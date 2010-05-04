@@ -1,4 +1,6 @@
 * text=auto !eol
+adit/lib/sources/xtee-server-1.0-RC1-sources.jar -text
+adit/lib/spring-ws-1.5.9-all.jar -text
 adit/lib/xtee-server-1.0-RC1.jar -text
 adit/pom.xml -text
 adit/src/main/java/ee/adit/ws/endpoint/GetDocumentEndpoint.java -text
