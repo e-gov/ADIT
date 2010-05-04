@@ -7,12 +7,18 @@
   <version>0.0.1</version>
   <name>adit Maven Webapp</name>
   <url>http://maven.apache.org</url>
+  
+  <properties>
+  	<baseDir>C:\development\adit\adit</baseDir>
+  </properties>
+  
   <dependencies>
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
+      <groupId>ee.webmedia</groupId>
+      <artifactId>xtee</artifactId>
+      <version>1.0</version>
+      <scope>system</scope>
+      <systemPath>${baseDir}\lib\xtee-server-1.0-RC1.jar</systemPath>
     </dependency>
   </dependencies>
   <build>

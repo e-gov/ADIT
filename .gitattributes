@@ -1,3 +1,5 @@
 * text=auto !eol
+adit/lib/xtee-server-1.0-RC1.jar -text
 adit/pom.xml -text
+adit/src/main/java/ee/adit/ws/endpoint/GetDocumentEndpoint.java -text
 adit/src/main/webapp/WEB-INF/web.xml -text
