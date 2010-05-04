@@ -11,11 +11,8 @@ public class GetDocumentEndpoint extends AbstractXTeeBaseEndpoint {
 	protected void invokeInternal(Document requestKeha, Element responseKeha,
 			XTeeHeader xteeHeader) throws Exception {
 		
+		;
 		
-		
-	}
-
-
-	
+	}	
 	
 }
