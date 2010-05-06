@@ -20,6 +20,8 @@
 			<scope>system</scope>
 			<systemPath>${baseDir}\lib\xtee-server-1.0-RC1.jar</systemPath>
 		</dependency>
+		
+		<!-- Spring libraries -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>ws</artifactId>
@@ -27,6 +29,21 @@
 			<scope>system</scope>
 			<systemPath>${baseDir}\lib\spring-ws-1.5.9-all.jar</systemPath>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>beans</artifactId>
+			<version>2.5.6</version>
+			<scope>system</scope>
+			<systemPath>${baseDir}\lib\spring-beans-2.5.6.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>core</artifactId>
+			<version>3.0.2</version>
+			<scope>system</scope>
+			<systemPath>${baseDir}\lib\org.springframework.core-3.0.2.RELEASE.jar</systemPath>
+		</dependency>
+		
 	</dependencies>
 
 	<build>
