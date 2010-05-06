@@ -4,6 +4,7 @@ import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 
+import org.apache.log4j.Logger;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
 import org.springframework.oxm.XmlMappingException;
@@ -13,17 +14,10 @@ import org.w3c.dom.Element;
 import ee.webmedia.xtee.XTeeHeader;
 import ee.webmedia.xtee.endpoint.AbstractXTeeBaseEndpoint;
 
-//AbstractXTeeBaseEndpoint
-
-/**
- * Peaks tegema nii, et klassil on AbstractXTeeBaseEndpoint omadused ning
- * implementeeriks samas ka AbstractMarshallingPayloadEndpoint nimelist abstract
- * klassi.
- * 
- */
-
 public abstract class AbstractAditBaseEndpoint extends AbstractXTeeBaseEndpoint {
 
+	private static Logger LOG = Logger.getLogger(AbstractAditBaseEndpoint.class);
+	
 	private XTeeHeader header;
 
 	private Marshaller marshaller;
@@ -33,6 +27,8 @@ public abstract class AbstractAditBaseEndpoint extends AbstractXTeeBaseEndpoint 
 	protected void invokeInternal(Document requestKeha, Element responseKeha,
 			XTeeHeader xteeHeader) throws Exception {
 
+		LOG.debug("AbstractAditBaseEndpoint invoked");
+		
 		try {
 			// Unmarshall the request object
 			Source requestObjectSource = new DOMSource(requestKeha);

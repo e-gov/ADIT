@@ -1,4 +1,5 @@
 * text=auto !eol
+adit/lib/log4j-1.2.16.jar -text
 adit/lib/org.springframework.core-3.0.2.RELEASE.jar -text
 adit/lib/sources/spring-ws-1.5.9-sources.jar -text
 adit/lib/sources/xtee-server-1.0-RC1-sources.jar -text
@@ -7,4 +8,6 @@ adit/lib/spring-ws-1.5.9-all.jar -text
 adit/lib/xtee-server-1.0-RC1.jar -text
 adit/pom.xml -text
 adit/src/main/java/ee/adit/ws/endpoint/AbstractAditBaseEndpoint.java -text
+adit/src/main/java/ee/adit/ws/endpoint/GetDocumentEndpoint.java -text
+adit/src/main/resources/log4j.xml -text
 adit/src/main/webapp/WEB-INF/web.xml -text
