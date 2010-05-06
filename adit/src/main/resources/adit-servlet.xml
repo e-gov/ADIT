@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+	<bean id="GetDocumentEndpoint" class="ee.adit.ws.endpoint.GetDocumentEndpoint">
+		<property name="marshaller" ref="castorMarshaller" />
+		<property name="unmarshaller" ref="castorMarshaller" />
+	</bean>
+
+	<!-- Castor Marshaller -->
+	<bean id="castorMarshaller" class="org.springframework.oxm.castor.CastorMarshaller">
+		<property name="mappingLocation" value="classpath:/adit-castor-mapping.xml" />
+	</bean>
+
+	<!-- Web Service Endpoint mapping -->
+	<bean id="endpointMapping"
+		class="org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping">
+		<property name="mappings">
+			<props>
+				<prop key="{http://www.example.org/livelink/}scanningImportRequestType">GetDocumentEndpoint</prop>
+				<prop key="defaultEndpoint">GetDocumentEndpoint</prop>
+			</props>
+		</property>
+	</bean>
+
+</beans>
