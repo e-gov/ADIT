@@ -1,19 +1,28 @@
 package ee.adit.ws.endpoint;
 
 import org.apache.log4j.Logger;
+import org.springframework.stereotype.Component;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
-public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
+import ee.webmedia.xtee.XTeeHeader;
+import ee.webmedia.xtee.endpoint.AbstractXTeeBaseEndpoint;
+
+@Component
+public class GetDocumentEndpoint extends AbstractXTeeBaseEndpoint {
 
 	private static Logger LOG = Logger.getLogger(GetDocumentEndpoint.class);
-	
+
 	@Override
-	protected Object invokeInternal(Object requestObject) throws Exception {
+	protected void invokeInternal(Document requestKeha, Element responseKeha,
+			XTeeHeader xteeHeader) throws Exception {
 		
-		LOG.debug("GetDocumentEndpoint invoked");
+		this.
 		
-		org.springframework.ws.transport.http.MessageDispatcherServlet w;
+		LOG.debug("GetDocumentEndpoint invoked.");
 		
-		return null;
 	}
+	
+	
 
 }

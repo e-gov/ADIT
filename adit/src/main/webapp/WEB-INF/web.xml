@@ -5,11 +5,22 @@
 
 	<display-name>Livelink Scan Service</display-name>
 
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>/WEB-INF/adit-servlet.xml</param-value>
+	</context-param>
+	<servlet>
+		<servlet-name>springLoaderServlet</servlet-name>
+		<servlet-class>org.springframework.web.context.ContextLoaderServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
 	<!-- take especial notice of the name of this servlet -->
 	<servlet>
 		<servlet-name>adit</servlet-name>
 		<servlet-class>
 			org.springframework.ws.transport.http.MessageDispatcherServlet</servlet-class>
+		<load-on-startup>2</load-on-startup>
 	</servlet>
 
 	<servlet-mapping>

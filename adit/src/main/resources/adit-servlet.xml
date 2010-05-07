@@ -1,34 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+xmlns:aop="http://www.springframework.org/schema/aop"
+xmlns:context="http://www.springframework.org/schema/context"
+xmlns:jee="http://www.springframework.org/schema/jee"
+xmlns:tx="http://www.springframework.org/schema/tx"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.springframework.org/schema/aop
+http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context-2.5.xsd
+http://www.springframework.org/schema/jee
+http://www.springframework.org/schema/jee/spring-jee-2.5.xsd
+http://www.springframework.org/schema/tx
+http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
 
-	<bean id="GetDocumentEndpoint" class="ee.adit.ws.endpoint.GetDocumentEndpoint">
-		<property name="marshaller" ref="castorMarshaller" />
-		<property name="unmarshaller" ref="castorMarshaller" />
-	</bean>
-
+	<!--
+		<bean id="GetDocumentEndpoint"
+		class="ee.adit.ws.endpoint.GetDocumentEndpoint"> <property
+		name="marshaller" ref="castorMarshaller" /> <property
+		name="unmarshaller" ref="castorMarshaller" /> </bean>
+	-->
 	<!-- Castor Marshaller -->
-	<bean id="castorMarshaller" class="org.springframework.oxm.castor.CastorMarshaller">
-		<property name="mappingLocation" value="classpath:/adit-castor-mapping.xml" />
-	</bean>
-
+	<!--
+		<bean id="castorMarshaller"
+		class="org.springframework.oxm.castor.CastorMarshaller"> <property
+		name="mappingLocation" value="classpath:/adit-castor-mapping.xml" />
+		</bean>
+	-->
 	<!-- Web Service Endpoint mapping -->
-	<bean id="endpointMapping"
+	<!--
+		<bean id="endpointMapping"
 		class="org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping">
-		<property name="mappings">
-			<props>
-				<prop key="{http://www.example.org/livelink/}scanningImportRequestType">GetDocumentEndpoint</prop>
-				<prop key="defaultEndpoint">GetDocumentEndpoint</prop>
-			</props>
-		</property>
-	</bean>
-
+		<property name="mappings"> <props> <prop
+		key="{http://www.riik.ee/adit/}getDocumentRequestType">GetDocumentEndpoint</prop>
+		<prop key="defaultEndpoint">GetDocumentEndpoint</prop> </props>
+		</property> </bean>
+	-->
 	<!-- WSDL publishing -->
-	<bean id="adit"
+	<!--
+		<bean id="adit"
 		class="org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition">
-		<constructor-arg value="classpath:adit.wsdl" />
+		<constructor-arg value="classpath:adit.wsdl" /> </bean> <bean
+		id="contextPath" class="java.lang.String"> <constructor-arg
+		type="java.lang.String" value="ee.riik.adit" /> </bean>
+
+		<context:component-scan base-package="ee.webmedia.xtee" /> <bean
+		id="echo" class="ee.webmedia.xtee.wsdl.XTeeWsdlDefinition"> <property
+		name="schema" ref="schema" /> <property name="portTypeName"
+		value="adit" /> </bean> <bean id="xteeDatabase"
+		class="java.lang.String"> <constructor-arg value="naidis" /> </bean>
+	-->
+
+	<context:component-scan base-package="ee.adit.ws.endpoint" />
+	
+	<bean id="contextPath" class="java.lang.String">
+		<constructor-arg type="java.lang.String" value="ee.adit.pojo" />
+	</bean>
+	<bean id="schema" class="org.springframework.xml.xsd.SimpleXsdSchema">
+		<property name="xsd" value="/WEB-INF/adit.xsd" />
+	</bean>
+	<bean id="adit" class="ee.webmedia.xtee.wsdl.XTeeWsdlDefinition">
+		<property name="schema" ref="schema" />
+		<property name="portTypeName" value="adit" />
+	</bean>
+	<bean id="xteeDatabase" class="java.lang.String">
+		<constructor-arg value="adit" />
 	</bean>
 
 </beans>
