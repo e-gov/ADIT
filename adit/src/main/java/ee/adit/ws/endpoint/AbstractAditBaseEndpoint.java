@@ -30,6 +30,10 @@ public abstract class AbstractAditBaseEndpoint extends AbstractXTeeBaseEndpoint 
 		LOG.debug("AbstractAditBaseEndpoint invoked");
 		
 		try {
+			
+			// Set the header as a property
+			this.setHeader(xteeHeader);
+			
 			// Unmarshall the request object
 			Source requestObjectSource = new DOMSource(requestKeha);
 			Object requestObject = this.getUnmarshaller().unmarshal(requestObjectSource);

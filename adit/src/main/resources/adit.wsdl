@@ -5,14 +5,14 @@
       <xsd:element name="GetDocumentRequest">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="" type="xsd:string"/>
+            <xsd:element name="keha" type="xsd:string"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
       <xsd:element name="GetDocumentRsponse">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="out" type="xsd:string"/>
+            <xsd:element name="keha" type="xsd:string"/>
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
