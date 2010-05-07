@@ -1,4 +1,5 @@
 * text=auto !eol
+adit/doc/testMessages/getDocument.v1.xml -text
 adit/lib/castor-1.3.1-core.jar -text
 adit/lib/castor-1.3.1.jar -text
 adit/lib/commons-logging-1.1.1.jar -text
