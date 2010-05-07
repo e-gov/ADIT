@@ -25,4 +25,10 @@
 		</property>
 	</bean>
 
+	<!-- WSDL publishing -->
+	<bean id="adit"
+		class="org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition">
+		<constructor-arg value="classpath:adit.wsdl" />
+	</bean>
+
 </beans>
