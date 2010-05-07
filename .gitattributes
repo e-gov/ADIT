@@ -21,7 +21,6 @@ adit/src/main/java/ee/adit/ws/endpoint/GetDocumentEndpoint.java -text
 adit/src/main/java/ee/adit/ws/endpoint/XteeCustomEndpoint.java -text
 adit/src/main/resources/adit-castor-mapping.xml -text
 adit/src/main/resources/adit-servlet.xml -text
-adit/src/main/resources/adit.wsdl -text
 adit/src/main/resources/adit.xsd -text
 adit/src/main/resources/log4j.xml -text
 adit/src/main/webapp/WEB-INF/web.xml -text
