@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.riik.ee/adit/"
 	xmlns:tns="http://www.riik.ee/adit/" elementFormDefault="qualified">
+	
 	<element name="GetDocumentRequest" type="tns:GetDocumentRequest"></element>
 	<element name="GetDocumentResponse" type="tns:GetDocumentResponse"></element>
+	
 	<complexType name="GetDocumentRequest">
 		<sequence>
 			<element name="keha" type="string"></element>

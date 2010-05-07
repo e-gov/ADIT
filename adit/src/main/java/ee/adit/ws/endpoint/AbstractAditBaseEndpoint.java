@@ -14,7 +14,7 @@ import org.w3c.dom.Element;
 import ee.webmedia.xtee.XTeeHeader;
 import ee.webmedia.xtee.endpoint.AbstractXTeeBaseEndpoint;
 
-public abstract class AbstractAditBaseEndpoint extends AbstractXTeeBaseEndpoint {
+public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 
 	private static Logger LOG = Logger.getLogger(AbstractAditBaseEndpoint.class);
 	
