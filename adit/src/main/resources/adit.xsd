@@ -1,9 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.riik.ee/adit/"
-	xmlns:tns="http://www.riik.ee/adit/" elementFormDefault="qualified">
+	xmlns:tns="http://www.riik.ee/adit/" elementFormDefault="qualified"
+	xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/">
+	
+	<!-- <import namespace="http://schemas.xmlsoap.org/soap/encoding/"
+		schemaLocation="http://schemas.xmlsoap.org/soap/encoding/" />-->
 	
 	<element name="GetDocumentRequest" type="tns:GetDocumentRequest"></element>
 	<element name="GetDocumentResponse" type="tns:GetDocumentResponse"></element>
+	
+	<element name="JoinRequest" type="tns:JoinRequest"></element>
+	<element name="JoinResponse" type="tns:JoinResponse"></element>
+	<element name="UnJoinRequest" type="tns:UnJoinRequest"></element>
+	<element name="UnJoinResponse" type="tns:UnJoinResponse"></element>
+	<element name="GetUserInfoRequest" type="tns:GetUserInfoRequest"></element>
+	<element name="GetUserInfoResponse" type="tns:GetUserInfoResponse"></element>
+	<element name="GetJoinedRequest" type="tns:GetJoinedRequest"></element>
+	<element name="GetJoinedResponse" type="tns:GetJoinedResponse"></element>
+	
+	<!--
+	<complexType name="ArrayOfMessage">
+		<complexContent>
+			<restriction base="SOAP-ENC:Array">
+				<sequence>
+					<element name="message"	type="string" maxOccurs="unbounded"	minOccurs="0"></element>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	 -->
+	
+	<complexType name="ArrayOfMessage">
+		<sequence>
+			<element name="message"	type="string" maxOccurs="unbounded"	minOccurs="0"></element>
+		</sequence>
+	</complexType>
 	
 	<complexType name="GetDocumentRequest">
 		<sequence>
@@ -13,6 +44,60 @@
 	<complexType name="GetDocumentResponse">
 		<sequence>
 			<element name="keha" type="string"></element>
+		</sequence>
+	</complexType>
+	
+	<!-- join päringu tüübid -->
+	<complexType name="JoinRequest">
+		<sequence>
+			<element name="userType" type="string"></element>
+			<element name="userName" type="string"></element>
+		</sequence>
+	</complexType>
+	<complexType name="JoinResponse">
+		<sequence>
+			<element name="success" type="boolean"></element>
+			<element name="messages" type="tns:ArrayOfMessage"></element>
+		</sequence>
+	</complexType>
+	
+	<!-- unJoin päringu tüübid -->
+	<complexType name="UnJoinRequest">
+		<sequence/>
+	</complexType>
+	<complexType name="UnJoinResponse">
+		<sequence>
+			<element name="success" type="boolean"></element>
+			<element name="messages" type="tns:ArrayOfMessage"></element>
+		</sequence>
+	</complexType>
+	
+	<!-- getUserInfo päringu tüübid -->
+	<complexType name="GetUserInfoRequest">
+		<sequence>
+			<element name="userList" type="base64Binary"></element>
+		</sequence>
+	</complexType>
+	<complexType name="GetUserInfoResponse">
+		<sequence>
+			<element name="success" type="boolean"></element>
+			<element name="messages" type="tns:ArrayOfMessage"></element>
+			<element name="userList" type="base64Binary"></element>
+		</sequence>
+	</complexType>
+	
+	<!-- getJoined päringu tüübid -->
+	<complexType name="GetJoinedRequest">
+		<sequence>
+			<element name="maxResults" type="integer"></element>
+			<element name="startIndex" type="integer"></element>
+		</sequence>
+	</complexType>
+	<complexType name="GetJoinedResponse">
+		<sequence>
+			<element name="success" type="boolean"></element>
+			<element name="messages" type="tns:ArrayOfMessage"></element>
+			<element name="userList" type="base64Binary"></element>
 		</sequence>
 	</complexType>
 </schema>
