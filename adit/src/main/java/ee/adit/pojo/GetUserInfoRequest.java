@@ -15,16 +15,16 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for GetDocumentResponse complex type.
+ * <p>Java class for GetUserInfoRequest complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="GetDocumentResponse">
+ * &lt;complexType name="GetUserInfoRequest">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="keha" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="userList" type="{http://www.w3.org/2001/XMLSchema}base64Binary"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -34,36 +34,34 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "GetDocumentResponse", propOrder = {
-    "keha"
+@XmlType(name = "GetUserInfoRequest", propOrder = {
+    "userList"
 })
-public class GetDocumentResponse {
+public class GetUserInfoRequest {
 
     @XmlElement(required = true)
-    protected String keha;
+    protected byte[] userList;
 
     /**
-     * Gets the value of the keha property.
+     * Gets the value of the userList property.
      * 
      * @return
      *     possible object is
-     *     {@link String }
-     *     
+     *     byte[]
      */
-    public String getKeha() {
-        return keha;
+    public byte[] getUserList() {
+        return userList;
     }
 
     /**
-     * Sets the value of the keha property.
+     * Sets the value of the userList property.
      * 
      * @param value
      *     allowed object is
-     *     {@link String }
-     *     
+     *     byte[]
      */
-    public void setKeha(String value) {
-        this.keha = value;
+    public void setUserList(byte[] value) {
+        this.userList = ((byte[]) value);
     }
 
 }

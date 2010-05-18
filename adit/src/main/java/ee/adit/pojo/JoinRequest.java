@@ -15,16 +15,17 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for GetDocumentResponse complex type.
+ * <p>Java class for JoinRequest complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="GetDocumentResponse">
+ * &lt;complexType name="JoinRequest">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="keha" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="userType" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="userName" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -34,36 +35,63 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "GetDocumentResponse", propOrder = {
-    "keha"
+@XmlType(name = "JoinRequest", propOrder = {
+    "userType",
+    "userName"
 })
-public class GetDocumentResponse {
+public class JoinRequest {
 
     @XmlElement(required = true)
-    protected String keha;
+    protected String userType;
+    @XmlElement(required = true)
+    protected String userName;
 
     /**
-     * Gets the value of the keha property.
+     * Gets the value of the userType property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getKeha() {
-        return keha;
+    public String getUserType() {
+        return userType;
     }
 
     /**
-     * Sets the value of the keha property.
+     * Sets the value of the userType property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setKeha(String value) {
-        this.keha = value;
+    public void setUserType(String value) {
+        this.userType = value;
+    }
+
+    /**
+     * Gets the value of the userName property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getUserName() {
+        return userName;
+    }
+
+    /**
+     * Sets the value of the userName property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setUserName(String value) {
+        this.userName = value;
     }
 
 }

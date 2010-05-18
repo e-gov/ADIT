@@ -15,16 +15,17 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for GetDocumentResponse complex type.
+ * <p>Java class for JoinResponse complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="GetDocumentResponse">
+ * &lt;complexType name="JoinResponse">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="keha" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="success" type="{http://www.w3.org/2001/XMLSchema}boolean"/>
+ *         &lt;element name="messages" type="{http://www.riik.ee/adit/}ArrayOfMessage"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -34,36 +35,54 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "GetDocumentResponse", propOrder = {
-    "keha"
+@XmlType(name = "JoinResponse", propOrder = {
+    "success",
+    "messages"
 })
-public class GetDocumentResponse {
+public class JoinResponse {
 
+    protected boolean success;
     @XmlElement(required = true)
-    protected String keha;
+    protected ArrayOfMessage messages;
 
     /**
-     * Gets the value of the keha property.
+     * Gets the value of the success property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
      */
-    public String getKeha() {
-        return keha;
+    public boolean isSuccess() {
+        return success;
     }
 
     /**
-     * Sets the value of the keha property.
+     * Sets the value of the success property.
+     * 
+     */
+    public void setSuccess(boolean value) {
+        this.success = value;
+    }
+
+    /**
+     * Gets the value of the messages property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link ArrayOfMessage }
+     *     
+     */
+    public ArrayOfMessage getMessages() {
+        return messages;
+    }
+
+    /**
+     * Sets the value of the messages property.
      * 
      * @param value
      *     allowed object is
-     *     {@link String }
+     *     {@link ArrayOfMessage }
      *     
      */
-    public void setKeha(String value) {
-        this.keha = value;
+    public void setMessages(ArrayOfMessage value) {
+        this.messages = value;
     }
 
 }

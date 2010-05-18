@@ -10,21 +10,19 @@ package ee.adit.pojo;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for GetDocumentResponse complex type.
+ * <p>Java class for UnJoinRequest complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="GetDocumentResponse">
+ * &lt;complexType name="UnJoinRequest">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="keha" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -34,36 +32,8 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "GetDocumentResponse", propOrder = {
-    "keha"
-})
-public class GetDocumentResponse {
+@XmlType(name = "UnJoinRequest")
+public class UnJoinRequest {
 
-    @XmlElement(required = true)
-    protected String keha;
-
-    /**
-     * Gets the value of the keha property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getKeha() {
-        return keha;
-    }
-
-    /**
-     * Sets the value of the keha property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setKeha(String value) {
-        this.keha = value;
-    }
 
 }
