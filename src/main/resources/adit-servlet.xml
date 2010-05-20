@@ -21,7 +21,7 @@
 	</bean>
 	<bean id="GetJoinedEndpoint" class="ee.adit.ws.endpoint.GetJoinedEndpoint">
 	</bean>
-	<bean id="GetUserInfoEndpoint" class="ee.adit.ws.endpoint.GetUserInfo">
+	<bean id="GetUserInfoEndpoint" class="ee.adit.ws.endpoint.GetUserInfoEndpoint">
 	</bean>
 	
 	<bean id="GetDocumentEndpoint" class="ee.adit.ws.endpoint.GetDocumentEndpoint">
