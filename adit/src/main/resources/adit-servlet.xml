@@ -15,6 +15,14 @@
 	http://www.springframework.org/schema/tx
 	http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
 
+	<bean id="JoinEndpoint" class="ee.adit.ws.endpoint.JoinEndpoint">
+	</bean>
+	<bean id="UnJoinEndpoint" class="ee.adit.ws.endpoint.UnJoinEndpoint">
+	</bean>
+	<bean id="GetJoinedEndpoint" class="ee.adit.ws.endpoint.GetJoinedEndpoint">
+	</bean>
+	<bean id="GetUserInfoEndpoint" class="ee.adit.ws.endpoint.GetUserInfo">
+	</bean>
 	
 	<bean id="GetDocumentEndpoint" class="ee.adit.ws.endpoint.GetDocumentEndpoint">
 	</bean>
@@ -27,9 +35,17 @@
 		<property name="mappings">
 			<props>
 				<prop
-					key="{http://producers.adit.xtee.riik.ee/producer/adit}getDocument">GetDocumentEndpoint</prop>
+					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}join">JoinEndpoint</prop>
 				<prop
-					key="{http://producers.adit.xtee.riik.ee/producer/adit}listMethods">ListMethodsEndpoint</prop>
+					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}unJoin">UnJoinEndpoint</prop>
+				<prop
+					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}getJoined">GetJoinedEndpoint</prop>
+				<prop
+					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}getUserInfo">GetUserInfoEndpoint</prop>
+				<prop
+					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}getDocument">GetDocumentEndpoint</prop>
+				<prop
+					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}listMethods">ListMethodsEndpoint</prop>
 			</props>
 		</property>
 	</bean>
@@ -48,7 +64,7 @@
 		<property name="portTypeName" value="adit" />
 	</bean>
 	<bean id="xteeDatabase" class="java.lang.String">
-		<constructor-arg value="adit" />
+		<constructor-arg value="ametlikud-dokumendid" />
 	</bean>
 
 </beans>
