@@ -18,6 +18,14 @@ public class UnJoinEndpoint extends XteeCustomEndpoint {
 	protected void invokeInternal(Document requestKeha, Element responseKeha, XTeeHeader xteeHeader) throws Exception {
 		LOG.debug("UnJoinEndpoint invoked.");
 		
-		// TODO: Implement me!
+		// TODO: Kontrollime, kas päringu käivitanud infosüsteem on ADITis registreeritud
+		
+		// TODO: Kontrollime, kas päringu käivitanud infosüsteem tohib andmeid muuta (või üldse näha)
+		
+		// TODO: Kontrollime, kas päringu käivitanud kasutaja eksisteerib
+		
+		// TODO: Kontrollime, kas infosüsteem tohib antud kasutaja andmeid muuta
+		
+		// TODO: Märgime kasutaja lahkunuks
 	}
 }

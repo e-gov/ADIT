@@ -18,6 +18,15 @@ public class JoinEndpoint extends XteeCustomEndpoint {
 	protected void invokeInternal(Document requestKeha, Element responseKeha, XTeeHeader xteeHeader) throws Exception {
 		LOG.debug("JoinEndpoint invoked.");
 		
-		// TODO: Implement me!
+		// TODO: Kontrollime, kas päringu käivitanud infosüsteem on ADITis registreeritud
+		
+		// TODO: Kontrollime, kas päringu käivitanud infosüsteem tohib andmeid muuta (või üldse näha)
+		
+		// TODO: Kontrollime, kas etteantud kasutajatüüp eksisteerib
+		
+		// TODO: Kontrollime, kas kasutaja juba eksisteerib
+		// s.t. kas lisame uue kasutaja või muudame olemasolevat
+		
+		// TODO: Lisame kasutaja või muudame olemasolevat
 	}
 }
