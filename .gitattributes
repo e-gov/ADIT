@@ -60,7 +60,6 @@ src/main/java/ee/adit/ws/endpoint/XteeCustomEndpoint.java -text
 src/main/resources/adit-castor-mapping.xml -text
 src/main/resources/adit-servlet.xml -text
 src/main/resources/adit.xsd -text
-src/main/resources/create_database.sql -text
 src/main/resources/hibernate.cfg.xml -text
 src/main/resources/hibernate.reveng.xml -text
 src/main/resources/log4j.xml -text

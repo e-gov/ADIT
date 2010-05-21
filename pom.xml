@@ -9,7 +9,7 @@
 	<url>http://maven.apache.org</url>
 
 	<properties>
-		<baseDir>C:\projektid\adit\adit</baseDir>
+		<baseDir>C:\development\adit\adit</baseDir>
 	</properties>
 
 	<dependencies>
@@ -94,65 +94,65 @@
 		</dependency>
 
 
-		<!-- Hibernate -->		
-	  	<dependency>
-	      <groupId>java</groupId>
-	      <artifactId>antlr</artifactId>
-	      <version>2.7.6</version>
-	      <scope>system</scope>
-	      <systemPath>${baseDir}/lib/antlr-2.7.6.jar</systemPath>
-	    </dependency>
-	    <dependency>
-	      <groupId>java</groupId>
-	      <artifactId>commons-collections</artifactId>
-	      <version>3.1</version>
-	      <scope>system</scope>
-	      <systemPath>${baseDir}/lib/commons-collections-3.1.jar</systemPath>
-	    </dependency>
-	    <dependency>
-	      <groupId>java</groupId>
-	      <artifactId>dom4j</artifactId>
-	      <version>1.6.1</version>
-	      <scope>system</scope>
-	      <systemPath>${baseDir}/lib/dom4j-1.6.1.jar</systemPath>
-	    </dependency>
-	    <dependency>
-	      <groupId>java</groupId>
-	      <artifactId>hibernate3</artifactId>
-	      <version>1.6.1</version>
-	      <scope>system</scope>
-	      <systemPath>${baseDir}/lib/hibernate3.jar</systemPath>
-	    </dependency>
-	    <dependency>
-	      <groupId>java</groupId>
-	      <artifactId>javassist</artifactId>
-	      <version>3.9.0.GA</version>
-	      <scope>system</scope>
-	      <systemPath>${baseDir}/lib/javassist-3.9.0.GA.jar</systemPath>
-	    </dependency>
-	    <dependency>
-	      <groupId>java</groupId>
-	      <artifactId>jta</artifactId>
-	      <version>1.1</version>
-	      <scope>system</scope>
-	      <systemPath>${baseDir}/lib/jta-1.1.jar</systemPath>
-	    </dependency>
-	    <dependency>
-	      <groupId>java</groupId>
-	      <artifactId>slf4j-api</artifactId>
-	      <version>1.5.10</version>
-	      <scope>system</scope>
-	      <systemPath>${baseDir}/lib/slf4j-api-1.5.8.jar</systemPath>
-	    </dependency>
-	
+		<!-- Hibernate -->
+		<dependency>
+			<groupId>java</groupId>
+			<artifactId>antlr</artifactId>
+			<version>2.7.6</version>
+			<scope>system</scope>
+			<systemPath>${baseDir}/lib/antlr-2.7.6.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>java</groupId>
+			<artifactId>commons-collections</artifactId>
+			<version>3.1</version>
+			<scope>system</scope>
+			<systemPath>${baseDir}/lib/commons-collections-3.1.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>java</groupId>
+			<artifactId>dom4j</artifactId>
+			<version>1.6.1</version>
+			<scope>system</scope>
+			<systemPath>${baseDir}/lib/dom4j-1.6.1.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>java</groupId>
+			<artifactId>hibernate3</artifactId>
+			<version>1.6.1</version>
+			<scope>system</scope>
+			<systemPath>${baseDir}/lib/hibernate3.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>java</groupId>
+			<artifactId>javassist</artifactId>
+			<version>3.9.0.GA</version>
+			<scope>system</scope>
+			<systemPath>${baseDir}/lib/javassist-3.9.0.GA.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>java</groupId>
+			<artifactId>jta</artifactId>
+			<version>1.1</version>
+			<scope>system</scope>
+			<systemPath>${baseDir}/lib/jta-1.1.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>java</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.5.10</version>
+			<scope>system</scope>
+			<systemPath>${baseDir}/lib/slf4j-api-1.5.8.jar</systemPath>
+		</dependency>
+
 		<!-- Oracle -->
-	    <dependency>
-	      <groupId>java</groupId>
-	      <artifactId>ojdbc</artifactId>
-	      <version>1.4</version>
-	      <scope>system</scope>
-	      <systemPath>${baseDir}/lib/ojdbc14.jar</systemPath>
-	    </dependency>
+		<dependency>
+			<groupId>java</groupId>
+			<artifactId>ojdbc</artifactId>
+			<version>1.4</version>
+			<scope>system</scope>
+			<systemPath>${baseDir}/lib/ojdbc14.jar</systemPath>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -181,12 +181,27 @@
 		<plugins>
 
 			<!-- Compiler -->
+
+			<plugin>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.1-beta-1</version>
+			</plugin>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
 					<source>1.6</source>
 					<target>1.6</target>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>tomcat-maven-plugin</artifactId>
+				<configuration>
+					<server>tomcat6</server>
+					<warFile>${baseDir}/target/adit.war</warFile>
 				</configuration>
 			</plugin>
 
