@@ -1,6 +1,6 @@
 package ee.adit.dao;
 
-// Generated 21.05.2010 14:01:23 by Hibernate Tools 3.2.4.GA
+// Generated 21.05.2010 14:11:25 by Hibernate Tools 3.2.4.GA
 
 import java.util.List;
 import javax.naming.InitialContext;

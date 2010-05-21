@@ -11,13 +11,14 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Example;
 
 /**
- * Home object for domain model class DocumentHistory.
- * @see ee.adit.dao.DocumentHistory
+ * Home object for domain model class AccessRestriction.
+ * @see ee.adit.dao.AccessRestriction
  * @author Hibernate Tools
  */
-public class DocumentHistoryHome {
+public class AccessRestrictionHome {
 
-	private static final Log log = LogFactory.getLog(DocumentHistoryHome.class);
+	private static final Log log = LogFactory
+			.getLog(AccessRestrictionHome.class);
 
 	private final SessionFactory sessionFactory = getSessionFactory();
 
@@ -32,8 +33,8 @@ public class DocumentHistoryHome {
 		}
 	}
 
-	public void persist(DocumentHistory transientInstance) {
-		log.debug("persisting DocumentHistory instance");
+	public void persist(AccessRestriction transientInstance) {
+		log.debug("persisting AccessRestriction instance");
 		try {
 			sessionFactory.getCurrentSession().persist(transientInstance);
 			log.debug("persist successful");
@@ -43,8 +44,8 @@ public class DocumentHistoryHome {
 		}
 	}
 
-	public void attachDirty(DocumentHistory instance) {
-		log.debug("attaching dirty DocumentHistory instance");
+	public void attachDirty(AccessRestriction instance) {
+		log.debug("attaching dirty AccessRestriction instance");
 		try {
 			sessionFactory.getCurrentSession().saveOrUpdate(instance);
 			log.debug("attach successful");
@@ -54,8 +55,8 @@ public class DocumentHistoryHome {
 		}
 	}
 
-	public void attachClean(DocumentHistory instance) {
-		log.debug("attaching clean DocumentHistory instance");
+	public void attachClean(AccessRestriction instance) {
+		log.debug("attaching clean AccessRestriction instance");
 		try {
 			sessionFactory.getCurrentSession().lock(instance, LockMode.NONE);
 			log.debug("attach successful");
@@ -65,8 +66,8 @@ public class DocumentHistoryHome {
 		}
 	}
 
-	public void delete(DocumentHistory persistentInstance) {
-		log.debug("deleting DocumentHistory instance");
+	public void delete(AccessRestriction persistentInstance) {
+		log.debug("deleting AccessRestriction instance");
 		try {
 			sessionFactory.getCurrentSession().delete(persistentInstance);
 			log.debug("delete successful");
@@ -76,10 +77,10 @@ public class DocumentHistoryHome {
 		}
 	}
 
-	public DocumentHistory merge(DocumentHistory detachedInstance) {
-		log.debug("merging DocumentHistory instance");
+	public AccessRestriction merge(AccessRestriction detachedInstance) {
+		log.debug("merging AccessRestriction instance");
 		try {
-			DocumentHistory result = (DocumentHistory) sessionFactory
+			AccessRestriction result = (AccessRestriction) sessionFactory
 					.getCurrentSession().merge(detachedInstance);
 			log.debug("merge successful");
 			return result;
@@ -89,11 +90,12 @@ public class DocumentHistoryHome {
 		}
 	}
 
-	public DocumentHistory findById(long id) {
-		log.debug("getting DocumentHistory instance with id: " + id);
+	public AccessRestriction findById(ee.adit.dao.AccessRestrictionId id) {
+		log.debug("getting AccessRestriction instance with id: " + id);
 		try {
-			DocumentHistory instance = (DocumentHistory) sessionFactory
-					.getCurrentSession().get("ee.adit.dao.DocumentHistory", id);
+			AccessRestriction instance = (AccessRestriction) sessionFactory
+					.getCurrentSession().get("ee.adit.dao.AccessRestriction",
+							id);
 			if (instance == null) {
 				log.debug("get successful, no instance found");
 			} else {
@@ -106,12 +108,12 @@ public class DocumentHistoryHome {
 		}
 	}
 
-	public List findByExample(DocumentHistory instance) {
-		log.debug("finding DocumentHistory instance by example");
+	public List findByExample(AccessRestriction instance) {
+		log.debug("finding AccessRestriction instance by example");
 		try {
 			List results = sessionFactory.getCurrentSession().createCriteria(
-					"ee.adit.dao.DocumentHistory")
-					.add(Example.create(instance)).list();
+					"ee.adit.dao.AccessRestriction").add(
+					Example.create(instance)).list();
 			log.debug("find by example successful, result size: "
 					+ results.size());
 			return results;
