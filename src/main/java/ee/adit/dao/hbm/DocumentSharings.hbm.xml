@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 21.05.2010 14:01:22 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="ee.adit.dao.DocumentSharings" table="DOCUMENT_SHARINGS" schema="ADIT">
+        <id name="id" type="long">
+            <column name="ID" precision="12" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="documentId" type="long">
+            <column name="DOCUMENT_ID" precision="12" scale="0" not-null="true" />
+        </property>
+        <property name="userCode" type="string">
+            <column name="USER_CODE" length="50" not-null="true" />
+        </property>
+        <property name="sharingTypeShortName" type="string">
+            <column name="SHARING_TYPE_SHORT_NAME" length="50" not-null="true" />
+        </property>
+        <property name="taskDescription" type="string">
+            <column name="TASK_DESCRIPTION" length="4000" />
+        </property>
+        <property name="creationDate" type="date">
+            <column name="CREATION_DATE" length="7" />
+        </property>
+        <property name="dvkStatusId" type="java.lang.Long">
+            <column name="DVK_STATUS_ID" precision="12" scale="0" />
+        </property>
+        <property name="dvkId" type="java.lang.Long">
+            <column name="DVK_ID" precision="12" scale="0" />
+        </property>
+        <property name="wfStatusId" type="java.lang.Long">
+            <column name="WF_STATUS_ID" precision="12" scale="0" />
+        </property>
+        <property name="lastAccessDate" type="date">
+            <column name="LAST_ACCESS_DATE" length="7" />
+        </property>
+    </class>
+</hibernate-mapping>

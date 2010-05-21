@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 21.05.2010 14:01:22 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="ee.adit.dao.Users" table="USERS" schema="ADIT">
+        <id name="userCode" type="string">
+            <column name="USER_CODE" length="50" />
+            <generator class="assigned" />
+        </id>
+        <property name="fullName" type="string">
+            <column name="FULL_NAME" />
+        </property>
+        <property name="usertypeShortName" type="string">
+            <column name="USERTYPE_SHORT_NAME" length="50" not-null="true" />
+        </property>
+        <property name="active" type="java.lang.Boolean">
+            <column name="ACTIVE" precision="1" scale="0" />
+        </property>
+        <property name="dvkOrgCode" type="string">
+            <column name="DVK_ORG_CODE" length="50" />
+        </property>
+        <property name="dvkSubdivisionShortName" type="string">
+            <column name="DVK_SUBDIVISION_SHORT_NAME" length="50" />
+        </property>
+        <property name="dvkOccupationShortName" type="string">
+            <column name="DVK_OCCUPATION_SHORT_NAME" length="50" />
+        </property>
+    </class>
+</hibernate-mapping>
