@@ -21,5 +21,22 @@
 		<property name="hibernate.c3p0.max_statements">50</property>
 		<property name="hibernate.connection.pool_size">10</property>
 		<property name="hibernate.hbm2ddl.auto">update</property>
+		<property name="jndi.class">com.sun.jndi.fscontext.RefFSContextFactory</property>
+		
+		<mapping resource="ee/adit/dao/hbm/DocumentType.hbm.xml"/>
+		<mapping resource="ee/adit/dao/hbm/Document.hbm.xml"/>
+		<mapping resource="ee/adit/dao/hbm/DocumentSharing.hbm.xml"/>
+		<mapping resource="ee/adit/dao/hbm/DocumentFile.hbm.xml"/>
+		<mapping resource="ee/adit/dao/hbm/DocumentHistory.hbm.xml"/>
+		<mapping resource="ee/adit/dao/hbm/DocumentWfStatus.hbm.xml"/>
+		<mapping resource="ee/adit/dao/hbm/DocumentDvkStatus.hbm.xml"/>
+		
+		<mapping resource="ee/adit/dao/hbm/RemoteApplication.hbm.xml"/>
+		<mapping resource="ee/adit/dao/hbm/AccessRestriction.hbm.xml"/>
+		<mapping resource="ee/adit/dao/hbm/DocumentHistoryType.hbm.xml"/>
+		<mapping resource="ee/adit/dao/hbm/DocumentSharingType.hbm.xml"/>
+		
+		
+		
     </session-factory>
 </hibernate-configuration>

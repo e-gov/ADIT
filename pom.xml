@@ -77,6 +77,7 @@
 			<scope>system</scope>
 			<systemPath>${baseDir}\lib\wsdl4j-qname-1.6.1.jar</systemPath>
 		</dependency>
+		
 		<!-- Logging -->
 		<dependency>
 			<groupId>org.apache</groupId>
@@ -92,7 +93,13 @@
 			<scope>system</scope>
 			<systemPath>${baseDir}\lib\commons-logging-1.1.1.jar</systemPath>
 		</dependency>
-
+		<dependency>
+			<groupId>slf4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.6.0</version>
+			<scope>system</scope>
+			<systemPath>${baseDir}\lib\slf4j-log4j12-1.6.0.jar</systemPath>
+		</dependency>
 
 		<!-- Hibernate -->
 		<dependency>
@@ -153,6 +160,7 @@
 			<scope>system</scope>
 			<systemPath>${baseDir}/lib/ojdbc14.jar</systemPath>
 		</dependency>
+		
 	</dependencies>
 
 	<build>

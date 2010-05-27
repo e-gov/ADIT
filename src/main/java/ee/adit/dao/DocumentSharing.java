@@ -1,6 +1,6 @@
 package ee.adit.dao;
 
-// Generated 21.05.2010 16:49:43 by Hibernate Tools 3.2.4.GA
+// Generated 27.05.2010 11:51:49 by Hibernate Tools 3.2.4.GA
 
 import java.util.Date;
 
