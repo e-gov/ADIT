@@ -1,6 +1,6 @@
-package ee.adit.dao;
+package ee.adit.dao.pojo;
 
-// Generated 27.05.2010 11:51:49 by Hibernate Tools 3.2.4.GA
+// Generated 27.05.2010 12:13:12 by Hibernate Tools 3.2.4.GA
 
 import java.util.HashSet;
 import java.util.Set;

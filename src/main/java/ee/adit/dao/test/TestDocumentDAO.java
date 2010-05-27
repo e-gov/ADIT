@@ -1,18 +1,12 @@
 package ee.adit.dao.test;
 
-import java.util.Hashtable;
-
-import javax.naming.Context;
-import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import org.hibernate.LockMode;
-import org.hibernate.LockOptions;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
-import ee.adit.dao.DocumentType;
+import ee.adit.dao.pojo.DocumentType;
 
 public class TestDocumentDAO {
 
