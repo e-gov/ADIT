@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 27.05.2010 11:51:49 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="ee.adit.dao.DocumentSharing" table="DOCUMENT_SHARING" schema="ADIT">
+        <id name="id" type="long">
+            <column name="ID" precision="12" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="documentSharingType" class="ee.adit.dao.DocumentSharingType" fetch="select">
+            <column name="SHARING_TYPE_SHORT_NAME" length="50" not-null="true" />
+        </many-to-one>
+        <many-to-one name="documentDvkStatus" class="ee.adit.dao.DocumentDvkStatus" fetch="select">
+            <column name="DVK_STATUS_ID" precision="12" scale="0" />
+        </many-to-one>
+        <many-to-one name="documentWfStatus" class="ee.adit.dao.DocumentWfStatus" fetch="select">
+            <column name="WF_STATUS_ID" precision="12" scale="0" />
+        </many-to-one>
+        <many-to-one name="document" class="ee.adit.dao.Document" fetch="select">
+            <column name="DOCUMENT_ID" precision="12" scale="0" not-null="true" />
+        </many-to-one>
+        <property name="userCode" type="string">
+            <column name="USER_CODE" length="50" not-null="true" />
+        </property>
+        <property name="taskDescription" type="string">
+            <column name="TASK_DESCRIPTION" length="4000" />
+        </property>
+        <property name="creationDate" type="date">
+            <column name="CREATION_DATE" length="7" />
+        </property>
+        <property name="dvkId" type="java.lang.Long">
+            <column name="DVK_ID" precision="12" scale="0" />
+        </property>
+        <property name="lastAccessDate" type="date">
+            <column name="LAST_ACCESS_DATE" length="7" />
+        </property>
+    </class>
+</hibernate-mapping>

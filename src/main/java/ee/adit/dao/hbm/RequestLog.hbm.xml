@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 27.05.2010 11:51:49 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="ee.adit.dao.RequestLog" table="REQUEST_LOG" schema="ADIT">
+        <id name="id" type="long">
+            <column name="ID" precision="18" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="request" type="string">
+            <column name="REQUEST" length="50" />
+        </property>
+        <property name="documentId" type="java.lang.Long">
+            <column name="DOCUMENT_ID" precision="12" scale="0" />
+        </property>
+        <property name="requestDate" type="date">
+            <column name="REQUEST_DATE" length="7" />
+        </property>
+        <property name="remoteApplicationShortName" type="string">
+            <column name="REMOTE_APPLICATION_SHORT_NAME" length="50" />
+        </property>
+        <property name="userCode" type="string">
+            <column name="USER_CODE" length="50" />
+        </property>
+        <property name="organizationCode" type="string">
+            <column name="ORGANIZATION_CODE" length="50" />
+        </property>
+        <property name="additionalInformation" type="string">
+            <column name="ADDITIONAL_INFORMATION" length="4000" />
+        </property>
+    </class>
+</hibernate-mapping>
