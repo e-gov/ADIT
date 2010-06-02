@@ -17,6 +17,8 @@
 
 	<!-- Endpoints -->
 	<bean id="JoinEndpoint" class="ee.adit.ws.endpoint.JoinEndpoint">
+		<property name="marshaller" ref="castorMarshaller"/>
+		<property name="unmarshaller" ref="castorMarshaller"/>
 	</bean>
 	<bean id="UnJoinEndpoint" class="ee.adit.ws.endpoint.UnJoinEndpoint">
 	</bean>
@@ -35,7 +37,7 @@
 		<property name="mappings">
 			<props>
 				<prop
-					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}join">JoinEndpoint</prop>
+					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}Join">JoinEndpoint</prop>
 				<prop
 					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}unJoin">UnJoinEndpoint</prop>
 				<prop
@@ -65,6 +67,11 @@
 	</bean>
 	<bean id="xteeDatabase" class="java.lang.String">
 		<constructor-arg value="ametlikud-dokumendid" />
+	</bean>
+
+	<!-- Castor Marshaller -->
+	<bean id="castorMarshaller" class="org.springframework.oxm.castor.CastorMarshaller">
+		<property name="mappingLocation" value="classpath:/adit-castor-mapping.xml" />
 	</bean>
 
 </beans>
