@@ -35,7 +35,8 @@
 		<mapping resource="ee/adit/dao/hbm/AccessRestriction.hbm.xml"/>
 		<mapping resource="ee/adit/dao/hbm/DocumentHistoryType.hbm.xml"/>
 		<mapping resource="ee/adit/dao/hbm/DocumentSharingType.hbm.xml"/>
-		
+		<mapping resource="ee/adit/dao/hbm/Signature.hbm.xml"/>
+		<mapping resource="ee/adit/dao/hbm/AditUser.hbm.xml"/>
 		
 		
     </session-factory>

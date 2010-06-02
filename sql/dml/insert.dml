@@ -1,0 +1,9 @@
+-- Document Types --
+
+INSERT INTO document_type (
+	short_name,
+	description
+) VALUES (
+	'Kiri',
+	'Kirja dokumendi tüüp.'
+);

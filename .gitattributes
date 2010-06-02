@@ -24,6 +24,8 @@ lib/wsdl4j-1.6.1.jar -text
 lib/wsdl4j-qname-1.6.1.jar -text
 lib/xtee-server-1.0-RC1.jar -text
 /pom.xml -text
+sql/dml/insert.dml -text
+src/main/java/ee/adit/dao/DocumentTypeDAO.java -text
 src/main/java/ee/adit/dao/hbm/AccessRestriction.hbm.xml -text
 src/main/java/ee/adit/dao/hbm/AditLog.hbm.xml -text
 src/main/java/ee/adit/dao/hbm/AditUser.hbm.xml -text
