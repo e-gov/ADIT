@@ -1,6 +1,6 @@
 package ee.adit.dao.pojo;
 
-// Generated 27.05.2010 12:13:12 by Hibernate Tools 3.2.4.GA
+// Generated 2.06.2010 13:39:35 by Hibernate Tools 3.2.4.GA
 
 import java.util.Date;
 
@@ -10,41 +10,38 @@ import java.util.Date;
 public class DocumentSharing implements java.io.Serializable {
 
 	private long id;
-	private DocumentSharingType documentSharingType;
-	private DocumentDvkStatus documentDvkStatus;
-	private DocumentWfStatus documentWfStatus;
-	private Document document;
+	private long documentId;
 	private String userCode;
+	private String sharingTypeShortName;
 	private String taskDescription;
 	private Date creationDate;
-	private Long dvkId;
+	private Long dvkStatusId;
+	private Long wfStatusId;
 	private Date lastAccessDate;
 
 	public DocumentSharing() {
 	}
 
-	public DocumentSharing(long id, DocumentSharingType documentSharingType,
-			Document document, String userCode) {
+	public DocumentSharing(long id, long documentId, String userCode,
+			String sharingTypeShortName) {
 		this.id = id;
-		this.documentSharingType = documentSharingType;
-		this.document = document;
+		this.documentId = documentId;
 		this.userCode = userCode;
+		this.sharingTypeShortName = sharingTypeShortName;
 	}
 
-	public DocumentSharing(long id, DocumentSharingType documentSharingType,
-			DocumentDvkStatus documentDvkStatus,
-			DocumentWfStatus documentWfStatus, Document document,
-			String userCode, String taskDescription, Date creationDate,
-			Long dvkId, Date lastAccessDate) {
+	public DocumentSharing(long id, long documentId, String userCode,
+			String sharingTypeShortName, String taskDescription,
+			Date creationDate, Long dvkStatusId, Long wfStatusId,
+			Date lastAccessDate) {
 		this.id = id;
-		this.documentSharingType = documentSharingType;
-		this.documentDvkStatus = documentDvkStatus;
-		this.documentWfStatus = documentWfStatus;
-		this.document = document;
+		this.documentId = documentId;
 		this.userCode = userCode;
+		this.sharingTypeShortName = sharingTypeShortName;
 		this.taskDescription = taskDescription;
 		this.creationDate = creationDate;
-		this.dvkId = dvkId;
+		this.dvkStatusId = dvkStatusId;
+		this.wfStatusId = wfStatusId;
 		this.lastAccessDate = lastAccessDate;
 	}
 
@@ -56,36 +53,12 @@ public class DocumentSharing implements java.io.Serializable {
 		this.id = id;
 	}
 
-	public DocumentSharingType getDocumentSharingType() {
-		return this.documentSharingType;
+	public long getDocumentId() {
+		return this.documentId;
 	}
 
-	public void setDocumentSharingType(DocumentSharingType documentSharingType) {
-		this.documentSharingType = documentSharingType;
-	}
-
-	public DocumentDvkStatus getDocumentDvkStatus() {
-		return this.documentDvkStatus;
-	}
-
-	public void setDocumentDvkStatus(DocumentDvkStatus documentDvkStatus) {
-		this.documentDvkStatus = documentDvkStatus;
-	}
-
-	public DocumentWfStatus getDocumentWfStatus() {
-		return this.documentWfStatus;
-	}
-
-	public void setDocumentWfStatus(DocumentWfStatus documentWfStatus) {
-		this.documentWfStatus = documentWfStatus;
-	}
-
-	public Document getDocument() {
-		return this.document;
-	}
-
-	public void setDocument(Document document) {
-		this.document = document;
+	public void setDocumentId(long documentId) {
+		this.documentId = documentId;
 	}
 
 	public String getUserCode() {
@@ -94,6 +67,14 @@ public class DocumentSharing implements java.io.Serializable {
 
 	public void setUserCode(String userCode) {
 		this.userCode = userCode;
+	}
+
+	public String getSharingTypeShortName() {
+		return this.sharingTypeShortName;
+	}
+
+	public void setSharingTypeShortName(String sharingTypeShortName) {
+		this.sharingTypeShortName = sharingTypeShortName;
 	}
 
 	public String getTaskDescription() {
@@ -112,12 +93,20 @@ public class DocumentSharing implements java.io.Serializable {
 		this.creationDate = creationDate;
 	}
 
-	public Long getDvkId() {
-		return this.dvkId;
+	public Long getDvkStatusId() {
+		return this.dvkStatusId;
 	}
 
-	public void setDvkId(Long dvkId) {
-		this.dvkId = dvkId;
+	public void setDvkStatusId(Long dvkStatusId) {
+		this.dvkStatusId = dvkStatusId;
+	}
+
+	public Long getWfStatusId() {
+		return this.wfStatusId;
+	}
+
+	public void setWfStatusId(Long wfStatusId) {
+		this.wfStatusId = wfStatusId;
 	}
 
 	public Date getLastAccessDate() {

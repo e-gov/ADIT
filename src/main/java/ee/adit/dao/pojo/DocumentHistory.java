@@ -1,6 +1,6 @@
 package ee.adit.dao.pojo;
 
-// Generated 27.05.2010 12:13:12 by Hibernate Tools 3.2.4.GA
+// Generated 2.06.2010 13:39:35 by Hibernate Tools 3.2.4.GA
 
 import java.util.Date;
 
@@ -10,36 +10,39 @@ import java.util.Date;
 public class DocumentHistory implements java.io.Serializable {
 
 	private long id;
-	private DocumentHistoryType documentHistoryType;
-	private RemoteApplication remoteApplication;
-	private Document document;
+	private long documentId;
+	private Long documentHistoryTypeId;
 	private String description;
 	private Date eventDate;
 	private String userCode;
+	private String remoteApplicationShortName;
 	private String notificationStatus;
 	private String xteeNotificationId;
+	private String xteeUserCode;
 
 	public DocumentHistory() {
 	}
 
-	public DocumentHistory(long id, Document document) {
+	public DocumentHistory(long id, long documentId) {
 		this.id = id;
-		this.document = document;
+		this.documentId = documentId;
 	}
 
-	public DocumentHistory(long id, DocumentHistoryType documentHistoryType,
-			RemoteApplication remoteApplication, Document document,
-			String description, Date eventDate, String userCode,
-			String notificationStatus, String xteeNotificationId) {
+	public DocumentHistory(long id, long documentId,
+			Long documentHistoryTypeId, String description, Date eventDate,
+			String userCode, String remoteApplicationShortName,
+			String notificationStatus, String xteeNotificationId,
+			String xteeUserCode) {
 		this.id = id;
-		this.documentHistoryType = documentHistoryType;
-		this.remoteApplication = remoteApplication;
-		this.document = document;
+		this.documentId = documentId;
+		this.documentHistoryTypeId = documentHistoryTypeId;
 		this.description = description;
 		this.eventDate = eventDate;
 		this.userCode = userCode;
+		this.remoteApplicationShortName = remoteApplicationShortName;
 		this.notificationStatus = notificationStatus;
 		this.xteeNotificationId = xteeNotificationId;
+		this.xteeUserCode = xteeUserCode;
 	}
 
 	public long getId() {
@@ -50,28 +53,20 @@ public class DocumentHistory implements java.io.Serializable {
 		this.id = id;
 	}
 
-	public DocumentHistoryType getDocumentHistoryType() {
-		return this.documentHistoryType;
+	public long getDocumentId() {
+		return this.documentId;
 	}
 
-	public void setDocumentHistoryType(DocumentHistoryType documentHistoryType) {
-		this.documentHistoryType = documentHistoryType;
+	public void setDocumentId(long documentId) {
+		this.documentId = documentId;
 	}
 
-	public RemoteApplication getRemoteApplication() {
-		return this.remoteApplication;
+	public Long getDocumentHistoryTypeId() {
+		return this.documentHistoryTypeId;
 	}
 
-	public void setRemoteApplication(RemoteApplication remoteApplication) {
-		this.remoteApplication = remoteApplication;
-	}
-
-	public Document getDocument() {
-		return this.document;
-	}
-
-	public void setDocument(Document document) {
-		this.document = document;
+	public void setDocumentHistoryTypeId(Long documentHistoryTypeId) {
+		this.documentHistoryTypeId = documentHistoryTypeId;
 	}
 
 	public String getDescription() {
@@ -98,6 +93,14 @@ public class DocumentHistory implements java.io.Serializable {
 		this.userCode = userCode;
 	}
 
+	public String getRemoteApplicationShortName() {
+		return this.remoteApplicationShortName;
+	}
+
+	public void setRemoteApplicationShortName(String remoteApplicationShortName) {
+		this.remoteApplicationShortName = remoteApplicationShortName;
+	}
+
 	public String getNotificationStatus() {
 		return this.notificationStatus;
 	}
@@ -112,6 +115,14 @@ public class DocumentHistory implements java.io.Serializable {
 
 	public void setXteeNotificationId(String xteeNotificationId) {
 		this.xteeNotificationId = xteeNotificationId;
+	}
+
+	public String getXteeUserCode() {
+		return this.xteeUserCode;
+	}
+
+	public void setXteeUserCode(String xteeUserCode) {
+		this.xteeUserCode = xteeUserCode;
 	}
 
 }

@@ -1,6 +1,6 @@
 package ee.adit.dao.pojo;
 
-// Generated 27.05.2010 12:13:12 by Hibernate Tools 3.2.4.GA
+// Generated 2.06.2010 13:39:35 by Hibernate Tools 3.2.4.GA
 
 import java.util.Date;
 import java.util.HashSet;
@@ -12,68 +12,59 @@ import java.util.Set;
 public class Document implements java.io.Serializable {
 
 	private long id;
-	private DocumentType documentType;
-	private Document document;
-	private DocumentDvkStatus documentDvkStatus;
-	private RemoteApplication remoteApplication;
-	private DocumentWfStatus documentWfStatus;
 	private String guid;
 	private String title;
+	private String type;
 	private String creatorCode;
 	private Date creationDate;
+	private String remoteApplicationShortName;
 	private Date lastModifiedDate;
+	private Long documentDvkStatusId;
 	private Long dvkId;
-	private Date lastAccessDate;
+	private Long documentWfStatusId;
+	private Long parentId;
 	private Boolean locked;
 	private Date lockingDate;
 	private Boolean signable;
-	private Boolean archived;
-	private Date archivingDate;
-	private Set documentSharings = new HashSet(0);
-	private Set documentFiles = new HashSet(0);
-	private Set documents = new HashSet(0);
-	private Set documentHistories = new HashSet(0);
+	private Boolean deflated;
+	private Date deflateDate;
+	private Boolean deleted;
+	private Set signatures = new HashSet(0);
 
 	public Document() {
 	}
 
-	public Document(long id, DocumentType documentType, String creatorCode) {
+	public Document(long id, String type, String creatorCode) {
 		this.id = id;
-		this.documentType = documentType;
+		this.type = type;
 		this.creatorCode = creatorCode;
 	}
 
-	public Document(long id, DocumentType documentType, Document document,
-			DocumentDvkStatus documentDvkStatus,
-			RemoteApplication remoteApplication,
-			DocumentWfStatus documentWfStatus, String guid, String title,
-			String creatorCode, Date creationDate, Date lastModifiedDate,
-			Long dvkId, Date lastAccessDate, Boolean locked, Date lockingDate,
-			Boolean signable, Boolean archived, Date archivingDate,
-			Set documentSharings, Set documentFiles, Set documents,
-			Set documentHistories) {
+	public Document(long id, String guid, String title, String type,
+			String creatorCode, Date creationDate,
+			String remoteApplicationShortName, Date lastModifiedDate,
+			Long documentDvkStatusId, Long dvkId, Long documentWfStatusId,
+			Long parentId, Boolean locked, Date lockingDate, Boolean signable,
+			Boolean deflated, Date deflateDate, Boolean deleted, Set signatures) {
 		this.id = id;
-		this.documentType = documentType;
-		this.document = document;
-		this.documentDvkStatus = documentDvkStatus;
-		this.remoteApplication = remoteApplication;
-		this.documentWfStatus = documentWfStatus;
 		this.guid = guid;
 		this.title = title;
+		this.type = type;
 		this.creatorCode = creatorCode;
 		this.creationDate = creationDate;
+		this.remoteApplicationShortName = remoteApplicationShortName;
 		this.lastModifiedDate = lastModifiedDate;
+		this.documentDvkStatusId = documentDvkStatusId;
 		this.dvkId = dvkId;
-		this.lastAccessDate = lastAccessDate;
+		this.documentWfStatusId = documentWfStatusId;
+		this.parentId = parentId;
 		this.locked = locked;
 		this.lockingDate = lockingDate;
 		this.signable = signable;
-		this.archived = archived;
-		this.archivingDate = archivingDate;
-		this.documentSharings = documentSharings;
-		this.documentFiles = documentFiles;
-		this.documents = documents;
-		this.documentHistories = documentHistories;
+		this.deflated = deflated;
+		this.deflateDate = deflateDate;
+		this.deleted = deleted;
+		this.signatures = signatures;
 	}
 
 	public long getId() {
@@ -82,46 +73,6 @@ public class Document implements java.io.Serializable {
 
 	public void setId(long id) {
 		this.id = id;
-	}
-
-	public DocumentType getDocumentType() {
-		return this.documentType;
-	}
-
-	public void setDocumentType(DocumentType documentType) {
-		this.documentType = documentType;
-	}
-
-	public Document getDocument() {
-		return this.document;
-	}
-
-	public void setDocument(Document document) {
-		this.document = document;
-	}
-
-	public DocumentDvkStatus getDocumentDvkStatus() {
-		return this.documentDvkStatus;
-	}
-
-	public void setDocumentDvkStatus(DocumentDvkStatus documentDvkStatus) {
-		this.documentDvkStatus = documentDvkStatus;
-	}
-
-	public RemoteApplication getRemoteApplication() {
-		return this.remoteApplication;
-	}
-
-	public void setRemoteApplication(RemoteApplication remoteApplication) {
-		this.remoteApplication = remoteApplication;
-	}
-
-	public DocumentWfStatus getDocumentWfStatus() {
-		return this.documentWfStatus;
-	}
-
-	public void setDocumentWfStatus(DocumentWfStatus documentWfStatus) {
-		this.documentWfStatus = documentWfStatus;
 	}
 
 	public String getGuid() {
@@ -140,6 +91,14 @@ public class Document implements java.io.Serializable {
 		this.title = title;
 	}
 
+	public String getType() {
+		return this.type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
 	public String getCreatorCode() {
 		return this.creatorCode;
 	}
@@ -156,12 +115,28 @@ public class Document implements java.io.Serializable {
 		this.creationDate = creationDate;
 	}
 
+	public String getRemoteApplicationShortName() {
+		return this.remoteApplicationShortName;
+	}
+
+	public void setRemoteApplicationShortName(String remoteApplicationShortName) {
+		this.remoteApplicationShortName = remoteApplicationShortName;
+	}
+
 	public Date getLastModifiedDate() {
 		return this.lastModifiedDate;
 	}
 
 	public void setLastModifiedDate(Date lastModifiedDate) {
 		this.lastModifiedDate = lastModifiedDate;
+	}
+
+	public Long getDocumentDvkStatusId() {
+		return this.documentDvkStatusId;
+	}
+
+	public void setDocumentDvkStatusId(Long documentDvkStatusId) {
+		this.documentDvkStatusId = documentDvkStatusId;
 	}
 
 	public Long getDvkId() {
@@ -172,12 +147,20 @@ public class Document implements java.io.Serializable {
 		this.dvkId = dvkId;
 	}
 
-	public Date getLastAccessDate() {
-		return this.lastAccessDate;
+	public Long getDocumentWfStatusId() {
+		return this.documentWfStatusId;
 	}
 
-	public void setLastAccessDate(Date lastAccessDate) {
-		this.lastAccessDate = lastAccessDate;
+	public void setDocumentWfStatusId(Long documentWfStatusId) {
+		this.documentWfStatusId = documentWfStatusId;
+	}
+
+	public Long getParentId() {
+		return this.parentId;
+	}
+
+	public void setParentId(Long parentId) {
+		this.parentId = parentId;
 	}
 
 	public Boolean getLocked() {
@@ -204,52 +187,36 @@ public class Document implements java.io.Serializable {
 		this.signable = signable;
 	}
 
-	public Boolean getArchived() {
-		return this.archived;
+	public Boolean getDeflated() {
+		return this.deflated;
 	}
 
-	public void setArchived(Boolean archived) {
-		this.archived = archived;
+	public void setDeflated(Boolean deflated) {
+		this.deflated = deflated;
 	}
 
-	public Date getArchivingDate() {
-		return this.archivingDate;
+	public Date getDeflateDate() {
+		return this.deflateDate;
 	}
 
-	public void setArchivingDate(Date archivingDate) {
-		this.archivingDate = archivingDate;
+	public void setDeflateDate(Date deflateDate) {
+		this.deflateDate = deflateDate;
 	}
 
-	public Set getDocumentSharings() {
-		return this.documentSharings;
+	public Boolean getDeleted() {
+		return this.deleted;
 	}
 
-	public void setDocumentSharings(Set documentSharings) {
-		this.documentSharings = documentSharings;
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
 	}
 
-	public Set getDocumentFiles() {
-		return this.documentFiles;
+	public Set getSignatures() {
+		return this.signatures;
 	}
 
-	public void setDocumentFiles(Set documentFiles) {
-		this.documentFiles = documentFiles;
-	}
-
-	public Set getDocuments() {
-		return this.documents;
-	}
-
-	public void setDocuments(Set documents) {
-		this.documents = documents;
-	}
-
-	public Set getDocumentHistories() {
-		return this.documentHistories;
-	}
-
-	public void setDocumentHistories(Set documentHistories) {
-		this.documentHistories = documentHistories;
+	public void setSignatures(Set signatures) {
+		this.signatures = signatures;
 	}
 
 }

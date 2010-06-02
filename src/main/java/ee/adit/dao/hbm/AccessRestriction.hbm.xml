@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 27.05.2010 11:51:49 by Hibernate Tools 3.2.4.GA -->
+<!-- Generated 2.06.2010 13:39:35 by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
-    <class name="ee.adit.dao.AccessRestriction" table="ACCESS_RESTRICTION" schema="ADIT">
-        <composite-id name="id" class="ee.adit.dao.AccessRestrictionId">
+    <class name="ee.adit.dao.pojo.AccessRestriction" table="ACCESS_RESTRICTION" schema="ADIT">
+        <composite-id name="id" class="ee.adit.dao.pojo.AccessRestrictionId">
             <key-property name="remoteApplicationShortName" type="string">
                 <column name="REMOTE_APPLICATION_SHORT_NAME" length="50" />
             </key-property>
@@ -12,8 +12,8 @@
                 <column name="USER_CODE" length="50" />
             </key-property>
         </composite-id>
-        <many-to-one name="remoteApplication" class="ee.adit.dao.RemoteApplication" update="false" insert="false" fetch="select">
-            <column name="REMOTE_APPLICATION_SHORT_NAME" length="50" not-null="true" />
-        </many-to-one>
+        <property name="restriction" type="string">
+            <column name="RESTRICTION" length="50" />
+        </property>
     </class>
 </hibernate-mapping>
