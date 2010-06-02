@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2.06.2010 13:39:35 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="ee.adit.dao.pojo.Usertype" table="USERTYPE" schema="ADIT">
+        <id name="shortName" type="string">
+            <column name="SHORT_NAME" length="50" />
+            <generator class="assigned" />
+        </id>
+        <property name="description" type="string">
+            <column name="DESCRIPTION" length="4000" />
+        </property>
+        <property name="diskQuota" type="java.lang.Long">
+            <column name="DISK_QUOTA" precision="18" scale="0" />
+        </property>
+    </class>
+</hibernate-mapping>
