@@ -45,7 +45,9 @@ import ee.webmedia.xtee.XTeeUtil;
  * @author Dmitri Danilkin
  */
 public abstract class XteeCustomEndpoint implements MessageEndpoint {
+	
 	public final static String RESPONSE_SUFFIX = "Response";
+	
 	private boolean metaService = false;
 	
 	private MessageContext messageContext;
@@ -161,11 +163,9 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 	 */
 	protected abstract void invokeInternal(Document requestKeha, Element responseKeha, XTeeHeader xteeHeader) throws Exception;
 
-
 	public MessageContext getMessageContext() {
 		return messageContext;
 	}
-
 
 	public void setMessageContext(MessageContext messageContext) {
 		this.messageContext = messageContext;

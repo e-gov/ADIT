@@ -10,7 +10,7 @@ import ee.webmedia.xtee.annotation.XTeeService;
 
 @XTeeService(name = "join", version = "v1")
 @Component
-public class JoinEndpoint extends XteeCustomEndpoint {
+public class JoinEndpoint extends AbstractAditBaseEndpoint {
 
 	private static Logger LOG = Logger.getLogger(JoinEndpoint.class);
 
@@ -18,15 +18,25 @@ public class JoinEndpoint extends XteeCustomEndpoint {
 	protected void invokeInternal(Document requestKeha, Element responseKeha, XTeeHeader xteeHeader) throws Exception {
 		LOG.debug("JoinEndpoint invoked.");
 		
-		// TODO: Kontrollime, kas päringu käivitanud infosüsteem on ADITis registreeritud
 		
-		// TODO: Kontrollime, kas päringu käivitanud infosüsteem tohib andmeid muuta (või üldse näha)
 		
-		// TODO: Kontrollime, kas etteantud kasutajatüüp eksisteerib
+		// TODO: Kontrollime, kas pï¿½ringu kï¿½ivitanud infosï¿½steem on ADITis registreeritud
+		
+		// TODO: Kontrollime, kas pï¿½ringu kï¿½ivitanud infosï¿½steem tohib andmeid muuta (vï¿½i ï¿½ldse nï¿½ha)
+		
+		// TODO: Kontrollime, kas etteantud kasutajatï¿½ï¿½p eksisteerib
 		
 		// TODO: Kontrollime, kas kasutaja juba eksisteerib
-		// s.t. kas lisame uue kasutaja või muudame olemasolevat
+		// s.t. kas lisame uue kasutaja vï¿½i muudame olemasolevat
 		
-		// TODO: Lisame kasutaja või muudame olemasolevat
+		// TODO: Lisame kasutaja vï¿½i muudame olemasolevat
+	}
+
+	@Override
+	protected Object invokeInternal(Object requestObject) throws Exception {
+		
+		LOG.debug("JoinEndpoint invoked using object.");
+		
+		return null;
 	}
 }
