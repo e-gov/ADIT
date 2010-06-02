@@ -19,7 +19,9 @@ package ee.adit.ws.endpoint;
 import java.util.Iterator;
 
 import javax.xml.namespace.QName;
+import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeader;
@@ -67,7 +69,22 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 		XTeeHeader pais = metaService ? null : parseXteeHeader(paringMessage);
 		Document paring = metaService ? null : parseQuery(paringMessage);
 		
-		getResponse(pais, paring, responseMessage, paringMessage);
+		
+		Node operationNode = null;
+		
+		Iterator i = paringMessage.getSOAPBody().getChildElements();
+		while(i.hasNext()) {
+			Node n = (Node) i.next();
+			if(Node.ELEMENT_NODE == n.getNodeType()) {
+				operationNode = n;
+			}
+		}
+		
+		Document operationDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+		operationNode = operationDocument.importNode(operationNode, true);
+		operationDocument.appendChild(operationNode);	
+		
+		getResponse(pais, paring, responseMessage, paringMessage, operationDocument);
 	}
 	
 	
@@ -97,11 +114,11 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 		return query;
 	}
 	
-	private void getResponse(XTeeHeader header, Document query, SOAPMessage responseMessage, SOAPMessage requestMessage) throws Exception {
+	private void getResponse(XTeeHeader header, Document query, SOAPMessage responseMessage, SOAPMessage requestMessage, Document operationNode) throws Exception {
 		SOAPElement teenusElement = createXteeMessageStructure(requestMessage, responseMessage);
 		if (!metaService) copyParing(query, teenusElement);
 		Element kehaNode = teenusElement.addChildElement("keha");
-		invokeInternal(query, kehaNode, header);
+		invokeInternal(operationNode, kehaNode, header);
 		if (!metaService) addHeader(header, responseMessage);
 	}
 	
