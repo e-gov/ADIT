@@ -41,12 +41,18 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 			// Excecute business logic
 			Object responseObject = invokeInternal(requestObject);
 			
-			// Marshall the response object
-			DOMResult reponseObjectResult = new DOMResult();
-			this.getMarshaller().marshal(responseObject, reponseObjectResult);
+			if(responseObject != null) {
+				// Marshall the response object
+				DOMResult reponseObjectResult = new DOMResult();
+				this.getMarshaller().marshal(responseObject, reponseObjectResult);
+				
+				// Add the reponse DOM tree as a child element to the responseKeha element
+				responseKeha.appendChild(reponseObjectResult.getNode());
+			} else {
+				LOG.error("Response object not initialized.");
+			}
 			
-			// Add the reponse DOM tree as a child element to the responseKeha element
-			responseKeha.appendChild(reponseObjectResult.getNode());
+			
 		} catch (XmlMappingException e) {
 			throw e;
 		}

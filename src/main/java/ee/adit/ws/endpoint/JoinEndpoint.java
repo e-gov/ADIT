@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import ee.adit.pojo.JoinRequest;
 import ee.webmedia.xtee.XTeeHeader;
 import ee.webmedia.xtee.annotation.XTeeService;
 
@@ -15,10 +16,13 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 	private static Logger LOG = Logger.getLogger(JoinEndpoint.class);
 
 	@Override
-	protected void invokeInternal(Document requestKeha, Element responseKeha, XTeeHeader xteeHeader) throws Exception {
-		LOG.debug("JoinEndpoint invoked.");
+	protected Object invokeInternal(Object requestObject) throws Exception {
 		
+		LOG.debug("JoinEndpoint invoked using object.");
 		
+		JoinRequest request = (JoinRequest) requestObject;
+		
+		LOG.debug("JoinEndpoint request object cast successful.");
 		
 		// TODO: Kontrollime, kas p�ringu k�ivitanud infos�steem on ADITis registreeritud
 		
@@ -30,12 +34,6 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 		// s.t. kas lisame uue kasutaja v�i muudame olemasolevat
 		
 		// TODO: Lisame kasutaja v�i muudame olemasolevat
-	}
-
-	@Override
-	protected Object invokeInternal(Object requestObject) throws Exception {
-		
-		LOG.debug("JoinEndpoint invoked using object.");
 		
 		return null;
 	}
