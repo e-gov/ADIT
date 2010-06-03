@@ -3,5 +3,37 @@
 "http://castor.org/mapping.dtd">
 <mapping>
 
-	
+	<class name="ee.adit.pojo.JoinRequest">
+		<map-to xml="Join" ns-uri="http://www.riik.ee/adit/" />
+		<field name="application" type="java.lang.String">
+			<bind-xml name="application" location="keha" />
+		</field>
+		<field name="institutionCode" type="java.lang.String">
+			<bind-xml name="institutionCode" location="keha" />
+		</field>
+		<field name="userType" type="java.lang.String">
+			<bind-xml name="userType" location="keha" />
+		</field>
+		<field name="userName" type="java.lang.String">
+			<bind-xml name="userName" location="keha" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.JoinResponse">
+		<map-to xml="JoinResponse" ns-uri="http://www.riik.ee/adit/" />
+		<field name="success" type="java.lang.Boolean">
+			<bind-xml name="success" />
+		</field>
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
+			<bind-xml name="messages" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.ArrayOfMessage">
+		<map-to xml="messages" ns-uri="http://www.riik.ee/adit/" />
+		<field name="message" type="java.lang.String" collection="arraylist">
+			<bind-xml name="message" />
+		</field>
+	</class>
+
 </mapping>
