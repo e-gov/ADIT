@@ -10,9 +10,7 @@
     
     <logger name="ee.adit">
     	<level value="DEBUG"></level>
-    	<!-- 
     	<appender-ref ref="stdout" />
-    	-->
     </logger>
     
     <root>
