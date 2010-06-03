@@ -18,12 +18,10 @@ public class GetJoinedEndpoint extends XteeCustomEndpoint {
 	protected void invokeInternal(Document requestKeha, Element responseKeha, XTeeHeader xteeHeader) throws Exception {
 		LOG.debug("GetJoinedEndpoint invoked.");
 		
-		// TODO: Kontrollime, kas p‰ringu k‰ivitanud infos¸steem on ADITis registreeritud
+		// TODO: Kontrollime, kas p√§ringu k√§ivitanud infos√ºsteem on ADITis registreeritud
 		
-		// TODO: Kontrollime, kas p‰ringu k‰ivitanud infos¸steem tohib andmeid n‰ha
+		// TODO: Kontrollime, kas p√§ringu k√§ivitanud infos√ºsteem tohib andmeid n√§ha
 		
-		// TODO: Kontrollime, kas k¸situd kirjete arv j‰‰b maksimaalse lubatud vahemiku piiresse
-		
-		// TODO: Implement me!
+		// TODO: Kontrollime, kas k√ºsitud kirjete arv j√§√§b maksimaalse lubatud vahemiku piiresse
 	}
 }
