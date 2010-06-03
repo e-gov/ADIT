@@ -2,8 +2,9 @@ package ee.adit.dao;
 
 import org.apache.log4j.Logger;
 import org.hibernate.SessionFactory;
-import org.hibernate.usertype.UserType;
 import org.springframework.orm.hibernate3.HibernateTemplate;
+
+import ee.adit.dao.pojo.Usertype;
 
 public class UsertypeDAO {
 
@@ -13,8 +14,8 @@ public class UsertypeDAO {
 
 	private SessionFactory sessionFactory;
 	
-	public UserType getByShortName(String userTypeShortName) {
-		return (UserType) this.getHibernateTemplate().get(UserType.class, userTypeShortName);
+	public Usertype getByShortName(String userTypeShortName) {
+		return (Usertype) this.getHibernateTemplate().get(Usertype.class, userTypeShortName);
 	}
 
 	public SessionFactory getSessionFactory() {

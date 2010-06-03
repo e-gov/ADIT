@@ -1,11 +1,11 @@
 package ee.adit.service;
 
 import org.apache.log4j.Logger;
-import org.hibernate.usertype.UserType;
 
 import ee.adit.dao.RemoteApplicationDAO;
 import ee.adit.dao.UsertypeDAO;
 import ee.adit.dao.pojo.RemoteApplication;
+import ee.adit.dao.pojo.Usertype;
 
 public class UserService {
 
@@ -59,7 +59,7 @@ public class UserService {
 		boolean result = false;
 		
 		if(userTypeShortName != null) {
-			UserType userType = this.getUsertypeDAO().getByShortName(userTypeShortName);
+			Usertype userType = this.getUsertypeDAO().getByShortName(userTypeShortName);
 			if(userType != null) {
 				result = true;
 			}
