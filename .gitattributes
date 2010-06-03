@@ -25,6 +25,7 @@ lib/wsdl4j-qname-1.6.1.jar -text
 lib/xtee-server-1.0-RC1.jar -text
 /pom.xml -text
 sql/dml/insert.dml -text
+sql/dml/usertype.dml.sql -text
 sql/testdata/remote_application.dml.sql -text
 src/main/java/ee/adit/dao/DocumentTypeDAO.java -text
 src/main/java/ee/adit/dao/RemoteApplicationDAO.java -text
@@ -73,6 +74,7 @@ src/main/java/ee/adit/dao/pojo/UserNotification.java -text
 src/main/java/ee/adit/dao/pojo/UserNotificationId.java -text
 src/main/java/ee/adit/dao/pojo/Usertype.java -text
 src/main/java/ee/adit/dao/test/TestDocumentDAO.java -text
+src/main/java/ee/adit/exception/AditException.java -text
 src/main/java/ee/adit/pojo/ArrayOfMessage.java -text
 src/main/java/ee/adit/pojo/GetDocumentRequest.java -text
 src/main/java/ee/adit/pojo/GetDocumentResponse.java -text

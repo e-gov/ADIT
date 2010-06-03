@@ -29,6 +29,28 @@ public class UserService {
 		return result;
 	}
 
+	/**
+	 * Determines the access level for this application:
+	 * 0 - no access
+	 * 1 - read access
+	 * 2 - write acces (full access) 
+	 * @return
+	 */
+	public int getAccessLevel(String remoteApplicationShortName) {
+		int result = 0;
+		
+		RemoteApplication remoteApplication = this.getRemoteApplicationDAO().getByShortName(remoteApplicationShortName);
+		if(remoteApplication != null) {
+			if(remoteApplication.getCanWrite()) {
+				result = 2;
+			} else if(remoteApplication.getCanRead()) {
+				result = 1;
+			}
+		}
+		
+		return result;
+	}
+	
 	public RemoteApplicationDAO getRemoteApplicationDAO() {
 		return remoteApplicationDAO;
 	}

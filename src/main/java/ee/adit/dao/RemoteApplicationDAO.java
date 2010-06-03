@@ -15,7 +15,6 @@ public class RemoteApplicationDAO {
 	private SessionFactory sessionFactory;
 	
 	public RemoteApplication getByShortName(String remoteApplicationShortName) {
-		
 		return (RemoteApplication) this.getHibernateTemplate().get(RemoteApplication.class, remoteApplicationShortName);
 	}
 

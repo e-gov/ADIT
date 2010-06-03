@@ -6,7 +6,10 @@ import org.apache.log4j.Logger;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
+import ee.adit.exception.AditException;
+import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.JoinRequest;
+import ee.adit.pojo.JoinResponse;
 import ee.adit.service.UserService;
 import ee.adit.util.Util;
 import ee.webmedia.xtee.XTeeHeader;
@@ -25,6 +28,8 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 	@Override
 	protected Object invokeInternal(Object requestObject) throws Exception {
 
+		JoinResponse response = new JoinResponse();
+		
 		try {
 
 			LOG.debug("JoinEndpoint invoked.");
@@ -42,28 +47,47 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 
 			if (applicationRegistered) {
 				
+				// TODO: Kontrollime, kas päringu käivitanud infosüsteem tohib
+				// andmeid muuta (või üldse näha)
+				int accessLevel = this.getUserService().getAccessLevel(request.getApplication());
+				
+				// Application has write 
+				if(accessLevel == 2) {
+					
+					// TODO: Kontrollime, kas etteantud kasutajatüüp eksisteerib
+					
+					
+					
+					// TODO: Kontrollime, kas kasutaja juba eksisteerib
+					// s.t. kas lisame uue kasutaja või muudame olemasolevat
+
+					// TODO: Lisame kasutaja või muudame olemasolevat
+					
+				} else {
+					String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.write", new Object[] { request.getApplication() }, Locale.ENGLISH);
+					throw new AditException(errorMessage, null);
+				}
+				
+				
+				
 			} else {
-				LOG.error(this.getMessageSource().getMessage("application.notRegistered", new Object[] { request.getApplication() }, Locale.ENGLISH));
+				String errorMessage = this.getMessageSource().getMessage("application.notRegistered", new Object[] { request.getApplication() }, Locale.ENGLISH);
+				throw new AditException(errorMessage, null);
 			}
-
 			
-			
-			
-			
-			
-			
-			// TODO: Kontrollime, kas päringu käivitanud infosüsteem tohib
-			// andmeid muuta (või üldse näha)
-
-			// TODO: Kontrollime, kas etteantud kasutajatüüp eksisteerib
-
-			// TODO: Kontrollime, kas kasutaja juba eksisteerib
-			// s.t. kas lisame uue kasutaja või muudame olemasolevat
-
-			// TODO: Lisame kasutaja või muudame olemasolevat
-
 		} catch (Exception e) {
+			
 			LOG.error("Exception: ", e);
+			response.setSuccess(false);
+			ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
+			
+			if(e instanceof AditException) {
+				arrayOfMessage.getMessage().add(e.getMessage());
+			} else {
+				arrayOfMessage.getMessage().add("Could not register the user.");
+			}
+			
+			response.setMessages(arrayOfMessage);
 		}
 		return null;
 	}
