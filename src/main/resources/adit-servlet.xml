@@ -87,7 +87,7 @@
 	<!-- Service Classes -->
 	<bean id="userService" class="ee.adit.service.UserService">
 		<property name="remoteApplicationDAO" ref="remoteApplicationDAO"></property>
-		<property name="userTypeDAO" ref="usertypeDAO"></property>
+		<property name="usertypeDAO" ref="usertypeDAO"></property>
 	</bean>
 
 	<bean id="myDataSource"

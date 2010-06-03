@@ -55,7 +55,7 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 				if(accessLevel == 2) {
 					
 					// TODO: Kontrollime, kas etteantud kasutajatüüp eksisteerib
-					this.getUserService().userTypeExists(request.getUserType());
+					boolean userTypeExists = this.getUserService().userTypeExists(request.getUserType());
 					
 					
 					// TODO: Kontrollime, kas kasutaja juba eksisteerib
