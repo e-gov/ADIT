@@ -51,6 +51,14 @@ public class UserService {
 		return result;
 	}
 	
+	public boolean userTypeExists(String userTypeShortName) {
+		boolean result = false;
+		
+		
+		
+		return result;
+	}
+	
 	public RemoteApplicationDAO getRemoteApplicationDAO() {
 		return remoteApplicationDAO;
 	}
