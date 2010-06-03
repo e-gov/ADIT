@@ -84,6 +84,7 @@ src/main/java/ee/adit/pojo/ObjectFactory.java -text
 src/main/java/ee/adit/pojo/UnJoinRequest.java -text
 src/main/java/ee/adit/pojo/UnJoinResponse.java -text
 src/main/java/ee/adit/pojo/package-info.java -text
+src/main/java/ee/adit/util/Util.java -text
 src/main/java/ee/adit/ws/endpoint/AbstractAditBaseEndpoint.java -text
 src/main/java/ee/adit/ws/endpoint/GetDocumentEndpoint.java -text
 src/main/java/ee/adit/ws/endpoint/GetJoinedEndpoint.java -text
