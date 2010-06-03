@@ -17,6 +17,9 @@
 
 	<!-- Endpoints -->
 	<bean id="JoinEndpoint" class="ee.adit.ws.endpoint.JoinEndpoint">
+		<property name="marshaller" ref="castorMarshaller" />
+		<property name="unmarshaller" ref="castorMarshaller" />
+		<property name="userService" ref="userService"></property>
 	</bean>
 	<bean id="UnJoinEndpoint" class="ee.adit.ws.endpoint.UnJoinEndpoint">
 	</bean>
@@ -35,7 +38,7 @@
 		<property name="mappings">
 			<props>
 				<prop
-					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}join">JoinEndpoint</prop>
+					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}Join">JoinEndpoint</prop>
 				<prop
 					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}unJoin">UnJoinEndpoint</prop>
 				<prop
@@ -49,7 +52,7 @@
 			</props>
 		</property>
 	</bean>
-	
+
 
 	<context:component-scan base-package="ee.adit.ws.endpoint" />
 
@@ -67,13 +70,61 @@
 		<constructor-arg value="ametlikud-dokumendid" />
 	</bean>
 
-	<!-- MessageSource -->
-    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
-       <property name="basenames">
-            <list>
-                <value>messages</value>
-            </list>
-        </property>
-    </bean>
+	<!-- Castor Marshaller -->
+	<bean id="castorMarshaller" class="org.springframework.oxm.castor.CastorMarshaller">
+		<property name="mappingLocation" value="classpath:/adit-castor-mapping.xml" />
+	</bean>
+
+	
+
+
+
+
+
+	<!-- Service Classes -->
+	<bean id="userService" class="ee.adit.service.UserService">
+		<property name="remoteApplicationDAO" ref="remoteApplicationDAO"></property>
+	</bean>
+
+	<bean id="myDataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
+		<property name="url" value="jdbc:oracle:thin:@localhost:1521:XE" />
+		<property name="username" value="adit" />
+		<property name="password" value="adit" />
+	</bean>
+	
+	<bean id="mySessionFactory"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource" ref="myDataSource" />
+		<property name="mappingResources">
+			<list>
+				<value>ee/adit/dao/hbm/DocumentType.hbm.xml</value>
+				<value>ee/adit/dao/hbm/Document.hbm.xml</value>
+				<value>ee/adit/dao/hbm/DocumentSharing.hbm.xml</value>
+				<value>ee/adit/dao/hbm/DocumentFile.hbm.xml</value>
+				<value>ee/adit/dao/hbm/DocumentHistory.hbm.xml</value>
+				<value>ee/adit/dao/hbm/DocumentWfStatus.hbm.xml</value>
+				<value>ee/adit/dao/hbm/DocumentDvkStatus.hbm.xml</value>
+				<value>ee/adit/dao/hbm/RemoteApplication.hbm.xml</value>
+				<value>ee/adit/dao/hbm/AccessRestriction.hbm.xml</value>
+				<value>ee/adit/dao/hbm/DocumentHistoryType.hbm.xml</value>
+				<value>ee/adit/dao/hbm/DocumentSharingType.hbm.xml</value>
+				<value>ee/adit/dao/hbm/Signature.hbm.xml</value>
+				<value>ee/adit/dao/hbm/AditUser.hbm.xml</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<value>
+				hibernate.dialect = org.hibernate.dialect.Oracle10gDialect
+			</value>
+		</property>
+	</bean>
+	
+	<bean id="remoteApplicationDAO" class="ee.adit.dao.RemoteApplicationDAO">
+		<property name="sessionFactory" ref="mySessionFactory" />
+	</bean>
+
+	
 
 </beans>
