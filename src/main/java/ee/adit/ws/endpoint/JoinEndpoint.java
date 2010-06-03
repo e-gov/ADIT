@@ -57,18 +57,22 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 					// TODO: Kontrollime, kas etteantud kasutajatüüp eksisteerib
 					boolean userTypeExists = this.getUserService().userTypeExists(request.getUserType());
 					
-					
-					// TODO: Kontrollime, kas kasutaja juba eksisteerib
-					// s.t. kas lisame uue kasutaja või muudame olemasolevat
+					if(userTypeExists) {
+						
+						// TODO: Kontrollime, kas kasutaja juba eksisteerib
+						// s.t. kas lisame uue kasutaja või muudame olemasolevat
 
-					// TODO: Lisame kasutaja või muudame olemasolevat
+						// TODO: Lisame kasutaja või muudame olemasolevat
+						
+					} else {
+						String errorMessage = this.getMessageSource().getMessage("usertype.nonExistent", new Object[] { request.getUserType() }, Locale.ENGLISH);
+						throw new AditException(errorMessage, null);
+					}
 					
 				} else {
 					String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.write", new Object[] { request.getApplication() }, Locale.ENGLISH);
 					throw new AditException(errorMessage, null);
 				}
-				
-				
 				
 			} else {
 				String errorMessage = this.getMessageSource().getMessage("application.notRegistered", new Object[] { request.getApplication() }, Locale.ENGLISH);
@@ -89,7 +93,7 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 			
 			response.setMessages(arrayOfMessage);
 		}
-		return null;
+		return response;
 	}
 
 	private static void printRequest(JoinRequest request) {
