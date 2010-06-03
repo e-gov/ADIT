@@ -28,16 +28,16 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 		
 		
 		
-		// TODO: Kontrollime, kas p�ringu k�ivitanud infos�steem on ADITis registreeritud
+		// TODO: Kontrollime, kas päringu käivitanud infosüsteem on ADITis registreeritud
 		
-		// TODO: Kontrollime, kas p�ringu k�ivitanud infos�steem tohib andmeid muuta (v�i �ldse n�ha)
+		// TODO: Kontrollime, kas päringu käivitanud infosüsteem tohib andmeid muuta (või üldse näha)
 		
-		// TODO: Kontrollime, kas etteantud kasutajat��p eksisteerib
+		// TODO: Kontrollime, kas etteantud kasutajatüüp eksisteerib
 		
 		// TODO: Kontrollime, kas kasutaja juba eksisteerib
-		// s.t. kas lisame uue kasutaja v�i muudame olemasolevat
+		// s.t. kas lisame uue kasutaja või muudame olemasolevat
 		
-		// TODO: Lisame kasutaja v�i muudame olemasolevat
+		// TODO: Lisame kasutaja või muudame olemasolevat
 		
 		return null;
 	}
