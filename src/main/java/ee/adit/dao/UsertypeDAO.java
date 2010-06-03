@@ -5,7 +5,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.usertype.UserType;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 
-public class UserTypeDAO {
+public class UsertypeDAO {
 
 	private static Logger LOG = Logger.getLogger(RemoteApplicationDAO.class);
 	

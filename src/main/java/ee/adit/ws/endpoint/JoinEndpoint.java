@@ -47,7 +47,7 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 
 			if (applicationRegistered) {
 				
-				// TODO: Kontrollime, kas päringu käivitanud infosüsteem tohib
+				// Kontrollime, kas päringu käivitanud infosüsteem tohib
 				// andmeid muuta (või üldse näha)
 				int accessLevel = this.getUserService().getAccessLevel(request.getApplication());
 				
@@ -55,7 +55,7 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 				if(accessLevel == 2) {
 					
 					// TODO: Kontrollime, kas etteantud kasutajatüüp eksisteerib
-					
+					this.getUserService().userTypeExists(request.getUserType());
 					
 					
 					// TODO: Kontrollime, kas kasutaja juba eksisteerib

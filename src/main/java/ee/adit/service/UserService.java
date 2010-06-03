@@ -1,8 +1,10 @@
 package ee.adit.service;
 
 import org.apache.log4j.Logger;
+import org.hibernate.usertype.UserType;
 
 import ee.adit.dao.RemoteApplicationDAO;
+import ee.adit.dao.UsertypeDAO;
 import ee.adit.dao.pojo.RemoteApplication;
 
 public class UserService {
@@ -10,6 +12,8 @@ public class UserService {
 	private static Logger LOG = Logger.getLogger(UserService.class);
 	
 	private RemoteApplicationDAO remoteApplicationDAO;
+	
+	private UsertypeDAO usertypeDAO;
 	
 	public boolean isApplicationRegistered(String remoteApplicationShortName) {
 		boolean result = false;
@@ -54,7 +58,14 @@ public class UserService {
 	public boolean userTypeExists(String userTypeShortName) {
 		boolean result = false;
 		
-		
+		if(userTypeShortName != null) {
+			UserType userType = this.getUsertypeDAO().getByShortName(userTypeShortName);
+			if(userType != null) {
+				result = true;
+			}
+		} else {
+			throw new RuntimeException("UserTypeShortName not defined.");
+		}	
 		
 		return result;
 	}
@@ -65,6 +76,14 @@ public class UserService {
 
 	public void setRemoteApplicationDAO(RemoteApplicationDAO remoteApplicationDAO) {
 		this.remoteApplicationDAO = remoteApplicationDAO;
+	}
+
+	public UsertypeDAO getUsertypeDAO() {
+		return usertypeDAO;
+	}
+
+	public void setUsertypeDAO(UsertypeDAO usertypeDAO) {
+		this.usertypeDAO = usertypeDAO;
 	}
 	
 	

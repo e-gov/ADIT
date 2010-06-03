@@ -29,7 +29,7 @@ sql/dml/usertype.dml.sql -text
 sql/testdata/remote_application.dml.sql -text
 src/main/java/ee/adit/dao/DocumentTypeDAO.java -text
 src/main/java/ee/adit/dao/RemoteApplicationDAO.java -text
-src/main/java/ee/adit/dao/UserTypeDAO.java -text
+src/main/java/ee/adit/dao/UsertypeDAO.java -text
 src/main/java/ee/adit/dao/hbm/AccessRestriction.hbm.xml -text
 src/main/java/ee/adit/dao/hbm/AditLog.hbm.xml -text
 src/main/java/ee/adit/dao/hbm/AditUser.hbm.xml -text

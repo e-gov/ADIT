@@ -87,6 +87,7 @@
 	<!-- Service Classes -->
 	<bean id="userService" class="ee.adit.service.UserService">
 		<property name="remoteApplicationDAO" ref="remoteApplicationDAO"></property>
+		<property name="userTypeDAO" ref="usertypeDAO"></property>
 	</bean>
 
 	<bean id="myDataSource"
@@ -115,6 +116,7 @@
 				<value>ee/adit/dao/hbm/DocumentSharingType.hbm.xml</value>
 				<value>ee/adit/dao/hbm/Signature.hbm.xml</value>
 				<value>ee/adit/dao/hbm/AditUser.hbm.xml</value>
+				<value>ee/adit/dao/hbm/Usertype.hbm.xml</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">
@@ -127,6 +129,11 @@
 	<bean id="remoteApplicationDAO" class="ee.adit.dao.RemoteApplicationDAO">
 		<property name="sessionFactory" ref="mySessionFactory" />
 	</bean>
+	
+	<bean id="usertypeDAO" class="ee.adit.dao.UsertypeDAO">
+		<property name="sessionFactory" ref="mySessionFactory" />
+	</bean>
+	
 
 	<!-- MessageSource -->
 	<bean id="messageSource"
