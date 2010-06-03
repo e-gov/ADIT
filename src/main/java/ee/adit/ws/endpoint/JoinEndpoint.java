@@ -43,7 +43,6 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 			if (applicationRegistered) {
 				
 			} else {
-				LOG.debug("MessageSource: " + this.getMessageSource());
 				LOG.error(this.getMessageSource().getMessage("application.notRegistered", new Object[] { request.getApplication() }, Locale.ENGLISH));
 			}
 
