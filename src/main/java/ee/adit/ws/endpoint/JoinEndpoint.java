@@ -37,13 +37,13 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 
 			// TODO: check header and request objects - not null, not empty strings and so on.
 
-			// Kontrollime, kas päringu käivitanud infosüsteem on ADITis
-			// registreeritud
+			// Kontrollime, kas päringu käivitanud infosüsteem on ADITis registreeritud
 			boolean applicationRegistered = this.getUserService().isApplicationRegistered(request.getApplication());
 
 			if (applicationRegistered) {
 				
 			} else {
+				LOG.debug("MessageSource: " + this.getMessageSource());
 				LOG.error(this.getMessageSource().getMessage("application.notRegistered", new Object[] { request.getApplication() }, Locale.ENGLISH));
 			}
 
