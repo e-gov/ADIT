@@ -25,7 +25,9 @@ lib/wsdl4j-qname-1.6.1.jar -text
 lib/xtee-server-1.0-RC1.jar -text
 /pom.xml -text
 sql/dml/insert.dml -text
+sql/testdata/remote_application.dml.sql -text
 src/main/java/ee/adit/dao/DocumentTypeDAO.java -text
+src/main/java/ee/adit/dao/RemoteApplicationDAO.java -text
 src/main/java/ee/adit/dao/hbm/AccessRestriction.hbm.xml -text
 src/main/java/ee/adit/dao/hbm/AditLog.hbm.xml -text
 src/main/java/ee/adit/dao/hbm/AditUser.hbm.xml -text
@@ -84,6 +86,7 @@ src/main/java/ee/adit/pojo/ObjectFactory.java -text
 src/main/java/ee/adit/pojo/UnJoinRequest.java -text
 src/main/java/ee/adit/pojo/UnJoinResponse.java -text
 src/main/java/ee/adit/pojo/package-info.java -text
+src/main/java/ee/adit/service/UserService.java -text
 src/main/java/ee/adit/util/Util.java -text
 src/main/java/ee/adit/ws/endpoint/AbstractAditBaseEndpoint.java -text
 src/main/java/ee/adit/ws/endpoint/GetDocumentEndpoint.java -text

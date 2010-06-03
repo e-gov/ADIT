@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 
 import ee.adit.pojo.JoinRequest;
+import ee.adit.service.UserService;
 import ee.adit.util.Util;
 import ee.webmedia.xtee.XTeeHeader;
 import ee.webmedia.xtee.annotation.XTeeService;
@@ -14,8 +15,12 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 
 	private static Logger LOG = Logger.getLogger(JoinEndpoint.class);
 
+	private UserService userService;
+	
 	@Override
 	protected Object invokeInternal(Object requestObject) throws Exception {
+		
+		try {
 		
 		LOG.debug("JoinEndpoint invoked.");
 		JoinRequest request = (JoinRequest) requestObject;
@@ -25,10 +30,14 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 		Util.printHeader(header);
 		printRequest(request);
 		
-		
-		
+		// TODO: check header and request objects
 		
 		// TODO: Kontrollime, kas päringu käivitanud infosüsteem on ADITis registreeritud
+		// Selleks kontrollime tabelis REMOTE_APPLICATION olevaid kirjeid ja päringu parameetrit APPLICATION
+		
+		
+		
+		boolean applicationRegistered = this.getUserService().isApplicationRegistered(request.getApplication());
 		
 		// TODO: Kontrollime, kas päringu käivitanud infosüsteem tohib andmeid muuta (või üldse näha)
 		
@@ -39,6 +48,9 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 		
 		// TODO: Lisame kasutaja või muudame olemasolevat
 		
+		} catch (Exception e) {
+			LOG.error("Exception: ", e);
+		}
 		return null;
 	}
 	
@@ -53,5 +65,13 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 		
 		LOG.debug("----------------------------");
 	
+	}
+
+	public UserService getUserService() {
+		return userService;
+	}
+
+	public void setUserService(UserService userService) {
+		this.userService = userService;
 	}
 }
