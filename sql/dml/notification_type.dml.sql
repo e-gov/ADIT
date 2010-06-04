@@ -32,7 +32,7 @@ INSERT INTO &&ADIT_SCHEMA..notification_type (
 	'Dokumendi muutmine'
 );
 
-INSERT INTO notification_type (
+INSERT INTO &&ADIT_SCHEMA..notification_type (
 	short_name,
 	description
 ) VALUES (
