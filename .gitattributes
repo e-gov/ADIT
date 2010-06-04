@@ -29,6 +29,7 @@ sql/dml/document_history_type.dml.sql -text
 sql/dml/document_sharing_type.dml.sql -text
 sql/dml/document_type.dml.sql -text
 sql/dml/notification_type.dml.sql -text
+sql/dml/run.sql -text
 sql/dml/usertype.dml.sql -text
 sql/testdata/remote_application.dml.sql -text
 src/main/java/ee/adit/dao/DocumentTypeDAO.java -text
