@@ -25,7 +25,6 @@ lib/wsdl4j-qname-1.6.1.jar -text
 lib/xtee-server-1.0-RC1.jar -text
 /pom.xml -text
 sql/database.sql -text
-sql/dml/run.sql -text
 sql/document_dvk_status.dml.sql -text
 sql/document_history_type.dml.sql -text
 sql/document_sharing_type.dml.sql -text
