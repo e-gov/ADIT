@@ -1,7 +1,13 @@
 -- Creates database and inserts classificator data --
-'&ADIT_SCHEMA.' Enter ADIT SQL Schema name: 
-'&ADIT_TABLE_TABLESPACE.' Enter ADIT tablespace for storing tables:
-'&ADIT_INDEX_TABLESPACE.' Enter ADIT tablespace for storing indexes: 
+
+prompt 'Enter ADIT database schema name: ';
+accept ADIT_SCHEMA default 'ADIT';
+
+prompt 'Enter ADIT tablespace to use for tables: ';
+accept ADIT_TABLE_TABLESPACE default 'ADIT_DATA';
+
+prompt 'Enter ADIT tablespace to use for indexes: ';
+accept ADIT_INDEX_TABLESPACE default 'ADIT_INDX';
 
 -- Create database
 @@database.sql
