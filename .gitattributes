@@ -33,7 +33,6 @@ sql/dml/notification_type.dml.sql -text
 sql/dml/run.sql -text
 sql/dml/usertype.dml.sql -text
 sql/run.sql -text
-sql/test.sql -text
 sql/testdata/remote_application.dml.sql -text
 src/main/java/ee/adit/dao/DocumentTypeDAO.java -text
 src/main/java/ee/adit/dao/RemoteApplicationDAO.java -text
