@@ -74,7 +74,7 @@ CREATE TABLE &&ADIT_SCHEMA..ACCESS_RESTRICTION
 	remote_application  VARCHAR2(50) NOT NULL,    /* Viide välisele infosüsteemile (infosüsteemi lühinimi). */
 	user_code           VARCHAR2(50) NOT NULL,    /* Viide kasutajale, kelle puhul antud piirang rakendub. */
 	restriction         VARCHAR2(50)    /* Määrab ära piirangu tüübi. "WRITE" - kasutaja andmete muutmise piirang, "READ" - täielik piirang (infosüsteemil puudub õigus kasutaja andmete lugemiseks, samuti ka muutmiseks). */
-);
+) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
 COMMENT ON TABLE &&ADIT_SCHEMA..ACCESS_RESTRICTION IS 'Infosüsteemide ligipääsupiirangud kasutajate lõikes. Infosüsteemidele saab määrata piiranguid kasutajate nimel tegevuste läbi viimiseks rakenduses.';
 COMMENT ON COLUMN &&ADIT_SCHEMA..ACCESS_RESTRICTION.remote_application  IS 'Viide välisele infosüsteemile (infosüsteemi lühinimi).';
@@ -93,7 +93,7 @@ CREATE TABLE &&ADIT_SCHEMA..ADIT_LOG
 	xtee_user_code                 VARCHAR2(50),    /* X-tee päringu isikukood */
 	xtee_institution_code          VARCHAR2(50),    /* X-tee päringu ettevõtte registrikood */
 	db_user                        VARCHAR2(50)    /* Andmebaasikasutaja nimi. */
-);
+) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
 COMMENT ON TABLE &&ADIT_SCHEMA..ADIT_LOG IS 'Andmed kõikide andmebaasis tehtud muudatuste kohta. Välja arvatud tabeli DOCUMENT_FILES veeru FILE_DATA muudatused.';
 COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_LOG.table_name                     IS 'Muutunud väärtuse tabeli nimi';
@@ -116,7 +116,7 @@ CREATE TABLE &&ADIT_SCHEMA..ADIT_USER
 	dvk_subdivision_short_name  VARCHAR2(50),    /* Kui kasutaja kasutab dokumentide saatmiseks ja vastuvõtmiseks DVK-d, siis on see väli täidetud juhul kui asutusel on DVK-s registreeritud vastav allüksus. Väljale kirjutatakse kasutaja DVK asutuse allüksuse lühinimi. */
 	dvk_occupation_short_name   VARCHAR2(50),    /* Kui kasutaja kasutab dokumentide saatmiseks ja vastuvõtmiseks DVK-d, siis on see väli täidetud juhul kui asutusel on DVK-s registreeritud vastav ametikoht. Väljale kirjutatakse kasutaja DVK asutuse ametikoha lühinimi. */
 	disk_quota                  NUMBER(18)    /* Kasutaja failide mahupiirang baitides. Kasutajale määratud mahupiirang omab prioriteeti kasutajatüübi mahupiirangu üle. */
-);
+) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
 COMMENT ON TABLE &&ADIT_SCHEMA..ADIT_USER IS 'Kasutaja andmed. Kasutaja on alati isik, kelle määrab üheselt isikukood. Isik võib süsteemis esindada kas iseennast või asutust.';
 COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_USER.user_code                   IS 'Kasutaja isiku või registrikood koos riigitunnusega. Nt. "EE38407089945".';
@@ -148,7 +148,7 @@ CREATE TABLE &&ADIT_SCHEMA..DOCUMENT
 	deflated                NUMBER(1) DEFAULT 0,    /* Näitab, kas dokument on arhiveeritud. "1" - arhiveeritud, "0" - ei ole arhiveeritud */
 	deflate_date            DATE,    /* Arhiveerimise kuupäev ja kellaaeg. */
 	deleted                 NUMBER(1)    /* Näitab, kas dokument on kustutatud. "1" - kustutatud, "0" - kustutamata. */
-);
+) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
 COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT IS 'Dokumendi andmed.';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.ID                      IS 'Unikaalne identifikaator';
@@ -174,7 +174,7 @@ CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_DVK_STATUS
 (
 	ID           NUMBER(12) NOT NULL,    /* DVK staatuse unikaalne identifikaator */
 	description  VARCHAR2(4000)    /* DVK staatuse kirjeldus */
-);
+) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
 COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_DVK_STATUS IS 'Dokumendi DVK staatused (kattuvad DVK staatustega). Staatused on järgmised: 
  1. Puudub (100) 2. Saatmisel (101) 3. Saadetud (102) 4. Katkestatud (103)';
@@ -190,7 +190,7 @@ CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_FILE
 	description      VARCHAR2(4000),    /* Faili kirjeldus. */
 	file_data        BLOB,    /* Faili sisu binaarkujul */
 	file_size_bytes  NUMBER(38)    /* Faili suurus baitides */
-);
+) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
 COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_FILE IS 'Dokumendi juurde kuuluvate failide andmed.';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.ID               IS 'Unikaalne identifikaator';
@@ -213,7 +213,7 @@ CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_HISTORY
 	notification_status    VARCHAR2(50),    /* Teavituse saatmise staatus. Kui teavistus on saatmata, siis "SAADA", kui saadetud, siis "SAADETUD". Kui teavitust ei ole vaja saata, siis väli tühi (NULL). */
 	xtee_notification_id   VARCHAR2(50),    /* Teavituskalendri X-tee teenuselt saadud teavituse ID. See väli täidetakse juhul kui teavituse saatmine teavituskalendrile õnnestus. */
 	xtee_user_code         VARCHAR2(50)    /* X-tee kasutaja isikukood, kes tegevuse käivitas. See on vajalik selleks, et asutuse dokumentide puhul teada, mis konkreetne isik tegevuse läbi viis. */
-);
+) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
 COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_HISTORY IS 'Dokumendi ajalookirjed. Kirje tekib siis, kui dokumendiga viiakse läbi toiming. Tabel koondab endasse dokumendiga teostatud toimingute ajaloo.';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY.ID                     IS 'Unikaalne identifikaator';
@@ -231,7 +231,7 @@ CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_HISTORY_TYPE
 (
 	short_name   VARCHAR2(50) NOT NULL,    /* Ajalookirje tüübi nimi. Nt. "esmane loomine" või "dokumendi muutmine". */
 	description  VARCHAR2(4000)    /* Ajalookirje tüübi kirjeldus. */
-);
+) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
 COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_HISTORY_TYPE IS 'Dokumendi ajalookirjete tüübid. Ajalookirjete tüübid on näiteks "esmane loomine", "dokumendi muutmine" jne. (täpsemalt on kirjeldatud dokumentatsioonis). Ajalookirjete tüübid on järgmised: 
  1. Esmane loomine 2. Dokumendi muutmine 3. Dokumendi faili lisamine 4. Dokumendi faili muutmine 5. Dokumendi faili kustutamine 6. Staatuse muutmine 7. Saatmine 8. Jagamine 9. Lukustamine 10. Arhiveerimine 11. Dokumendi digitaalne allkirjastamine 12. Kustutamine';
@@ -249,7 +249,7 @@ CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING
 	dvk_status_id     NUMBER(12),    /* Dokumendi DVK staatuse ID. Näitab, millises staatuses on jagatud dokument adressaadi DVK-s. */
 	wf_status_id      NUMBER(12),    /* Töövoo staatuse ID */
 	last_access_date  DATE    /* Kuupäev ja kellaaeg, millal viimati jagatud dokumendi andmeid vaadati. */
-);
+) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
 COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING IS 'Dokumendi jagamise andmed.';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.ID                IS 'Unikaalne identifikaator';
@@ -266,7 +266,7 @@ CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING_TYPE
 (
 	short_name   VARCHAR2(50) NOT NULL,    /* Dokumendi jagamise tüübi lühinimi. (Nt. "sending", "sharing"). Lühinimed on inglisekeelsed. */
 	description  VARCHAR2(4000)    /* Dokumendi jagamise tüübi kirjeldus. */
-);
+) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
 COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING_TYPE IS 'Dokumendi jagamise tüübid: 
  1. Allkirjastamine 2. Jagamine 3. DVK Saatmine 4. ADIT Saatmine';
@@ -277,7 +277,7 @@ CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_TYPE
 (
 	short_name   VARCHAR2(50) NOT NULL,    /* Dokumendi tüübi lühinimi. */
 	description  VARCHAR2(4000)    /* Dokumendi tüübi kirjeldus. */
-);
+) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
 COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_TYPE IS 'Dokumendi tüüpide kirjeldused. Neid liike lisandub töö käigus, kuid esialgselt on olemas: 
  1. Kiri (letter) 2. Avaldus / Taotlus (application)';
@@ -289,7 +289,7 @@ CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_WF_STATUS
 	ID           NUMBER(12) NOT NULL,    /* Unikaalne identifikaator */
 	description  VARCHAR2(4000),    /* Töövoo staatuse kirjeldus */
 	name         VARCHAR2(50)    /* Dokumendi töövoo staatuse nimetus. */
-);
+) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
 COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_WF_STATUS IS 'Töövoo staatused. Staatused on järgmised: 
  1. Puudub (lokaalse faili puhul) 2. Dokumente on puudu 3. Järjekorras 4. Ootel 5. Lõpetatud 6. Tagasi lükatud 7. Teha 8. Töötlemisel 9. Aktsepteeritud (võetud töösse) 10. Salvestatud 11. Arhiveeritud 12. Saadetud';
@@ -306,7 +306,7 @@ CREATE TABLE &&ADIT_SCHEMA..DOWNLOAD_REQUEST_LOG
 	remote_application_short_name  VARCHAR2(50),
 	user_code                      VARCHAR2(50),
 	organization_code              VARCHAR2(50)
-);
+) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
 COMMENT ON TABLE &&ADIT_SCHEMA..DOWNLOAD_REQUEST_LOG IS 'Allalaadimispäringute logi. Siia tabelisse kirjutatakse andmed juhul kui käivitatakse üks järgmistest päringutest: 
  - getDocument (juhul kui päringu parameetri "kas tagastada ka failide sisu" väärtuseks on "jah") - getDocumentFile';
@@ -321,7 +321,7 @@ CREATE TABLE &&ADIT_SCHEMA..ERROR_LOG
 	action_name                    VARCHAR2(255),    /* Päringu või toimingu nimi, mille täitmisel viga ilmnes. */
 	error_level                    VARCHAR2(50),    /* Vea raskusaste (FATAL, ERROR, WARNING) */
 	error_message                  VARCHAR2(4000)    /* Veateate sisu */
-);
+) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
 COMMENT ON COLUMN &&ADIT_SCHEMA..ERROR_LOG.document_id                    IS 'Dokument, mille töötlemisel või millega seotud tegevuse ebaõnnestumisel viga tekkis.';
 COMMENT ON COLUMN &&ADIT_SCHEMA..ERROR_LOG.error_date                     IS 'Vea tekkimise aeg';
@@ -339,7 +339,7 @@ CREATE TABLE &&ADIT_SCHEMA..METADATA_REQUEST_LOG
 	remote_application_short_name  VARCHAR2(50),    /* Päringu teinud infosüsteemi lühinimi. */
 	user_code                      VARCHAR2(50),    /* Isik, kelle nimel päring tehti (kas eraisikuna või juriidilise isiku esindajana) */
 	organization_code              VARCHAR2(50)    /* Juriidilise isiku registrikood */
-);
+) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
 COMMENT ON TABLE &&ADIT_SCHEMA..METADATA_REQUEST_LOG IS 'Dokumendi ja metaandmete päringute logi. Andmed kirjutatakse siia tabelisse juhul kui käivitatakse üks järgmistest päringutest: 
  - getDocumentList - getDocument';
@@ -353,7 +353,7 @@ CREATE TABLE &&ADIT_SCHEMA..NOTIFICATION_TYPE
 (
 	short_name   VARCHAR2(50) NOT NULL,    /* Teavituse tüübi lühinimi */
 	description  VARCHAR2(4000)    /* Teavituse tüübi kirjeldus. */
-);
+) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
 COMMENT ON TABLE &&ADIT_SCHEMA..NOTIFICATION_TYPE IS 'Teavituste tüüpide andmed. Teavituse tübid on järgmised: 
  1. Saatmine (send) 2. Jagamine (share) 3. Vaatamine (view) 4. Muutmine (modify) 5. Allkirjastamine (sign)';
@@ -367,7 +367,7 @@ CREATE TABLE &&ADIT_SCHEMA..REMOTE_APPLICATION
 	organization_code  VARCHAR2(50) NOT NULL,    /* Infosüsteemi omaniku (asutuse) registrikood */
 	can_read           NUMBER(1) DEFAULT 0,    /* Näitab, kas infosüsteemil on üleüldine õigus rakenduse abil andmeid lugeda. */
 	can_write          NUMBER(1) DEFAULT 0    /* Näitab, kas infosüsteemil on üleüldine õigus rakenduse abil andmeid muuta. */
-);
+) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
 COMMENT ON TABLE &&ADIT_SCHEMA..REMOTE_APPLICATION IS 'Välised infosüsteemid.';
 COMMENT ON COLUMN &&ADIT_SCHEMA..REMOTE_APPLICATION.short_name         IS 'Infosüsteemi lühinimi';
@@ -386,7 +386,7 @@ CREATE TABLE &&ADIT_SCHEMA..REQUEST_LOG
 	user_code                      VARCHAR2(50),    /* Isik, kelle nimel päring tehti (kas eraisikuna või juriidilise isiku esindajana) */
 	organization_code              VARCHAR2(50),    /* Juriidilise isiku registrikood */
 	additional_information         VARCHAR2(4000)    /* Lisainfo päringu kohta. Nt. "saveDocumentFile" päringu puhul kirjutatakse siia ka manuse ID. */
-);
+) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
 COMMENT ON TABLE &&ADIT_SCHEMA..REQUEST_LOG IS 'Päringute tehtud muudatuste logi. Andmed kirjutatakse sellesse tabelisse juhul, kui käivitati üks järgmistest päringutest: 
  - saveDocument - saveDocumentFile - deleteDocumentFile - archieveDocument - deleteDocument - getDocumentHistory - sendDocument - shareDocument - unShareDocument - markDocumentViewed - prepareSignature - giveSiganture - modifyStatus';
@@ -410,7 +410,7 @@ CREATE TABLE &&ADIT_SCHEMA..SIGNATURE
 	city            VARCHAR2(100),    /* Allkirja metaandmed - linn */
 	post_index      VARCHAR2(50),    /* Allkirja metaandmed - indeks */
 	container_data  BLOB    /* Allkirja konteiner. */
-);
+) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
 COMMENT ON TABLE &&ADIT_SCHEMA..SIGNATURE IS 'Allkirjade tabel.';
 COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.ID              IS 'Unikaalne identifikaator.';
@@ -428,7 +428,7 @@ CREATE TABLE &&ADIT_SCHEMA..USER_NOTIFICATION
 (
 	user_code          VARCHAR2(50) NOT NULL,    /* Viide kasutajale (isiku- või registrikood) */
 	notification_type  VARCHAR2(50) NOT NULL    /* Teavituse tüübi lühinimi. */
-);
+) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
 COMMENT ON TABLE &&ADIT_SCHEMA..USER_NOTIFICATION IS 'Kasutajate teavituste andmed. Kasutaja saab määrata, kas ta soovib teatud sündmuste toimumisel saada teavitusi. Teavitused edastatakse teavituskalendrile vastavalt selles tabelis olevale seadistusele.';
 COMMENT ON COLUMN &&ADIT_SCHEMA..USER_NOTIFICATION.user_code          IS 'Viide kasutajale (isiku- või registrikood)';
@@ -439,7 +439,7 @@ CREATE TABLE &&ADIT_SCHEMA..USERTYPE
 	short_name   VARCHAR2(50) NOT NULL,    /* Kasutajatüübi lühinimi. */
 	description  VARCHAR2(4000),    /* Kasutajatüübi kirjeldus. */
 	disk_quota   NUMBER(18)    /* Määrab kasutajatüübi vaikimisi kehtiva mahupiirangu baitides. */
-);
+) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
 COMMENT ON TABLE &&ADIT_SCHEMA..USERTYPE IS 'Kasutajatüüpide andmed. Kasutajatüüpe on kolm: 
  1. Eraisik (person) 2. Ettevõte (company) 3. Asutus (institution)';
@@ -451,102 +451,155 @@ COMMENT ON COLUMN &&ADIT_SCHEMA..USERTYPE.disk_quota   IS 'Määrab kasutajatü�
 /* Create Primary Key Constraints */
 ALTER TABLE &&ADIT_SCHEMA..ACCESS_RESTRICTION ADD CONSTRAINT PK_ACCESS_RESTRICTIONS 
 	PRIMARY KEY (remote_application, user_code) 
- USING INDEX ;
+ USING INDEX TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 
 ALTER TABLE &&ADIT_SCHEMA..ADIT_LOG ADD CONSTRAINT PK_ADIT_LOG 
 	PRIMARY KEY (ID) 
- USING INDEX ;
+ USING INDEX TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 
 ALTER TABLE &&ADIT_SCHEMA..ADIT_USER ADD CONSTRAINT PK_USERS 
 	PRIMARY KEY (user_code) 
- USING INDEX ;
+ USING INDEX TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 
 ALTER TABLE &&ADIT_SCHEMA..DOCUMENT ADD CONSTRAINT PK_DOCUMENTS 
 	PRIMARY KEY (ID) 
- USING INDEX ;
+ USING INDEX TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 
 ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_DVK_STATUS ADD CONSTRAINT PK_DOCUMENT_DVK_STATUSES 
 	PRIMARY KEY (ID) 
- USING INDEX ;
+ USING INDEX TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 
 ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_FILE ADD CONSTRAINT PK_DOCUMENT_FILES 
 	PRIMARY KEY (ID) 
- USING INDEX ;
+ USING INDEX TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 
 ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_HISTORY ADD CONSTRAINT PK_DOCUMENT_HISTORY 
 	PRIMARY KEY (ID) 
- USING INDEX ;
+ USING INDEX TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 
 ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_HISTORY_TYPE ADD CONSTRAINT PK_DOCUMENT_HISTORY_TYPE 
 	PRIMARY KEY (short_name) 
- USING INDEX ;
+ USING INDEX TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 
 ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING ADD CONSTRAINT PK_DOCUMENT_SHARINGS 
 	PRIMARY KEY (ID) 
- USING INDEX ;
+ USING INDEX TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 
 ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING_TYPE ADD CONSTRAINT PK_DOCUMENT_SHARING_TYPES 
 	PRIMARY KEY (short_name) 
- USING INDEX ;
+ USING INDEX TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 
 ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_TYPE ADD CONSTRAINT PK_DOCUMENT_TYPES 
 	PRIMARY KEY (short_name) 
- USING INDEX ;
+ USING INDEX TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 
 ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_WF_STATUS ADD CONSTRAINT PK_DOCUMENT_WF_STATUSES 
 	PRIMARY KEY (ID) 
- USING INDEX ;
+ USING INDEX TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 
 ALTER TABLE &&ADIT_SCHEMA..DOWNLOAD_REQUEST_LOG ADD CONSTRAINT PK_DOWNLOAD_REQUEST_LOG 
 	PRIMARY KEY (ID) 
- USING INDEX ;
+ USING INDEX TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 
 ALTER TABLE &&ADIT_SCHEMA..ERROR_LOG ADD CONSTRAINT PK_ERROR_LOG 
 	PRIMARY KEY (ID) 
- USING INDEX ;
+ USING INDEX TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 
 ALTER TABLE &&ADIT_SCHEMA..METADATA_REQUEST_LOG ADD CONSTRAINT PK_METADATA_REQUEST_LOG 
 	PRIMARY KEY (ID) 
- USING INDEX ;
+ USING INDEX TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 
 ALTER TABLE &&ADIT_SCHEMA..NOTIFICATION_TYPE ADD CONSTRAINT PK_NOTIFICATION_TYPES 
 	PRIMARY KEY (short_name) 
- USING INDEX ;
+ USING INDEX TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 
 ALTER TABLE &&ADIT_SCHEMA..REMOTE_APPLICATION ADD CONSTRAINT PK_REMOTE_APPLICATIONS 
 	PRIMARY KEY (short_name) 
- USING INDEX ;
+ USING INDEX TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 
 ALTER TABLE &&ADIT_SCHEMA..REQUEST_LOG ADD CONSTRAINT PK_REQUEST_LOG 
 	PRIMARY KEY (ID) 
- USING INDEX ;
+ USING INDEX TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 
 ALTER TABLE &&ADIT_SCHEMA..SIGNATURE ADD CONSTRAINT PK_SIGNATURE 
 	PRIMARY KEY (ID) 
- USING INDEX ;
+ USING INDEX TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 
 ALTER TABLE &&ADIT_SCHEMA..USER_NOTIFICATION ADD CONSTRAINT PK_NOTIFICATIONS 
 	PRIMARY KEY (user_code, notification_type) 
- USING INDEX ;
+ USING INDEX TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 
 ALTER TABLE &&ADIT_SCHEMA..USERTYPE ADD CONSTRAINT PK_USERTYPES 
 	PRIMARY KEY (short_name) 
- USING INDEX ;
-
-
+ USING INDEX TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 
 /* Create Foreign Key Constraints */
+ALTER TABLE &&ADIT_SCHEMA..ACCESS_RESTRICTION ADD CONSTRAINT remote_application_short_name 
+	FOREIGN KEY (remote_application) REFERENCES &&ADIT_SCHEMA..REMOTE_APPLICATION (short_name);
+
+ALTER TABLE &&ADIT_SCHEMA..ACCESS_RESTRICTION ADD CONSTRAINT user_code 
+	FOREIGN KEY (user_code) REFERENCES &&ADIT_SCHEMA..ADIT_USER (user_code);
+
+ALTER TABLE &&ADIT_SCHEMA..ADIT_USER ADD CONSTRAINT usertype_short_name 
+	FOREIGN KEY (usertype) REFERENCES &&ADIT_SCHEMA..USERTYPE (short_name);
+
+ALTER TABLE &&ADIT_SCHEMA..DOCUMENT ADD CONSTRAINT document_dvk_status_id 
+	FOREIGN KEY (dvk_status_id) REFERENCES &&ADIT_SCHEMA..DOCUMENT_DVK_STATUS (ID);
+
+ALTER TABLE &&ADIT_SCHEMA..DOCUMENT ADD CONSTRAINT document_type_short_name 
+	FOREIGN KEY (type) REFERENCES &&ADIT_SCHEMA..DOCUMENT_TYPE (short_name);
+
+ALTER TABLE &&ADIT_SCHEMA..DOCUMENT ADD CONSTRAINT document_workflow_status_id 
+	FOREIGN KEY (wf_status_id) REFERENCES &&ADIT_SCHEMA..DOCUMENT_WF_STATUS (ID);
+
+ALTER TABLE &&ADIT_SCHEMA..DOCUMENT ADD CONSTRAINT parent_document_id 
+	FOREIGN KEY (parent_id) REFERENCES &&ADIT_SCHEMA..DOCUMENT (ID);
+
+ALTER TABLE &&ADIT_SCHEMA..DOCUMENT ADD CONSTRAINT remote_application_short_name 
+	FOREIGN KEY (remote_application) REFERENCES &&ADIT_SCHEMA..REMOTE_APPLICATION (short_name);
+
+ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_FILE ADD CONSTRAINT document_id 
+	FOREIGN KEY (document_id) REFERENCES &&ADIT_SCHEMA..DOCUMENT (ID);
+
+ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_HISTORY ADD CONSTRAINT FK_DOCUMENT_HIST_DOCUMENT_HIST 
+	FOREIGN KEY (history_type) REFERENCES &&ADIT_SCHEMA..DOCUMENT_HISTORY_TYPE (short_name);
+
+ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_HISTORY ADD CONSTRAINT FK_DOCUMENT_HIST_REMOTE_APPLIC 
+	FOREIGN KEY (remote_application) REFERENCES &&ADIT_SCHEMA..REMOTE_APPLICATION (short_name);
+
+ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_HISTORY ADD CONSTRAINT FK_DOCUMENT_HISTORY_DOCUMENT 
+	FOREIGN KEY (document_id) REFERENCES &&ADIT_SCHEMA..DOCUMENT (ID);
+
+ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_HISTORY ADD CONSTRAINT user_code 
+	FOREIGN KEY (user_code) REFERENCES &&ADIT_SCHEMA..ADIT_USER (user_code);
+
+ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING ADD CONSTRAINT document_id 
+	FOREIGN KEY (document_id) REFERENCES &&ADIT_SCHEMA..DOCUMENT (ID);
+
+ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING ADD CONSTRAINT dvk_status_id 
+	FOREIGN KEY (dvk_status_id) REFERENCES &&ADIT_SCHEMA..DOCUMENT_DVK_STATUS (ID);
+
+ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING ADD CONSTRAINT sharing_type_short_name 
+	FOREIGN KEY (sharing_type) REFERENCES &&ADIT_SCHEMA..DOCUMENT_SHARING_TYPE (short_name);
+
+ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING ADD CONSTRAINT user_code 
+	FOREIGN KEY (user_code) REFERENCES &&ADIT_SCHEMA..ADIT_USER (user_code);
+
+ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING ADD CONSTRAINT wf_status_id 
+	FOREIGN KEY (wf_status_id) REFERENCES &&ADIT_SCHEMA..DOCUMENT_WF_STATUS (ID);
+
 ALTER TABLE &&ADIT_SCHEMA..SIGNATURE ADD CONSTRAINT FK_SIGNATURE_DOCUMENT 
 	FOREIGN KEY (document_id) REFERENCES &&ADIT_SCHEMA..DOCUMENT (ID);
 
 ALTER TABLE &&ADIT_SCHEMA..SIGNATURE ADD CONSTRAINT FK_SIGNATURE_USER 
 	FOREIGN KEY (user_code) REFERENCES &&ADIT_SCHEMA..ADIT_USER (user_code);
 
+ALTER TABLE &&ADIT_SCHEMA..USER_NOTIFICATION ADD CONSTRAINT notification_type_short_name 
+	FOREIGN KEY (notification_type) REFERENCES &&ADIT_SCHEMA..NOTIFICATION_TYPE (short_name);
 
-
-
-
-
+ALTER TABLE &&ADIT_SCHEMA..USER_NOTIFICATION ADD CONSTRAINT user_code 
+	FOREIGN KEY (user_code) REFERENCES &&ADIT_SCHEMA..ADIT_USER (user_code);
+	
 /* Create Triggers */
 CREATE SEQUENCE &&ADIT_SCHEMA..ADIT_LOG_ID_SEQ
 INCREMENT BY 1
