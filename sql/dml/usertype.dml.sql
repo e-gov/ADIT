@@ -1,3 +1,5 @@
+-- USERTYPE --
+
 INSERT INTO usertype (
 	short_name,
 	description,
@@ -27,3 +29,5 @@ INSERT INTO usertype (
 	'Ettevõte',
 	10485760
 );
+
+--  --

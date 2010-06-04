@@ -25,6 +25,7 @@ lib/wsdl4j-qname-1.6.1.jar -text
 lib/xtee-server-1.0-RC1.jar -text
 /pom.xml -text
 sql/dml/insert.dml -text
+sql/dml/notification_type.dml.sql -text
 sql/dml/usertype.dml.sql -text
 sql/testdata/remote_application.dml.sql -text
 src/main/java/ee/adit/dao/DocumentTypeDAO.java -text
