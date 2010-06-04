@@ -2,5 +2,5 @@
 
 '&ADIT_SCHEMA.' Enter ADIT SQL Schema name: 
 
--- @@database.sql
-@C:\development\adit\adit\sql\dml\run.sql
+--@@database.sql
+@@run_dml.sql
