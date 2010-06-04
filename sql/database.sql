@@ -3,7 +3,7 @@
 /*  Created On : reede, 04 juuni, 2010 */
 /*  DBMS       : Oracle */
 /*  -------------------------------------------------- */
-
+'&ADIT_SCHEMA' Enter ADIT SQL Schema name: 
 
 
 /* Drop Tables, Stored Procedures and Views */
