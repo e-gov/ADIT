@@ -1,6 +1,6 @@
 -- DOCUMENT_TYPE --
 
-INSERT INTO document_type (
+INSERT INTO &&ADIT_SCHEMA..document_type (
 	short_name,
 	description
 ) VALUES (
@@ -8,7 +8,7 @@ INSERT INTO document_type (
 	'Kiri'
 );
 
-INSERT INTO document_type (
+INSERT INTO &&ADIT_SCHEMA..document_type (
 	short_name,
 	description
 ) VALUES (

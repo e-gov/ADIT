@@ -1,6 +1,6 @@
 -- USERTYPE --
 
-INSERT INTO usertype (
+INSERT INTO &&ADIT_SCHEMA..usertype (
 	short_name,
 	description,
 	disk_quota
@@ -10,7 +10,7 @@ INSERT INTO usertype (
 	10485760
 );
 
-INSERT INTO usertype (
+INSERT INTO &&ADIT_SCHEMA..usertype (
 	short_name,
 	description,
 	disk_quota
@@ -20,7 +20,7 @@ INSERT INTO usertype (
 	10485760
 );
 
-INSERT INTO usertype (
+INSERT INTO &&ADIT_SCHEMA..usertype (
 	short_name,
 	description,
 	disk_quota

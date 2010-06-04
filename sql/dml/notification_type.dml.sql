@@ -1,6 +1,6 @@
 -- NOTIFICATION TYPE --
 
-INSERT INTO notification_type (
+INSERT INTO &&ADIT_SCHEMA..notification_type (
 	short_name,
 	description
 ) VALUES (
@@ -8,7 +8,7 @@ INSERT INTO notification_type (
 	'Dokumendi saatmine'
 );
 
-INSERT INTO notification_type (
+INSERT INTO &&ADIT_SCHEMA..notification_type (
 	short_name,
 	description
 ) VALUES (
@@ -16,7 +16,7 @@ INSERT INTO notification_type (
 	'Dokumendi jagamine'
 );
 
-INSERT INTO notification_type (
+INSERT INTO &&ADIT_SCHEMA..notification_type (
 	short_name,
 	description
 ) VALUES (
@@ -24,7 +24,7 @@ INSERT INTO notification_type (
 	'Dokumendi vaatamine'
 );
 
-INSERT INTO notification_type (
+INSERT INTO &&ADIT_SCHEMA..notification_type (
 	short_name,
 	description
 ) VALUES (

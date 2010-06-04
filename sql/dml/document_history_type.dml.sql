@@ -1,6 +1,6 @@
 -- DOCUMENT_HISTORY_TYPE --
 
-INSERT INTO (
+INSERT INTO &&ADIT_SCHEMA..document_history_type(
 	short_name,
 	description
 ) VALUES (
@@ -8,7 +8,7 @@ INSERT INTO (
 	'Dokumendi esmane loomine'
 );
 
-INSERT INTO (
+INSERT INTO &&ADIT_SCHEMA..document_history_type(
 	short_name,
 	description
 ) VALUES (
@@ -16,7 +16,7 @@ INSERT INTO (
 	'Dokumendi muutmine'
 );
 
-INSERT INTO (
+INSERT INTO &&ADIT_SCHEMA..document_history_type(
 	short_name,
 	description
 ) VALUES (
@@ -24,7 +24,7 @@ INSERT INTO (
 	'Dokumendi faili lisamine'
 );
 
-INSERT INTO (
+INSERT INTO &&ADIT_SCHEMA..document_history_type(
 	short_name,
 	description
 ) VALUES (
@@ -32,7 +32,7 @@ INSERT INTO (
 	'Dokumendi faili muutmine'
 );
 
-INSERT INTO (
+INSERT INTO &&ADIT_SCHEMA..document_history_type(
 	short_name,
 	description
 ) VALUES (
@@ -40,7 +40,7 @@ INSERT INTO (
 	'Dokumendi faili kustutamine'
 );
 
-INSERT INTO (
+INSERT INTO &&ADIT_SCHEMA..document_history_type(
 	short_name,
 	description
 ) VALUES (
@@ -48,7 +48,7 @@ INSERT INTO (
 	'Dokumendi staatuse muutmine'
 );
 
-INSERT INTO (
+INSERT INTO &&ADIT_SCHEMA..document_history_type(
 	short_name,
 	description
 ) VALUES (
@@ -56,7 +56,7 @@ INSERT INTO (
 	'Dokumendi saatmine'
 );
 
-INSERT INTO (
+INSERT INTO &&ADIT_SCHEMA..document_history_type(
 	short_name,
 	description
 ) VALUES (
@@ -64,7 +64,7 @@ INSERT INTO (
 	'Dokumendi jagamine'
 );
 
-INSERT INTO (
+INSERT INTO &&ADIT_SCHEMA..document_history_type(
 	short_name,
 	description
 ) VALUES (
@@ -72,7 +72,7 @@ INSERT INTO (
 	'Dokumendi lukustamine'
 );
 
-INSERT INTO (
+INSERT INTO &&ADIT_SCHEMA..document_history_type(
 	short_name,
 	description
 ) VALUES (
@@ -80,7 +80,7 @@ INSERT INTO (
 	'Dokumendi arhiveerimine (deflate)'
 );
 
-INSERT INTO (
+INSERT INTO &&ADIT_SCHEMA..document_history_type(
 	short_name,
 	description
 ) VALUES (
@@ -88,7 +88,7 @@ INSERT INTO (
 	'Dokumendi digitaalne allkirjastamine'
 );
 
-INSERT INTO (
+INSERT INTO &&ADIT_SCHEMA..document_history_type(
 	short_name,
 	description
 ) VALUES (

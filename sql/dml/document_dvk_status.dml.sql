@@ -1,6 +1,6 @@
 -- DOCUMENT_DVK_STATUS --
 
-INSERT INTO document_dvk_status (
+INSERT INTO &&ADIT_SCHEMA..document_dvk_status (
 	ID,
 	description
 ) VALUES (
@@ -8,7 +8,7 @@ INSERT INTO document_dvk_status (
 	'Puudub'
 );
 
-INSERT INTO document_dvk_status (
+INSERT INTO &&ADIT_SCHEMA..document_dvk_status (
 	ID,
 	description
 ) VALUES (
@@ -16,7 +16,7 @@ INSERT INTO document_dvk_status (
 	'Saatmisel'
 );
 
-INSERT INTO document_dvk_status (
+INSERT INTO &&ADIT_SCHEMA..document_dvk_status (
 	ID,
 	description
 ) VALUES (
@@ -24,7 +24,7 @@ INSERT INTO document_dvk_status (
 	'Saadetud'
 );
 
-INSERT INTO document_dvk_status (
+INSERT INTO &&ADIT_SCHEMA..document_dvk_status (
 	ID,
 	description
 ) VALUES (

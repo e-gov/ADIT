@@ -1,6 +1,6 @@
 -- DOCUMENT_SHARING_TYPE --
 
-INSERT INTO document_sharing_type (
+INSERT INTO &&ADIT_SCHEMA..document_sharing_type (
 	short_name,
 	description
 ) VALUES (
@@ -8,7 +8,7 @@ INSERT INTO document_sharing_type (
 	'Dokumendi allkirjastamine'
 );
 
-INSERT INTO document_sharing_type (
+INSERT INTO &&ADIT_SCHEMA..document_sharing_type (
 	short_name,
 	description
 ) VALUES (
@@ -16,7 +16,7 @@ INSERT INTO document_sharing_type (
 	'Dokumendi jagamine'
 );
 
-INSERT INTO document_sharing_type (
+INSERT INTO &&ADIT_SCHEMA..document_sharing_type (
 	short_name,
 	description
 ) VALUES (
@@ -24,7 +24,7 @@ INSERT INTO document_sharing_type (
 	'Dokumendi saatmine DVK kaudu (DVK kasutajale)'
 );
 
-INSERT INTO document_sharing_type (
+INSERT INTO &&ADIT_SCHEMA..document_sharing_type (
 	short_name,
 	description
 ) VALUES (
