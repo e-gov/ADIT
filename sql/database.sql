@@ -7,82 +7,82 @@
 
 
 /* Drop Tables, Stored Procedures and Views */
-DROP TABLE ACCESS_RESTRICTION CASCADE CONSTRAINTS;
-DROP TRIGGER SET_ADIT_LOG_ID;
+DROP TABLE &&ADIT_SCHEMA..ACCESS_RESTRICTION CASCADE CONSTRAINTS;
+DROP TRIGGER &&ADIT_SCHEMA..SET_ADIT_LOG_ID;
 
-DROP SEQUENCE ADIT_LOG_ID_SEQ;
+DROP SEQUENCE &&ADIT_SCHEMA..ADIT_LOG_ID_SEQ;
 
-DROP TABLE ADIT_LOG CASCADE CONSTRAINTS;
-DROP TABLE ADIT_USER CASCADE CONSTRAINTS;
-DROP TRIGGER SET_DOCUMENT_ID;
+DROP TABLE &&ADIT_SCHEMA..ADIT_LOG CASCADE CONSTRAINTS;
+DROP TABLE &&ADIT_SCHEMA..ADIT_USER CASCADE CONSTRAINTS;
+DROP TRIGGER &&ADIT_SCHEMA..SET_DOCUMENT_ID;
 
-DROP SEQUENCE DOCUMENT_ID_SEQ;
+DROP SEQUENCE &&ADIT_SCHEMA..DOCUMENT_ID_SEQ;
 
-DROP TABLE DOCUMENT CASCADE CONSTRAINTS;
-DROP TABLE DOCUMENT_DVK_STATUS CASCADE CONSTRAINTS;
-DROP TRIGGER SET_DOCUMENT_FILE_ID;
+DROP TABLE &&ADIT_SCHEMA..DOCUMENT CASCADE CONSTRAINTS;
+DROP TABLE &&ADIT_SCHEMA..DOCUMENT_DVK_STATUS CASCADE CONSTRAINTS;
+DROP TRIGGER &&ADIT_SCHEMA..SET_DOCUMENT_FILE_ID;
 
-DROP SEQUENCE DOCUMENT_FILE_ID_SEQ;
+DROP SEQUENCE &&ADIT_SCHEMA..DOCUMENT_FILE_ID_SEQ;
 
-DROP TABLE DOCUMENT_FILE CASCADE CONSTRAINTS;
-DROP TRIGGER SET_DOCUMENT_HISTORY_ID;
+DROP TABLE &&ADIT_SCHEMA..DOCUMENT_FILE CASCADE CONSTRAINTS;
+DROP TRIGGER &&ADIT_SCHEMA..SET_DOCUMENT_HISTORY_ID;
 
-DROP SEQUENCE DOCUMENT_HISTORY_ID_SEQ;
+DROP SEQUENCE &&ADIT_SCHEMA..DOCUMENT_HISTORY_ID_SEQ;
 
-DROP TABLE DOCUMENT_HISTORY CASCADE CONSTRAINTS;
-DROP TABLE DOCUMENT_HISTORY_TYPE CASCADE CONSTRAINTS;
-DROP TRIGGER SET_DOCUMENT_SHARING_ID;
+DROP TABLE &&ADIT_SCHEMA..DOCUMENT_HISTORY CASCADE CONSTRAINTS;
+DROP TABLE &&ADIT_SCHEMA..DOCUMENT_HISTORY_TYPE CASCADE CONSTRAINTS;
+DROP TRIGGER &&ADIT_SCHEMA..SET_DOCUMENT_SHARING_ID;
 
-DROP SEQUENCE DOCUMENT_SHARING_ID_SEQ;
+DROP SEQUENCE &&ADIT_SCHEMA..DOCUMENT_SHARING_ID_SEQ;
 
-DROP TABLE DOCUMENT_SHARING CASCADE CONSTRAINTS;
-DROP TABLE DOCUMENT_SHARING_TYPE CASCADE CONSTRAINTS;
-DROP TABLE DOCUMENT_TYPE CASCADE CONSTRAINTS;
-DROP TABLE DOCUMENT_WF_STATUS CASCADE CONSTRAINTS;
-DROP TRIGGER SET_DOWNLOAD_REQUEST_LOG_ID;
+DROP TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING CASCADE CONSTRAINTS;
+DROP TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING_TYPE CASCADE CONSTRAINTS;
+DROP TABLE &&ADIT_SCHEMA..DOCUMENT_TYPE CASCADE CONSTRAINTS;
+DROP TABLE &&ADIT_SCHEMA..DOCUMENT_WF_STATUS CASCADE CONSTRAINTS;
+DROP TRIGGER &&ADIT_SCHEMA..SET_DOWNLOAD_REQUEST_LOG_ID;
 
-DROP SEQUENCE DOWNLOAD_REQUEST_LOG_ID_SEQ;
+DROP SEQUENCE &&ADIT_SCHEMA..DOWNLOAD_REQUEST_LOG_ID_SEQ;
 
-DROP TABLE DOWNLOAD_REQUEST_LOG CASCADE CONSTRAINTS;
-DROP TRIGGER SET_ERROR_LOG_ID;
+DROP TABLE &&ADIT_SCHEMA..DOWNLOAD_REQUEST_LOG CASCADE CONSTRAINTS;
+DROP TRIGGER &&ADIT_SCHEMA..SET_ERROR_LOG_ID;
 
-DROP SEQUENCE ERROR_LOG_ID_SEQ;
+DROP SEQUENCE &&ADIT_SCHEMA..ERROR_LOG_ID_SEQ;
 
-DROP TABLE ERROR_LOG CASCADE CONSTRAINTS;
-DROP TRIGGER SET_METADATA_REQUEST_LOG_ID;
+DROP TABLE &&ADIT_SCHEMA..ERROR_LOG CASCADE CONSTRAINTS;
+DROP TRIGGER &&ADIT_SCHEMA..SET_METADATA_REQUEST_LOG_ID;
 
-DROP SEQUENCE METADATA_REQUEST_LOG_ID_SEQ;
+DROP SEQUENCE &&ADIT_SCHEMA..METADATA_REQUEST_LOG_ID_SEQ;
 
-DROP TABLE METADATA_REQUEST_LOG CASCADE CONSTRAINTS;
-DROP TABLE NOTIFICATION_TYPE CASCADE CONSTRAINTS;
-DROP TABLE REMOTE_APPLICATION CASCADE CONSTRAINTS;
-DROP TRIGGER SET_REQUEST_LOG_ID;
+DROP TABLE &&ADIT_SCHEMA..METADATA_REQUEST_LOG CASCADE CONSTRAINTS;
+DROP TABLE &&ADIT_SCHEMA..NOTIFICATION_TYPE CASCADE CONSTRAINTS;
+DROP TABLE &&ADIT_SCHEMA..REMOTE_APPLICATION CASCADE CONSTRAINTS;
+DROP TRIGGER &&ADIT_SCHEMA..SET_REQUEST_LOG_ID;
 
-DROP SEQUENCE REQUEST_LOG_ID_SEQ;
+DROP SEQUENCE &&ADIT_SCHEMA..REQUEST_LOG_ID_SEQ;
 
-DROP TABLE REQUEST_LOG CASCADE CONSTRAINTS;
-DROP TRIGGER SET_SIGNATURE_ID;
+DROP TABLE &&ADIT_SCHEMA..REQUEST_LOG CASCADE CONSTRAINTS;
+DROP TRIGGER &&ADIT_SCHEMA..SET_SIGNATURE_ID;
 
-DROP SEQUENCE SIGNATURE_ID_SEQ;
+DROP SEQUENCE &&ADIT_SCHEMA..SIGNATURE_ID_SEQ;
 
-DROP TABLE SIGNATURE CASCADE CONSTRAINTS;
-DROP TABLE USER_NOTIFICATION CASCADE CONSTRAINTS;
-DROP TABLE USERTYPE CASCADE CONSTRAINTS;
+DROP TABLE &&ADIT_SCHEMA..SIGNATURE CASCADE CONSTRAINTS;
+DROP TABLE &&ADIT_SCHEMA..USER_NOTIFICATION CASCADE CONSTRAINTS;
+DROP TABLE &&ADIT_SCHEMA..USERTYPE CASCADE CONSTRAINTS;
 
 /* Create Tables */
-CREATE TABLE ACCESS_RESTRICTION
+CREATE TABLE &&ADIT_SCHEMA..ACCESS_RESTRICTION
 (
 	remote_application  VARCHAR2(50) NOT NULL,    /* Viide välisele infosüsteemile (infosüsteemi lühinimi). */
 	user_code           VARCHAR2(50) NOT NULL,    /* Viide kasutajale, kelle puhul antud piirang rakendub. */
 	restriction         VARCHAR2(50)    /* Määrab ära piirangu tüübi. "WRITE" - kasutaja andmete muutmise piirang, "READ" - täielik piirang (infosüsteemil puudub õigus kasutaja andmete lugemiseks, samuti ka muutmiseks). */
 );
 
-COMMENT ON TABLE ACCESS_RESTRICTION IS 'Infosüsteemide ligipääsupiirangud kasutajate lõikes. Infosüsteemidele saab määrata piiranguid kasutajate nimel tegevuste läbi viimiseks rakenduses.';
-COMMENT ON COLUMN ACCESS_RESTRICTION.remote_application  IS 'Viide välisele infosüsteemile (infosüsteemi lühinimi).';
-COMMENT ON COLUMN ACCESS_RESTRICTION.user_code           IS 'Viide kasutajale, kelle puhul antud piirang rakendub.';
-COMMENT ON COLUMN ACCESS_RESTRICTION.restriction         IS 'Määrab ära piirangu tüübi. "WRITE" - kasutaja andmete muutmise piirang, "READ" - täielik piirang (infosüsteemil puudub õigus kasutaja andmete lugemiseks, samuti ka muutmiseks).';
+COMMENT ON TABLE &&ADIT_SCHEMA..ACCESS_RESTRICTION IS 'Infosüsteemide ligipääsupiirangud kasutajate lõikes. Infosüsteemidele saab määrata piiranguid kasutajate nimel tegevuste läbi viimiseks rakenduses.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ACCESS_RESTRICTION.remote_application  IS 'Viide välisele infosüsteemile (infosüsteemi lühinimi).';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ACCESS_RESTRICTION.user_code           IS 'Viide kasutajale, kelle puhul antud piirang rakendub.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ACCESS_RESTRICTION.restriction         IS 'Määrab ära piirangu tüübi. "WRITE" - kasutaja andmete muutmise piirang, "READ" - täielik piirang (infosüsteemil puudub õigus kasutaja andmete lugemiseks, samuti ka muutmiseks).';
 
-CREATE TABLE ADIT_LOG
+CREATE TABLE &&ADIT_SCHEMA..ADIT_LOG
 (
 	ID                             NUMBER(18) NOT NULL,
 	table_name                     VARCHAR2(50),    /* Muutunud väärtuse tabeli nimi */
@@ -96,18 +96,18 @@ CREATE TABLE ADIT_LOG
 	db_user                        VARCHAR2(50)    /* Andmebaasikasutaja nimi. */
 );
 
-COMMENT ON TABLE ADIT_LOG IS 'Andmed kõikide andmebaasis tehtud muudatuste kohta. Välja arvatud tabeli DOCUMENT_FILES veeru FILE_DATA muudatused.';
-COMMENT ON COLUMN ADIT_LOG.table_name                     IS 'Muutunud väärtuse tabeli nimi';
-COMMENT ON COLUMN ADIT_LOG.column_name                    IS 'Muutunud väärtuse tabeli veeru nimi';
-COMMENT ON COLUMN ADIT_LOG.old_value                      IS 'Vana väärtus';
-COMMENT ON COLUMN ADIT_LOG.new_value                      IS 'Uus väärtus';
-COMMENT ON COLUMN ADIT_LOG.log_date                       IS 'Muudatuse aeg';
-COMMENT ON COLUMN ADIT_LOG.remote_application_short_name  IS 'Infosüsteem, kes antud muudatuse välja kutsus.';
-COMMENT ON COLUMN ADIT_LOG.xtee_user_code                 IS 'X-tee päringu isikukood';
-COMMENT ON COLUMN ADIT_LOG.xtee_institution_code          IS 'X-tee päringu ettevõtte registrikood';
-COMMENT ON COLUMN ADIT_LOG.db_user                        IS 'Andmebaasikasutaja nimi.';
+COMMENT ON TABLE &&ADIT_SCHEMA..ADIT_LOG IS 'Andmed kõikide andmebaasis tehtud muudatuste kohta. Välja arvatud tabeli DOCUMENT_FILES veeru FILE_DATA muudatused.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_LOG.table_name                     IS 'Muutunud väärtuse tabeli nimi';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_LOG.column_name                    IS 'Muutunud väärtuse tabeli veeru nimi';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_LOG.old_value                      IS 'Vana väärtus';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_LOG.new_value                      IS 'Uus väärtus';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_LOG.log_date                       IS 'Muudatuse aeg';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_LOG.remote_application_short_name  IS 'Infosüsteem, kes antud muudatuse välja kutsus.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_LOG.xtee_user_code                 IS 'X-tee päringu isikukood';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_LOG.xtee_institution_code          IS 'X-tee päringu ettevõtte registrikood';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_LOG.db_user                        IS 'Andmebaasikasutaja nimi.';
 
-CREATE TABLE ADIT_USER
+CREATE TABLE &&ADIT_SCHEMA..ADIT_USER
 (
 	user_code                   VARCHAR2(50) NOT NULL,    /* Kasutaja isiku või registrikood koos riigitunnusega. Nt. "EE38407089945". */
 	full_name                   VARCHAR2(255),    /* Kasutaja täispikk nimi. */
@@ -119,17 +119,17 @@ CREATE TABLE ADIT_USER
 	disk_quota                  NUMBER(18)    /* Kasutaja failide mahupiirang baitides. Kasutajale määratud mahupiirang omab prioriteeti kasutajatüübi mahupiirangu üle. */
 );
 
-COMMENT ON TABLE ADIT_USER IS 'Kasutaja andmed. Kasutaja on alati isik, kelle määrab üheselt isikukood. Isik võib süsteemis esindada kas iseennast või asutust.';
-COMMENT ON COLUMN ADIT_USER.user_code                   IS 'Kasutaja isiku või registrikood koos riigitunnusega. Nt. "EE38407089945".';
-COMMENT ON COLUMN ADIT_USER.full_name                   IS 'Kasutaja täispikk nimi.';
-COMMENT ON COLUMN ADIT_USER.usertype                    IS 'Viide kasutaja tüübile.';
-COMMENT ON COLUMN ADIT_USER.active                      IS 'Näitab, kas tegemist on aktiivse kasutajaga. "1" - aktiivne", "0" - mitteaktiivne.';
-COMMENT ON COLUMN ADIT_USER.dvk_org_code                IS 'Kui kasutaja kasutab dokumentide saatmiseks ja vastuvõtmiseks DVK-d, siis on see väli täidetud. Väljale kirjutatakse kasutaja DVK asutuse registrikood.';
-COMMENT ON COLUMN ADIT_USER.dvk_subdivision_short_name  IS 'Kui kasutaja kasutab dokumentide saatmiseks ja vastuvõtmiseks DVK-d, siis on see väli täidetud juhul kui asutusel on DVK-s registreeritud vastav allüksus. Väljale kirjutatakse kasutaja DVK asutuse allüksuse lühinimi.';
-COMMENT ON COLUMN ADIT_USER.dvk_occupation_short_name   IS 'Kui kasutaja kasutab dokumentide saatmiseks ja vastuvõtmiseks DVK-d, siis on see väli täidetud juhul kui asutusel on DVK-s registreeritud vastav ametikoht. Väljale kirjutatakse kasutaja DVK asutuse ametikoha lühinimi.';
-COMMENT ON COLUMN ADIT_USER.disk_quota                  IS 'Kasutaja failide mahupiirang baitides. Kasutajale määratud mahupiirang omab prioriteeti kasutajatüübi mahupiirangu üle.';
+COMMENT ON TABLE &&ADIT_SCHEMA..ADIT_USER IS 'Kasutaja andmed. Kasutaja on alati isik, kelle määrab üheselt isikukood. Isik võib süsteemis esindada kas iseennast või asutust.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_USER.user_code                   IS 'Kasutaja isiku või registrikood koos riigitunnusega. Nt. "EE38407089945".';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_USER.full_name                   IS 'Kasutaja täispikk nimi.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_USER.usertype                    IS 'Viide kasutaja tüübile.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_USER.active                      IS 'Näitab, kas tegemist on aktiivse kasutajaga. "1" - aktiivne", "0" - mitteaktiivne.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_USER.dvk_org_code                IS 'Kui kasutaja kasutab dokumentide saatmiseks ja vastuvõtmiseks DVK-d, siis on see väli täidetud. Väljale kirjutatakse kasutaja DVK asutuse registrikood.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_USER.dvk_subdivision_short_name  IS 'Kui kasutaja kasutab dokumentide saatmiseks ja vastuvõtmiseks DVK-d, siis on see väli täidetud juhul kui asutusel on DVK-s registreeritud vastav allüksus. Väljale kirjutatakse kasutaja DVK asutuse allüksuse lühinimi.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_USER.dvk_occupation_short_name   IS 'Kui kasutaja kasutab dokumentide saatmiseks ja vastuvõtmiseks DVK-d, siis on see väli täidetud juhul kui asutusel on DVK-s registreeritud vastav ametikoht. Väljale kirjutatakse kasutaja DVK asutuse ametikoha lühinimi.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_USER.disk_quota                  IS 'Kasutaja failide mahupiirang baitides. Kasutajale määratud mahupiirang omab prioriteeti kasutajatüübi mahupiirangu üle.';
 
-CREATE TABLE DOCUMENT
+CREATE TABLE &&ADIT_SCHEMA..DOCUMENT
 (
 	ID                      NUMBER(12) NOT NULL,    /* Unikaalne identifikaator */
 	guid                    VARCHAR2(50),    /* Dokumendi globaalselt unikaalne identifikaator. Kui dokument võetakse vastu DVK-st, siis tuleb ka GUID sealt. Kui dokument luuakse ADIT-is, siis genereerib ADIT ise GUID. */
@@ -151,38 +151,38 @@ CREATE TABLE DOCUMENT
 	deleted                 NUMBER(1)    /* Näitab, kas dokument on kustutatud. "1" - kustutatud, "0" - kustutamata. */
 );
 
-COMMENT ON TABLE DOCUMENT IS 'Dokumendi andmed.';
-COMMENT ON COLUMN DOCUMENT.ID                      IS 'Unikaalne identifikaator';
-COMMENT ON COLUMN DOCUMENT.guid                    IS 'Dokumendi globaalselt unikaalne identifikaator. Kui dokument võetakse vastu DVK-st, siis tuleb ka GUID sealt. Kui dokument luuakse ADIT-is, siis genereerib ADIT ise GUID.';
-COMMENT ON COLUMN DOCUMENT.title                   IS 'Dokumendi pealkiri.';
-COMMENT ON COLUMN DOCUMENT.type                    IS 'Viide dokumendi tüübi lühinimele.';
-COMMENT ON COLUMN DOCUMENT.creator_code            IS 'Dokumendi looja isikukood.';
-COMMENT ON COLUMN DOCUMENT.creation_date           IS 'Dokumendi loomise kuupäev ja kellaaeg';
-COMMENT ON COLUMN DOCUMENT.remote_application      IS 'Viide päringu välja kutsunud infosüsteemi lühinimele.';
-COMMENT ON COLUMN DOCUMENT.last_modified_date      IS 'Viimase muudatuse kuupäev ja kellaaeg.';
-COMMENT ON COLUMN DOCUMENT.document_dvk_status_id  IS 'Kui dokument on saadetud üle DVK või võetud vastu DVK-st, siis kirjutatakse siia väljale dokumendi DVK staatuse idenfitikaator';
-COMMENT ON COLUMN DOCUMENT.dvk_id                  IS 'Kui tegemist on DVK-st tulnud dokumendiga, siis kirjutatakse siia dokumendile DVK poolt antud ID';
-COMMENT ON COLUMN DOCUMENT.document_wf_status_id   IS 'Viide dokumendi töövoo staatusele.';
-COMMENT ON COLUMN DOCUMENT.parent_id               IS 'Kui on tegemist alamdokumendiga, siis viide nn peadokumendile';
-COMMENT ON COLUMN DOCUMENT.locked                  IS 'Näitab, kas dokument on "lukustatud". "1" - lukus, "0" - lukustamata.';
-COMMENT ON COLUMN DOCUMENT.locking_date            IS 'Lukustamise kuupäev ja kellaaeg';
-COMMENT ON COLUMN DOCUMENT.signable                IS 'Näitab, kas dokument on allkirjastatav.';
-COMMENT ON COLUMN DOCUMENT.deflated                IS 'Näitab, kas dokument on arhiveeritud. "1" - arhiveeritud, "0" - ei ole arhiveeritud';
-COMMENT ON COLUMN DOCUMENT.deflate_date            IS 'Arhiveerimise kuupäev ja kellaaeg.';
-COMMENT ON COLUMN DOCUMENT.deleted                 IS 'Näitab, kas dokument on kustutatud. "1" - kustutatud, "0" - kustutamata.';
+COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT IS 'Dokumendi andmed.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.ID                      IS 'Unikaalne identifikaator';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.guid                    IS 'Dokumendi globaalselt unikaalne identifikaator. Kui dokument võetakse vastu DVK-st, siis tuleb ka GUID sealt. Kui dokument luuakse ADIT-is, siis genereerib ADIT ise GUID.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.title                   IS 'Dokumendi pealkiri.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.type                    IS 'Viide dokumendi tüübi lühinimele.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.creator_code            IS 'Dokumendi looja isikukood.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.creation_date           IS 'Dokumendi loomise kuupäev ja kellaaeg';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.remote_application      IS 'Viide päringu välja kutsunud infosüsteemi lühinimele.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.last_modified_date      IS 'Viimase muudatuse kuupäev ja kellaaeg.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.document_dvk_status_id  IS 'Kui dokument on saadetud üle DVK või võetud vastu DVK-st, siis kirjutatakse siia väljale dokumendi DVK staatuse idenfitikaator';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.dvk_id                  IS 'Kui tegemist on DVK-st tulnud dokumendiga, siis kirjutatakse siia dokumendile DVK poolt antud ID';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.document_wf_status_id   IS 'Viide dokumendi töövoo staatusele.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.parent_id               IS 'Kui on tegemist alamdokumendiga, siis viide nn peadokumendile';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.locked                  IS 'Näitab, kas dokument on "lukustatud". "1" - lukus, "0" - lukustamata.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.locking_date            IS 'Lukustamise kuupäev ja kellaaeg';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.signable                IS 'Näitab, kas dokument on allkirjastatav.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.deflated                IS 'Näitab, kas dokument on arhiveeritud. "1" - arhiveeritud, "0" - ei ole arhiveeritud';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.deflate_date            IS 'Arhiveerimise kuupäev ja kellaaeg.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.deleted                 IS 'Näitab, kas dokument on kustutatud. "1" - kustutatud, "0" - kustutamata.';
 
-CREATE TABLE DOCUMENT_DVK_STATUS
+CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_DVK_STATUS
 (
 	ID           NUMBER(12) NOT NULL,    /* DVK staatuse unikaalne identifikaator */
 	description  VARCHAR2(4000)    /* DVK staatuse kirjeldus */
 );
 
-COMMENT ON TABLE DOCUMENT_DVK_STATUS IS 'Dokumendi DVK staatused (kattuvad DVK staatustega). Staatused on järgmised: 
+COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_DVK_STATUS IS 'Dokumendi DVK staatused (kattuvad DVK staatustega). Staatused on järgmised: 
  1. Puudub (100) 2. Saatmisel (101) 3. Saadetud (102) 4. Katkestatud (103)';
-COMMENT ON COLUMN DOCUMENT_DVK_STATUS.ID           IS 'DVK staatuse unikaalne identifikaator';
-COMMENT ON COLUMN DOCUMENT_DVK_STATUS.description  IS 'DVK staatuse kirjeldus';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_DVK_STATUS.ID           IS 'DVK staatuse unikaalne identifikaator';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_DVK_STATUS.description  IS 'DVK staatuse kirjeldus';
 
-CREATE TABLE DOCUMENT_FILE
+CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_FILE
 (
 	ID               NUMBER(12) NOT NULL,    /* Unikaalne identifikaator */
 	document_id      NUMBER(12) NOT NULL,    /* Viide dokumendi ID-le */
@@ -193,16 +193,16 @@ CREATE TABLE DOCUMENT_FILE
 	file_size_bytes  NUMBER(38)    /* Faili suurus baitides */
 );
 
-COMMENT ON TABLE DOCUMENT_FILE IS 'Dokumendi juurde kuuluvate failide andmed.';
-COMMENT ON COLUMN DOCUMENT_FILE.ID               IS 'Unikaalne identifikaator';
-COMMENT ON COLUMN DOCUMENT_FILE.document_id      IS 'Viide dokumendi ID-le';
-COMMENT ON COLUMN DOCUMENT_FILE.file_name        IS 'Faili nimi. (Nt. "avaldus.doc")';
-COMMENT ON COLUMN DOCUMENT_FILE.content_type     IS 'Faili MIME tüüp. (Nt. "application/rtf")';
-COMMENT ON COLUMN DOCUMENT_FILE.description      IS 'Faili kirjeldus.';
-COMMENT ON COLUMN DOCUMENT_FILE.file_data        IS 'Faili sisu binaarkujul';
-COMMENT ON COLUMN DOCUMENT_FILE.file_size_bytes  IS 'Faili suurus baitides';
+COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_FILE IS 'Dokumendi juurde kuuluvate failide andmed.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.ID               IS 'Unikaalne identifikaator';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.document_id      IS 'Viide dokumendi ID-le';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.file_name        IS 'Faili nimi. (Nt. "avaldus.doc")';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.content_type     IS 'Faili MIME tüüp. (Nt. "application/rtf")';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.description      IS 'Faili kirjeldus.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.file_data        IS 'Faili sisu binaarkujul';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.file_size_bytes  IS 'Faili suurus baitides';
 
-CREATE TABLE DOCUMENT_HISTORY
+CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_HISTORY
 (
 	ID                     NUMBER(12) NOT NULL,    /* Unikaalne identifikaator */
 	document_id            NUMBER(12) NOT NULL,    /* Viide dokumendile, millega ajalookirje on seotud */
@@ -216,30 +216,30 @@ CREATE TABLE DOCUMENT_HISTORY
 	xtee_user_code         VARCHAR2(50)    /* X-tee kasutaja isikukood, kes tegevuse käivitas. See on vajalik selleks, et asutuse dokumentide puhul teada, mis konkreetne isik tegevuse läbi viis. */
 );
 
-COMMENT ON TABLE DOCUMENT_HISTORY IS 'Dokumendi ajalookirjed. Kirje tekib siis, kui dokumendiga viiakse läbi toiming. Tabel koondab endasse dokumendiga teostatud toimingute ajaloo.';
-COMMENT ON COLUMN DOCUMENT_HISTORY.ID                     IS 'Unikaalne identifikaator';
-COMMENT ON COLUMN DOCUMENT_HISTORY.document_id            IS 'Viide dokumendile, millega ajalookirje on seotud';
-COMMENT ON COLUMN DOCUMENT_HISTORY.document_history_type  IS 'Viide dokumendi ajaloo tüübile.';
-COMMENT ON COLUMN DOCUMENT_HISTORY.description            IS 'Toimingu täpsem kirjeldus, kui vajalik.';
-COMMENT ON COLUMN DOCUMENT_HISTORY.event_date             IS 'Tegevuse kuupäev ja kelaaaeg';
-COMMENT ON COLUMN DOCUMENT_HISTORY.user_code              IS 'Tegevuse läbi viinud isiku kood. Viide kasutajale.';
-COMMENT ON COLUMN DOCUMENT_HISTORY.remote_application     IS 'Viide välisele infosüsteemile (välise infosüsteemi lühinimi), mis antud toimingu välja kutsus.';
-COMMENT ON COLUMN DOCUMENT_HISTORY.notification_status    IS 'Teavituse saatmise staatus. Kui teavistus on saatmata, siis "SAADA", kui saadetud, siis "SAADETUD". Kui teavitust ei ole vaja saata, siis väli tühi (NULL).';
-COMMENT ON COLUMN DOCUMENT_HISTORY.xtee_notification_id   IS 'Teavituskalendri X-tee teenuselt saadud teavituse ID. See väli täidetakse juhul kui teavituse saatmine teavituskalendrile õnnestus.';
-COMMENT ON COLUMN DOCUMENT_HISTORY.xtee_user_code         IS 'X-tee kasutaja isikukood, kes tegevuse käivitas. See on vajalik selleks, et asutuse dokumentide puhul teada, mis konkreetne isik tegevuse läbi viis.';
+COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_HISTORY IS 'Dokumendi ajalookirjed. Kirje tekib siis, kui dokumendiga viiakse läbi toiming. Tabel koondab endasse dokumendiga teostatud toimingute ajaloo.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY.ID                     IS 'Unikaalne identifikaator';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY.document_id            IS 'Viide dokumendile, millega ajalookirje on seotud';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY.document_history_type  IS 'Viide dokumendi ajaloo tüübile.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY.description            IS 'Toimingu täpsem kirjeldus, kui vajalik.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY.event_date             IS 'Tegevuse kuupäev ja kelaaaeg';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY.user_code              IS 'Tegevuse läbi viinud isiku kood. Viide kasutajale.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY.remote_application     IS 'Viide välisele infosüsteemile (välise infosüsteemi lühinimi), mis antud toimingu välja kutsus.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY.notification_status    IS 'Teavituse saatmise staatus. Kui teavistus on saatmata, siis "SAADA", kui saadetud, siis "SAADETUD". Kui teavitust ei ole vaja saata, siis väli tühi (NULL).';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY.xtee_notification_id   IS 'Teavituskalendri X-tee teenuselt saadud teavituse ID. See väli täidetakse juhul kui teavituse saatmine teavituskalendrile õnnestus.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY.xtee_user_code         IS 'X-tee kasutaja isikukood, kes tegevuse käivitas. See on vajalik selleks, et asutuse dokumentide puhul teada, mis konkreetne isik tegevuse läbi viis.';
 
-CREATE TABLE DOCUMENT_HISTORY_TYPE
+CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_HISTORY_TYPE
 (
 	short_name   VARCHAR2(50) NOT NULL,    /* Ajalookirje tüübi nimi. Nt. "esmane loomine" või "dokumendi muutmine". */
 	description  VARCHAR2(4000)    /* Ajalookirje tüübi kirjeldus. */
 );
 
-COMMENT ON TABLE DOCUMENT_HISTORY_TYPE IS 'Dokumendi ajalookirjete tüübid. Ajalookirjete tüübid on näiteks "esmane loomine", "dokumendi muutmine" jne. (täpsemalt on kirjeldatud dokumentatsioonis). Ajalookirjete tüübid on järgmised: 
+COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_HISTORY_TYPE IS 'Dokumendi ajalookirjete tüübid. Ajalookirjete tüübid on näiteks "esmane loomine", "dokumendi muutmine" jne. (täpsemalt on kirjeldatud dokumentatsioonis). Ajalookirjete tüübid on järgmised: 
  1. Esmane loomine 2. Dokumendi muutmine 3. Dokumendi faili lisamine 4. Dokumendi faili muutmine 5. Dokumendi faili kustutamine 6. Staatuse muutmine 7. Saatmine 8. Jagamine 9. Lukustamine 10. Arhiveerimine 11. Dokumendi digitaalne allkirjastamine 12. Kustutamine';
-COMMENT ON COLUMN DOCUMENT_HISTORY_TYPE.short_name   IS 'Ajalookirje tüübi nimi. Nt. "esmane loomine" või "dokumendi muutmine".';
-COMMENT ON COLUMN DOCUMENT_HISTORY_TYPE.description  IS 'Ajalookirje tüübi kirjeldus.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY_TYPE.short_name   IS 'Ajalookirje tüübi nimi. Nt. "esmane loomine" või "dokumendi muutmine".';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY_TYPE.description  IS 'Ajalookirje tüübi kirjeldus.';
 
-CREATE TABLE DOCUMENT_SHARING
+CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING
 (
 	ID                NUMBER(12) NOT NULL,    /* Unikaalne identifikaator */
 	document_id       NUMBER(12) NOT NULL,    /* Viide dokumendile */
@@ -252,53 +252,53 @@ CREATE TABLE DOCUMENT_SHARING
 	last_access_date  DATE    /* Kuupäev ja kellaaeg, millal viimati jagatud dokumendi andmeid vaadati. */
 );
 
-COMMENT ON TABLE DOCUMENT_SHARING IS 'Dokumendi jagamise andmed.';
-COMMENT ON COLUMN DOCUMENT_SHARING.ID                IS 'Unikaalne identifikaator';
-COMMENT ON COLUMN DOCUMENT_SHARING.document_id       IS 'Viide dokumendile';
-COMMENT ON COLUMN DOCUMENT_SHARING.user_code         IS 'Viide kasutajale (isikukood), kellele dokument jagati';
-COMMENT ON COLUMN DOCUMENT_SHARING.sharing_type      IS 'Viide dokumendi jagamise tüübile. Viidatakse kasutades dokumendi tüübi lühinime.';
-COMMENT ON COLUMN DOCUMENT_SHARING.task_description  IS 'Jagamise eesmärk. Toiming, mida jagamise adressaat peaks dokumendiga tegema.';
-COMMENT ON COLUMN DOCUMENT_SHARING.creation_date     IS 'Jagamise kuupäev ja kellaaeg';
-COMMENT ON COLUMN DOCUMENT_SHARING.dvk_status_id     IS 'Dokumendi DVK staatuse ID. Näitab, millises staatuses on jagatud dokument adressaadi DVK-s.';
-COMMENT ON COLUMN DOCUMENT_SHARING.wf_status_id      IS 'Töövoo staatuse ID';
-COMMENT ON COLUMN DOCUMENT_SHARING.last_access_date  IS 'Kuupäev ja kellaaeg, millal viimati jagatud dokumendi andmeid vaadati.';
+COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING IS 'Dokumendi jagamise andmed.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.ID                IS 'Unikaalne identifikaator';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.document_id       IS 'Viide dokumendile';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.user_code         IS 'Viide kasutajale (isikukood), kellele dokument jagati';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.sharing_type      IS 'Viide dokumendi jagamise tüübile. Viidatakse kasutades dokumendi tüübi lühinime.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.task_description  IS 'Jagamise eesmärk. Toiming, mida jagamise adressaat peaks dokumendiga tegema.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.creation_date     IS 'Jagamise kuupäev ja kellaaeg';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.dvk_status_id     IS 'Dokumendi DVK staatuse ID. Näitab, millises staatuses on jagatud dokument adressaadi DVK-s.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.wf_status_id      IS 'Töövoo staatuse ID';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.last_access_date  IS 'Kuupäev ja kellaaeg, millal viimati jagatud dokumendi andmeid vaadati.';
 
-CREATE TABLE DOCUMENT_SHARING_TYPE
+CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING_TYPE
 (
 	short_name   VARCHAR2(50) NOT NULL,    /* Dokumendi jagamise tüübi lühinimi. (Nt. "sending", "sharing"). Lühinimed on inglisekeelsed. */
 	description  VARCHAR2(4000)    /* Dokumendi jagamise tüübi kirjeldus. */
 );
 
-COMMENT ON TABLE DOCUMENT_SHARING_TYPE IS 'Dokumendi jagamise tüübid: 
+COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING_TYPE IS 'Dokumendi jagamise tüübid: 
  1. Allkirjastamine 2. Jagamine 3. DVK Saatmine 4. ADIT Saatmine';
-COMMENT ON COLUMN DOCUMENT_SHARING_TYPE.short_name   IS 'Dokumendi jagamise tüübi lühinimi. (Nt. "sending", "sharing"). Lühinimed on inglisekeelsed.';
-COMMENT ON COLUMN DOCUMENT_SHARING_TYPE.description  IS 'Dokumendi jagamise tüübi kirjeldus.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING_TYPE.short_name   IS 'Dokumendi jagamise tüübi lühinimi. (Nt. "sending", "sharing"). Lühinimed on inglisekeelsed.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING_TYPE.description  IS 'Dokumendi jagamise tüübi kirjeldus.';
 
-CREATE TABLE DOCUMENT_TYPE
+CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_TYPE
 (
 	short_name   VARCHAR2(50) NOT NULL,    /* Dokumendi tüübi lühinimi. */
 	description  VARCHAR2(4000)    /* Dokumendi tüübi kirjeldus. */
 );
 
-COMMENT ON TABLE DOCUMENT_TYPE IS 'Dokumendi tüüpide kirjeldused. Neid liike lisandub töö käigus, kuid esialgselt on olemas: 
+COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_TYPE IS 'Dokumendi tüüpide kirjeldused. Neid liike lisandub töö käigus, kuid esialgselt on olemas: 
  1. Kiri (letter) 2. Avaldus / Taotlus (application)';
-COMMENT ON COLUMN DOCUMENT_TYPE.short_name   IS 'Dokumendi tüübi lühinimi.';
-COMMENT ON COLUMN DOCUMENT_TYPE.description  IS 'Dokumendi tüübi kirjeldus.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_TYPE.short_name   IS 'Dokumendi tüübi lühinimi.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_TYPE.description  IS 'Dokumendi tüübi kirjeldus.';
 
-CREATE TABLE DOCUMENT_WF_STATUS
+CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_WF_STATUS
 (
 	ID           NUMBER(12) NOT NULL,    /* Unikaalne identifikaator */
 	description  VARCHAR2(4000),    /* Töövoo staatuse kirjeldus */
 	name         VARCHAR2(50)    /* Dokumendi töövoo staatuse nimetus. */
 );
 
-COMMENT ON TABLE DOCUMENT_WF_STATUS IS 'Töövoo staatused. Staatused on järgmised: 
+COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_WF_STATUS IS 'Töövoo staatused. Staatused on järgmised: 
  1. Puudub (lokaalse faili puhul) 2. Dokumente on puudu 3. Järjekorras 4. Ootel 5. Lõpetatud 6. Tagasi lükatud 7. Teha 8. Töötlemisel 9. Aktsepteeritud (võetud töösse) 10. Salvestatud 11. Arhiveeritud 12. Saadetud';
-COMMENT ON COLUMN DOCUMENT_WF_STATUS.ID           IS 'Unikaalne identifikaator';
-COMMENT ON COLUMN DOCUMENT_WF_STATUS.description  IS 'Töövoo staatuse kirjeldus';
-COMMENT ON COLUMN DOCUMENT_WF_STATUS.name         IS 'Dokumendi töövoo staatuse nimetus.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_WF_STATUS.ID           IS 'Unikaalne identifikaator';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_WF_STATUS.description  IS 'Töövoo staatuse kirjeldus';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_WF_STATUS.name         IS 'Dokumendi töövoo staatuse nimetus.';
 
-CREATE TABLE DOWNLOAD_REQUEST_LOG
+CREATE TABLE &&ADIT_SCHEMA..DOWNLOAD_REQUEST_LOG
 (
 	ID                             NUMBER(18) NOT NULL,
 	document_id                    NUMBER(12),
@@ -309,10 +309,10 @@ CREATE TABLE DOWNLOAD_REQUEST_LOG
 	organization_code              VARCHAR2(50)
 );
 
-COMMENT ON TABLE DOWNLOAD_REQUEST_LOG IS 'Allalaadimispäringute logi. Siia tabelisse kirjutatakse andmed juhul kui käivitatakse üks järgmistest päringutest: 
+COMMENT ON TABLE &&ADIT_SCHEMA..DOWNLOAD_REQUEST_LOG IS 'Allalaadimispäringute logi. Siia tabelisse kirjutatakse andmed juhul kui käivitatakse üks järgmistest päringutest: 
  - getDocument (juhul kui päringu parameetri "kas tagastada ka failide sisu" väärtuseks on "jah") - getDocumentFile';
 
-CREATE TABLE ERROR_LOG
+CREATE TABLE &&ADIT_SCHEMA..ERROR_LOG
 (
 	ID                             NUMBER(18) NOT NULL,
 	document_id                    NUMBER(12),    /* Dokument, mille töötlemisel või millega seotud tegevuse ebaõnnestumisel viga tekkis. */
@@ -324,15 +324,15 @@ CREATE TABLE ERROR_LOG
 	error_message                  VARCHAR2(4000)    /* Veateate sisu */
 );
 
-COMMENT ON COLUMN ERROR_LOG.document_id                    IS 'Dokument, mille töötlemisel või millega seotud tegevuse ebaõnnestumisel viga tekkis.';
-COMMENT ON COLUMN ERROR_LOG.error_date                     IS 'Vea tekkimise aeg';
-COMMENT ON COLUMN ERROR_LOG.remote_application_short_name  IS 'Päringu teinud infosüsteemi lühinimi.';
-COMMENT ON COLUMN ERROR_LOG.user_code                      IS 'Päringuga seotud isiku kood';
-COMMENT ON COLUMN ERROR_LOG.action_name                    IS 'Päringu või toimingu nimi, mille täitmisel viga ilmnes.';
-COMMENT ON COLUMN ERROR_LOG.error_level                    IS 'Vea raskusaste (FATAL, ERROR, WARNING)';
-COMMENT ON COLUMN ERROR_LOG.error_message                  IS 'Veateate sisu';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ERROR_LOG.document_id                    IS 'Dokument, mille töötlemisel või millega seotud tegevuse ebaõnnestumisel viga tekkis.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ERROR_LOG.error_date                     IS 'Vea tekkimise aeg';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ERROR_LOG.remote_application_short_name  IS 'Päringu teinud infosüsteemi lühinimi.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ERROR_LOG.user_code                      IS 'Päringuga seotud isiku kood';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ERROR_LOG.action_name                    IS 'Päringu või toimingu nimi, mille täitmisel viga ilmnes.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ERROR_LOG.error_level                    IS 'Vea raskusaste (FATAL, ERROR, WARNING)';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ERROR_LOG.error_message                  IS 'Veateate sisu';
 
-CREATE TABLE METADATA_REQUEST_LOG
+CREATE TABLE &&ADIT_SCHEMA..METADATA_REQUEST_LOG
 (
 	ID                             NUMBER(18) NOT NULL,
 	document_id                    NUMBER(12) NOT NULL,    /* Dokumendi ID, mida vaadati. */
@@ -342,26 +342,26 @@ CREATE TABLE METADATA_REQUEST_LOG
 	organization_code              VARCHAR2(50)    /* Juriidilise isiku registrikood */
 );
 
-COMMENT ON TABLE METADATA_REQUEST_LOG IS 'Dokumendi ja metaandmete päringute logi. Andmed kirjutatakse siia tabelisse juhul kui käivitatakse üks järgmistest päringutest: 
+COMMENT ON TABLE &&ADIT_SCHEMA..METADATA_REQUEST_LOG IS 'Dokumendi ja metaandmete päringute logi. Andmed kirjutatakse siia tabelisse juhul kui käivitatakse üks järgmistest päringutest: 
  - getDocumentList - getDocument';
-COMMENT ON COLUMN METADATA_REQUEST_LOG.document_id                    IS 'Dokumendi ID, mida vaadati.';
-COMMENT ON COLUMN METADATA_REQUEST_LOG.request_date                   IS 'Päringu tegemise aeg.';
-COMMENT ON COLUMN METADATA_REQUEST_LOG.remote_application_short_name  IS 'Päringu teinud infosüsteemi lühinimi.';
-COMMENT ON COLUMN METADATA_REQUEST_LOG.user_code                      IS 'Isik, kelle nimel päring tehti (kas eraisikuna või juriidilise isiku esindajana)';
-COMMENT ON COLUMN METADATA_REQUEST_LOG.organization_code              IS 'Juriidilise isiku registrikood';
+COMMENT ON COLUMN &&ADIT_SCHEMA..METADATA_REQUEST_LOG.document_id                    IS 'Dokumendi ID, mida vaadati.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..METADATA_REQUEST_LOG.request_date                   IS 'Päringu tegemise aeg.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..METADATA_REQUEST_LOG.remote_application_short_name  IS 'Päringu teinud infosüsteemi lühinimi.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..METADATA_REQUEST_LOG.user_code                      IS 'Isik, kelle nimel päring tehti (kas eraisikuna või juriidilise isiku esindajana)';
+COMMENT ON COLUMN &&ADIT_SCHEMA..METADATA_REQUEST_LOG.organization_code              IS 'Juriidilise isiku registrikood';
 
-CREATE TABLE NOTIFICATION_TYPE
+CREATE TABLE &&ADIT_SCHEMA..NOTIFICATION_TYPE
 (
 	short_name   VARCHAR2(50) NOT NULL,    /* Teavituse tüübi lühinimi */
 	description  VARCHAR2(4000)    /* Teavituse tüübi kirjeldus. */
 );
 
-COMMENT ON TABLE NOTIFICATION_TYPE IS 'Teavituste tüüpide andmed. Teavituse tübid on järgmised: 
+COMMENT ON TABLE &&ADIT_SCHEMA..NOTIFICATION_TYPE IS 'Teavituste tüüpide andmed. Teavituse tübid on järgmised: 
  1. Saatmine (send) 2. Jagamine (share) 3. Vaatamine (view) 4. Muutmine (modify) 5. Allkirjastamine (sign)';
-COMMENT ON COLUMN NOTIFICATION_TYPE.short_name   IS 'Teavituse tüübi lühinimi';
-COMMENT ON COLUMN NOTIFICATION_TYPE.description  IS 'Teavituse tüübi kirjeldus.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..NOTIFICATION_TYPE.short_name   IS 'Teavituse tüübi lühinimi';
+COMMENT ON COLUMN &&ADIT_SCHEMA..NOTIFICATION_TYPE.description  IS 'Teavituse tüübi kirjeldus.';
 
-CREATE TABLE REMOTE_APPLICATION
+CREATE TABLE &&ADIT_SCHEMA..REMOTE_APPLICATION
 (
 	short_name         VARCHAR2(50) NOT NULL,    /* Infosüsteemi lühinimi */
 	name               VARCHAR2(50),    /* Infosüsteemi täispikk nimi */
@@ -370,14 +370,14 @@ CREATE TABLE REMOTE_APPLICATION
 	can_write          NUMBER(1) DEFAULT 0    /* Näitab, kas infosüsteemil on üleüldine õigus rakenduse abil andmeid muuta. */
 );
 
-COMMENT ON TABLE REMOTE_APPLICATION IS 'Välised infosüsteemid.';
-COMMENT ON COLUMN REMOTE_APPLICATION.short_name         IS 'Infosüsteemi lühinimi';
-COMMENT ON COLUMN REMOTE_APPLICATION.name               IS 'Infosüsteemi täispikk nimi';
-COMMENT ON COLUMN REMOTE_APPLICATION.organization_code  IS 'Infosüsteemi omaniku (asutuse) registrikood';
-COMMENT ON COLUMN REMOTE_APPLICATION.can_read           IS 'Näitab, kas infosüsteemil on üleüldine õigus rakenduse abil andmeid lugeda.';
-COMMENT ON COLUMN REMOTE_APPLICATION.can_write          IS 'Näitab, kas infosüsteemil on üleüldine õigus rakenduse abil andmeid muuta.';
+COMMENT ON TABLE &&ADIT_SCHEMA..REMOTE_APPLICATION IS 'Välised infosüsteemid.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..REMOTE_APPLICATION.short_name         IS 'Infosüsteemi lühinimi';
+COMMENT ON COLUMN &&ADIT_SCHEMA..REMOTE_APPLICATION.name               IS 'Infosüsteemi täispikk nimi';
+COMMENT ON COLUMN &&ADIT_SCHEMA..REMOTE_APPLICATION.organization_code  IS 'Infosüsteemi omaniku (asutuse) registrikood';
+COMMENT ON COLUMN &&ADIT_SCHEMA..REMOTE_APPLICATION.can_read           IS 'Näitab, kas infosüsteemil on üleüldine õigus rakenduse abil andmeid lugeda.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..REMOTE_APPLICATION.can_write          IS 'Näitab, kas infosüsteemil on üleüldine õigus rakenduse abil andmeid muuta.';
 
-CREATE TABLE REQUEST_LOG
+CREATE TABLE &&ADIT_SCHEMA..REQUEST_LOG
 (
 	ID                             NUMBER(18) NOT NULL,
 	request                        VARCHAR2(50),    /* Päringu nimi. Nt. "shareDocument" */
@@ -389,17 +389,17 @@ CREATE TABLE REQUEST_LOG
 	additional_information         VARCHAR2(4000)    /* Lisainfo päringu kohta. Nt. "saveDocumentFile" päringu puhul kirjutatakse siia ka manuse ID. */
 );
 
-COMMENT ON TABLE REQUEST_LOG IS 'Päringute tehtud muudatuste logi. Andmed kirjutatakse sellesse tabelisse juhul, kui käivitati üks järgmistest päringutest: 
+COMMENT ON TABLE &&ADIT_SCHEMA..REQUEST_LOG IS 'Päringute tehtud muudatuste logi. Andmed kirjutatakse sellesse tabelisse juhul, kui käivitati üks järgmistest päringutest: 
  - saveDocument - saveDocumentFile - deleteDocumentFile - archieveDocument - deleteDocument - getDocumentHistory - sendDocument - shareDocument - unShareDocument - markDocumentViewed - prepareSignature - giveSiganture - modifyStatus';
-COMMENT ON COLUMN REQUEST_LOG.request                        IS 'Päringu nimi. Nt. "shareDocument"';
-COMMENT ON COLUMN REQUEST_LOG.document_id                    IS 'Dokumendi ID, millega tegevus läbi viidi';
-COMMENT ON COLUMN REQUEST_LOG.request_date                   IS 'Päringu tegemise aeg';
-COMMENT ON COLUMN REQUEST_LOG.remote_application_short_name  IS 'Päringu teinud infosüsteemi lühinimi';
-COMMENT ON COLUMN REQUEST_LOG.user_code                      IS 'Isik, kelle nimel päring tehti (kas eraisikuna või juriidilise isiku esindajana)';
-COMMENT ON COLUMN REQUEST_LOG.organization_code              IS 'Juriidilise isiku registrikood';
-COMMENT ON COLUMN REQUEST_LOG.additional_information         IS 'Lisainfo päringu kohta. Nt. "saveDocumentFile" päringu puhul kirjutatakse siia ka manuse ID.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..REQUEST_LOG.request                        IS 'Päringu nimi. Nt. "shareDocument"';
+COMMENT ON COLUMN &&ADIT_SCHEMA..REQUEST_LOG.document_id                    IS 'Dokumendi ID, millega tegevus läbi viidi';
+COMMENT ON COLUMN &&ADIT_SCHEMA..REQUEST_LOG.request_date                   IS 'Päringu tegemise aeg';
+COMMENT ON COLUMN &&ADIT_SCHEMA..REQUEST_LOG.remote_application_short_name  IS 'Päringu teinud infosüsteemi lühinimi';
+COMMENT ON COLUMN &&ADIT_SCHEMA..REQUEST_LOG.user_code                      IS 'Isik, kelle nimel päring tehti (kas eraisikuna või juriidilise isiku esindajana)';
+COMMENT ON COLUMN &&ADIT_SCHEMA..REQUEST_LOG.organization_code              IS 'Juriidilise isiku registrikood';
+COMMENT ON COLUMN &&ADIT_SCHEMA..REQUEST_LOG.additional_information         IS 'Lisainfo päringu kohta. Nt. "saveDocumentFile" päringu puhul kirjutatakse siia ka manuse ID.';
 
-CREATE TABLE SIGNATURE
+CREATE TABLE &&ADIT_SCHEMA..SIGNATURE
 (
 	ID              NUMBER(12) NOT NULL,    /* Unikaalne identifikaator. */
 	user_code       VARCHAR2(50),    /* Viide kasutajale, kes allkirja andis. */
@@ -413,135 +413,135 @@ CREATE TABLE SIGNATURE
 	container_data  BLOB    /* Allkirja konteiner. */
 );
 
-COMMENT ON TABLE SIGNATURE IS 'Allkirjade tabel.';
-COMMENT ON COLUMN SIGNATURE.ID              IS 'Unikaalne identifikaator.';
-COMMENT ON COLUMN SIGNATURE.user_code       IS 'Viide kasutajale, kes allkirja andis.';
-COMMENT ON COLUMN SIGNATURE.document_id     IS 'Viide dokumendile, millele allkiri anti.';
-COMMENT ON COLUMN SIGNATURE.signer_role     IS 'Allkirja metaandmed - roll';
-COMMENT ON COLUMN SIGNATURE.resolution      IS 'Allkirja metaandmed - resolutsioon';
-COMMENT ON COLUMN SIGNATURE.country         IS 'Allkirja metaandmed - riik';
-COMMENT ON COLUMN SIGNATURE.county          IS 'Allkirja metaandmed - maakond';
-COMMENT ON COLUMN SIGNATURE.city            IS 'Allkirja metaandmed - linn';
-COMMENT ON COLUMN SIGNATURE.post_index      IS 'Allkirja metaandmed - indeks';
-COMMENT ON COLUMN SIGNATURE.container_data  IS 'Allkirja konteiner.';
+COMMENT ON TABLE &&ADIT_SCHEMA..SIGNATURE IS 'Allkirjade tabel.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.ID              IS 'Unikaalne identifikaator.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.user_code       IS 'Viide kasutajale, kes allkirja andis.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.document_id     IS 'Viide dokumendile, millele allkiri anti.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.signer_role     IS 'Allkirja metaandmed - roll';
+COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.resolution      IS 'Allkirja metaandmed - resolutsioon';
+COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.country         IS 'Allkirja metaandmed - riik';
+COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.county          IS 'Allkirja metaandmed - maakond';
+COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.city            IS 'Allkirja metaandmed - linn';
+COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.post_index      IS 'Allkirja metaandmed - indeks';
+COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.container_data  IS 'Allkirja konteiner.';
 
-CREATE TABLE USER_NOTIFICATION
+CREATE TABLE &&ADIT_SCHEMA..USER_NOTIFICATION
 (
 	user_code          VARCHAR2(50) NOT NULL,    /* Viide kasutajale (isiku- või registrikood) */
 	notification_type  VARCHAR2(50) NOT NULL    /* Teavituse tüübi lühinimi. */
 );
 
-COMMENT ON TABLE USER_NOTIFICATION IS 'Kasutajate teavituste andmed. Kasutaja saab määrata, kas ta soovib teatud sündmuste toimumisel saada teavitusi. Teavitused edastatakse teavituskalendrile vastavalt selles tabelis olevale seadistusele.';
-COMMENT ON COLUMN USER_NOTIFICATION.user_code          IS 'Viide kasutajale (isiku- või registrikood)';
-COMMENT ON COLUMN USER_NOTIFICATION.notification_type  IS 'Teavituse tüübi lühinimi.';
+COMMENT ON TABLE &&ADIT_SCHEMA..USER_NOTIFICATION IS 'Kasutajate teavituste andmed. Kasutaja saab määrata, kas ta soovib teatud sündmuste toimumisel saada teavitusi. Teavitused edastatakse teavituskalendrile vastavalt selles tabelis olevale seadistusele.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..USER_NOTIFICATION.user_code          IS 'Viide kasutajale (isiku- või registrikood)';
+COMMENT ON COLUMN &&ADIT_SCHEMA..USER_NOTIFICATION.notification_type  IS 'Teavituse tüübi lühinimi.';
 
-CREATE TABLE USERTYPE
+CREATE TABLE &&ADIT_SCHEMA..USERTYPE
 (
 	short_name   VARCHAR2(50) NOT NULL,    /* Kasutajatüübi lühinimi. */
 	description  VARCHAR2(4000),    /* Kasutajatüübi kirjeldus. */
 	disk_quota   NUMBER(18)    /* Määrab kasutajatüübi vaikimisi kehtiva mahupiirangu baitides. */
 );
 
-COMMENT ON TABLE USERTYPE IS 'Kasutajatüüpide andmed. Kasutajatüüpe on kolm: 
+COMMENT ON TABLE &&ADIT_SCHEMA..USERTYPE IS 'Kasutajatüüpide andmed. Kasutajatüüpe on kolm: 
  1. Eraisik (person) 2. Ettevõte (company) 3. Asutus (institution)';
-COMMENT ON COLUMN USERTYPE.short_name   IS 'Kasutajatüübi lühinimi.';
-COMMENT ON COLUMN USERTYPE.description  IS 'Kasutajatüübi kirjeldus.';
-COMMENT ON COLUMN USERTYPE.disk_quota   IS 'Määrab kasutajatüübi vaikimisi kehtiva mahupiirangu baitides.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..USERTYPE.short_name   IS 'Kasutajatüübi lühinimi.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..USERTYPE.description  IS 'Kasutajatüübi kirjeldus.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..USERTYPE.disk_quota   IS 'Määrab kasutajatüübi vaikimisi kehtiva mahupiirangu baitides.';
 
 
 /* Create Primary Key Constraints */
-ALTER TABLE ACCESS_RESTRICTION ADD CONSTRAINT PK_ACCESS_RESTRICTIONS 
+ALTER TABLE &&ADIT_SCHEMA..ACCESS_RESTRICTION ADD CONSTRAINT PK_ACCESS_RESTRICTIONS 
 	PRIMARY KEY (remote_application, user_code) 
  USING INDEX ;
 
-ALTER TABLE ADIT_LOG ADD CONSTRAINT PK_ADIT_LOG 
+ALTER TABLE &&ADIT_SCHEMA..ADIT_LOG ADD CONSTRAINT PK_ADIT_LOG 
 	PRIMARY KEY (ID) 
  USING INDEX ;
 
-ALTER TABLE ADIT_USER ADD CONSTRAINT PK_USERS 
+ALTER TABLE &&ADIT_SCHEMA..ADIT_USER ADD CONSTRAINT PK_USERS 
 	PRIMARY KEY (user_code) 
  USING INDEX ;
 
-ALTER TABLE DOCUMENT ADD CONSTRAINT PK_DOCUMENTS 
+ALTER TABLE &&ADIT_SCHEMA..DOCUMENT ADD CONSTRAINT PK_DOCUMENTS 
 	PRIMARY KEY (ID) 
  USING INDEX ;
 
-ALTER TABLE DOCUMENT_DVK_STATUS ADD CONSTRAINT PK_DOCUMENT_DVK_STATUSES 
+ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_DVK_STATUS ADD CONSTRAINT PK_DOCUMENT_DVK_STATUSES 
 	PRIMARY KEY (ID) 
  USING INDEX ;
 
-ALTER TABLE DOCUMENT_FILE ADD CONSTRAINT PK_DOCUMENT_FILES 
+ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_FILE ADD CONSTRAINT PK_DOCUMENT_FILES 
 	PRIMARY KEY (ID) 
  USING INDEX ;
 
-ALTER TABLE DOCUMENT_HISTORY ADD CONSTRAINT PK_DOCUMENT_HISTORY 
+ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_HISTORY ADD CONSTRAINT PK_DOCUMENT_HISTORY 
 	PRIMARY KEY (ID) 
  USING INDEX ;
 
-ALTER TABLE DOCUMENT_HISTORY_TYPE ADD CONSTRAINT PK_DOCUMENT_HISTORY_TYPE 
+ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_HISTORY_TYPE ADD CONSTRAINT PK_DOCUMENT_HISTORY_TYPE 
 	PRIMARY KEY (short_name) 
  USING INDEX ;
 
-ALTER TABLE DOCUMENT_SHARING ADD CONSTRAINT PK_DOCUMENT_SHARINGS 
+ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING ADD CONSTRAINT PK_DOCUMENT_SHARINGS 
 	PRIMARY KEY (ID) 
  USING INDEX ;
 
-ALTER TABLE DOCUMENT_SHARING_TYPE ADD CONSTRAINT PK_DOCUMENT_SHARING_TYPES 
+ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING_TYPE ADD CONSTRAINT PK_DOCUMENT_SHARING_TYPES 
 	PRIMARY KEY (short_name) 
  USING INDEX ;
 
-ALTER TABLE DOCUMENT_TYPE ADD CONSTRAINT PK_DOCUMENT_TYPES 
+ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_TYPE ADD CONSTRAINT PK_DOCUMENT_TYPES 
 	PRIMARY KEY (short_name) 
  USING INDEX ;
 
-ALTER TABLE DOCUMENT_WF_STATUS ADD CONSTRAINT PK_DOCUMENT_WF_STATUSES 
+ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_WF_STATUS ADD CONSTRAINT PK_DOCUMENT_WF_STATUSES 
 	PRIMARY KEY (ID) 
  USING INDEX ;
 
-ALTER TABLE DOWNLOAD_REQUEST_LOG ADD CONSTRAINT PK_DOWNLOAD_REQUEST_LOG 
+ALTER TABLE &&ADIT_SCHEMA..DOWNLOAD_REQUEST_LOG ADD CONSTRAINT PK_DOWNLOAD_REQUEST_LOG 
 	PRIMARY KEY (ID) 
  USING INDEX ;
 
-ALTER TABLE ERROR_LOG ADD CONSTRAINT PK_ERROR_LOG 
+ALTER TABLE &&ADIT_SCHEMA..ERROR_LOG ADD CONSTRAINT PK_ERROR_LOG 
 	PRIMARY KEY (ID) 
  USING INDEX ;
 
-ALTER TABLE METADATA_REQUEST_LOG ADD CONSTRAINT PK_METADATA_REQUEST_LOG 
+ALTER TABLE &&ADIT_SCHEMA..METADATA_REQUEST_LOG ADD CONSTRAINT PK_METADATA_REQUEST_LOG 
 	PRIMARY KEY (ID) 
  USING INDEX ;
 
-ALTER TABLE NOTIFICATION_TYPE ADD CONSTRAINT PK_NOTIFICATION_TYPES 
+ALTER TABLE &&ADIT_SCHEMA..NOTIFICATION_TYPE ADD CONSTRAINT PK_NOTIFICATION_TYPES 
 	PRIMARY KEY (short_name) 
  USING INDEX ;
 
-ALTER TABLE REMOTE_APPLICATION ADD CONSTRAINT PK_REMOTE_APPLICATIONS 
+ALTER TABLE &&ADIT_SCHEMA..REMOTE_APPLICATION ADD CONSTRAINT PK_REMOTE_APPLICATIONS 
 	PRIMARY KEY (short_name) 
  USING INDEX ;
 
-ALTER TABLE REQUEST_LOG ADD CONSTRAINT PK_REQUEST_LOG 
+ALTER TABLE &&ADIT_SCHEMA..REQUEST_LOG ADD CONSTRAINT PK_REQUEST_LOG 
 	PRIMARY KEY (ID) 
  USING INDEX ;
 
-ALTER TABLE SIGNATURE ADD CONSTRAINT PK_SIGNATURE 
+ALTER TABLE &&ADIT_SCHEMA..SIGNATURE ADD CONSTRAINT PK_SIGNATURE 
 	PRIMARY KEY (ID) 
  USING INDEX ;
 
-ALTER TABLE USER_NOTIFICATION ADD CONSTRAINT PK_NOTIFICATIONS 
+ALTER TABLE &&ADIT_SCHEMA..USER_NOTIFICATION ADD CONSTRAINT PK_NOTIFICATIONS 
 	PRIMARY KEY (user_code, notification_type) 
  USING INDEX ;
 
-ALTER TABLE USERTYPE ADD CONSTRAINT PK_USERTYPES 
+ALTER TABLE &&ADIT_SCHEMA..USERTYPE ADD CONSTRAINT PK_USERTYPES 
 	PRIMARY KEY (short_name) 
  USING INDEX ;
 
 
 
 /* Create Foreign Key Constraints */
-ALTER TABLE SIGNATURE ADD CONSTRAINT FK_SIGNATURE_DOCUMENT 
-	FOREIGN KEY (document_id) REFERENCES DOCUMENT (ID);
+ALTER TABLE &&ADIT_SCHEMA..SIGNATURE ADD CONSTRAINT FK_SIGNATURE_DOCUMENT 
+	FOREIGN KEY (document_id) REFERENCES &&ADIT_SCHEMA..DOCUMENT (ID);
 
-ALTER TABLE SIGNATURE ADD CONSTRAINT FK_SIGNATURE_USER 
-	FOREIGN KEY (user_code) REFERENCES ADIT_USER (user_code);
+ALTER TABLE &&ADIT_SCHEMA..SIGNATURE ADD CONSTRAINT FK_SIGNATURE_USER 
+	FOREIGN KEY (user_code) REFERENCES &&ADIT_SCHEMA..ADIT_USER (user_code);
 
 
 
@@ -549,7 +549,7 @@ ALTER TABLE SIGNATURE ADD CONSTRAINT FK_SIGNATURE_USER
 
 
 /* Create Triggers */
-CREATE SEQUENCE ADIT_LOG_ID_SEQ
+CREATE SEQUENCE &&ADIT_SCHEMA..ADIT_LOG_ID_SEQ
 INCREMENT BY 1
 START WITH 1
 NOMAXVALUE
@@ -558,18 +558,18 @@ NOCYCLE
 NOCACHE
 NOORDER;
 
-CREATE OR REPLACE TRIGGER SET_ADIT_LOG_ID
+CREATE OR REPLACE TRIGGER &&ADIT_SCHEMA..SET_ADIT_LOG_ID
 BEFORE INSERT
-ON ADIT_LOG
+ON &&ADIT_SCHEMA..ADIT_LOG
 FOR EACH ROW
 BEGIN
-  SELECT ADIT_LOG_ID_SEQ.NEXTVAL
+  SELECT &&ADIT_SCHEMA..ADIT_LOG_ID_SEQ.NEXTVAL
   INTO :NEW.ID
   FROM DUAL;
 END;
 /
 
-CREATE SEQUENCE DOCUMENT_ID_SEQ
+CREATE SEQUENCE &&ADIT_SCHEMA..DOCUMENT_ID_SEQ
 INCREMENT BY 1
 START WITH 1
 NOMAXVALUE
@@ -578,18 +578,18 @@ NOCYCLE
 NOCACHE
 NOORDER;
 
-CREATE OR REPLACE TRIGGER SET_DOCUMENT_ID
+CREATE OR REPLACE TRIGGER &&ADIT_SCHEMA..SET_DOCUMENT_ID
 BEFORE INSERT
-ON DOCUMENT
+ON &&ADIT_SCHEMA..DOCUMENT
 FOR EACH ROW
 BEGIN
-  SELECT DOCUMENT_ID_SEQ.NEXTVAL
+  SELECT &&ADIT_SCHEMA..DOCUMENT_ID_SEQ.NEXTVAL
   INTO :NEW.ID
   FROM DUAL;
 END;
 /
 
-CREATE SEQUENCE DOCUMENT_FILE_ID_SEQ
+CREATE SEQUENCE &&ADIT_SCHEMA..DOCUMENT_FILE_ID_SEQ
 INCREMENT BY 1
 START WITH 1
 NOMAXVALUE
@@ -598,18 +598,18 @@ NOCYCLE
 NOCACHE
 NOORDER;
 
-CREATE OR REPLACE TRIGGER SET_DOCUMENT_FILE_ID
+CREATE OR REPLACE TRIGGER &&ADIT_SCHEMA..SET_DOCUMENT_FILE_ID
 BEFORE INSERT
-ON DOCUMENT_FILE
+ON &&ADIT_SCHEMA..DOCUMENT_FILE
 FOR EACH ROW
 BEGIN
-  SELECT DOCUMENT_FILE_ID_SEQ.NEXTVAL
+  SELECT &&ADIT_SCHEMA..DOCUMENT_FILE_ID_SEQ.NEXTVAL
   INTO :NEW.ID
   FROM DUAL;
 END;
 /
 
-CREATE SEQUENCE DOCUMENT_HISTORY_ID_SEQ
+CREATE SEQUENCE &&ADIT_SCHEMA..DOCUMENT_HISTORY_ID_SEQ
 INCREMENT BY 1
 START WITH 1
 NOMAXVALUE
@@ -618,18 +618,18 @@ NOCYCLE
 NOCACHE
 NOORDER;
 
-CREATE OR REPLACE TRIGGER SET_DOCUMENT_HISTORY_ID
+CREATE OR REPLACE TRIGGER &&ADIT_SCHEMA..SET_DOCUMENT_HISTORY_ID
 BEFORE INSERT
-ON DOCUMENT_HISTORY
+ON &&ADIT_SCHEMA..DOCUMENT_HISTORY
 FOR EACH ROW
 BEGIN
-  SELECT DOCUMENT_HISTORY_ID_SEQ.NEXTVAL
+  SELECT &&ADIT_SCHEMA..DOCUMENT_HISTORY_ID_SEQ.NEXTVAL
   INTO :NEW.ID
   FROM DUAL;
 END;
 /
 
-CREATE SEQUENCE DOCUMENT_SHARING_ID_SEQ
+CREATE SEQUENCE &&ADIT_SCHEMA..DOCUMENT_SHARING_ID_SEQ
 INCREMENT BY 1
 START WITH 1
 NOMAXVALUE
@@ -638,18 +638,18 @@ NOCYCLE
 NOCACHE
 NOORDER;
 
-CREATE OR REPLACE TRIGGER SET_DOCUMENT_SHARING_ID
+CREATE OR REPLACE TRIGGER &&ADIT_SCHEMA..SET_DOCUMENT_SHARING_ID
 BEFORE INSERT
-ON DOCUMENT_SHARING
+ON &&ADIT_SCHEMA..DOCUMENT_SHARING
 FOR EACH ROW
 BEGIN
-  SELECT DOCUMENT_SHARING_ID_SEQ.NEXTVAL
+  SELECT &&ADIT_SCHEMA..DOCUMENT_SHARING_ID_SEQ.NEXTVAL
   INTO :NEW.ID
   FROM DUAL;
 END;
 /
 
-CREATE SEQUENCE DOWNLOAD_REQUEST_LOG_ID_SEQ
+CREATE SEQUENCE &&ADIT_SCHEMA..DOWNLOAD_REQUEST_LOG_ID_SEQ
 INCREMENT BY 1
 START WITH 1
 NOMAXVALUE
@@ -658,18 +658,18 @@ NOCYCLE
 NOCACHE
 NOORDER;
 
-CREATE OR REPLACE TRIGGER SET_DOWNLOAD_REQUEST_LOG_ID
+CREATE OR REPLACE TRIGGER &&ADIT_SCHEMA..SET_DOWNLOAD_REQUEST_LOG_ID
 BEFORE INSERT
-ON DOWNLOAD_REQUEST_LOG
+ON &&ADIT_SCHEMA..DOWNLOAD_REQUEST_LOG
 FOR EACH ROW
 BEGIN
-  SELECT DOWNLOAD_REQUEST_LOG_ID_SEQ.NEXTVAL
+  SELECT &&ADIT_SCHEMA..DOWNLOAD_REQUEST_LOG_ID_SEQ.NEXTVAL
   INTO :NEW.ID
   FROM DUAL;
 END;
 /
 
-CREATE SEQUENCE ERROR_LOG_ID_SEQ
+CREATE SEQUENCE &&ADIT_SCHEMA..ERROR_LOG_ID_SEQ
 INCREMENT BY 1
 START WITH 1
 NOMAXVALUE
@@ -678,18 +678,18 @@ NOCYCLE
 NOCACHE
 NOORDER;
 
-CREATE OR REPLACE TRIGGER SET_ERROR_LOG_ID
+CREATE OR REPLACE TRIGGER &&ADIT_SCHEMA..SET_ERROR_LOG_ID
 BEFORE INSERT
-ON ERROR_LOG
+ON &&ADIT_SCHEMA..ERROR_LOG
 FOR EACH ROW
 BEGIN
-  SELECT ERROR_LOG_ID_SEQ.NEXTVAL
+  SELECT &&ADIT_SCHEMA..ERROR_LOG_ID_SEQ.NEXTVAL
   INTO :NEW.ID
   FROM DUAL;
 END;
 /
 
-CREATE SEQUENCE METADATA_REQUEST_LOG_ID_SEQ
+CREATE SEQUENCE &&ADIT_SCHEMA..METADATA_REQUEST_LOG_ID_SEQ
 INCREMENT BY 1
 START WITH 1
 NOMAXVALUE
@@ -698,18 +698,18 @@ NOCYCLE
 NOCACHE
 NOORDER;
 
-CREATE OR REPLACE TRIGGER SET_METADATA_REQUEST_LOG_ID
+CREATE OR REPLACE TRIGGER &&ADIT_SCHEMA..SET_METADATA_REQUEST_LOG_ID
 BEFORE INSERT
-ON METADATA_REQUEST_LOG
+ON &&ADIT_SCHEMA..METADATA_REQUEST_LOG
 FOR EACH ROW
 BEGIN
-  SELECT METADATA_REQUEST_LOG_ID_SEQ.NEXTVAL
+  SELECT &&ADIT_SCHEMA..METADATA_REQUEST_LOG_ID_SEQ.NEXTVAL
   INTO :NEW.ID
   FROM DUAL;
 END;
 /
 
-CREATE SEQUENCE REQUEST_LOG_ID_SEQ
+CREATE SEQUENCE &&ADIT_SCHEMA..REQUEST_LOG_ID_SEQ
 INCREMENT BY 1
 START WITH 1
 NOMAXVALUE
@@ -718,18 +718,18 @@ NOCYCLE
 NOCACHE
 NOORDER;
 
-CREATE OR REPLACE TRIGGER SET_REQUEST_LOG_ID
+CREATE OR REPLACE TRIGGER &&ADIT_SCHEMA..SET_REQUEST_LOG_ID
 BEFORE INSERT
-ON REQUEST_LOG
+ON &&ADIT_SCHEMA..REQUEST_LOG
 FOR EACH ROW
 BEGIN
-  SELECT REQUEST_LOG_ID_SEQ.NEXTVAL
+  SELECT &&ADIT_SCHEMA..REQUEST_LOG_ID_SEQ.NEXTVAL
   INTO :NEW.ID
   FROM DUAL;
 END;
 /
 
-CREATE SEQUENCE SIGNATURE_ID_SEQ
+CREATE SEQUENCE &&ADIT_SCHEMA..SIGNATURE_ID_SEQ
 INCREMENT BY 1
 START WITH 1
 NOMAXVALUE
@@ -738,12 +738,12 @@ NOCYCLE
 NOCACHE
 NOORDER;
 
-CREATE OR REPLACE TRIGGER SET_SIGNATURE_ID
+CREATE OR REPLACE TRIGGER &&ADIT_SCHEMA..SET_SIGNATURE_ID
 BEFORE INSERT
-ON SIGNATURE
+ON &&ADIT_SCHEMA..SIGNATURE
 FOR EACH ROW
 BEGIN
-  SELECT SIGNATURE_ID_SEQ.NEXTVAL
+  SELECT &&ADIT_SCHEMA..SIGNATURE_ID_SEQ.NEXTVAL
   INTO :NEW.ID
   FROM DUAL;
 END;
