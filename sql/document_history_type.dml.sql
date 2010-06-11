@@ -95,3 +95,11 @@ INSERT INTO &&ADIT_SCHEMA..document_history_type(
 	'delete',
 	'Dokumendi kustutamine'
 );
+
+INSERT INTO &&ADIT_SCHEMA..document_history_type(
+	short_name,
+	description
+) VALUES (
+	'markViewed',
+	'Dokumendi vaadatuks märkimine'
+);
