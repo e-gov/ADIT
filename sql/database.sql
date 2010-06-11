@@ -115,7 +115,8 @@ CREATE TABLE &&ADIT_SCHEMA..ADIT_USER
 	dvk_org_code                VARCHAR2(50),    /* Kui kasutaja kasutab dokumentide saatmiseks ja vastuvõtmiseks DVK-d, siis on see väli täidetud. Väljale kirjutatakse kasutaja DVK asutuse registrikood. */
 	dvk_subdivision_short_name  VARCHAR2(50),    /* Kui kasutaja kasutab dokumentide saatmiseks ja vastuvõtmiseks DVK-d, siis on see väli täidetud juhul kui asutusel on DVK-s registreeritud vastav allüksus. Väljale kirjutatakse kasutaja DVK asutuse allüksuse lühinimi. */
 	dvk_occupation_short_name   VARCHAR2(50),    /* Kui kasutaja kasutab dokumentide saatmiseks ja vastuvõtmiseks DVK-d, siis on see väli täidetud juhul kui asutusel on DVK-s registreeritud vastav ametikoht. Väljale kirjutatakse kasutaja DVK asutuse ametikoha lühinimi. */
-	disk_quota                  NUMBER(18)    /* Kasutaja failide mahupiirang baitides. Kasutajale määratud mahupiirang omab prioriteeti kasutajatüübi mahupiirangu üle. */
+	disk_quota                  NUMBER(18),    /* Kasutaja failide mahupiirang baitides. Kasutajale määratud mahupiirang omab prioriteeti kasutajatüübi mahupiirangu üle. */
+	deactivation_date			DATE	/* Kasutajakonto kustutamise / deaktiveerimise kellaaeg ja kuupäev */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
 COMMENT ON TABLE &&ADIT_SCHEMA..ADIT_USER IS 'Kasutaja andmed. Kasutaja on alati isik, kelle määrab üheselt isikukood. Isik võib süsteemis esindada kas iseennast või asutust.';
