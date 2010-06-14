@@ -66,6 +66,8 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 						
 						// TODO: Lisame kasutaja või muudame olemasolevat
 						
+						
+						
 					} else {
 						String errorMessage = this.getMessageSource().getMessage("usertype.nonExistent", new Object[] { request.getUserType() }, Locale.ENGLISH);
 						throw new AditException(errorMessage, null);

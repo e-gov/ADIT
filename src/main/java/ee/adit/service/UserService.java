@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 
 import ee.adit.dao.RemoteApplicationDAO;
 import ee.adit.dao.UsertypeDAO;
+import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.RemoteApplication;
 import ee.adit.dao.pojo.Usertype;
 
@@ -66,6 +67,18 @@ public class UserService {
 		} else {
 			throw new RuntimeException("UserTypeShortName not defined.");
 		}	
+		
+		return result;
+	}
+	
+	public AditUser getUserByID(String userRegCode) {
+		AditUser result = null;
+		
+		try {
+			
+		} catch (Exception e) {
+			
+		}
 		
 		return result;
 	}
