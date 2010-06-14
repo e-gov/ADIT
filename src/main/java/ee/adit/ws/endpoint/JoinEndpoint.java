@@ -6,6 +6,8 @@ import org.apache.log4j.Logger;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
+import ee.adit.dao.pojo.AditUser;
+import ee.adit.dao.pojo.Usertype;
 import ee.adit.exception.AditException;
 import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.JoinRequest;
@@ -55,13 +57,13 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 				if(accessLevel == 2) {
 					
 					// TODO: Kontrollime, kas etteantud kasutajatüüp eksisteerib
-					boolean userTypeExists = this.getUserService().userTypeExists(request.getUserType());
+					Usertype usertype = this.getUserService().getUsertypeByID(request.getUserType());
 					
-					if(userTypeExists) {
+					if(usertype != null) {
 
 						// TODO: Kontrollime, kas kasutaja juba eksisteerib
 						// s.t. kas lisame uue kasutaja või muudame olemasolevat
-						
+						AditUser aditUser = userService.getUserByID(header.getIsikukood());
 						
 						
 						// TODO: Lisame kasutaja või muudame olemasolevat

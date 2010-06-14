@@ -2,6 +2,7 @@ package ee.adit.service;
 
 import org.apache.log4j.Logger;
 
+import ee.adit.dao.AditUserDAO;
 import ee.adit.dao.RemoteApplicationDAO;
 import ee.adit.dao.UsertypeDAO;
 import ee.adit.dao.pojo.AditUser;
@@ -15,6 +16,8 @@ public class UserService {
 	private RemoteApplicationDAO remoteApplicationDAO;
 	
 	private UsertypeDAO usertypeDAO;
+	
+	private AditUserDAO aditUserDAO;
 	
 	public boolean isApplicationRegistered(String remoteApplicationShortName) {
 		boolean result = false;
@@ -56,17 +59,14 @@ public class UserService {
 		return result;
 	}
 	
-	public boolean userTypeExists(String userTypeShortName) {
-		boolean result = false;
+	public Usertype getUsertypeByID(String usertypeShortName) {
+		Usertype result = null;
 		
-		if(userTypeShortName != null) {
-			Usertype userType = this.getUsertypeDAO().getByShortName(userTypeShortName);
-			if(userType != null) {
-				result = true;
-			}
-		} else {
-			throw new RuntimeException("UserTypeShortName not defined.");
-		}	
+		try {
+			result = this.getUsertypeDAO().getByShortName(usertypeShortName);
+		} catch (Exception e) {
+			LOG.error("Error while fetching Usertype by sgort name: ", e);
+		}
 		
 		return result;
 	}
@@ -75,9 +75,9 @@ public class UserService {
 		AditUser result = null;
 		
 		try {
-			
+			result = this.getAditUserDAO().getUserByID(userRegCode);
 		} catch (Exception e) {
-			
+			LOG.error("Error while fetching AditUser by ID: ", e);
 		}
 		
 		return result;
@@ -97,6 +97,14 @@ public class UserService {
 
 	public void setUsertypeDAO(UsertypeDAO usertypeDAO) {
 		this.usertypeDAO = usertypeDAO;
+	}
+
+	public AditUserDAO getAditUserDAO() {
+		return aditUserDAO;
+	}
+
+	public void setAditUserDAO(AditUserDAO aditUserDAO) {
+		this.aditUserDAO = aditUserDAO;
 	}
 	
 	

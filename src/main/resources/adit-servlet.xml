@@ -88,6 +88,8 @@
 	<bean id="userService" class="ee.adit.service.UserService">
 		<property name="remoteApplicationDAO" ref="remoteApplicationDAO"></property>
 		<property name="usertypeDAO" ref="usertypeDAO"></property>
+		<property name="aditUserDAO" ref="aditUserDAO"></property>
+		
 	</bean>
 
 	<bean id="myDataSource"
@@ -134,6 +136,9 @@
 		<property name="sessionFactory" ref="mySessionFactory" />
 	</bean>
 	
+	<bean id="aditUserDAO" class="ee.adit.dao.AditUserDAO">
+		<property name="sessionFactory" ref="mySessionFactory" />
+	</bean>
 
 	<!-- MessageSource -->
 	<bean id="messageSource"
