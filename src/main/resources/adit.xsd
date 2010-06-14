@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.riik.ee/adit/"
-	xmlns:tns="http://www.riik.ee/adit/" elementFormDefault="qualified"
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+	xmlns:tns="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" elementFormDefault="qualified"
 	xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/">
 	
-	<!-- <import namespace="http://schemas.xmlsoap.org/soap/encoding/"
-		schemaLocation="http://schemas.xmlsoap.org/soap/encoding/" />-->
+	<!-- 
+	<import namespace="http://schemas.xmlsoap.org/soap/encoding/"
+		schemaLocation="http://schemas.xmlsoap.org/soap/encoding/" />
+	 -->
 	
 	<element name="GetDocumentRequest" type="tns:GetDocumentRequest"></element>
 	<element name="GetDocumentResponse" type="tns:GetDocumentResponse"></element>
@@ -50,8 +52,6 @@
 	<!-- join päringu tüübid -->
 	<complexType name="JoinRequest">
 		<sequence>
-			<element name="application" type="string"></element>
-			<element name="institutionCode" type="string"></element>
 			<element name="userType" type="string"></element>
 			<element name="userName" type="string"></element>
 		</sequence>
