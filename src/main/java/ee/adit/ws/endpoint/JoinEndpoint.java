@@ -48,7 +48,8 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 			printRequest(request);
 
 			// TODO: check header and request objects - not null, not empty strings and so on.
-
+			checkHeader(header);
+			
 			// Kontrollime, kas päringu käivitanud infosüsteem on ADITis registreeritud
 			boolean applicationRegistered = this.getUserService().isApplicationRegistered(systemName);
 
@@ -81,17 +82,17 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 						
 					} else {
 						String errorMessage = this.getMessageSource().getMessage("usertype.nonExistent", new Object[] { request.getUserType() }, Locale.ENGLISH);
-						throw new AditException(errorMessage, null);
+						throw new AditException(errorMessage);
 					}
 					
 				} else {
 					String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.write", new Object[] { systemName }, Locale.ENGLISH);
-					throw new AditException(errorMessage, null);
+					throw new AditException(errorMessage);
 				}
 				
 			} else {
 				String errorMessage = this.getMessageSource().getMessage("application.notRegistered", new Object[] { systemName }, Locale.ENGLISH);
-				throw new AditException(errorMessage, null);
+				throw new AditException(errorMessage);
 			}
 			
 		} catch (Exception e) {
@@ -111,10 +112,22 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 			response.setMessages(arrayOfMessage);
 		}
 		
-		
 		return response;
 	}
 
+	private void checkHeader(CustomXTeeHeader header) throws Exception {
+		String errorMessage = null;
+		if(header != null) {
+			if(header.getIsikukood() == null) {
+				errorMessage = this.getMessageSource().getMessage("request.header.undefined.personalCode", new Object[] {}, Locale.ENGLISH);
+				throw new AditException(errorMessage);
+			} else if(header.getInfosysteem() == null) {
+				errorMessage = this.getMessageSource().getMessage("request.header.undefined.systemName", new Object[] {}, Locale.ENGLISH);
+				throw new AditException(errorMessage);
+			}			
+		}
+	}
+	
 	private static void printRequest(JoinRequest request) {
 
 		LOG.debug("-------- JoinRequest -------");
