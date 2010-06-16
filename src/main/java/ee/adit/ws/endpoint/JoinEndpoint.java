@@ -50,6 +50,9 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 			// Check header for required fields
 			checkHeader(header);
 			
+			// Check request body
+			checkRequest(request);
+			
 			// Kontrollime, kas päringu käivitanud infosüsteem on ADITis registreeritud
 			boolean applicationRegistered = this.getUserService().isApplicationRegistered(systemName);
 
@@ -125,6 +128,22 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 				errorMessage = this.getMessageSource().getMessage("request.header.undefined.systemName", new Object[] {}, Locale.ENGLISH);
 				throw new AditException(errorMessage);
 			}			
+		}
+	}
+	
+	private void checkRequest(JoinRequest request) {
+		String errorMessage = null; 
+		if(request != null) {
+			if(request.getUserType() == null) {
+				errorMessage = this.getMessageSource().getMessage("request.body.undefined.usertype", new Object[] {}, Locale.ENGLISH);
+				throw new AditException(errorMessage);
+			} else if(request.getUserName() == null) {
+				errorMessage = this.getMessageSource().getMessage("request.body.undefined.username", new Object[] {}, Locale.ENGLISH);
+				throw new AditException(errorMessage);
+			}
+		} else {
+			errorMessage = this.getMessageSource().getMessage("request.body.empty", new Object[] {}, Locale.ENGLISH);
+			throw new AditException(errorMessage);
 		}
 	}
 	
