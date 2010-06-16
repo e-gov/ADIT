@@ -1,7 +1,5 @@
 package ee.adit.ws.endpoint;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
@@ -9,11 +7,8 @@ import javax.xml.transform.dom.DOMSource;
 import org.apache.log4j.Logger;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
-import org.springframework.oxm.XmlMappingException;
-import org.springframework.oxm.castor.CastorMarshaller;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 import ee.adit.util.CustomXTeeHeader;
 
@@ -27,7 +22,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 
 	private Unmarshaller unmarshaller;
 
-	protected void invokeInternal(Document requestKeha, Element responseKeha,
+	protected void invokeInternal(Document requestKeha, Element responseElement,
 			CustomXTeeHeader xteeHeader) throws Exception {
 
 		LOG.debug("AbstractAditBaseEndpoint invoked");
@@ -46,11 +41,11 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 			
 			if(responseObject != null) {
 				// Marshall the response object
-				DOMResult reponseObjectResult = new DOMResult(responseKeha);
+				DOMResult reponseObjectResult = new DOMResult(responseElement);
 				this.getMarshaller().marshal(responseObject, reponseObjectResult);				
 				
-				// Add the reponse DOM tree as a child element to the responseKeha element
-				responseKeha.appendChild(reponseObjectResult.getNode());
+				// Add the reponse DOM tree as a child element to the responseKeha element				
+				responseElement.appendChild(reponseObjectResult.getNode());
 			} else {
 				LOG.error("Response object not initialized.");
 			}

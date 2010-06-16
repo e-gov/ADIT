@@ -122,8 +122,7 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 	private void getResponse(CustomXTeeHeader header, Document query, SOAPMessage responseMessage, SOAPMessage requestMessage, Document operationNode) throws Exception {
 		SOAPElement teenusElement = createXteeMessageStructure(requestMessage, responseMessage);
 		if (!metaService) copyParing(query, teenusElement);
-		Element kehaNode = teenusElement.addChildElement("keha");
-		invokeInternal(operationNode, kehaNode, header);
+		invokeInternal(operationNode, teenusElement, header);
 		if (!metaService) addHeader(header, responseMessage);
 	}
 	
@@ -183,7 +182,7 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 	 * @param responseKeha response body
 	 * @param xteeHeader
 	 */
-	protected abstract void invokeInternal(Document requestKeha, Element responseKeha, CustomXTeeHeader xTeeHeader) throws Exception;
+	protected abstract void invokeInternal(Document requestKeha, Element responseElement, CustomXTeeHeader xTeeHeader) throws Exception;
 
 	public MessageContext getMessageContext() {
 		return messageContext;
