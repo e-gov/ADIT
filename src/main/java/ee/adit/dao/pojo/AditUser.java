@@ -1,6 +1,6 @@
 package ee.adit.dao.pojo;
 
-// Generated 16.06.2010 14:33:21 by Hibernate Tools 3.2.4.GA
+// Generated 16.06.2010 15:06:32 by Hibernate Tools 3.2.4.GA
 
 import java.util.HashSet;
 import java.util.Set;
@@ -15,9 +15,9 @@ public class AditUser implements java.io.Serializable {
 	private String fullName;
 	private Boolean active;
 	private String dvkOrgCode;
+	private Long diskQuota;
 	private String dvkSubdivisionShortName;
 	private String dvkOccupationShortName;
-	private Long diskQuota;
 	private Set signatures = new HashSet(0);
 	private Set accessRestrictions = new HashSet(0);
 
@@ -30,17 +30,17 @@ public class AditUser implements java.io.Serializable {
 	}
 
 	public AditUser(String userCode, Usertype usertype, String fullName,
-			Boolean active, String dvkOrgCode, String dvkSubdivisionShortName,
-			String dvkOccupationShortName, Long diskQuota, Set signatures,
-			Set accessRestrictions) {
+			Boolean active, String dvkOrgCode, Long diskQuota,
+			String dvkSubdivisionShortName, String dvkOccupationShortName,
+			Set signatures, Set accessRestrictions) {
 		this.userCode = userCode;
 		this.usertype = usertype;
 		this.fullName = fullName;
 		this.active = active;
 		this.dvkOrgCode = dvkOrgCode;
+		this.diskQuota = diskQuota;
 		this.dvkSubdivisionShortName = dvkSubdivisionShortName;
 		this.dvkOccupationShortName = dvkOccupationShortName;
-		this.diskQuota = diskQuota;
 		this.signatures = signatures;
 		this.accessRestrictions = accessRestrictions;
 	}
@@ -85,6 +85,14 @@ public class AditUser implements java.io.Serializable {
 		this.dvkOrgCode = dvkOrgCode;
 	}
 
+	public Long getDiskQuota() {
+		return this.diskQuota;
+	}
+
+	public void setDiskQuota(Long diskQuota) {
+		this.diskQuota = diskQuota;
+	}
+
 	public String getDvkSubdivisionShortName() {
 		return this.dvkSubdivisionShortName;
 	}
@@ -99,14 +107,6 @@ public class AditUser implements java.io.Serializable {
 
 	public void setDvkOccupationShortName(String dvkOccupationShortName) {
 		this.dvkOccupationShortName = dvkOccupationShortName;
-	}
-
-	public Long getDiskQuota() {
-		return this.diskQuota;
-	}
-
-	public void setDiskQuota(Long diskQuota) {
-		this.diskQuota = diskQuota;
 	}
 
 	public Set getSignatures() {
