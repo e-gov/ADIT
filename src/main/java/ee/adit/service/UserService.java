@@ -86,15 +86,19 @@ public class UserService {
 		
 		RemoteApplication remoteApplication = this.getRemoteApplicationDAO().getByShortName(remoteApplicationShortName);
 		List<AccessRestriction> accessRestrictons = this.getAditUserDAO().getAccessRestrictionsForUser(aditUser);
+		LOG.debug("Number of access restrictions for (" + aditUser.getUserCode() + "): " + accessRestrictons.size());
 		Iterator<AccessRestriction> i = accessRestrictons.iterator();
 		
 		while(i.hasNext()) {
 			AccessRestriction accessRestriction = i.next();
-			if(accessRestriction.getRemoteApplication().equals(remoteApplication)) {
+			LOG.debug("Access restriction: " + accessRestriction.getRestriction());
+			if(accessRestriction.getRemoteApplication() != null && accessRestriction.getRemoteApplication().getShortName() != null && accessRestriction.getRemoteApplication().getShortName().equals(remoteApplication.getShortName())) {
 				// If the restriction restricts this application to read this user's data
 				if(ACCESS_RESTRICTION_READ.equalsIgnoreCase(accessRestriction.getRestriction())) {
+					LOG.debug("Found READ access restriction for user: " + aditUser.getUserCode());
 					result = 0;
 				} else if(ACCESS_RESTRICTION_WRITE.equalsIgnoreCase(accessRestriction.getRestriction())) {
+					LOG.debug("Found WRITE access restriction for user: " + aditUser.getUserCode());
 					result = 1;
 				}
 			}
