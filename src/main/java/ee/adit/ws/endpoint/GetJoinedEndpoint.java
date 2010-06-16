@@ -8,6 +8,8 @@ import java.util.Locale;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.soap.AttachmentPart;
+import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
@@ -18,6 +20,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.apache.log4j.Logger;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
+import org.springframework.ws.WebServiceMessage;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -86,7 +89,7 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 						if(userList != null && userList.size() > 0) {
 							LOG.debug("Number of users found: " + userList.size());
 							
-							// TODO: add userList as a SOAP attachment
+							// TODO: REFACTOR
 							// 1. Convert the java list to XML string							
 							List<GetJoinedResponseAttachmentUser> getJoinedResponseAttachmentUserList = new ArrayList<GetJoinedResponseAttachmentUser>();
 							
@@ -127,10 +130,16 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 							
 							// Add XML declaration
 							str = XMLUtil.XML_DECLARATION + str;
+							LOG.debug("Attachment XML string: " + str);
+							byte[] bytes = str.getBytes("UTF-8");
 							
-							LOG.debug("RESULT XML ATTACHMENT: " + str);
+							// TODO: base64 encode the bytes
 							
 							// 2. Add as an attachment
+							SOAPMessage responseMessage = this.getResponseMessage();
+							AttachmentPart attachmentPart = responseMessage.createAttachmentPart(bytes, "base64Binary");
+							
+							responseMessage.addAttachmentPart(attachmentPart);
 							
 						} else {
 							LOG.warn("No users were found.");

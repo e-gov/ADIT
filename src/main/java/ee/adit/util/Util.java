@@ -6,6 +6,14 @@ public class Util {
 
 	private static Logger LOG = Logger.getLogger(Util.class);
 	
+	public static String base64encode(String string) {
+		String result = null;
+		
+		// TODO: base64 encode
+		
+		return result;
+	}
+	
 	public static void printHeader(CustomXTeeHeader header) {
 		
 		LOG.debug("-------- XTeeHeader --------");
