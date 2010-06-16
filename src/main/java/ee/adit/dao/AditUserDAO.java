@@ -20,4 +20,12 @@ public class AditUserDAO extends AbstractAditDAO {
 		return result;
 	}
 	
+	public void saveOrUpdate(AditUser aditUser) {
+		try {
+			this.getHibernateTemplate().saveOrUpdate(aditUser);
+		} catch(Exception e) {
+			LOG.error("Exception while adding AditUser: ", e);
+		}
+	}
+	
 }

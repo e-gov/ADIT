@@ -19,6 +19,10 @@ public class UserService {
 	
 	private AditUserDAO aditUserDAO;
 	
+	private static final String USERTYPE_PERSON = "PERSON";
+	private static final String USERTYPE_INSTITUTION = "INSTITUTION";
+	private static final String USERTYPE_COMPANY = "COMPANY";
+	
 	public boolean isApplicationRegistered(String remoteApplicationShortName) {
 		boolean result = false;
 		LOG.debug("Checking if application '" + remoteApplicationShortName + "' is registered.");
@@ -84,7 +88,19 @@ public class UserService {
 	}
 	
 	public void addUser(String username, Usertype usertype, String institutionCode, String personalCode) {
-		
+		if(USERTYPE_PERSON.equalsIgnoreCase(usertype.getShortName()) || USERTYPE_INSTITUTION.equalsIgnoreCase(usertype.getShortName()) || USERTYPE_COMPANY.equalsIgnoreCase(usertype.getShortName())) {
+			addUser(username, personalCode, usertype);
+		} else {
+			// TODO: throw exception - unknown usertype
+		}
+	}
+	
+	public void addUser(String username, String usercode, Usertype usertype) {
+		AditUser aditUser = new AditUser();
+		aditUser.setUserCode(usercode);
+		aditUser.setFullName(username);
+		aditUser.setUsertype(usertype);
+		this.getAditUserDAO().saveOrUpdate(aditUser);
 	}
 	
 	public RemoteApplicationDAO getRemoteApplicationDAO() {
