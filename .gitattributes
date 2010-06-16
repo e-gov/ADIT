@@ -1,6 +1,7 @@
 * text=auto !eol
 WEB-INF/web.xml -text
 doc/testMessages/getDocument.v1.xml -text
+doc/testMessages/join.v1.xml -text
 lib/antlr-2.7.6.jar -text
 lib/castor-1.3.1-core.jar -text
 lib/castor-1.3.1.jar -text
@@ -100,6 +101,7 @@ src/main/java/ee/adit/pojo/UnJoinRequest.java -text
 src/main/java/ee/adit/pojo/UnJoinResponse.java -text
 src/main/java/ee/adit/pojo/package-info.java -text
 src/main/java/ee/adit/service/UserService.java -text
+src/main/java/ee/adit/util/CustomXTeeHeader.java -text
 src/main/java/ee/adit/util/Util.java -text
 src/main/java/ee/adit/ws/endpoint/AbstractAditBaseEndpoint.java -text
 src/main/java/ee/adit/ws/endpoint/GetDocumentEndpoint.java -text

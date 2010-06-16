@@ -110,12 +110,8 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 	private static void printRequest(JoinRequest request) {
 
 		LOG.debug("-------- JoinRequest -------");
-
-		LOG.debug("Application: " + request.getApplication());
-		LOG.debug("InstitutionCode: " + request.getInstitutionCode());
 		LOG.debug("UserName: " + request.getUserName());
 		LOG.debug("UserType: " + request.getUserType());
-
 		LOG.debug("----------------------------");
 
 	}
