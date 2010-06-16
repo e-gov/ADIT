@@ -17,6 +17,7 @@ import ee.adit.pojo.JoinRequest;
 import ee.adit.pojo.JoinResponse;
 import ee.adit.pojo.Success;
 import ee.adit.service.UserService;
+import ee.adit.util.Configuration;
 import ee.adit.util.CustomXTeeHeader;
 import ee.webmedia.xtee.annotation.XTeeService;
 
@@ -30,6 +31,8 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 
 	private MessageSource messageSource;
 
+	private Configuration configuration;
+	
 	@Override
 	protected Object invokeInternal(Object requestObject) throws Exception {
 		LOG.debug("GetJoinedEndpoint.v1 invoked.");
@@ -53,11 +56,20 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 				
 				if(accessLevel == 1) {
 					
-					// TODO: Kontrollime, kas küsitud kirjete arv jääb maksimaalse lubatud vahemiku piiresse
-					BigInteger maxResult = request.getMaxResults();
+					// Kontrollime, kas küsitud kirjete arv jääb maksimaalse lubatud vahemiku piiresse
+					BigInteger maxResults = request.getMaxResults();
+					BigInteger configurationMaxResults = configuration.getGetJoinedMaxResults();
 					
-					
-					
+					if(maxResults.intValue() <= configurationMaxResults.intValue()) {
+						
+						// TODO: teeme andmebaasist väljavõtte vastavalt offset-ile ja maksimaalsele ridade arvule
+						
+						
+					} else {
+						// TODO: tagasta veateade
+						String errorMessage = this.getMessageSource().getMessage("request.getJoined.maxResults.tooLarge", new Object[] { configurationMaxResults.toString() }, Locale.ENGLISH);
+						throw new AditException(errorMessage);
+					}
 					
 				} else {
 					String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.read", new Object[] { applicationName }, Locale.ENGLISH);
@@ -89,5 +101,13 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 
 	public void setMessageSource(MessageSource messageSource) {
 		this.messageSource = messageSource;
+	}
+
+	public Configuration getConfiguration() {
+		return configuration;
+	}
+
+	public void setConfiguration(Configuration configuration) {
+		this.configuration = configuration;
 	}
 }
