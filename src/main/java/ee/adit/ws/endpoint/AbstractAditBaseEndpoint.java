@@ -45,7 +45,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 				this.getMarshaller().marshal(responseObject, reponseObjectResult);				
 				
 				// Add the reponse DOM tree as a child element to the responseKeha element				
-				responseElement.appendChild(reponseObjectResult.getNode());
+				responseElement = (Element) reponseObjectResult.getNode();
 			} else {
 				LOG.error("Response object not initialized.");
 			}

@@ -14,6 +14,7 @@ import ee.adit.exception.AditException;
 import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.JoinRequest;
 import ee.adit.pojo.JoinResponse;
+import ee.adit.pojo.Success;
 import ee.adit.service.UserService;
 import ee.adit.util.CustomXTeeHeader;
 import ee.adit.util.Util;
@@ -96,7 +97,7 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 		} catch (Exception e) {
 			
 			LOG.error("Exception: ", e);
-			response.setSuccess(false);
+			response.setSuccess(new Success(false));
 			ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
 			
 			if(e instanceof AditException) {

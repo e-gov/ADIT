@@ -14,17 +14,22 @@
 	</class>
 
 	<class name="ee.adit.pojo.JoinResponse">
-		<map-to xml="keha" ns-uri="http://x-tee.riik.ee/xsd/xtee.xsd" ns-prefix="xtee"/>
-		<field name="success" type="java.lang.Boolean">
-			<bind-xml name="success" />
+		<map-to xml="keha" ns-prefix="xtee" />
+		<field name="success" type="ee.adit.pojo.Success" >
 		</field>
 		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
 			<bind-xml name="messages" />
 		</field>
 	</class>
 
+	<class name="ee.adit.pojo.Success">
+		<map-to xml="success" ns-prefix="adit" />
+		<field name="success" type="java.lang.Boolean" container="true">
+		</field>
+	</class>
+
 	<class name="ee.adit.pojo.ArrayOfMessage">
-		<map-to xml="messages" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="messages" ns-prefix="adit" />
 		<field name="message" type="java.lang.String" collection="arraylist">
 			<bind-xml name="message" />
 		</field>
