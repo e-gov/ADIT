@@ -98,7 +98,14 @@
 			<artifactId>log4j</artifactId>
 			<version>1.6.0</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}\lib\slf4j-log4j12-1.6.0.jar</systemPath>
+			<systemPath>${baseDir}\lib\slf4j-log4j12-1.5.8.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>java</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.5.10</version>
+			<scope>system</scope>
+			<systemPath>${baseDir}/lib/slf4j-api-1.5.8.jar</systemPath>
 		</dependency>
 
 		<!-- Hibernate -->
@@ -144,13 +151,7 @@
 			<scope>system</scope>
 			<systemPath>${baseDir}/lib/jta-1.1.jar</systemPath>
 		</dependency>
-		<dependency>
-			<groupId>java</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>1.5.10</version>
-			<scope>system</scope>
-			<systemPath>${baseDir}/lib/slf4j-api-1.6.0.jar</systemPath>
-		</dependency>
+		
 
 		<!-- Oracle -->
 		<dependency>
