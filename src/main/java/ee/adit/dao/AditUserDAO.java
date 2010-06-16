@@ -12,7 +12,7 @@ public class AditUserDAO extends AbstractAditDAO {
 		AditUser result = null;
 		
 		try {
-			this.getHibernateTemplate().get(AditUser.class, userRegCode);
+			result = (AditUser) this.getHibernateTemplate().get(AditUser.class, userRegCode);
 		} catch(Exception e) {
 			LOG.error("Exception while finding AditUser by registration code: ", e);
 		}

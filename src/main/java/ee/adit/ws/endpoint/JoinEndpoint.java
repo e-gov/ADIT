@@ -72,12 +72,14 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 
 						// Kontrollime, kas kasutaja juba eksisteerib
 						// s.t. kas lisame uue kasutaja või muudame olemasolevat
+						LOG.debug("Checking if user already exists...");
 						AditUser aditUser = userService.getUserByID(header.getIsikukood());
 						
 						// TODO: Lisame kasutaja või muudame olemasolevat
 						if(aditUser != null) { 
 							// Muudame olemasolevat kasutajat
 							LOG.info("Modifying existing user.");
+							userService.modifyUser(aditUser, request.getUserName(), usertype);
 						} else {
 							// Lisame uue kasutaja
 							LOG.info("Adding new user.");

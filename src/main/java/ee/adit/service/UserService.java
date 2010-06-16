@@ -76,10 +76,16 @@ public class UserService {
 	}
 	
 	public AditUser getUserByID(String userRegCode) {
+		LOG.debug("Getting user by ID: " + userRegCode);
 		AditUser result = null;
 		
 		try {
 			result = this.getAditUserDAO().getUserByID(userRegCode);
+			if(result != null) {
+				LOG.debug("Found user with ID: " + result.getUserCode() + ", name: " + result.getFullName());
+			} else {
+				LOG.debug("Did not find user.");
+			}
 		} catch (Exception e) {
 			LOG.error("Error while fetching AditUser by ID: ", e);
 		}
@@ -88,8 +94,10 @@ public class UserService {
 	}
 	
 	public void addUser(String username, Usertype usertype, String institutionCode, String personalCode) {
-		if(USERTYPE_PERSON.equalsIgnoreCase(usertype.getShortName()) || USERTYPE_INSTITUTION.equalsIgnoreCase(usertype.getShortName()) || USERTYPE_COMPANY.equalsIgnoreCase(usertype.getShortName())) {
+		if(USERTYPE_PERSON.equalsIgnoreCase(usertype.getShortName())) {
 			addUser(username, personalCode, usertype);
+		} else if(USERTYPE_INSTITUTION.equalsIgnoreCase(usertype.getShortName()) || USERTYPE_COMPANY.equalsIgnoreCase(usertype.getShortName())) {
+			addUser(username, institutionCode, usertype);
 		} else {
 			// TODO: throw exception - unknown usertype
 		}
@@ -100,6 +108,21 @@ public class UserService {
 		aditUser.setUserCode(usercode);
 		aditUser.setFullName(username);
 		aditUser.setUsertype(usertype);
+		this.getAditUserDAO().saveOrUpdate(aditUser);
+	}
+	
+	public void modifyUser(AditUser aditUser, String username, Usertype usertype) {
+		if(USERTYPE_PERSON.equalsIgnoreCase(usertype.getShortName())) {
+			modifyUser(aditUser, username);
+		} else if(USERTYPE_INSTITUTION.equalsIgnoreCase(usertype.getShortName()) || USERTYPE_COMPANY.equalsIgnoreCase(usertype.getShortName())) {
+			modifyUser(aditUser, username);
+		} else {
+			// TODO: throw exception - unknown usertype
+		}
+	}
+	
+	public void modifyUser(AditUser aditUser, String username) {
+		aditUser.setFullName(username);
 		this.getAditUserDAO().saveOrUpdate(aditUser);
 	}
 	
