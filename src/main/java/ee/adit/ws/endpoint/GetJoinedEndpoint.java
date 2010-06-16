@@ -1,20 +1,34 @@
 package ee.adit.ws.endpoint;
 
+import java.io.StringWriter;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.apache.log4j.Logger;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.exception.AditException;
 import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.GetJoinedRequest;
 import ee.adit.pojo.GetJoinedResponse;
+import ee.adit.pojo.GetJoinedResponseAttachment;
+import ee.adit.pojo.GetJoinedResponseAttachmentUser;
 import ee.adit.pojo.JoinRequest;
 import ee.adit.pojo.JoinResponse;
 import ee.adit.pojo.Success;
@@ -45,7 +59,6 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 		ArrayOfMessage messages = new ArrayOfMessage();
 		
 		try {
-			LOG.debug("JoinEndpoint invoked.");
 			GetJoinedRequest request = (GetJoinedRequest) requestObject;
 			CustomXTeeHeader header = this.getHeader();
 			String applicationName = header.getInfosysteem();
@@ -58,7 +71,7 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 				// Kontrollime, kas päringu käivitanud infosüsteem tohib andmeid näha
 				int accessLevel = this.getUserService().getAccessLevel(applicationName);
 				
-				if(accessLevel == 1) {
+				if(accessLevel >= 1) {
 					
 					// Kontrollime, kas küsitud kirjete arv jääb maksimaalse lubatud vahemiku piiresse
 					BigInteger maxResults = request.getMaxResults();
@@ -69,11 +82,45 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 						// Teeme andmebaasist väljavõtte vastavalt offset-ile ja maksimaalsele ridade arvule
 						List<AditUser> userList = this.getUserService().listUsers(request.getStartIndex(), maxResults);
 						
-						if(userList != null) {
+						if(userList != null && userList.size() > 0) {
 							LOG.debug("Number of users found: " + userList.size());
 							
 							// TODO: add userList as a SOAP attachment
-							// 1. Convert the java list to XML string
+							// 1. Convert the java list to XML string							
+							List<GetJoinedResponseAttachmentUser> getJoinedResponseAttachmentUserList = new ArrayList<GetJoinedResponseAttachmentUser>();
+							
+							for(int i = 0; i < userList.size(); i++) {
+								AditUser aditUser = userList.get(i);
+								GetJoinedResponseAttachmentUser getJoinedResponseAttachmentUser = new GetJoinedResponseAttachmentUser();
+								getJoinedResponseAttachmentUser.setCode(aditUser.getUserCode());
+								getJoinedResponseAttachmentUser.setName(aditUser.getFullName());
+								getJoinedResponseAttachmentUser.setType(aditUser.getUsertype().getShortName());
+								getJoinedResponseAttachmentUserList.add(getJoinedResponseAttachmentUser);
+							}
+							GetJoinedResponseAttachment getJoinedResponseAttachment = new GetJoinedResponseAttachment();
+							getJoinedResponseAttachment.setUsers(getJoinedResponseAttachmentUserList);
+							getJoinedResponseAttachment.setTotal(getJoinedResponseAttachmentUserList.size());
+							
+							// Convert the getJoinedResponseAttachment object to XML using the marshaller
+							DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+							DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+							Document doc = documentBuilder.newDocument();
+							Element rootElement = doc.createElement("result");
+							DOMResult reponseObjectResult = new DOMResult(rootElement);
+							this.getMarshaller().marshal(getJoinedResponseAttachment, reponseObjectResult);
+							
+							Node resultNode = reponseObjectResult.getNode();
+							
+							// TEST OUTPUT
+							TransformerFactory transFactory = TransformerFactory.newInstance();
+							Transformer transformer = transFactory.newTransformer();
+							StringWriter buffer = new StringWriter();
+							transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+							transformer.transform(new DOMSource(resultNode),
+							      new StreamResult(buffer));
+							String str = buffer.toString();
+							
+							LOG.debug("RESULT XML ATTACHMENT: " + str);
 							
 							// 2. Add as an attachment
 							

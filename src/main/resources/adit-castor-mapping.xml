@@ -35,26 +35,45 @@
 		</field>
 	</class>	
 
+	<class name="ee.adit.pojo.GetJoinedRequest">
+		<map-to xml="GetJoined" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<field name="maxResults" type="java.math.BigInteger">
+			<bind-xml name="maxResults" location="keha" />
+		</field>
+		<field name="startIndex" type="java.math.BigInteger">
+			<bind-xml name="startIndex" location="keha" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.GetJoinedResponse">
+		<map-to xml="keha" ns-prefix="xtee" />
+		<field name="success" type="ee.adit.pojo.Success" >
+		</field>
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
+			<bind-xml name="messages" />
+		</field>
+	</class>
+
 	<class name="ee.adit.pojo.GetJoinedResponseAttachment">
 		<map-to xml="user_list" />
 		<field name="total" type="java.lang.Integer">
 			<bind-xml name="total" />
 		</field>
 		<field name="users" type="ee.adit.pojo.GetJoinedResponseAttachmentUser" collection="arraylist">
-			<bind-xml name="user_list" />
+			<bind-xml name="user" />
 		</field>
 	</class>
  	
  	<class name="ee.adit.pojo.GetJoinedResponseAttachmentUser">
  		<map-to xml="user" />
  		<field name="code" type="java.lang.String">
-			<bind-xml name="total" />
+			<bind-xml name="code" />
 		</field>
 		<field name="name" type="java.lang.String">
-			<bind-xml name="total" />
+			<bind-xml name="name" />
 		</field>
 		<field name="type" type="java.lang.String">
-			<bind-xml name="total" />
+			<bind-xml name="type" />
 		</field>
  	</class>
  	

@@ -9,6 +9,7 @@ import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Property;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
 import ee.adit.dao.pojo.AccessRestriction;
@@ -55,10 +56,11 @@ public class AditUserDAO extends AbstractAditDAO {
 
 	public List<AditUser> listUsers(int startIndex, int maxResults) throws Exception {
 		List<AditUser> result = null;
-
-		DetachedCriteria criteria = DetachedCriteria.forClass(AditUser.class);
-		criteria.addOrder(Order.asc("fullName"));
-		result = this.getHibernateTemplate().findByCriteria(criteria, startIndex, maxResults);
+		
+		DetachedCriteria dt = DetachedCriteria.forClass(AditUser.class, "aditUser");
+		dt.add(Property.forName("aditUser.active").eq(new Boolean(true)));
+		dt.addOrder(Order.asc("aditUser.fullName"));
+		result = this.getHibernateTemplate().findByCriteria(dt, 0, maxResults);
 		
 		return result;
 	}
