@@ -33,6 +33,29 @@
 		<field name="message" type="java.lang.String" collection="arraylist">
 			<bind-xml name="message" />
 		</field>
+	</class>	
+
+	<class name="ee.adit.pojo.GetJoinedResponseAttachment">
+		<map-to xml="user_list" />
+		<field name="total" type="java.lang.Integer">
+			<bind-xml name="total" />
+		</field>
+		<field name="users" type="ee.adit.pojo.GetJoinedResponseAttachmentUser" collection="arraylist">
+			<bind-xml name="user_list" />
+		</field>
 	</class>
+ 	
+ 	<class name="ee.adit.pojo.GetJoinedResponseAttachmentUser">
+ 		<map-to xml="user" />
+ 		<field name="code" type="java.lang.String">
+			<bind-xml name="total" />
+		</field>
+		<field name="name" type="java.lang.String">
+			<bind-xml name="total" />
+		</field>
+		<field name="type" type="java.lang.String">
+			<bind-xml name="total" />
+		</field>
+ 	</class>
  	
 </mapping>

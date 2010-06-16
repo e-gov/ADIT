@@ -35,6 +35,8 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 
 	private Configuration configuration;
 	
+	
+	
 	@Override
 	protected Object invokeInternal(Object requestObject) throws Exception {
 		LOG.debug("GetJoinedEndpoint.v1 invoked.");
@@ -64,11 +66,17 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 					
 					if(maxResults.intValue() <= configurationMaxResults.intValue()) {
 						
-						// TODO: teeme andmebaasist väljavõtte vastavalt offset-ile ja maksimaalsele ridade arvule
+						// Teeme andmebaasist väljavõtte vastavalt offset-ile ja maksimaalsele ridade arvule
 						List<AditUser> userList = this.getUserService().listUsers(request.getStartIndex(), maxResults);
 						
 						if(userList != null) {
 							LOG.debug("Number of users found: " + userList.size());
+							
+							// TODO: add userList as a SOAP attachment
+							// 1. Convert the java list to XML string
+							
+							// 2. Add as an attachment
+							
 						} else {
 							LOG.warn("No users were found.");
 						}						

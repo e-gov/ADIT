@@ -93,6 +93,8 @@ src/main/java/ee/adit/pojo/GetDocumentRequest.java -text
 src/main/java/ee/adit/pojo/GetDocumentResponse.java -text
 src/main/java/ee/adit/pojo/GetJoinedRequest.java -text
 src/main/java/ee/adit/pojo/GetJoinedResponse.java -text
+src/main/java/ee/adit/pojo/GetJoinedResponseAttachment.java -text
+src/main/java/ee/adit/pojo/GetJoinedResponseAttachmentUser.java -text
 src/main/java/ee/adit/pojo/GetUserInfoRequest.java -text
 src/main/java/ee/adit/pojo/GetUserInfoResponse.java -text
 src/main/java/ee/adit/pojo/JoinRequest.java -text
