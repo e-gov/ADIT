@@ -47,7 +47,7 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 			Util.printHeader(header);
 			printRequest(request);
 
-			// TODO: check header and request objects - not null, not empty strings and so on.
+			// Check header for required fields
 			checkHeader(header);
 			
 			// Kontrollime, kas päringu käivitanud infosüsteem on ADITis registreeritud
