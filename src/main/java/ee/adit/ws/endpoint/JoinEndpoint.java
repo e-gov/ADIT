@@ -81,8 +81,7 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 						} else {
 							// Lisame uue kasutaja
 							LOG.info("Adding new user.");
-							String dvkOrgCode = null;
-							userService.addUser(request.getUserName(), usertype, header.getAsutus(), header.getIsikukood(), dvkOrgCode);
+							userService.addUser(request.getUserName(), usertype, header.getAsutus(), header.getIsikukood());
 						}
 						
 					} else {
