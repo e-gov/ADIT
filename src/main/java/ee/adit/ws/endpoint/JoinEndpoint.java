@@ -110,6 +110,9 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 				throw new AditException(errorMessage);
 			}
 			
+			// Set response messages
+			response.setMessages(messages);
+			
 		} catch (Exception e) {
 			
 			LOG.error("Exception: ", e);
@@ -126,9 +129,6 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 			LOG.debug("Adding exception messages to response object.");
 			response.setMessages(arrayOfMessage);
 		}
-		
-		// Set response messages
-		response.setMessages(messages);
 		
 		return response;
 	}
