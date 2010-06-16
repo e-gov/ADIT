@@ -47,8 +47,6 @@ public class JoinRequest {
     protected String userType;
     @XmlElement(required = true)
     protected String userName;
-    @XmlElement(required = true)
-    protected String dvkOrgCode;
 
     /**
      * Gets the value of the userType property.
@@ -96,30 +94,6 @@ public class JoinRequest {
      */
     public void setUserName(String value) {
         this.userName = value;
-    }
-
-    /**
-     * Gets the value of the dvkOrgCode property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getDvkOrgCode() {
-        return dvkOrgCode;
-    }
-
-    /**
-     * Sets the value of the dvkOrgCode property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setDvkOrgCode(String value) {
-        this.dvkOrgCode = value;
     }
 
 }
