@@ -54,7 +54,6 @@
 		<sequence>
 			<element name="userType" type="string"></element>
 			<element name="userName" type="string"></element>
-			<element name="dvkOrgCode" type="string"></element>
 		</sequence>
 	</complexType>
 	<complexType name="JoinResponse">
