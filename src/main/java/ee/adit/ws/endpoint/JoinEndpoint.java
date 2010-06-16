@@ -41,7 +41,7 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 			LOG.debug("JoinEndpoint invoked.");
 			JoinRequest request = (JoinRequest) requestObject;
 			CustomXTeeHeader header = this.getHeader();
-			String systemName = header.getInfosysteem();
+			String applicationName = header.getInfosysteem();
 			
 			// Log request
 			Util.printHeader(header);
@@ -54,13 +54,13 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 			checkRequest(request);
 			
 			// Kontrollime, kas päringu käivitanud infosüsteem on ADITis registreeritud
-			boolean applicationRegistered = this.getUserService().isApplicationRegistered(systemName);
+			boolean applicationRegistered = this.getUserService().isApplicationRegistered(applicationName);
 
 			if (applicationRegistered) {
 				
 				// Kontrollime, kas päringu käivitanud infosüsteem tohib
 				// andmeid muuta (või üldse näha)
-				int accessLevel = this.getUserService().getAccessLevel(systemName);
+				int accessLevel = this.getUserService().getAccessLevel(applicationName);
 				
 				// Application has write permission
 				if(accessLevel == 2) {
@@ -89,12 +89,12 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 					}
 					
 				} else {
-					String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.write", new Object[] { systemName }, Locale.ENGLISH);
+					String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.write", new Object[] { applicationName }, Locale.ENGLISH);
 					throw new AditException(errorMessage);
 				}
 				
 			} else {
-				String errorMessage = this.getMessageSource().getMessage("application.notRegistered", new Object[] { systemName }, Locale.ENGLISH);
+				String errorMessage = this.getMessageSource().getMessage("application.notRegistered", new Object[] { applicationName }, Locale.ENGLISH);
 				throw new AditException(errorMessage);
 			}
 			
