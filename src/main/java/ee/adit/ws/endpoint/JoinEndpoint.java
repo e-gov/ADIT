@@ -81,6 +81,8 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 						} else {
 							// Lisame uue kasutaja
 							LOG.info("Adding new user.");
+							String dvkOrgCode = null;
+							userService.addUser(request.getUserName(), usertype, header.getAsutus(), header.getIsikukood(), dvkOrgCode);
 						}
 						
 					} else {
@@ -127,7 +129,10 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 			} else if(header.getInfosysteem() == null) {
 				errorMessage = this.getMessageSource().getMessage("request.header.undefined.systemName", new Object[] {}, Locale.ENGLISH);
 				throw new AditException(errorMessage);
-			}			
+			} else if(header.getAsutus() == null) {
+				errorMessage = this.getMessageSource().getMessage("request.header.undefined.institution", new Object[] {}, Locale.ENGLISH);
+				throw new AditException(errorMessage);
+			}
 		}
 	}
 	

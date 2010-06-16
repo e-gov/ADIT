@@ -83,6 +83,10 @@ public class UserService {
 		return result;
 	}
 	
+	public void addUser(String username, Usertype usertype, String institutionCode, String personalCode, String dvkOrgCode) {
+		
+	}
+	
 	public RemoteApplicationDAO getRemoteApplicationDAO() {
 		return remoteApplicationDAO;
 	}
