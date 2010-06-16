@@ -1,10 +1,14 @@
 package ee.adit.service;
 
+import java.util.Iterator;
+import java.util.Set;
+
 import org.apache.log4j.Logger;
 
 import ee.adit.dao.AditUserDAO;
 import ee.adit.dao.RemoteApplicationDAO;
 import ee.adit.dao.UsertypeDAO;
+import ee.adit.dao.pojo.AccessRestriction;
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.RemoteApplication;
 import ee.adit.dao.pojo.Usertype;
@@ -22,6 +26,9 @@ public class UserService {
 	private static final String USERTYPE_PERSON = "PERSON";
 	private static final String USERTYPE_INSTITUTION = "INSTITUTION";
 	private static final String USERTYPE_COMPANY = "COMPANY";
+	
+	private static final String ACCESS_RESTRICTION_WRITE = "WRITE";
+	private static final String ACCESS_RESTRICTION_READ = "READ";
 	
 	public boolean isApplicationRegistered(String remoteApplicationShortName) {
 		boolean result = false;
@@ -57,6 +64,28 @@ public class UserService {
 				result = 2;
 			} else if(remoteApplication.getCanRead()) {
 				result = 1;
+			}
+		}
+		
+		return result;
+	}
+	
+	public int getAccessLevelForUser(String remoteApplicationShortName, AditUser aditUser) {
+		int result = 2;
+		
+		RemoteApplication remoteApplication = this.getRemoteApplicationDAO().getByShortName(remoteApplicationShortName);
+		Set<AccessRestriction> accessRestrictons = aditUser.getAccessRestrictions();
+		Iterator<AccessRestriction> i = accessRestrictons.iterator();
+		
+		while(i.hasNext()) {
+			AccessRestriction accessRestriction = i.next();
+			if(accessRestriction.getRemoteApplication().equals(remoteApplication)) {
+				// If the restriction restricts this application to read this user's data
+				if(ACCESS_RESTRICTION_READ.equalsIgnoreCase(accessRestriction.getRestriction())) {
+					result = 0;
+				} else if(ACCESS_RESTRICTION_WRITE.equalsIgnoreCase(accessRestriction.getRestriction())) {
+					result = 1;
+				}
 			}
 		}
 		

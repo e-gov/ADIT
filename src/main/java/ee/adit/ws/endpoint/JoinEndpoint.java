@@ -76,11 +76,20 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 						// Lisame kasutaja või muudame olemasolevat
 						if(aditUser != null) { 
 							// Muudame olemasolevat kasutajat
-							LOG.info("Modifying existing user.");
-							userService.modifyUser(aditUser, request.getUserName(), usertype);
-							response.setSuccess(new Success(true));
-							String message = this.getMessageSource().getMessage("request.join.success.userModified", new Object[] { request.getUserType() }, Locale.ENGLISH);
-							messages.addMessage(message);
+							// Kontrollime, kas infosüsteemil on õigus kasutaja andmeid muuta
+							int applicationAccessLevelForUser = userService.getAccessLevelForUser(applicationName, aditUser);
+							
+							if(applicationAccessLevelForUser == 2) {
+								LOG.info("Modifying existing user.");
+								userService.modifyUser(aditUser, request.getUserName(), usertype);
+								response.setSuccess(new Success(true));
+								String message = this.getMessageSource().getMessage("request.join.success.userModified", new Object[] { request.getUserType() }, Locale.ENGLISH);
+								messages.addMessage(message);
+							} else {
+								String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.forUser.write", new Object[] { applicationName, aditUser.getUserCode() }, Locale.ENGLISH);
+								throw new AditException(errorMessage);
+							}
+							
 						} else {
 							// Lisame uue kasutaja
 							LOG.info("Adding new user.");
