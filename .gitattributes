@@ -14,8 +14,8 @@ lib/jta-1.1.jar -text
 lib/log4j-1.2.16.jar -text
 lib/ojdbc14.jar -text
 lib/orai18n.jar -text
-lib/slf4j-api-1.6.0.jar -text
-lib/slf4j-log4j12-1.6.0.jar -text
+lib/slf4j-api-1.5.8.jar -text
+lib/slf4j-log4j12-1.5.8.jar -text
 lib/sources/spring-ws-1.5.9-sources.jar -text
 lib/sources/xtee-server-1.0-RC1-sources.jar -text
 lib/spring-webmvc.jar -text
