@@ -1,5 +1,6 @@
 package ee.adit.service;
 
+import java.math.BigInteger;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -171,6 +172,14 @@ public class UserService {
 		this.getAditUserDAO().saveOrUpdate(aditUser);
 	}
 	
+	public List<AditUser> listUsers(BigInteger startIndex, BigInteger maxResults) throws Exception {
+		List <AditUser> result = null;
+		
+		result = this.getAditUserDAO().listUsers(startIndex.intValue(), maxResults.intValue());
+		
+		return result;
+	}
+	
 	public RemoteApplicationDAO getRemoteApplicationDAO() {
 		return remoteApplicationDAO;
 	}
@@ -193,7 +202,6 @@ public class UserService {
 
 	public void setAditUserDAO(AditUserDAO aditUserDAO) {
 		this.aditUserDAO = aditUserDAO;
-	}
-	
+	}	
 	
 }

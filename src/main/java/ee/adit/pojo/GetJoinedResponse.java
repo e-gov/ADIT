@@ -43,27 +43,12 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class GetJoinedResponse {
 
-    protected boolean success;
+	@XmlElement(required = true)
+    protected Success success;
     @XmlElement(required = true)
     protected ArrayOfMessage messages;
     @XmlElement(required = true)
     protected byte[] userList;
-
-    /**
-     * Gets the value of the success property.
-     * 
-     */
-    public boolean isSuccess() {
-        return success;
-    }
-
-    /**
-     * Sets the value of the success property.
-     * 
-     */
-    public void setSuccess(boolean value) {
-        this.success = value;
-    }
 
     /**
      * Gets the value of the messages property.
@@ -110,5 +95,13 @@ public class GetJoinedResponse {
     public void setUserList(byte[] value) {
         this.userList = ((byte[]) value);
     }
+
+	public Success getSuccess() {
+		return success;
+	}
+
+	public void setSuccess(Success success) {
+		this.success = success;
+	}
 
 }

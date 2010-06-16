@@ -1,6 +1,7 @@
 package ee.adit.ws.endpoint;
 
 import java.math.BigInteger;
+import java.util.List;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import ee.adit.dao.pojo.AditUser;
 import ee.adit.exception.AditException;
 import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.GetJoinedRequest;
@@ -63,7 +65,13 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 					if(maxResults.intValue() <= configurationMaxResults.intValue()) {
 						
 						// TODO: teeme andmebaasist väljavõtte vastavalt offset-ile ja maksimaalsele ridade arvule
+						List<AditUser> userList = this.getUserService().listUsers(request.getStartIndex(), maxResults);
 						
+						if(userList != null) {
+							LOG.debug("Number of users found: " + userList.size());
+						} else {
+							LOG.warn("No users were found.");
+						}						
 						
 					} else {
 						String errorMessage = this.getMessageSource().getMessage("request.getJoined.maxResults.tooLarge", new Object[] { configurationMaxResults.toString() }, Locale.ENGLISH);
@@ -80,6 +88,18 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 			
 		} catch (Exception e) {
 			LOG.error("Exception: ", e);
+			response.setSuccess(new Success(false));
+			ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
+			
+			if(e instanceof AditException) {
+				LOG.debug("Adding exception message to response object.");
+				arrayOfMessage.getMessage().add(e.getMessage());
+			} else {
+				arrayOfMessage.getMessage().add("Could not register the user - service error.");
+			}
+			
+			LOG.debug("Adding exception messages to response object.");
+			response.setMessages(arrayOfMessage);
 		}
 		
 		return response;
