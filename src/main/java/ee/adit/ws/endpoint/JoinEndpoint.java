@@ -43,7 +43,7 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 			CustomXTeeHeader header = this.getHeader();
 			String systemName = header.getInfosysteem();
 			
-			// Log the input parameters
+			// Log request
 			Util.printHeader(header);
 			printRequest(request);
 
@@ -62,15 +62,15 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 				// andmeid muuta (või üldse näha)
 				int accessLevel = this.getUserService().getAccessLevel(systemName);
 				
-				// Application has write 
+				// Application has write permission
 				if(accessLevel == 2) {
 					
-					// TODO: Kontrollime, kas etteantud kasutajatüüp eksisteerib
+					// Kontrollime, kas etteantud kasutajatüüp eksisteerib
 					Usertype usertype = this.getUserService().getUsertypeByID(request.getUserType());
 					
 					if(usertype != null) {
 
-						// TODO: Kontrollime, kas kasutaja juba eksisteerib
+						// Kontrollime, kas kasutaja juba eksisteerib
 						// s.t. kas lisame uue kasutaja või muudame olemasolevat
 						AditUser aditUser = userService.getUserByID(header.getIsikukood());
 						
