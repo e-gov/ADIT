@@ -95,7 +95,7 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 				LOG.debug("Adding exception message to response object.");
 				arrayOfMessage.getMessage().add(e.getMessage());
 			} else {
-				arrayOfMessage.getMessage().add("Could not register the user - service error.");
+				arrayOfMessage.getMessage().add("Service error");
 			}
 			
 			LOG.debug("Adding exception messages to response object.");
