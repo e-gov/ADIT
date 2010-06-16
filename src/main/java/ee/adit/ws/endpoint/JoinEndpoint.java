@@ -127,6 +127,8 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 			response.setMessages(arrayOfMessage);
 		}
 		
+		LOG.debug("Messages: " + messages.getMessage().size());
+		
 		// Set response messages
 		response.setMessages(messages);
 		

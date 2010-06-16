@@ -76,9 +76,10 @@ public class ArrayOfMessage {
     }
     
     public void addMessage(String message) {
-    	if(this.message != null) {
-    		this.message.add(message);
-    	}
+    	if (this.message == null) {
+            this.message = new ArrayList<String>();
+        }
+    	this.message.add(message);
     }
 
 }
