@@ -1,6 +1,6 @@
 package ee.adit.dao.pojo;
 
-// Generated 2.06.2010 13:39:35 by Hibernate Tools 3.2.4.GA
+// Generated 16.06.2010 14:33:21 by Hibernate Tools 3.2.4.GA
 
 import java.math.BigDecimal;
 import java.sql.Blob;
@@ -11,7 +11,7 @@ import java.sql.Blob;
 public class DocumentFile implements java.io.Serializable {
 
 	private long id;
-	private long documentId;
+	private Document document;
 	private String fileName;
 	private String contentType;
 	private String description;
@@ -21,17 +21,17 @@ public class DocumentFile implements java.io.Serializable {
 	public DocumentFile() {
 	}
 
-	public DocumentFile(long id, long documentId, String fileName) {
+	public DocumentFile(long id, Document document, String fileName) {
 		this.id = id;
-		this.documentId = documentId;
+		this.document = document;
 		this.fileName = fileName;
 	}
 
-	public DocumentFile(long id, long documentId, String fileName,
+	public DocumentFile(long id, Document document, String fileName,
 			String contentType, String description, Blob fileData,
 			BigDecimal fileSizeBytes) {
 		this.id = id;
-		this.documentId = documentId;
+		this.document = document;
 		this.fileName = fileName;
 		this.contentType = contentType;
 		this.description = description;
@@ -47,12 +47,12 @@ public class DocumentFile implements java.io.Serializable {
 		this.id = id;
 	}
 
-	public long getDocumentId() {
-		return this.documentId;
+	public Document getDocument() {
+		return this.document;
 	}
 
-	public void setDocumentId(long documentId) {
-		this.documentId = documentId;
+	public void setDocument(Document document) {
+		this.document = document;
 	}
 
 	public String getFileName() {

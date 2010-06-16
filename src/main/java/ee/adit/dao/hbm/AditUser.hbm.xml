@@ -1,18 +1,18 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 2.06.2010 13:39:35 by Hibernate Tools 3.2.4.GA -->
+<!-- Generated 16.06.2010 14:33:21 by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
     <class name="ee.adit.dao.pojo.AditUser" table="ADIT_USER" schema="ADIT">
         <id name="userCode" type="string">
             <column name="USER_CODE" length="50" />
             <generator class="assigned" />
         </id>
+        <many-to-one name="usertype" class="ee.adit.dao.pojo.Usertype" fetch="select">
+            <column name="USERTYPE" length="50" not-null="true" />
+        </many-to-one>
         <property name="fullName" type="string">
             <column name="FULL_NAME" />
-        </property>
-        <property name="usertypeShortName" type="string">
-            <column name="USERTYPE_SHORT_NAME" length="50" not-null="true" />
         </property>
         <property name="active" type="java.lang.Boolean">
             <column name="ACTIVE" precision="1" scale="0" />
@@ -34,6 +34,12 @@
                 <column name="USER_CODE" length="50" />
             </key>
             <one-to-many class="ee.adit.dao.pojo.Signature" />
+        </set>
+        <set name="accessRestrictions" inverse="true" lazy="true" table="ACCESS_RESTRICTION" fetch="select">
+            <key>
+                <column name="USER_CODE" length="50" not-null="true" />
+            </key>
+            <one-to-many class="ee.adit.dao.pojo.AccessRestriction" />
         </set>
     </class>
 </hibernate-mapping>

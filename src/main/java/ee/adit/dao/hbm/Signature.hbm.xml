@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 2.06.2010 13:39:35 by Hibernate Tools 3.2.4.GA -->
+<!-- Generated 16.06.2010 14:33:21 by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
     <class name="ee.adit.dao.pojo.Signature" table="SIGNATURE" schema="ADIT">
         <id name="id" type="long">

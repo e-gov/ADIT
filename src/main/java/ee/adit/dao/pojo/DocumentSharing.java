@@ -1,6 +1,6 @@
 package ee.adit.dao.pojo;
 
-// Generated 2.06.2010 13:39:35 by Hibernate Tools 3.2.4.GA
+// Generated 16.06.2010 14:33:21 by Hibernate Tools 3.2.4.GA
 
 import java.util.Date;
 
@@ -10,38 +10,39 @@ import java.util.Date;
 public class DocumentSharing implements java.io.Serializable {
 
 	private long id;
+	private DocumentSharingType documentSharingType;
+	private DocumentDvkStatus documentDvkStatus;
+	private DocumentWfStatus documentWfStatus;
 	private long documentId;
 	private String userCode;
-	private String sharingTypeShortName;
 	private String taskDescription;
 	private Date creationDate;
-	private Long dvkStatusId;
-	private Long wfStatusId;
 	private Date lastAccessDate;
 
 	public DocumentSharing() {
 	}
 
-	public DocumentSharing(long id, long documentId, String userCode,
-			String sharingTypeShortName) {
+	public DocumentSharing(long id, DocumentSharingType documentSharingType,
+			long documentId, String userCode) {
 		this.id = id;
+		this.documentSharingType = documentSharingType;
 		this.documentId = documentId;
 		this.userCode = userCode;
-		this.sharingTypeShortName = sharingTypeShortName;
 	}
 
-	public DocumentSharing(long id, long documentId, String userCode,
-			String sharingTypeShortName, String taskDescription,
-			Date creationDate, Long dvkStatusId, Long wfStatusId,
+	public DocumentSharing(long id, DocumentSharingType documentSharingType,
+			DocumentDvkStatus documentDvkStatus,
+			DocumentWfStatus documentWfStatus, long documentId,
+			String userCode, String taskDescription, Date creationDate,
 			Date lastAccessDate) {
 		this.id = id;
+		this.documentSharingType = documentSharingType;
+		this.documentDvkStatus = documentDvkStatus;
+		this.documentWfStatus = documentWfStatus;
 		this.documentId = documentId;
 		this.userCode = userCode;
-		this.sharingTypeShortName = sharingTypeShortName;
 		this.taskDescription = taskDescription;
 		this.creationDate = creationDate;
-		this.dvkStatusId = dvkStatusId;
-		this.wfStatusId = wfStatusId;
 		this.lastAccessDate = lastAccessDate;
 	}
 
@@ -51,6 +52,30 @@ public class DocumentSharing implements java.io.Serializable {
 
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	public DocumentSharingType getDocumentSharingType() {
+		return this.documentSharingType;
+	}
+
+	public void setDocumentSharingType(DocumentSharingType documentSharingType) {
+		this.documentSharingType = documentSharingType;
+	}
+
+	public DocumentDvkStatus getDocumentDvkStatus() {
+		return this.documentDvkStatus;
+	}
+
+	public void setDocumentDvkStatus(DocumentDvkStatus documentDvkStatus) {
+		this.documentDvkStatus = documentDvkStatus;
+	}
+
+	public DocumentWfStatus getDocumentWfStatus() {
+		return this.documentWfStatus;
+	}
+
+	public void setDocumentWfStatus(DocumentWfStatus documentWfStatus) {
+		this.documentWfStatus = documentWfStatus;
 	}
 
 	public long getDocumentId() {
@@ -69,14 +94,6 @@ public class DocumentSharing implements java.io.Serializable {
 		this.userCode = userCode;
 	}
 
-	public String getSharingTypeShortName() {
-		return this.sharingTypeShortName;
-	}
-
-	public void setSharingTypeShortName(String sharingTypeShortName) {
-		this.sharingTypeShortName = sharingTypeShortName;
-	}
-
 	public String getTaskDescription() {
 		return this.taskDescription;
 	}
@@ -91,22 +108,6 @@ public class DocumentSharing implements java.io.Serializable {
 
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
-	}
-
-	public Long getDvkStatusId() {
-		return this.dvkStatusId;
-	}
-
-	public void setDvkStatusId(Long dvkStatusId) {
-		this.dvkStatusId = dvkStatusId;
-	}
-
-	public Long getWfStatusId() {
-		return this.wfStatusId;
-	}
-
-	public void setWfStatusId(Long wfStatusId) {
-		this.wfStatusId = wfStatusId;
 	}
 
 	public Date getLastAccessDate() {

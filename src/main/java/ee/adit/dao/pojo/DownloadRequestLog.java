@@ -1,6 +1,6 @@
 package ee.adit.dao.pojo;
 
-// Generated 2.06.2010 13:39:35 by Hibernate Tools 3.2.4.GA
+// Generated 16.06.2010 14:33:21 by Hibernate Tools 3.2.4.GA
 
 import java.util.Date;
 

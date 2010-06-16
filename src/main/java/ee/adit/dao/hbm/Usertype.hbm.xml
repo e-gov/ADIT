@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 2.06.2010 13:39:35 by Hibernate Tools 3.2.4.GA -->
+<!-- Generated 16.06.2010 14:33:21 by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
     <class name="ee.adit.dao.pojo.Usertype" table="USERTYPE" schema="ADIT">
         <id name="shortName" type="string">
@@ -14,5 +14,11 @@
         <property name="diskQuota" type="java.lang.Long">
             <column name="DISK_QUOTA" precision="18" scale="0" />
         </property>
+        <set name="aditUsers" inverse="true" lazy="true" table="ADIT_USER" fetch="select">
+            <key>
+                <column name="USERTYPE" length="50" not-null="true" />
+            </key>
+            <one-to-many class="ee.adit.dao.pojo.AditUser" />
+        </set>
     </class>
 </hibernate-mapping>

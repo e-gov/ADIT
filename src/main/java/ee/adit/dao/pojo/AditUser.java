@@ -1,6 +1,6 @@
 package ee.adit.dao.pojo;
 
-// Generated 2.06.2010 13:39:35 by Hibernate Tools 3.2.4.GA
+// Generated 16.06.2010 14:33:21 by Hibernate Tools 3.2.4.GA
 
 import java.util.HashSet;
 import java.util.Set;
@@ -11,35 +11,38 @@ import java.util.Set;
 public class AditUser implements java.io.Serializable {
 
 	private String userCode;
+	private Usertype usertype;
 	private String fullName;
-	private String usertypeShortName;
 	private Boolean active;
 	private String dvkOrgCode;
 	private String dvkSubdivisionShortName;
 	private String dvkOccupationShortName;
 	private Long diskQuota;
 	private Set signatures = new HashSet(0);
+	private Set accessRestrictions = new HashSet(0);
 
 	public AditUser() {
 	}
 
-	public AditUser(String userCode, String usertypeShortName) {
+	public AditUser(String userCode, Usertype usertype) {
 		this.userCode = userCode;
-		this.usertypeShortName = usertypeShortName;
+		this.usertype = usertype;
 	}
 
-	public AditUser(String userCode, String fullName, String usertypeShortName,
+	public AditUser(String userCode, Usertype usertype, String fullName,
 			Boolean active, String dvkOrgCode, String dvkSubdivisionShortName,
-			String dvkOccupationShortName, Long diskQuota, Set signatures) {
+			String dvkOccupationShortName, Long diskQuota, Set signatures,
+			Set accessRestrictions) {
 		this.userCode = userCode;
+		this.usertype = usertype;
 		this.fullName = fullName;
-		this.usertypeShortName = usertypeShortName;
 		this.active = active;
 		this.dvkOrgCode = dvkOrgCode;
 		this.dvkSubdivisionShortName = dvkSubdivisionShortName;
 		this.dvkOccupationShortName = dvkOccupationShortName;
 		this.diskQuota = diskQuota;
 		this.signatures = signatures;
+		this.accessRestrictions = accessRestrictions;
 	}
 
 	public String getUserCode() {
@@ -50,20 +53,20 @@ public class AditUser implements java.io.Serializable {
 		this.userCode = userCode;
 	}
 
+	public Usertype getUsertype() {
+		return this.usertype;
+	}
+
+	public void setUsertype(Usertype usertype) {
+		this.usertype = usertype;
+	}
+
 	public String getFullName() {
 		return this.fullName;
 	}
 
 	public void setFullName(String fullName) {
 		this.fullName = fullName;
-	}
-
-	public String getUsertypeShortName() {
-		return this.usertypeShortName;
-	}
-
-	public void setUsertypeShortName(String usertypeShortName) {
-		this.usertypeShortName = usertypeShortName;
 	}
 
 	public Boolean getActive() {
@@ -112,6 +115,14 @@ public class AditUser implements java.io.Serializable {
 
 	public void setSignatures(Set signatures) {
 		this.signatures = signatures;
+	}
+
+	public Set getAccessRestrictions() {
+		return this.accessRestrictions;
+	}
+
+	public void setAccessRestrictions(Set accessRestrictions) {
+		this.accessRestrictions = accessRestrictions;
 	}
 
 }

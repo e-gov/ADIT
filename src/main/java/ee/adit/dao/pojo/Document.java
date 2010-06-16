@@ -1,6 +1,6 @@
 package ee.adit.dao.pojo;
 
-// Generated 2.06.2010 13:39:35 by Hibernate Tools 3.2.4.GA
+// Generated 16.06.2010 14:33:21 by Hibernate Tools 3.2.4.GA
 
 import java.util.Date;
 import java.util.HashSet;
@@ -12,59 +12,66 @@ import java.util.Set;
 public class Document implements java.io.Serializable {
 
 	private long id;
+	private DocumentType documentType;
+	private Document document;
 	private String guid;
 	private String title;
-	private String type;
 	private String creatorCode;
 	private Date creationDate;
-	private String remoteApplicationShortName;
+	private String remoteApplication;
 	private Date lastModifiedDate;
 	private Long documentDvkStatusId;
 	private Long dvkId;
 	private Long documentWfStatusId;
-	private Long parentId;
 	private Boolean locked;
 	private Date lockingDate;
 	private Boolean signable;
 	private Boolean deflated;
 	private Date deflateDate;
 	private Boolean deleted;
+	private Set documents = new HashSet(0);
+	private Set documentFiles = new HashSet(0);
 	private Set signatures = new HashSet(0);
+	private Set documentHistories = new HashSet(0);
 
 	public Document() {
 	}
 
-	public Document(long id, String type, String creatorCode) {
+	public Document(long id, DocumentType documentType, String creatorCode) {
 		this.id = id;
-		this.type = type;
+		this.documentType = documentType;
 		this.creatorCode = creatorCode;
 	}
 
-	public Document(long id, String guid, String title, String type,
-			String creatorCode, Date creationDate,
-			String remoteApplicationShortName, Date lastModifiedDate,
+	public Document(long id, DocumentType documentType, Document document,
+			String guid, String title, String creatorCode, Date creationDate,
+			String remoteApplication, Date lastModifiedDate,
 			Long documentDvkStatusId, Long dvkId, Long documentWfStatusId,
-			Long parentId, Boolean locked, Date lockingDate, Boolean signable,
-			Boolean deflated, Date deflateDate, Boolean deleted, Set signatures) {
+			Boolean locked, Date lockingDate, Boolean signable,
+			Boolean deflated, Date deflateDate, Boolean deleted, Set documents,
+			Set documentFiles, Set signatures, Set documentHistories) {
 		this.id = id;
+		this.documentType = documentType;
+		this.document = document;
 		this.guid = guid;
 		this.title = title;
-		this.type = type;
 		this.creatorCode = creatorCode;
 		this.creationDate = creationDate;
-		this.remoteApplicationShortName = remoteApplicationShortName;
+		this.remoteApplication = remoteApplication;
 		this.lastModifiedDate = lastModifiedDate;
 		this.documentDvkStatusId = documentDvkStatusId;
 		this.dvkId = dvkId;
 		this.documentWfStatusId = documentWfStatusId;
-		this.parentId = parentId;
 		this.locked = locked;
 		this.lockingDate = lockingDate;
 		this.signable = signable;
 		this.deflated = deflated;
 		this.deflateDate = deflateDate;
 		this.deleted = deleted;
+		this.documents = documents;
+		this.documentFiles = documentFiles;
 		this.signatures = signatures;
+		this.documentHistories = documentHistories;
 	}
 
 	public long getId() {
@@ -73,6 +80,22 @@ public class Document implements java.io.Serializable {
 
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	public DocumentType getDocumentType() {
+		return this.documentType;
+	}
+
+	public void setDocumentType(DocumentType documentType) {
+		this.documentType = documentType;
+	}
+
+	public Document getDocument() {
+		return this.document;
+	}
+
+	public void setDocument(Document document) {
+		this.document = document;
 	}
 
 	public String getGuid() {
@@ -91,14 +114,6 @@ public class Document implements java.io.Serializable {
 		this.title = title;
 	}
 
-	public String getType() {
-		return this.type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
 	public String getCreatorCode() {
 		return this.creatorCode;
 	}
@@ -115,12 +130,12 @@ public class Document implements java.io.Serializable {
 		this.creationDate = creationDate;
 	}
 
-	public String getRemoteApplicationShortName() {
-		return this.remoteApplicationShortName;
+	public String getRemoteApplication() {
+		return this.remoteApplication;
 	}
 
-	public void setRemoteApplicationShortName(String remoteApplicationShortName) {
-		this.remoteApplicationShortName = remoteApplicationShortName;
+	public void setRemoteApplication(String remoteApplication) {
+		this.remoteApplication = remoteApplication;
 	}
 
 	public Date getLastModifiedDate() {
@@ -153,14 +168,6 @@ public class Document implements java.io.Serializable {
 
 	public void setDocumentWfStatusId(Long documentWfStatusId) {
 		this.documentWfStatusId = documentWfStatusId;
-	}
-
-	public Long getParentId() {
-		return this.parentId;
-	}
-
-	public void setParentId(Long parentId) {
-		this.parentId = parentId;
 	}
 
 	public Boolean getLocked() {
@@ -211,12 +218,36 @@ public class Document implements java.io.Serializable {
 		this.deleted = deleted;
 	}
 
+	public Set getDocuments() {
+		return this.documents;
+	}
+
+	public void setDocuments(Set documents) {
+		this.documents = documents;
+	}
+
+	public Set getDocumentFiles() {
+		return this.documentFiles;
+	}
+
+	public void setDocumentFiles(Set documentFiles) {
+		this.documentFiles = documentFiles;
+	}
+
 	public Set getSignatures() {
 		return this.signatures;
 	}
 
 	public void setSignatures(Set signatures) {
 		this.signatures = signatures;
+	}
+
+	public Set getDocumentHistories() {
+		return this.documentHistories;
+	}
+
+	public void setDocumentHistories(Set documentHistories) {
+		this.documentHistories = documentHistories;
 	}
 
 }

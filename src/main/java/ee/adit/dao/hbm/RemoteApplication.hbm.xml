@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 2.06.2010 13:39:35 by Hibernate Tools 3.2.4.GA -->
+<!-- Generated 16.06.2010 14:33:21 by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
     <class name="ee.adit.dao.pojo.RemoteApplication" table="REMOTE_APPLICATION" schema="ADIT">
         <id name="shortName" type="string">
@@ -20,5 +20,17 @@
         <property name="canWrite" type="java.lang.Boolean">
             <column name="CAN_WRITE" precision="1" scale="0" />
         </property>
+        <set name="accessRestrictions" inverse="true" lazy="true" table="ACCESS_RESTRICTION" fetch="select">
+            <key>
+                <column name="REMOTE_APPLICATION" length="50" not-null="true" />
+            </key>
+            <one-to-many class="ee.adit.dao.pojo.AccessRestriction" />
+        </set>
+        <set name="documentHistories" inverse="true" lazy="true" table="DOCUMENT_HISTORY" fetch="select">
+            <key>
+                <column name="REMOTE_APPLICATION" length="50" />
+            </key>
+            <one-to-many class="ee.adit.dao.pojo.DocumentHistory" />
+        </set>
     </class>
 </hibernate-mapping>
