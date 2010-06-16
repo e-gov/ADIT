@@ -53,6 +53,7 @@ public class UserService {
 	 * 0 - no access
 	 * 1 - read access
 	 * 2 - write acces (full access) 
+	 * 
 	 * @return
 	 */
 	public int getAccessLevel(String remoteApplicationShortName) {
@@ -69,7 +70,16 @@ public class UserService {
 		
 		return result;
 	}
-	
+	/**
+	 * Determines the level of access on user for this application:
+	 * 0 - no access
+	 * 1 - read access
+	 * 2 - write acces (full access) 
+	 *  
+	 * @param remoteApplicationShortName
+	 * @param aditUser
+	 * @return
+	 */
 	public int getAccessLevelForUser(String remoteApplicationShortName, AditUser aditUser) {
 		int result = 2;
 		
