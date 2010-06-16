@@ -35,6 +35,7 @@ import ee.adit.pojo.Success;
 import ee.adit.service.UserService;
 import ee.adit.util.Configuration;
 import ee.adit.util.CustomXTeeHeader;
+import ee.adit.util.XMLUtil;
 import ee.webmedia.xtee.annotation.XTeeService;
 
 @XTeeService(name = "getJoined", version = "v1")
@@ -119,6 +120,13 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 							transformer.transform(new DOMSource(resultNode),
 							      new StreamResult(buffer));
 							String str = buffer.toString();
+							
+							// Remove container tag
+							str.replaceAll("<result>", "");
+							str.replaceAll("</result>", "");
+							
+							// Add XML declaration
+							str = XMLUtil.XML_DECLARATION + str;
 							
 							LOG.debug("RESULT XML ATTACHMENT: " + str);
 							
