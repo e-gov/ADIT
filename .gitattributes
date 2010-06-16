@@ -87,6 +87,7 @@ src/main/java/ee/adit/dao/pojo/UserNotificationId.java -text
 src/main/java/ee/adit/dao/pojo/Usertype.java -text
 src/main/java/ee/adit/dao/test/TestDocumentDAO.java -text
 src/main/java/ee/adit/exception/AditException.java -text
+src/main/java/ee/adit/exception/AditInternalException.java -text
 src/main/java/ee/adit/pojo/ArrayOfMessage.java -text
 src/main/java/ee/adit/pojo/GetDocumentRequest.java -text
 src/main/java/ee/adit/pojo/GetDocumentResponse.java -text

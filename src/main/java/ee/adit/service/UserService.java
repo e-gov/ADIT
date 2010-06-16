@@ -13,6 +13,7 @@ import ee.adit.dao.pojo.AccessRestriction;
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.RemoteApplication;
 import ee.adit.dao.pojo.Usertype;
+import ee.adit.exception.AditInternalException;
 
 public class UserService {
 
@@ -137,13 +138,13 @@ public class UserService {
 		return result;
 	}
 	
-	public void addUser(String username, Usertype usertype, String institutionCode, String personalCode) {
+	public void addUser(String username, Usertype usertype, String institutionCode, String personalCode) throws AditInternalException {
 		if(USERTYPE_PERSON.equalsIgnoreCase(usertype.getShortName())) {
 			addUser(username, personalCode, usertype);
 		} else if(USERTYPE_INSTITUTION.equalsIgnoreCase(usertype.getShortName()) || USERTYPE_COMPANY.equalsIgnoreCase(usertype.getShortName())) {
 			addUser(username, institutionCode, usertype);
 		} else {
-			// TODO: throw exception - unknown usertype
+			throw new AditInternalException("Unknown usertype");
 		}
 	}
 	
@@ -155,13 +156,13 @@ public class UserService {
 		this.getAditUserDAO().saveOrUpdate(aditUser);
 	}
 	
-	public void modifyUser(AditUser aditUser, String username, Usertype usertype) {
+	public void modifyUser(AditUser aditUser, String username, Usertype usertype) throws AditInternalException {
 		if(USERTYPE_PERSON.equalsIgnoreCase(usertype.getShortName())) {
 			modifyUser(aditUser, username);
 		} else if(USERTYPE_INSTITUTION.equalsIgnoreCase(usertype.getShortName()) || USERTYPE_COMPANY.equalsIgnoreCase(usertype.getShortName())) {
 			modifyUser(aditUser, username);
 		} else {
-			// TODO: throw exception - unknown usertype
+			throw new AditInternalException("Unknown usertype");
 		}
 	}
 	
