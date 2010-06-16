@@ -1,14 +1,10 @@
 package ee.adit.ws.endpoint;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Usertype;
@@ -20,7 +16,6 @@ import ee.adit.pojo.Success;
 import ee.adit.service.UserService;
 import ee.adit.util.CustomXTeeHeader;
 import ee.adit.util.Util;
-import ee.webmedia.xtee.XTeeHeader;
 import ee.webmedia.xtee.annotation.XTeeService;
 
 @XTeeService(name = "join", version = "v1")
@@ -41,7 +36,7 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 		
 		try {
 
-			LOG.debug("JoinEndpoint invoked.");
+			LOG.debug("JoinEndpoint.v1 invoked.");
 			JoinRequest request = (JoinRequest) requestObject;
 			CustomXTeeHeader header = this.getHeader();
 			String applicationName = header.getInfosysteem();
