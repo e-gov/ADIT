@@ -39,9 +39,8 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 
 			LOG.debug("JoinEndpoint invoked.");
 			JoinRequest request = (JoinRequest) requestObject;
-			CustomXTeeHeader header = (CustomXTeeHeader) this.getHeader();
+			CustomXTeeHeader header = this.getHeader();
 			String systemName = header.getInfosysteem();
-			LOG.debug("SystemName: " + systemName);
 			
 			// Log the input parameters
 			Util.printHeader(header);
