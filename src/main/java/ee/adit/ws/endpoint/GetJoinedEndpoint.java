@@ -66,11 +66,9 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 						
 						
 					} else {
-						// TODO: tagasta veateade
 						String errorMessage = this.getMessageSource().getMessage("request.getJoined.maxResults.tooLarge", new Object[] { configurationMaxResults.toString() }, Locale.ENGLISH);
 						throw new AditException(errorMessage);
 					}
-					
 				} else {
 					String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.read", new Object[] { applicationName }, Locale.ENGLISH);
 					throw new AditException(errorMessage);
