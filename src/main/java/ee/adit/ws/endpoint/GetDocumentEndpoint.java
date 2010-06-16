@@ -10,7 +10,7 @@ import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import ee.webmedia.xtee.XTeeHeader;
+import ee.adit.util.CustomXTeeHeader;
 import ee.webmedia.xtee.annotation.XTeeService;
 
 @XTeeService(name = "getDocument", version = "v1")
@@ -21,7 +21,7 @@ public class GetDocumentEndpoint extends XteeCustomEndpoint {
 
 	@Override
 	protected void invokeInternal(Document requestKeha, Element responseKeha,
-			XTeeHeader xteeHeader) throws Exception {
+			CustomXTeeHeader xteeHeader) throws Exception {
 
 		MessageContext context = this.getMessageContext();
 

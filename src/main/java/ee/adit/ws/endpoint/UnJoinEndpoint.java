@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import ee.adit.util.CustomXTeeHeader;
 import ee.webmedia.xtee.XTeeHeader;
 import ee.webmedia.xtee.annotation.XTeeService;
 
@@ -15,17 +16,17 @@ public class UnJoinEndpoint extends XteeCustomEndpoint {
 	private static Logger LOG = Logger.getLogger(UnJoinEndpoint.class);
 
 	@Override
-	protected void invokeInternal(Document requestKeha, Element responseKeha, XTeeHeader xteeHeader) throws Exception {
+	protected void invokeInternal(Document requestKeha, Element responseKeha, CustomXTeeHeader xteeHeader) throws Exception {
 		LOG.debug("UnJoinEndpoint invoked.");
 		
-		// TODO: Kontrollime, kas päringu käivitanud infosüsteem on ADITis registreeritud
+		// TODO: Kontrollime, kas pï¿½ringu kï¿½ivitanud infosï¿½steem on ADITis registreeritud
 		
-		// TODO: Kontrollime, kas päringu käivitanud infosüsteem tohib andmeid muuta (või üldse näha)
+		// TODO: Kontrollime, kas pï¿½ringu kï¿½ivitanud infosï¿½steem tohib andmeid muuta (vï¿½i ï¿½ldse nï¿½ha)
 		
-		// TODO: Kontrollime, kas päringu käivitanud kasutaja eksisteerib
+		// TODO: Kontrollime, kas pï¿½ringu kï¿½ivitanud kasutaja eksisteerib
 		
-		// TODO: Kontrollime, kas infosüsteem tohib antud kasutaja andmeid muuta
+		// TODO: Kontrollime, kas infosï¿½steem tohib antud kasutaja andmeid muuta
 		
-		// TODO: Märgime kasutaja lahkunuks
+		// TODO: Mï¿½rgime kasutaja lahkunuks
 	}
 }

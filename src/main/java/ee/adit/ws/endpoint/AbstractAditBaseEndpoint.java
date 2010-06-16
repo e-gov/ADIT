@@ -11,21 +11,20 @@ import org.springframework.oxm.XmlMappingException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import ee.webmedia.xtee.XTeeHeader;
-import ee.webmedia.xtee.endpoint.AbstractXTeeBaseEndpoint;
+import ee.adit.util.CustomXTeeHeader;
 
 public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 
 	private static Logger LOG = Logger.getLogger(AbstractAditBaseEndpoint.class);
 	
-	private XTeeHeader header;
+	private CustomXTeeHeader header;
 
 	private Marshaller marshaller;
 
 	private Unmarshaller unmarshaller;
 
 	protected void invokeInternal(Document requestKeha, Element responseKeha,
-			XTeeHeader xteeHeader) throws Exception {
+			CustomXTeeHeader xteeHeader) throws Exception {
 
 		LOG.debug("AbstractAditBaseEndpoint invoked");
 		
@@ -75,11 +74,11 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 		this.unmarshaller = unmarshaller;
 	}
 
-	public XTeeHeader getHeader() {
+	public CustomXTeeHeader getHeader() {
 		return header;
 	}
 
-	public void setHeader(XTeeHeader header) {
+	public void setHeader(CustomXTeeHeader header) {
 		this.header = header;
 	}
 

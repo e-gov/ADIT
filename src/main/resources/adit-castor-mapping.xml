@@ -5,12 +5,6 @@
 
 	<class name="ee.adit.pojo.JoinRequest">
 		<map-to xml="Join" ns-uri="http://www.riik.ee/adit/" />
-		<field name="application" type="java.lang.String">
-			<bind-xml name="application" location="keha" />
-		</field>
-		<field name="institutionCode" type="java.lang.String">
-			<bind-xml name="institutionCode" location="keha" />
-		</field>
 		<field name="userType" type="java.lang.String">
 			<bind-xml name="userType" location="keha" />
 		</field>

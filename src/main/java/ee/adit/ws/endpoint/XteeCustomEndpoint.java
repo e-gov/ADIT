@@ -27,6 +27,7 @@ import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPMessage;
 
+import org.apache.log4j.Logger;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.MessageEndpoint;
 import org.w3c.dom.Attr;
@@ -35,6 +36,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
+import ee.adit.util.CustomXTeeHeader;
 import ee.webmedia.soap.SOAPUtil;
 import ee.webmedia.xtee.XTeeHeader;
 import ee.webmedia.xtee.XTeeUtil;
@@ -47,6 +49,8 @@ import ee.webmedia.xtee.XTeeUtil;
  * @author Dmitri Danilkin
  */
 public abstract class XteeCustomEndpoint implements MessageEndpoint {
+	
+	private static Logger LOG = Logger.getLogger(XteeCustomEndpoint.class);
 	
 	public final static String RESPONSE_SUFFIX = "Response";
 	
@@ -66,7 +70,7 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 			responseMessage.getSOAPHeader().detachNode();
 		}
 		
-		XTeeHeader pais = metaService ? null : parseXteeHeader(paringMessage);
+		CustomXTeeHeader pais = metaService ? null : parseXteeHeader(paringMessage);
 		Document paring = metaService ? null : parseQuery(paringMessage);
 		
 		
@@ -89,12 +93,13 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 	
 	
 	@SuppressWarnings("unchecked")
-	private XTeeHeader parseXteeHeader(SOAPMessage paringMessage) throws SOAPException {
-		XTeeHeader pais = new XTeeHeader();
+	private CustomXTeeHeader parseXteeHeader(SOAPMessage paringMessage) throws SOAPException {
+		CustomXTeeHeader pais = new CustomXTeeHeader();
 		SOAPHeader header = paringMessage.getSOAPHeader();
 		for(Iterator<Node> headerElemendid = header.getChildElements(); headerElemendid.hasNext(); ) {
 			Node headerElement = headerElemendid.next();
 			if(!SOAPUtil.isTextNode(headerElement)) {
+				LOG.debug("Parsing XTee header element: " + headerElement.getLocalName());
 				pais.addElement(new QName(headerElement.getNamespaceURI(),headerElement.getLocalName()), headerElement.getTextContent());
 			}
 		}
@@ -114,7 +119,7 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 		return query;
 	}
 	
-	private void getResponse(XTeeHeader header, Document query, SOAPMessage responseMessage, SOAPMessage requestMessage, Document operationNode) throws Exception {
+	private void getResponse(CustomXTeeHeader header, Document query, SOAPMessage responseMessage, SOAPMessage requestMessage, Document operationNode) throws Exception {
 		SOAPElement teenusElement = createXteeMessageStructure(requestMessage, responseMessage);
 		if (!metaService) copyParing(query, teenusElement);
 		Element kehaNode = teenusElement.addChildElement("keha");
@@ -150,7 +155,7 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 	    }
 	}
 	
-	private void addHeader(XTeeHeader pais, SOAPMessage message) throws SOAPException {
+	private void addHeader(CustomXTeeHeader pais, SOAPMessage message) throws SOAPException {
 		XTeeUtil.addXteeNamespace(message);
 		for (QName qname : pais.getElemendid().keySet()) {
 			if (qname.getNamespaceURI().equals(XTeeUtil.XTEE_NS_URI)) {
@@ -173,12 +178,12 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 
 	/**
 	 * Method which must implement the service logic, receives <code>requestKeha</code>, <code>responseKeha<code>
-	 * and <code>XteeHeader</code>
+	 * and <code>CustomXTeeHeader</code>
 	 * @param requestKeha query body
 	 * @param responseKeha response body
 	 * @param xteeHeader
 	 */
-	protected abstract void invokeInternal(Document requestKeha, Element responseKeha, XTeeHeader xteeHeader) throws Exception;
+	protected abstract void invokeInternal(Document requestKeha, Element responseKeha, CustomXTeeHeader xTeeHeader) throws Exception;
 
 	public MessageContext getMessageContext() {
 		return messageContext;

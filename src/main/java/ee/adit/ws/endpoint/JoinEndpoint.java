@@ -5,6 +5,8 @@ import java.util.Locale;
 import org.apache.log4j.Logger;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Usertype;
@@ -13,6 +15,7 @@ import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.JoinRequest;
 import ee.adit.pojo.JoinResponse;
 import ee.adit.service.UserService;
+import ee.adit.util.CustomXTeeHeader;
 import ee.adit.util.Util;
 import ee.webmedia.xtee.XTeeHeader;
 import ee.webmedia.xtee.annotation.XTeeService;
@@ -36,8 +39,10 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 
 			LOG.debug("JoinEndpoint invoked.");
 			JoinRequest request = (JoinRequest) requestObject;
-			XTeeHeader header = this.getHeader();
-
+			CustomXTeeHeader header = (CustomXTeeHeader) this.getHeader();
+			String systemName = header.getInfosysteem();
+			LOG.debug("SystemName: " + systemName);
+			
 			// Log the input parameters
 			Util.printHeader(header);
 			printRequest(request);
@@ -45,13 +50,13 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 			// TODO: check header and request objects - not null, not empty strings and so on.
 
 			// Kontrollime, kas päringu käivitanud infosüsteem on ADITis registreeritud
-			boolean applicationRegistered = this.getUserService().isApplicationRegistered(request.getApplication());
+			boolean applicationRegistered = this.getUserService().isApplicationRegistered(systemName);
 
 			if (applicationRegistered) {
 				
 				// Kontrollime, kas päringu käivitanud infosüsteem tohib
 				// andmeid muuta (või üldse näha)
-				int accessLevel = this.getUserService().getAccessLevel(request.getApplication());
+				int accessLevel = this.getUserService().getAccessLevel(systemName);
 				
 				// Application has write 
 				if(accessLevel == 2) {
@@ -81,12 +86,12 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 					}
 					
 				} else {
-					String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.write", new Object[] { request.getApplication() }, Locale.ENGLISH);
+					String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.write", new Object[] { systemName }, Locale.ENGLISH);
 					throw new AditException(errorMessage, null);
 				}
 				
 			} else {
-				String errorMessage = this.getMessageSource().getMessage("application.notRegistered", new Object[] { request.getApplication() }, Locale.ENGLISH);
+				String errorMessage = this.getMessageSource().getMessage("application.notRegistered", new Object[] { systemName }, Locale.ENGLISH);
 				throw new AditException(errorMessage, null);
 			}
 			
@@ -131,4 +136,5 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 	public void setMessageSource(MessageSource messageSource) {
 		this.messageSource = messageSource;
 	}
+	
 }
