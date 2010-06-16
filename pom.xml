@@ -149,7 +149,7 @@
 			<artifactId>slf4j-api</artifactId>
 			<version>1.5.10</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}/lib/slf4j-api-1.5.8.jar</systemPath>
+			<systemPath>${baseDir}/lib/slf4j-api-1.6.0.jar</systemPath>
 		</dependency>
 
 		<!-- Oracle -->
