@@ -1,5 +1,7 @@
 package ee.adit.ws.endpoint;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
@@ -8,8 +10,10 @@ import org.apache.log4j.Logger;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
 import org.springframework.oxm.XmlMappingException;
+import org.springframework.oxm.castor.CastorMarshaller;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 import ee.adit.util.CustomXTeeHeader;
 
@@ -42,8 +46,8 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 			
 			if(responseObject != null) {
 				// Marshall the response object
-				DOMResult reponseObjectResult = new DOMResult();
-				this.getMarshaller().marshal(responseObject, reponseObjectResult);
+				DOMResult reponseObjectResult = new DOMResult(responseKeha);
+				this.getMarshaller().marshal(responseObject, reponseObjectResult);				
 				
 				// Add the reponse DOM tree as a child element to the responseKeha element
 				responseKeha.appendChild(reponseObjectResult.getNode());
@@ -52,8 +56,8 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 			}
 			
 			
-		} catch (XmlMappingException e) {
-			throw e;
+		} catch (Exception e) {
+			LOG.error("Exception while marshalling response object: ", e);
 		}
 		
 	}

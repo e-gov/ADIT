@@ -1,6 +1,6 @@
 package ee.adit.exception;
 
-public class AditException extends Exception {
+public class AditException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 

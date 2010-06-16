@@ -100,13 +100,17 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 			ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
 			
 			if(e instanceof AditException) {
+				LOG.debug("Adding exception message to response object.");
 				arrayOfMessage.getMessage().add(e.getMessage());
 			} else {
 				arrayOfMessage.getMessage().add("Could not register the user.");
 			}
 			
+			LOG.debug("Adding exception messages to response object.");
 			response.setMessages(arrayOfMessage);
 		}
+		
+		
 		return response;
 	}
 
