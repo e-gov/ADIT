@@ -2,7 +2,7 @@
    <soapenv:Header>
       <xtee:nimi>ametlikud-dokumendid.join.v1</xtee:nimi>
       <xtee:id>00000000000000</xtee:id>
-      <xtee:isikukood>EE38407089745</xtee:isikukood>
+      <xtee:isikukood>EE38407054916</xtee:isikukood>
       <xtee:andmekogu>ametlikud-dokumendid</xtee:andmekogu>
       <xtee:asutus>12345678</xtee:asutus>
       <adit:infosysteem>KOV</adit:infosysteem>
