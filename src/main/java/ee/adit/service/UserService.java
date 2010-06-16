@@ -1,6 +1,7 @@
 package ee.adit.service;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -84,7 +85,7 @@ public class UserService {
 		int result = 2;
 		
 		RemoteApplication remoteApplication = this.getRemoteApplicationDAO().getByShortName(remoteApplicationShortName);
-		Set<AccessRestriction> accessRestrictons = aditUser.getAccessRestrictions();
+		List<AccessRestriction> accessRestrictons = this.getAditUserDAO().getAccessRestrictionsForUser(aditUser);
 		Iterator<AccessRestriction> i = accessRestrictons.iterator();
 		
 		while(i.hasNext()) {
