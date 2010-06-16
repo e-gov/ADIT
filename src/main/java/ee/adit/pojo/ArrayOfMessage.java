@@ -70,5 +70,15 @@ public class ArrayOfMessage {
         }
         return this.message;
     }
+    
+    public void setMessage(List<String> message) {
+    	this.message = message;
+    }
+    
+    public void addMessage(String message) {
+    	if(this.message != null) {
+    		this.message.add(message);
+    	}
+    }
 
 }

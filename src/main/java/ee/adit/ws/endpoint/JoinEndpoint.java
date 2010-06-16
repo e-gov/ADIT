@@ -1,5 +1,7 @@
 package ee.adit.ws.endpoint;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
@@ -35,6 +37,7 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 	protected Object invokeInternal(Object requestObject) throws Exception {
 
 		JoinResponse response = new JoinResponse();
+		ArrayOfMessage messages = new ArrayOfMessage();
 		
 		try {
 
@@ -75,15 +78,21 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 						LOG.debug("Checking if user already exists...");
 						AditUser aditUser = userService.getUserByID(header.getIsikukood());
 						
-						// TODO: Lisame kasutaja või muudame olemasolevat
+						// Lisame kasutaja või muudame olemasolevat
 						if(aditUser != null) { 
 							// Muudame olemasolevat kasutajat
 							LOG.info("Modifying existing user.");
 							userService.modifyUser(aditUser, request.getUserName(), usertype);
+							response.setSuccess(new Success(true));
+							String message = this.getMessageSource().getMessage("request.join.success.userModified", new Object[] { request.getUserType() }, Locale.ENGLISH);
+							messages.addMessage(message);
 						} else {
 							// Lisame uue kasutaja
 							LOG.info("Adding new user.");
 							userService.addUser(request.getUserName(), usertype, header.getAsutus(), header.getIsikukood());
+							response.setSuccess(new Success(true));
+							String message = this.getMessageSource().getMessage("request.join.success.userAdded", new Object[] { request.getUserType() }, Locale.ENGLISH);
+							messages.addMessage(message);
 						}
 						
 					} else {
@@ -117,6 +126,9 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 			LOG.debug("Adding exception messages to response object.");
 			response.setMessages(arrayOfMessage);
 		}
+		
+		// Set response messages
+		response.setMessages(messages);
 		
 		return response;
 	}
