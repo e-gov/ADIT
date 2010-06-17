@@ -1,0 +1,33 @@
+1. Download and install m2eclipse plugin for Eclipse.
+2. Download and install maven2
+3. Configure Tomcat Maven plugin (in project pom.xml):
+
+<plugin>
+  <groupId>org.codehaus.mojo</groupId>
+  <artifactId>tomcat-maven-plugin</artifactId>
+  <configuration>
+    <server>tomcat6</server>
+    <warFile>${baseDir}/target/adit.war</warFile>
+  </configuration>
+</plugin>
+
+4. Create and configure Maven2 settings:
+ - create file: [MAVEN2_HOME]\conf\settings.xml: 
+
+<servers>
+  <server>
+    <id>tomcat6</id>
+    <username>tomcat</username>
+    <password>tomcat</password>
+  </server>
+</servers> 
+
+5. Create Maven2 default build command:
+Right click on pom.xml -> "Run as" -> "Run configurations":
+ -> Maven Build -> New:
+   a. Set Base directory to project base directory
+   b. Set "Goals" to "tomcat:redeploy"
+   c. Set "Maven Runtime" to "External" (configure it) 
+
+6. Run the maven build, type "ALT + SHIFT + X" and then "M".
+
