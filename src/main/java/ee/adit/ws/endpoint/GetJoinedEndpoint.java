@@ -38,6 +38,7 @@ import ee.adit.pojo.Success;
 import ee.adit.service.UserService;
 import ee.adit.util.Configuration;
 import ee.adit.util.CustomXTeeHeader;
+import ee.adit.util.Util;
 import ee.adit.util.XMLUtil;
 import ee.webmedia.xtee.annotation.XTeeService;
 
@@ -131,13 +132,13 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 							// Add XML declaration
 							str = XMLUtil.XML_DECLARATION + str;
 							LOG.debug("Attachment XML string: " + str);
-							byte[] bytes = str.getBytes("UTF-8");
 							
 							// TODO: base64 encode the bytes
+							String base64Encoded = Util.base64encode(str);
 							
 							// 2. Add as an attachment
 							SOAPMessage responseMessage = this.getResponseMessage();
-							AttachmentPart attachmentPart = responseMessage.createAttachmentPart(bytes, "base64Binary");
+							AttachmentPart attachmentPart = responseMessage.createAttachmentPart(base64Encoded.getBytes(), "base64Binary");
 							
 							responseMessage.addAttachmentPart(attachmentPart);
 							

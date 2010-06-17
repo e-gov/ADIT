@@ -1,17 +1,16 @@
 package ee.adit.util;
 
+import java.io.UnsupportedEncodingException;
+
 import org.apache.log4j.Logger;
+import org.castor.core.util.Base64Encoder;
 
 public class Util {
 
 	private static Logger LOG = Logger.getLogger(Util.class);
 	
-	public static String base64encode(String string) {
-		String result = null;
-		
-		// TODO: base64 encode
-		
-		return result;
+	public static String base64encode(String string) throws UnsupportedEncodingException {
+		return new String(Base64Encoder.encode(string.getBytes("UTF-8")));
 	}
 	
 	public static void printHeader(CustomXTeeHeader header) {
