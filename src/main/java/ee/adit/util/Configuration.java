@@ -35,4 +35,13 @@ public class Configuration {
 		this.deleteTemporaryFiles = deleteTemporaryFiles;
 	}
 	
+	public boolean getDeleteTemporaryFilesAsBoolean() {
+		boolean result = false;
+		if(this.getDeleteTemporaryFiles() != null) {
+			result = (new Boolean(this.getDeleteTemporaryFiles())).booleanValue();
+		} else {
+			result = false;
+		}
+		return result;
+	}
 }

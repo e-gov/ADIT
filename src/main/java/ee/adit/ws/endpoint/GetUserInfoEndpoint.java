@@ -74,8 +74,8 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 						LOG.debug("Attachment: " + attachment.getContentId());
 						
 						String base64DecodedFile = extractXML(attachment);
-						//String xmlFile = base64DecodeAndUnzip(base64EncodedFile);
-						
+						String xmlFile = Util.base64DecodeAndUnzip(base64DecodedFile, this.getConfiguration().getTempDir(), this.getConfiguration().getDeleteTemporaryFilesAsBoolean());
+						LOG.debug("Attachment unzipped to temporary file: " + xmlFile);
 					}
 					
 					// TODO: Extract the SOAP attachment and:
