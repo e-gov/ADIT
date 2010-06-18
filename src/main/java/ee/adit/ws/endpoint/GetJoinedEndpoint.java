@@ -41,6 +41,7 @@ import org.w3c.dom.NodeList;
 
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.exception.AditException;
+import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.GetJoinedRequest;
 import ee.adit.pojo.GetJoinedResponse;
@@ -72,6 +73,10 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 		ArrayOfMessage messages = new ArrayOfMessage();
 		
 		try {
+			
+			// Check configuration
+			checkConfiguration();
+			
 			GetJoinedRequest request = (GetJoinedRequest) requestObject;
 			CustomXTeeHeader header = this.getHeader();
 			String applicationName = header.getInfosysteem();
@@ -160,6 +165,30 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 		getJoinedResponseAttachment.setTotal(getJoinedResponseAttachmentUserList.size());
 
 		return marshal(getJoinedResponseAttachment);
+	}
+	
+	private void checkConfiguration() throws AditInternalException {
+		if(this.getConfiguration() == null) {
+			throw new AditInternalException("Configuration not initialized - check servlet configuration.");
+		} else {
+			if(this.getConfiguration().getGetJoinedMaxResults() != null) {
+				throw new AditInternalException("Configuration not properly initialized (parameter 'getJoinedMaxResults' is undefined) - check servlet configuration.");
+			}
+			if(this.getConfiguration().getDeleteTemporaryFiles() != null) {
+				throw new AditInternalException("Configuration not properly initialized (parameter 'deleteTemporaryFiles' is undefined) - check servlet configuration.");
+			}
+			if(this.getConfiguration().getTempDir() != null) {
+				try {
+					boolean tempDirExists = (new File(this.getConfiguration().getTempDir())).exists();
+					if(!tempDirExists) {
+						throw new FileNotFoundException("Directory does not exist: " + this.getConfiguration().getTempDir());
+					}
+				} catch (Exception e) {
+					throw new AditInternalException("Configuration not properly initialized (parameter 'tempDir' not properly configured) - check servlet configuration.", e);
+				}
+				throw new AditInternalException("Configuration not properly initialized (parameter 'tempDir' is undefined) - check servlet configuration.");
+			}
+		}
 	}
 	
 	public UserService getUserService() {
