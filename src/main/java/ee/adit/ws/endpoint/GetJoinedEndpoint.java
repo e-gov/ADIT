@@ -63,12 +63,6 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 	private static Logger LOG = Logger.getLogger(GetJoinedEndpoint.class);
 
 	private UserService userService;
-
-	private MessageSource messageSource;
-
-	private Configuration configuration;
-	
-	
 	
 	@Override
 	protected Object invokeInternal(Object requestObject) throws Exception {
@@ -94,7 +88,7 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 					
 					// Kontrollime, kas küsitud kirjete arv jääb maksimaalse lubatud vahemiku piiresse
 					BigInteger maxResults = request.getMaxResults();
-					BigInteger configurationMaxResults = configuration.getGetJoinedMaxResults();
+					BigInteger configurationMaxResults = this.getConfiguration().getGetJoinedMaxResults();
 					
 					if(maxResults.intValue() <= configurationMaxResults.intValue()) {
 						
@@ -174,21 +168,5 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 
 	public void setUserService(UserService userService) {
 		this.userService = userService;
-	}
-
-	public MessageSource getMessageSource() {
-		return messageSource;
-	}
-
-	public void setMessageSource(MessageSource messageSource) {
-		this.messageSource = messageSource;
-	}
-
-	public Configuration getConfiguration() {
-		return configuration;
-	}
-
-	public void setConfiguration(Configuration configuration) {
-		this.configuration = configuration;
 	}
 }

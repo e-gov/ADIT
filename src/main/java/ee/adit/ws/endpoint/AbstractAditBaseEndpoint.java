@@ -22,6 +22,7 @@ import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.log4j.Logger;
+import org.springframework.context.MessageSource;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
 import org.w3c.dom.Document;
@@ -29,6 +30,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.helpers.DefaultHandler;
 
+import ee.adit.util.Configuration;
 import ee.adit.util.CustomXTeeHeader;
 import ee.adit.util.Util;
 
@@ -42,6 +44,10 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 
 	private Unmarshaller unmarshaller;
 
+	private MessageSource messageSource;
+
+	private Configuration configuration;
+	
 	protected void invokeInternal(Document requestKeha, Element responseElement,
 			CustomXTeeHeader xteeHeader) throws Exception {
 
@@ -101,7 +107,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 			
 			// Create outputStream
 			String tempFileName = Util.generateRandomFileName();
-			String tempFileFullName = File.separator + tempFileName;
+			String tempFileFullName = this.getConfiguration().getTempDir() + File.separator + tempFileName;
 			FileOutputStream fos = new FileOutputStream(tempFileFullName);
 			StreamResult reponseObjectResult = new StreamResult(fos);
 			
@@ -144,5 +150,21 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 	// Abstract method for implementing by subclasses
 	protected abstract Object invokeInternal(Object requestObject)
 			throws Exception;
+
+	public MessageSource getMessageSource() {
+		return messageSource;
+	}
+
+	public void setMessageSource(MessageSource messageSource) {
+		this.messageSource = messageSource;
+	}
+
+	public Configuration getConfiguration() {
+		return configuration;
+	}
+
+	public void setConfiguration(Configuration configuration) {
+		this.configuration = configuration;
+	}
 	
 }

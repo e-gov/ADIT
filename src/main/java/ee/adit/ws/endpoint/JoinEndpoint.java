@@ -26,8 +26,6 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 
 	private UserService userService;
 
-	private MessageSource messageSource;
-
 	@Override
 	protected Object invokeInternal(Object requestObject) throws Exception {
 
@@ -184,14 +182,6 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 
 	public void setUserService(UserService userService) {
 		this.userService = userService;
-	}
-
-	public MessageSource getMessageSource() {
-		return messageSource;
-	}
-
-	public void setMessageSource(MessageSource messageSource) {
-		this.messageSource = messageSource;
 	}
 	
 }
