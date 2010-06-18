@@ -24,6 +24,7 @@ import ee.adit.pojo.GetUserInfoResponse;
 import ee.adit.pojo.Success;
 import ee.adit.service.UserService;
 import ee.adit.util.CustomXTeeHeader;
+import ee.adit.util.Util;
 import ee.webmedia.xtee.XTeeHeader;
 import ee.webmedia.xtee.annotation.XTeeService;
 
@@ -72,7 +73,7 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 						Attachment attachment = i.next();
 						LOG.debug("Attachment: " + attachment.getContentId());
 						
-						String base64EncodedFile = extractXML(attachment);
+						String base64DecodedFile = extractXML(attachment);
 						
 						//String xmlFile = base64DecodeAndUnzip(base64EncodedFile);
 						
@@ -115,11 +116,6 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 	}
 	
 	public String extractXML(Attachment attachment) throws IOException {
-		String result = null;
-		
-		InputStream inputStream = attachment.getInputStream();
-		
-		
-		return result;
+		return Util.createTemporaryFile(attachment.getInputStream(), this.getConfiguration().getTempDir());
 	}
 }
