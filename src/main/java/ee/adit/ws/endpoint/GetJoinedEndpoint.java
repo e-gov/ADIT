@@ -109,10 +109,8 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 							addAttachment(gzipFileName);
 							
 							// Delete temporary files
-							if(deleteTemporaryFiles) {
-								(new File(xmlFile)).delete();
-								(new File(gzipFileName)).delete();
-							}
+							Util.deleteFile(xmlFile, deleteTemporaryFiles);
+							Util.deleteFile(xmlFile, deleteTemporaryFiles);							
 							
 						} else {
 							LOG.warn("No users were found.");

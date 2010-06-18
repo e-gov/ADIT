@@ -94,6 +94,18 @@ public class Util {
 		return resultFileName;
 	}
 	
+	public static boolean deleteFile(String fileName, boolean deleteTemporaryFiles) {
+		if(deleteTemporaryFiles) {
+			boolean fileDeleted = (new File(fileName)).delete();
+			if(fileDeleted) {
+				LOG.debug("Deleted temporary file: " + fileName);
+			}
+			return fileDeleted;
+		} else {
+			return false;
+		}
+	}
+	
 	public static void printHeader(CustomXTeeHeader header) {
 		
 		LOG.debug("-------- XTeeHeader --------");
