@@ -38,7 +38,7 @@ import javax.xml.bind.annotation.XmlType;
     "userList"
 })
 public class GetUserInfoRequest {
-
+	
     @XmlElement(required = true)
     protected byte[] userList;
 
