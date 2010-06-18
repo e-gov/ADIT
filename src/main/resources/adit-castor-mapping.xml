@@ -78,9 +78,9 @@
 	</class>
  	
  	<class name="ee.adit.pojo.GetUserInfoRequestAttachmentUserList">
-		<map-to xml="user_list" />
+		<map-to xml="getJoinedRequestAttachmentV1" />
 		<field name="codes" type="java.lang.String" collection="arraylist">
-			<bind-xml name="code" location="user_list" />
+			<bind-xml name="code" location="user_list"/>
 		</field>
 	</class>
 	

@@ -121,13 +121,9 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 	}
 	
 	public Object unMarshal(String fileName) throws XmlMappingException, IOException {
-		String result = null;
-		
 		FileInputStream fileInputStream = new FileInputStream(fileName);
 		StreamSource streamSource = new StreamSource(fileInputStream);
-		this.getUnmarshaller().unmarshal(streamSource);
-		
-		return result;
+		return this.getUnmarshaller().unmarshal(streamSource);
 	}
 	
 	public Marshaller getMarshaller() {

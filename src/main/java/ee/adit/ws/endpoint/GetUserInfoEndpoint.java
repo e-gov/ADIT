@@ -16,10 +16,12 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import ee.adit.exception.AditException;
+import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.GetJoinedRequest;
 import ee.adit.pojo.GetJoinedResponse;
 import ee.adit.pojo.GetUserInfoRequest;
+import ee.adit.pojo.GetUserInfoRequestAttachmentUserList;
 import ee.adit.pojo.GetUserInfoResponse;
 import ee.adit.pojo.Success;
 import ee.adit.service.UserService;
@@ -84,22 +86,33 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 							
 							// Unmarshal the XML from the temporary file
 							Object unmarshalledObject = unMarshal(xmlFile);
-							LOG.debug("XML unmarshalled to type: " + unmarshalledObject.getClass());
+							
+							// Check if the marshalling result is what we expected
+							if(unmarshalledObject != null) {
+								LOG.debug("XML unmarshalled to type: " + unmarshalledObject.getClass());
+								if(unmarshalledObject instanceof GetUserInfoRequestAttachmentUserList) {
+									
+									// TODO: Query database
+									
+									
+									
+									
+									// TODO: Construct response
+									
+								} else {
+									throw new AditInternalException("Unmarshalling returned wrong type. Expected " + GetUserInfoRequestAttachmentUserList.class + ", got " + unmarshalledObject.getClass());
+								}
+								
+							} else {
+								throw new AditInternalException("Unmarshalling failed for XML in file: " + xmlFile);
+							}
 							
 						} else {
 							String errorMessage = this.getMessageSource().getMessage("request.attachments.tooMany", new Object[] { applicationName }, Locale.ENGLISH);
 							throw new AditException(errorMessage);
 						}
 						attachmentCount++;
-					}
-					
-					// TODO: Extract the SOAP attachment and:
-					// 1. Base 64 decode
-					// 2. unGZip
-					// 3. unmarshal XML
-					// 4. Fetch data from database
-					// 5. Construct response a
-					
+					}					
 				} else {
 					String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.read", new Object[] { applicationName }, Locale.ENGLISH);
 					throw new AditException(errorMessage);
