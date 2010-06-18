@@ -1,19 +1,27 @@
 package ee.adit.ws.endpoint;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.StringWriter;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
+import javax.activation.MimetypesFileTypeMap;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.soap.AttachmentPart;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
@@ -21,6 +29,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.apache.log4j.Logger;
 import org.springframework.context.MessageSource;
+import org.springframework.oxm.XmlMappingException;
 import org.springframework.stereotype.Component;
 import org.springframework.ws.WebServiceMessage;
 import org.w3c.dom.Document;
@@ -93,59 +102,19 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 						if(userList != null && userList.size() > 0) {
 							LOG.debug("Number of users found: " + userList.size());
 							
-							// TODO: REFACTOR
-							// 1. Convert the java list to XML string							
-							List<GetJoinedResponseAttachmentUser> getJoinedResponseAttachmentUserList = new ArrayList<GetJoinedResponseAttachmentUser>();
+							// 1. Convert java list to XML string using Castor
+							Node rootNode = getXML(userList);
 							
-							for(int i = 0; i < userList.size(); i++) {
-								AditUser aditUser = userList.get(i);
-								GetJoinedResponseAttachmentUser getJoinedResponseAttachmentUser = new GetJoinedResponseAttachmentUser();
-								getJoinedResponseAttachmentUser.setCode(aditUser.getUserCode());
-								getJoinedResponseAttachmentUser.setName(aditUser.getFullName());
-								getJoinedResponseAttachmentUser.setType(aditUser.getUsertype().getShortName());
-								getJoinedResponseAttachmentUserList.add(getJoinedResponseAttachmentUser);
-							}
-							GetJoinedResponseAttachment getJoinedResponseAttachment = new GetJoinedResponseAttachment();
-							getJoinedResponseAttachment.setUsers(getJoinedResponseAttachmentUserList);
-							getJoinedResponseAttachment.setTotal(getJoinedResponseAttachmentUserList.size());
+							// 2. Output the XML to a temporary file
+							String temporaryFile = outputToTemporaryFile(rootNode, this.getConfiguration());
 							
-							// Convert the getJoinedResponseAttachment object to XML using the marshaller
-							DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-							DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-							Document doc = documentBuilder.newDocument();
-							Element rootElement = doc.createElement("result");
-							DOMResult reponseObjectResult = new DOMResult(rootElement);
-							this.getMarshaller().marshal(getJoinedResponseAttachment, reponseObjectResult);
-							
-							Node userListElement = rootElement.getFirstChild();
-							
-							String tempFileName = Util.generateRandomFileName();
-							
-							String tmpFileName = this.getConfiguration().getTempDir() + File.separator + tempFileName;
-							
-							FileOutputStream fos = new FileOutputStream(tmpFileName);
-							
-							// TEST OUTPUT
-							TransformerFactory transFactory = TransformerFactory.newInstance();
-							Transformer transformer = transFactory.newTransformer();
-							transformer.transform(new DOMSource(userListElement), new StreamResult(fos));
-							
-							fos.close();
-							
-							// TODO: GZIP the data
-							String gzipFileName = Util.gzipAndBase64Encode(tempFileName, this.getConfiguration().getTempDir());
+							// 3. GZip and Base64 encode the temporary file
+							String gzipFileName = Util.gzipAndBase64Encode(temporaryFile, this.getConfiguration().getTempDir());
 							LOG.debug("Result XML gzipped filename: " + gzipFileName);
-							
-							// base64 encode the bytes
-							//String base64Encoded = Util.base64encode(str);
-							
-							//LOG.debug("base64Encoded: " + base64Encoded);
-							
-							// 2. Add as an attachment
-							//SOAPMessage responseMessage = this.getResponseMessage();
-							//AttachmentPart attachmentPart = responseMessage.createAttachmentPart(base64Encoded.getBytes(), "base64Binary");
-							
-							//responseMessage.addAttachmentPart(attachmentPart);
+
+							// 4. Add as an attachment
+							SOAPMessage responseMessage = this.getResponseMessage();
+							addAttachment(gzipFileName, responseMessage);
 							
 						} else {
 							LOG.warn("No users were found.");
@@ -183,6 +152,59 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 		return response;
 	}
 
+	private Node getXML(List<AditUser> userList) throws XmlMappingException, IOException, ParserConfigurationException {
+		List<GetJoinedResponseAttachmentUser> getJoinedResponseAttachmentUserList = new ArrayList<GetJoinedResponseAttachmentUser>();
+		
+		for(int i = 0; i < userList.size(); i++) {
+			AditUser aditUser = userList.get(i);
+			GetJoinedResponseAttachmentUser getJoinedResponseAttachmentUser = new GetJoinedResponseAttachmentUser();
+			getJoinedResponseAttachmentUser.setCode(aditUser.getUserCode());
+			getJoinedResponseAttachmentUser.setName(aditUser.getFullName());
+			getJoinedResponseAttachmentUser.setType(aditUser.getUsertype().getShortName());
+			getJoinedResponseAttachmentUserList.add(getJoinedResponseAttachmentUser);
+		}
+		GetJoinedResponseAttachment getJoinedResponseAttachment = new GetJoinedResponseAttachment();
+		getJoinedResponseAttachment.setUsers(getJoinedResponseAttachmentUserList);
+		getJoinedResponseAttachment.setTotal(getJoinedResponseAttachmentUserList.size());
+		
+		// Convert the getJoinedResponseAttachment object to XML using the marshaller
+		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+		Document doc = documentBuilder.newDocument();
+		Element rootElement = doc.createElement("result");
+		DOMResult reponseObjectResult = new DOMResult(rootElement);
+		this.getMarshaller().marshal(getJoinedResponseAttachment, reponseObjectResult);
+		
+		Node userListElement = rootElement.getFirstChild();
+		return userListElement;
+	}
+	
+	public static String outputToTemporaryFile(Node rootNode, Configuration config) throws TransformerException, IOException {
+		String tempFileName = Util.generateRandomFileName();
+		FileOutputStream fos = new FileOutputStream(config.getTempDir() + File.separator + tempFileName);
+		TransformerFactory transFactory = TransformerFactory.newInstance();
+		Transformer transformer = transFactory.newTransformer();
+		transformer.transform(new DOMSource(rootNode), new StreamResult(fos));
+		fos.close();		
+		
+		return tempFileName;
+	}
+	
+	public static void addAttachment(String fileName, SOAPMessage soapMessage) throws Exception {		
+		try {
+			FileDataSource fileDataSource = new FileDataSource(fileName);
+			MimetypesFileTypeMap typeMap = new MimetypesFileTypeMap();
+			typeMap.addMimeTypes("base64");
+			fileDataSource.setFileTypeMap(typeMap);
+			DataHandler dataHandler = new DataHandler(fileDataSource);
+			AttachmentPart attachmentPart = soapMessage.createAttachmentPart(dataHandler);
+			soapMessage.addAttachmentPart(attachmentPart);
+		} catch (Exception e) {
+			LOG.error("Exception while adding SOAP attachment to response message: ", e);
+			throw e;
+		}		
+	}
+	
 	public UserService getUserService() {
 		return userService;
 	}

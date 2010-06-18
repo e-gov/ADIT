@@ -37,9 +37,9 @@ public class Util {
 		String resultFileName = null;
 		
 		// Pack data to GZip format
-        String zipOutFileName = tempDir + File.separator + inputFile + "_zipOutBuffer.dat";
+        String zipOutFileName = inputFile + "_zipOutBuffer.dat";
         LOG.debug("Packing data to GZip format. Output file: " + zipOutFileName);
-        FileInputStream in = new FileInputStream( tempDir + File.separator + inputFile);
+        FileInputStream in = new FileInputStream(inputFile);
         FileOutputStream zipOutFile = new FileOutputStream(zipOutFileName, false);
         GZIPOutputStream out = new GZIPOutputStream(zipOutFile);
         byte[] buf = new byte[1024];
@@ -53,7 +53,7 @@ public class Util {
         LOG.debug("GZip complete");
         
         // Encode the GZipped data to Base64 binary data
-        resultFileName = tempDir + File.separator + inputFile + "_Base64OutBuffer.dat";
+        resultFileName = inputFile + "_Base64OutBuffer.dat";
         LOG.debug("Encoding zip file to Base64: Output file: " + zipOutFileName);
         in = new FileInputStream(zipOutFileName);
         FileOutputStream b64out = new FileOutputStream(resultFileName, false);
