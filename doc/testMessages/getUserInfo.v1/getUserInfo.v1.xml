@@ -10,7 +10,7 @@
    <soapenv:Body>
       <adit:GetUserInfo>
          <keha>
-            <adit:userList>cid:43144761007</adit:userList>
+            <adit:userList>cid:123123123</adit:userList>
          </keha>
       </adit:GetUserInfo>
    </soapenv:Body>
