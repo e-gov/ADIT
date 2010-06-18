@@ -48,9 +48,7 @@ public class GetJoinedResponse {
     @XmlElement(required = true)
     protected ArrayOfMessage messages;
     @XmlElement(required = true)
-    protected byte[] userList;
-    @XmlElement(required = true)
-    protected String href;
+    protected GetJoinedResponseUserList userList;
     
     /**
      * Gets the value of the messages property.
@@ -76,28 +74,6 @@ public class GetJoinedResponse {
         this.messages = value;
     }
 
-    /**
-     * Gets the value of the userList property.
-     * 
-     * @return
-     *     possible object is
-     *     byte[]
-     */
-    public byte[] getUserList() {
-        return userList;
-    }
-
-    /**
-     * Sets the value of the userList property.
-     * 
-     * @param value
-     *     allowed object is
-     *     byte[]
-     */
-    public void setUserList(byte[] value) {
-        this.userList = ((byte[]) value);
-    }
-
 	public Success getSuccess() {
 		return success;
 	}
@@ -106,12 +82,12 @@ public class GetJoinedResponse {
 		this.success = success;
 	}
 
-	public String getHref() {
-		return href;
+	public GetJoinedResponseUserList getUserList() {
+		return userList;
 	}
 
-	public void setHref(String href) {
-		this.href = href;
+	public void setUserList(GetJoinedResponseUserList userList) {
+		this.userList = userList;
 	}
 
 }

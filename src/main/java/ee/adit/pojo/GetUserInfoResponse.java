@@ -74,34 +74,20 @@ public class GetUserInfoResponse {
         this.messages = value;
     }
 
-    /**
-     * Gets the value of the userList property.
-     * 
-     * @return
-     *     possible object is
-     *     byte[]
-     */
-    public byte[] getUserList() {
-        return userList;
-    }
-
-    /**
-     * Sets the value of the userList property.
-     * 
-     * @param value
-     *     allowed object is
-     *     byte[]
-     */
-    public void setUserList(byte[] value) {
-        this.userList = ((byte[]) value);
-    }
-
 	public Success getSuccess() {
 		return success;
 	}
 
 	public void setSuccess(Success success) {
 		this.success = success;
+	}
+
+	public byte[] getUserList() {
+		return userList;
+	}
+
+	public void setUserList(byte[] userList) {
+		this.userList = userList;
 	}
 
 }

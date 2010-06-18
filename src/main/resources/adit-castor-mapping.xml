@@ -41,11 +41,15 @@
 		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
 			<bind-xml name="messages" />
 		</field>
-		<field name="userList" type="bytes">
+		<field name="userList" type="ee.adit.pojo.GetJoinedResponseUserList">
 			<bind-xml name="user_list" />
 		</field>
-		<field name="href" type="java.lang.String" >
-			<bind-xml name="href" node="attribute" location="user_list"/>
+	</class>
+	
+	<class name="ee.adit.pojo.GetJoinedResponseUserList">
+		<map-to xml="user_list" ns-prefix="adit"/>
+		<field name="href" type="java.lang.String">
+			<bind-xml name="href" node="attribute"/>
 		</field>
 	</class>
 
