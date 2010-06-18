@@ -3,6 +3,7 @@
 "http://castor.org/mapping.dtd">
 <mapping>
 
+	<!-- Join -->
 	<class name="ee.adit.pojo.JoinRequest">
 		<map-to xml="Join" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
 		<field name="userType" type="java.lang.String">
@@ -20,21 +21,9 @@
 		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
 			<bind-xml name="messages" />
 		</field>
-	</class>
-
-	<class name="ee.adit.pojo.Success">
-		<map-to xml="success" ns-prefix="adit" />
-		<field name="success" type="java.lang.Boolean" container="true">
-		</field>
-	</class>
-
-	<class name="ee.adit.pojo.ArrayOfMessage">
-		<map-to xml="messages" ns-prefix="adit" />
-		<field name="message" type="java.lang.String" collection="arraylist">
-			<bind-xml name="message" />
-		</field>
 	</class>	
 
+	<!-- GetJoined -->
 	<class name="ee.adit.pojo.GetJoinedRequest">
 		<map-to xml="GetJoined" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
 		<field name="maxResults" type="java.math.BigInteger">
@@ -76,5 +65,30 @@
 			<bind-xml name="type" />
 		</field>
  	</class>
+ 	
+ 	<!-- GetUserInfo -->
+ 	<class name="ee.adit.pojo.GetUserInfoRequest">
+		<map-to xml="GetUserInfo" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<field name="maxResults" type="java.math.BigInteger">
+			<bind-xml name="maxResults" location="keha" />
+		</field>
+		<field name="startIndex" type="java.math.BigInteger">
+			<bind-xml name="startIndex" location="keha" />
+		</field>
+	</class>
+ 	
+ 	<!-- Common -->
+ 	<class name="ee.adit.pojo.Success">
+		<map-to xml="success" ns-prefix="adit" />
+		<field name="success" type="java.lang.Boolean" container="true">
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.ArrayOfMessage">
+		<map-to xml="messages" ns-prefix="adit" />
+		<field name="message" type="java.lang.String" collection="arraylist">
+			<bind-xml name="message" />
+		</field>
+	</class>
  	
 </mapping>

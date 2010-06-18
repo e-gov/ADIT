@@ -171,13 +171,16 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 		if(this.getConfiguration() == null) {
 			throw new AditInternalException("Configuration not initialized - check servlet configuration.");
 		} else {
-			if(this.getConfiguration().getGetJoinedMaxResults() != null) {
+			if(this.getConfiguration().getGetJoinedMaxResults() == null) {
 				throw new AditInternalException("Configuration not properly initialized (parameter 'getJoinedMaxResults' is undefined) - check servlet configuration.");
 			}
-			if(this.getConfiguration().getDeleteTemporaryFiles() != null) {
+			if(this.getConfiguration().getDeleteTemporaryFiles() == null) {
 				throw new AditInternalException("Configuration not properly initialized (parameter 'deleteTemporaryFiles' is undefined) - check servlet configuration.");
 			}
-			if(this.getConfiguration().getTempDir() != null) {
+			if(this.getConfiguration().getTempDir() == null) {
+				
+				throw new AditInternalException("Configuration not properly initialized (parameter 'tempDir' is undefined) - check servlet configuration.");
+			} else {
 				try {
 					boolean tempDirExists = (new File(this.getConfiguration().getTempDir())).exists();
 					if(!tempDirExists) {
@@ -186,7 +189,6 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 				} catch (Exception e) {
 					throw new AditInternalException("Configuration not properly initialized (parameter 'tempDir' not properly configured) - check servlet configuration.", e);
 				}
-				throw new AditInternalException("Configuration not properly initialized (parameter 'tempDir' is undefined) - check servlet configuration.");
 			}
 		}
 	}
