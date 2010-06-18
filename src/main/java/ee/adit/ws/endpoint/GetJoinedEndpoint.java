@@ -111,6 +111,7 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 							// Delete temporary files
 							if(deleteTemporaryFiles) {
 								(new File(xmlFile)).delete();
+								(new File(gzipFileName)).delete();
 							}
 							
 						} else {
