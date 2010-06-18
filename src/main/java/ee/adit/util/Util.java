@@ -33,12 +33,13 @@ public class Util {
 		return result.toString();
 	}
 		
-	public static String gzipAndBase64Encode(String rawDataFileName, String tempDir) throws IOException {
+	public static String gzipAndBase64Encode(String inputFile, String tempDir) throws IOException {
 		String resultFileName = null;
 		
 		// Pack data to GZip format
-        String zipOutFileName = tempDir + File.separator + rawDataFileName + "_zipOutBuffer.dat";
-        FileInputStream in = new FileInputStream( tempDir + File.separator + rawDataFileName);
+        String zipOutFileName = tempDir + File.separator + inputFile + "_zipOutBuffer.dat";
+        LOG.debug("Packing data to GZip format. Output file: " + zipOutFileName);
+        FileInputStream in = new FileInputStream( tempDir + File.separator + inputFile);
         FileOutputStream zipOutFile = new FileOutputStream(zipOutFileName, false);
         GZIPOutputStream out = new GZIPOutputStream(zipOutFile);
         byte[] buf = new byte[1024];
@@ -49,9 +50,11 @@ public class Util {
         in.close();
         out.finish();
         out.close();
-		
+        LOG.debug("GZip complete");
+        
         // Encode the GZipped data to Base64 binary data
-        resultFileName = tempDir + File.separator + rawDataFileName + "_Base64OutBuffer.dat";
+        resultFileName = tempDir + File.separator + inputFile + "_Base64OutBuffer.dat";
+        LOG.debug("Encoding zip file to Base64: Output file: " + zipOutFileName);
         in = new FileInputStream(zipOutFileName);
         FileOutputStream b64out = new FileOutputStream(resultFileName, false);
         Base64OutputStream b64outStream = new Base64OutputStream(b64out);
@@ -62,6 +65,18 @@ public class Util {
         in.close();
         b64out.close();
         b64outStream.close();
+        
+        // Delete temporary files
+        try {
+        	File inputDataFile = new File(tempDir + File.separator + inputFile);
+        	inputDataFile.delete();
+        	LOG.debug("Deleted temporary file: " + tempDir + File.separator + inputFile);
+        	File zipFile = new File(zipOutFileName);
+        	zipFile.delete();
+        	LOG.debug("Deleted temporary file: " + zipOutFileName);
+        } catch(Exception e) {
+        	LOG.error("Exception while deleting temporary files: ", e);
+        }
         
 		return resultFileName;
 	}
