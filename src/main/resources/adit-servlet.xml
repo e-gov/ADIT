@@ -99,10 +99,10 @@
 
 	<!-- Service Classes -->
 	<bean id="userService" class="ee.adit.service.UserService">
-		<property name="remoteApplicationDAO" ref="remoteApplicationDAO"></property>
-		<property name="usertypeDAO" ref="usertypeDAO"></property>
-		<property name="aditUserDAO" ref="aditUserDAO"></property>
-		
+		<property name="remoteApplicationDAO" ref="remoteApplicationDAO"/>
+		<property name="usertypeDAO" ref="usertypeDAO"/>
+		<property name="aditUserDAO" ref="aditUserDAO"/>
+		<property name="documentDAO" ref="documentDAO"/>
 	</bean>
 
 	<bean id="myDataSource"
@@ -152,6 +152,10 @@
 	<bean id="aditUserDAO" class="ee.adit.dao.AditUserDAO">
 		<property name="sessionFactory" ref="mySessionFactory" />
 	</bean>
+	
+	<bean id="documentDAO" class="ee.adit.dao.DocumentDAO">
+		<property name="sessionFactory" ref="mySessionFactory" />
+	</bean>	
 
 	<!-- MessageSource -->
 	<bean id="messageSource"

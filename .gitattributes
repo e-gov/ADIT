@@ -45,6 +45,7 @@ sql/testdata/remote_application.dml.sql -text
 sql/usertype.dml.sql -text
 src/main/java/ee/adit/dao/AbstractAditDAO.java -text
 src/main/java/ee/adit/dao/AditUserDAO.java -text
+src/main/java/ee/adit/dao/DocumentDAO.java -text
 src/main/java/ee/adit/dao/DocumentTypeDAO.java -text
 src/main/java/ee/adit/dao/RemoteApplicationDAO.java -text
 src/main/java/ee/adit/dao/UsertypeDAO.java -text

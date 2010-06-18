@@ -8,6 +8,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import ee.adit.dao.AditUserDAO;
+import ee.adit.dao.DocumentDAO;
 import ee.adit.dao.RemoteApplicationDAO;
 import ee.adit.dao.UsertypeDAO;
 import ee.adit.dao.pojo.AccessRestriction;
@@ -26,6 +27,8 @@ public class UserService {
 	private UsertypeDAO usertypeDAO;
 	
 	private AditUserDAO aditUserDAO;
+	
+	private DocumentDAO documentDAO;
 	
 	private static final String USERTYPE_PERSON = "PERSON";
 	private static final String USERTYPE_INSTITUTION = "INSTITUTION";
@@ -195,11 +198,13 @@ public class UserService {
 	
 	public void getUserInfo(String userCode) {
 		
+		int usedSpace = this.getDocumentDAO().getUsedSpaceForUser(userCode);
+		
 		/*
 		 * TODO: get user data:
-		 * - joined
-		 * - free_space
-		 * - used_space
+		 * - joined (ADIT_USER)
+		 * - free_space (ADIT_USER, DOCUMENT, DOCUMENT_FILE)
+		 * - used_space (ADIT_USER, DOCUMENT, DOCUMENT_FILE)
 		 * - can_read
 		 * - can_write
 		 * - uses_dvk
@@ -229,6 +234,14 @@ public class UserService {
 
 	public void setAditUserDAO(AditUserDAO aditUserDAO) {
 		this.aditUserDAO = aditUserDAO;
+	}
+
+	public DocumentDAO getDocumentDAO() {
+		return documentDAO;
+	}
+
+	public void setDocumentDAO(DocumentDAO documentDAO) {
+		this.documentDAO = documentDAO;
 	}	
 	
 }
