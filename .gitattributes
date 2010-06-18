@@ -3,6 +3,7 @@ WEB-INF/web.xml -text
 doc/environmentSetup.txt -text
 doc/testMessages/getDocument.v1.xml -text
 doc/testMessages/getJoined.v1.xml -text
+doc/testMessages/getUserInfo.v1/base64 -text
 doc/testMessages/getUserInfo.v1/getUserInfo.v1.attachment.xml -text
 doc/testMessages/getUserInfo.v1/getUserInfo.v1.xml -text
 doc/testMessages/join.v1.xml -text
