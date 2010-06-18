@@ -56,13 +56,13 @@
 				<prop
 					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}Join">JoinEndpoint</prop>
 				<prop
-					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}unJoin">UnJoinEndpoint</prop>
+					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}UnJoin">UnJoinEndpoint</prop>
 				<prop
 					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}GetJoined">GetJoinedEndpoint</prop>
 				<prop
-					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}getUserInfo">GetUserInfoEndpoint</prop>
+					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}GetUserInfo">GetUserInfoEndpoint</prop>
 				<prop
-					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}getDocument">GetDocumentEndpoint</prop>
+					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}GetDocument">GetDocumentEndpoint</prop>
 				<prop
 					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}listMethods">ListMethodsEndpoint</prop>
 			</props>
