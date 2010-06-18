@@ -73,6 +73,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 			DataHandler dataHandler = new DataHandler(fileDataSource);
 			AttachmentPart attachmentPart = responseMessage.createAttachmentPart(dataHandler);
 			responseMessage.addAttachmentPart(attachmentPart);
+			LOG.debug("Attachment added.");
 		} catch (Exception e) {
 			LOG.error("Exception while adding SOAP attachment to response message: ", e);
 			throw e;
