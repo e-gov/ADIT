@@ -19,12 +19,14 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.soap.AttachmentPart;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Result;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.log4j.Logger;
@@ -102,14 +104,11 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 						if(userList != null && userList.size() > 0) {
 							LOG.debug("Number of users found: " + userList.size());
 							
-							// 1. Convert java list to XML string using Castor
-							Node rootNode = getXML(userList);
-							
-							// 2. Output the XML to a temporary file
-							String temporaryFile = Util.outputToTemporaryFile(rootNode, this.getConfiguration());
+							// 1. Convert java list to XML string and output to file
+							String xmlFile = outputToFile(userList);
 							
 							// 3. GZip and Base64 encode the temporary file
-							String gzipFileName = Util.gzipAndBase64Encode(temporaryFile, this.getConfiguration().getTempDir());
+							String gzipFileName = Util.gzipAndBase64Encode(xmlFile, this.getConfiguration().getTempDir());
 
 							// 4. Add as an attachment
 							addAttachment(gzipFileName);
@@ -150,7 +149,7 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 		return response;
 	}
 
-	private Node getXML(List<AditUser> userList) throws XmlMappingException, IOException, ParserConfigurationException {
+	private String outputToFile(List<AditUser> userList) throws XmlMappingException, IOException, ParserConfigurationException, TransformerException {
 		List<GetJoinedResponseAttachmentUser> getJoinedResponseAttachmentUserList = new ArrayList<GetJoinedResponseAttachmentUser>();
 		
 		for(int i = 0; i < userList.size(); i++) {

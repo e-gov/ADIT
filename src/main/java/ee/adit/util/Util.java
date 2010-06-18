@@ -15,10 +15,12 @@ import javax.activation.FileDataSource;
 import javax.activation.MimetypesFileTypeMap;
 import javax.xml.soap.AttachmentPart;
 import javax.xml.soap.SOAPMessage;
+import javax.xml.transform.Result;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.codec.binary.Base64;
@@ -88,18 +90,6 @@ public class Util {
         }
         
 		return resultFileName;
-	}
-	
-	public static String outputToTemporaryFile(Node rootNode, Configuration config) throws TransformerException, IOException {
-		String tempFileName = Util.generateRandomFileName();
-		String tempFileFullName = config.getTempDir() + File.separator + tempFileName;
-		FileOutputStream fos = new FileOutputStream(tempFileFullName);
-		TransformerFactory transFactory = TransformerFactory.newInstance();
-		Transformer transformer = transFactory.newTransformer();
-		transformer.transform(new DOMSource(rootNode), new StreamResult(fos));
-		fos.close();		
-		
-		return tempFileFullName;
 	}
 	
 	public static void printHeader(CustomXTeeHeader header) {
