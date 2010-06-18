@@ -3,6 +3,8 @@ package ee.adit.ws.endpoint;
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 import javax.activation.MimetypesFileTypeMap;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.soap.AttachmentPart;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Source;
@@ -14,6 +16,7 @@ import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 import ee.adit.util.CustomXTeeHeader;
 
@@ -78,6 +81,25 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 			LOG.error("Exception while adding SOAP attachment to response message: ", e);
 			throw e;
 		}		
+	}
+	
+	public Node marshal(Object object) {
+		Node result = null;
+		
+		// TODO: use SAX instead of DOM
+		try {
+			DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+			Document doc = documentBuilder.newDocument();
+			Element rootElement = doc.createElement("result");
+			DOMResult reponseObjectResult = new DOMResult(rootElement);
+			this.getMarshaller().marshal(object, reponseObjectResult);
+			result = rootElement.getFirstChild();
+		} catch (Exception e) {
+			LOG.error("Error while marshalling object: " + object.getClass());
+		}
+		
+		return result;
 	}
 	
 	public Marshaller getMarshaller() {

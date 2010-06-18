@@ -165,15 +165,7 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 		getJoinedResponseAttachment.setUsers(getJoinedResponseAttachmentUserList);
 		getJoinedResponseAttachment.setTotal(getJoinedResponseAttachmentUserList.size());
 		
-		// Convert the getJoinedResponseAttachment object to XML using the marshaller
-		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-		Document doc = documentBuilder.newDocument();
-		Element rootElement = doc.createElement("result");
-		DOMResult reponseObjectResult = new DOMResult(rootElement);
-		this.getMarshaller().marshal(getJoinedResponseAttachment, reponseObjectResult);
 		
-		Node userListElement = rootElement.getFirstChild();
 		return userListElement;
 	}
 	
