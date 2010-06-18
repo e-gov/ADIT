@@ -102,6 +102,7 @@ src/main/java/ee/adit/pojo/GetJoinedResponse.java -text
 src/main/java/ee/adit/pojo/GetJoinedResponseAttachment.java -text
 src/main/java/ee/adit/pojo/GetJoinedResponseAttachmentUser.java -text
 src/main/java/ee/adit/pojo/GetUserInfoRequest.java -text
+src/main/java/ee/adit/pojo/GetUserInfoRequestAttachmentUserList.java -text
 src/main/java/ee/adit/pojo/GetUserInfoResponse.java -text
 src/main/java/ee/adit/pojo/JoinRequest.java -text
 src/main/java/ee/adit/pojo/JoinResponse.java -text

@@ -2,7 +2,9 @@ package ee.adit.ws.endpoint;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
@@ -12,6 +14,7 @@ import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 
 import org.apache.log4j.Logger;
 import org.springframework.context.MessageSource;
@@ -20,6 +23,7 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
+import org.springframework.oxm.XmlMappingException;
 import org.springframework.ws.mime.Attachment;
 import org.springframework.ws.soap.SoapMessage;
 import org.w3c.dom.Document;
@@ -112,6 +116,16 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 		} catch (Exception e) {
 			LOG.error("Error while marshalling object: " + object.getClass());
 		}
+		
+		return result;
+	}
+	
+	public Object unMarshal(String fileName) throws XmlMappingException, IOException {
+		String result = null;
+		
+		FileInputStream fileInputStream = new FileInputStream(fileName);
+		StreamSource streamSource = new StreamSource(fileInputStream);
+		this.getUnmarshaller().unmarshal(streamSource);
 		
 		return result;
 	}

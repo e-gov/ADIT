@@ -69,13 +69,28 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 					
 					Iterator<Attachment> i = this.getRequestMessage().getAttachments();
 					
+					int attachmentCount = 0;
 					while(i.hasNext()) {
-						Attachment attachment = i.next();
-						LOG.debug("Attachment: " + attachment.getContentId());
-						
-						String base64DecodedFile = extractXML(attachment);
-						String xmlFile = Util.base64DecodeAndUnzip(base64DecodedFile, this.getConfiguration().getTempDir(), this.getConfiguration().getDeleteTemporaryFilesAsBoolean());
-						LOG.debug("Attachment unzipped to temporary file: " + xmlFile);
+						if(attachmentCount == 0) {
+							Attachment attachment = i.next();
+							LOG.debug("Attachment: " + attachment.getContentId());
+							
+							// Extract the SOAP message to a temporary file
+							String base64EncodedFile = extractXML(attachment);
+							
+							// Base64 decode and unzip the temporary file
+							String xmlFile = Util.base64DecodeAndUnzip(base64EncodedFile, this.getConfiguration().getTempDir(), this.getConfiguration().getDeleteTemporaryFilesAsBoolean());
+							LOG.debug("Attachment unzipped to temporary file: " + xmlFile);
+							
+							// Unmarshal the XML from the temporary file
+							Object unmarshalledObject = unMarshal(xmlFile);
+							LOG.debug("XML unmarshalled to type: " + unmarshalledObject.getClass());
+							
+						} else {
+							String errorMessage = this.getMessageSource().getMessage("request.attachments.tooMany", new Object[] { applicationName }, Locale.ENGLISH);
+							throw new AditException(errorMessage);
+						}
+						attachmentCount++;
 					}
 					
 					// TODO: Extract the SOAP attachment and:
