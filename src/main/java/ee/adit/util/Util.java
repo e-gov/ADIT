@@ -68,8 +68,6 @@ public class Util {
         
         // Delete temporary files
         try {
-        	File inputDataFile = new File(tempDir + File.separator + inputFile);
-        	inputDataFile.delete();
         	LOG.debug("Deleted temporary file: " + tempDir + File.separator + inputFile);
         	File zipFile = new File(zipOutFileName);
         	zipFile.delete();
