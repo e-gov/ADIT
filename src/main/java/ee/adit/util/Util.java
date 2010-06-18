@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Random;
 import java.util.zip.GZIPInputStream;
@@ -149,6 +150,23 @@ public class Util {
         }
         
         return unzipOutFileName;
+	}
+	
+	public static String createTemporaryFile(InputStream inputStream, String tempDir) throws IOException {		
+		
+		String temporaryFile = tempDir + File.separator + generateRandomFileName();
+		FileOutputStream fileOutputStream = new FileOutputStream(temporaryFile);
+		
+		int len;
+		byte[] buf = new byte[1024];
+		while((len = inputStream.read(buf)) > 0) {
+			fileOutputStream.write(buf, 0, len);
+		}
+		
+		fileOutputStream.close();
+		inputStream.close();
+		
+		return temporaryFile;
 	}
 	
 	public static boolean deleteFile(String fileName, boolean deleteTemporaryFiles) {

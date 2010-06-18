@@ -72,7 +72,9 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 						Attachment attachment = i.next();
 						LOG.debug("Attachment: " + attachment.getContentId());
 						
-						extractXML(attachment);
+						String base64EncodedFile = extractXML(attachment);
+						
+						//String xmlFile = base64DecodeAndUnzip(base64EncodedFile);
 						
 					}
 					
@@ -112,10 +114,12 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 		return response;
 	}
 	
-	public void extractXML(Attachment attachment) throws IOException {
+	public String extractXML(Attachment attachment) throws IOException {
+		String result = null;
+		
 		InputStream inputStream = attachment.getInputStream();
 		
 		
-		
+		return result;
 	}
 }
