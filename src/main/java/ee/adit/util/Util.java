@@ -99,6 +99,8 @@ public class Util {
 			boolean fileDeleted = (new File(fileName)).delete();
 			if(fileDeleted) {
 				LOG.debug("Deleted temporary file: " + fileName);
+			} else {
+				LOG.warn("Could not delete temporary file: " + fileName);
 			}
 			return fileDeleted;
 		} else {
