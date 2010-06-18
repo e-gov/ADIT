@@ -48,7 +48,7 @@ public class GetUserInfoResponse {
     @XmlElement(required = true)
     protected ArrayOfMessage messages;
     @XmlElement(required = true)
-    protected byte[] userList;
+    protected UserList userList;
 
     /**
      * Gets the value of the messages property.
@@ -82,11 +82,11 @@ public class GetUserInfoResponse {
 		this.success = success;
 	}
 
-	public byte[] getUserList() {
+	public UserList getUserList() {
 		return userList;
 	}
 
-	public void setUserList(byte[] userList) {
+	public void setUserList(UserList userList) {
 		this.userList = userList;
 	}
 
