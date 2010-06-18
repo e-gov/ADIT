@@ -53,8 +53,22 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 
 			if(applicationRegistered) {
 				
-				// TODO: Kontrollime, kas päringu käivitanud infosüsteem tohib andmeid näha
-
+				// Kontrollime, kas päringu käivitanud infosüsteem tohib andmeid näha
+				int accessLevel = this.getUserService().getAccessLevel(applicationName);
+				
+				if(accessLevel >= 1) {
+					
+					// TODO: Extract the SOAP attachment and:
+					// 1. Base 64 decode
+					// 2. unGZip
+					// 3. unmarshal XML
+					// 4. Fetch data from database
+					// 5. Construct response a
+					
+				} else {
+					String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.read", new Object[] { applicationName }, Locale.ENGLISH);
+					throw new AditException(errorMessage);
+				}	
 				
 			} else {
 				String errorMessage = this.getMessageSource().getMessage("application.notRegistered", new Object[] { applicationName }, Locale.ENGLISH);

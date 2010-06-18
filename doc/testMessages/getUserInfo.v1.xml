@@ -1,6 +1,6 @@
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xtee="http://x-tee.riik.ee/xsd/xtee.xsd" xmlns:adit="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid">
    <soapenv:Header>
-      <xtee:nimi>ametlikud-dokumendid.getJoined.v1</xtee:nimi>
+      <xtee:nimi>ametlikud-dokumendid.getUserInfo..v1</xtee:nimi>
       <xtee:id>00000000000000</xtee:id>
       <xtee:isikukood>EE38407089745</xtee:isikukood>
       <xtee:andmekogu>ametlikud-dokumendid</xtee:andmekogu>
@@ -8,11 +8,10 @@
       <adit:infosysteem>KOV</adit:infosysteem>
    </soapenv:Header>
    <soapenv:Body>
-      <adit:GetJoined>
+      <adit:GetUserInfo>
          <keha>
-            <adit:maxResults>100</adit:maxResults>
-            <adit:startIndex>0</adit:startIndex>
+            <adit:userList>cid:43144761007</adit:userList>
          </keha>
-      </adit:GetJoined>
+      </adit:GetUserInfo>
    </soapenv:Body>
 </soapenv:Envelope>
