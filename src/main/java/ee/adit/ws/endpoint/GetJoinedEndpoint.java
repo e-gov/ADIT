@@ -108,7 +108,8 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 							String xmlFile = outputToFile(userList);
 							
 							// 3. GZip and Base64 encode the temporary file
-							String gzipFileName = Util.gzipAndBase64Encode(xmlFile, this.getConfiguration().getTempDir());
+							boolean deleteTemporaryFiles = new Boolean(this.getConfiguration().getDeleteTemporaryFiles()).booleanValue();
+							String gzipFileName = Util.gzipAndBase64Encode(xmlFile, this.getConfiguration().getTempDir(), deleteTemporaryFiles);
 
 							// 4. Add as an attachment
 							addAttachment(gzipFileName);

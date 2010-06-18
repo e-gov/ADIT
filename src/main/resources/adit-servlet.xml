@@ -160,7 +160,8 @@
 	<!-- Configuration -->
 	<bean id="configuration" class="ee.adit.util.Configuration">
 		<property name="getJoinedMaxResults" value="1000"/>
-		<property name="tempDir" value="C:\adit_temp"></property>
+		<property name="tempDir" value="C:\adit_temp"/>
+		<property name="deleteTemporaryFiles" value="false"/>
 	</bean>
 
 </beans>

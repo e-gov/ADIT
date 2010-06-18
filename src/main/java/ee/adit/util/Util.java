@@ -47,7 +47,7 @@ public class Util {
 		return result.toString();
 	}
 		
-	public static String gzipAndBase64Encode(String inputFile, String tempDir) throws IOException {
+	public static String gzipAndBase64Encode(String inputFile, String tempDir, boolean deleteTemporaryFiles) throws IOException {
 		String resultFileName = null;
 		
 		// Pack data to GZip format
@@ -82,9 +82,11 @@ public class Util {
         
         // Delete temporary files
         try {
-        	File zipFile = new File(zipOutFileName);
-        	zipFile.delete();
-        	LOG.debug("Deleted temporary file: " + zipOutFileName);
+        	if(deleteTemporaryFiles) {
+        		File zipFile = new File(zipOutFileName);
+            	zipFile.delete();
+            	LOG.debug("Deleted temporary file: " + zipOutFileName);
+        	}        	
         } catch(Exception e) {
         	LOG.error("Exception while deleting temporary files: ", e);
         }

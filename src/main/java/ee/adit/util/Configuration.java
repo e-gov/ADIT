@@ -8,6 +8,8 @@ public class Configuration {
 
 	private String tempDir;
 	
+	private String deleteTemporaryFiles;
+	
 	public BigInteger getGetJoinedMaxResults() {
 		return getJoinedMaxResults;
 		
@@ -23,6 +25,14 @@ public class Configuration {
 
 	public void setTempDir(String tempDir) {
 		this.tempDir = tempDir;
+	}
+
+	public String getDeleteTemporaryFiles() {
+		return deleteTemporaryFiles;
+	}
+
+	public void setDeleteTemporaryFiles(String deleteTemporaryFiles) {
+		this.deleteTemporaryFiles = deleteTemporaryFiles;
 	}
 	
 }
