@@ -9,6 +9,7 @@ import javax.xml.soap.SOAPMessage;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
+import org.springframework.ws.mime.Attachment;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -62,7 +63,14 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 				int accessLevel = this.getUserService().getAccessLevel(applicationName);
 				
 				if(accessLevel >= 1) {
-														
+					
+					Iterator<Attachment> i = this.getRequestMessage().getAttachments();
+					
+					while(i.hasNext()) {
+						Attachment attachment = i.next();
+						LOG.debug("Attachment: " + attachment.getContentId());
+					}
+					
 					// TODO: Extract the SOAP attachment and:
 					// 1. Base 64 decode
 					// 2. unGZip
