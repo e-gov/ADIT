@@ -35,7 +35,7 @@
 	</class>
 
 	<class name="ee.adit.pojo.GetJoinedResponse">
-		<map-to xml="keha" ns-prefix="xtee" />
+		<map-to xml="keha"/>
 		<field name="success" type="ee.adit.pojo.Success" >
 		</field>
 		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
