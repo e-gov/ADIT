@@ -164,9 +164,8 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 		GetJoinedResponseAttachment getJoinedResponseAttachment = new GetJoinedResponseAttachment();
 		getJoinedResponseAttachment.setUsers(getJoinedResponseAttachmentUserList);
 		getJoinedResponseAttachment.setTotal(getJoinedResponseAttachmentUserList.size());
-		
-		
-		return userListElement;
+
+		return marshal(getJoinedResponseAttachment);
 	}
 	
 	public UserService getUserService() {
