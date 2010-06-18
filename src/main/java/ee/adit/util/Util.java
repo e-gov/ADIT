@@ -10,6 +10,11 @@ import java.io.UnsupportedEncodingException;
 import java.util.Random;
 import java.util.zip.GZIPOutputStream;
 
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
+import javax.activation.MimetypesFileTypeMap;
+import javax.xml.soap.AttachmentPart;
+import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;

@@ -1,5 +1,10 @@
 package ee.adit.ws.endpoint;
 
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
+import javax.activation.MimetypesFileTypeMap;
+import javax.xml.soap.AttachmentPart;
+import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
@@ -57,6 +62,23 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 		
 	}
 
+	public void addAttachment(String fileName) throws Exception {		
+		try {
+			LOG.debug("Adding SOAP attachment from file: " + fileName);
+			SOAPMessage responseMessage = this.getResponseMessage();
+			FileDataSource fileDataSource = new FileDataSource(fileName);
+			MimetypesFileTypeMap typeMap = new MimetypesFileTypeMap();
+			typeMap.addMimeTypes("base64");
+			fileDataSource.setFileTypeMap(typeMap);
+			DataHandler dataHandler = new DataHandler(fileDataSource);
+			AttachmentPart attachmentPart = responseMessage.createAttachmentPart(dataHandler);
+			responseMessage.addAttachmentPart(attachmentPart);
+		} catch (Exception e) {
+			LOG.error("Exception while adding SOAP attachment to response message: ", e);
+			throw e;
+		}		
+	}
+	
 	public Marshaller getMarshaller() {
 		return marshaller;
 	}

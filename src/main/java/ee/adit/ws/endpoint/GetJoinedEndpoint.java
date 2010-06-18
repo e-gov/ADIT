@@ -112,8 +112,7 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 							String gzipFileName = Util.gzipAndBase64Encode(temporaryFile, this.getConfiguration().getTempDir());
 
 							// 4. Add as an attachment
-							SOAPMessage responseMessage = this.getResponseMessage();
-							addAttachment(gzipFileName, responseMessage);
+							addAttachment(gzipFileName);
 							
 						} else {
 							LOG.warn("No users were found.");
@@ -176,24 +175,6 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 		
 		Node userListElement = rootElement.getFirstChild();
 		return userListElement;
-	}
-	
-	
-	
-	public static void addAttachment(String fileName, SOAPMessage soapMessage) throws Exception {		
-		try {
-			LOG.debug("Adding SOAP attachment from file: " + fileName);
-			FileDataSource fileDataSource = new FileDataSource(fileName);
-			MimetypesFileTypeMap typeMap = new MimetypesFileTypeMap();
-			typeMap.addMimeTypes("base64");
-			fileDataSource.setFileTypeMap(typeMap);
-			DataHandler dataHandler = new DataHandler(fileDataSource);
-			AttachmentPart attachmentPart = soapMessage.createAttachmentPart(dataHandler);
-			soapMessage.addAttachmentPart(attachmentPart);
-		} catch (Exception e) {
-			LOG.error("Exception while adding SOAP attachment to response message: ", e);
-			throw e;
-		}		
 	}
 	
 	public UserService getUserService() {
