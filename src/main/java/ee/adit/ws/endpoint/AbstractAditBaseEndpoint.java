@@ -1,34 +1,27 @@
 package ee.adit.ws.endpoint;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 import javax.activation.MimetypesFileTypeMap;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.soap.AttachmentPart;
-import javax.xml.soap.SOAPMessage;
-import javax.xml.transform.Result;
 import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.sax.SAXResult;
-import javax.xml.transform.sax.SAXSource;
-import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.log4j.Logger;
 import org.springframework.context.MessageSource;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
+import org.springframework.ws.mime.Attachment;
+import org.springframework.ws.soap.SoapMessage;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.xml.sax.helpers.DefaultHandler;
 
 import ee.adit.util.Configuration;
 import ee.adit.util.CustomXTeeHeader;
@@ -83,22 +76,24 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 		
 	}
 
-	public void addAttachment(String fileName) throws Exception {		
+	public String addAttachment(String fileName) throws Exception {	
+		String result = null;
 		try {
 			LOG.debug("Adding SOAP attachment from file: " + fileName);
-			SOAPMessage responseMessage = this.getResponseMessage();
+			SoapMessage responseMessage = this.getResponseMessage();
 			FileDataSource fileDataSource = new FileDataSource(fileName);
-			MimetypesFileTypeMap typeMap = new MimetypesFileTypeMap();
-			typeMap.addMimeTypes("base64");
-			fileDataSource.setFileTypeMap(typeMap);
-			DataHandler dataHandler = new DataHandler(fileDataSource);
-			AttachmentPart attachmentPart = responseMessage.createAttachmentPart(dataHandler);
-			responseMessage.addAttachmentPart(attachmentPart);
-			LOG.debug("Attachment added.");
+			FileInputStream fis = new FileInputStream(fileName);
+			InputStreamResource isr = new InputStreamResource(fis);
+			Attachment attachment = responseMessage.addAttachment(Util.generateRandomID(), isr, "{http://www.w3.org/2001/XMLSchema}base64Binary");			
+			//AttachmentPart attachmentPart = responseMessage.createAttachmentPart(dataHandler);
+			//responseMessage.addAttachmentPart(attachmentPart);
+			LOG.debug("Attachment added with ID: " + attachment.getContentId());
+			result = attachment.getContentId();
 		} catch (Exception e) {
 			LOG.error("Exception while adding SOAP attachment to response message: ", e);
 			throw e;
-		}		
+		}
+		return result;
 	}
 	
 	public String marshal(Object object) {

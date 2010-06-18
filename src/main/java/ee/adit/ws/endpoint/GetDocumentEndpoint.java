@@ -23,7 +23,7 @@ public class GetDocumentEndpoint extends XteeCustomEndpoint {
 	protected void invokeInternal(Document requestKeha, Element responseKeha,
 			CustomXTeeHeader xteeHeader) throws Exception {
 
-		MessageContext context = this.getMessageContext();
+		/*MessageContext context = this.getMessageContext();
 
 		SaajSoapMessage requestMessage = (SaajSoapMessage) context.getRequest();
 
@@ -32,7 +32,7 @@ public class GetDocumentEndpoint extends XteeCustomEndpoint {
 		Attachment att = responseMessage.addAttachment("1", attachmentFile);
 		LOG.debug("Added attachment size: " + att.getSize());
 		
-		LOG.debug("GetDocumentEndpoint invoked.");
+		LOG.debug("GetDocumentEndpoint invoked.");*/
 
 	}
 }

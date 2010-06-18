@@ -111,7 +111,8 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 							String gzipFileName = Util.gzipAndBase64Encode(xmlFile, this.getConfiguration().getTempDir(), deleteTemporaryFiles);
 
 							// 4. Add as an attachment
-							addAttachment(gzipFileName);						
+							String contentID = addAttachment(gzipFileName);	
+							response.setUserList(contentID.getBytes());
 							
 						} else {
 							LOG.warn("No users were found.");

@@ -26,10 +26,13 @@ import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPMessage;
+import javax.xml.ws.handler.soap.SOAPMessageContext;
 
 import org.apache.log4j.Logger;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.MessageEndpoint;
+import org.springframework.ws.soap.SoapMessage;
+import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -56,21 +59,21 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 	
 	private boolean metaService = false;
 	
-	private MessageContext messageContext;
+	private SOAPMessageContext messageContext;
 	
-	private SOAPMessage responseMessage; 
+	private SaajSoapMessage responseMessage; 
 	
-	private SOAPMessage requestMessage;
+	private SaajSoapMessage requestMessage;
 	
 	public final void invoke(MessageContext messageContext) throws Exception {	
 		
-		this.setMessageContext(messageContext);
+		this.setMessageContext( (SOAPMessageContext) messageContext);
 		
 		SOAPMessage paringMessage = SOAPUtil.extractSoapMessage(messageContext.getRequest());
 		SOAPMessage responseMessage = SOAPUtil.extractSoapMessage(messageContext.getResponse());
 		
-		this.setResponseMessage(responseMessage);
-		this.setRequestMessage(paringMessage);
+		this.setResponseMessage(new SaajSoapMessage(responseMessage));
+		this.setRequestMessage(new SaajSoapMessage(paringMessage));
 		
 		// meta-service does not need 'header' element
 		if(metaService) {
@@ -191,31 +194,33 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 	 */
 	protected abstract void invokeInternal(Document requestKeha, Element responseElement, CustomXTeeHeader xTeeHeader) throws Exception;
 
-	public MessageContext getMessageContext() {
+
+	public SOAPMessageContext getMessageContext() {
 		return messageContext;
 	}
 
-	public void setMessageContext(MessageContext messageContext) {
+
+	public void setMessageContext(SOAPMessageContext messageContext) {
 		this.messageContext = messageContext;
 	}
 
 
-	public SOAPMessage getResponseMessage() {
+	public SoapMessage getResponseMessage() {
 		return responseMessage;
 	}
 
-
-	public void setResponseMessage(SOAPMessage responseMessage) {
-		this.responseMessage = responseMessage;
-	}
-
-
-	public SOAPMessage getRequestMessage() {
+	public SoapMessage getRequestMessage() {
 		return requestMessage;
 	}
 
 
-	public void setRequestMessage(SOAPMessage requestMessage) {
+	public void setResponseMessage(SaajSoapMessage responseMessage) {
+		this.responseMessage = responseMessage;
+	}
+
+
+	public void setRequestMessage(SaajSoapMessage requestMessage) {
 		this.requestMessage = requestMessage;
 	}
+
 }

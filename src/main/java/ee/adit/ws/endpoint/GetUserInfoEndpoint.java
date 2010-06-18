@@ -62,15 +62,7 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 				int accessLevel = this.getUserService().getAccessLevel(applicationName);
 				
 				if(accessLevel >= 1) {
-					
-					SOAPMessage responseMessage = this.getRequestMessage();
-					Iterator<AttachmentPart> i = responseMessage.getAttachments();
-					while(i.hasNext()) {
-						AttachmentPart attachment = i.next();
-						LOG.debug("Attachment ID: " + attachment.getContentId());
-						
-					}
-					
+														
 					// TODO: Extract the SOAP attachment and:
 					// 1. Base 64 decode
 					// 2. unGZip
