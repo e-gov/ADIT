@@ -10,10 +10,17 @@ import java.io.UnsupportedEncodingException;
 import java.util.Random;
 import java.util.zip.GZIPOutputStream;
 
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Base64OutputStream;
 import org.apache.log4j.Logger;
 import org.castor.core.util.Base64Encoder;
+import org.w3c.dom.Node;
 
 public class Util {
 
@@ -63,12 +70,11 @@ public class Util {
         	b64outStream.write(b, 0, len);
         }
         in.close();
-        b64out.close();
         b64outStream.close();
+        b64out.close();
         
         // Delete temporary files
         try {
-        	LOG.debug("Deleted temporary file: " + tempDir + File.separator + inputFile);
         	File zipFile = new File(zipOutFileName);
         	zipFile.delete();
         	LOG.debug("Deleted temporary file: " + zipOutFileName);
@@ -77,6 +83,18 @@ public class Util {
         }
         
 		return resultFileName;
+	}
+	
+	public static String outputToTemporaryFile(Node rootNode, Configuration config) throws TransformerException, IOException {
+		String tempFileName = Util.generateRandomFileName();
+		String tempFileFullName = config.getTempDir() + File.separator + tempFileName;
+		FileOutputStream fos = new FileOutputStream(tempFileFullName);
+		TransformerFactory transFactory = TransformerFactory.newInstance();
+		Transformer transformer = transFactory.newTransformer();
+		transformer.transform(new DOMSource(rootNode), new StreamResult(fos));
+		fos.close();		
+		
+		return tempFileFullName;
 	}
 	
 	public static void printHeader(CustomXTeeHeader header) {

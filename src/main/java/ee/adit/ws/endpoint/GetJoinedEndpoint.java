@@ -106,11 +106,10 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 							Node rootNode = getXML(userList);
 							
 							// 2. Output the XML to a temporary file
-							String temporaryFile = outputToTemporaryFile(rootNode, this.getConfiguration());
+							String temporaryFile = Util.outputToTemporaryFile(rootNode, this.getConfiguration());
 							
 							// 3. GZip and Base64 encode the temporary file
 							String gzipFileName = Util.gzipAndBase64Encode(temporaryFile, this.getConfiguration().getTempDir());
-							LOG.debug("Result XML gzipped filename: " + gzipFileName);
 
 							// 4. Add as an attachment
 							SOAPMessage responseMessage = this.getResponseMessage();
@@ -179,19 +178,11 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 		return userListElement;
 	}
 	
-	public static String outputToTemporaryFile(Node rootNode, Configuration config) throws TransformerException, IOException {
-		String tempFileName = Util.generateRandomFileName();
-		FileOutputStream fos = new FileOutputStream(config.getTempDir() + File.separator + tempFileName);
-		TransformerFactory transFactory = TransformerFactory.newInstance();
-		Transformer transformer = transFactory.newTransformer();
-		transformer.transform(new DOMSource(rootNode), new StreamResult(fos));
-		fos.close();		
-		
-		return tempFileName;
-	}
+	
 	
 	public static void addAttachment(String fileName, SOAPMessage soapMessage) throws Exception {		
 		try {
+			LOG.debug("Adding SOAP attachment from file: " + fileName);
 			FileDataSource fileDataSource = new FileDataSource(fileName);
 			MimetypesFileTypeMap typeMap = new MimetypesFileTypeMap();
 			typeMap.addMimeTypes("base64");
