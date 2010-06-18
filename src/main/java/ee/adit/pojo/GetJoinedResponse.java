@@ -49,7 +49,9 @@ public class GetJoinedResponse {
     protected ArrayOfMessage messages;
     @XmlElement(required = true)
     protected byte[] userList;
-
+    @XmlElement(required = true)
+    protected String href;
+    
     /**
      * Gets the value of the messages property.
      * 
@@ -102,6 +104,14 @@ public class GetJoinedResponse {
 
 	public void setSuccess(Success success) {
 		this.success = success;
+	}
+
+	public String getHref() {
+		return href;
+	}
+
+	public void setHref(String href) {
+		this.href = href;
 	}
 
 }

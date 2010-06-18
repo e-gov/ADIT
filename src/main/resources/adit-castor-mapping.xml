@@ -44,6 +44,9 @@
 		<field name="userList" type="bytes">
 			<bind-xml name="user_list" />
 		</field>
+		<field name="href" type="java.lang.String" >
+			<bind-xml name="href" node="attribute" location="user_list"/>
+		</field>
 	</class>
 
 	<class name="ee.adit.pojo.GetJoinedResponseAttachment">

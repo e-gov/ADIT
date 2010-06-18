@@ -112,7 +112,7 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 
 							// 4. Add as an attachment
 							String contentID = addAttachment(gzipFileName);	
-							response.setUserList(contentID.getBytes());
+							response.setHref("cid:" + contentID);
 							
 						} else {
 							LOG.warn("No users were found.");
