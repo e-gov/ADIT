@@ -41,6 +41,9 @@
 		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
 			<bind-xml name="messages" />
 		</field>
+		<field name="userList" type="bytes">
+			<bind-xml name="user_list" />
+		</field>
 	</class>
 
 	<class name="ee.adit.pojo.GetJoinedResponseAttachment">
@@ -69,11 +72,8 @@
  	<!-- GetUserInfo -->
  	<class name="ee.adit.pojo.GetUserInfoRequest">
 		<map-to xml="GetUserInfo" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
-		<field name="maxResults" type="java.math.BigInteger">
-			<bind-xml name="maxResults" location="keha" />
-		</field>
-		<field name="startIndex" type="java.math.BigInteger">
-			<bind-xml name="startIndex" location="keha" />
+		<field name="userList" type="bytes">
+			<bind-xml name="userList" location="keha" />
 		</field>
 	</class>
  	
