@@ -74,7 +74,6 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 						LOG.debug("Attachment: " + attachment.getContentId());
 						
 						String base64DecodedFile = extractXML(attachment);
-						
 						//String xmlFile = base64DecodeAndUnzip(base64EncodedFile);
 						
 					}
@@ -116,6 +115,8 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 	}
 	
 	public String extractXML(Attachment attachment) throws IOException {
-		return Util.createTemporaryFile(attachment.getInputStream(), this.getConfiguration().getTempDir());
+		String result = Util.createTemporaryFile(attachment.getInputStream(), this.getConfiguration().getTempDir());
+		LOG.debug("Attachment extracted to temporary file: " + result);
+		return result;
 	}
 }
