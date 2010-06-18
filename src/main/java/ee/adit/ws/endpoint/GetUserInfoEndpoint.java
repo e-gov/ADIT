@@ -1,5 +1,7 @@
 package ee.adit.ws.endpoint;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Iterator;
 import java.util.Locale;
 
@@ -69,6 +71,9 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 					while(i.hasNext()) {
 						Attachment attachment = i.next();
 						LOG.debug("Attachment: " + attachment.getContentId());
+						
+						extractXML(attachment);
+						
 					}
 					
 					// TODO: Extract the SOAP attachment and:
@@ -105,5 +110,12 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 		}
 		
 		return response;
+	}
+	
+	public void extractXML(Attachment attachment) throws IOException {
+		InputStream inputStream = attachment.getInputStream();
+		
+		
+		
 	}
 }

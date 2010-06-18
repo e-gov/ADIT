@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Random;
+import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 import javax.activation.DataHandler;
@@ -24,6 +25,7 @@ import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.binary.Base64InputStream;
 import org.apache.commons.codec.binary.Base64OutputStream;
 import org.apache.log4j.Logger;
 import org.castor.core.util.Base64Encoder;
@@ -60,7 +62,7 @@ public class Util {
 		String resultFileName = null;
 		
 		// Pack data to GZip format
-        String zipOutFileName = inputFile + "_zipOutBuffer.dat";
+        String zipOutFileName = inputFile + "_zipOutBuffer.adit";
         LOG.debug("Packing data to GZip format. Output file: " + zipOutFileName);
         FileInputStream in = new FileInputStream(inputFile);
         FileOutputStream zipOutFile = new FileOutputStream(zipOutFileName, false);
@@ -76,7 +78,7 @@ public class Util {
         LOG.debug("GZip complete");
         
         // Encode the GZipped data to Base64 binary data
-        resultFileName = inputFile + "_Base64OutBuffer.dat";
+        resultFileName = inputFile + "_Base64OutBuffer.adit";
         LOG.debug("Encoding zip file to Base64: Output file: " + zipOutFileName);
         in = new FileInputStream(zipOutFileName);
         FileOutputStream b64out = new FileOutputStream(resultFileName, false);
@@ -101,6 +103,42 @@ public class Util {
         }
         
 		return resultFileName;
+	}
+	
+	public static String base64DecodeAndUnzip(String inputFile, String tempDir, boolean deleteTemporaryFiles) throws IOException {
+		String result = null;
+		
+		// Base64 decode
+		String base64DecodedFile = inputFile + "_Base64DecodedOutBuffer.adit";
+		FileInputStream inputFileStream = new FileInputStream(inputFile);
+		FileOutputStream base64DecodedOut = new FileOutputStream(base64DecodedFile, false);
+		Base64InputStream base64InputStream = new Base64InputStream(inputFileStream);
+		
+		int len;
+		byte[] b = new byte[66000];
+        while ((len = base64InputStream.read(b)) > 0) {
+        	base64DecodedOut.write(b, 0, len);
+        }
+        base64DecodedOut.close();
+        base64InputStream.close();
+        inputFileStream.close();
+		
+        // Unzip
+        
+        String unzipOutFileName = inputFile + "_unzipOutBuffer.adit";
+        FileOutputStream unzipOutFileStream = new FileOutputStream(unzipOutFileName, false);
+        FileInputStream gzipFileInputStream = new FileInputStream(base64DecodedFile);
+        GZIPInputStream gzipInputStream = new GZIPInputStream(gzipFileInputStream);
+        
+        byte[] buf = new byte[1024];
+        while ((len = gzipInputStream.read(buf)) > 0) {
+        	unzipOutFileStream.write(buf, 0, len);
+        }
+        unzipOutFileStream.close();
+        gzipInputStream.close();
+        gzipFileInputStream.close();        
+        
+		return result;
 	}
 	
 	public static boolean deleteFile(String fileName, boolean deleteTemporaryFiles) {
