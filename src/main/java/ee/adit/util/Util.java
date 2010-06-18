@@ -106,7 +106,6 @@ public class Util {
 	}
 	
 	public static String base64DecodeAndUnzip(String inputFile, String tempDir, boolean deleteTemporaryFiles) throws IOException {
-		String result = null;
 		
 		// Base64 decode
 		String base64DecodedFile = inputFile + "_Base64DecodedOutBuffer.adit";
@@ -138,7 +137,18 @@ public class Util {
         gzipInputStream.close();
         gzipFileInputStream.close();        
         
-		return result;
+        // Delete temporary files
+        try {
+        	if(deleteTemporaryFiles) {
+        		File zipFile = new File(base64DecodedFile);
+            	zipFile.delete();
+            	LOG.debug("Deleted temporary file: " + base64DecodedFile);
+        	}        	
+        } catch(Exception e) {
+        	LOG.error("Exception while deleting temporary files: ", e);
+        }
+        
+        return unzipOutFileName;
 	}
 	
 	public static boolean deleteFile(String fileName, boolean deleteTemporaryFiles) {
