@@ -12,6 +12,10 @@
     	<level value="DEBUG"></level>
     </logger>
     
+    <logger name="org.hibernate">
+    	<level value="INFO"></level>
+    </logger>
+    
     <root>
 		<level value="warn" />
 		<appender-ref ref="stdout" />

@@ -199,6 +199,8 @@ public class UserService {
 	public void getUserInfo(String userCode) {
 		
 		int usedSpace = this.getDocumentDAO().getUsedSpaceForUser(userCode);
+		LOG.debug("Information for user (" + userCode + "): ");
+		LOG.debug("UsedSpace for user: " + usedSpace);
 		
 		/*
 		 * TODO: get user data:
