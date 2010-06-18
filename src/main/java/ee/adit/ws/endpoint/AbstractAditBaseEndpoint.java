@@ -15,7 +15,9 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.apache.log4j.Logger;
 import org.springframework.context.MessageSource;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.InputStreamSource;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
 import org.springframework.ws.mime.Attachment;
@@ -81,12 +83,8 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 		try {
 			LOG.debug("Adding SOAP attachment from file: " + fileName);
 			SoapMessage responseMessage = this.getResponseMessage();
-			FileDataSource fileDataSource = new FileDataSource(fileName);
-			FileInputStream fis = new FileInputStream(fileName);
-			InputStreamResource isr = new InputStreamResource(fis);
+			InputStreamSource isr = new FileSystemResource(new File(fileName));			
 			Attachment attachment = responseMessage.addAttachment(Util.generateRandomID(), isr, "{http://www.w3.org/2001/XMLSchema}base64Binary");			
-			//AttachmentPart attachmentPart = responseMessage.createAttachmentPart(dataHandler);
-			//responseMessage.addAttachmentPart(attachmentPart);
 			LOG.debug("Attachment added with ID: " + attachment.getContentId());
 			result = attachment.getContentId();
 		} catch (Exception e) {
