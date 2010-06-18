@@ -1,5 +1,7 @@
 package ee.adit.ws.endpoint;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.StringWriter;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -24,6 +26,7 @@ import org.springframework.ws.WebServiceMessage;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.exception.AditException;
@@ -114,33 +117,35 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 							DOMResult reponseObjectResult = new DOMResult(rootElement);
 							this.getMarshaller().marshal(getJoinedResponseAttachment, reponseObjectResult);
 							
-							Node resultNode = reponseObjectResult.getNode();
+							Node userListElement = rootElement.getFirstChild();
+							
+							String tempFileName = Util.generateRandomFileName();
+							
+							String tmpFileName = this.getConfiguration().getTempDir() + File.separator + tempFileName;
+							
+							FileOutputStream fos = new FileOutputStream(tmpFileName);
 							
 							// TEST OUTPUT
 							TransformerFactory transFactory = TransformerFactory.newInstance();
 							Transformer transformer = transFactory.newTransformer();
-							StringWriter buffer = new StringWriter();
-							transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-							transformer.transform(new DOMSource(resultNode),
-							      new StreamResult(buffer));
-							String str = buffer.toString();
+							transformer.transform(new DOMSource(userListElement), new StreamResult(fos));
 							
-							// Remove container tag
-							str.replaceAll("<result>", "");
-							str.replaceAll("</result>", "");
+							fos.close();
 							
-							// Add XML declaration
-							str = XMLUtil.XML_DECLARATION + str;
-							LOG.debug("Attachment XML string: " + str);
+							// TODO: GZIP the data
+							String gzipFileName = Util.gzipPack(tempFileName, this.getConfiguration().getTempDir());
+							LOG.debug("Result XML gzipped filename: " + gzipFileName);
 							
-							// TODO: base64 encode the bytes
-							String base64Encoded = Util.base64encode(str);
+							// base64 encode the bytes
+							//String base64Encoded = Util.base64encode(str);
+							
+							//LOG.debug("base64Encoded: " + base64Encoded);
 							
 							// 2. Add as an attachment
-							SOAPMessage responseMessage = this.getResponseMessage();
-							AttachmentPart attachmentPart = responseMessage.createAttachmentPart(base64Encoded.getBytes(), "base64Binary");
+							//SOAPMessage responseMessage = this.getResponseMessage();
+							//AttachmentPart attachmentPart = responseMessage.createAttachmentPart(base64Encoded.getBytes(), "base64Binary");
 							
-							responseMessage.addAttachmentPart(attachmentPart);
+							//responseMessage.addAttachmentPart(attachmentPart);
 							
 						} else {
 							LOG.warn("No users were found.");

@@ -6,6 +6,8 @@ public class Configuration {
 
 	private BigInteger getJoinedMaxResults;
 
+	private String tempDir;
+	
 	public BigInteger getGetJoinedMaxResults() {
 		return getJoinedMaxResults;
 		
@@ -13,6 +15,14 @@ public class Configuration {
 
 	public void setGetJoinedMaxResults(BigInteger getJoinedMaxResults) {
 		this.getJoinedMaxResults = getJoinedMaxResults;
+	}
+
+	public String getTempDir() {
+		return tempDir;
+	}
+
+	public void setTempDir(String tempDir) {
+		this.tempDir = tempDir;
 	}
 	
 }
