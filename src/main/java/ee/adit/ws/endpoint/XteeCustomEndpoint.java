@@ -60,6 +60,8 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 	
 	private SOAPMessage responseMessage; 
 	
+	private SOAPMessage requestMessage;
+	
 	public final void invoke(MessageContext messageContext) throws Exception {	
 		
 		this.setMessageContext(messageContext);
@@ -68,6 +70,7 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 		SOAPMessage responseMessage = SOAPUtil.extractSoapMessage(messageContext.getResponse());
 		
 		this.setResponseMessage(responseMessage);
+		this.setRequestMessage(paringMessage);
 		
 		// meta-service does not need 'header' element
 		if(metaService) {
@@ -204,5 +207,15 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 
 	public void setResponseMessage(SOAPMessage responseMessage) {
 		this.responseMessage = responseMessage;
+	}
+
+
+	public SOAPMessage getRequestMessage() {
+		return requestMessage;
+	}
+
+
+	public void setRequestMessage(SOAPMessage requestMessage) {
+		this.requestMessage = requestMessage;
 	}
 }

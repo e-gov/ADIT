@@ -1,6 +1,11 @@
 package ee.adit.ws.endpoint;
 
+import java.util.Iterator;
 import java.util.Locale;
+
+import javax.xml.soap.AttachmentPart;
+import javax.xml.soap.SOAPElement;
+import javax.xml.soap.SOAPMessage;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
@@ -57,6 +62,14 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 				int accessLevel = this.getUserService().getAccessLevel(applicationName);
 				
 				if(accessLevel >= 1) {
+					
+					SOAPMessage responseMessage = this.getRequestMessage();
+					Iterator<AttachmentPart> i = responseMessage.getAttachments();
+					while(i.hasNext()) {
+						AttachmentPart attachment = i.next();
+						LOG.debug("Attachment ID: " + attachment.getContentId());
+						
+					}
 					
 					// TODO: Extract the SOAP attachment and:
 					// 1. Base 64 decode
