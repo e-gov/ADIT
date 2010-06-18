@@ -92,9 +92,10 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 								LOG.debug("XML unmarshalled to type: " + unmarshalledObject.getClass());
 								if(unmarshalledObject instanceof GetUserInfoRequestAttachmentUserList) {
 									
+									GetUserInfoRequestAttachmentUserList userList = (GetUserInfoRequestAttachmentUserList) unmarshalledObject;
 									// TODO: Query database
 									
-									
+									this.getUserService().getUserInfo(userList);
 									
 									
 									// TODO: Construct response

@@ -15,6 +15,7 @@ import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.RemoteApplication;
 import ee.adit.dao.pojo.Usertype;
 import ee.adit.exception.AditInternalException;
+import ee.adit.pojo.GetUserInfoRequestAttachmentUserList;
 
 public class UserService {
 
@@ -178,6 +179,32 @@ public class UserService {
 		result = this.getAditUserDAO().listUsers(startIndex.intValue(), maxResults.intValue());
 		
 		return result;
+	}
+	
+	public void getUserInfo(GetUserInfoRequestAttachmentUserList userList) {
+		
+		List<String> userCodes = userList.getCodes();
+		
+		for(String userCode : userCodes) {
+			
+			getUserInfo(userCode);
+			
+		}
+		
+	}
+	
+	public void getUserInfo(String userCode) {
+		
+		/*
+		 * TODO: get user data:
+		 * - joined
+		 * - free_space
+		 * - used_space
+		 * - can_read
+		 * - can_write
+		 * - uses_dvk
+		 */
+		
 	}
 	
 	public RemoteApplicationDAO getRemoteApplicationDAO() {
