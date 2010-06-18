@@ -59,15 +59,11 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 	
 	private boolean metaService = false;
 	
-	private SOAPMessageContext messageContext;
-	
 	private SaajSoapMessage responseMessage; 
 	
 	private SaajSoapMessage requestMessage;
 	
 	public final void invoke(MessageContext messageContext) throws Exception {	
-		
-		this.setMessageContext( (SOAPMessageContext) messageContext);
 		
 		SOAPMessage paringMessage = SOAPUtil.extractSoapMessage(messageContext.getRequest());
 		SOAPMessage responseMessage = SOAPUtil.extractSoapMessage(messageContext.getResponse());
@@ -193,16 +189,6 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 	 * @param xteeHeader
 	 */
 	protected abstract void invokeInternal(Document requestKeha, Element responseElement, CustomXTeeHeader xTeeHeader) throws Exception;
-
-
-	public SOAPMessageContext getMessageContext() {
-		return messageContext;
-	}
-
-
-	public void setMessageContext(SOAPMessageContext messageContext) {
-		this.messageContext = messageContext;
-	}
 
 
 	public SoapMessage getResponseMessage() {
