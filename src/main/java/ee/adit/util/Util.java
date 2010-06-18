@@ -33,7 +33,7 @@ public class Util {
 		return result.toString();
 	}
 		
-	public static String gzipPack(String rawDataFileName, String tempDir) throws IOException {
+	public static String gzipAndBase64Encode(String rawDataFileName, String tempDir) throws IOException {
 		String resultFileName = null;
 		
 		// Pack data to GZip format

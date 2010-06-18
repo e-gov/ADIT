@@ -133,7 +133,7 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 							fos.close();
 							
 							// TODO: GZIP the data
-							String gzipFileName = Util.gzipPack(tempFileName, this.getConfiguration().getTempDir());
+							String gzipFileName = Util.gzipAndBase64Encode(tempFileName, this.getConfiguration().getTempDir());
 							LOG.debug("Result XML gzipped filename: " + gzipFileName);
 							
 							// base64 encode the bytes
