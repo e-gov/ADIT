@@ -1,6 +1,6 @@
 package ee.adit.pojo;
 
-public class GetJoinedResponseUserList {
+public class UserList {
 	
 	private String href;
 

@@ -47,7 +47,7 @@ import ee.adit.pojo.GetJoinedRequest;
 import ee.adit.pojo.GetJoinedResponse;
 import ee.adit.pojo.GetJoinedResponseAttachment;
 import ee.adit.pojo.GetJoinedResponseAttachmentUser;
-import ee.adit.pojo.GetJoinedResponseUserList;
+import ee.adit.pojo.UserList;
 import ee.adit.pojo.JoinRequest;
 import ee.adit.pojo.JoinResponse;
 import ee.adit.pojo.Success;
@@ -113,7 +113,7 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 
 							// 4. Add as an attachment
 							String contentID = addAttachment(gzipFileName);
-							GetJoinedResponseUserList getJoinedResponseUserList = new GetJoinedResponseUserList();
+							UserList getJoinedResponseUserList = new UserList();
 							getJoinedResponseUserList.setHref("cid:" + contentID);
 							response.setUserList(getJoinedResponseUserList);
 							

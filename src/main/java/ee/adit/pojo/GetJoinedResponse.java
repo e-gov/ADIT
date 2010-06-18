@@ -48,7 +48,7 @@ public class GetJoinedResponse {
     @XmlElement(required = true)
     protected ArrayOfMessage messages;
     @XmlElement(required = true)
-    protected GetJoinedResponseUserList userList;
+    protected UserList userList;
     
     /**
      * Gets the value of the messages property.
@@ -82,11 +82,11 @@ public class GetJoinedResponse {
 		this.success = success;
 	}
 
-	public GetJoinedResponseUserList getUserList() {
+	public UserList getUserList() {
 		return userList;
 	}
 
-	public void setUserList(GetJoinedResponseUserList userList) {
+	public void setUserList(UserList userList) {
 		this.userList = userList;
 	}
 

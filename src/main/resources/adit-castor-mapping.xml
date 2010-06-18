@@ -84,6 +84,18 @@
 		</field>
 	</class>
  	
+ 	<class name="ee.adit.pojo.GetUserInfoResponse">
+		<map-to xml="keha"/>
+		<field name="success" type="ee.adit.pojo.Success" >
+		</field>
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
+			<bind-xml name="messages" />
+		</field>
+		<field name="userList" type="ee.adit.pojo.UserList">
+			<bind-xml name="user_list" />
+		</field>
+	</class>
+ 	
  	<!-- Common -->
  	<class name="ee.adit.pojo.Success">
 		<map-to xml="success" ns-prefix="adit" />
