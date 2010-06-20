@@ -9,7 +9,7 @@
 	<url>http://maven.apache.org</url>
 
 	<properties>
-		<baseDir>C:\development\adit\adit</baseDir>
+		<baseDir>E:\dev\adit\adit</baseDir>
 	</properties>
 
 	<dependencies>
@@ -219,7 +219,7 @@
 				<artifactId>tomcat-maven-plugin</artifactId>
 				<configuration>
 					<server>tomcat6</server>
-					<warFile>${baseDir}/target/adit.war</warFile>
+					<warSourceDirectory>${baseDir}/target/adit</warSourceDirectory>
 				</configuration>
 			</plugin>
 
