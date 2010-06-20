@@ -31,3 +31,8 @@ Right click on pom.xml -> "Run as" -> "Run configurations":
 
 6. Run the maven build, type "ALT + SHIFT + X" and then "M".
 
+NB! Sometimes the maven goal "tomcat:redeploy" does not undeploy the application correctly in tomcat. This is related to operating system
+issus with locking files. The cure for that is to add some parameters to tomcat context configuration (context.xml) like this:
+
+<Context reloadable="true" antiResourceLocking="true">
+
