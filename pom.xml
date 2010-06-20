@@ -219,7 +219,7 @@
 				<artifactId>tomcat-maven-plugin</artifactId>
 				<configuration>
 					<server>tomcat6</server>
-					<warSourceDirectory>${baseDir}/target/adit</warSourceDirectory>
+					<warFile>${baseDir}/target/adit.war</warFile>
 				</configuration>
 			</plugin>
 
