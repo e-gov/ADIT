@@ -12,7 +12,7 @@ public class DocumentDAO extends AbstractAditDAO {
 
 	private static Logger LOG = Logger.getLogger(DocumentDAO.class);
 	
-	public int getUsedSpaceForUser(String userCode) {
+	public long getUsedSpaceForUser(String userCode) {
 		
 		// TODO: add conditions for files - do not count in deflated/deleted
 		
@@ -22,10 +22,10 @@ public class DocumentDAO extends AbstractAditDAO {
 		//List<DocumentFile> userFiles = this.getHibernateTemplate().find("from DocumentFile docFile where docFile.document in (select doc.id from Document doc where doc.creatorCode = ? and doc.deleted != ? and doc.deflated != ?)", new Object[] {userCode, new Boolean(true), new Boolean(true)});
 		List<DocumentFile> userFiles = this.getHibernateTemplate().find("from DocumentFile docFile where docFile.document in (select doc.id from Document doc where doc.creatorCode = ? and (doc.deflated is null or doc.deflated != ?) and (doc.deleted is null or doc.deleted != ?))", new Object[] {userCode, deflated, deleted});
 		
-		int result = 0;
+		long result = 0;
 		for(DocumentFile docFile : userFiles) {
 			BigDecimal fileSize = docFile.getFileSizeBytes();
-			result += fileSize.intValue();
+			result += fileSize.longValue();
 		}
 		
 		return result;

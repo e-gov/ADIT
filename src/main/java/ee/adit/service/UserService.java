@@ -198,21 +198,57 @@ public class UserService {
 	
 	public void getUserInfo(String userCode) {
 		
-		int usedSpace = this.getDocumentDAO().getUsedSpaceForUser(userCode);
-		LOG.debug("Information for user (" + userCode + "): ");
-		LOG.debug("UsedSpace for user: " + usedSpace);
+		
 		
 		AditUser user = this.getAditUserDAO().getUserByID(userCode);
 		
-		/*
-		 * TODO: get user data:
-		 * - joined (ADIT_USER)
-		 * - free_space (ADIT_USER, DOCUMENT, DOCUMENT_FILE)
-		 * - used_space (ADIT_USER, DOCUMENT, DOCUMENT_FILE)
-		 * - can_read
-		 * - can_write
-		 * - uses_dvk
-		 */
+		Long diskquota = null;
+		long usedSpace;
+		Long unusedSpace = null;
+		boolean usesDVK = false;
+		boolean canRead = true;
+		boolean canWrite = true;
+		
+		if(user != null) {
+			LOG.debug("User has joined the service: " + userCode);
+			// User has joined the service
+			usedSpace = this.getDocumentDAO().getUsedSpaceForUser(userCode);
+			LOG.debug("Information for user (" + userCode + "): ");
+			LOG.debug("UsedSpace for user: " + usedSpace);
+			
+			
+			
+			if(user.getDiskQuota() != null && user.getDiskQuota() > 0) {
+				// Disk quota defined in user table
+				user.getDiskQuota();				
+			} else {
+				// User disk quota not defined in user table - check usertype for quota
+				Usertype usertype = user.getUsertype();
+				if(usertype != null && usertype.getDiskQuota() != null) {
+					diskquota = usertype.getDiskQuota();
+				}
+			}
+			
+			if(diskquota != null) {
+				// Calculate the unused space for this user
+				unusedSpace = diskquota.longValue() - usedSpace;				
+			} else {
+				throw new AditInternalException("User disk quota not defined by user/usertype data.");
+			}
+			
+			if(user.getDvkOrgCode() != null && !"".equalsIgnoreCase(user.getDvkOrgCode().trim())) {
+				usesDVK = true;
+				canWrite = false;
+			}
+			
+			
+		} else {
+			// User has not joined the service
+			LOG.debug("User has not joined the service: " + userCode);
+		}
+		
+		// Construct the holder object
+		
 		
 	}
 	
