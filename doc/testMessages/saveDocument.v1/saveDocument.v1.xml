@@ -9,8 +9,8 @@
    </soapenv:Header>
    <soapenv:Body>
       <adit:SaveDocument>
-      	<keha>
-      		<document href="cid:123123123" />
+        <keha>
+	  	  <document href="cid:123123123"/>
 		</keha>
       </adit:SaveDocument>
    </soapenv:Body>
