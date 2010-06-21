@@ -71,6 +71,7 @@ public class Util {
         byte[] buf = new byte[1024];
         int len;
         while ((len = in.read(buf)) > 0) {
+        	LOG.debug(new String(buf, "UTF-8"));
             out.write(buf, 0, len);
         }
         in.close();

@@ -22,7 +22,7 @@ public class UsertypeDAO extends AbstractAditDAO {
 		Usertype result = null;
 		
 		try {
-			List<Usertype> usertypeList = this.getHibernateTemplate().find("user.Usertype from AditUser user where user.userCode = ?", user.getUserCode());
+			List<Usertype> usertypeList = this.getHibernateTemplate().find("select user.usertype from AditUser user where user.userCode = ?", user.getUserCode());
 			
 			if(usertypeList != null && usertypeList.size() > 0) {
 				result = usertypeList.get(0);

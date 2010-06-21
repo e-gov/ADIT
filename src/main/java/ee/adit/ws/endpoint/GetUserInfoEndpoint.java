@@ -24,6 +24,7 @@ import ee.adit.pojo.GetJoinedResponse;
 import ee.adit.pojo.GetUserInfoRequest;
 import ee.adit.pojo.GetUserInfoRequestAttachmentUserList;
 import ee.adit.pojo.GetUserInfoResponse;
+import ee.adit.pojo.GetUserInfoResponseAttachment;
 import ee.adit.pojo.GetUserInfoResponseAttachmentUser;
 import ee.adit.pojo.Success;
 import ee.adit.pojo.UserList;
@@ -95,9 +96,13 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 								LOG.debug("XML unmarshalled to type: " + unmarshalledObject.getClass());
 								if(unmarshalledObject instanceof GetUserInfoRequestAttachmentUserList) {
 									
-									GetUserInfoRequestAttachmentUserList userList = (GetUserInfoRequestAttachmentUserList) unmarshalledObject;									
+									GetUserInfoRequestAttachmentUserList userList = (GetUserInfoRequestAttachmentUserList) unmarshalledObject;
+									
 									List<GetUserInfoResponseAttachmentUser> userInfoList = this.getUserService().getUserInfo(userList);
-									String responseAttachmentXMLFile = this.marshal(userInfoList);
+									GetUserInfoResponseAttachment responseAttachment = new GetUserInfoResponseAttachment();
+									responseAttachment.setUserList(userInfoList);
+									
+									String responseAttachmentXMLFile = this.marshal(responseAttachment);
 									
 									String attachmentFile = Util.gzipAndBase64Encode(responseAttachmentXMLFile, this.getConfiguration().getTempDir(), this.getConfiguration().getDeleteTemporaryFilesAsBoolean());
 									
