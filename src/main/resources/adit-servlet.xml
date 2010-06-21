@@ -25,6 +25,10 @@
 	</bean>
 	
 	<bean id="UnJoinEndpoint" class="ee.adit.ws.endpoint.UnJoinEndpoint">
+		<property name="marshaller" ref="castorMarshaller"/>
+		<property name="unmarshaller" ref="castorMarshaller"/>
+		<property name="userService" ref="userService"/>
+		<property name="messageSource" ref="messageSource"/>
 	</bean>
 	
 	<bean id="GetJoinedEndpoint" class="ee.adit.ws.endpoint.GetJoinedEndpoint">

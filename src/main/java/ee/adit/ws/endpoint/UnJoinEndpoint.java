@@ -12,6 +12,7 @@ import ee.adit.pojo.UnJoinRequest;
 import ee.adit.pojo.UnJoinResponse;
 import ee.adit.service.UserService;
 import ee.adit.util.CustomXTeeHeader;
+import ee.adit.util.Util;
 import ee.webmedia.xtee.XTeeHeader;
 import ee.webmedia.xtee.annotation.XTeeService;
 
@@ -47,9 +48,12 @@ public class UnJoinEndpoint extends AbstractAditBaseEndpoint {
 			CustomXTeeHeader header = this.getHeader();
 			String applicationName = header.getInfosysteem();
 			
+			// Log request
+			Util.printHeader(header);
+			
 			// TODO: Kontrollime, kas päringu käivitanud infosüsteem on ADITis registreeritud
-			
-			
+			boolean applicationRegistered = this.getUserService().isApplicationRegistered(applicationName);
+						
 			
 			// TODO: Kontrollime, kas päringu käivitanud infosüsteem tohib andmeid muuta (või üldse näha)
 			
@@ -64,5 +68,13 @@ public class UnJoinEndpoint extends AbstractAditBaseEndpoint {
 		}
 		
 		return null;
+	}
+
+	public UserService getUserService() {
+		return userService;
+	}
+
+	public void setUserService(UserService userService) {
+		this.userService = userService;
 	}
 }
