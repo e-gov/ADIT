@@ -14,6 +14,7 @@ import org.springframework.orm.hibernate3.HibernateCallback;
 
 import ee.adit.dao.pojo.AccessRestriction;
 import ee.adit.dao.pojo.AditUser;
+import ee.adit.dao.pojo.Usertype;
 
 public class AditUserDAO extends AbstractAditDAO {
 
@@ -21,13 +22,12 @@ public class AditUserDAO extends AbstractAditDAO {
 
 	public AditUser getUserByID(String userCode) {
 		AditUser result = null;
-
+		
 		try {
-			result = (AditUser) this.getHibernateTemplate().get(AditUser.class, userCode);
+			result = (AditUser) this.getHibernateTemplate().get(AditUser.class, userCode);			
 		} catch (Exception e) {
 			LOG.error(
-					"Exception while finding AditUser by registration code: ",
-					e);
+					"Exception while finding AditUser by registration code: ", e);
 		}
 
 		return result;
@@ -63,5 +63,5 @@ public class AditUserDAO extends AbstractAditDAO {
 		
 		return result;
 	}
-
+	
 }

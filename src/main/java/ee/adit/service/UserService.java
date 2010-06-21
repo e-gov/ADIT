@@ -228,7 +228,7 @@ public class UserService {
 				user.getDiskQuota();				
 			} else {
 				// User disk quota not defined in user table - check usertype for quota
-				Usertype usertype = user.getUsertype();
+				Usertype usertype = this.getUsertypeDAO().getUsertype(user);
 				if(usertype != null && usertype.getDiskQuota() != null) {
 					diskquota = usertype.getDiskQuota();
 				}
