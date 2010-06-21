@@ -86,6 +86,7 @@
 		<property name="userService" ref="userService"/>
 		<property name="messageSource" ref="messageSource"/>
 		<property name="configuration" ref="configuration"/>
+		<property name="documentService" ref="documentService"/>
 	</bean>
 	
 	<bean id="SaveDocumentFileEndpoint" class="ee.adit.ws.endpoint.document.SaveDocumentFileEndpoint">
@@ -192,6 +193,12 @@
 		<property name="accessRestrictionDAO" ref="accessRestrictionDAO"/>
 	</bean>
 
+	<bean id="documentService" class="ee.adit.service.DocumentService">
+		<property name="messageSource" ref="messageSource"/>
+		<property name="documentTypeDAO" ref="documentTypeDAO"/>
+		<property name="documentDAO" ref="documentDAO"/>
+	</bean>
+
 	<bean id="myDataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
@@ -248,6 +255,9 @@
 		<property name="sessionFactory" ref="mySessionFactory" />
 	</bean>	
 
+	<bean id="documentTypeDAO" class="ee.adit.dao.DsocumentTypeDAO">
+		<property name="sessionFactory" ref="mySessionFactory" />
+	</bean>
 
 	<!-- MessageSource -->
 	<bean id="messageSource"

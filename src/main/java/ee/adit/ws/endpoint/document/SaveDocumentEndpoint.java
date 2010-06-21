@@ -17,6 +17,7 @@ import ee.adit.pojo.SaveDocumentRequest;
 import ee.adit.pojo.SaveDocumentRequestAttachment;
 import ee.adit.pojo.SaveDocumentResponse;
 import ee.adit.pojo.Success;
+import ee.adit.service.DocumentService;
 import ee.adit.service.UserService;
 import ee.adit.util.CustomXTeeHeader;
 import ee.adit.util.Util;
@@ -31,6 +32,8 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 	private static Logger LOG = Logger.getLogger(SaveDocumentEndpoint.class);
 	
 	private UserService userService;
+	
+	private DocumentService documentService;
 	
 	@Override
 	protected Object invokeInternal(Object requestObject) throws Exception {
@@ -91,18 +94,26 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 											
 											SaveDocumentRequestAttachment document = (SaveDocumentRequestAttachment) unmarshalledObject;
 											
-											// TODO: Kas dokumendi juures on täidetud vajalikud metaandmed
-											
-											
-											
-											
-											if(remainingDiskQuota > 0) {
+											if(document.getId() != null) {
+												LOG.debug("Modifying document. ID: " + document.getId());
 												
-												
-												
-												// TODO: Dokument ja failid andmebaasi
+												//TODO: implement
 												
 											} else {
+												LOG.debug("Saving document. GUID: " + document.getGuid());
+												
+												// TODO: Kas dokumendi juures on täidetud vajalikud metaandmed
+												this.getDocumentService().checkAttachedDocumentMetadataForNewDocument(document);
+												
+												if(remainingDiskQuota > 0) {
+													
+													
+													
+													// TODO: Dokument ja failid andmebaasi
+													
+												} else {
+													
+												}
 												
 											}
 											
@@ -161,6 +172,14 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 
 	public void setUserService(UserService userService) {
 		this.userService = userService;
+	}
+
+	public DocumentService getDocumentService() {
+		return documentService;
+	}
+
+	public void setDocumentService(DocumentService documentService) {
+		this.documentService = documentService;
 	}
 
 }

@@ -31,4 +31,8 @@ public class DocumentDAO extends AbstractAditDAO {
 		return result;
 	}
 	
+	public Document getDocument(Integer id) {
+		return (Document) this.getHibernateTemplate().get(Document.class, id);
+	}
+	
 }
