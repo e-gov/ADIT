@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import ee.adit.exception.AditException;
 import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.JoinRequest;
+import ee.adit.pojo.SaveDocumentRequest;
 import ee.adit.pojo.SaveDocumentResponse;
 import ee.adit.pojo.Success;
 import ee.adit.service.UserService;
@@ -30,7 +31,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 		try {
 			
 			LOG.debug("SaveDocumentEndpoint.v1 invoked.");
-			JoinRequest request = (JoinRequest) requestObject;
+			SaveDocumentRequest request = (SaveDocumentRequest) requestObject;
 			CustomXTeeHeader header = this.getHeader();
 			String applicationName = header.getInfosysteem();
 			
