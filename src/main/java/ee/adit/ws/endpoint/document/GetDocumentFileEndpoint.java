@@ -7,7 +7,7 @@ import ee.webmedia.xtee.annotation.XTeeService;
 
 @XTeeService(name = "getDocumentFile", version = "v1")
 @Component
-public class getDocumentFileEndpoint extends AbstractAditBaseEndpoint {
+public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 
 	@Override
 	protected Object invokeInternal(Object requestObject) throws Exception {
