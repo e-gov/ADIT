@@ -22,12 +22,12 @@
     </logger>
     
     <logger name="org.hibernate">
-    	<level value="DEBUG"></level>
+    	<level value="INFO"></level>
     	<appender ref="file" />
     </logger>
     
     <logger name="org.springframework.orm.hibernate3">
-    	<level value="DEBUG"/>
+    	<level value="INFO"/>
     	<appender ref="file" />
     </logger>
     
