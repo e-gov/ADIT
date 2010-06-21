@@ -83,6 +83,7 @@ public class UnJoinEndpoint extends AbstractAditBaseEndpoint {
 							
 							String message = this.getMessageSource().getMessage("request.unJoin.success", new Object[] { aditUser.getUserCode() }, Locale.ENGLISH);
 							messages.addMessage(message);
+							response.setSuccess(new Success(true));
 							
 						} else {
 							String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.forUser.write", new Object[] { applicationName, aditUser.getUserCode() }, Locale.ENGLISH);
@@ -120,7 +121,7 @@ public class UnJoinEndpoint extends AbstractAditBaseEndpoint {
 			response.setMessages(arrayOfMessage);
 		}
 		
-		return null;
+		return response;
 	}
 
 	public UserService getUserService() {
