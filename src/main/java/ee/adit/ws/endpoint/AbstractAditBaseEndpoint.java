@@ -126,6 +126,10 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 		return this.getUnmarshaller().unmarshal(streamSource);
 	}
 	
+	// Abstract method for implementing by subclasses
+	protected abstract Object invokeInternal(Object requestObject)
+			throws Exception;
+	
 	public Marshaller getMarshaller() {
 		return marshaller;
 	}
@@ -149,10 +153,6 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 	public void setHeader(CustomXTeeHeader header) {
 		this.header = header;
 	}
-
-	// Abstract method for implementing by subclasses
-	protected abstract Object invokeInternal(Object requestObject)
-			throws Exception;
 
 	public MessageSource getMessageSource() {
 		return messageSource;
