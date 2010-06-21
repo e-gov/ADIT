@@ -23,6 +23,20 @@
 		</field>
 	</class>	
 
+	<!-- UnJoin -->
+	<class name="ee.adit.pojo.UnJoinRequest">
+		<map-to xml="UnJoin" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+	</class>
+
+	<class name="ee.adit.pojo.UnJoinResponse">
+		<map-to xml="keha" ns-prefix="xtee" />
+		<field name="success" type="ee.adit.pojo.Success" >
+		</field>
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
+			<bind-xml name="messages" />
+		</field>
+	</class>
+
 	<!-- GetJoined -->
 	<class name="ee.adit.pojo.GetJoinedRequest">
 		<map-to xml="GetJoined" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
