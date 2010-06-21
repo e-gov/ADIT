@@ -124,12 +124,14 @@ src/main/java/ee/adit/util/Util.java -text
 src/main/java/ee/adit/util/XMLUtil.java -text
 src/main/java/ee/adit/ws/endpoint/AbstractAditBaseEndpoint.java -text
 src/main/java/ee/adit/ws/endpoint/XteeCustomEndpoint.java -text
+src/main/java/ee/adit/ws/endpoint/document/ConfirmSignatureEndpoint.java -text
 src/main/java/ee/adit/ws/endpoint/document/DeflateDocumentEndpoint.java -text
 src/main/java/ee/adit/ws/endpoint/document/DeleteDocumentEndpoint.java -text
 src/main/java/ee/adit/ws/endpoint/document/DeleteDocumentFileEndpoint.java -text
 src/main/java/ee/adit/ws/endpoint/document/GetDocumentEndpoint.java -text
 src/main/java/ee/adit/ws/endpoint/document/GetDocumentFileEndpoint.java -text
 src/main/java/ee/adit/ws/endpoint/document/GetDocumentListEndpoint.java -text
+src/main/java/ee/adit/ws/endpoint/document/PrepareSignatureEndpoint.java -text
 src/main/java/ee/adit/ws/endpoint/document/SaveDocumentEndpoint.java -text
 src/main/java/ee/adit/ws/endpoint/document/saveDocumentFileEndpoint.java -text
 src/main/java/ee/adit/ws/endpoint/user/GetJoinedEndpoint.java -text
