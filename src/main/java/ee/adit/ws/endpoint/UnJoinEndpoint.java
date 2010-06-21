@@ -37,8 +37,6 @@ public class UnJoinEndpoint extends AbstractAditBaseEndpoint {
 		
 		try {
 			LOG.debug("UnJoinEndpoint.v1 invoked.");
-			
-			UnJoinRequest request = (UnJoinRequest) requestObject;
 			CustomXTeeHeader header = this.getHeader();
 			String applicationName = header.getInfosysteem();
 			
