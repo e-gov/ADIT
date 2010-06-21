@@ -73,7 +73,6 @@ src/main/java/ee/adit/dao/hbm/Signature.hbm.xml -text
 src/main/java/ee/adit/dao/hbm/UserNotification.hbm.xml -text
 src/main/java/ee/adit/dao/hbm/Usertype.hbm.xml -text
 src/main/java/ee/adit/dao/pojo/AccessRestriction.java -text
-src/main/java/ee/adit/dao/pojo/AccessRestrictionId.java -text
 src/main/java/ee/adit/dao/pojo/AditLog.java -text
 src/main/java/ee/adit/dao/pojo/AditUser.java -text
 src/main/java/ee/adit/dao/pojo/Document.java -text
