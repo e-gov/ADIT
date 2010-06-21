@@ -1,5 +1,4 @@
 * text=auto !eol
-WEB-INF/web.xml -text
 doc/environmentSetup.txt -text
 doc/testMessages/getDocument.v1.xml -text
 doc/testMessages/getJoined.v1.xml -text
@@ -46,6 +45,7 @@ sql/testdata/create_tablespaces.sql -text
 sql/testdata/remote_application.dml.sql -text
 sql/usertype.dml.sql -text
 src/main/java/ee/adit/dao/AbstractAditDAO.java -text
+src/main/java/ee/adit/dao/AccessRestrictionDAO.java -text
 src/main/java/ee/adit/dao/AditUserDAO.java -text
 src/main/java/ee/adit/dao/DocumentDAO.java -text
 src/main/java/ee/adit/dao/DocumentTypeDAO.java -text

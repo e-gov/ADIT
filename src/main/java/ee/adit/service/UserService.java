@@ -9,6 +9,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
+import ee.adit.dao.AccessRestrictionDAO;
 import ee.adit.dao.AditUserDAO;
 import ee.adit.dao.DocumentDAO;
 import ee.adit.dao.RemoteApplicationDAO;
@@ -32,6 +33,8 @@ public class UserService {
 	private AditUserDAO aditUserDAO;
 	
 	private DocumentDAO documentDAO;
+	
+	private AccessRestrictionDAO accessRestrictionDAO;
 	
 	private static final String USERTYPE_PERSON = "PERSON";
 	private static final String USERTYPE_INSTITUTION = "INSTITUTION";
@@ -94,7 +97,7 @@ public class UserService {
 		int result = 2;
 		
 		RemoteApplication remoteApplication = this.getRemoteApplicationDAO().getByShortName(remoteApplicationShortName);
-		List<AccessRestriction> accessRestrictons = this.getAditUserDAO().getAccessRestrictionsForUser(aditUser);
+		List<AccessRestriction> accessRestrictons = this.getAccessRestrictionDAO().getAccessRestrictionsForUser(aditUser);
 		LOG.debug("Number of access restrictions for (" + aditUser.getUserCode() + "): " + accessRestrictons.size());
 		Iterator<AccessRestriction> i = accessRestrictons.iterator();
 		
@@ -301,6 +304,14 @@ public class UserService {
 
 	public void setDocumentDAO(DocumentDAO documentDAO) {
 		this.documentDAO = documentDAO;
+	}
+
+	public AccessRestrictionDAO getAccessRestrictionDAO() {
+		return accessRestrictionDAO;
+	}
+
+	public void setAccessRestrictionDAO(AccessRestrictionDAO accessRestrictionDAO) {
+		this.accessRestrictionDAO = accessRestrictionDAO;
 	}	
 	
 }

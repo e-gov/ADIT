@@ -35,17 +35,7 @@ public class AditUserDAO extends AbstractAditDAO {
 		}
 	}
 
-	public List<AccessRestriction> getAccessRestrictionsForUser(AditUser aditUser) {
-		List<AccessRestriction> result = null;
-		
-		try {
-			result = this.getHibernateTemplate().find("from AccessRestriction accessRestriction where accessRestriction.aditUser = ?", aditUser);
-		} catch (Exception e) {
-			LOG.error("Exception while adding AditUser: ", e);
-		}	
-		
-		return result;
-	}
+	
 
 	public List<AditUser> listUsers(int startIndex, int maxResults) throws Exception {
 		List<AditUser> result = null;
