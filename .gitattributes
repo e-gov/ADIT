@@ -1,5 +1,4 @@
 * text=auto !eol
-WEB-INF/web.xml -text
 doc/environmentSetup.txt -text
 doc/testMessages/getDocument.v1.xml -text
 doc/testMessages/getJoined.v1.xml -text
