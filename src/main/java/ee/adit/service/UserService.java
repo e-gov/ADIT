@@ -268,7 +268,7 @@ public class UserService {
 		
 	}
 	
-	public void deactivateUser(AditUser user) {
+	public void deactivateUser(AditUser user) {		
 		user.setActive(false);
 		user.setDeactivationDate(new Date());
 		this.getAditUserDAO().saveOrUpdate(user);		
