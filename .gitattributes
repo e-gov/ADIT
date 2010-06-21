@@ -135,10 +135,10 @@ src/main/java/ee/adit/ws/endpoint/document/GetDocumentListEndpoint.java -text
 src/main/java/ee/adit/ws/endpoint/document/MarkDocumentViewedEndpoint.java -text
 src/main/java/ee/adit/ws/endpoint/document/PrepareSignatureEndpoint.java -text
 src/main/java/ee/adit/ws/endpoint/document/SaveDocumentEndpoint.java -text
+src/main/java/ee/adit/ws/endpoint/document/SaveDocumentFileEndpoint.java -text
 src/main/java/ee/adit/ws/endpoint/document/SendDocumentEndpoint.java -text
 src/main/java/ee/adit/ws/endpoint/document/ShareDocumentEndpoint.java -text
 src/main/java/ee/adit/ws/endpoint/document/UnShareDocumentEndpoint.java -text
-src/main/java/ee/adit/ws/endpoint/document/saveDocumentFileEndpoint.java -text
 src/main/java/ee/adit/ws/endpoint/user/GetJoinedEndpoint.java -text
 src/main/java/ee/adit/ws/endpoint/user/GetUserInfoEndpoint.java -text
 src/main/java/ee/adit/ws/endpoint/user/JoinEndpoint.java -text
