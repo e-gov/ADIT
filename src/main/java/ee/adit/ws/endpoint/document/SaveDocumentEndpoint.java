@@ -3,8 +3,11 @@ package ee.adit.ws.endpoint.document;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 
+import ee.adit.exception.AditException;
+import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.JoinRequest;
 import ee.adit.pojo.SaveDocumentResponse;
+import ee.adit.pojo.Success;
 import ee.adit.util.CustomXTeeHeader;
 import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
 import ee.adit.ws.endpoint.user.JoinEndpoint;
@@ -28,8 +31,22 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 			CustomXTeeHeader header = this.getHeader();
 			String applicationName = header.getInfosysteem();
 			
-		} catch (Exception e) {
+			// TODO: implement
 			
+		} catch (Exception e) {
+			LOG.error("Exception: ", e);
+			response.setSuccess(new Success(false));
+			ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
+			
+			if(e instanceof AditException) {
+				LOG.debug("Adding exception message to response object.");
+				arrayOfMessage.getMessage().add(e.getMessage());
+			} else {
+				arrayOfMessage.getMessage().add("Service error");
+			}
+			
+			LOG.debug("Adding exception messages to response object.");
+			response.setMessages(arrayOfMessage);
 		}
 		
 		
