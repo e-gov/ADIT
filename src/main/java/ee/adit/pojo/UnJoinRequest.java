@@ -35,5 +35,14 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "UnJoinRequest")
 public class UnJoinRequest {
 
+	private String keha;
 
+	public String getKeha() {
+		return keha;
+	}
+
+	public void setKeha(String keha) {
+		this.keha = keha;
+	}
+	
 }

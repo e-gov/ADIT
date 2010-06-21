@@ -26,6 +26,9 @@
 	<!-- UnJoin -->
 	<class name="ee.adit.pojo.UnJoinRequest">
 		<map-to xml="UnJoin" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<field name="keha" type="java.lang.String">
+			<bind-xml name="keha" />
+		</field>
 	</class>
 
 	<class name="ee.adit.pojo.UnJoinResponse">
