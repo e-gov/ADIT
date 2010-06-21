@@ -18,7 +18,7 @@ import ee.adit.dao.pojo.RemoteApplication;
 import ee.adit.dao.pojo.Usertype;
 import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.GetUserInfoRequestAttachmentUserList;
-import ee.adit.pojo.GetUserInfoResponseAttachmentUserList;
+import ee.adit.pojo.GetUserInfoResponseAttachmentUser;
 
 public class UserService {
 
@@ -186,23 +186,23 @@ public class UserService {
 		return result;
 	}
 	
-	public List<GetUserInfoResponseAttachmentUserList> getUserInfo(GetUserInfoRequestAttachmentUserList userList) {
-		List<GetUserInfoResponseAttachmentUserList> result = new ArrayList<GetUserInfoResponseAttachmentUserList>();
+	public List<GetUserInfoResponseAttachmentUser> getUserInfo(GetUserInfoRequestAttachmentUserList userList) {
+		List<GetUserInfoResponseAttachmentUser> result = new ArrayList<GetUserInfoResponseAttachmentUser>();
 		
 		List<String> userCodes = userList.getCodes();
 		
 		for(String userCode : userCodes) {
 			
-			GetUserInfoResponseAttachmentUserList userInfo = getUserInfo(userCode);
+			GetUserInfoResponseAttachmentUser userInfo = getUserInfo(userCode);
 			result.add(userInfo);
 		}
 		
 		return result;
 	}
 	
-	public GetUserInfoResponseAttachmentUserList getUserInfo(String userCode) {
+	public GetUserInfoResponseAttachmentUser getUserInfo(String userCode) {
 		
-		GetUserInfoResponseAttachmentUserList result = new GetUserInfoResponseAttachmentUserList();
+		GetUserInfoResponseAttachmentUser result = new GetUserInfoResponseAttachmentUser();
 		
 		AditUser user = this.getAditUserDAO().getUserByID(userCode);
 		

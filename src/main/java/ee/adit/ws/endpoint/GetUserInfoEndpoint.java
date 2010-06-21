@@ -24,7 +24,7 @@ import ee.adit.pojo.GetJoinedResponse;
 import ee.adit.pojo.GetUserInfoRequest;
 import ee.adit.pojo.GetUserInfoRequestAttachmentUserList;
 import ee.adit.pojo.GetUserInfoResponse;
-import ee.adit.pojo.GetUserInfoResponseAttachmentUserList;
+import ee.adit.pojo.GetUserInfoResponseAttachmentUser;
 import ee.adit.pojo.Success;
 import ee.adit.service.UserService;
 import ee.adit.util.CustomXTeeHeader;
@@ -97,7 +97,7 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 									GetUserInfoRequestAttachmentUserList userList = (GetUserInfoRequestAttachmentUserList) unmarshalledObject;
 									// TODO: Query database
 									
-									List<GetUserInfoResponseAttachmentUserList> userInfoList = this.getUserService().getUserInfo(userList);
+									List<GetUserInfoResponseAttachmentUser> userInfoList = this.getUserService().getUserInfo(userList);
 									
 									// TODO: Construct response
 									

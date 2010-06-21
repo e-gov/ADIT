@@ -1,6 +1,6 @@
 package ee.adit.pojo;
 
-public class GetUserInfoResponseAttachmentUserList {
+public class GetUserInfoResponseAttachmentUser {
 
 	String userCode;
 	

@@ -78,7 +78,7 @@
 	</class>
  	
  	<class name="ee.adit.pojo.GetUserInfoRequestAttachmentUserList">
-		<map-to xml="getJoinedRequestAttachmentV1" />
+		<map-to xml="getUserInfoRequestAttachmentV1" />
 		<field name="codes" type="java.lang.String" collection="arraylist">
 			<bind-xml name="code" location="user_list"/>
 		</field>
@@ -95,6 +95,41 @@
 			<bind-xml name="user_list" />
 		</field>
 	</class>
+ 	
+ 	<class name="ee.adit.pojo.GetUserInfoResponseAttachment">
+ 		<map-to xml="getUserInfoResponseAttachmentV1" />
+ 		<field name="userList" type="ee.adit.pojo.GetUserInfoResponseAttachmentUser" collection="arraylist">
+			<bind-xml name="user_list" />
+		</field>
+ 	</class>
+ 	
+ 	<class name="ee.adit.pojo.GetUserInfoResponseAttachmentUser">
+ 		<map-to xml="user" />
+ 		<field name="userCode" type="java.lang.String">
+			<bind-xml name="code" />
+		</field>
+		<field name="userCode" type="java.lang.String">
+			<bind-xml name="code" />
+		</field>
+		<field name="hasJoined" type="boolean">
+			<bind-xml name="has_joined" />
+		</field>
+		<field name="freeSpace" type="java.lang.Long">
+			<bind-xml name="free_space_bytes" />
+		</field>
+		<field name="usedSpace" type="java.lang.Long">
+			<bind-xml name="used_space_bytes" />
+		</field>
+		<field name="canRead" type="boolean">
+			<bind-xml name="can_read" />
+		</field>
+		<field name="canWrite" type="boolean">
+			<bind-xml name="can_write" />
+		</field>
+		<field name="usesDVK" type="boolean">
+			<bind-xml name="uses_dvk" />
+		</field>
+ 	</class>
  	
  	<!-- Common -->
  	<class name="ee.adit.pojo.Success">
