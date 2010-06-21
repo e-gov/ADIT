@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<getJoinedRequestAttachmentV1>
+<getUserInfoRequestAttachmentV1>
   <user_list>
       <code>EE38407054916</code>
       <code>EE38407054917</code>
       <code>EE38407089745</code>
   </user_list>
-</getJoinedRequestAttachmentV1>
+</getUserInfoRequestAttachmentV1>
