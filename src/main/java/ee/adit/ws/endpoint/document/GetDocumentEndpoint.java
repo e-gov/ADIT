@@ -1,4 +1,4 @@
-package ee.adit.ws.endpoint;
+package ee.adit.ws.endpoint.document;
 
 import java.io.File;
 
@@ -11,6 +11,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import ee.adit.util.CustomXTeeHeader;
+import ee.adit.ws.endpoint.XteeCustomEndpoint;
 import ee.webmedia.xtee.annotation.XTeeService;
 
 @XTeeService(name = "getDocument", version = "v1")
