@@ -124,11 +124,11 @@ src/main/java/ee/adit/util/Util.java -text
 src/main/java/ee/adit/util/XMLUtil.java -text
 src/main/java/ee/adit/ws/endpoint/AbstractAditBaseEndpoint.java -text
 src/main/java/ee/adit/ws/endpoint/GetDocumentEndpoint.java -text
-src/main/java/ee/adit/ws/endpoint/GetJoinedEndpoint.java -text
-src/main/java/ee/adit/ws/endpoint/GetUserInfoEndpoint.java -text
-src/main/java/ee/adit/ws/endpoint/JoinEndpoint.java -text
-src/main/java/ee/adit/ws/endpoint/UnJoinEndpoint.java -text
 src/main/java/ee/adit/ws/endpoint/XteeCustomEndpoint.java -text
+src/main/java/ee/adit/ws/endpoint/user/GetJoinedEndpoint.java -text
+src/main/java/ee/adit/ws/endpoint/user/GetUserInfoEndpoint.java -text
+src/main/java/ee/adit/ws/endpoint/user/JoinEndpoint.java -text
+src/main/java/ee/adit/ws/endpoint/user/UnJoinEndpoint.java -text
 src/main/resources/adit-castor-mapping.xml -text
 src/main/resources/adit-servlet.xml -text
 src/main/resources/adit.xsd -text

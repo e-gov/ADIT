@@ -1,4 +1,4 @@
-package ee.adit.ws.endpoint;
+package ee.adit.ws.endpoint.user;
 
 import java.util.Locale;
 
@@ -16,6 +16,7 @@ import ee.adit.pojo.Success;
 import ee.adit.service.UserService;
 import ee.adit.util.CustomXTeeHeader;
 import ee.adit.util.Util;
+import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
 import ee.webmedia.xtee.annotation.XTeeService;
 
 @XTeeService(name = "join", version = "v1")

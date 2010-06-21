@@ -17,21 +17,21 @@
 
 	<!-- Endpoints -->
 	
-	<bean id="JoinEndpoint" class="ee.adit.ws.endpoint.JoinEndpoint">
+	<bean id="JoinEndpoint" class="ee.adit.ws.endpoint.user.JoinEndpoint">
 		<property name="marshaller" ref="castorMarshaller"/>
 		<property name="unmarshaller" ref="castorMarshaller"/>
 		<property name="userService" ref="userService"/>
 		<property name="messageSource" ref="messageSource"/>
 	</bean>
 	
-	<bean id="UnJoinEndpoint" class="ee.adit.ws.endpoint.UnJoinEndpoint">
+	<bean id="UnJoinEndpoint" class="ee.adit.ws.endpoint.user.UnJoinEndpoint">
 		<property name="marshaller" ref="castorMarshaller"/>
 		<property name="unmarshaller" ref="castorMarshaller"/>
 		<property name="userService" ref="userService"/>
 		<property name="messageSource" ref="messageSource"/>
 	</bean>
 	
-	<bean id="GetJoinedEndpoint" class="ee.adit.ws.endpoint.GetJoinedEndpoint">
+	<bean id="GetJoinedEndpoint" class="ee.adit.ws.endpoint.user.GetJoinedEndpoint">
 		<property name="marshaller" ref="castorMarshaller"/>
 		<property name="unmarshaller" ref="castorMarshaller"/>
 		<property name="userService" ref="userService"/>
@@ -39,7 +39,7 @@
 		<property name="configuration" ref="configuration"/>
 	</bean>
 	
-	<bean id="GetUserInfoEndpoint" class="ee.adit.ws.endpoint.GetUserInfoEndpoint">
+	<bean id="GetUserInfoEndpoint" class="ee.adit.ws.endpointuser..GetUserInfoEndpoint">
 		<property name="marshaller" ref="castorMarshaller"/>
 		<property name="unmarshaller" ref="castorMarshaller"/>
 		<property name="userService" ref="userService"/>

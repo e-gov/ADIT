@@ -1,4 +1,4 @@
-package ee.adit.ws.endpoint;
+package ee.adit.ws.endpoint.user;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,6 +31,7 @@ import ee.adit.pojo.UserList;
 import ee.adit.service.UserService;
 import ee.adit.util.CustomXTeeHeader;
 import ee.adit.util.Util;
+import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
 import ee.webmedia.xtee.XTeeHeader;
 import ee.webmedia.xtee.annotation.XTeeService;
 

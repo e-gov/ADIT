@@ -1,4 +1,4 @@
-package ee.adit.ws.endpoint;
+package ee.adit.ws.endpoint.user;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -56,6 +56,7 @@ import ee.adit.util.Configuration;
 import ee.adit.util.CustomXTeeHeader;
 import ee.adit.util.Util;
 import ee.adit.util.XMLUtil;
+import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
 import ee.webmedia.xtee.annotation.XTeeService;
 
 @XTeeService(name = "getJoined", version = "v1")
