@@ -89,9 +89,16 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 										LOG.debug("XML unmarshalled to type: " + unmarshalledObject.getClass());
 										if(unmarshalledObject instanceof SaveDocumentRequestAttachment) {
 											
+											SaveDocumentRequestAttachment document = (SaveDocumentRequestAttachment) unmarshalledObject;
+											
+											// TODO: Kas dokumendi juures on täidetud vajalikud metaandmed
+											
+											
+											
+											
 											if(remainingDiskQuota > 0) {
 												
-												// TODO: Kas dokumendi juures on täidetud vajalikud metaandmed
+												
 												
 												// TODO: Dokument ja failid andmebaasi
 												
