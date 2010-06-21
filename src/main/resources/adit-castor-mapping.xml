@@ -160,7 +160,17 @@
 		</field>
 	</class>
 	
-	 
+	<class name="ee.adit.pojo.SaveDocumentResponse">
+		<map-to xml="SaveDocumentResponse" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<field name="success" type="ee.adit.pojo.Success" >
+		</field>
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
+			<bind-xml name="messages" />
+		</field>
+		<field name="documentId" type="java.lang.Integer">
+			<bind-xml name="document_id" />
+		</field>
+	</class>
  	
  	<!-- Common -->
  	<class name="ee.adit.pojo.Success">
