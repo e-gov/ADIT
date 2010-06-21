@@ -8,7 +8,7 @@
 		</layout>
     </appender>
     
-    <appender name="tomcat_logfile" class="org.apache.log4j.DailyRollingFileAppender">
+    <appender name="file" class="org.apache.log4j.DailyRollingFileAppender">
 		<param name="file" value="C:/development/adit/adit/adit.log" />
 		<param name="datePattern" value="'.'yyyy-MM" />
 		<param name="append" value="true" /> 
@@ -23,10 +23,12 @@
     
     <logger name="org.hibernate">
     	<level value="DEBUG"></level>
+    	<appender ref="file" />
     </logger>
     
     <logger name="org.springframework.orm.hibernate3">
     	<level value="DEBUG"/>
+    	<appender ref="file" />
     </logger>
     
     <root>
