@@ -81,6 +81,11 @@
 	</bean>
 	
 	<bean id="SaveDocumentEndpoint" class="ee.adit.ws.endpoint.document.SaveDocumentEndpoint">
+		<property name="marshaller" ref="castorMarshaller"/>
+		<property name="unmarshaller" ref="castorMarshaller"/>
+		<property name="userService" ref="userService"/>
+		<property name="messageSource" ref="messageSource"/>
+		<property name="configuration" ref="configuration"/>
 	</bean>
 	
 	<bean id="SaveDocumentFileEndpoint" class="ee.adit.ws.endpoint.document.SaveDocumentFileEndpoint">
