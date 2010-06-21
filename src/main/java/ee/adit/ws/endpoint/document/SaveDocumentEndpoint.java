@@ -8,6 +8,7 @@ import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.JoinRequest;
 import ee.adit.pojo.SaveDocumentResponse;
 import ee.adit.pojo.Success;
+import ee.adit.service.UserService;
 import ee.adit.util.CustomXTeeHeader;
 import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
 import ee.adit.ws.endpoint.user.JoinEndpoint;
@@ -18,6 +19,8 @@ import ee.webmedia.xtee.annotation.XTeeService;
 public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 
 	private static Logger LOG = Logger.getLogger(SaveDocumentEndpoint.class);
+	
+	private UserService userService;
 	
 	@Override
 	protected Object invokeInternal(Object requestObject) throws Exception {
@@ -51,6 +54,14 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 		
 		
 		return response;
+	}
+
+	public UserService getUserService() {
+		return userService;
+	}
+
+	public void setUserService(UserService userService) {
+		this.userService = userService;
 	}
 
 }
