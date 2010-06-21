@@ -23,21 +23,21 @@
 		<property name="hibernate.hbm2ddl.auto">update</property>
 		<property name="jndi.class">com.sun.jndi.fscontext.RefFSContextFactory</property>
 		
-		<mapping resource="ee/adit/dao/hbm/DocumentType.hbm.xml"/>
-		<mapping resource="ee/adit/dao/hbm/Document.hbm.xml"/>
-		<mapping resource="ee/adit/dao/hbm/DocumentSharing.hbm.xml"/>
-		<mapping resource="ee/adit/dao/hbm/DocumentFile.hbm.xml"/>
-		<mapping resource="ee/adit/dao/hbm/DocumentHistory.hbm.xml"/>
-		<mapping resource="ee/adit/dao/hbm/DocumentWfStatus.hbm.xml"/>
-		<mapping resource="ee/adit/dao/hbm/DocumentDvkStatus.hbm.xml"/>
+		<mapping resource="DocumentType.hbm.xml"/>
+		<mapping resource="Document.hbm.xml"/>
+		<mapping resource="DocumentSharing.hbm.xml"/>
+		<mapping resource="DocumentFile.hbm.xml"/>
+		<mapping resource="DocumentHistory.hbm.xml"/>
+		<mapping resource="DocumentWfStatus.hbm.xml"/>
+		<mapping resource="DocumentDvkStatus.hbm.xml"/>
 		
-		<mapping resource="ee/adit/dao/hbm/RemoteApplication.hbm.xml"/>
-		<mapping resource="ee/adit/dao/hbm/AccessRestriction.hbm.xml"/>
-		<mapping resource="ee/adit/dao/hbm/DocumentHistoryType.hbm.xml"/>
-		<mapping resource="ee/adit/dao/hbm/DocumentSharingType.hbm.xml"/>
-		<mapping resource="ee/adit/dao/hbm/Signature.hbm.xml"/>
-		<mapping resource="ee/adit/dao/hbm/AditUser.hbm.xml"/>
-		<mapping resource="ee/adit/dao/hbm/Usertype.hbm.xml"/>
+		<mapping resource="RemoteApplication.hbm.xml"/>
+		<mapping resource="AccessRestriction.hbm.xml"/>
+		<mapping resource="DocumentHistoryType.hbm.xml"/>
+		<mapping resource="DocumentSharingType.hbm.xml"/>
+		<mapping resource="Signature.hbm.xml"/>
+		<mapping resource="AditUser.hbm.xml"/>
+		<mapping resource="Usertype.hbm.xml"/>
 		
 		
     </session-factory>
