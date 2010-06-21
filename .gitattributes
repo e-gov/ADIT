@@ -97,7 +97,6 @@ src/main/java/ee/adit/pojo/Success.java -text
 src/main/java/ee/adit/pojo/UnJoinRequest.java -text
 src/main/java/ee/adit/pojo/UnJoinResponse.java -text
 src/main/java/ee/adit/pojo/UserList.java -text
-src/main/java/ee/adit/pojo/package-info.java -text
 src/main/java/ee/adit/service/UserService.java -text
 src/main/java/ee/adit/util/Configuration.java -text
 src/main/java/ee/adit/util/CustomXTeeHeader.java -text
