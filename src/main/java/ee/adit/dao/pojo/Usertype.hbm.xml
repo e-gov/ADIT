@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 21.06.2010 12:03:01 by Hibernate Tools 3.2.4.GA -->
+<!-- Generated 21.06.2010 12:26:14 by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
-    <class name="ee.adit.dao.pojo.DocumentType" table="DOCUMENT_TYPE" schema="ADIT">
+    <class name="ee.adit.dao.pojo.Usertype" table="USERTYPE" schema="ADIT">
         <id name="shortName" type="string">
             <column name="SHORT_NAME" length="50" />
             <generator class="assigned" />
@@ -11,11 +11,14 @@
         <property name="description" type="string">
             <column name="DESCRIPTION" length="4000" />
         </property>
-        <set name="documents" inverse="true" lazy="true" table="DOCUMENT" fetch="select">
+        <property name="diskQuota" type="java.lang.Long">
+            <column name="DISK_QUOTA" precision="18" scale="0" />
+        </property>
+        <set name="aditUsers" inverse="true" lazy="true" table="ADIT_USER" fetch="select">
             <key>
-                <column name="TYPE" length="50" not-null="true" />
+                <column name="USERTYPE" length="50" not-null="true" />
             </key>
-            <one-to-many class="ee.adit.dao.pojo.Document" />
+            <one-to-many class="ee.adit.dao.pojo.AditUser" />
         </set>
     </class>
 </hibernate-mapping>

@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 21.06.2010 12:03:01 by Hibernate Tools 3.2.4.GA -->
+<!-- Generated 21.06.2010 12:26:14 by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
-    <class name="ee.adit.dao.pojo.DocumentDvkStatus" table="DOCUMENT_DVK_STATUS" schema="ADIT">
+    <class name="ee.adit.dao.pojo.DocumentWfStatus" table="DOCUMENT_WF_STATUS" schema="ADIT">
         <id name="id" type="long">
             <column name="ID" precision="12" scale="0" />
             <generator class="assigned" />
@@ -11,9 +11,12 @@
         <property name="description" type="string">
             <column name="DESCRIPTION" length="4000" />
         </property>
+        <property name="name" type="string">
+            <column name="NAME" length="50" />
+        </property>
         <set name="documentSharings" inverse="true" lazy="true" table="DOCUMENT_SHARING" fetch="select">
             <key>
-                <column name="DVK_STATUS_ID" precision="12" scale="0" />
+                <column name="WF_STATUS_ID" precision="12" scale="0" />
             </key>
             <one-to-many class="ee.adit.dao.pojo.DocumentSharing" />
         </set>
