@@ -15,7 +15,7 @@
 	http://www.springframework.org/schema/tx
 	http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
 
-	<!-- Endpoints -->
+	<!-- User endpoints -->
 	
 	<bean id="JoinEndpoint" class="ee.adit.ws.endpoint.user.JoinEndpoint">
 		<property name="marshaller" ref="castorMarshaller"/>
@@ -47,12 +47,17 @@
 		<property name="configuration" ref="configuration"/>
 	</bean>
 	
-	<bean id="GetDocumentEndpoint" class="ee.adit.ws.endpoint.GetDocumentEndpoint">
+	
+	<!-- Document endpoints -->
+	
+	<bean id="GetDocumentEndpoint" class="ee.adit.ws.endpoint.document.GetDocumentEndpoint">
 	</bean>
+	
 	<bean id="ListMethodsEndpoint" class="ee.webmedia.xtee.endpoint.ListMethodsEndpoint">
 	</bean>
 
 	<!-- Endpoint Mappings -->
+	
 	<bean id="endpointMapping"
 		class="org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping">
 		<property name="mappings">
