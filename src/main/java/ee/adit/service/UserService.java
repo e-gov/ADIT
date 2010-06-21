@@ -274,6 +274,23 @@ public class UserService {
 		this.getAditUserDAO().saveOrUpdate(user);		
 	}
 	
+	public long getRemainingDiskQuota(AditUser user) {
+		long result = 0;
+		
+		if(user.getDiskQuota() != null) {
+			result = user.getDiskQuota();
+		} else {
+			Usertype usertype = this.getUsertypeDAO().getUsertype(user);
+			if(usertype != null) {
+				result = usertype.getDiskQuota();
+			} else {
+				throw new AditInternalException("Error getting remaining disk quota for user: " + user.getUserCode());
+			}
+		}
+		
+		return result;
+	}
+	
 	public RemoteApplicationDAO getRemoteApplicationDAO() {
 		return remoteApplicationDAO;
 	}

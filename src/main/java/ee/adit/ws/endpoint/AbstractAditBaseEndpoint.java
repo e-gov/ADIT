@@ -29,6 +29,7 @@ import org.springframework.ws.soap.SoapMessage;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import ee.adit.exception.AditInternalException;
 import ee.adit.util.Configuration;
 import ee.adit.util.CustomXTeeHeader;
 import ee.adit.util.Util;

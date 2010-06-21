@@ -94,6 +94,8 @@ src/main/java/ee/adit/pojo/JoinRequest.java -text
 src/main/java/ee/adit/pojo/JoinResponse.java -text
 src/main/java/ee/adit/pojo/ObjectFactory.java -text
 src/main/java/ee/adit/pojo/SaveDocumentRequest.java -text
+src/main/java/ee/adit/pojo/SaveDocumentRequestAttachment.java -text
+src/main/java/ee/adit/pojo/SaveDocumentRequestAttachmentFile.java -text
 src/main/java/ee/adit/pojo/SaveDocumentRequestDocument.java -text
 src/main/java/ee/adit/pojo/SaveDocumentResponse.java -text
 src/main/java/ee/adit/pojo/Success.java -text

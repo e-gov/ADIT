@@ -1,8 +1,11 @@
 package ee.adit.ws.endpoint.document;
 
+import java.util.Locale;
+
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 
+import ee.adit.dao.pojo.AditUser;
 import ee.adit.exception.AditException;
 import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.JoinRequest;
@@ -35,8 +38,56 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 			CustomXTeeHeader header = this.getHeader();
 			String applicationName = header.getInfosysteem();
 			
-			// TODO: implement
+			// Kontrollime, kas päringu käivitanud infosüsteem on ADITis registreeritud
+			boolean applicationRegistered = this.getUserService().isApplicationRegistered(applicationName);
 			
+			if (applicationRegistered) {
+				
+				
+				
+				// Kas päringus märgitud isik on teenuse kasutaja
+				AditUser user = this.getUserService().getUserByID(this.getHeader().getIsikukood());
+				
+				if(user != null) {
+					if(user.getActive() != null && user.getActive()) {
+						
+						// Kas infosüsteemil on antud kasutaja jaoks kirjutamisõigus
+						int applicationAccessLevelForUser = userService.getAccessLevelForUser(applicationName, user);
+						
+						if(applicationAccessLevelForUser == 2) {
+							
+							// Kas kasutajal on piisavalt vaba kettaruumi
+							long remainingDiskQuota = this.getUserService().getRemainingDiskQuota(user);
+							
+							// TODO: check the size of the incoming document and compare it to the remaining disk space
+							
+							if(remainingDiskQuota > 0) {
+								
+							} else {
+								
+							}
+							
+							// TODO: Kas dokumendi juures on täidetud vajalikud metaandmed
+							
+							// TODO: Dokument ja failid andmebaasi
+							
+							
+						} else {
+							String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.forUser.write", new Object[] { applicationName, user.getUserCode() }, Locale.ENGLISH);
+							throw new AditException(errorMessage);
+						}						
+					} else {
+						String errorMessage = this.getMessageSource().getMessage("user.inactive", new Object[] { this.getHeader().getIsikukood() }, Locale.ENGLISH);
+						throw new AditException(errorMessage);
+					}
+				} else {
+					String errorMessage = this.getMessageSource().getMessage("user.nonExistent", new Object[] { this.getHeader().getIsikukood() }, Locale.ENGLISH);
+					throw new AditException(errorMessage);
+				}				
+			} else {
+				String errorMessage = this.getMessageSource().getMessage("application.notRegistered", new Object[] { applicationName }, Locale.ENGLISH);
+				throw new AditException(errorMessage);
+			}			
 		} catch (Exception e) {
 			LOG.error("Exception: ", e);
 			response.setSuccess(new Success(false));
