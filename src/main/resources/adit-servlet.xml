@@ -50,8 +50,52 @@
 	
 	<!-- Document endpoints -->
 	
+	<bean id="ConfirmSignatureEndpoint" class="ee.adit.ws.endpoint.document.ConfirmSignatureEndpoint">
+	</bean>
+	
+	<bean id="DeflateDocumentEndpoint" class="ee.adit.ws.endpoint.document.DeflateDocumentEndpoint">
+	</bean>
+	
+	<bean id="DeleteDocumentEndpoint" class="ee.adit.ws.endpoint.document.DeleteDocumentEndpoint">
+	</bean>
+	
+	<bean id="DeleteDocumentFileEndpoint" class="ee.adit.ws.endpoint.document.DeleteDocumentFileEndpoint">
+	</bean>
+	
 	<bean id="GetDocumentEndpoint" class="ee.adit.ws.endpoint.document.GetDocumentEndpoint">
 	</bean>
+	
+	<bean id="GetDocumentFileEndpoint" class="ee.adit.ws.endpoint.document.GetDocumentFileEndpoint">
+	</bean>
+	
+	<bean id="GetDocumentHistoryEndpoint" class="ee.adit.ws.endpoint.document.GetDocumentHistoryEndpoint">
+	</bean>
+	
+	<bean id="GetDocumentListEndpoint" class="ee.adit.ws.endpoint.document.GetDocumentListEndpoint">
+	</bean>
+	
+	<bean id="MarkDocumentViewedEndpoint" class="ee.adit.ws.endpoint.document.MarkDocumentViewedEndpoint">
+	</bean>
+	
+	<bean id="PrepareSignatureEndpoint" class="ee.adit.ws.endpoint.document.PrepareSignatureEndpoint">
+	</bean>
+	
+	<bean id="SaveDocumentEndpoint" class="ee.adit.ws.endpoint.document.SaveDocumentEndpoint">
+	</bean>
+	
+	<bean id="SaveDocumentFileEndpoint" class="ee.adit.ws.endpoint.document.SaveDocumentFileEndpoint">
+	</bean>
+	
+	<bean id="SendDocumentEndpoint" class="ee.adit.ws.endpoint.document.SendDocumentEndpoint">
+	</bean>
+	
+	<bean id="ShareDocumentEndpoint" class="ee.adit.ws.endpoint.document.ShareDocumentEndpoint">
+	</bean>
+	
+	<bean id="UnShareDocumentEndpoint" class="ee.adit.ws.endpoint.document.UnShareDocumentEndpoint">
+	</bean>
+	
+	<!-- Meta service endpoint -->
 	
 	<bean id="ListMethodsEndpoint" class="ee.webmedia.xtee.endpoint.ListMethodsEndpoint">
 	</bean>
@@ -72,6 +116,36 @@
 					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}GetUserInfo">GetUserInfoEndpoint</prop>
 				<prop
 					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}GetDocument">GetDocumentEndpoint</prop>
+				<prop
+					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}ConfirmSignature">ConfirmSignatureEndpoint</prop>
+				<prop
+					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}DeflateDocument">DeflateDocumentEndpoint</prop>
+				<prop
+					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}DeleteDocument">DeleteDocumentEndpoint</prop>
+				<prop
+					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}DeleteDocumentFile">DeleteDocumentFileEndpoint</prop>
+				<prop
+					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}GetDocument">GetDocumentEndpoint</prop>
+				<prop
+					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}GetDocumentFile">GetDocumentFileEndpoint</prop>
+				<prop
+					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}GetDocumentHistory">GetDocumentHistoryEndpoint</prop>
+				<prop
+					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}GetDocumentList">GetDocumentListEndpoint</prop>
+				<prop
+					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}MarkDocumentViewed">MarkDocumentViewedEndpoint</prop>
+				<prop
+					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}PrepareSignature">PrepareSignatureEndpoint</prop>
+				<prop
+					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}SaveDocument">SaveDocumentEndpoint</prop>
+				<prop
+					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}SaveDocumentFile">SaveDocumentFileEndpoint</prop>
+				<prop
+					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}SendDocument">SendDocumentEndpoint</prop>
+				<prop
+					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}ShareDocument">ShareDocumentEndpoint</prop>
+				<prop
+					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}UnShareDocument">UnShareDocumentEndpoint</prop>
 				<prop
 					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}listMethods">ListMethodsEndpoint</prop>
 			</props>
