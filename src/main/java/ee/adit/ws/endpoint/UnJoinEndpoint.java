@@ -61,7 +61,7 @@ public class UnJoinEndpoint extends AbstractAditBaseEndpoint {
 					
 					if(aditUser != null) {
 						
-						// TODO: Kontrollime, kas infosüsteem tohib antud kasutaja andmeid muuta
+						// Kontrollime, kas infosüsteem tohib antud kasutaja andmeid muuta
 						int applicationAccessLevelForUser = userService.getAccessLevelForUser(applicationName, aditUser);
 						
 						if(applicationAccessLevelForUser == 2) {
@@ -76,6 +76,7 @@ public class UnJoinEndpoint extends AbstractAditBaseEndpoint {
 								messages.addMessage(message);
 								response.setSuccess(new Success(true));
 								LOG.info("User (" + aditUser.getUserCode() + ") deactivated.");
+								
 							} else {
 								String errorMessage = this.getMessageSource().getMessage("request.unJoin.alreadyUnJoined", new Object[] { aditUser.getUserCode() }, Locale.ENGLISH);
 								throw new AditException(errorMessage);
