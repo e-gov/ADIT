@@ -200,20 +200,20 @@
 		<property name="dataSource" ref="myDataSource" />
 		<property name="mappingResources">
 			<list>
-				<value>DocumentType.hbm.xml</value>
-				<value>Document.hbm.xml</value>
-				<value>DocumentSharing.hbm.xml</value>
-				<value>DocumentFile.hbm.xml</value>
-				<value>DocumentHistory.hbm.xml</value>
-				<value>DocumentWfStatus.hbm.xml</value>
-				<value>DocumentDvkStatus.hbm.xml</value>
-				<value>RemoteApplication.hbm.xml</value>
-				<value>AccessRestriction.hbm.xml</value>
-				<value>DocumentHistoryType.hbm.xml</value>
-				<value>DocumentSharingType.hbm.xml</value>
-				<value>Signature.hbm.xml</value>
-				<value>AditUser.hbm.xml</value>
-				<value>Usertype.hbm.xml</value>
+				<value>hbm/DocumentType.hbm.xml</value>
+				<value>hbm/Document.hbm.xml</value>
+				<value>hbm/DocumentSharing.hbm.xml</value>
+				<value>hbm/DocumentFile.hbm.xml</value>
+				<value>hbm/DocumentHistory.hbm.xml</value>
+				<value>hbm/DocumentWfStatus.hbm.xml</value>
+				<value>hbm/DocumentDvkStatus.hbm.xml</value>
+				<value>hbm/RemoteApplication.hbm.xml</value>
+				<value>hbm/AccessRestriction.hbm.xml</value>
+				<value>hbm/DocumentHistoryType.hbm.xml</value>
+				<value>hbm/DocumentSharingType.hbm.xml</value>
+				<value>hbm/Signature.hbm.xml</value>
+				<value>hbm/AditUser.hbm.xml</value>
+				<value>hbm/Usertype.hbm.xml</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">
