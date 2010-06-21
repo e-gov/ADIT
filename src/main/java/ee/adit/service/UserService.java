@@ -202,6 +202,8 @@ public class UserService {
 		LOG.debug("Information for user (" + userCode + "): ");
 		LOG.debug("UsedSpace for user: " + usedSpace);
 		
+		AditUser user = this.getAditUserDAO().getUserByID(userCode);
+		
 		/*
 		 * TODO: get user data:
 		 * - joined (ADIT_USER)

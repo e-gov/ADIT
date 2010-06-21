@@ -19,12 +19,11 @@ public class AditUserDAO extends AbstractAditDAO {
 
 	private static Logger LOG = Logger.getLogger(AditUserDAO.class);
 
-	public AditUser getUserByID(String userRegCode) {
+	public AditUser getUserByID(String userCode) {
 		AditUser result = null;
 
 		try {
-			result = (AditUser) this.getHibernateTemplate().get(AditUser.class,
-					userRegCode);
+			result = (AditUser) this.getHibernateTemplate().get(AditUser.class, userCode);
 		} catch (Exception e) {
 			LOG.error(
 					"Exception while finding AditUser by registration code: ",
