@@ -13,6 +13,8 @@ public class GetUserInfoResponseAttachmentUserList {
 	boolean canRead;
 	
 	boolean canWrite;
+	
+	boolean usesDVK;
 
 	public String getUserCode() {
 		return userCode;
@@ -60,6 +62,14 @@ public class GetUserInfoResponseAttachmentUserList {
 
 	public void setCanWrite(boolean canWrite) {
 		this.canWrite = canWrite;
+	}
+
+	public boolean isUsesDVK() {
+		return usesDVK;
+	}
+
+	public void setUsesDVK(boolean usesDVK) {
+		this.usesDVK = usesDVK;
 	}
 	
 }

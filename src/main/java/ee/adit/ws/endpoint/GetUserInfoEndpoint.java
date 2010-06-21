@@ -3,6 +3,7 @@ package ee.adit.ws.endpoint;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 
 import javax.xml.soap.AttachmentPart;
@@ -23,6 +24,7 @@ import ee.adit.pojo.GetJoinedResponse;
 import ee.adit.pojo.GetUserInfoRequest;
 import ee.adit.pojo.GetUserInfoRequestAttachmentUserList;
 import ee.adit.pojo.GetUserInfoResponse;
+import ee.adit.pojo.GetUserInfoResponseAttachmentUserList;
 import ee.adit.pojo.Success;
 import ee.adit.service.UserService;
 import ee.adit.util.CustomXTeeHeader;
@@ -95,8 +97,7 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 									GetUserInfoRequestAttachmentUserList userList = (GetUserInfoRequestAttachmentUserList) unmarshalledObject;
 									// TODO: Query database
 									
-									this.getUserService().getUserInfo(userList);
-									
+									List<GetUserInfoResponseAttachmentUserList> userInfoList = this.getUserService().getUserInfo(userList);
 									
 									// TODO: Construct response
 									

@@ -1,6 +1,7 @@
 package ee.adit.service;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -17,6 +18,7 @@ import ee.adit.dao.pojo.RemoteApplication;
 import ee.adit.dao.pojo.Usertype;
 import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.GetUserInfoRequestAttachmentUserList;
+import ee.adit.pojo.GetUserInfoResponseAttachmentUserList;
 
 public class UserService {
 
@@ -184,21 +186,23 @@ public class UserService {
 		return result;
 	}
 	
-	public void getUserInfo(GetUserInfoRequestAttachmentUserList userList) {
+	public List<GetUserInfoResponseAttachmentUserList> getUserInfo(GetUserInfoRequestAttachmentUserList userList) {
+		List<GetUserInfoResponseAttachmentUserList> result = new ArrayList<GetUserInfoResponseAttachmentUserList>();
 		
 		List<String> userCodes = userList.getCodes();
 		
 		for(String userCode : userCodes) {
 			
-			getUserInfo(userCode);
-			
+			GetUserInfoResponseAttachmentUserList userInfo = getUserInfo(userCode);
+			result.add(userInfo);
 		}
 		
+		return result;
 	}
 	
-	public void getUserInfo(String userCode) {
+	public GetUserInfoResponseAttachmentUserList getUserInfo(String userCode) {
 		
-		
+		GetUserInfoResponseAttachmentUserList result = new GetUserInfoResponseAttachmentUserList();
 		
 		AditUser user = this.getAditUserDAO().getUserByID(userCode);
 		
@@ -208,15 +212,16 @@ public class UserService {
 		boolean usesDVK = false;
 		boolean canRead = true;
 		boolean canWrite = true;
+		boolean hasJoined = false;
 		
 		if(user != null) {
-			LOG.debug("User has joined the service: " + userCode);
 			// User has joined the service
+			LOG.debug("User has joined the service: " + userCode);
+			hasJoined = true;
+			
 			usedSpace = this.getDocumentDAO().getUsedSpaceForUser(userCode);
 			LOG.debug("Information for user (" + userCode + "): ");
 			LOG.debug("UsedSpace for user: " + usedSpace);
-			
-			
 			
 			if(user.getDiskQuota() != null && user.getDiskQuota() > 0) {
 				// Disk quota defined in user table
@@ -240,15 +245,22 @@ public class UserService {
 				usesDVK = true;
 				canWrite = false;
 			}
-			
+
+			// Construct the holder object
+			result.setUserCode(userCode);
+			result.setHasJoined(hasJoined);
+			result.setFreeSpace(unusedSpace);
+			result.setUsedSpace(usedSpace);
+			result.setCanRead(canRead);
+			result.setCanWrite(canWrite);
+			result.setUsesDVK(usesDVK);
 			
 		} else {
 			// User has not joined the service
 			LOG.debug("User has not joined the service: " + userCode);
-		}
-		
-		// Construct the holder object
-		
+		}		
+
+		return result;
 		
 	}
 	
