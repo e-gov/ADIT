@@ -1,5 +1,7 @@
 package ee.adit.service;
 
+import java.io.FileInputStream;
+import java.io.StringWriter;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -12,10 +14,13 @@ import org.springframework.context.MessageSource;
 import ee.adit.dao.DocumentDAO;
 import ee.adit.dao.DocumentTypeDAO;
 import ee.adit.dao.pojo.Document;
+import ee.adit.dao.pojo.DocumentFile;
 import ee.adit.dao.pojo.DocumentType;
 import ee.adit.exception.AditException;
 import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.SaveDocumentRequestAttachment;
+import ee.adit.pojo.SaveDocumentRequestAttachmentFile;
+import ee.adit.util.Util;
 
 public class DocumentService {
 
@@ -27,7 +32,7 @@ public class DocumentService {
 	
 	private DocumentDAO documentDAO;
 	
-	public void checkAttachedDocumentMetadataForNewDocument(SaveDocumentRequestAttachment document) throws AditException {
+	public void checkAttachedDocumentMetadataForNewDocument(SaveDocumentRequestAttachment document, long remainingDiskQuota, String xmlFile) throws AditException {
 		
 		if(document != null) {
 			
@@ -79,11 +84,30 @@ public class DocumentService {
 				}
 			}
 			
-			// Check files - at least one file must be defined
-			if(document.getFiles() == null || document.getFiles().size() == 0) {
-				String errorMessage = this.getMessageSource().getMessage("request.saveDocument.document.files.undefined", new Object[] {}, Locale.ENGLISH);
-				throw new AditException(errorMessage);	
+			// TODO: Check files - at least one file must be defined. 
+			// The <data> tags of the <file> elements did not get unmarshalled (to save memory).
+			// That is why we need to check those files on the disk. We need the sizes of the <data> elements.
+			// 1. Get the XML file
+			// 2. find the <data> elements
+			// 3. For each <data> element, create a temporary file and add a reference to the document object
+			
+			try {
+				FileInputStream fileInputStream = new FileInputStream(xmlFile);
+				StringWriter sw = new StringWriter();
+				
+				int len;
+				byte[] b = new byte[1024];
+				boolean dataTagOpen = false;
+				
+				while((len = fileInputStream.read(b)) > 0) {
+					String tmpString = new String(b, 0, len);
+					
+				}
+				
+			} catch (Exception e) {
+				// TODO: throw exception
 			}
+			
 			
 		} else {
 			throw new AditInternalException("Document not initialized.");
