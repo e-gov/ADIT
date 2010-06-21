@@ -41,25 +41,9 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class UnJoinResponse {
 
-    protected boolean success;
+    protected Success success;
     @XmlElement(required = true)
     protected ArrayOfMessage messages;
-
-    /**
-     * Gets the value of the success property.
-     * 
-     */
-    public boolean isSuccess() {
-        return success;
-    }
-
-    /**
-     * Sets the value of the success property.
-     * 
-     */
-    public void setSuccess(boolean value) {
-        this.success = value;
-    }
 
     /**
      * Gets the value of the messages property.
@@ -84,5 +68,13 @@ public class UnJoinResponse {
     public void setMessages(ArrayOfMessage value) {
         this.messages = value;
     }
+
+	public Success getSuccess() {
+		return success;
+	}
+
+	public void setSuccess(Success success) {
+		this.success = success;
+	}
 
 }
