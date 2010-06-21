@@ -148,12 +148,12 @@
  	<!-- SaveDocument -->
  	<class name="ee.adit.pojo.SaveDocumentRequest">
 		<map-to xml="SaveDocument" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
-		<field name="document" type="ee.adit.pojo.SaveDocumentRequest.Document">
+		<field name="document" type="ee.adit.pojo.SaveDocumentRequestDocument">
 			<bind-xml name="document" location="keha" />
 		</field>
 	</class>
 	
-	<class name="ee.adit.pojo.SaveDocumentRequest.Document">
+	<class name="ee.adit.pojo.SaveDocumentRequestDocument">
 		<map-to xml="document" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
 		<field name="href" type="java.lang.String">
 			<bind-xml name="href" node="attribute" />
@@ -167,7 +167,7 @@
 		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
 			<bind-xml name="messages" />
 		</field>
-		<field name="documentId" type="java.lang.Integer">
+		<field name="documentId" type="java.math.BigInteger">
 			<bind-xml name="document_id" />
 		</field>
 	</class>
