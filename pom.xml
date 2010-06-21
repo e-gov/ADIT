@@ -9,7 +9,7 @@
 	<url>http://maven.apache.org</url>
 
 	<properties>
-		<baseDir>E:\dev\adit\adit</baseDir>
+		<baseDir>C:\development\adit\adit</baseDir>
 	</properties>
 
 	<dependencies>
