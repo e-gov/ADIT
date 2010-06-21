@@ -2,6 +2,7 @@ package ee.adit.service;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -266,7 +267,8 @@ public class UserService {
 	
 	public void deactivateUser(AditUser user) {
 		user.setActive(false);
-		// TODO: call DAO
+		user.setDeactivationDate(new Date());
+		this.getAditUserDAO().saveOrUpdate(user);		
 	}
 	
 	public RemoteApplicationDAO getRemoteApplicationDAO() {
