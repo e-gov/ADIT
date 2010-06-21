@@ -28,17 +28,6 @@ public class UnJoinEndpoint extends AbstractAditBaseEndpoint {
 	private static Logger LOG = Logger.getLogger(UnJoinEndpoint.class);
 
 	private UserService userService;
-	
-	@Override
-	protected void invokeInternal(Document requestKeha, Element responseKeha, CustomXTeeHeader xteeHeader) throws Exception {
-		
-		
-		
-		
-		
-		
-		
-	}
 
 	@Override
 	protected Object invokeInternal(Object requestObject) throws Exception {
