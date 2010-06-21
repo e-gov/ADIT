@@ -6,7 +6,7 @@ doc/testMessages/getUserInfo.v1/base64 -text
 doc/testMessages/getUserInfo.v1/getUserInfo.v1.attachment.xml -text
 doc/testMessages/getUserInfo.v1/getUserInfo.v1.xml -text
 doc/testMessages/join.v1.xml -text
-doc/testMessages/saveDocument.v1.xml -text
+doc/testMessages/saveDocument.v1/saveDocument.v1.xml -text
 doc/testMessages/unJoin.v1.xml -text
 doc/xtee_generate_objects_readme.txt -text
 lib/antlr-2.7.6.jar -text
