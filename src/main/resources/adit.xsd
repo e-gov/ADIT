@@ -8,29 +8,20 @@
 		schemaLocation="http://schemas.xmlsoap.org/soap/encoding/" />
 	 -->
 	
-	<element name="GetDocumentRequest" type="tns:GetDocumentRequest"></element>
-	<element name="GetDocumentResponse" type="tns:GetDocumentResponse"></element>
+	<element name="GetDocumentRequest" type="tns:GetDocumentRequest"/>
+	<element name="GetDocumentResponse" type="tns:GetDocumentResponse"/>
 	
-	<element name="JoinRequest" type="tns:JoinRequest"></element>
-	<element name="JoinResponse" type="tns:JoinResponse"></element>
-	<element name="UnJoinRequest" type="tns:UnJoinRequest"></element>
-	<element name="UnJoinResponse" type="tns:UnJoinResponse"></element>
-	<element name="GetUserInfoRequest" type="tns:GetUserInfoRequest"></element>
-	<element name="GetUserInfoResponse" type="tns:GetUserInfoResponse"></element>
-	<element name="GetJoinedRequest" type="tns:GetJoinedRequest"></element>
-	<element name="GetJoinedResponse" type="tns:GetJoinedResponse"></element>
+	<element name="JoinRequest" type="tns:JoinRequest"/>
+	<element name="JoinResponse" type="tns:JoinResponse"/>
+	<element name="UnJoinRequest" type="tns:UnJoinRequest"/>
+	<element name="UnJoinResponse" type="tns:UnJoinResponse"/>
+	<element name="GetUserInfoRequest" type="tns:GetUserInfoRequest"/>
+	<element name="GetUserInfoResponse" type="tns:GetUserInfoResponse"/>
+	<element name="GetJoinedRequest" type="tns:GetJoinedRequest"/>
+	<element name="GetJoinedResponse" type="tns:GetJoinedResponse"/>
 	
-	<!--
-	<complexType name="ArrayOfMessage">
-		<complexContent>
-			<restriction base="SOAP-ENC:Array">
-				<sequence>
-					<element name="message"	type="string" maxOccurs="unbounded"	minOccurs="0"></element>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
-	 -->
+	<element name="SaveDocumentRequest" type="tns:SaveDocumentRequest"/>
+	<element name="SaveDocumentResponse" type="tns:SaveDocumentResponse"/>
 	
 	<complexType name="ArrayOfMessage">
 		<sequence>
@@ -102,4 +93,23 @@
 			<element name="userList" type="base64Binary"></element>
 		</sequence>
 	</complexType>
+	
+	<!-- saveDocument päringu tüübid -->
+	<complexType name="SaveDocumentRequest">
+		<sequence>
+			<element name="document" type="string">
+				<complexType>
+					<attribute name="href" type="string"/>
+				</complexType>
+			</element>
+		</sequence>
+	</complexType>
+	<complexType name="SaveDocumentResponse">
+		<sequence>
+			<element name="success" type="boolean"></element>
+			<element name="messages" type="tns:ArrayOfMessage"></element>
+			<element name="document_id" type="integer"></element>
+		</sequence>
+	</complexType>
+	
 </schema>
