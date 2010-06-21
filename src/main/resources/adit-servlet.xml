@@ -107,6 +107,7 @@
 		<property name="usertypeDAO" ref="usertypeDAO"/>
 		<property name="aditUserDAO" ref="aditUserDAO"/>
 		<property name="documentDAO" ref="documentDAO"/>
+		<property name="accessRestrictionDAO" ref="accessRestrictionDAO"/>
 	</bean>
 
 	<bean id="myDataSource"
@@ -160,6 +161,11 @@
 	<bean id="documentDAO" class="ee.adit.dao.DocumentDAO">
 		<property name="sessionFactory" ref="mySessionFactory" />
 	</bean>	
+
+	<bean id="accessRestrictionDAO" class="ee.adit.dao.AccessRestrictionDAO">
+		<property name="sessionFactory" ref="mySessionFactory" />
+	</bean>	
+
 
 	<!-- MessageSource -->
 	<bean id="messageSource"
