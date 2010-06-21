@@ -26,6 +26,7 @@ import ee.adit.pojo.GetUserInfoRequestAttachmentUserList;
 import ee.adit.pojo.GetUserInfoResponse;
 import ee.adit.pojo.GetUserInfoResponseAttachmentUser;
 import ee.adit.pojo.Success;
+import ee.adit.pojo.UserList;
 import ee.adit.service.UserService;
 import ee.adit.util.CustomXTeeHeader;
 import ee.adit.util.Util;
@@ -94,12 +95,17 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 								LOG.debug("XML unmarshalled to type: " + unmarshalledObject.getClass());
 								if(unmarshalledObject instanceof GetUserInfoRequestAttachmentUserList) {
 									
-									GetUserInfoRequestAttachmentUserList userList = (GetUserInfoRequestAttachmentUserList) unmarshalledObject;
-									// TODO: Query database
-									
+									GetUserInfoRequestAttachmentUserList userList = (GetUserInfoRequestAttachmentUserList) unmarshalledObject;									
 									List<GetUserInfoResponseAttachmentUser> userInfoList = this.getUserService().getUserInfo(userList);
+									String responseAttachmentXMLFile = this.marshal(userInfoList);
 									
-									// TODO: Construct response
+									String attachmentFile = Util.gzipAndBase64Encode(responseAttachmentXMLFile, this.getConfiguration().getTempDir(), this.getConfiguration().getDeleteTemporaryFilesAsBoolean());
+									
+									// Add as an attachment
+									String contentID = addAttachment(attachmentFile);
+									UserList getUserInfoResponseUserList = new UserList();
+									getUserInfoResponseUserList.setHref("cid:" + contentID);
+									response.setUserList(getUserInfoResponseUserList);
 									
 								} else {
 									throw new AditInternalException("Unmarshalling returned wrong type. Expected " + GetUserInfoRequestAttachmentUserList.class + ", got " + unmarshalledObject.getClass());
