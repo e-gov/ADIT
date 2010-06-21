@@ -26,7 +26,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 		
 		try {
 			
-			LOG.debug("JoinEndpoint.v1 invoked.");
+			LOG.debug("SaveDocumentEndpoint.v1 invoked.");
 			JoinRequest request = (JoinRequest) requestObject;
 			CustomXTeeHeader header = this.getHeader();
 			String applicationName = header.getInfosysteem();
