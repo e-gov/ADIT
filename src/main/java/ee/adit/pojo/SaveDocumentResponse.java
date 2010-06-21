@@ -46,27 +46,11 @@ import ee.adit.pojo.ArrayOfMessage;
 })
 public class SaveDocumentResponse {
 
-    protected boolean success;
+    protected Success success;
     @XmlElement(required = true)
     protected ArrayOfMessage messages;
     @XmlElement(name = "document_id", required = true)
     protected BigInteger documentId;
-
-    /**
-     * Gets the value of the success property.
-     * 
-     */
-    public boolean isSuccess() {
-        return success;
-    }
-
-    /**
-     * Sets the value of the success property.
-     * 
-     */
-    public void setSuccess(boolean value) {
-        this.success = value;
-    }
 
     /**
      * Gets the value of the messages property.
@@ -115,5 +99,13 @@ public class SaveDocumentResponse {
     public void setDocumentId(BigInteger value) {
         this.documentId = value;
     }
+
+	public Success getSuccess() {
+		return success;
+	}
+
+	public void setSuccess(Success success) {
+		this.success = success;
+	}
 
 }

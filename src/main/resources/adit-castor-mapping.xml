@@ -145,6 +145,23 @@
 		</field>
  	</class>
  	
+ 	<!-- SaveDocument -->
+ 	<class name="ee.adit.pojo.SaveDocumentRequest">
+		<map-to xml="SaveDocument" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<field name="document" type="ee.adit.pojo.SaveDocumentRequest.Document">
+			<bind-xml name="document" location="keha" />
+		</field>
+	</class>
+	
+	<class name="ee.adit.pojo.SaveDocumentRequest.Document">
+		<map-to xml="document" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<field name="href" type="java.lang.String">
+			<bind-xml name="href" node="attribute" />
+		</field>
+	</class>
+	
+	 
+ 	
  	<!-- Common -->
  	<class name="ee.adit.pojo.Success">
 		<map-to xml="success" ns-prefix="adit" />
