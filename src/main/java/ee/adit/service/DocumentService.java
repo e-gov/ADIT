@@ -81,12 +81,15 @@ public class DocumentService {
 				}
 			}
 			
+			// Check files - at least one file must be defined
+			if(document.getFiles() == null || document.getFiles().size() == 0) {
+				String errorMessage = this.getMessageSource().getMessage("request.saveDocument.document.files.undefined", new Object[] {}, Locale.ENGLISH);
+				throw new AditException(errorMessage);	
+			}
+			
 		} else {
 			throw new AditInternalException("Document not initialized.");
-		}
-
-		// TODO: check files
-		
+		}		
 	}
 	
 	public String getValidDocumentTypes() {
