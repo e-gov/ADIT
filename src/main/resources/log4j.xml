@@ -8,12 +8,25 @@
 		</layout>
     </appender>
     
+    <appender name="tomcat_logfile" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="file" value="C:/development/adit/adit/adit.log" />
+		<param name="datePattern" value="'.'yyyy-MM" />
+		<param name="append" value="true" /> 
+		<layout class="org.apache.log4j.PatternLayout">
+	    	<param name="ConversionPattern" value="%d{ABSOLUTE}%5p %C:%L - %m%n"/>
+		</layout>
+    </appender>
+    
     <logger name="ee.adit">
     	<level value="DEBUG"></level>
     </logger>
     
     <logger name="org.hibernate">
-    	<level value="INFO"></level>
+    	<level value="DEBUG"></level>
+    </logger>
+    
+    <logger name="org.springframework.orm.hibernate3">
+    	<level value="DEBUG"/>
     </logger>
     
     <root>
