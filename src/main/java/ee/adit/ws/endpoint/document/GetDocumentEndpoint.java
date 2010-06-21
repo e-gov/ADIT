@@ -11,20 +11,22 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import ee.adit.util.CustomXTeeHeader;
+import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
 import ee.adit.ws.endpoint.XteeCustomEndpoint;
 import ee.webmedia.xtee.annotation.XTeeService;
 
 @XTeeService(name = "getDocument", version = "v1")
 @Component
-public class GetDocumentEndpoint extends XteeCustomEndpoint {
+public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
 
 	private static Logger LOG = Logger.getLogger(GetDocumentEndpoint.class);
 
 	@Override
-	protected void invokeInternal(Document requestKeha, Element responseKeha,
-			CustomXTeeHeader xteeHeader) throws Exception {
-
+	protected Object invokeInternal(Object requestObject) throws Exception {
 		
-
+		// TODO Auto-generated method stub
+		
+		return null;
 	}
+
 }
