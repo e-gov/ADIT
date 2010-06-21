@@ -1,19 +1,25 @@
 package ee.adit.ws.endpoint.document;
 
+import java.util.Iterator;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
+import org.springframework.ws.mime.Attachment;
 
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.exception.AditException;
+import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.ArrayOfMessage;
+import ee.adit.pojo.GetUserInfoRequestAttachmentUserList;
 import ee.adit.pojo.JoinRequest;
 import ee.adit.pojo.SaveDocumentRequest;
+import ee.adit.pojo.SaveDocumentRequestAttachment;
 import ee.adit.pojo.SaveDocumentResponse;
 import ee.adit.pojo.Success;
 import ee.adit.service.UserService;
 import ee.adit.util.CustomXTeeHeader;
+import ee.adit.util.Util;
 import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
 import ee.adit.ws.endpoint.user.JoinEndpoint;
 import ee.webmedia.xtee.annotation.XTeeService;
@@ -60,17 +66,51 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 							long remainingDiskQuota = this.getUserService().getRemainingDiskQuota(user);
 							
 							// TODO: check the size of the incoming document and compare it to the remaining disk space
+							Iterator<Attachment> i = this.getRequestMessage().getAttachments();
 							
-							if(remainingDiskQuota > 0) {
-								
-							} else {
-								
+							int attachmentCount = 0;
+							while(i.hasNext()) {
+								if(attachmentCount == 0) {
+									Attachment attachment = i.next();
+									LOG.debug("Attachment: " + attachment.getContentId());
+									
+									// Extract the SOAP message to a temporary file
+									String base64EncodedFile = extractXML(attachment);
+									
+									// Base64 decode and unzip the temporary file
+									String xmlFile = Util.base64DecodeAndUnzip(base64EncodedFile, this.getConfiguration().getTempDir(), this.getConfiguration().getDeleteTemporaryFilesAsBoolean());
+									LOG.debug("Attachment unzipped to temporary file: " + xmlFile);
+									
+									// Unmarshal the XML from the temporary file
+									Object unmarshalledObject = unMarshal(xmlFile);
+									
+									// Check if the marshalling result is what we expected
+									if(unmarshalledObject != null) {
+										LOG.debug("XML unmarshalled to type: " + unmarshalledObject.getClass());
+										if(unmarshalledObject instanceof SaveDocumentRequestAttachment) {
+											
+											if(remainingDiskQuota > 0) {
+												
+												// TODO: Kas dokumendi juures on täidetud vajalikud metaandmed
+												
+												// TODO: Dokument ja failid andmebaasi
+												
+											} else {
+												
+											}
+											
+										} else {
+											throw new AditInternalException("Unmarshalling returned wrong type. Expected " + SaveDocumentRequestAttachment.class + ", got " + unmarshalledObject.getClass());
+										}
+									} else {
+										throw new AditInternalException("Unmarshalling failed for XML in file: " + xmlFile);
+									}
+								} else {
+									String errorMessage = this.getMessageSource().getMessage("request.attachments.tooMany", new Object[] { applicationName }, Locale.ENGLISH);
+									throw new AditException(errorMessage);
+								}
+								attachmentCount++;
 							}
-							
-							// TODO: Kas dokumendi juures on täidetud vajalikud metaandmed
-							
-							// TODO: Dokument ja failid andmebaasi
-							
 							
 						} else {
 							String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.forUser.write", new Object[] { applicationName, user.getUserCode() }, Locale.ENGLISH);

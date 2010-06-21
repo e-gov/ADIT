@@ -127,6 +127,12 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 		return this.getUnmarshaller().unmarshal(streamSource);
 	}
 	
+	public String extractXML(Attachment attachment) throws IOException {
+		String result = Util.createTemporaryFile(attachment.getInputStream(), this.getConfiguration().getTempDir());
+		LOG.debug("Attachment extracted to temporary file: " + result);
+		return result;
+	}
+	
 	// Abstract method for implementing by subclasses
 	protected abstract Object invokeInternal(Object requestObject)
 			throws Exception;

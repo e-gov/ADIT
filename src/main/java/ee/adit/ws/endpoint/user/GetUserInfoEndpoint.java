@@ -155,10 +155,5 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 		
 		return response;
 	}
-	
-	public String extractXML(Attachment attachment) throws IOException {
-		String result = Util.createTemporaryFile(attachment.getInputStream(), this.getConfiguration().getTempDir());
-		LOG.debug("Attachment extracted to temporary file: " + result);
-		return result;
-	}
+		
 }
