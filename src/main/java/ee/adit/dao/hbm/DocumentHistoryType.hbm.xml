@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 16.06.2010 15:06:32 by Hibernate Tools 3.2.4.GA -->
+<!-- Generated 21.06.2010 11:12:31 by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
     <class name="ee.adit.dao.pojo.DocumentHistoryType" table="DOCUMENT_HISTORY_TYPE" schema="ADIT">
         <id name="shortName" type="string">

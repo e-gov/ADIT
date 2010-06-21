@@ -79,7 +79,7 @@ public class UnJoinEndpoint extends AbstractAditBaseEndpoint {
 							LOG.info("Deactivating user.");
 							
 							// TODO: Märgime kasutaja lahkunuks
-							
+							this.getUserService().deactivateUser();
 							
 							
 						} else {

@@ -1,19 +1,19 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 16.06.2010 15:06:32 by Hibernate Tools 3.2.4.GA -->
+<!-- Generated 21.06.2010 11:12:31 by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
     <class name="ee.adit.dao.pojo.Signature" table="SIGNATURE" schema="ADIT">
         <id name="id" type="long">
             <column name="ID" precision="12" scale="0" />
             <generator class="assigned" />
         </id>
-        <many-to-one name="aditUser" class="ee.adit.dao.pojo.AditUser" fetch="select">
-            <column name="USER_CODE" length="50" />
-        </many-to-one>
         <many-to-one name="document" class="ee.adit.dao.pojo.Document" fetch="select">
             <column name="DOCUMENT_ID" precision="12" scale="0" not-null="true" />
         </many-to-one>
+        <property name="userCode" type="string">
+            <column name="USER_CODE" length="50" />
+        </property>
         <property name="signerRole" type="string">
             <column name="SIGNER_ROLE" length="50" />
         </property>

@@ -264,6 +264,11 @@ public class UserService {
 		
 	}
 	
+	public void deactivateUser(AditUser user) {
+		user.setActive(false);
+		// TODO: call DAO
+	}
+	
 	public RemoteApplicationDAO getRemoteApplicationDAO() {
 		return remoteApplicationDAO;
 	}

@@ -1,6 +1,6 @@
 package ee.adit.dao.pojo;
 
-// Generated 16.06.2010 15:06:32 by Hibernate Tools 3.2.4.GA
+// Generated 21.06.2010 11:12:30 by Hibernate Tools 3.2.4.GA
 
 import java.sql.Blob;
 
@@ -10,8 +10,8 @@ import java.sql.Blob;
 public class Signature implements java.io.Serializable {
 
 	private long id;
-	private AditUser aditUser;
 	private Document document;
+	private String userCode;
 	private String signerRole;
 	private String resolution;
 	private String country;
@@ -28,12 +28,12 @@ public class Signature implements java.io.Serializable {
 		this.document = document;
 	}
 
-	public Signature(long id, AditUser aditUser, Document document,
+	public Signature(long id, Document document, String userCode,
 			String signerRole, String resolution, String country,
 			String county, String city, String postIndex, Blob containerData) {
 		this.id = id;
-		this.aditUser = aditUser;
 		this.document = document;
+		this.userCode = userCode;
 		this.signerRole = signerRole;
 		this.resolution = resolution;
 		this.country = country;
@@ -51,20 +51,20 @@ public class Signature implements java.io.Serializable {
 		this.id = id;
 	}
 
-	public AditUser getAditUser() {
-		return this.aditUser;
-	}
-
-	public void setAditUser(AditUser aditUser) {
-		this.aditUser = aditUser;
-	}
-
 	public Document getDocument() {
 		return this.document;
 	}
 
 	public void setDocument(Document document) {
 		this.document = document;
+	}
+
+	public String getUserCode() {
+		return this.userCode;
+	}
+
+	public void setUserCode(String userCode) {
+		this.userCode = userCode;
 	}
 
 	public String getSignerRole() {
