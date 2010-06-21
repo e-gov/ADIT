@@ -76,7 +76,7 @@ public class UnJoinEndpoint extends AbstractAditBaseEndpoint {
 						int applicationAccessLevelForUser = userService.getAccessLevelForUser(applicationName, aditUser);
 						
 						if(applicationAccessLevelForUser == 2) {
-							LOG.info("Modifying existing user.");
+							LOG.info("Deactivating user.");
 							
 							// TODO: Märgime kasutaja lahkunuks
 							
