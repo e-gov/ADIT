@@ -52,8 +52,6 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 			
 			if (applicationRegistered) {
 				
-				
-				
 				// Kas päringus märgitud isik on teenuse kasutaja
 				AditUser user = this.getUserService().getUserByID(this.getHeader().getIsikukood());
 				

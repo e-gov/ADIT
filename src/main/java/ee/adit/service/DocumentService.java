@@ -49,8 +49,6 @@ public class DocumentService {
 				throw new AditException(errorMessage);
 			}
 			
-			
-			
 			// Check document_type
 			if(document.getDocument_type() == null || "".equalsIgnoreCase(document.getDocument_type())) {
 				
