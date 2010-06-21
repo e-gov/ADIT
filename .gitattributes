@@ -93,6 +93,8 @@ src/main/java/ee/adit/pojo/GetUserInfoResponseAttachmentUser.java -text
 src/main/java/ee/adit/pojo/JoinRequest.java -text
 src/main/java/ee/adit/pojo/JoinResponse.java -text
 src/main/java/ee/adit/pojo/ObjectFactory.java -text
+src/main/java/ee/adit/pojo/SaveDocumentRequest.java -text
+src/main/java/ee/adit/pojo/SaveDocumentResponse.java -text
 src/main/java/ee/adit/pojo/Success.java -text
 src/main/java/ee/adit/pojo/UnJoinRequest.java -text
 src/main/java/ee/adit/pojo/UnJoinResponse.java -text

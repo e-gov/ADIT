@@ -97,7 +97,7 @@
 	<!-- saveDocument päringu tüübid -->
 	<complexType name="SaveDocumentRequest">
 		<sequence>
-			<element name="document" type="string">
+			<element name="document">
 				<complexType>
 					<attribute name="href" type="string"/>
 				</complexType>
