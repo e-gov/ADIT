@@ -100,7 +100,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 											} else {
 												LOG.debug("Saving document. GUID: " + document.getGuid());
 												
-												// TODO: Kas dokumendi juures on täidetud vajalikud metaandmed
+												// Kas dokumendi juures on täidetud vajalikud metaandmed
 												this.getDocumentService().checkAttachedDocumentMetadataForNewDocument(document);
 												
 												if(remainingDiskQuota > 0) {
