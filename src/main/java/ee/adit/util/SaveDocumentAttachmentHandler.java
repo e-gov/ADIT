@@ -47,7 +47,7 @@ public class SaveDocumentAttachmentHandler extends DefaultHandler {
 				this.incrementFileCount();
 			}	
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new SAXException("Error parsing startElement: ", e);
 		}
 	}
 
@@ -56,11 +56,7 @@ public class SaveDocumentAttachmentHandler extends DefaultHandler {
 			throws SAXException {
 		// if <data> tag open, then write to outputstream
 		if(this.isOpen()) {
-			
-			System.out.println("start: " + start);
-			System.out.println("length: " + length);
 			String str = new String(ch, start, length);
-			System.out.println("String: " + str);
 			
 			if(str != null && !str.trim().equalsIgnoreCase("")) {
 				try {
@@ -70,11 +66,9 @@ public class SaveDocumentAttachmentHandler extends DefaultHandler {
 					byte[] strBuf = str.getBytes("UTF-8");
 					this.getStream().write(strBuf);
 				} catch (Exception e) {
-					e.printStackTrace();
+					throw new SAXException("Error parsing character data: ", e);
 				}
 			}
-			
-			
 		}
 	}
 	
@@ -90,7 +84,7 @@ public class SaveDocumentAttachmentHandler extends DefaultHandler {
 				}
 				this.setOpen(false);
 			} catch (Exception e) {
-				e.printStackTrace();
+				throw new SAXException("Error parsing endElement: ", e);
 			}
 		}
 		
