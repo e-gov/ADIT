@@ -10,9 +10,9 @@ public class SaveDocumentRequestAttachment {
 	
 	private String title;
 	
-	private String document_type;
+	private String documentType;
 	
-	private Integer previous_document_it;
+	private Integer previousDocumentID;
 	
 	private List<SaveDocumentRequestAttachmentFile> files;
 
@@ -40,28 +40,28 @@ public class SaveDocumentRequestAttachment {
 		this.title = title;
 	}
 
-	public String getDocument_type() {
-		return document_type;
-	}
-
-	public void setDocument_type(String documentType) {
-		document_type = documentType;
-	}
-
-	public Integer getPrevious_document_it() {
-		return previous_document_it;
-	}
-
-	public void setPrevious_document_it(Integer previousDocumentIt) {
-		previous_document_it = previousDocumentIt;
-	}
-
 	public List<SaveDocumentRequestAttachmentFile> getFiles() {
 		return files;
 	}
 
 	public void setFiles(List<SaveDocumentRequestAttachmentFile> files) {
 		this.files = files;
+	}
+
+	public String getDocumentType() {
+		return documentType;
+	}
+
+	public void setDocumentType(String documentType) {
+		this.documentType = documentType;
+	}
+
+	public Integer getPreviousDocumentID() {
+		return previousDocumentID;
+	}
+
+	public void setPreviousDocumentID(Integer previousDocumentID) {
+		this.previousDocumentID = previousDocumentID;
 	}
 	
 }

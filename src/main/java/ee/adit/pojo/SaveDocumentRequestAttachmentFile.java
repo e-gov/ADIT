@@ -6,11 +6,11 @@ public class SaveDocumentRequestAttachmentFile {
 	
 	private String name;
 	
-	private String content_type;
+	private String contentType;
 	
 	private String description;
 	
-	private Integer size_bytes;
+	private Integer sizeBytes;
 	
 	private String tmpFileName;
 
@@ -30,14 +30,6 @@ public class SaveDocumentRequestAttachmentFile {
 		this.name = name;
 	}
 
-	public String getContent_type() {
-		return content_type;
-	}
-
-	public void setContent_type(String contentType) {
-		content_type = contentType;
-	}
-
 	public String getDescription() {
 		return description;
 	}
@@ -46,20 +38,28 @@ public class SaveDocumentRequestAttachmentFile {
 		this.description = description;
 	}
 
-	public Integer getSize_bytes() {
-		return size_bytes;
-	}
-
-	public void setSize_bytes(Integer sizeBytes) {
-		size_bytes = sizeBytes;
-	}
-
 	public String getTmpFileName() {
 		return tmpFileName;
 	}
 
 	public void setTmpFileName(String tmpFileName) {
 		this.tmpFileName = tmpFileName;
+	}
+
+	public String getContentType() {
+		return contentType;
+	}
+
+	public void setContentType(String contentType) {
+		this.contentType = contentType;
+	}
+
+	public Integer getSizeBytes() {
+		return sizeBytes;
+	}
+
+	public void setSizeBytes(Integer sizeBytes) {
+		this.sizeBytes = sizeBytes;
 	}
 
 }

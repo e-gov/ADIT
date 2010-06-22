@@ -60,10 +60,10 @@ public class DocumentService {
 			}
 			
 			// Check document_type
-			if(document.getDocument_type() == null || "".equalsIgnoreCase(document.getDocument_type())) {
+			if(document.getDocumentType() == null || "".equalsIgnoreCase(document.getDocumentType())) {
 				
 				// Is the document type valid?
-				DocumentType documentType = this.getDocumentTypeDAO().getDocumentType(document.getDocument_type());
+				DocumentType documentType = this.getDocumentTypeDAO().getDocumentType(document.getDocumentType());
 				
 				if(documentType == null) {
 					String validDocumentTypes = getValidDocumentTypes();
@@ -78,13 +78,13 @@ public class DocumentService {
 			}
 			
 			// Check previous_document_id
-			if(document.getPrevious_document_it() != null) {
+			if(document.getPreviousDocumentID() != null) {
 				// Check if the document exists
 				
-				Document previousDocument = this.getDocumentDAO().getDocument(document.getPrevious_document_it());
+				Document previousDocument = this.getDocumentDAO().getDocument(document.getPreviousDocumentID());
 				
 				if(previousDocument == null) {
-					String errorMessage = this.getMessageSource().getMessage("request.saveDocument.document.previousDocument.nonExistent", new Object[] { document.getPrevious_document_it() }, Locale.ENGLISH);
+					String errorMessage = this.getMessageSource().getMessage("request.saveDocument.document.previousDocument.nonExistent", new Object[] { document.getPreviousDocumentID() }, Locale.ENGLISH);
 					throw new AditException(errorMessage);
 				}
 			}

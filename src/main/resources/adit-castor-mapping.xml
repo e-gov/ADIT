@@ -160,6 +160,47 @@
 		</field>
 	</class>
 	
+	<class name="ee.adit.pojo.SaveDocumentRequestAttachment">
+		<map-to xml="saveDocumentRequestAttachmentV1" />
+		<field name="id" type="java.lang.Integer">
+			<bind-xml name="id" location="document" />
+		</field>
+		<field name="guid" type="java.lang.String">
+			<bind-xml name="guid" location="document" />
+		</field>
+		<field name="title" type="java.lang.String">
+			<bind-xml name="title" location="document" />
+		</field>
+		<field name="documentType" type="java.lang.String">
+			<bind-xml name="document_type" location="document" />
+		</field>
+		<field name="previousDocumentID" type="java.lang.Integer">
+			<bind-xml name="previous_document_id" location="document" />
+		</field>
+		<field name="files" type="ee.adit.pojo.SaveDocumentRequestAttachmentFile" collection="arraylist">
+			<bind-xml name="file" />
+		</field>
+	</class>
+	
+	<class name="ee.adit.pojo.SaveDocumentRequestAttachmentFile">
+		<map-to xml="files" />
+		<field name="id" type="java.lang.Integer">
+			<bind-xml name="id"/>
+		</field>
+		<field name="name" type="java.lang.String">
+			<bind-xml name="name"/>
+		</field>
+		<field name="contentType" type="java.lang.String">
+			<bind-xml name="content_type"/>
+		</field>
+		<field name="description" type="java.lang.String">
+			<bind-xml name="description"/>
+		</field>
+		<field name="sizeBytes" type="java.lang.Integer">
+			<bind-xml name="size_bytes"/>
+		</field>	
+	</class>
+	
 	<class name="ee.adit.pojo.SaveDocumentResponse">
 		<map-to xml="SaveDocumentResponse" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
 		<field name="success" type="ee.adit.pojo.Success" >
