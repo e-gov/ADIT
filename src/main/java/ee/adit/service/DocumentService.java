@@ -37,7 +37,8 @@ public class DocumentService {
 	
 	private DocumentDAO documentDAO;
 	
-	public void checkAttachedDocumentMetadataForNewDocument(SaveDocumentRequestAttachment document, long remainingDiskQuota, String xmlFile, String tempDir) throws AditException {
+	public List<String> checkAttachedDocumentMetadataForNewDocument(SaveDocumentRequestAttachment document, long remainingDiskQuota, String xmlFile, String tempDir) throws AditException {
+		List<String> result = null;
 		LOG.debug("Checking attached document metadata for new document...");
 		if(document != null) {
 			
@@ -116,11 +117,11 @@ public class DocumentService {
 				InputSource inputSource = new InputSource(fileInputStream);
 				xmlReader.parse(inputSource);
 				
-				List<String> fileNames = handler.getFiles();
+				result = handler.getFiles();
 				
 				// Add references to file objects
-				for(int i = 0; i < fileNames.size(); i++) {
-					String fileName = fileNames.get(i);
+				for(int i = 0; i < result.size(); i++) {
+					String fileName = result.get(i);
 					SaveDocumentRequestAttachmentFile file = document.getFiles().get(i);
 					LOG.debug("Adding reference to file object. File ID: " + file.getId() + " (" + file.getName() + "). Temporary file: " + fileName);
 					file.setTmpFileName(fileName);
@@ -130,8 +131,6 @@ public class DocumentService {
 				}				
 				
 				LOG.debug("Total size of document files: " + totalSize);
-				
-				
 				
 				if(remainingDiskQuota < totalSize) {
 					String errorMessage = this.getMessageSource().getMessage("request.saveDocument.document.files.quotaExceeded", new Object[] { remainingDiskQuota, totalSize }, Locale.ENGLISH);
@@ -145,7 +144,9 @@ public class DocumentService {
 			
 		} else {
 			throw new AditInternalException("Document not initialized.");
-		}		
+		}
+		
+		return result;
 	}
 	
 	public String getValidDocumentTypes() {

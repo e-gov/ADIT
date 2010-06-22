@@ -1,6 +1,7 @@
 package ee.adit.ws.endpoint.document;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
@@ -100,18 +101,11 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 											} else {
 												LOG.debug("Saving document. GUID: " + document.getGuid());
 												
-												// Kas dokumendi juures on täidetud vajalikud metaandmed
-												this.getDocumentService().checkAttachedDocumentMetadataForNewDocument(document, remainingDiskQuota, xmlFile, this.getConfiguration().getTempDir());
+												// Check document metadata
+												List<String> fileNames = this.getDocumentService().checkAttachedDocumentMetadataForNewDocument(document, remainingDiskQuota, xmlFile, this.getConfiguration().getTempDir());
 												
-												if(remainingDiskQuota > 0) {
-													
-													
-													
-													// TODO: Dokument ja failid andmebaasi
-													
-												} else {
-													
-												}
+												// TODO: Document to database
+												
 												
 											}
 											
