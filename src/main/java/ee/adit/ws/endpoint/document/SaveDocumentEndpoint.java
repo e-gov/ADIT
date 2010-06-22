@@ -105,7 +105,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 												List<String> fileNames = this.getDocumentService().checkAttachedDocumentMetadataForNewDocument(document, remainingDiskQuota, xmlFile, this.getConfiguration().getTempDir());
 												
 												// TODO: Document to database
-												
+												this.getDocumentService().save(document, fileNames);
 												
 											}
 											

@@ -166,6 +166,10 @@ public class DocumentService {
 		return result.toString();
 	}
 	
+	public void save(SaveDocumentRequestAttachment document, List<String> fileNames) {
+		
+	}
+	
 	public MessageSource getMessageSource() {
 		return messageSource;
 	}
