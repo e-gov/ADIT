@@ -176,13 +176,8 @@
 	<!-- Castor Marshaller -->
 	<bean id="castorMarshaller" class="org.springframework.oxm.castor.CastorMarshaller">
 		<property name="mappingLocation" value="classpath:/adit-castor-mapping.xml" />
+		<property name="ignoreExtraElements" value="true" />
 	</bean>
-
-
-
-
-
-
 
 	<!-- Service Classes -->
 	<bean id="userService" class="ee.adit.service.UserService">

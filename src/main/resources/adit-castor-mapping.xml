@@ -199,9 +199,6 @@
 		<field name="sizeBytes" type="java.lang.Integer">
 			<bind-xml name="size_bytes"/>
 		</field>
-		<field name="data" transient="true">
-			<bind-xml name="data"/>
-		</field>
 	</class>
 	
 	<class name="ee.adit.pojo.SaveDocumentResponse">

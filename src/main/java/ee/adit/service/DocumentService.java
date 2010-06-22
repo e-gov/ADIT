@@ -97,7 +97,7 @@ public class DocumentService {
 			// 3. For each <data> element, create a temporary file and add a reference to the document object
 			long totalSize = 0;
 			
-			/*try {
+			try {
 				FileInputStream fileInputStream = new FileInputStream(xmlFile);
 				
 				SaveDocumentAttachmentHandler handler = new SaveDocumentAttachmentHandler(tempDir);
@@ -132,7 +132,7 @@ public class DocumentService {
 				
 			} catch (Exception e) {
 				throw new AditInternalException("Error parsing attachment: ", e);
-			}*/
+			}
 			
 			
 		} else {
