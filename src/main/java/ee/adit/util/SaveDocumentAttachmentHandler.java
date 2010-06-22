@@ -10,7 +10,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-public class SaveDocumentAttachmentParser extends DefaultHandler {
+public class SaveDocumentAttachmentHandler extends DefaultHandler {
 
 	private String tempDir;
 	
@@ -22,7 +22,7 @@ public class SaveDocumentAttachmentParser extends DefaultHandler {
 	
 	private int fileCount;
 	
-	public SaveDocumentAttachmentParser(String tempDir) {
+	public SaveDocumentAttachmentHandler(String tempDir) {
 		super();
 		this.setTempDir(tempDir);
 		this.setFileCount(1);
@@ -96,28 +96,19 @@ public class SaveDocumentAttachmentParser extends DefaultHandler {
 		
 	}
 	
-	@Override
-	public void endDocument() throws SAXException {
-		if(this.getFiles() != null && this.getFiles().size() > 0) {
-			for(int i = 0; i < this.getFiles().size(); i++) {
-				System.out.println("File: " + this.getFiles().get(i));
-			}
-		}
-	}
-	
-	public boolean isOpen() {
+	private boolean isOpen() {
 		return open;
 	}
 
-	public void setOpen(boolean open) {
+	private void setOpen(boolean open) {
 		this.open = open;
 	}
 
-	public OutputStream getStream() {
+	private OutputStream getStream() {
 		return stream;
 	}
 
-	public void setStream(OutputStream stream) {
+	private void setStream(OutputStream stream) {
 		this.stream = stream;
 	}
 
@@ -125,22 +116,22 @@ public class SaveDocumentAttachmentParser extends DefaultHandler {
 		return files;
 	}
 
-	public void setFiles(List<String> files) {
+	private void setFiles(List<String> files) {
 		this.files = files;
 	}
 
-	public void addFile(String file) {
+	private void addFile(String file) {
 		if(this.getFiles() == null) {
 			this.setFiles(new ArrayList<String>());
 		}
 		this.getFiles().add(file);
 	}
 
-	public int getFileCount() {
+	private int getFileCount() {
 		return fileCount;
 	}
 
-	public void setFileCount(int fileCount) {
+	private void setFileCount(int fileCount) {
 		this.fileCount = fileCount;
 	}
 	

@@ -10,6 +10,9 @@ import java.util.UUID;
 
 import org.apache.log4j.Logger;
 import org.springframework.context.MessageSource;
+import org.xml.sax.InputSource;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.XMLReaderFactory;
 
 import ee.adit.dao.DocumentDAO;
 import ee.adit.dao.DocumentTypeDAO;
@@ -20,6 +23,7 @@ import ee.adit.exception.AditException;
 import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.SaveDocumentRequestAttachment;
 import ee.adit.pojo.SaveDocumentRequestAttachmentFile;
+import ee.adit.util.SaveDocumentAttachmentHandler;
 import ee.adit.util.Util;
 
 public class DocumentService {
@@ -32,7 +36,7 @@ public class DocumentService {
 	
 	private DocumentDAO documentDAO;
 	
-	public void checkAttachedDocumentMetadataForNewDocument(SaveDocumentRequestAttachment document, long remainingDiskQuota, String xmlFile) throws AditException {
+	public void checkAttachedDocumentMetadataForNewDocument(SaveDocumentRequestAttachment document, long remainingDiskQuota, String xmlFile, String tempDir) throws AditException {
 		
 		if(document != null) {
 			
@@ -93,19 +97,19 @@ public class DocumentService {
 			
 			try {
 				FileInputStream fileInputStream = new FileInputStream(xmlFile);
-				StringWriter sw = new StringWriter();
 				
-				int len;
-				byte[] b = new byte[1024];
-				boolean dataTagOpen = false;
+				SaveDocumentAttachmentHandler handler = new SaveDocumentAttachmentHandler(tempDir);
 				
-				while((len = fileInputStream.read(b)) > 0) {
-					String tmpString = new String(b, 0, len);
-					
-				}
+				XMLReader xmlReader = XMLReaderFactory.createXMLReader();
+				xmlReader.setContentHandler(handler);
+				
+				InputSource inputSource = new InputSource(fileInputStream);
+				xmlReader.parse(inputSource);
+				
+				List<String> fileNames = handler.getFiles();
 				
 			} catch (Exception e) {
-				// TODO: throw exception
+				throw new AditInternalException("Error parsing attachment: ", e);
 			}
 			
 			

@@ -106,7 +106,7 @@ src/main/java/ee/adit/service/DocumentService.java -text
 src/main/java/ee/adit/service/UserService.java -text
 src/main/java/ee/adit/util/Configuration.java -text
 src/main/java/ee/adit/util/CustomXTeeHeader.java -text
-src/main/java/ee/adit/util/SaveDocumentAttachmentParser.java -text
+src/main/java/ee/adit/util/SaveDocumentAttachmentHandler.java -text
 src/main/java/ee/adit/util/Util.java -text
 src/main/java/ee/adit/util/XMLUtil.java -text
 src/main/java/ee/adit/ws/endpoint/AbstractAditBaseEndpoint.java -text
