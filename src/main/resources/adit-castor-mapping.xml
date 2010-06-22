@@ -176,14 +176,14 @@
 		</field>
 		<field name="previousDocumentID" type="java.lang.Integer">
 			<bind-xml name="previous_document_id" location="document" />
-		</field>
+		</field>		
 		<field name="files" type="ee.adit.pojo.SaveDocumentRequestAttachmentFile" collection="arraylist">
-			<bind-xml name="file" />
+			<bind-xml name="file" location="document/files"/>
 		</field>
 	</class>
 	
 	<class name="ee.adit.pojo.SaveDocumentRequestAttachmentFile">
-		<map-to xml="files" />
+		<map-to xml="file"/>
 		<field name="id" type="java.lang.Integer">
 			<bind-xml name="id"/>
 		</field>
@@ -198,7 +198,10 @@
 		</field>
 		<field name="sizeBytes" type="java.lang.Integer">
 			<bind-xml name="size_bytes"/>
-		</field>	
+		</field>
+		<field name="data" transient="true">
+			<bind-xml name="data"/>
+		</field>
 	</class>
 	
 	<class name="ee.adit.pojo.SaveDocumentResponse">

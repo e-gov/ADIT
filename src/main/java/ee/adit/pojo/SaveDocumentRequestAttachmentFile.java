@@ -13,7 +13,7 @@ public class SaveDocumentRequestAttachmentFile {
 	private Integer sizeBytes;
 	
 	private String tmpFileName;
-
+	
 	public Integer getId() {
 		return id;
 	}
@@ -61,5 +61,4 @@ public class SaveDocumentRequestAttachmentFile {
 	public void setSizeBytes(Integer sizeBytes) {
 		this.sizeBytes = sizeBytes;
 	}
-
 }
