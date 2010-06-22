@@ -38,9 +38,10 @@ public class DocumentService {
 	private DocumentDAO documentDAO;
 	
 	public void checkAttachedDocumentMetadataForNewDocument(SaveDocumentRequestAttachment document, long remainingDiskQuota, String xmlFile, String tempDir) throws AditException {
-		
+		LOG.debug("Checking attached document metadata for new document...");
 		if(document != null) {
 			
+			LOG.debug("Checking GUID: " + document.getGuid());
 			// Check GUID
 			if(document.getGuid() != null) {
 				// Check GUID format
@@ -53,19 +54,24 @@ public class DocumentService {
 				
 			}
 			
+			LOG.debug("Checking title: " + document.getTitle());
 			// Check title
 			if(document.getTitle() == null || "".equalsIgnoreCase(document.getTitle())) {
 				String errorMessage = this.getMessageSource().getMessage("request.saveDocument.document.title.undefined", new Object[] {}, Locale.ENGLISH);
 				throw new AditException(errorMessage);
 			}
 			
+			LOG.debug("Checking document type: " + document.getDocumentType());
 			// Check document_type
-			if(document.getDocumentType() == null || "".equalsIgnoreCase(document.getDocumentType())) {
+			
+			if(document.getDocumentType() != null && !"".equalsIgnoreCase(document.getDocumentType().trim())) {
 				
 				// Is the document type valid?
+				LOG.debug("Document type is defined. Checking if it is valid.");
 				DocumentType documentType = this.getDocumentTypeDAO().getDocumentType(document.getDocumentType());
 				
 				if(documentType == null) {
+					LOG.debug("Document type does not exist: " + document.getDocumentType());
 					String validDocumentTypes = getValidDocumentTypes();
 					String errorMessage = this.getMessageSource().getMessage("request.saveDocument.document.type.nonExistent", new Object[] { validDocumentTypes }, Locale.ENGLISH);
 					throw new AditException(errorMessage);
@@ -77,8 +83,9 @@ public class DocumentService {
 				throw new AditException(errorMessage);
 			}
 			
+			LOG.debug("Checking previous document ID: " + document.getPreviousDocumentID());
 			// Check previous_document_id
-			if(document.getPreviousDocumentID() != null) {
+			if(document.getPreviousDocumentID() != null && document.getPreviousDocumentID() != 0) {
 				// Check if the document exists
 				
 				Document previousDocument = this.getDocumentDAO().getDocument(document.getPreviousDocumentID());
@@ -97,6 +104,7 @@ public class DocumentService {
 			// 3. For each <data> element, create a temporary file and add a reference to the document object
 			long totalSize = 0;
 			
+			LOG.debug("Checking files");
 			try {
 				FileInputStream fileInputStream = new FileInputStream(xmlFile);
 				

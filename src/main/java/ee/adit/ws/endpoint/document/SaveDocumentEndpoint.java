@@ -92,7 +92,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 											
 											SaveDocumentRequestAttachment document = (SaveDocumentRequestAttachment) unmarshalledObject;
 											
-											if(document.getId() != null) {
+											if(document.getId() != null && document.getId() != 0) {
 												LOG.debug("Modifying document. ID: " + document.getId());
 												
 												//TODO: implement
