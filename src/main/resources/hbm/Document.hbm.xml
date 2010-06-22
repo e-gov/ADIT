@@ -65,7 +65,7 @@
             </key>
             <one-to-many class="ee.adit.dao.pojo.Document" />
         </set>
-        <set name="documentFiles" inverse="true" lazy="true" table="DOCUMENT_FILE" fetch="select">
+        <set name="documentFiles" inverse="true" lazy="true" table="DOCUMENT_FILE" fetch="select" cascade="save-update">
             <key>
                 <column name="DOCUMENT_ID" precision="12" scale="0" not-null="true" />
             </key>

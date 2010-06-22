@@ -1,5 +1,6 @@
 package ee.adit.ws.endpoint.document;
 
+import java.math.BigInteger;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.ws.mime.Attachment;
 
 import ee.adit.dao.pojo.AditUser;
+import ee.adit.dao.pojo.Document;
 import ee.adit.exception.AditException;
 import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.ArrayOfMessage;
@@ -105,8 +107,9 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 												List<String> fileNames = this.getDocumentService().checkAttachedDocumentMetadataForNewDocument(document, remainingDiskQuota, xmlFile, this.getConfiguration().getTempDir());
 												
 												// TODO: Document to database
-												this.getDocumentService().save(document, fileNames);
-												
+												Long documentID = this.getDocumentService().save(document, fileNames, user.getUserCode(), applicationName);
+												LOG.debug("Document saved with ID: " + documentID.toString());
+												response.setDocumentId(documentID);
 											}
 											
 										} else {

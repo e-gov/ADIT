@@ -50,7 +50,7 @@ public class SaveDocumentResponse {
     @XmlElement(required = true)
     protected ArrayOfMessage messages;
     @XmlElement(name = "document_id", required = true)
-    protected BigInteger documentId;
+    protected long documentId;
 
     /**
      * Gets the value of the messages property.
@@ -84,7 +84,7 @@ public class SaveDocumentResponse {
      *     {@link BigInteger }
      *     
      */
-    public BigInteger getDocumentId() {
+    public long getDocumentId() {
         return documentId;
     }
 
@@ -96,7 +96,7 @@ public class SaveDocumentResponse {
      *     {@link BigInteger }
      *     
      */
-    public void setDocumentId(BigInteger value) {
+    public void setDocumentId(long value) {
         this.documentId = value;
     }
 

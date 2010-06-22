@@ -43,6 +43,10 @@ public class Util {
 		return new String(Base64Encoder.encode(string.getBytes("UTF-8")));
 	}
 	
+	public static String generateGUID() {
+    	return java.util.UUID.randomUUID().toString();
+    }
+	
 	public static String generateRandomFileName() {
 		StringBuffer result = new StringBuffer();
 		Random r = new Random();
