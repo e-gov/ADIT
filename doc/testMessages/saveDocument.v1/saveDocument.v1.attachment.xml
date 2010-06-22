@@ -8,7 +8,35 @@
     <files>
         <file>
             <id/>
-            <name>avaldus.txt</name>
+            <name>avaldus1.txt</name>
+            <content_type>text/plain</content_type>
+            <description>Avaldus tekstifailina</description>
+            <size_bytes>223</size_bytes>
+            <data>
+                SvVnZXZhIExpbm5hdmFsaXRzdXMJMjAuMDQuMjAxMA0KDQpBdmFsZHVzDQoNClBh
+                bHVuIHZpaXZpdGFtYXR1bHQgdGFnYXN0YWRhIG1pbnUgcG9vbHQgbfb2ZHVudWQg
+                dGVpc2lw5GV2YWwgbGlubmF2YWxpdHN1c2Uga2FudHNlbGVpc3NlIHVudXN0YXR1
+                ZCBrb2h2ZXIsIHN1dXNhZCBqYSByYW5uYXBhbGwuDQoNCg0KRWlubyBNdWlkdWdp
+                DQpBUyBBc3V0dXMNCkp1aGF0dXNlIGVzaW1lZXMNCg==
+            </data>
+        </file>
+        <file>
+            <id/>
+            <name>avaldus2.txt</name>
+            <content_type>text/plain</content_type>
+            <description>Avaldus tekstifailina</description>
+            <size_bytes>223</size_bytes>
+            <data>
+                SvVnZXZhIExpbm5hdmFsaXRzdXMJMjAuMDQuMjAxMA0KDQpBdmFsZHVzDQoNClBh
+                bHVuIHZpaXZpdGFtYXR1bHQgdGFnYXN0YWRhIG1pbnUgcG9vbHQgbfb2ZHVudWQg
+                dGVpc2lw5GV2YWwgbGlubmF2YWxpdHN1c2Uga2FudHNlbGVpc3NlIHVudXN0YXR1
+                ZCBrb2h2ZXIsIHN1dXNhZCBqYSByYW5uYXBhbGwuDQoNCg0KRWlubyBNdWlkdWdp
+                DQpBUyBBc3V0dXMNCkp1aGF0dXNlIGVzaW1lZXMNCg==
+            </data>
+        </file>
+        <file>
+            <id/>
+            <name>avaldus3.txt</name>
             <content_type>text/plain</content_type>
             <description>Avaldus tekstifailina</description>
             <size_bytes>223</size_bytes>

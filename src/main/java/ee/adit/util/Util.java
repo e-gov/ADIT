@@ -53,6 +53,15 @@ public class Util {
 		return result.toString();
 	}
 	
+	public static String generateRandomFileNameWithoutExtension() {
+		StringBuffer result = new StringBuffer();
+		Random r = new Random();
+		for(int i = 0; i < 30; i++) {
+			result.append(r.nextInt(10));
+		}
+		return result.toString();
+	}
+	
 	public static String generateRandomID() {
 		StringBuffer result = new StringBuffer();
 		Random r = new Random();
