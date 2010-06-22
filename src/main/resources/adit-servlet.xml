@@ -255,7 +255,7 @@
 		<property name="sessionFactory" ref="mySessionFactory" />
 	</bean>	
 
-	<bean id="documentTypeDAO" class="ee.adit.dao.DsocumentTypeDAO">
+	<bean id="documentTypeDAO" class="ee.adit.dao.DocumentTypeDAO">
 		<property name="sessionFactory" ref="mySessionFactory" />
 	</bean>
 
