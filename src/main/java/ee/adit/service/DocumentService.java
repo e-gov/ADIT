@@ -1,5 +1,6 @@
 package ee.adit.service;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.StringWriter;
 import java.util.Collection;
@@ -94,6 +95,7 @@ public class DocumentService {
 			// 1. Get the XML file
 			// 2. find the <data> elements
 			// 3. For each <data> element, create a temporary file and add a reference to the document object
+			long totalSize = 0;
 			
 			try {
 				FileInputStream fileInputStream = new FileInputStream(xmlFile);
@@ -107,6 +109,26 @@ public class DocumentService {
 				xmlReader.parse(inputSource);
 				
 				List<String> fileNames = handler.getFiles();
+				
+				// Add references to file objects
+				for(int i = 0; i < fileNames.size(); i++) {
+					String fileName = fileNames.get(i);
+					SaveDocumentRequestAttachmentFile file = document.getFiles().get(i);
+					LOG.debug("Adding reference to file object. File ID: " + file.getId() + " (" + file.getName() + "). Temporary file: " + fileName);
+					file.setTmpFileName(fileName);
+					
+					totalSize += (new File(fileName)).length();
+					
+				}				
+				
+				LOG.debug("Total size of document files: " + totalSize);
+				
+				
+				
+				if(remainingDiskQuota < totalSize) {
+					String errorMessage = this.getMessageSource().getMessage("request.saveDocument.document.files.quotaExceeded", new Object[] { remainingDiskQuota, totalSize }, Locale.ENGLISH);
+					throw new AditException(errorMessage);
+				}
 				
 			} catch (Exception e) {
 				throw new AditInternalException("Error parsing attachment: ", e);

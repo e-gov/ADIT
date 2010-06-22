@@ -12,7 +12,7 @@ public class SaveDocumentRequestAttachmentFile {
 	
 	private Integer size_bytes;
 	
-	private String data;
+	private String tmpFileName;
 
 	public Integer getId() {
 		return id;
@@ -54,12 +54,12 @@ public class SaveDocumentRequestAttachmentFile {
 		size_bytes = sizeBytes;
 	}
 
-	public String getData() {
-		return data;
+	public String getTmpFileName() {
+		return tmpFileName;
 	}
 
-	public void setData(String data) {
-		this.data = data;
+	public void setTmpFileName(String tmpFileName) {
+		this.tmpFileName = tmpFileName;
 	}
-	
+
 }
