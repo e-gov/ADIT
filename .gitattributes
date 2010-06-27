@@ -80,6 +80,8 @@ src/main/java/ee/adit/dao/test/TestDocumentDAO.java -text
 src/main/java/ee/adit/exception/AditException.java -text
 src/main/java/ee/adit/exception/AditInternalException.java -text
 src/main/java/ee/adit/pojo/ArrayOfMessage.java -text
+src/main/java/ee/adit/pojo/DeleteDocumentRequest.java -text
+src/main/java/ee/adit/pojo/DeleteDocumentResponse.java -text
 src/main/java/ee/adit/pojo/GetDocumentRequest.java -text
 src/main/java/ee/adit/pojo/GetDocumentResponse.java -text
 src/main/java/ee/adit/pojo/GetJoinedRequest.java -text
