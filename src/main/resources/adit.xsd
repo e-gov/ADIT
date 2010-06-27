@@ -22,6 +22,8 @@
 	
 	<element name="SaveDocumentRequest" type="tns:SaveDocumentRequest"/>
 	<element name="SaveDocumentResponse" type="tns:SaveDocumentResponse"/>
+	<element name="DeleteDocumentRequest" type="tns:DeleteDocumentRequest"/>
+	<element name="DeleteDocumentResponse" type="tns:DeleteDocumentResponse"/>
 	
 	<complexType name="ArrayOfMessage">
 		<sequence>
@@ -109,6 +111,19 @@
 			<element name="success" type="boolean"></element>
 			<element name="messages" type="tns:ArrayOfMessage"></element>
 			<element name="document_id" type="integer"></element>
+		</sequence>
+	</complexType>
+	
+	<!-- deleteDocument päringu tüübid -->
+	<complexType name="DeleteDocumentRequest">
+		<sequence>
+			<element name="document_id" type="integer"></element>
+		</sequence>
+	</complexType>
+	<complexType name="DeleteDocumentResponse">
+		<sequence>
+			<element name="success" type="boolean"></element>
+			<element name="messages" type="tns:ArrayOfMessage"></element>
 		</sequence>
 	</complexType>
 	
