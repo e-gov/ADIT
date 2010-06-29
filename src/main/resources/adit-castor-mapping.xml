@@ -213,6 +213,23 @@
 		</field>
 	</class>
  	
+	<!-- DeleteDocument -->
+	<class name="ee.adit.pojo.DeleteDocumentRequest">
+		<map-to xml="DeleteDocument" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<field name="documentId" type="long">
+			<bind-xml name="document_id" location="keha" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.DeleteDocumentResponse">
+		<map-to xml="keha" ns-prefix="xtee" />
+		<field name="success" type="ee.adit.pojo.Success" >
+		</field>
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
+			<bind-xml name="messages" />
+		</field>
+	</class>
+ 	
  	<!-- Common -->
  	<class name="ee.adit.pojo.Success">
 		<map-to xml="success" ns-prefix="adit" />

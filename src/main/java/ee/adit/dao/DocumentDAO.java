@@ -45,7 +45,8 @@ public class DocumentDAO extends AbstractAditDAO {
 		return result;
 	}
 	
-	public Document getDocument(Integer id) {
+	public Document getDocument(long id) {
+		LOG.debug("Attempting to load document from database. Document id: " + String.valueOf(id));
 		return (Document) this.getHibernateTemplate().get(Document.class, id);
 	}
 	
@@ -67,36 +68,36 @@ public class DocumentDAO extends AbstractAditDAO {
 				
 				Set<DocumentFile> documentFiles = new HashSet<DocumentFile>();
 				
-				for(int i = 0; i < files.size(); i++) {
-					DocumentFile documentFile = new DocumentFile();
-					SaveDocumentRequestAttachmentFile attachmentFile = files.get(i);
-					String fileName = attachmentFile.getTmpFileName();
-					
-					FileInputStream fileInputStream = null;
-					try {
-						fileInputStream = new FileInputStream(fileName);
-					} catch (FileNotFoundException e) {
-						LOG.error("Error saving document file: ", e);
+				if (files != null) {
+					for(int i = 0; i < files.size(); i++) {
+						DocumentFile documentFile = new DocumentFile();
+						SaveDocumentRequestAttachmentFile attachmentFile = files.get(i);
+						String fileName = attachmentFile.getTmpFileName();
+						
+						FileInputStream fileInputStream = null;
+						try {
+							fileInputStream = new FileInputStream(fileName);
+						} catch (FileNotFoundException e) {
+							LOG.error("Error saving document file: ", e);
+						}
+						
+						long length = (new File(fileName)).length();
+						
+						Blob fileData = Hibernate.createBlob(fileInputStream, length);
+						documentFile.setFileData(fileData);
+						documentFile.setContentType(attachmentFile.getContentType());
+						documentFile.setDescription(attachmentFile.getDescription());
+						documentFile.setFileName(fileName);
+						documentFile.setFileSizeBytes(new BigDecimal(length));
+						documentFile.setDocument(document);
+						documentFiles.add(documentFile);
 					}
-					
-					long length = (new File(fileName)).length();
-					
-					Blob fileData = Hibernate.createBlob(fileInputStream, length);
-					documentFile.setFileData(fileData);
-					documentFile.setContentType(attachmentFile.getContentType());
-					documentFile.setDescription(attachmentFile.getDescription());
-					documentFile.setFileName(fileName);
-					documentFile.setFileSizeBytes(new BigDecimal(length));
-					documentFile.setDocument(document);
-					documentFiles.add(documentFile);
 				}
 				
 				document.setDocumentFiles(documentFiles);
-				Long tmp = (Long) session.save(document);
-				LOG.debug("ID TMP serializable: " + tmp);
-				LOG.debug("ID TMP: " + document.getId());
-				return tmp;
-				
+				session.saveOrUpdate(document);
+				LOG.debug("Saved document ID: " + document.getId());
+				return document.getId();
 			}
 		});
 		

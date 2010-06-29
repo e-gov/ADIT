@@ -83,5 +83,11 @@
             </key>
             <one-to-many class="ee.adit.dao.pojo.DocumentHistory" />
         </set>
+        <set name="documentSharings" inverse="true" cascade="all,delete-orphan" lazy="false" table="DOCUMENT_SHARING" fetch="select">
+            <key>
+                <column name="DOCUMENT_ID" precision="12" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="ee.adit.dao.pojo.DocumentSharing" />
+        </set>
     </class>
 </hibernate-mapping>

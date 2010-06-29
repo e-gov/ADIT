@@ -33,6 +33,7 @@ public class Document implements java.io.Serializable {
 	private Set documentFiles = new HashSet(0);
 	private Set signatures = new HashSet(0);
 	private Set documentHistories = new HashSet(0);
+	private Set documentSharings = new HashSet(0);
 
 	public Document() {
 	}
@@ -49,7 +50,7 @@ public class Document implements java.io.Serializable {
 			Long documentDvkStatusId, Long dvkId, Long documentWfStatusId,
 			Boolean locked, Date lockingDate, Boolean signable,
 			Boolean deflated, Date deflateDate, Boolean deleted, Set documents,
-			Set documentFiles, Set signatures, Set documentHistories) {
+			Set documentFiles, Set signatures, Set documentHistories, Set documentSharings) {
 		this.id = id;
 		this.documentType = documentType;
 		this.document = document;
@@ -72,6 +73,7 @@ public class Document implements java.io.Serializable {
 		this.documentFiles = documentFiles;
 		this.signatures = signatures;
 		this.documentHistories = documentHistories;
+		this.documentSharings = documentSharings;
 	}
 
 	public long getId() {
@@ -250,4 +252,11 @@ public class Document implements java.io.Serializable {
 		this.documentHistories = documentHistories;
 	}
 
+	public Set getDocumentSharings() {
+		return this.documentSharings;
+	}
+
+	public void setDocumentSharings(Set documentSharings) {
+		this.documentSharings = documentSharings;
+	}
 }

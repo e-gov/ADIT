@@ -57,6 +57,12 @@
 	</bean>
 	
 	<bean id="DeleteDocumentEndpoint" class="ee.adit.ws.endpoint.document.DeleteDocumentEndpoint">
+		<property name="marshaller" ref="castorMarshaller"/>
+		<property name="unmarshaller" ref="castorMarshaller"/>
+		<property name="userService" ref="userService"/>
+		<property name="messageSource" ref="messageSource"/>
+		<property name="configuration" ref="configuration"/>
+		<property name="documentService" ref="documentService"/>
 	</bean>
 	
 	<bean id="DeleteDocumentFileEndpoint" class="ee.adit.ws.endpoint.document.DeleteDocumentFileEndpoint">

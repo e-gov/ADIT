@@ -50,8 +50,12 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 	
 	protected void invokeInternal(Document requestKeha, Element responseElement,
 			CustomXTeeHeader xteeHeader) throws Exception {
-
+		
 		LOG.debug("AbstractAditBaseEndpoint invoked");
+		
+		if (requestKeha == null) {
+			throw new Exception("Failed unmarshalling request because request body is null!");
+		}
 		
 		try {
 			
@@ -60,6 +64,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 			
 			// Unmarshall the request object
 			Source requestObjectSource = new DOMSource(requestKeha);
+			LOG.debug(requestKeha.toString());
 			Object requestObject = this.getUnmarshaller().unmarshal(requestObjectSource);
 			
 			// Excecute business logic

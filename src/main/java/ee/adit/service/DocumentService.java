@@ -36,7 +36,11 @@ import ee.adit.util.SaveDocumentAttachmentHandler;
 import ee.adit.util.Util;
 
 public class DocumentService {
-
+	public static final String DocumentSharingType_Sign = "sign";
+	public static final String DocumentSharingType_Share = "share";
+	public static final String DocumentSharingType_SendDvk = "send_dvk";
+	public static final String DocumentSharingType_SendAdit = "send_adit";
+	
 	private static Logger LOG = Logger.getLogger(UserService.class);
 	
 	private MessageSource messageSource;
