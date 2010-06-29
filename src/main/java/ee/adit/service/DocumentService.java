@@ -36,10 +36,26 @@ import ee.adit.util.SaveDocumentAttachmentHandler;
 import ee.adit.util.Util;
 
 public class DocumentService {
-	public static final String DocumentSharingType_Sign = "sign";
-	public static final String DocumentSharingType_Share = "share";
-	public static final String DocumentSharingType_SendDvk = "send_dvk";
-	public static final String DocumentSharingType_SendAdit = "send_adit";
+	// Dokumendi jagamise tüüpide koodid
+	public static final String SharingType_Sign = "sign";
+	public static final String SharingType_Share = "share";
+	public static final String SharingType_SendDvk = "send_dvk";
+	public static final String SharingType_SendAdit = "send_adit";
+	
+	// Dokumendi ajaloosündmuste koodid
+	public static final String HistoryType_Create = "create";
+	public static final String HistoryType_Modify = "modify";
+	public static final String HistoryType_AddFile = "add_file";
+	public static final String HistoryType_ModifyFile = "modify_file";
+	public static final String HistoryType_DeleteFile = "delete_file";
+	public static final String HistoryType_ModifyStatus = "modify_status";
+	public static final String HistoryType_Send = "send";
+	public static final String HistoryType_Share = "share";
+	public static final String HistoryType_Lock = "lock";
+	public static final String HistoryType_Deflate = "deflate";
+	public static final String HistoryType_Sign = "sign";
+	public static final String HistoryType_Delete = "delete";
+	public static final String HistoryType_MarkViewed = "markViewed";
 	
 	private static Logger LOG = Logger.getLogger(UserService.class);
 	

@@ -8,12 +8,12 @@
             <column name="ID" precision="12" scale="0" />
             <generator class="assigned" />
         </id>
-        <many-to-one name="remoteApplication" class="ee.adit.dao.pojo.RemoteApplication" fetch="select">
+        <property name="remoteApplicationName" type="string">
             <column name="REMOTE_APPLICATION" length="50" />
-        </many-to-one>
-        <many-to-one name="document" class="ee.adit.dao.pojo.Document" fetch="select">
+        </property>
+        <property name="documentId" type="long">
             <column name="DOCUMENT_ID" precision="12" scale="0" not-null="true" />
-        </many-to-one>
+        </property>
         <property name="documentHistoryType" type="string">
             <column name="DOCUMENT_HISTORY_TYPE" length="50" />
         </property>

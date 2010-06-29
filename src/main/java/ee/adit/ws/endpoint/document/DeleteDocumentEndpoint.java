@@ -1,5 +1,6 @@
 package ee.adit.ws.endpoint.document;
 
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Locale;
 
@@ -102,19 +103,15 @@ public class DeleteDocumentEndpoint extends AbstractAditBaseEndpoint {
 			
 			// Kontrollime, kas ID-le vastav dokument on olemas
 			if (doc != null) {
+				boolean saveDocument = false;
+				
 				// Kontrollime, kas dokument kuulub päringu käivitanud kasutajale
 				if (doc.getCreatorCode().equalsIgnoreCase(userCode)) {
 					// Kontrollime, ega dokument ei ole lukustatud.
 					if (!doc.getLocked()) {
 						// Märgime dokumendi kustutatuks
 						doc.setDeleted(true);
-						
-						// Lisame kustutamise ajaloosündmuse
-						DocumentHistory historyEvent = new DocumentHistory();
-						doc.getDocumentHistories().add(historyEvent);
-						
-						// Salvestame tehtud muudatused
-						this.documentService.getDocumentDAO().save(doc, null);
+						saveDocument = true;
 					} else {
 						String errorMessage = this.getMessageSource().getMessage("request.deleteDocument.error.document.locked", new Object[] { request.getDocumentId() }, Locale.ENGLISH);
 						throw new AditException(errorMessage);
@@ -133,7 +130,7 @@ public class DeleteDocumentEndpoint extends AbstractAditBaseEndpoint {
 						}
 					}
 					if (changesMade) {
-						this.documentService.getDocumentDAO().save(doc, null);
+						saveDocument = true;
 					} else {
 						String errorMessage = this.getMessageSource().getMessage("request.deleteDocument.error.document.dosNotBelongToUser", new Object[] { request.getDocumentId(), userCode }, Locale.ENGLISH);
 						throw new AditException(errorMessage);
@@ -141,6 +138,21 @@ public class DeleteDocumentEndpoint extends AbstractAditBaseEndpoint {
 				} else {
 					String errorMessage = this.getMessageSource().getMessage("request.deleteDocument.error.document.dosNotBelongToUser", new Object[] { request.getDocumentId(), userCode }, Locale.ENGLISH);
 					throw new AditException(errorMessage);
+				}
+				
+				// Salvestame dokumendi
+				if (saveDocument) {
+					// Lisame kustutamise ajaloosündmuse
+					DocumentHistory historyEvent = new DocumentHistory();
+					historyEvent.setRemoteApplicationName(applicationName);
+					historyEvent.setDocumentId(doc.getId());
+					historyEvent.setDocumentHistoryType(DocumentService.HistoryType_Delete);
+					historyEvent.setEventDate(new Date());
+					historyEvent.setUserCode(userCode);
+					doc.getDocumentHistories().add(historyEvent);
+					
+					// Salvestame tehtud muudatused
+					this.documentService.getDocumentDAO().save(doc, null);
 				}
 			} else {
 				String errorMessage = this.getMessageSource().getMessage("request.deleteDocument.error.document.nonExistent", new Object[] { request.getDocumentId() }, Locale.ENGLISH);

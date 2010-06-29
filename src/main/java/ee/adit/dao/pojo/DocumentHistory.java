@@ -10,8 +10,8 @@ import java.util.Date;
 public class DocumentHistory implements java.io.Serializable {
 
 	private long id;
-	private RemoteApplication remoteApplication;
-	private Document document;
+	private String remoteApplicationName;
+	private long documentId;
 	private String documentHistoryType;
 	private String description;
 	private Date eventDate;
@@ -23,18 +23,18 @@ public class DocumentHistory implements java.io.Serializable {
 	public DocumentHistory() {
 	}
 
-	public DocumentHistory(long id, Document document) {
+	public DocumentHistory(long id, long documentId) {
 		this.id = id;
-		this.document = document;
+		this.documentId = documentId;
 	}
 
-	public DocumentHistory(long id, RemoteApplication remoteApplication,
-			Document document, String documentHistoryType, String description,
+	public DocumentHistory(long id, String remoteApplicationName,
+			long documentId, String documentHistoryType, String description,
 			Date eventDate, String userCode, String notificationStatus,
 			String xteeNotificationId, String xteeUserCode) {
 		this.id = id;
-		this.remoteApplication = remoteApplication;
-		this.document = document;
+		this.remoteApplicationName = remoteApplicationName;
+		this.documentId = documentId;
 		this.documentHistoryType = documentHistoryType;
 		this.description = description;
 		this.eventDate = eventDate;
@@ -52,20 +52,20 @@ public class DocumentHistory implements java.io.Serializable {
 		this.id = id;
 	}
 
-	public RemoteApplication getRemoteApplication() {
-		return this.remoteApplication;
+	public String getRemoteApplicationName() {
+		return this.remoteApplicationName;
 	}
 
-	public void setRemoteApplication(RemoteApplication remoteApplication) {
-		this.remoteApplication = remoteApplication;
+	public void setRemoteApplicationName(String remoteApplicationName) {
+		this.remoteApplicationName = remoteApplicationName;
 	}
 
-	public Document getDocument() {
-		return this.document;
+	public long getDocumentId() {
+		return this.documentId;
 	}
 
-	public void setDocument(Document document) {
-		this.document = document;
+	public void setDocumentId(long documentId) {
+		this.documentId = documentId;
 	}
 
 	public String getDocumentHistoryType() {
