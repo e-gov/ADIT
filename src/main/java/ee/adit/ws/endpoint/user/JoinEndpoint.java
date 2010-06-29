@@ -50,7 +50,7 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 			// Check request body
 			checkRequest(request);
 			
-			// Kontrollime, kas p√§ringu k√§ivitanud infos√ºsteem on ADITis registreeritud
+			// Kontrollime, kas p‰ringu k‰ivitanud infos¸steem on ADITis registreeritud
 			boolean applicationRegistered = this.getUserService().isApplicationRegistered(applicationName);
 
 			if (applicationRegistered) {
