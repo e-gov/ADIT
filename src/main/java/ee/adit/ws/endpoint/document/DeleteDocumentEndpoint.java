@@ -113,7 +113,7 @@ public class DeleteDocumentEndpoint extends AbstractAditBaseEndpoint {
 						doc.setDeleted(true);
 						saveDocument = true;
 					} else {
-						String errorMessage = this.getMessageSource().getMessage("request.deleteDocument.error.document.locked", new Object[] { request.getDocumentId() }, Locale.ENGLISH);
+						String errorMessage = this.getMessageSource().getMessage("request.deleteDocument.document.locked", new Object[] { request.getDocumentId() }, Locale.ENGLISH);
 						throw new AditException(errorMessage);
 					}
 				} else if (doc.getDocumentSharings() != null) {
@@ -132,11 +132,11 @@ public class DeleteDocumentEndpoint extends AbstractAditBaseEndpoint {
 					if (changesMade) {
 						saveDocument = true;
 					} else {
-						String errorMessage = this.getMessageSource().getMessage("request.deleteDocument.error.document.dosNotBelongToUser", new Object[] { request.getDocumentId(), userCode }, Locale.ENGLISH);
+						String errorMessage = this.getMessageSource().getMessage("request.deleteDocument.document.dosNotBelongToUser", new Object[] { request.getDocumentId(), userCode }, Locale.ENGLISH);
 						throw new AditException(errorMessage);
 					}
 				} else {
-					String errorMessage = this.getMessageSource().getMessage("request.deleteDocument.error.document.dosNotBelongToUser", new Object[] { request.getDocumentId(), userCode }, Locale.ENGLISH);
+					String errorMessage = this.getMessageSource().getMessage("request.deleteDocument.document.dosNotBelongToUser", new Object[] { request.getDocumentId(), userCode }, Locale.ENGLISH);
 					throw new AditException(errorMessage);
 				}
 				
@@ -155,11 +155,13 @@ public class DeleteDocumentEndpoint extends AbstractAditBaseEndpoint {
 					this.documentService.getDocumentDAO().save(doc, null);
 				}
 			} else {
-				String errorMessage = this.getMessageSource().getMessage("request.deleteDocument.error.document.nonExistent", new Object[] { request.getDocumentId() }, Locale.ENGLISH);
+				String errorMessage = this.getMessageSource().getMessage("request.deleteDocument.document.nonExistent", new Object[] { request.getDocumentId() }, Locale.ENGLISH);
 				throw new AditException(errorMessage);
 			}
 			
 			// Set response messages
+			response.setSuccess(new Success(true));
+			messages.addMessage(this.getMessageSource().getMessage("request.deleteDocument.success", new Object[] { }, Locale.ENGLISH));
 			response.setMessages(messages);
 		} catch (Exception e) {
 			LOG.error("Exception: ", e);
