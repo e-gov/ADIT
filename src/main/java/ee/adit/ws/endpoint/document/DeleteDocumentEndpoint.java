@@ -132,11 +132,11 @@ public class DeleteDocumentEndpoint extends AbstractAditBaseEndpoint {
 					if (changesMade) {
 						saveDocument = true;
 					} else {
-						String errorMessage = this.getMessageSource().getMessage("request.deleteDocument.document.dosNotBelongToUser", new Object[] { request.getDocumentId(), userCode }, Locale.ENGLISH);
+						String errorMessage = this.getMessageSource().getMessage("document.doesNotBelongToUser", new Object[] { request.getDocumentId(), userCode }, Locale.ENGLISH);
 						throw new AditException(errorMessage);
 					}
 				} else {
-					String errorMessage = this.getMessageSource().getMessage("request.deleteDocument.document.dosNotBelongToUser", new Object[] { request.getDocumentId(), userCode }, Locale.ENGLISH);
+					String errorMessage = this.getMessageSource().getMessage("document.doesNotBelongToUser", new Object[] { request.getDocumentId(), userCode }, Locale.ENGLISH);
 					throw new AditException(errorMessage);
 				}
 				
@@ -155,7 +155,7 @@ public class DeleteDocumentEndpoint extends AbstractAditBaseEndpoint {
 					this.documentService.getDocumentDAO().save(doc, null);
 				}
 			} else {
-				String errorMessage = this.getMessageSource().getMessage("request.deleteDocument.document.nonExistent", new Object[] { request.getDocumentId() }, Locale.ENGLISH);
+				String errorMessage = this.getMessageSource().getMessage("document.nonExistent", new Object[] { request.getDocumentId() }, Locale.ENGLISH);
 				throw new AditException(errorMessage);
 			}
 			

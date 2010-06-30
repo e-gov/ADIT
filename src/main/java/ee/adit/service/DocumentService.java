@@ -58,11 +58,8 @@ public class DocumentService {
 	public static final String HistoryType_MarkViewed = "markViewed";
 	
 	private static Logger LOG = Logger.getLogger(UserService.class);
-	
 	private MessageSource messageSource;
-	
 	private DocumentTypeDAO documentTypeDAO;
-	
 	private DocumentDAO documentDAO;
 	
 	public List<String> checkAttachedDocumentMetadataForNewDocument(SaveDocumentRequestAttachment document, long remainingDiskQuota, String xmlFile, String tempDir) throws AditException {

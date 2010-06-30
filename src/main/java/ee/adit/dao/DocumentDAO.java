@@ -3,9 +3,13 @@ package ee.adit.dao;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.Serializable;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.HashSet;
@@ -43,6 +47,49 @@ public class DocumentDAO extends AbstractAditDAO {
 		}
 		
 		return result;
+	}
+	
+	/**
+	 * Asendab etteantud ID-le vastava faili sisu esialgse sisu MD5 räsikoodiga
+	 * 
+	 * @param fileId	Faili ID
+	 * @throws NoSuchAlgorithmException
+	 * @throws SQLException
+	 * @throws IOException
+	 */
+	public void deflateFile(int fileId) throws NoSuchAlgorithmException, SQLException, IOException {
+		List<DocumentFile> files = this.getHibernateTemplate().find("from DocumentFile docFile where docFile.document=?", new Object[] {fileId});
+		
+		for(DocumentFile docFile : files) {
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			InputStream dataStream = docFile.getFileData().getBinaryStream();
+			
+			// Loeme andmebaasist faili sisu ja arvutame selle MD5 räsi
+			byte[] buf = new byte[10240];
+			int len = 0;
+			try {
+				while ((len = dataStream.read(buf, 0, buf.length)) > 0) {
+	                md.update(buf, 0, len);
+	            }
+			} finally {
+				try {
+					dataStream.close();
+					dataStream = null;
+				} catch (Exception e) {}
+			}
+			
+			// Salvestame MD5 räsi faili sisuks
+			byte[] digest = md.digest();
+			OutputStream outStream = docFile.getFileData().setBinaryStream(0);
+			try {
+				outStream.write(digest, 0, digest.length);
+			} finally {
+				try {
+					dataStream.close();
+					dataStream = null;
+				} catch (Exception e) {}
+			}
+		}
 	}
 	
 	public Document getDocument(long id) {
