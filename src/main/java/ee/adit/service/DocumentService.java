@@ -24,6 +24,7 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 import ee.adit.dao.DocumentDAO;
+import ee.adit.dao.DocumentFileDAO;
 import ee.adit.dao.DocumentTypeDAO;
 import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.DocumentFile;
@@ -61,6 +62,7 @@ public class DocumentService {
 	private MessageSource messageSource;
 	private DocumentTypeDAO documentTypeDAO;
 	private DocumentDAO documentDAO;
+	private DocumentFileDAO documentFileDAO;
 	
 	public List<String> checkAttachedDocumentMetadataForNewDocument(SaveDocumentRequestAttachment document, long remainingDiskQuota, String xmlFile, String tempDir) throws AditException {
 		List<String> result = null;
@@ -191,6 +193,10 @@ public class DocumentService {
 		return result.toString();
 	}
 	
+	public String deflateDocumentFile(long documentId, long fileId, boolean markDeleted) {
+		return this.getDocumentFileDAO().deflateDocumentFile(documentId, fileId, markDeleted);
+	}
+	
 	public Long save(SaveDocumentRequestAttachment attachmentDocument, List<String> fileNames, String creatorCode, String remoteApplication) throws FileNotFoundException {
 		
 		// TODO
@@ -249,6 +255,14 @@ public class DocumentService {
 
 	public void setDocumentDAO(DocumentDAO documentDAO) {
 		this.documentDAO = documentDAO;
+	}
+	
+	public DocumentFileDAO getDocumentFileDAO() {
+		return documentFileDAO;
+	}
+
+	public void setDocumentFileDAO(DocumentFileDAO documentFileDAO) {
+		this.documentFileDAO = documentFileDAO;
 	}
 	
 }

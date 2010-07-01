@@ -22,7 +22,7 @@ lib/hibernate3.jar -text
 lib/javassist-3.9.0.GA.jar -text
 lib/jta-1.1.jar -text
 lib/log4j-1.2.16.jar -text
-lib/ojdbc14.jar -text
+lib/ojdbc6.jar -text
 lib/orai18n.jar -text
 lib/slf4j-api-1.5.8.jar -text
 lib/slf4j-log4j12-1.5.8.jar -text
@@ -43,6 +43,7 @@ sql/document_type.dml.sql -text
 sql/notification_type.dml.sql -text
 sql/run.sql -text
 sql/run_dml.sql -text
+sql/stored_proc.sql -text
 sql/testdata/adit_user.dml.sql -text
 sql/testdata/create_tablespaces.sql -text
 sql/testdata/remote_application.dml.sql -text

@@ -1,6 +1,7 @@
 package ee.adit.ws.endpoint.document;
 
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
+import ee.adit.dao.pojo.DocumentFile;
 import ee.adit.dao.pojo.DocumentHistory;
 import ee.adit.exception.AditException;
 import ee.adit.pojo.ArrayOfMessage;
@@ -105,7 +107,24 @@ public class DeflateDocumentEndpoint extends AbstractAditBaseEndpoint {
 				if (doc.getCreatorCode().equalsIgnoreCase(userCode)) {
 					// Kontrollime, ega dokument ei ole juba tühjendatud.
 					if (!doc.getDeflated()) {
-						// TODO: Failide sisu asendamine failide MD5 räsikoodiga
+						// Failide sisu asendamine failide MD5 räsikoodiga
+						Iterator it = doc.getDocumentFiles().iterator();
+						while (it.hasNext()) {
+							DocumentFile docFile = (DocumentFile)it.next();
+							String resultCode = this.documentService.deflateDocumentFile(doc.getId(), docFile.getId(), false);
+							
+							// Kontrollime üle võimalikud veaolukorrad
+							if (resultCode.equalsIgnoreCase("already_deleted")) {
+								String errorMessage = this.getMessageSource().getMessage("file.isDeleted", new Object[] { docFile.getId() }, Locale.ENGLISH);
+								throw new AditException(errorMessage);
+							} else if (resultCode.equalsIgnoreCase("file_does_not_exist")) {
+								String errorMessage = this.getMessageSource().getMessage("file.nonExistent", new Object[] { docFile.getId() }, Locale.ENGLISH);
+								throw new AditException(errorMessage);
+							} else if (resultCode.equalsIgnoreCase("file_does_not_belong_to_document")) {
+								String errorMessage = this.getMessageSource().getMessage("file.doesNotBelongToDocument", new Object[] { docFile.getId(), doc.getId() }, Locale.ENGLISH);
+								throw new AditException(errorMessage);
+							}
+						}
 						
 						// Märgime dokumendi tühjendatuks ja lukustatuks
 						doc.setDeflated(true);

@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
+import ee.adit.dao.pojo.DocumentFile;
 import ee.adit.dao.pojo.DocumentHistory;
 import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.exception.AditException;
@@ -109,6 +110,27 @@ public class DeleteDocumentEndpoint extends AbstractAditBaseEndpoint {
 				if (doc.getCreatorCode().equalsIgnoreCase(userCode)) {
 					// Kontrollime, ega dokument ei ole lukustatud.
 					if (!doc.getLocked()) {
+						// Failide sisu asendamine failide MD5 räsikoodiga
+						if ((doc.getDocumentSharings() == null) || (doc.getDocumentSharings().size() < 1)) {
+							Iterator it = doc.getDocumentFiles().iterator();
+							while (it.hasNext()) {
+								DocumentFile docFile = (DocumentFile)it.next();
+								String resultCode = this.documentService.deflateDocumentFile(doc.getId(), docFile.getId(), true);
+								
+								// Kontrollime üle võimalikud veaolukorrad
+								if (resultCode.equalsIgnoreCase("already_deleted")) {
+									String errorMessage = this.getMessageSource().getMessage("file.isDeleted", new Object[] { docFile.getId() }, Locale.ENGLISH);
+									throw new AditException(errorMessage);
+								} else if (resultCode.equalsIgnoreCase("file_does_not_exist")) {
+									String errorMessage = this.getMessageSource().getMessage("file.nonExistent", new Object[] { docFile.getId() }, Locale.ENGLISH);
+									throw new AditException(errorMessage);
+								} else if (resultCode.equalsIgnoreCase("file_does_not_belong_to_document")) {
+									String errorMessage = this.getMessageSource().getMessage("file.doesNotBelongToDocument", new Object[] { docFile.getId(), doc.getId() }, Locale.ENGLISH);
+									throw new AditException(errorMessage);
+								}
+							}
+						}
+						
 						// Märgime dokumendi kustutatuks
 						doc.setDeleted(true);
 						saveDocument = true;

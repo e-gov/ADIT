@@ -9,7 +9,7 @@
 	<url>http://maven.apache.org</url>
 
 	<properties>
-		<baseDir>C:\development\adit\adit</baseDir>
+		<baseDir>C:\projektid\adit\adit</baseDir>
 	</properties>
 
 	<dependencies>
@@ -157,9 +157,9 @@
 		<dependency>
 			<groupId>java</groupId>
 			<artifactId>ojdbc</artifactId>
-			<version>1.4</version>
+			<version>1.6</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}/lib/ojdbc14.jar</systemPath>
+			<systemPath>${baseDir}/lib/ojdbc6.jar</systemPath>
 		</dependency>
 		
 		<!-- Codec -->

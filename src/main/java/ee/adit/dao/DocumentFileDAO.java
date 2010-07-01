@@ -13,7 +13,7 @@ import ee.adit.dao.pojo.DocumentFileDeflateResult;
 public class DocumentFileDAO extends AbstractAditDAO {
 	private static Logger LOG = Logger.getLogger(DocumentFileDAO.class);
 	
-	public boolean deflateDocumentFile(final long documentId, final long fileId, final boolean markDeleted) {
+	public String deflateDocumentFile(final long documentId, final long fileId, final boolean markDeleted) {
 		LOG.debug("deflateDocumentFile starting...");
 		DocumentFileDeflateResult result = (DocumentFileDeflateResult) getHibernateTemplate().execute(new HibernateCallback() {
             public Object doInHibernate(Session session) throws HibernateException, SQLException
@@ -28,6 +28,8 @@ public class DocumentFileDAO extends AbstractAditDAO {
             }
         }); 
 		
-		return result.getSuccess();
+		LOG.debug("File deflation result code is: " + result.getResultCode());
+		
+		return result.getResultCode();
 	}	
 }

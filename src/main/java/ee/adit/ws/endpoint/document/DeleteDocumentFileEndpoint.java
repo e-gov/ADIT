@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.DocumentHistory;
+import ee.adit.dao.pojo.DocumentType;
 import ee.adit.exception.AditException;
 import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.DeleteDocumentFileRequest;
@@ -99,42 +100,34 @@ public class DeleteDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 			
 			// Kontrollime, kas ID-le vastav dokument on olemas
 			if (doc != null) {
-				boolean saveDocument = false;
-				
 				// Kontrollime, kas dokument kuulub päringu käivitanud kasutajale
 				if (doc.getCreatorCode().equalsIgnoreCase(userCode)) {
-					// Kontrollime, ega dokument ei ole juba tühjendatud.
-					if (!doc.getDeflated()) {
-						// TODO: Failide sisu asendamine failide MD5 räsikoodiga
+					String resultCode = this.documentService.deflateDocumentFile(request.getDocumentId(), request.getFileId(), true);
+					if (resultCode.equalsIgnoreCase("ok")) {
+						// Lisame ajaloosündmuse
+						DocumentHistory historyEvent = new DocumentHistory();
+						historyEvent.setRemoteApplicationName(applicationName);
+						historyEvent.setDocumentId(doc.getId());
+						historyEvent.setDocumentHistoryType(DocumentService.HistoryType_DeleteFile);
+						historyEvent.setEventDate(new Date());
+						historyEvent.setUserCode(userCode);
+						doc.getDocumentHistories().add(historyEvent);
 						
-						// Märgime dokumendi tühjendatuks ja lukustatuks
-						doc.setDeflated(true);
-						doc.setDeflateDate(new Date());
-						doc.setLocked(true);
-						doc.setLockingDate(new Date());
-						saveDocument = true;
-					} else {
-						String errorMessage = this.getMessageSource().getMessage("request.deflateDocument.document.alreadyDeflated", new Object[] { request.getDocumentId() }, Locale.ENGLISH);
+						// Salvestame tehtud muudatused
+						this.documentService.getDocumentDAO().save(doc, null);
+					} else if (resultCode.equalsIgnoreCase("already_deleted")) {
+						String errorMessage = this.getMessageSource().getMessage("file.alreadyDeleted", new Object[] { request.getFileId() }, Locale.ENGLISH);
+						throw new AditException(errorMessage);
+					} else if (resultCode.equalsIgnoreCase("file_does_not_exist")) {
+						String errorMessage = this.getMessageSource().getMessage("file.nonExistent", new Object[] { request.getFileId() }, Locale.ENGLISH);
+						throw new AditException(errorMessage);
+					} else if (resultCode.equalsIgnoreCase("file_does_not_belong_to_document")) {
+						String errorMessage = this.getMessageSource().getMessage("file.doesNotBelongToDocument", new Object[] { request.getFileId(), request.getDocumentId() }, Locale.ENGLISH);
 						throw new AditException(errorMessage);
 					}
 				} else {
 					String errorMessage = this.getMessageSource().getMessage("document.doesNotBelongToUser", new Object[] { request.getDocumentId(), userCode }, Locale.ENGLISH);
 					throw new AditException(errorMessage);
-				}
-				
-				// Salvestame dokumendi
-				if (saveDocument) {
-					// Lisame kustutamise ajaloosündmuse
-					DocumentHistory historyEvent = new DocumentHistory();
-					historyEvent.setRemoteApplicationName(applicationName);
-					historyEvent.setDocumentId(doc.getId());
-					historyEvent.setDocumentHistoryType(DocumentService.HistoryType_DeleteFile);
-					historyEvent.setEventDate(new Date());
-					historyEvent.setUserCode(userCode);
-					doc.getDocumentHistories().add(historyEvent);
-					
-					// Salvestame tehtud muudatused
-					this.documentService.getDocumentDAO().save(doc, null);
 				}
 			} else {
 				String errorMessage = this.getMessageSource().getMessage("document.nonExistent", new Object[] { request.getDocumentId() }, Locale.ENGLISH);

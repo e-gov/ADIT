@@ -2,21 +2,20 @@ package ee.adit.dao.pojo;
 
 public class DocumentFileDeflateResult implements java.io.Serializable {
 	private static final long serialVersionUID = -1723731077807470907L;
-	private Boolean success;
+	private String resultCode;
 
 	public DocumentFileDeflateResult() {
 	}
 
-	public DocumentFileDeflateResult(Boolean success) {
-		this.success = success;
+	public DocumentFileDeflateResult(String resultCode) {
+		this.resultCode = resultCode;
 	}
 
-	public Boolean getSuccess() {
-		return this.success;
+	public String getResultCode() {
+		return this.resultCode;
 	}
 
-	public void setSuccess(Boolean success) {
-		this.success = success;
+	public void setResultCode(String resultCode) {
+		this.resultCode = resultCode;
 	}
-
 }
