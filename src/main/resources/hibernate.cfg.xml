@@ -37,7 +37,7 @@
 		<mapping resource="Signature.hbm.xml"/>
 		<mapping resource="AditUser.hbm.xml"/>
 		<mapping resource="Usertype.hbm.xml"/>
-		
+		<mapping resource="DocumentFileDeflateResult.hbm.xml"/>
 		
     </session-factory>
 </hibernate-configuration>

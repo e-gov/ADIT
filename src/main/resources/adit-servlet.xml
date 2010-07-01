@@ -210,6 +210,7 @@
 		<property name="messageSource" ref="messageSource"/>
 		<property name="documentTypeDAO" ref="documentTypeDAO"/>
 		<property name="documentDAO" ref="documentDAO"/>
+		<property name="documentFileDAO" ref="documentFileDAO"/>
 	</bean>
 
 	<bean id="myDataSource"
@@ -229,6 +230,7 @@
 				<value>classpath:hbm/Document.hbm.xml</value>
 				<value>classpath:hbm/DocumentSharing.hbm.xml</value>
 				<value>classpath:hbm/DocumentFile.hbm.xml</value>
+				<value>classpath:hbm/DocumentFileDeflateResult.hbm.xml</value>
 				<value>classpath:hbm/DocumentHistory.hbm.xml</value>
 				<value>classpath:hbm/DocumentWfStatus.hbm.xml</value>
 				<value>classpath:hbm/DocumentDvkStatus.hbm.xml</value>
@@ -263,6 +265,10 @@
 	<bean id="documentDAO" class="ee.adit.dao.DocumentDAO">
 		<property name="sessionFactory" ref="mySessionFactory" />
 	</bean>	
+
+	<bean id="documentFileDAO" class="ee.adit.dao.DocumentFileDAO">
+		<property name="sessionFactory" ref="mySessionFactory" />
+	</bean>
 
 	<bean id="accessRestrictionDAO" class="ee.adit.dao.AccessRestrictionDAO">
 		<property name="sessionFactory" ref="mySessionFactory" />

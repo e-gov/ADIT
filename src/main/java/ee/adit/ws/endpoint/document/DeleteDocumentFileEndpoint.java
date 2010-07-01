@@ -116,7 +116,7 @@ public class DeleteDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 						// Salvestame tehtud muudatused
 						this.documentService.getDocumentDAO().save(doc, null);
 					} else if (resultCode.equalsIgnoreCase("already_deleted")) {
-						String errorMessage = this.getMessageSource().getMessage("file.alreadyDeleted", new Object[] { request.getFileId() }, Locale.ENGLISH);
+						String errorMessage = this.getMessageSource().getMessage("file.isDeleted", new Object[] { request.getFileId() }, Locale.ENGLISH);
 						throw new AditException(errorMessage);
 					} else if (resultCode.equalsIgnoreCase("file_does_not_exist")) {
 						String errorMessage = this.getMessageSource().getMessage("file.nonExistent", new Object[] { request.getFileId() }, Locale.ENGLISH);
@@ -136,7 +136,7 @@ public class DeleteDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 			
 			// Set response messages
 			response.setSuccess(new Success(true));
-			messages.addMessage(this.getMessageSource().getMessage("request.deflateDocument.success", new Object[] { }, Locale.ENGLISH));
+			messages.addMessage(this.getMessageSource().getMessage("request.deleteDocumentFile.success", new Object[] { }, Locale.ENGLISH));
 			response.setMessages(messages);
 		} catch (Exception e) {
 			LOG.error("Exception: ", e);

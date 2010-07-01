@@ -31,7 +31,8 @@ begin
                 if (item_count > 0) then
                     -- Calculate MD5 hash
                     update	document_file
-                    set		  file_data = dbms_crypto.hash(file_data, 2)
+                    set		  file_data = dbms_crypto.hash(nvl(file_data, empty_blob()), 2),
+                            deleted = (case when DEFLATE_FILE.mark_deleted = 1 then 1 else document_file.deleted end)
                     where   id = DEFLATE_FILE.file_id;
                     
                     open result_rc for
