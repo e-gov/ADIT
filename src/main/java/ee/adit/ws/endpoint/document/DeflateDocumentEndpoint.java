@@ -184,7 +184,7 @@ public class DeflateDocumentEndpoint extends AbstractAditBaseEndpoint {
 		String errorMessage = null; 
 		if(request != null) {
 			if(request.getDocumentId() <= 0) {
-				errorMessage = this.getMessageSource().getMessage("request.body.undefined.documentid", new Object[] {}, Locale.ENGLISH);
+				errorMessage = this.getMessageSource().getMessage("request.body.undefined.documentId", new Object[] {}, Locale.ENGLISH);
 				throw new AditException(errorMessage);
 			}
 		} else {

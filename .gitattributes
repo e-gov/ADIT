@@ -61,6 +61,7 @@ src/main/java/ee/adit/dao/pojo/AditUser.java -text
 src/main/java/ee/adit/dao/pojo/Document.java -text
 src/main/java/ee/adit/dao/pojo/DocumentDvkStatus.java -text
 src/main/java/ee/adit/dao/pojo/DocumentFile.java -text
+src/main/java/ee/adit/dao/pojo/DocumentFileDeflateResult.java -text
 src/main/java/ee/adit/dao/pojo/DocumentHistory.java -text
 src/main/java/ee/adit/dao/pojo/DocumentHistoryType.java -text
 src/main/java/ee/adit/dao/pojo/DocumentSharing.java -text
@@ -83,6 +84,8 @@ src/main/java/ee/adit/exception/AditInternalException.java -text
 src/main/java/ee/adit/pojo/ArrayOfMessage.java -text
 src/main/java/ee/adit/pojo/DeflateDocumentRequest.java -text
 src/main/java/ee/adit/pojo/DeflateDocumentResponse.java -text
+src/main/java/ee/adit/pojo/DeleteDocumentFileRequest.java -text
+src/main/java/ee/adit/pojo/DeleteDocumentFileResponse.java -text
 src/main/java/ee/adit/pojo/DeleteDocumentRequest.java -text
 src/main/java/ee/adit/pojo/DeleteDocumentResponse.java -text
 src/main/java/ee/adit/pojo/GetDocumentRequest.java -text

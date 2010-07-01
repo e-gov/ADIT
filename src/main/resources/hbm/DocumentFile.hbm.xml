@@ -26,5 +26,11 @@
         <property name="fileSizeBytes" type="big_decimal">
             <column name="FILE_SIZE_BYTES" precision="38" scale="0" />
         </property>
+		<sql-query name="DEFLATE_FILE" callable="true">
+			<return class="ee.adit.dao.pojo.DocumentFileDeflateResult">
+				<return-property name="success" column="success" />
+			</return>
+		  	{ call DEFLATE_FILE(?, :documentId , :fileId, :markDeleted) }
+		 </sql-query>
     </class>
 </hibernate-mapping>
