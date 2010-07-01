@@ -191,6 +191,7 @@ CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_FILE
 	description      VARCHAR2(4000),    /* Faili kirjeldus. */
 	file_data        BLOB,    /* Faili sisu binaarkujul */
 	file_size_bytes  NUMBER(38)    /* Faili suurus baitides */
+	deleted          NUMBER(1) DEFAULT 0 /* Kas antud fail on kustutatud */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
 COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_FILE IS 'Dokumendi juurde kuuluvate failide andmed.';
@@ -201,6 +202,7 @@ COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.content_type     IS 'Faili MIME t
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.description      IS 'Faili kirjeldus.';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.file_data        IS 'Faili sisu binaarkujul';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.file_size_bytes  IS 'Faili suurus baitides';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.deleted          IS 'Kas antud fail on kustutatud';
 
 CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_HISTORY
 (
