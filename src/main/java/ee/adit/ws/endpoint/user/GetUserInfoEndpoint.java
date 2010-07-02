@@ -26,6 +26,7 @@ import ee.adit.pojo.GetUserInfoRequestAttachmentUserList;
 import ee.adit.pojo.GetUserInfoResponse;
 import ee.adit.pojo.GetUserInfoResponseAttachment;
 import ee.adit.pojo.GetUserInfoResponseAttachmentUser;
+import ee.adit.pojo.Message;
 import ee.adit.pojo.Success;
 import ee.adit.pojo.UserList;
 import ee.adit.service.UserService;
@@ -144,9 +145,9 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 			
 			if(e instanceof AditException) {
 				LOG.debug("Adding exception message to response object.");
-				arrayOfMessage.getMessage().add(e.getMessage());
+				arrayOfMessage.getMessage().add(new Message("en", e.getMessage()));
 			} else {
-				arrayOfMessage.getMessage().add("Service error");
+				arrayOfMessage.getMessage().add(new Message("en", "Service error"));
 			}
 			
 			LOG.debug("Adding exception messages to response object.");

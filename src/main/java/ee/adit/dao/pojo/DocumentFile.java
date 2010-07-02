@@ -16,7 +16,7 @@ public class DocumentFile implements java.io.Serializable {
 	private String contentType;
 	private String description;
 	private Blob fileData;
-	private BigDecimal fileSizeBytes;
+	private Long fileSizeBytes;
 
 	public DocumentFile() {
 	}
@@ -29,7 +29,7 @@ public class DocumentFile implements java.io.Serializable {
 
 	public DocumentFile(long id, Document document, String fileName,
 			String contentType, String description, Blob fileData,
-			BigDecimal fileSizeBytes) {
+			Long fileSizeBytes) {
 		this.id = id;
 		this.document = document;
 		this.fileName = fileName;
@@ -87,11 +87,11 @@ public class DocumentFile implements java.io.Serializable {
 		this.fileData = fileData;
 	}
 
-	public BigDecimal getFileSizeBytes() {
+	public Long getFileSizeBytes() {
 		return this.fileSizeBytes;
 	}
 
-	public void setFileSizeBytes(BigDecimal fileSizeBytes) {
+	public void setFileSizeBytes(Long fileSizeBytes) {
 		this.fileSizeBytes = fileSizeBytes;
 	}
 

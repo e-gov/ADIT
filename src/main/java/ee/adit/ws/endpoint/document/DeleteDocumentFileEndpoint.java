@@ -14,6 +14,7 @@ import ee.adit.exception.AditException;
 import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.DeleteDocumentFileRequest;
 import ee.adit.pojo.DeleteDocumentFileResponse;
+import ee.adit.pojo.Message;
 import ee.adit.pojo.Success;
 import ee.adit.service.DocumentService;
 import ee.adit.service.UserService;
@@ -136,7 +137,7 @@ public class DeleteDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 			
 			// Set response messages
 			response.setSuccess(new Success(true));
-			messages.addMessage(this.getMessageSource().getMessage("request.deleteDocumentFile.success", new Object[] { }, Locale.ENGLISH));
+			messages.addMessage(new Message("en", this.getMessageSource().getMessage("request.deleteDocumentFile.success", new Object[] { }, Locale.ENGLISH)));
 			response.setMessages(messages);
 		} catch (Exception e) {
 			LOG.error("Exception: ", e);
@@ -145,9 +146,9 @@ public class DeleteDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 			
 			if(e instanceof AditException) {
 				LOG.debug("Adding exception message to response object.");
-				arrayOfMessage.getMessage().add(e.getMessage());
+				arrayOfMessage.getMessage().add(new Message("en", e.getMessage()));
 			} else {
-				arrayOfMessage.getMessage().add("Service error");
+				arrayOfMessage.getMessage().add(new Message("en", "Service error"));
 			}
 			
 			LOG.debug("Adding exception messages to response object.");

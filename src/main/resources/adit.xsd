@@ -20,6 +20,8 @@
 	<element name="GetJoinedRequest" type="tns:GetJoinedRequest"/>
 	<element name="GetJoinedResponse" type="tns:GetJoinedResponse"/>
 	
+	<element name="GetDocumentFileRequest" type="tns:GetDocumentFileRequest"/>
+	<element name="GetDocumentFileResponse" type="tns:GetDocumentFileResponse"/>
 	<element name="SaveDocumentRequest" type="tns:SaveDocumentRequest"/>
 	<element name="SaveDocumentResponse" type="tns:SaveDocumentResponse"/>
 	<element name="DeleteDocumentFileRequest" type="tns:DeleteDocumentFileRequest"/>
@@ -29,9 +31,23 @@
 	<element name="DeleteDocumentRequest" type="tns:DeleteDocumentRequest"/>
 	<element name="DeleteDocumentResponse" type="tns:DeleteDocumentResponse"/>
 	
+	<complexType name="Message">
+		<simpleContent>
+			<extension base="string">
+				<attribute name="lang" type="string" /> 
+			</extension>
+		</simpleContent>
+	</complexType>
+
 	<complexType name="ArrayOfMessage">
 		<sequence>
-			<element name="message"	type="string" maxOccurs="unbounded"	minOccurs="0"></element>
+			<element name="message"	type="tns:Message" maxOccurs="unbounded" minOccurs="0"></element>
+		</sequence>
+	</complexType>
+	
+	<complexType name="ArrayOfFileId">
+		<sequence>
+			<element name="file_id"	type="integer" maxOccurs="unbounded" minOccurs="0"></element>
 		</sequence>
 	</complexType>
 	
@@ -97,6 +113,25 @@
 			<element name="success" type="boolean"></element>
 			<element name="messages" type="tns:ArrayOfMessage"></element>
 			<element name="userList" type="base64Binary"></element>
+		</sequence>
+	</complexType>
+	
+	<!-- getDocumentFile päringu tüübid -->
+	<complexType name="GetDocumentFileRequest">
+		<sequence>
+			<element name="document_id" type="integer"></element>
+			<element name="file_id_list" type="tns:ArrayOfFileId"></element>
+		</sequence>
+	</complexType>
+	<complexType name="GetDocumentFileResponse">
+		<sequence>
+			<element name="success" type="boolean"></element>
+			<element name="messages" type="tns:ArrayOfMessage"></element>
+			<element name="files">
+				<complexType>
+					<attribute name="href" type="string"/>
+				</complexType>
+			</element>
 		</sequence>
 	</complexType>
 	

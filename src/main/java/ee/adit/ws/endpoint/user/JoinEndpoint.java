@@ -12,6 +12,7 @@ import ee.adit.exception.AditException;
 import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.JoinRequest;
 import ee.adit.pojo.JoinResponse;
+import ee.adit.pojo.Message;
 import ee.adit.pojo.Success;
 import ee.adit.service.UserService;
 import ee.adit.util.CustomXTeeHeader;
@@ -50,7 +51,7 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 			// Check request body
 			checkRequest(request);
 			
-			// Kontrollime, kas päringu käivitanud infosüsteem on ADITis registreeritud
+			// Kontrollime, kas pï¿½ringu kï¿½ivitanud infosï¿½steem on ADITis registreeritud
 			boolean applicationRegistered = this.getUserService().isApplicationRegistered(applicationName);
 
 			if (applicationRegistered) {
@@ -83,7 +84,7 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 								userService.modifyUser(aditUser, request.getUserName(), usertype);
 								response.setSuccess(new Success(true));
 								String message = this.getMessageSource().getMessage("request.join.success.userModified", new Object[] { request.getUserType() }, Locale.ENGLISH);
-								messages.addMessage(message);
+								messages.addMessage(new Message("en", message));
 							} else {
 								String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.forUser.write", new Object[] { applicationName, aditUser.getUserCode() }, Locale.ENGLISH);
 								throw new AditException(errorMessage);
@@ -95,7 +96,7 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 							userService.addUser(request.getUserName(), usertype, header.getAsutus(), header.getIsikukood());
 							response.setSuccess(new Success(true));
 							String message = this.getMessageSource().getMessage("request.join.success.userAdded", new Object[] { request.getUserType() }, Locale.ENGLISH);
-							messages.addMessage(message);
+							messages.addMessage(new Message("en", message));
 						}
 						
 					} else {
@@ -124,9 +125,9 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 			
 			if(e instanceof AditException) {
 				LOG.debug("Adding exception message to response object.");
-				arrayOfMessage.getMessage().add(e.getMessage());
+				arrayOfMessage.getMessage().add(new Message("en", e.getMessage()));
 			} else {
-				arrayOfMessage.getMessage().add("Service error");
+				arrayOfMessage.getMessage().add(new Message("en", "Service error"));
 			}
 			
 			LOG.debug("Adding exception messages to response object.");

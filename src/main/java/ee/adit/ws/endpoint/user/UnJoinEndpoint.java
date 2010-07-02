@@ -12,6 +12,7 @@ import ee.adit.exception.AditException;
 import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.JoinRequest;
 import ee.adit.pojo.JoinResponse;
+import ee.adit.pojo.Message;
 import ee.adit.pojo.Success;
 import ee.adit.pojo.UnJoinRequest;
 import ee.adit.pojo.UnJoinResponse;
@@ -72,7 +73,7 @@ public class UnJoinEndpoint extends AbstractAditBaseEndpoint {
 								this.getUserService().deactivateUser(aditUser);
 								
 								String message = this.getMessageSource().getMessage("request.unJoin.success", new Object[] { aditUser.getUserCode() }, Locale.ENGLISH);
-								messages.addMessage(message);
+								messages.addMessage(new Message("en", message));
 								response.setSuccess(new Success(true));
 								LOG.info("User (" + aditUser.getUserCode() + ") deactivated.");
 								
@@ -107,9 +108,9 @@ public class UnJoinEndpoint extends AbstractAditBaseEndpoint {
 			
 			if(e instanceof AditException) {
 				LOG.debug("Adding exception message to response object.");
-				arrayOfMessage.getMessage().add(e.getMessage());
+				arrayOfMessage.getMessage().add(new Message("en", e.getMessage()));
 			} else {
-				arrayOfMessage.getMessage().add("Service error");
+				arrayOfMessage.getMessage().add(new Message("en", "Service error"));
 			}
 			
 			LOG.debug("Adding exception messages to response object.");

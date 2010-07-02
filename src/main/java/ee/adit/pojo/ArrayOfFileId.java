@@ -12,20 +12,21 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for ArrayOfMessage complex type.
+ * <p>Java class for ArrayOfFileId complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="ArrayOfMessage">
+ * &lt;complexType name="ArrayOfFileId">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="message" type="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}Message" maxOccurs="unbounded" minOccurs="0"/>
+ *         &lt;element name="file_id" type="{http://www.w3.org/2001/XMLSchema}integer" maxOccurs="unbounded" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -35,50 +36,44 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "ArrayOfMessage", propOrder = {
-    "message"
+@XmlType(name = "ArrayOfFileId", propOrder = {
+    "fileId"
 })
-public class ArrayOfMessage {
+public class ArrayOfFileId {
 
-    protected List<Message> message;
+    @XmlElement(name = "file_id")
+    protected List<Long> fileId;
 
     /**
-     * Gets the value of the message property.
+     * Gets the value of the fileId property.
      * 
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the message property.
+     * This is why there is not a <CODE>set</CODE> method for the fileId property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
-     *    getMessage().add(newItem);
+     *    getFileId().add(newItem);
      * </pre>
      * 
      * 
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link Message }
+     * {@link long }
      * 
      * 
      */
-    public List<Message> getMessage() {
-        if (message == null) {
-            message = new ArrayList<Message>();
+    public List<Long> getFileId() {
+        if (fileId == null) {
+            fileId = new ArrayList<Long>();
         }
-        return this.message;
+        return this.fileId;
     }
-    
-    public void setMessage(List<Message> message) {
-    	this.message = message;
-    }
-    
-    public void addMessage(Message message) {
-    	if (this.message == null) {
-            this.message = new ArrayList<Message>();
-        }
-    	this.message.add(message);
+
+    public void setFileId(List<Long> fileId) {
+    	this.fileId = fileId;
     }
 }

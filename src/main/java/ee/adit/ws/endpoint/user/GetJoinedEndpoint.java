@@ -47,6 +47,7 @@ import ee.adit.pojo.GetJoinedRequest;
 import ee.adit.pojo.GetJoinedResponse;
 import ee.adit.pojo.GetJoinedResponseAttachment;
 import ee.adit.pojo.GetJoinedResponseAttachmentUser;
+import ee.adit.pojo.Message;
 import ee.adit.pojo.UserList;
 import ee.adit.pojo.JoinRequest;
 import ee.adit.pojo.JoinResponse;
@@ -141,9 +142,9 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 			
 			if(e instanceof AditException) {
 				LOG.debug("Adding exception message to response object.");
-				arrayOfMessage.getMessage().add(e.getMessage());
+				arrayOfMessage.getMessage().add(new Message("en", e.getMessage()));
 			} else {
-				arrayOfMessage.getMessage().add("Service error");
+				arrayOfMessage.getMessage().add(new Message("en", "Service error"));
 			}
 			
 			LOG.debug("Adding exception messages to response object.");

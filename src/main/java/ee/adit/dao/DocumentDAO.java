@@ -42,8 +42,8 @@ public class DocumentDAO extends AbstractAditDAO {
 		
 		long result = 0;
 		for(DocumentFile docFile : userFiles) {
-			BigDecimal fileSize = docFile.getFileSizeBytes();
-			result += fileSize.longValue();
+			long fileSize = docFile.getFileSizeBytes();
+			result += fileSize;
 		}
 		
 		return result;
@@ -135,7 +135,7 @@ public class DocumentDAO extends AbstractAditDAO {
 						documentFile.setContentType(attachmentFile.getContentType());
 						documentFile.setDescription(attachmentFile.getDescription());
 						documentFile.setFileName(fileName);
-						documentFile.setFileSizeBytes(new BigDecimal(length));
+						documentFile.setFileSizeBytes(length);
 						documentFile.setDocument(document);
 						documentFiles.add(documentFile);
 					}
