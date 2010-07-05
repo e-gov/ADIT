@@ -5,12 +5,13 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.hibernate.SessionFactory;
 import org.springframework.orm.hibernate3.HibernateTemplate;
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Usertype;
 import ee.adit.exception.AditInternalException;
 
-public class UsertypeDAO extends AbstractAditDAO {
+public class UsertypeDAO extends HibernateDaoSupport {
 
 	private static Logger LOG = Logger.getLogger(RemoteApplicationDAO.class);
 	

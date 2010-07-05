@@ -256,6 +256,10 @@
 		</property>
 	</bean>
 
+    <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+        <property name="sessionFactory" ref="mySessionFactory" />
+    </bean>
+
 	<bean id="remoteApplicationDAO" class="ee.adit.dao.RemoteApplicationDAO">
 		<property name="sessionFactory" ref="mySessionFactory" />
 	</bean>

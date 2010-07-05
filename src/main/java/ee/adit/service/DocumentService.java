@@ -228,8 +228,6 @@ public class DocumentService {
 		
 		
 		
-		
-		
 		return this.getDocumentDAO().save(document, attachmentDocument.getFiles());
 	}
 	

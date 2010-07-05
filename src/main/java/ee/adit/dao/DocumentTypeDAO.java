@@ -4,10 +4,11 @@ import java.util.Collection;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import ee.adit.dao.pojo.DocumentType;
 
-public class DocumentTypeDAO extends AbstractAditDAO {
+public class DocumentTypeDAO extends HibernateDaoSupport {
 	
 	private static Logger LOG = Logger.getLogger(DocumentTypeDAO.class);
 	

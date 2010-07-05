@@ -7,10 +7,11 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.orm.hibernate3.HibernateCallback;
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import ee.adit.dao.pojo.DocumentFileDeflateResult;
 
-public class DocumentFileDAO extends AbstractAditDAO {
+public class DocumentFileDAO extends HibernateDaoSupport {
 	private static Logger LOG = Logger.getLogger(DocumentFileDAO.class);
 	
 	public String deflateDocumentFile(final long documentId, final long fileId, final boolean markDeleted) {

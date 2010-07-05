@@ -97,6 +97,7 @@ public class UserService {
 		int result = 2;
 		
 		RemoteApplication remoteApplication = this.getRemoteApplicationDAO().getByShortName(remoteApplicationShortName);
+		this.getAccessRestrictionDAO().setSessionFactory(this.getRemoteApplicationDAO().getSessionFactory());
 		List<AccessRestriction> accessRestrictons = this.getAccessRestrictionDAO().getAccessRestrictionsForUser(aditUser);
 		LOG.debug("Number of access restrictions for (" + aditUser.getUserCode() + "): " + accessRestrictons.size());
 		Iterator<AccessRestriction> i = accessRestrictons.iterator();

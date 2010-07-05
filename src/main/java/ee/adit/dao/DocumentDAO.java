@@ -21,12 +21,13 @@ import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.springframework.orm.hibernate3.HibernateCallback;
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.DocumentFile;
 import ee.adit.pojo.SaveDocumentRequestAttachmentFile;
 
-public class DocumentDAO extends AbstractAditDAO {
+public class DocumentDAO extends HibernateDaoSupport {
 
 	private static Logger LOG = Logger.getLogger(DocumentDAO.class);
 	
@@ -134,7 +135,7 @@ public class DocumentDAO extends AbstractAditDAO {
 						documentFile.setFileData(fileData);
 						documentFile.setContentType(attachmentFile.getContentType());
 						documentFile.setDescription(attachmentFile.getDescription());
-						documentFile.setFileName(fileName);
+						documentFile.setFileName(attachmentFile.getName());
 						documentFile.setFileSizeBytes(length);
 						documentFile.setDocument(document);
 						documentFiles.add(documentFile);

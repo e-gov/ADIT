@@ -92,15 +92,10 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 			}
 
 			// Kontrollime, kas päringus märgitud isik on teenuse kasutaja
-			String userCode = ((this.getHeader().getAllasutus() != null) && (this
-					.getHeader().getAllasutus().length() > 0)) ? this
-					.getHeader().getAllasutus() : this.getHeader()
-					.getIsikukood();
+			String userCode = ((this.getHeader().getAllasutus() != null) && (this.getHeader().getAllasutus().length() > 0)) ? this.getHeader().getAllasutus() : this.getHeader().getIsikukood();
 			AditUser user = this.getUserService().getUserByID(userCode);
 			if (user == null) {
-				String errorMessage = this.getMessageSource().getMessage(
-						"user.nonExistent", new Object[] { userCode },
-						Locale.ENGLISH);
+				String errorMessage = this.getMessageSource().getMessage("user.nonExistent", new Object[] { userCode },	Locale.ENGLISH);
 				throw new AditException(errorMessage);
 			}
 

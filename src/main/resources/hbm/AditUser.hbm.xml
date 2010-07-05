@@ -8,7 +8,7 @@
             <column name="USER_CODE" length="50" />
             <generator class="assigned" />
         </id>
-        <many-to-one name="usertype" class="ee.adit.dao.pojo.Usertype" fetch="select">
+        <many-to-one name="usertype" class="ee.adit.dao.pojo.Usertype" fetch="select" lazy="false">
             <column name="USERTYPE" length="50" not-null="true" />
         </many-to-one>
         <property name="fullName" type="string">

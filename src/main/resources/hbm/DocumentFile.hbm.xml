@@ -6,7 +6,9 @@
     <class name="ee.adit.dao.pojo.DocumentFile" table="DOCUMENT_FILE" schema="ADIT">
         <id name="id" type="long">
             <column name="ID" precision="12" scale="0" />
-            <generator class="assigned" />
+            <generator class="sequence">
+            	<param name="sequence">document_file_id_seq</param>
+            </generator>
         </id>
         <many-to-one name="document" class="ee.adit.dao.pojo.Document" fetch="select">
             <column name="DOCUMENT_ID" precision="12" scale="0" not-null="true" />
@@ -23,7 +25,7 @@
         <property name="fileData" type="blob">
             <column name="FILE_DATA" />
         </property>
-        <property name="fileSizeBytes" type="big_decimal">
+        <property name="fileSizeBytes" type="long">
             <column name="FILE_SIZE_BYTES" precision="38" scale="0" />
         </property>
     </class>

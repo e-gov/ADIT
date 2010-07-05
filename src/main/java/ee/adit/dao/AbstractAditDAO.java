@@ -2,10 +2,11 @@ package ee.adit.dao;
 
 import org.hibernate.SessionFactory;
 import org.springframework.orm.hibernate3.HibernateTemplate;
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
-public class AbstractAditDAO {
+public class AbstractAditDAO extends HibernateDaoSupport {
 
-	private HibernateTemplate hibernateTemplate;
+	/*private HibernateTemplate hibernateTemplate;
 
 	private SessionFactory sessionFactory;
 	
@@ -24,6 +25,6 @@ public class AbstractAditDAO {
 	
 	public void setHibernateTemplate(HibernateTemplate hibernateTemplate) {
 		this.hibernateTemplate = hibernateTemplate;
-	}
+	}*/
 	
 }

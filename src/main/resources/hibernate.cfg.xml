@@ -14,6 +14,7 @@
 		<property name="use_outer_join">false</property>
 		<property name="hibernate.cache.use_second_level_cache">false</property>
 		<property name="cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
+		<property name="current_session_context_class">thread</property> 
 		<property name="hibernate.c3p0.min_size">5</property>
 		<property name="hibernate.c3p0.max_size">20</property>
 		<property name="hibernate.c3p0.timeout">1800</property>

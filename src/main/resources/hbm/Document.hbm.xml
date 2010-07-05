@@ -6,7 +6,9 @@
     <class name="ee.adit.dao.pojo.Document" table="DOCUMENT" schema="ADIT">
         <id name="id" type="long">
             <column name="ID" precision="12" scale="0" />
-            <generator class="assigned" />
+            <generator class="sequence">
+            	<param name="sequence">document_id_seq</param>
+            </generator>
         </id>
         <many-to-one name="documentType" class="ee.adit.dao.pojo.DocumentType" fetch="select">
             <column name="TYPE" length="50" not-null="true" />
