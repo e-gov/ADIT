@@ -1,6 +1,7 @@
 package ee.adit.ws.endpoint.document;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
+import ee.adit.dao.pojo.DocumentHistory;
 import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.exception.AditException;
 import ee.adit.pojo.ArrayOfMessage;
@@ -109,55 +111,107 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 
 			// Kontrollime, kas ID-le vastav dokument on olemas
 			if (doc != null) {
-				// Dokumendi faile saab alla laadida, kui dokument:
-				// a) kuulub päringu käivitanud kasutajale
-				// b) on päringu käivitanud kasutajale välja jagatud
-				boolean userIsDocOwner = false;
-				if (doc.getCreatorCode().equalsIgnoreCase(userCode)) {
-					userIsDocOwner = true;
-				} else {
-					if ((doc.getDocumentSharings() != null) && (!doc.getDocumentSharings().isEmpty())) {
-						Iterator it = doc.getDocumentSharings().iterator();
-						while (it.hasNext()) {
-							DocumentSharing sharing = (DocumentSharing)it.next();
-							if (sharing.getUserCode().equalsIgnoreCase(userCode)) {
-								userIsDocOwner = true;
-								break;
+				if ((doc.getDeleted() == null) || (!doc.getDeleted())) {
+					if ((doc.getDeflated() == null) || (!doc.getDeflated())) {
+						boolean saveDocument = false;
+						
+						// Dokumendi faile saab alla laadida, kui dokument:
+						// a) kuulub päringu käivitanud kasutajale
+						// b) on päringu käivitanud kasutajale välja jagatud
+						boolean userIsDocOwner = false;
+						if (doc.getCreatorCode().equalsIgnoreCase(userCode)) {
+							userIsDocOwner = true;
+						} else {
+							if ((doc.getDocumentSharings() != null) && (!doc.getDocumentSharings().isEmpty())) {
+								Iterator it = doc.getDocumentSharings().iterator();
+								while (it.hasNext()) {
+									DocumentSharing sharing = (DocumentSharing)it.next();
+									if (sharing.getUserCode().equalsIgnoreCase(userCode)) {
+										userIsDocOwner = true;
+										
+										if (sharing.getLastAccessDate() == null) {
+											sharing.setLastAccessDate(new Date());
+											saveDocument = true;
+										}
+										
+										break;
+									}
+								}
 							}
 						}
-					}
-				}
-				
-				// Kui kasutaja tohib dokumendile ligi pääseda, siis tagastame failid
-				if (userIsDocOwner) {
-					List<GetDocumentFileResponseAttachmentFile> docFiles = this.documentService.getDocumentDAO().getDocumentFiles(
-							doc.getId(),
-							request.getFileIdList().getFileId(),
-							this.getConfiguration().getTempDir(),
-							this.getMessageSource().getMessage("files.nonExistentOrDeleted", new Object[] { }, Locale.ENGLISH));
-					
-					if ((docFiles != null) && (docFiles.size() > 0)) {
-						LOG.debug("Document has " + docFiles.size()  + " files.");
 						
-						// 1. Convert java list to XML string and output to file
-						String xmlFile = outputToFile(docFiles);
-						
-						// 2. GZip and Base64 encode the temporary file
-						String gzipFileName = Util.gzipAndBase64Encode(xmlFile, this.getConfiguration().getTempDir(), this.getConfiguration().getDeleteTemporaryFilesAsBoolean());
-
-						// 3. Add as an attachment
-						String contentID = addAttachment(gzipFileName);
-						GetDocumentFileResponseFiles files = new GetDocumentFileResponseFiles();
-						files.setHref("cid:" + contentID);
-						response.setFiles(files);
+						// Kui kasutaja tohib dokumendile ligi pääseda, siis tagastame failid
+						if (userIsDocOwner) {
+							List<GetDocumentFileResponseAttachmentFile> docFiles = this.documentService.getDocumentDAO().getDocumentFiles(
+									doc.getId(),
+									request.getFileIdList().getFileId(),
+									this.getConfiguration().getTempDir(),
+									this.getMessageSource().getMessage("files.nonExistentOrDeleted", new Object[] { }, Locale.ENGLISH));
+							
+							if ((docFiles != null) && (docFiles.size() > 0)) {
+								LOG.debug("Document has " + docFiles.size()  + " files.");
+								
+								// 1. Convert java list to XML string and output to file
+								String xmlFile = outputToFile(docFiles);
+								
+								// 2. GZip and Base64 encode the temporary file
+								String gzipFileName = Util.gzipAndBase64Encode(xmlFile, this.getConfiguration().getTempDir(), this.getConfiguration().getDeleteTemporaryFilesAsBoolean());
+		
+								// 3. Add as an attachment
+								String contentID = addAttachment(gzipFileName);
+								GetDocumentFileResponseFiles files = new GetDocumentFileResponseFiles();
+								files.setHref("cid:" + contentID);
+								response.setFiles(files);
+								
+								// If document has not been viewed by current user before then mark it viewed.
+								boolean isViewed = false;
+								if ((doc.getDocumentHistories() != null) && (!doc.getDocumentHistories().isEmpty())) {
+									Iterator it = doc.getDocumentHistories().iterator();
+									while (it.hasNext()) {
+										DocumentHistory event = (DocumentHistory)it.next();
+										if (event.getDocumentHistoryType().equalsIgnoreCase(DocumentService.HistoryType_MarkViewed)
+											&& event.getUserCode().equalsIgnoreCase(userCode)) {
+											isViewed = true;
+											break;
+										}
+									}
+								}
+								
+								if (!isViewed) {
+									// Add first viewing history event
+									DocumentHistory historyEvent = new DocumentHistory();
+									historyEvent.setRemoteApplicationName(applicationName);
+									historyEvent.setDocumentId(doc.getId());
+									historyEvent.setDocumentHistoryType(DocumentService.HistoryType_MarkViewed);
+									historyEvent.setEventDate(new Date());
+									historyEvent.setUserCode(userCode);
+									doc.getDocumentHistories().add(historyEvent);
+									saveDocument = true;
+								}
+								
+								if (saveDocument) {
+									this.documentService.getDocumentDAO().save(doc, null);
+								}
+							} else {
+								LOG.debug("Document has no files!");
+							}
+						} else {
+							LOG.debug("Requested document does not belong to user. Document ID: " + request.getDocumentId() + ", User ID: " + userCode);
+							String errorMessage = this.getMessageSource().getMessage("document.doesNotBelongToUser", new Object[] { request.getDocumentId(), userCode }, Locale.ENGLISH);
+							throw new AditException(errorMessage);
+						}
 					} else {
-						LOG.debug("Document has no files!");
-					}					
+						LOG.debug("Requested document is deflated. Document ID: " + request.getDocumentId());
+						String errorMessage = this.getMessageSource().getMessage("request.getDocumentFile.document.deflated", new Object[] { request.getDocumentId() },	Locale.ENGLISH);
+						throw new AditException(errorMessage);
+					}
 				} else {
-					String errorMessage = this.getMessageSource().getMessage("document.doesNotBelongToUser", new Object[] { request.getDocumentId(), userCode }, Locale.ENGLISH);
+					LOG.debug("Requested document is deleted. Document ID: " + request.getDocumentId());
+					String errorMessage = this.getMessageSource().getMessage("document.nonExistent", new Object[] { request.getDocumentId() },	Locale.ENGLISH);
 					throw new AditException(errorMessage);
 				}
 			} else {
+				LOG.debug("Requested document does not exist. Document ID: " + request.getDocumentId());
 				String errorMessage = this.getMessageSource().getMessage("document.nonExistent", new Object[] { request.getDocumentId() },	Locale.ENGLISH);
 				throw new AditException(errorMessage);
 			}

@@ -17,6 +17,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.springframework.dao.DataAccessException;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
@@ -56,7 +57,7 @@ public class DocumentDAO extends HibernateDaoSupport {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<GetDocumentFileResponseAttachmentFile> getDocumentFiles(final long documentId, final List<Long> fileIdList, final String temporaryFilesDir, final String filesNotFoundMessageBase) {
+	public List<GetDocumentFileResponseAttachmentFile> getDocumentFiles(final long documentId, final List<Long> fileIdList, final String temporaryFilesDir, final String filesNotFoundMessageBase) throws Exception {
 		if (documentId <= 0) {
 			throw new IllegalArgumentException("Document ID must be a positive integer. Currently supplied ID was " + documentId + ".");
 		}
@@ -93,7 +94,7 @@ public class DocumentDAO extends HibernateDaoSupport {
 	            				idListString += " " + id;
 	            			}
 	            			idListString = idListString.trim().replaceAll(" ", ",");
-	            			throw new HibernateException(new AditException(filesNotFoundMessageBase + " " + idListString));
+	            			throw new SQLException(new AditException(filesNotFoundMessageBase + " " + idListString));
 	            		}
 	            	}
 	            	
@@ -149,9 +150,11 @@ public class DocumentDAO extends HibernateDaoSupport {
 	            	return innerResult;
 	            }
 	        });
-		} catch (HibernateException ex) {
-			if (ex.getCause() instanceof AditException) {
-				throw (AditException) ex.getCause();
+		} catch (DataAccessException ex) {
+			if (ex.getRootCause() instanceof AditException) {
+				throw (AditException) ex.getRootCause();
+			} else {
+				throw ex;
 			}
 		}
 		return result;
