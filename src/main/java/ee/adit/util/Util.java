@@ -123,6 +123,27 @@ public class Util {
 		return resultFileName;
 	}
 	
+	public static String base64EncodeFile(String inputFile, String tempDir) throws IOException {
+		String resultFileName = null;
+		
+        // Encode data to Base64 binary data
+        resultFileName = inputFile + "_Base64OutBuffer.adit";
+        LOG.debug("Encoding file to Base64: Output file: " + inputFile);
+        FileInputStream in = new FileInputStream(inputFile);
+        FileOutputStream b64out = new FileOutputStream(resultFileName, false);
+        Base64OutputStream b64outStream = new Base64OutputStream(b64out);
+        byte[] b = new byte[66000];
+        int len = 0;
+        while ((len = in.read(b)) > 0) {
+        	b64outStream.write(b, 0, len);
+        }
+        in.close();
+        b64outStream.close();
+        b64out.close();
+
+        return resultFileName;
+	}
+	
 	public static String base64DecodeAndUnzip(String inputFile, String tempDir, boolean deleteTemporaryFiles) throws IOException {
 		
 		// Base64 decode
@@ -167,6 +188,26 @@ public class Util {
         }
         
         return unzipOutFileName;
+	}
+	
+	public static String base64DecodeFile(String inputFile, String tempDir) throws IOException {
+		
+		// Base64 decode
+		String base64DecodedFile = inputFile + "_Base64DecodedOutBuffer.adit";
+		FileInputStream inputFileStream = new FileInputStream(inputFile);
+		FileOutputStream base64DecodedOut = new FileOutputStream(base64DecodedFile, false);
+		Base64InputStream base64InputStream = new Base64InputStream(inputFileStream);
+		
+		int len;
+		byte[] b = new byte[66000];
+        while ((len = base64InputStream.read(b)) > 0) {
+        	base64DecodedOut.write(b, 0, len);
+        }
+        base64DecodedOut.close();
+        base64InputStream.close();
+        inputFileStream.close();
+		
+        return base64DecodedFile;
 	}
 	
 	public static String createTemporaryFile(InputStream inputStream, String tempDir) throws IOException {		

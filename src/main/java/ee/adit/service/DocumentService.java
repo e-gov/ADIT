@@ -149,13 +149,14 @@ public class DocumentService {
 				// Add references to file objects
 				for(int i = 0; i < result.size(); i++) {
 					String fileName = result.get(i);
+					String base64DecodedFile = Util.base64DecodeFile(fileName, tempDir);
+					
 					SaveDocumentRequestAttachmentFile file = document.getFiles().get(i);
-					LOG.debug("Adding reference to file object. File ID: " + file.getId() + " (" + file.getName() + "). Temporary file: " + fileName);
-					file.setTmpFileName(fileName);
+					LOG.debug("Adding reference to file object. File ID: " + file.getId() + " (" + file.getName() + "). Temporary file: " + base64DecodedFile);
+					file.setTmpFileName(base64DecodedFile);
 					
-					totalSize += (new File(fileName)).length();
-					
-				}				
+					totalSize += (new File(base64DecodedFile)).length();
+				}
 				
 				LOG.debug("Total size of document files: " + totalSize);
 				

@@ -1,7 +1,7 @@
 package ee.adit.ws.endpoint.document;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
-import ee.adit.dao.pojo.DocumentFile;
+import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.exception.AditException;
 import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.GetDocumentFileRequest;
@@ -109,16 +109,38 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 
 			// Kontrollime, kas ID-le vastav dokument on olemas
 			if (doc != null) {
-				// Kontrollime, kas dokument kuulub päringu käivitanud kasutajale
-				// TODO: Siin sobib ka kasutajale välja jagatud dokument
+				// Dokumendi faile saab alla laadida, kui dokument:
+				// a) kuulub päringu käivitanud kasutajale
+				// b) on päringu käivitanud kasutajale välja jagatud
+				boolean userIsDocOwner = false;
 				if (doc.getCreatorCode().equalsIgnoreCase(userCode)) {
-					if ((doc.getDocumentFiles() != null) && (doc.getDocumentFiles().size() > 0)) {
-						LOG.debug("Document has " + doc.getDocumentFiles().size()  + " files.");
-						
-						List<DocumentFile> filesList = new ArrayList<DocumentFile>(doc.getDocumentFiles());
+					userIsDocOwner = true;
+				} else {
+					if ((doc.getDocumentSharings() != null) && (!doc.getDocumentSharings().isEmpty())) {
+						Iterator it = doc.getDocumentSharings().iterator();
+						while (it.hasNext()) {
+							DocumentSharing sharing = (DocumentSharing)it.next();
+							if (sharing.getUserCode().equalsIgnoreCase(userCode)) {
+								userIsDocOwner = true;
+								break;
+							}
+						}
+					}
+				}
+				
+				// Kui kasutaja tohib dokumendile ligi pääseda, siis tagastame failid
+				if (userIsDocOwner) {
+					List<GetDocumentFileResponseAttachmentFile> docFiles = this.documentService.getDocumentDAO().getDocumentFiles(
+							doc.getId(),
+							request.getFileIdList().getFileId(),
+							this.getConfiguration().getTempDir(),
+							this.getMessageSource().getMessage("files.nonExistentOrDeleted", new Object[] { }, Locale.ENGLISH));
+					
+					if ((docFiles != null) && (docFiles.size() > 0)) {
+						LOG.debug("Document has " + docFiles.size()  + " files.");
 						
 						// 1. Convert java list to XML string and output to file
-						String xmlFile = outputToFile(filesList);
+						String xmlFile = outputToFile(docFiles);
 						
 						// 2. GZip and Base64 encode the temporary file
 						String gzipFileName = Util.gzipAndBase64Encode(xmlFile, this.getConfiguration().getTempDir(), this.getConfiguration().getDeleteTemporaryFilesAsBoolean());
@@ -163,22 +185,9 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 		return response;
 	}
 
-	private String outputToFile(List<DocumentFile> filesList) throws XmlMappingException, IOException, ParserConfigurationException, TransformerException {
-		List<GetDocumentFileResponseAttachmentFile> result = new ArrayList<GetDocumentFileResponseAttachmentFile>();
-		
-		for (int i = 0; i < filesList.size(); i++) {
-			DocumentFile docFile = filesList.get(i);
-			GetDocumentFileResponseAttachmentFile fileData = new GetDocumentFileResponseAttachmentFile();
-			fileData.setId(docFile.getId());
-			fileData.setName(docFile.getFileName());
-			fileData.setDescription(docFile.getDescription());
-			fileData.setContentType(docFile.getContentType());
-			fileData.setSizeBytes(docFile.getFileSizeBytes());
-			result.add(fileData);
-		}
+	private String outputToFile(List<GetDocumentFileResponseAttachmentFile> filesList) throws XmlMappingException, IOException, ParserConfigurationException, TransformerException {
 		GetDocumentFileResponseAttachment attachment = new GetDocumentFileResponseAttachment();
-		attachment.setFiles(result);
-
+		attachment.setFiles(filesList);
 		return marshal(attachment);
 	}
 

@@ -6,12 +6,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.math.BigDecimal;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -25,7 +22,10 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.DocumentFile;
+import ee.adit.exception.AditException;
+import ee.adit.pojo.GetDocumentFileResponseAttachmentFile;
 import ee.adit.pojo.SaveDocumentRequestAttachmentFile;
+import ee.adit.util.Util;
 
 public class DocumentDAO extends HibernateDaoSupport {
 
@@ -50,52 +50,111 @@ public class DocumentDAO extends HibernateDaoSupport {
 		return result;
 	}
 	
-	/**
-	 * Asendab etteantud ID-le vastava faili sisu esialgse sisu MD5 räsikoodiga
-	 * 
-	 * @param fileId	Faili ID
-	 * @throws NoSuchAlgorithmException
-	 * @throws SQLException
-	 * @throws IOException
-	 */
-	public void deflateFile(int fileId) throws NoSuchAlgorithmException, SQLException, IOException {
-		List<DocumentFile> files = this.getHibernateTemplate().find("from DocumentFile docFile where docFile.document=?", new Object[] {fileId});
-		
-		for(DocumentFile docFile : files) {
-			MessageDigest md = MessageDigest.getInstance("MD5");
-			InputStream dataStream = docFile.getFileData().getBinaryStream();
-			
-			// Loeme andmebaasist faili sisu ja arvutame selle MD5 räsi
-			byte[] buf = new byte[10240];
-			int len = 0;
-			try {
-				while ((len = dataStream.read(buf, 0, buf.length)) > 0) {
-	                md.update(buf, 0, len);
-	            }
-			} finally {
-				try {
-					dataStream.close();
-					dataStream = null;
-				} catch (Exception e) {}
-			}
-			
-			// Salvestame MD5 räsi faili sisuks
-			byte[] digest = md.digest();
-			OutputStream outStream = docFile.getFileData().setBinaryStream(0);
-			try {
-				outStream.write(digest, 0, digest.length);
-			} finally {
-				try {
-					dataStream.close();
-					dataStream = null;
-				} catch (Exception e) {}
-			}
-		}
-	}
-	
 	public Document getDocument(long id) {
 		LOG.debug("Attempting to load document from database. Document id: " + String.valueOf(id));
 		return (Document) this.getHibernateTemplate().get(Document.class, id);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<GetDocumentFileResponseAttachmentFile> getDocumentFiles(final long documentId, final List<Long> fileIdList, final String temporaryFilesDir, final String filesNotFoundMessageBase) {
+		if (documentId <= 0) {
+			throw new IllegalArgumentException("Document ID must be a positive integer. Currently supplied ID was " + documentId + ".");
+		}
+		
+		List<GetDocumentFileResponseAttachmentFile> result = null;
+		
+		try {
+			LOG.debug("Attempting to load document files for document " + documentId);
+			result = (ArrayList<GetDocumentFileResponseAttachmentFile>) getHibernateTemplate().execute(new HibernateCallback() {
+				
+				@Override
+				public Object doInHibernate(Session session) throws HibernateException, SQLException
+	            {
+	            	List<GetDocumentFileResponseAttachmentFile> innerResult = new ArrayList<GetDocumentFileResponseAttachmentFile>();
+	            	Document doc = (Document)session.get(Document.class, documentId);
+	            	List<DocumentFile> filesList = new ArrayList<DocumentFile>(doc.getDocumentFiles());            	
+	            	
+	            	// Check if all requested files exist
+	            	if ((fileIdList != null) && !fileIdList.isEmpty()) {
+	            		List<Long> internalIdList = new ArrayList<Long>();
+	            		internalIdList.addAll(fileIdList);
+	            		
+	            		for (DocumentFile docFile : filesList) {
+	        				if (!docFile.getDeleted() && internalIdList.contains((Long)docFile.getId())) {
+	        					internalIdList.remove((Long)docFile.getId());
+	        				}
+	            		}
+	            		
+	            		// If some files did not exist or were deleted
+	            		// then return error message
+	            		if (!internalIdList.isEmpty()) {
+	            			String idListString = "";
+	            			for (Long id : internalIdList) {
+	            				idListString += " " + id;
+	            			}
+	            			idListString = idListString.trim().replaceAll(" ", ",");
+	            			throw new HibernateException(new AditException(filesNotFoundMessageBase + " " + idListString));
+	            		}
+	            	}
+	            	
+	            	int itemIndex = 0;
+	            	for (DocumentFile docFile : filesList) {
+	            		if ((fileIdList == null) || fileIdList.isEmpty() || fileIdList.contains(docFile.getId())) {
+	            			GetDocumentFileResponseAttachmentFile f = new GetDocumentFileResponseAttachmentFile();
+	            			f.setContentType(docFile.getContentType());
+	            			f.setDescription(docFile.getDescription());
+	            			f.setId(docFile.getId());
+	            			f.setName(docFile.getFileName());
+	            			f.setSizeBytes(docFile.getFileSizeBytes());
+	            			
+	            			// Read file data from BLOB and write it to temporary file.
+	            			// This is necessary to avoid storing potentially large
+	            			// amounts of binary data in server memory.
+	            			itemIndex++;
+	        				String outputFileName = Util.generateRandomFileNameWithoutExtension();
+	        				outputFileName = temporaryFilesDir + File.separator + outputFileName + "_" + itemIndex + "_GDFv1.adit";
+	        				InputStream blobDataStream = null;
+	        				FileOutputStream fileOutputStream = null;
+	        				try {
+	        					byte[] buffer = new byte[10240];
+	        					int len = 0;
+	        					blobDataStream = docFile.getFileData().getBinaryStream();
+	        					fileOutputStream = new FileOutputStream(outputFileName);
+	        					while ((len = blobDataStream.read(buffer)) > 0) {
+	        						fileOutputStream.write(buffer, 0, len);
+	        					}
+	        					f.setTmpFileName(outputFileName);
+	        				} catch (IOException ex) {
+	        					throw new HibernateException(ex);
+	        				} finally {
+	        					try {
+	        						if (blobDataStream != null) {
+	        							blobDataStream.close();
+	        						}
+	        						blobDataStream = null;
+	        					} catch (Exception ex) {}
+	        					
+	        					try {
+	        						if (fileOutputStream != null) {
+	        							fileOutputStream.close();
+	        						}
+	        						fileOutputStream = null;
+	        					} catch (Exception ex) {}
+	        				}
+	        				
+	        				innerResult.add(f);
+	            		}
+	            	}
+	            	
+	            	return innerResult;
+	            }
+	        });
+		} catch (HibernateException ex) {
+			if (ex.getCause() instanceof AditException) {
+				throw (AditException) ex.getCause();
+			}
+		}
+		return result;
 	}
 	
 	/**

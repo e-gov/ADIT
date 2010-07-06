@@ -17,6 +17,7 @@ public class DocumentFile implements java.io.Serializable {
 	private String description;
 	private Blob fileData;
 	private Long fileSizeBytes;
+	private Boolean deleted;
 
 	public DocumentFile() {
 	}
@@ -29,7 +30,7 @@ public class DocumentFile implements java.io.Serializable {
 
 	public DocumentFile(long id, Document document, String fileName,
 			String contentType, String description, Blob fileData,
-			Long fileSizeBytes) {
+			Long fileSizeBytes, Boolean deleted) {
 		this.id = id;
 		this.document = document;
 		this.fileName = fileName;
@@ -37,6 +38,7 @@ public class DocumentFile implements java.io.Serializable {
 		this.description = description;
 		this.fileData = fileData;
 		this.fileSizeBytes = fileSizeBytes;
+		this.deleted = deleted;
 	}
 
 	public long getId() {
@@ -95,4 +97,11 @@ public class DocumentFile implements java.io.Serializable {
 		this.fileSizeBytes = fileSizeBytes;
 	}
 
+	public Boolean getDeleted() {
+		return this.deleted;
+	}
+
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
+	}
 }
