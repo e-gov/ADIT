@@ -32,6 +32,12 @@
         <property name="postIndex" type="string">
             <column name="POST_INDEX" length="50" />
         </property>
+        <property name="signerCode" type="string">
+            <column name="SIGNER_CODE" length="20" />
+        </property>
+        <property name="signerName" type="string">
+            <column name="SIGNER_NAME" length="100" />
+        </property>
         <property name="containerData" type="blob">
             <column name="CONTAINER_DATA" />
         </property>

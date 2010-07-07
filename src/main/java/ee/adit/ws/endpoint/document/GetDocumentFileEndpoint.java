@@ -22,7 +22,8 @@ import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.GetDocumentFileRequest;
 import ee.adit.pojo.GetDocumentFileResponse;
 import ee.adit.pojo.GetDocumentFileResponseAttachment;
-import ee.adit.pojo.GetDocumentFileResponseAttachmentFile;
+import ee.adit.pojo.OutputDocument;
+import ee.adit.pojo.OutputDocumentFile;
 import ee.adit.pojo.GetDocumentFileResponseFiles;
 import ee.adit.pojo.Message;
 import ee.adit.service.DocumentService;
@@ -142,11 +143,14 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 						
 						// Kui kasutaja tohib dokumendile ligi pääseda, siis tagastame failid
 						if (userIsDocOwner) {
-							List<GetDocumentFileResponseAttachmentFile> docFiles = this.documentService.getDocumentDAO().getDocumentFiles(
+							OutputDocument outputDoc = this.documentService.getDocumentDAO().getDocumentWithFiles(
 									doc.getId(),
 									request.getFileIdList().getFileId(),
+									false, false, true,
 									this.getConfiguration().getTempDir(),
 									this.getMessageSource().getMessage("files.nonExistentOrDeleted", new Object[] { }, Locale.ENGLISH));
+							
+							List<OutputDocumentFile> docFiles = outputDoc.getFiles().getFiles();
 							
 							if ((docFiles != null) && (docFiles.size() > 0)) {
 								LOG.debug("Document has " + docFiles.size()  + " files.");
@@ -202,12 +206,12 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 						}
 					} else {
 						LOG.debug("Requested document is deflated. Document ID: " + request.getDocumentId());
-						String errorMessage = this.getMessageSource().getMessage("request.getDocumentFile.document.deflated", new Object[] { request.getDocumentId() },	Locale.ENGLISH);
+						String errorMessage = this.getMessageSource().getMessage("document.deflated", new Object[] { doc.getDeflateDate() }, Locale.ENGLISH);
 						throw new AditException(errorMessage);
 					}
 				} else {
 					LOG.debug("Requested document is deleted. Document ID: " + request.getDocumentId());
-					String errorMessage = this.getMessageSource().getMessage("document.nonExistent", new Object[] { request.getDocumentId() },	Locale.ENGLISH);
+					String errorMessage = this.getMessageSource().getMessage("document.nonExistent", new Object[] { request.getDocumentId() }, Locale.ENGLISH);
 					throw new AditException(errorMessage);
 				}
 			} else {
@@ -239,7 +243,7 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 		return response;
 	}
 
-	private String outputToFile(List<GetDocumentFileResponseAttachmentFile> filesList) throws XmlMappingException, IOException, ParserConfigurationException, TransformerException {
+	private String outputToFile(List<OutputDocumentFile> filesList) throws XmlMappingException, IOException, ParserConfigurationException, TransformerException {
 		GetDocumentFileResponseAttachment attachment = new GetDocumentFileResponseAttachment();
 		attachment.setFiles(filesList);
 		return marshal(attachment);

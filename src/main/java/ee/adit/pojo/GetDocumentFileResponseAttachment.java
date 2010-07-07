@@ -3,13 +3,13 @@ package ee.adit.pojo;
 import java.util.List;
 
 public class GetDocumentFileResponseAttachment {
-	private List<GetDocumentFileResponseAttachmentFile> files;
+	private List<OutputDocumentFile> files;
 
-	public List<GetDocumentFileResponseAttachmentFile> getFiles() {
+	public List<OutputDocumentFile> getFiles() {
 		return files;
 	}
 
-	public void setFiles(List<GetDocumentFileResponseAttachmentFile> files) {
+	public void setFiles(List<OutputDocumentFile> files) {
 		this.files = files;
 	}
 }

@@ -8,20 +8,23 @@
             <column name="ID" precision="12" scale="0" />
             <generator class="assigned" />
         </id>
-        <many-to-one name="documentSharingType" class="ee.adit.dao.pojo.DocumentSharingType" fetch="select">
+        <property name="documentSharingType" type="string">
             <column name="SHARING_TYPE" length="50" not-null="true" />
-        </many-to-one>
-        <many-to-one name="documentDvkStatus" class="ee.adit.dao.pojo.DocumentDvkStatus" fetch="select">
+        </property>
+        <property name="documentDvkStatus" type="long">
             <column name="DVK_STATUS_ID" precision="12" scale="0" />
-        </many-to-one>
-        <many-to-one name="documentWfStatus" class="ee.adit.dao.pojo.DocumentWfStatus" fetch="select">
+        </property>
+        <property name="documentWfStatus" type="long">
             <column name="WF_STATUS_ID" precision="12" scale="0" />
-        </many-to-one>
+        </property>
         <property name="documentId" type="long">
             <column name="DOCUMENT_ID" precision="12" scale="0" not-null="true" />
         </property>
         <property name="userCode" type="string">
             <column name="USER_CODE" length="50" not-null="true" />
+        </property>
+        <property name="userName" type="string">
+            <column name="USER_NAME" length="255" />
         </property>
         <property name="taskDescription" type="string">
             <column name="TASK_DESCRIPTION" length="4000" />

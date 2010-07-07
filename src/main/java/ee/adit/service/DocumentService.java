@@ -208,11 +208,7 @@ public class DocumentService {
 		Document document = new Document();
 		document.setCreationDate(creationDate);
 		document.setCreatorCode(creatorCode);
-		
-		// Get document type
-		DocumentType documentType = this.getDocumentTypeDAO().getDocumentType(attachmentDocument.getDocumentType());
-		
-		document.setDocumentType(documentType);
+		document.setDocumentType(attachmentDocument.getDocumentType());
 		
 		if(attachmentDocument.getGuid() != null && !"".equalsIgnoreCase(attachmentDocument.getGuid().trim())) {
 			document.setGuid(attachmentDocument.getGuid());

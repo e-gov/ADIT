@@ -136,6 +136,7 @@ CREATE TABLE &&ADIT_SCHEMA..DOCUMENT
 	title                   VARCHAR2(255),    /* Dokumendi pealkiri. */
 	type                    VARCHAR2(50) NOT NULL,    /* Viide dokumendi tüübi lühinimele. */
 	creator_code            VARCHAR2(50) NOT NULL,    /* Dokumendi looja isikukood. */
+	creator_name            VARCHAR2(255) NULL,    /* Dokumendi looja nimi (loomise hetke seisuga) */
 	creation_date           DATE,    /* Dokumendi loomise kuupäev ja kellaaeg */
 	remote_application      VARCHAR2(50),    /* Viide päringu välja kutsunud infosüsteemi lühinimele. */
 	last_modified_date      DATE,    /* Viimase muudatuse kuupäev ja kellaaeg. */
@@ -157,6 +158,7 @@ COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.guid                    IS 'Dokumendi 
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.title                   IS 'Dokumendi pealkiri.';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.type                    IS 'Viide dokumendi tüübi lühinimele.';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.creator_code            IS 'Dokumendi looja isikukood.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.creator_name            IS 'Dokumendi looja nimi (loomise hetke seisuga)';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.creation_date           IS 'Dokumendi loomise kuupäev ja kellaaeg';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.remote_application      IS 'Viide päringu välja kutsunud infosüsteemi lühinimele.';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.last_modified_date      IS 'Viimase muudatuse kuupäev ja kellaaeg.';
@@ -246,6 +248,7 @@ CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING
 	ID                NUMBER(12) NOT NULL,    /* Unikaalne identifikaator */
 	document_id       NUMBER(12) NOT NULL,    /* Viide dokumendile */
 	user_code         VARCHAR2(50) NOT NULL,    /* Viide kasutajale (isikukood), kellele dokument jagati */
+	user_name		  VARCHAR2(255) NULL,		/* Kasutaja nimi (jagamise hetke seisuga) */
 	sharing_type      VARCHAR2(50) NOT NULL,    /* Viide dokumendi jagamise tüübile. Viidatakse kasutades dokumendi tüübi lühinime. */
 	task_description  VARCHAR2(4000),    /* Jagamise eesmärk. Toiming, mida jagamise adressaat peaks dokumendiga tegema. */
 	creation_date     DATE,    /* Jagamise kuupäev ja kellaaeg */
@@ -258,6 +261,7 @@ COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING IS 'Dokumendi jagamise andmed.'
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.ID                IS 'Unikaalne identifikaator';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.document_id       IS 'Viide dokumendile';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.user_code         IS 'Viide kasutajale (isikukood), kellele dokument jagati';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.user_name         IS 'Kasutaja nimi (jagamise hetke seisuga)';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.sharing_type      IS 'Viide dokumendi jagamise tüübile. Viidatakse kasutades dokumendi tüübi lühinime.';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.task_description  IS 'Jagamise eesmärk. Toiming, mida jagamise adressaat peaks dokumendiga tegema.';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.creation_date     IS 'Jagamise kuupäev ja kellaaeg';
@@ -412,6 +416,8 @@ CREATE TABLE &&ADIT_SCHEMA..SIGNATURE
 	county          VARCHAR2(100),    /* Allkirja metaandmed - maakond */
 	city            VARCHAR2(100),    /* Allkirja metaandmed - linn */
 	post_index      VARCHAR2(50),    /* Allkirja metaandmed - indeks */
+	signer_code		VARCHAR2(20),    /* Allkirja metaandmed - allkirjastaja isikukood */
+	signer_name		VARCHAR2(255),    /* Allkirja metaandmed - allkirjastaja nimi */
 	container_data  BLOB    /* Allkirja konteiner. */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
@@ -425,6 +431,8 @@ COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.country         IS 'Allkirja metaandm
 COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.county          IS 'Allkirja metaandmed - maakond';
 COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.city            IS 'Allkirja metaandmed - linn';
 COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.post_index      IS 'Allkirja metaandmed - indeks';
+COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.signer_code     IS 'Allkirja metaandmed - allkirjastaja isikukood';
+COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.signer_name     IS 'Allkirja metaandmed - allkirjastaja nimi';
 COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.container_data  IS 'Allkirja konteiner.';
 
 CREATE TABLE &&ADIT_SCHEMA..USER_NOTIFICATION

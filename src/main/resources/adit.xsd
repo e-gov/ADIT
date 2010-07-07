@@ -8,9 +8,6 @@
 		schemaLocation="http://schemas.xmlsoap.org/soap/encoding/" />
 	 -->
 	
-	<element name="GetDocumentRequest" type="tns:GetDocumentRequest"/>
-	<element name="GetDocumentResponse" type="tns:GetDocumentResponse"/>
-	
 	<element name="JoinRequest" type="tns:JoinRequest"/>
 	<element name="JoinResponse" type="tns:JoinResponse"/>
 	<element name="UnJoinRequest" type="tns:UnJoinRequest"/>
@@ -20,6 +17,8 @@
 	<element name="GetJoinedRequest" type="tns:GetJoinedRequest"/>
 	<element name="GetJoinedResponse" type="tns:GetJoinedResponse"/>
 	
+	<element name="GetDocumentRequest" type="tns:GetDocumentRequest"/>
+	<element name="GetDocumentResponse" type="tns:GetDocumentResponse"/>
 	<element name="GetDocumentFileRequest" type="tns:GetDocumentFileRequest"/>
 	<element name="GetDocumentFileResponse" type="tns:GetDocumentFileResponse"/>
 	<element name="SaveDocumentRequest" type="tns:SaveDocumentRequest"/>
@@ -51,17 +50,8 @@
 		</sequence>
 	</complexType>
 	
-	<complexType name="GetDocumentRequest">
-		<sequence>
-			<element name="keha" type="string"></element>
-		</sequence>
-	</complexType>
-	<complexType name="GetDocumentResponse">
-		<sequence>
-			<element name="keha" type="string"></element>
-		</sequence>
-	</complexType>
-	
+
+
 	<!-- join päringu tüübid -->
 	<complexType name="JoinRequest">
 		<sequence>
@@ -113,6 +103,25 @@
 			<element name="success" type="boolean"></element>
 			<element name="messages" type="tns:ArrayOfMessage"></element>
 			<element name="userList" type="base64Binary"></element>
+		</sequence>
+	</complexType>
+	
+	<!-- getDocument päringu tüübid -->
+	<complexType name="GetDocumentRequest">
+		<sequence>
+			<element name="document_id" type="integer"></element>
+			<element name="include_file_contents" type="boolean"></element>
+		</sequence>
+	</complexType>
+	<complexType name="GetDocumentResponse">
+		<sequence>
+			<element name="success" type="boolean"></element>
+			<element name="messages" type="tns:ArrayOfMessage"></element>
+			<element name="document">
+				<complexType>
+					<attribute name="href" type="string"/>
+				</complexType>
+			</element>
 		</sequence>
 	</complexType>
 	

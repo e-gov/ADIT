@@ -10,9 +10,9 @@
             	<param name="sequence">document_id_seq</param>
             </generator>
         </id>
-        <many-to-one name="documentType" class="ee.adit.dao.pojo.DocumentType" fetch="select">
+        <property name="documentType" type="string">
             <column name="TYPE" length="50" not-null="true" />
-        </many-to-one>
+        </property>
         <many-to-one name="document" class="ee.adit.dao.pojo.Document" fetch="select">
             <column name="PARENT_ID" precision="12" scale="0" />
         </many-to-one>
@@ -24,6 +24,9 @@
         </property>
         <property name="creatorCode" type="string">
             <column name="CREATOR_CODE" length="50" not-null="true" />
+        </property>
+        <property name="creatorName" type="string">
+            <column name="CREATOR_NAME" length="255" />
         </property>
         <property name="creationDate" type="date">
             <column name="CREATION_DATE" length="7" />

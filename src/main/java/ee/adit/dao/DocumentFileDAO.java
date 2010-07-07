@@ -18,7 +18,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.DocumentFile;
 import ee.adit.dao.pojo.DocumentFileDeflateResult;
-import ee.adit.pojo.GetDocumentFileResponseAttachmentFile;
+import ee.adit.pojo.OutputDocumentFile;
 import ee.adit.util.Util;
 
 public class DocumentFileDAO extends HibernateDaoSupport {

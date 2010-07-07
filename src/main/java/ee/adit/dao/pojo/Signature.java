@@ -9,6 +9,7 @@ import java.sql.Blob;
  */
 public class Signature implements java.io.Serializable {
 
+	private static final long serialVersionUID = -8865939367303169765L;
 	private long id;
 	private Document document;
 	private String userCode;
@@ -18,6 +19,8 @@ public class Signature implements java.io.Serializable {
 	private String county;
 	private String city;
 	private String postIndex;
+	private String signerCode;
+	private String signerName;
 	private Blob containerData;
 
 	public Signature() {
@@ -30,7 +33,8 @@ public class Signature implements java.io.Serializable {
 
 	public Signature(long id, Document document, String userCode,
 			String signerRole, String resolution, String country,
-			String county, String city, String postIndex, Blob containerData) {
+			String county, String city, String postIndex, String signerCode,
+			String signerName, Blob containerData) {
 		this.id = id;
 		this.document = document;
 		this.userCode = userCode;
@@ -40,6 +44,8 @@ public class Signature implements java.io.Serializable {
 		this.county = county;
 		this.city = city;
 		this.postIndex = postIndex;
+		this.signerCode = signerCode;
+		this.signerName = signerName;
 		this.containerData = containerData;
 	}
 
@@ -113,6 +119,22 @@ public class Signature implements java.io.Serializable {
 
 	public void setPostIndex(String postIndex) {
 		this.postIndex = postIndex;
+	}
+
+	public String getSignerCode() {
+		return signerCode;
+	}
+
+	public void setSignerCode(String signerCode) {
+		this.signerCode = signerCode;
+	}
+
+	public String getSignerName() {
+		return signerName;
+	}
+
+	public void setSignerName(String signerName) {
+		this.signerName = signerName;
 	}
 
 	public Blob getContainerData() {

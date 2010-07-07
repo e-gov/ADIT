@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-public class GetDocumentFileResponseAttachmentFile {
+public class OutputDocumentFile {
 	private long id;
 	private String name;
 	private String contentType;

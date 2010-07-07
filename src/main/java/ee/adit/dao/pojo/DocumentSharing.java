@@ -9,12 +9,14 @@ import java.util.Date;
  */
 public class DocumentSharing implements java.io.Serializable {
 
+	private static final long serialVersionUID = 3218754276318168022L;
 	private long id;
-	private DocumentSharingType documentSharingType;
-	private DocumentDvkStatus documentDvkStatus;
-	private DocumentWfStatus documentWfStatus;
+	private String documentSharingType;
+	private long documentDvkStatus;
+	private long documentWfStatus;
 	private long documentId;
 	private String userCode;
+	private String userName;
 	private String taskDescription;
 	private Date creationDate;
 	private Date lastAccessDate;
@@ -22,7 +24,7 @@ public class DocumentSharing implements java.io.Serializable {
 	public DocumentSharing() {
 	}
 
-	public DocumentSharing(long id, DocumentSharingType documentSharingType,
+	public DocumentSharing(long id, String documentSharingType,
 			long documentId, String userCode) {
 		this.id = id;
 		this.documentSharingType = documentSharingType;
@@ -30,17 +32,18 @@ public class DocumentSharing implements java.io.Serializable {
 		this.userCode = userCode;
 	}
 
-	public DocumentSharing(long id, DocumentSharingType documentSharingType,
-			DocumentDvkStatus documentDvkStatus,
-			DocumentWfStatus documentWfStatus, long documentId,
-			String userCode, String taskDescription, Date creationDate,
-			Date lastAccessDate) {
+	public DocumentSharing(long id, String documentSharingType,
+			long documentDvkStatus,
+			long documentWfStatus, long documentId,
+			String userCode, String userName, String taskDescription,
+			Date creationDate, Date lastAccessDate) {
 		this.id = id;
 		this.documentSharingType = documentSharingType;
 		this.documentDvkStatus = documentDvkStatus;
 		this.documentWfStatus = documentWfStatus;
 		this.documentId = documentId;
 		this.userCode = userCode;
+		this.userName = userName;
 		this.taskDescription = taskDescription;
 		this.creationDate = creationDate;
 		this.lastAccessDate = lastAccessDate;
@@ -54,27 +57,27 @@ public class DocumentSharing implements java.io.Serializable {
 		this.id = id;
 	}
 
-	public DocumentSharingType getDocumentSharingType() {
+	public String getDocumentSharingType() {
 		return this.documentSharingType;
 	}
 
-	public void setDocumentSharingType(DocumentSharingType documentSharingType) {
+	public void setDocumentSharingType(String documentSharingType) {
 		this.documentSharingType = documentSharingType;
 	}
 
-	public DocumentDvkStatus getDocumentDvkStatus() {
+	public long getDocumentDvkStatus() {
 		return this.documentDvkStatus;
 	}
 
-	public void setDocumentDvkStatus(DocumentDvkStatus documentDvkStatus) {
+	public void setDocumentDvkStatus(long documentDvkStatus) {
 		this.documentDvkStatus = documentDvkStatus;
 	}
 
-	public DocumentWfStatus getDocumentWfStatus() {
+	public long getDocumentWfStatus() {
 		return this.documentWfStatus;
 	}
 
-	public void setDocumentWfStatus(DocumentWfStatus documentWfStatus) {
+	public void setDocumentWfStatus(long documentWfStatus) {
 		this.documentWfStatus = documentWfStatus;
 	}
 
@@ -94,6 +97,14 @@ public class DocumentSharing implements java.io.Serializable {
 		this.userCode = userCode;
 	}
 
+	public String getUserName() {
+		return this.userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+	
 	public String getTaskDescription() {
 		return this.taskDescription;
 	}

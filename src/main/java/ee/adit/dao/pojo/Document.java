@@ -11,12 +11,14 @@ import java.util.Set;
  */
 public class Document implements java.io.Serializable {
 
+	private static final long serialVersionUID = -4634603111062567273L;
 	private long id;
-	private DocumentType documentType;
+	private String documentType;
 	private Document document;
 	private String guid;
 	private String title;
 	private String creatorCode;
+	private String creatorName;
 	private Date creationDate;
 	private String remoteApplication;
 	private Date lastModifiedDate;
@@ -38,15 +40,15 @@ public class Document implements java.io.Serializable {
 	public Document() {
 	}
 
-	public Document(long id, DocumentType documentType, String creatorCode) {
+	public Document(long id, String documentType, String creatorCode) {
 		this.id = id;
 		this.documentType = documentType;
 		this.creatorCode = creatorCode;
 	}
 
-	public Document(long id, DocumentType documentType, Document document,
-			String guid, String title, String creatorCode, Date creationDate,
-			String remoteApplication, Date lastModifiedDate,
+	public Document(long id, String documentType, Document document,
+			String guid, String title, String creatorCode, String creatorName,
+			Date creationDate, String remoteApplication, Date lastModifiedDate,
 			Long documentDvkStatusId, Long dvkId, Long documentWfStatusId,
 			Boolean locked, Date lockingDate, Boolean signable,
 			Boolean deflated, Date deflateDate, Boolean deleted, Set documents,
@@ -57,6 +59,7 @@ public class Document implements java.io.Serializable {
 		this.guid = guid;
 		this.title = title;
 		this.creatorCode = creatorCode;
+		this.creatorName = creatorName;
 		this.creationDate = creationDate;
 		this.remoteApplication = remoteApplication;
 		this.lastModifiedDate = lastModifiedDate;
@@ -84,11 +87,11 @@ public class Document implements java.io.Serializable {
 		this.id = id;
 	}
 
-	public DocumentType getDocumentType() {
+	public String getDocumentType() {
 		return this.documentType;
 	}
 
-	public void setDocumentType(DocumentType documentType) {
+	public void setDocumentType(String documentType) {
 		this.documentType = documentType;
 	}
 
@@ -122,6 +125,14 @@ public class Document implements java.io.Serializable {
 
 	public void setCreatorCode(String creatorCode) {
 		this.creatorCode = creatorCode;
+	}
+	
+	public String getCreatorName() {
+		return this.creatorName;
+	}
+
+	public void setCreatorName(String creatorName) {
+		this.creatorName = creatorName;
 	}
 
 	public Date getCreationDate() {
