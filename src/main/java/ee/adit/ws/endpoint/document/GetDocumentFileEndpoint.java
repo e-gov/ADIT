@@ -271,9 +271,6 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 			if (request.getDocumentId() <= 0) {
 				errorMessage = this.getMessageSource().getMessage("request.body.undefined.documentId", new Object[] {},	Locale.ENGLISH);
 				throw new AditException(errorMessage);
-			} else if ((request.getFileIdList() == null) || (request.getFileIdList().getFileId() == null) || (request.getFileIdList().getFileId().size() < 1)) {
-				errorMessage = this.getMessageSource().getMessage("request.body.undefined.fileId", new Object[] {},	Locale.ENGLISH);
-				throw new AditException(errorMessage);
 			}
 		} else {
 			errorMessage = this.getMessageSource().getMessage("request.body.empty", new Object[] {}, Locale.ENGLISH);

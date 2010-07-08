@@ -10,6 +10,7 @@ import java.util.Set;
  */
 public class DocumentSharingType implements java.io.Serializable {
 
+	private static final long serialVersionUID = 9025211919574912551L;
 	private String shortName;
 	private String description;
 	private Set documentSharings = new HashSet(0);

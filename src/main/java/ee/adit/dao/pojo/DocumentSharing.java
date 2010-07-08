@@ -12,8 +12,8 @@ public class DocumentSharing implements java.io.Serializable {
 	private static final long serialVersionUID = 3218754276318168022L;
 	private long id;
 	private String documentSharingType;
-	private long documentDvkStatus;
-	private long documentWfStatus;
+	private Long documentDvkStatus;
+	private Long documentWfStatus;
 	private long documentId;
 	private String userCode;
 	private String userName;
@@ -33,8 +33,8 @@ public class DocumentSharing implements java.io.Serializable {
 	}
 
 	public DocumentSharing(long id, String documentSharingType,
-			long documentDvkStatus,
-			long documentWfStatus, long documentId,
+			Long documentDvkStatus,
+			Long documentWfStatus, long documentId,
 			String userCode, String userName, String taskDescription,
 			Date creationDate, Date lastAccessDate) {
 		this.id = id;
@@ -65,19 +65,19 @@ public class DocumentSharing implements java.io.Serializable {
 		this.documentSharingType = documentSharingType;
 	}
 
-	public long getDocumentDvkStatus() {
+	public Long getDocumentDvkStatus() {
 		return this.documentDvkStatus;
 	}
 
-	public void setDocumentDvkStatus(long documentDvkStatus) {
+	public void setDocumentDvkStatus(Long documentDvkStatus) {
 		this.documentDvkStatus = documentDvkStatus;
 	}
 
-	public long getDocumentWfStatus() {
+	public Long getDocumentWfStatus() {
 		return this.documentWfStatus;
 	}
 
-	public void setDocumentWfStatus(long documentWfStatus) {
+	public void setDocumentWfStatus(Long documentWfStatus) {
 		this.documentWfStatus = documentWfStatus;
 	}
 

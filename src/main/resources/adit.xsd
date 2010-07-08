@@ -30,6 +30,8 @@
 	<element name="DeleteDocumentRequest" type="tns:DeleteDocumentRequest"/>
 	<element name="DeleteDocumentResponse" type="tns:DeleteDocumentResponse"/>
 	
+	<element name="UnShareDocumentRequest" type="tns:UnShareDocumentRequest"/>
+	<element name="UnShareDocumentResponse" type="tns:UnShareDocumentResponse"/>
 	<element name="MarkDocumentViewedRequest" type="tns:MarkDocumentViewedRequest"/>
 	<element name="MarkDocumentViewedResponse" type="tns:MarkDocumentViewedResponse"/>
 	
@@ -43,16 +45,35 @@
 
 	<complexType name="ArrayOfMessage">
 		<sequence>
-			<element name="message"	type="tns:Message" maxOccurs="unbounded" minOccurs="0"></element>
+			<element name="message" type="tns:Message" maxOccurs="unbounded" minOccurs="0"></element>
 		</sequence>
 	</complexType>
 	
 	<complexType name="ArrayOfFileId">
 		<sequence>
-			<element name="file_id"	type="integer" maxOccurs="unbounded" minOccurs="0"></element>
+			<element name="file_id" type="integer" maxOccurs="unbounded" minOccurs="0"></element>
 		</sequence>
 	</complexType>
 	
+	<complexType name="ArrayOfUserCode">
+		<sequence>
+			<element name="code" type="string" maxOccurs="unbounded" minOccurs="0"></element>
+		</sequence>
+	</complexType>
+
+	<complexType name="RecipientStatus">
+		<sequence>
+			<element name="code" type="string"></element>
+			<element name="success" type="boolean"></element>
+			<element name="messages" type="tns:ArrayOfMessage"></element>
+		</sequence>
+	</complexType>
+	
+	<complexType name="ArrayOfRecipientStatus">
+		<sequence>
+			<element name="recipient" type="tns:RecipientStatus" maxOccurs="unbounded" minOccurs="0"></element>
+		</sequence>
+	</complexType>
 
 
 	<!-- join päringu tüübid -->
@@ -205,6 +226,21 @@
 		</sequence>
 	</complexType>
 	
+	
+	<!-- unShareDocument päringu tüübid -->
+	<complexType name="UnShareDocumentRequest">
+		<sequence>
+			<element name="document_id" type="integer"/>
+			<element name="recipient_list" type="tns:ArrayOfUserCode"/>
+		</sequence>
+	</complexType>
+	<complexType name="UnShareDocumentResponse">
+		<sequence>
+			<element name="success" type="boolean"/>
+			<element name="messages" type="tns:ArrayOfMessage"/>
+			<element name="recipient_list" type="tns:ArrayOfRecipientStatus"/>
+		</sequence>
+	</complexType>
 	
 	<!-- markDocumentViewed päringu tüübid -->
 	<complexType name="MarkDocumentViewedRequest">

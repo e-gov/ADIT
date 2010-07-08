@@ -528,6 +528,41 @@
 	</class>
  	
  	
+ 	<!-- UnShareDocument -->
+	<class name="ee.adit.pojo.RecipientStatus">
+		<map-to xml="recipient" />
+		<field name="code" type="java.lang.String" />
+		<field name="success" type="boolean" />
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage" />
+	</class>
+	
+	<class name="ee.adit.pojo.ArrayOfRecipientStatus">
+		<map-to xml="recipient_list" />
+		<field name="recipient" type="ee.adit.pojo.RecipientStatus" collection="arraylist" />
+	</class>
+ 	
+	<class name="ee.adit.pojo.UnShareDocumentRequest">
+		<map-to xml="UnShareDocument" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<field name="documentId" type="java.lang.Long">
+			<bind-xml name="document_id" location="keha" />
+		</field>
+		<field name="recipientList" type="ee.adit.pojo.ArrayOfUserCode">
+			<bind-xml name="recipient_list" location="keha" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.UnShareDocumentResponse">
+		<map-to xml="keha" ns-prefix="xtee" />
+		<field name="success" type="boolean" >
+		</field>
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
+			<bind-xml name="messages" />
+		</field>
+		<field name="recipientList" type="ee.adit.pojo.ArrayOfRecipientStatus">
+			<bind-xml name="recipient_list" />
+		</field>
+	</class>
+ 	
  	<!-- MarkDocumentViewed -->
 	<class name="ee.adit.pojo.MarkDocumentViewedRequest">
 		<map-to xml="MarkDocumentViewed" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
@@ -580,6 +615,13 @@
 		<map-to xml="file_id_list" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
 		<field name="fileId" type="java.lang.Long" collection="arraylist">
 			<bind-xml name="file_id" />
+		</field>
+	</class>
+	
+	<class name="ee.adit.pojo.ArrayOfUserCode">
+		<map-to xml="recipient_list" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<field name="code" type="java.lang.String" collection="arraylist">
+			<bind-xml name="code" />
 		</field>
 	</class>
 </mapping>

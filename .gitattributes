@@ -84,6 +84,8 @@ src/main/java/ee/adit/exception/AditException.java -text
 src/main/java/ee/adit/exception/AditInternalException.java -text
 src/main/java/ee/adit/pojo/ArrayOfFileId.java -text
 src/main/java/ee/adit/pojo/ArrayOfMessage.java -text
+src/main/java/ee/adit/pojo/ArrayOfRecipientStatus.java -text
+src/main/java/ee/adit/pojo/ArrayOfUserCode.java -text
 src/main/java/ee/adit/pojo/DeflateDocumentRequest.java -text
 src/main/java/ee/adit/pojo/DeflateDocumentResponse.java -text
 src/main/java/ee/adit/pojo/DeleteDocumentFileRequest.java -text
@@ -119,6 +121,7 @@ src/main/java/ee/adit/pojo/ObjectFactory.java -text
 src/main/java/ee/adit/pojo/OutputDocument.java -text
 src/main/java/ee/adit/pojo/OutputDocumentFile.java -text
 src/main/java/ee/adit/pojo/OutputDocumentFilesList.java -text
+src/main/java/ee/adit/pojo/RecipientStatus.java -text
 src/main/java/ee/adit/pojo/SaveDocumentRequest.java -text
 src/main/java/ee/adit/pojo/SaveDocumentRequestAttachment.java -text
 src/main/java/ee/adit/pojo/SaveDocumentRequestAttachmentFile.java -text
@@ -128,6 +131,8 @@ src/main/java/ee/adit/pojo/Signature.java -text
 src/main/java/ee/adit/pojo/Success.java -text
 src/main/java/ee/adit/pojo/UnJoinRequest.java -text
 src/main/java/ee/adit/pojo/UnJoinResponse.java -text
+src/main/java/ee/adit/pojo/UnShareDocumentRequest.java -text
+src/main/java/ee/adit/pojo/UnShareDocumentResponse.java -text
 src/main/java/ee/adit/pojo/UserList.java -text
 src/main/java/ee/adit/service/DocumentService.java -text
 src/main/java/ee/adit/service/UserService.java -text

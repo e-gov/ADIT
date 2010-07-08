@@ -261,6 +261,7 @@ public class DocumentDAO extends HibernateDaoSupport {
 	            	innerResult.setLocked(doc.getLocked());
 	            	innerResult.setLockingDate(doc.getLockingDate());
 	            	// TODO: innerResult.setPreviousDocumentId(previousDocumentId);
+	            	// TODO: previous document GUID
 	            	innerResult.setSignable(doc.getSignable());
 	            	innerResult.setTitle(doc.getTitle());
 	            	innerResult.setWorkflowStatusId(doc.getDocumentWfStatusId());
