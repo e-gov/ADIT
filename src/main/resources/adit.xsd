@@ -30,6 +30,9 @@
 	<element name="DeleteDocumentRequest" type="tns:DeleteDocumentRequest"/>
 	<element name="DeleteDocumentResponse" type="tns:DeleteDocumentResponse"/>
 	
+	<element name="MarkDocumentViewedRequest" type="tns:MarkDocumentViewedRequest"/>
+	<element name="MarkDocumentViewedResponse" type="tns:MarkDocumentViewedResponse"/>
+	
 	<complexType name="Message">
 		<simpleContent>
 			<extension base="string">
@@ -196,6 +199,20 @@
 		</sequence>
 	</complexType>
 	<complexType name="DeflateDocumentResponse">
+		<sequence>
+			<element name="success" type="boolean"></element>
+			<element name="messages" type="tns:ArrayOfMessage"></element>
+		</sequence>
+	</complexType>
+	
+	
+	<!-- markDocumentViewed päringu tüübid -->
+	<complexType name="MarkDocumentViewedRequest">
+		<sequence>
+			<element name="document_id" type="integer"></element>
+		</sequence>
+	</complexType>
+	<complexType name="MarkDocumentViewedResponse">
 		<sequence>
 			<element name="success" type="boolean"></element>
 			<element name="messages" type="tns:ArrayOfMessage"></element>

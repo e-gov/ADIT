@@ -112,6 +112,8 @@ src/main/java/ee/adit/pojo/GetUserInfoResponseAttachment.java -text
 src/main/java/ee/adit/pojo/GetUserInfoResponseAttachmentUser.java -text
 src/main/java/ee/adit/pojo/JoinRequest.java -text
 src/main/java/ee/adit/pojo/JoinResponse.java -text
+src/main/java/ee/adit/pojo/MarkDocumentViewedRequest.java -text
+src/main/java/ee/adit/pojo/MarkDocumentViewedResponse.java -text
 src/main/java/ee/adit/pojo/Message.java -text
 src/main/java/ee/adit/pojo/ObjectFactory.java -text
 src/main/java/ee/adit/pojo/OutputDocument.java -text

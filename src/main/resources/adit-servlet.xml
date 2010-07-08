@@ -105,6 +105,12 @@
 	</bean>
 	
 	<bean id="MarkDocumentViewedEndpoint" class="ee.adit.ws.endpoint.document.MarkDocumentViewedEndpoint">
+		<property name="marshaller" ref="castorMarshaller"/>
+		<property name="unmarshaller" ref="castorMarshaller"/>
+		<property name="userService" ref="userService"/>
+		<property name="messageSource" ref="messageSource"/>
+		<property name="configuration" ref="configuration"/>
+		<property name="documentService" ref="documentService"/>
 	</bean>
 	
 	<bean id="PrepareSignatureEndpoint" class="ee.adit.ws.endpoint.document.PrepareSignatureEndpoint">

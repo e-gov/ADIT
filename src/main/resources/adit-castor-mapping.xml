@@ -527,6 +527,25 @@
 		</field>
 	</class>
  	
+ 	
+ 	<!-- MarkDocumentViewed -->
+	<class name="ee.adit.pojo.MarkDocumentViewedRequest">
+		<map-to xml="MarkDocumentViewed" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<field name="documentId" type="java.lang.Long">
+			<bind-xml name="document_id" location="keha" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.MarkDocumentViewedResponse">
+		<map-to xml="keha" ns-prefix="xtee" />
+		<field name="success" type="boolean" >
+		</field>
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
+			<bind-xml name="messages" />
+		</field>
+	</class>
+ 	
+ 	
  	<!-- Common -->
  	<class name="ee.adit.pojo.Success">
 		<map-to xml="success" ns-prefix="adit" />
