@@ -38,11 +38,13 @@
 	<element name="MarkDocumentViewedResponse" type="tns:MarkDocumentViewedResponse"/>
 	<element name="ModifyStatusRequest" type="tns:ModifyStatusRequest"/>
 	<element name="ModifyStatusResponse" type="tns:ModifyStatusResponse"/>
+	<element name="GetDocumentHistoryRequest" type="tns:GetDocumentHistoryRequest"/>
+	<element name="GetDocumentHistoryResponse" type="tns:GetDocumentHistoryResponse"/>
 	
 	<complexType name="Message">
 		<simpleContent>
 			<extension base="string">
-				<attribute name="lang" type="string" /> 
+				<attribute name="lang" type="string" />
 			</extension>
 		</simpleContent>
 	</complexType>
@@ -287,6 +289,24 @@
 		<sequence>
 			<element name="success" type="boolean"></element>
 			<element name="messages" type="tns:ArrayOfMessage"></element>
+		</sequence>
+	</complexType>
+	
+	<!-- getDocumentHistory päringu tüübid -->
+	<complexType name="GetDocumentHistoryRequest">
+		<sequence>
+			<element name="document_id" type="integer" nillable="false"></element>
+		</sequence>
+	</complexType>
+	<complexType name="GetDocumentHistoryResponse">
+		<sequence>
+			<element name="success" type="boolean"></element>
+			<element name="messages" type="tns:ArrayOfMessage"></element>
+			<element name="document_history_list">
+				<complexType>
+					<attribute name="href" type="string"/>
+				</complexType>
+			</element>
 		</sequence>
 	</complexType>
 	

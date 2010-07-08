@@ -101,6 +101,9 @@ src/main/java/ee/adit/pojo/GetDocumentFileRequest.java -text
 src/main/java/ee/adit/pojo/GetDocumentFileResponse.java -text
 src/main/java/ee/adit/pojo/GetDocumentFileResponseAttachment.java -text
 src/main/java/ee/adit/pojo/GetDocumentFileResponseFiles.java -text
+src/main/java/ee/adit/pojo/GetDocumentHistoryRequest.java -text
+src/main/java/ee/adit/pojo/GetDocumentHistoryResponse.java -text
+src/main/java/ee/adit/pojo/GetDocumentHistoryResponseDocumentHistoryList.java -text
 src/main/java/ee/adit/pojo/GetDocumentRequest.java -text
 src/main/java/ee/adit/pojo/GetDocumentResponse.java -text
 src/main/java/ee/adit/pojo/GetDocumentResponseDocument.java -text
