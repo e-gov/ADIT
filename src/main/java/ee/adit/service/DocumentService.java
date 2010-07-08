@@ -3,21 +3,12 @@ package ee.adit.service;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.StringWriter;
-import java.math.BigDecimal;
-import java.sql.Blob;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 import java.util.UUID;
 
 import org.apache.log4j.Logger;
-import org.hibernate.Hibernate;
 import org.springframework.context.MessageSource;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
@@ -26,8 +17,8 @@ import org.xml.sax.helpers.XMLReaderFactory;
 import ee.adit.dao.DocumentDAO;
 import ee.adit.dao.DocumentFileDAO;
 import ee.adit.dao.DocumentTypeDAO;
+import ee.adit.dao.DocumentWfStatusDAO;
 import ee.adit.dao.pojo.Document;
-import ee.adit.dao.pojo.DocumentFile;
 import ee.adit.dao.pojo.DocumentType;
 import ee.adit.exception.AditException;
 import ee.adit.exception.AditInternalException;
@@ -63,6 +54,7 @@ public class DocumentService {
 	private DocumentTypeDAO documentTypeDAO;
 	private DocumentDAO documentDAO;
 	private DocumentFileDAO documentFileDAO;
+	private DocumentWfStatusDAO documentWfStatusDAO;
 	
 	public List<String> checkAttachedDocumentMetadataForNewDocument(SaveDocumentRequestAttachment document, long remainingDiskQuota, String xmlFile, String tempDir) throws AditException {
 		List<String> result = null;
@@ -260,4 +252,11 @@ public class DocumentService {
 		this.documentFileDAO = documentFileDAO;
 	}
 	
+	public DocumentWfStatusDAO getDocumentWfStatusDAO() {
+		return documentWfStatusDAO;
+	}
+
+	public void setDocumentWfStatusDAO(DocumentWfStatusDAO documentWfStatusDAO) {
+		this.documentWfStatusDAO = documentWfStatusDAO;
+	}
 }

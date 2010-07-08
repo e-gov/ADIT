@@ -54,6 +54,7 @@ src/main/java/ee/adit/dao/AditUserDAO.java -text
 src/main/java/ee/adit/dao/DocumentDAO.java -text
 src/main/java/ee/adit/dao/DocumentFileDAO.java -text
 src/main/java/ee/adit/dao/DocumentTypeDAO.java -text
+src/main/java/ee/adit/dao/DocumentWfStatusDAO.java -text
 src/main/java/ee/adit/dao/RemoteApplicationDAO.java -text
 src/main/java/ee/adit/dao/UsertypeDAO.java -text
 src/main/java/ee/adit/dao/pojo/AccessRestriction.java -text
@@ -117,6 +118,8 @@ src/main/java/ee/adit/pojo/JoinResponse.java -text
 src/main/java/ee/adit/pojo/MarkDocumentViewedRequest.java -text
 src/main/java/ee/adit/pojo/MarkDocumentViewedResponse.java -text
 src/main/java/ee/adit/pojo/Message.java -text
+src/main/java/ee/adit/pojo/ModifyStatusRequest.java -text
+src/main/java/ee/adit/pojo/ModifyStatusResponse.java -text
 src/main/java/ee/adit/pojo/ObjectFactory.java -text
 src/main/java/ee/adit/pojo/OutputDocument.java -text
 src/main/java/ee/adit/pojo/OutputDocumentFile.java -text
@@ -155,6 +158,7 @@ src/main/java/ee/adit/ws/endpoint/document/GetDocumentFileEndpoint.java -text
 src/main/java/ee/adit/ws/endpoint/document/GetDocumentHistoryEndpoint.java -text
 src/main/java/ee/adit/ws/endpoint/document/GetDocumentListEndpoint.java -text
 src/main/java/ee/adit/ws/endpoint/document/MarkDocumentViewedEndpoint.java -text
+src/main/java/ee/adit/ws/endpoint/document/ModifyStatusEndpoint.java -text
 src/main/java/ee/adit/ws/endpoint/document/PrepareSignatureEndpoint.java -text
 src/main/java/ee/adit/ws/endpoint/document/SaveDocumentEndpoint.java -text
 src/main/java/ee/adit/ws/endpoint/document/SaveDocumentFileEndpoint.java -text

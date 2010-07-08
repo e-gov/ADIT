@@ -36,6 +36,8 @@
 	<element name="UnShareDocumentResponse" type="tns:UnShareDocumentResponse"/>
 	<element name="MarkDocumentViewedRequest" type="tns:MarkDocumentViewedRequest"/>
 	<element name="MarkDocumentViewedResponse" type="tns:MarkDocumentViewedResponse"/>
+	<element name="ModifyStatusRequest" type="tns:ModifyStatusRequest"/>
+	<element name="ModifyStatusResponse" type="tns:ModifyStatusResponse"/>
 	
 	<complexType name="Message">
 		<simpleContent>
@@ -268,6 +270,20 @@
 		</sequence>
 	</complexType>
 	<complexType name="MarkDocumentViewedResponse">
+		<sequence>
+			<element name="success" type="boolean"></element>
+			<element name="messages" type="tns:ArrayOfMessage"></element>
+		</sequence>
+	</complexType>
+	
+	<!-- modifyStatus päringu tüübid -->
+	<complexType name="ModifyStatusRequest">
+		<sequence>
+			<element name="document_id" type="integer"></element>
+			<element name="document_status_id" type="integer"></element>
+		</sequence>
+	</complexType>
+	<complexType name="ModifyStatusResponse">
 		<sequence>
 			<element name="success" type="boolean"></element>
 			<element name="messages" type="tns:ArrayOfMessage"></element>

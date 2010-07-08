@@ -113,6 +113,15 @@
 		<property name="documentService" ref="documentService"/>
 	</bean>
 	
+	<bean id="ModifyStatusEndpoint" class="ee.adit.ws.endpoint.document.ModifyStatusEndpoint">
+		<property name="marshaller" ref="castorMarshaller"/>
+		<property name="unmarshaller" ref="castorMarshaller"/>
+		<property name="userService" ref="userService"/>
+		<property name="messageSource" ref="messageSource"/>
+		<property name="configuration" ref="configuration"/>
+		<property name="documentService" ref="documentService"/>
+	</bean>
+	
 	<bean id="PrepareSignatureEndpoint" class="ee.adit.ws.endpoint.document.PrepareSignatureEndpoint">
 	</bean>
 	
@@ -187,6 +196,8 @@
 				<prop
 					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}MarkDocumentViewed">MarkDocumentViewedEndpoint</prop>
 				<prop
+					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}ModifyStatus">ModifyStatusEndpoint</prop>
+				<prop
 					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}PrepareSignature">PrepareSignatureEndpoint</prop>
 				<prop
 					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}SaveDocument">SaveDocumentEndpoint</prop>
@@ -241,6 +252,7 @@
 		<property name="documentTypeDAO" ref="documentTypeDAO"/>
 		<property name="documentDAO" ref="documentDAO"/>
 		<property name="documentFileDAO" ref="documentFileDAO"/>
+		<property name="documentWfStatusDAO" ref="documentWfStatusDAO"/>
 	</bean>
 
 	<bean id="myDataSource"
@@ -309,6 +321,10 @@
 	</bean>	
 
 	<bean id="documentTypeDAO" class="ee.adit.dao.DocumentTypeDAO">
+		<property name="sessionFactory" ref="mySessionFactory" />
+	</bean>
+	
+	<bean id="documentWfStatusDAO" class="ee.adit.dao.DocumentWfStatusDAO">
 		<property name="sessionFactory" ref="mySessionFactory" />
 	</bean>
 
