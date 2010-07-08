@@ -30,6 +30,8 @@
 	<element name="DeleteDocumentRequest" type="tns:DeleteDocumentRequest"/>
 	<element name="DeleteDocumentResponse" type="tns:DeleteDocumentResponse"/>
 	
+	<element name="ShareDocumentRequest" type="tns:ShareDocumentRequest"/>
+	<element name="ShareDocumentResponse" type="tns:ShareDocumentResponse"/>
 	<element name="UnShareDocumentRequest" type="tns:UnShareDocumentRequest"/>
 	<element name="UnShareDocumentResponse" type="tns:UnShareDocumentResponse"/>
 	<element name="MarkDocumentViewedRequest" type="tns:MarkDocumentViewedRequest"/>
@@ -226,6 +228,23 @@
 		</sequence>
 	</complexType>
 	
+	
+	<!-- shareDocument päringu tüübid -->
+	<complexType name="ShareDocumentRequest">
+		<sequence>
+			<element name="document_id" type="integer"/>
+			<element name="recipient_list" type="tns:ArrayOfUserCode"/>
+			<element name="reason_for_sharing" type="string"/>
+			<element name="shared_for_signing" type="boolean"/>
+		</sequence>
+	</complexType>
+	<complexType name="ShareDocumentResponse">
+		<sequence>
+			<element name="success" type="boolean"/>
+			<element name="messages" type="tns:ArrayOfMessage"/>
+			<element name="recipient_list" type="tns:ArrayOfRecipientStatus"/>
+		</sequence>
+	</complexType>
 	
 	<!-- unShareDocument päringu tüübid -->
 	<complexType name="UnShareDocumentRequest">

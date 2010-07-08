@@ -54,6 +54,7 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 	protected Object invokeInternal(Object requestObject) throws Exception {
 		UnShareDocumentResponse response = new UnShareDocumentResponse();
 		ArrayOfMessage messages = new ArrayOfMessage();
+		ArrayOfRecipientStatus statusArray = new ArrayOfRecipientStatus();
 
 		try {
 			LOG.debug("unShareDocument.v1 invoked.");
@@ -135,7 +136,6 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 			
 			// All checks are successfully passed
 			boolean saveDocument = false;
-			ArrayOfRecipientStatus statusArray = new ArrayOfRecipientStatus();
 			List<String> userCodes = new ArrayList<String>();
 			if ((request.getRecipientList() != null) && (request.getRecipientList().getCode() != null)) {
 				userCodes.addAll(request.getRecipientList().getCode());
@@ -214,6 +214,7 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 		} catch (Exception e) {
 			LOG.error("Exception: ", e);
 			response.setSuccess(false);
+			response.setRecipientList(statusArray);
 			ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
 
 			if (e instanceof AditException) {

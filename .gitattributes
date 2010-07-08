@@ -127,6 +127,8 @@ src/main/java/ee/adit/pojo/SaveDocumentRequestAttachment.java -text
 src/main/java/ee/adit/pojo/SaveDocumentRequestAttachmentFile.java -text
 src/main/java/ee/adit/pojo/SaveDocumentRequestDocument.java -text
 src/main/java/ee/adit/pojo/SaveDocumentResponse.java -text
+src/main/java/ee/adit/pojo/ShareDocumentRequest.java -text
+src/main/java/ee/adit/pojo/ShareDocumentResponse.java -text
 src/main/java/ee/adit/pojo/Signature.java -text
 src/main/java/ee/adit/pojo/Success.java -text
 src/main/java/ee/adit/pojo/UnJoinRequest.java -text

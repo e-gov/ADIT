@@ -528,19 +528,36 @@
 	</class>
  	
  	
- 	<!-- UnShareDocument -->
-	<class name="ee.adit.pojo.RecipientStatus">
-		<map-to xml="recipient" />
-		<field name="code" type="java.lang.String" />
-		<field name="success" type="boolean" />
-		<field name="messages" type="ee.adit.pojo.ArrayOfMessage" />
+ 	<!-- ShareDocument -->
+	<class name="ee.adit.pojo.ShareDocumentRequest">
+		<map-to xml="ShareDocument" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<field name="documentId" type="java.lang.Long">
+			<bind-xml name="document_id" location="keha" />
+		</field>
+		<field name="recipientList" type="ee.adit.pojo.ArrayOfUserCode">
+			<bind-xml name="recipient_list" location="keha" />
+		</field>
+		<field name="reasonForSharing" type="java.lang.String">
+			<bind-xml name="reason_for_sharing" location="keha" />
+		</field>
+		<field name="sharedForSigning" type="java.lang.Boolean">
+			<bind-xml name="shared_for_signing" location="keha" />
+		</field>
 	</class>
-	
-	<class name="ee.adit.pojo.ArrayOfRecipientStatus">
-		<map-to xml="recipient_list" />
-		<field name="recipient" type="ee.adit.pojo.RecipientStatus" collection="arraylist" />
+
+	<class name="ee.adit.pojo.ShareDocumentResponse">
+		<map-to xml="keha" ns-prefix="xtee" />
+		<field name="success" type="boolean" >
+		</field>
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
+			<bind-xml name="messages" />
+		</field>
+		<field name="recipientList" type="ee.adit.pojo.ArrayOfRecipientStatus">
+			<bind-xml name="recipient_list" />
+		</field>
 	</class>
  	
+ 	<!-- UnShareDocument -->
 	<class name="ee.adit.pojo.UnShareDocumentRequest">
 		<map-to xml="UnShareDocument" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
 		<field name="documentId" type="java.lang.Long">
@@ -623,5 +640,17 @@
 		<field name="code" type="java.lang.String" collection="arraylist">
 			<bind-xml name="code" />
 		</field>
+	</class>
+	
+	<class name="ee.adit.pojo.RecipientStatus">
+		<map-to xml="recipient" />
+		<field name="code" type="java.lang.String" />
+		<field name="success" type="boolean" />
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage" />
+	</class>
+	
+	<class name="ee.adit.pojo.ArrayOfRecipientStatus">
+		<map-to xml="recipient_list" />
+		<field name="recipient" type="ee.adit.pojo.RecipientStatus" collection="arraylist" />
 	</class>
 </mapping>
