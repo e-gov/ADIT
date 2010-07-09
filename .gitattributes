@@ -86,6 +86,10 @@ src/main/java/ee/adit/exception/AditInternalException.java -text
 src/main/java/ee/adit/pojo/Activity.java -text
 src/main/java/ee/adit/pojo/ActivityActor.java -text
 src/main/java/ee/adit/pojo/ActivitySubject.java -text
+src/main/java/ee/adit/pojo/ArrayOfCreatorApplication.java -text
+src/main/java/ee/adit/pojo/ArrayOfDocumentDvkStatus.java -text
+src/main/java/ee/adit/pojo/ArrayOfDocumentType.java -text
+src/main/java/ee/adit/pojo/ArrayOfDocumentWorkflowStatus.java -text
 src/main/java/ee/adit/pojo/ArrayOfFileId.java -text
 src/main/java/ee/adit/pojo/ArrayOfMessage.java -text
 src/main/java/ee/adit/pojo/ArrayOfRecipientStatus.java -text
@@ -108,6 +112,8 @@ src/main/java/ee/adit/pojo/GetDocumentHistoryRequest.java -text
 src/main/java/ee/adit/pojo/GetDocumentHistoryResponse.java -text
 src/main/java/ee/adit/pojo/GetDocumentHistoryResponseAttachment.java -text
 src/main/java/ee/adit/pojo/GetDocumentHistoryResponseDocument.java -text
+src/main/java/ee/adit/pojo/GetDocumentListRequest.java -text
+src/main/java/ee/adit/pojo/GetDocumentListResponse.java -text
 src/main/java/ee/adit/pojo/GetDocumentRequest.java -text
 src/main/java/ee/adit/pojo/GetDocumentResponse.java -text
 src/main/java/ee/adit/pojo/GetDocumentResponseDocument.java -text

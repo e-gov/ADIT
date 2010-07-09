@@ -54,7 +54,7 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
 		ArrayOfMessage messages = new ArrayOfMessage();
 
 		try {
-			LOG.debug("getDocumentFile.v1 invoked.");
+			LOG.debug("getDocument.v1 invoked.");
 			GetDocumentRequest request = (GetDocumentRequest) requestObject;
 			CustomXTeeHeader header = this.getHeader();
 			String applicationName = header.getInfosysteem();

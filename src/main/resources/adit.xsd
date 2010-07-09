@@ -17,6 +17,8 @@
 	<element name="GetJoinedRequest" type="tns:GetJoinedRequest"/>
 	<element name="GetJoinedResponse" type="tns:GetJoinedResponse"/>
 	
+	<element name="GetDocumentListRequest" type="tns:GetDocumentListRequest"/>
+	<element name="GetDocumentListResponse" type="tns:GetDocumentListResponse"/>
 	<element name="GetDocumentRequest" type="tns:GetDocumentRequest"/>
 	<element name="GetDocumentResponse" type="tns:GetDocumentResponse"/>
 	<element name="GetDocumentFileRequest" type="tns:GetDocumentFileRequest"/>
@@ -58,6 +60,30 @@
 	<complexType name="ArrayOfFileId">
 		<sequence>
 			<element name="file_id" type="integer" maxOccurs="unbounded" minOccurs="0"></element>
+		</sequence>
+	</complexType>
+	
+	<complexType name="ArrayOfDocumentType">
+		<sequence>
+			<element name="document_type" type="string" maxOccurs="unbounded" minOccurs="0"></element>
+		</sequence>
+	</complexType>
+	
+	<complexType name="ArrayOfDocumentDvkStatus">
+		<sequence>
+			<element name="status_id" type="integer" maxOccurs="unbounded" minOccurs="0"></element>
+		</sequence>
+	</complexType>
+	
+	<complexType name="ArrayOfDocumentWorkflowStatus">
+		<sequence>
+			<element name="status_id" type="integer" maxOccurs="unbounded" minOccurs="0"></element>
+		</sequence>
+	</complexType>
+	
+	<complexType name="ArrayOfCreatorApplication">
+		<sequence>
+			<element name="creator_application" type="string" maxOccurs="unbounded" minOccurs="0"></element>
 		</sequence>
 	</complexType>
 	
@@ -133,6 +159,33 @@
 			<element name="success" type="boolean"></element>
 			<element name="messages" type="tns:ArrayOfMessage"></element>
 			<element name="userList" type="base64Binary"></element>
+		</sequence>
+	</complexType>
+	
+	<!-- getDocumentList päringu tüübid -->
+	<complexType name="GetDocumentListRequest">
+		<sequence>
+			<element name="folder" type="string"></element>
+			<element name="document_types" type="tns:ArrayOfDocumentType"></element>
+			<element name="document_dvk_statuses" type="tns:ArrayOfDocumentDvkStatus"></element>
+			<element name="document_workflow_statuses" type="tns:ArrayOfDocumentWorkflowStatus"></element>
+			<element name="has_been_viewed" type="boolean"></element>
+			<element name="is_deflated" type="boolean"></element>
+			<element name="creator_applications" type="tns:ArrayOfCreatorApplication"></element>
+			<element name="search_phrase" type="string"></element>
+			<element name="max_results" type="integer"></element>
+			<element name="start_index" type="integer"></element>
+		</sequence>
+	</complexType>
+	<complexType name="GetDocumentListResponse">
+		<sequence>
+			<element name="success" type="boolean"></element>
+			<element name="messages" type="tns:ArrayOfMessage"></element>
+			<element name="document_list">
+				<complexType>
+					<attribute name="href" type="string"/>
+				</complexType>
+			</element>
 		</sequence>
 	</complexType>
 	
