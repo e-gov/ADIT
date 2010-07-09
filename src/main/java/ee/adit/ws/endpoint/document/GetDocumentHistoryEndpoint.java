@@ -15,6 +15,7 @@ import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.exception.AditException;
 import ee.adit.pojo.Activity;
 import ee.adit.pojo.ActivityActor;
+import ee.adit.pojo.ActivitySubject;
 import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.GetDocumentHistoryResponseAttachment;
 import ee.adit.pojo.GetDocumentHistoryRequest;
@@ -150,18 +151,35 @@ public class GetDocumentHistoryEndpoint extends AbstractAditBaseEndpoint {
 						activity.setTime(historyEvent.getEventDate());
 						activity.setType(historyEvent.getDocumentHistoryType());
 						activity.setApplication(historyEvent.getRemoteApplicationName());
-						
+						activity.setActors(new ArrayList<ActivityActor>());
+						activity.setSubjects(new ArrayList<ActivitySubject>());
+
 						ActivityActor actor = new ActivityActor();
 						actor.setCode(historyEvent.getUserCode());
-						// TODO: actor.setName(name);
-						actor.setUserCode(historyEvent.getXteeUserCode());
-						// TODO: actor.setUserName(userName);
-						activity.setActors(new ArrayList<ActivityActor>());
+						actor.setName(historyEvent.getUserName());
+						if (historyEvent.getUserCode().equalsIgnoreCase(userCode)
+							&& !historyEvent.getUserCode().equalsIgnoreCase(historyEvent.getXteeUserCode())) {
+							actor.setUserCode(historyEvent.getXteeUserCode());
+							actor.setUserName(historyEvent.getXteeUserName());
+						}
 						activity.getActors().add(actor);
 						
 						if (historyEvent.getDocumentHistoryType().equalsIgnoreCase(DocumentService.HistoryType_Send)
 							|| historyEvent.getDocumentHistoryType().equalsIgnoreCase(DocumentService.HistoryType_Share)) {
-							// TODO: Jagamise osapoolte tuvastamine
+							
+							if ((doc.getDocumentSharings() != null) && (!doc.getDocumentSharings().isEmpty())) {
+								Iterator sharingIterator = doc.getDocumentSharings().iterator();
+								while (sharingIterator.hasNext()) {
+									DocumentSharing sharing = (DocumentSharing)sharingIterator.next();
+									if (sharing.getCreationDate().compareTo(historyEvent.getEventDate()) == 0) {
+										
+										ActivitySubject subject = new ActivitySubject();
+										subject.setCode(sharing.getUserCode());
+										subject.setName(sharing.getUserName());
+										activity.getSubjects().add(subject);
+									}
+								}
+							}
 						}
 						
 						activityList.add(activity);

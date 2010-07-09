@@ -1,5 +1,6 @@
 package ee.adit.ws.endpoint.document;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Locale;
@@ -55,6 +56,11 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 		ShareDocumentResponse response = new ShareDocumentResponse();
 		ArrayOfMessage messages = new ArrayOfMessage();
 		ArrayOfRecipientStatus statusArray = new ArrayOfRecipientStatus();
+		
+		// Get a fixed request date
+		// This becomes useful if we later have to compare
+		// records in different database tables by date
+		Date requestDate = Calendar.getInstance().getTime();
 
 		try {
 			LOG.debug("shareDocument.v1 invoked.");
@@ -94,6 +100,16 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 			if (user == null) {
 				String errorMessage = this.getMessageSource().getMessage("user.nonExistent", new Object[] { userCode },	Locale.ENGLISH);
 				throw new AditException(errorMessage);
+			}
+			AditUser xroadRequestUser = null;
+			if (user.getUsertype().getShortName().equalsIgnoreCase("person")) {
+				xroadRequestUser = user;
+			} else {
+				try {
+					xroadRequestUser = this.getUserService().getUserByID(header.getIsikukood());
+				} catch (Exception ex) {
+					LOG.debug("Error when attempting to find local user matchinig the person that executed a company request.");
+				}
 			}
 
 			// Kontrollime, et kasutajakonto ligipääs poleks peatatud (kasutaja lahkunud)
@@ -136,7 +152,6 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 			
 			// All checks are successfully passed
 			boolean saveDocument = false;
-			
 			for (String recipientCode : request.getRecipientList().getCode()) {
 				boolean isSuccess = false;
 				ArrayOfMessage statusMessages = new ArrayOfMessage();
@@ -150,7 +165,7 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 					statusMessages.addMessage(new Message("en", this.getMessageSource().getMessage("request.shareDocument.recipientStatus.alreadySharedToUser", new Object[] { recipientCode }, Locale.ENGLISH)));
 				} else {
 					DocumentSharing sharing = new DocumentSharing();
-					sharing.setCreationDate(new Date());
+					sharing.setCreationDate(requestDate);
 					sharing.setDocumentId(doc.getId());
 					
 					if (request.getSharedForSigning() == true) {
@@ -180,7 +195,7 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 			if (saveDocument) {
 				doc.setLocked(true);
 				if (doc.getLockingDate() == null) {
-					doc.setLockingDate(new Date());
+					doc.setLockingDate(requestDate);
 				}
 				doc.setSignable(true);
 				
@@ -189,8 +204,13 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 				sharingEvent.setRemoteApplicationName(applicationName);
 				sharingEvent.setDocumentId(doc.getId());
 				sharingEvent.setDocumentHistoryType(DocumentService.HistoryType_Share);
-				sharingEvent.setEventDate(new Date());
-				sharingEvent.setUserCode(userCode);
+				sharingEvent.setEventDate(requestDate);
+				sharingEvent.setUserCode(user.getUserCode());
+				sharingEvent.setUserName(user.getFullName());
+				sharingEvent.setXteeUserCode(header.getIsikukood());
+				if (xroadRequestUser != null) {
+					sharingEvent.setXteeUserName(xroadRequestUser.getFullName());
+				}
 				doc.getDocumentHistories().add(sharingEvent);
 				
 				// Lisame lukustamise ajaloosündmuse
@@ -198,8 +218,13 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 				lockingEvent.setRemoteApplicationName(applicationName);
 				lockingEvent.setDocumentId(doc.getId());
 				lockingEvent.setDocumentHistoryType(DocumentService.HistoryType_Lock);
-				lockingEvent.setEventDate(new Date());
-				lockingEvent.setUserCode(userCode);
+				lockingEvent.setEventDate(requestDate);
+				lockingEvent.setUserCode(user.getUserCode());
+				lockingEvent.setUserName(user.getFullName());
+				lockingEvent.setXteeUserCode(header.getIsikukood());
+				if (xroadRequestUser != null) {
+					lockingEvent.setXteeUserName(xroadRequestUser.getFullName());
+				}
 				doc.getDocumentHistories().add(lockingEvent);
 				
 				this.documentService.getDocumentDAO().save(doc, null);
@@ -216,7 +241,7 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 		} catch (Exception e) {
 			LOG.error("Exception: ", e);
 			response.setSuccess(false);
-			response.setRecipientList(statusArray);
+			//response.setRecipientList(statusArray);
 			ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
 
 			if (e instanceof AditException) {

@@ -9,29 +9,32 @@ import java.util.Date;
  */
 public class DocumentHistory implements java.io.Serializable {
 
-	private long id;
+	private static final long serialVersionUID = 1886348010778047855L;
+	private Long id;
 	private String remoteApplicationName;
 	private long documentId;
 	private String documentHistoryType;
 	private String description;
 	private Date eventDate;
 	private String userCode;
+	private String userName;
 	private String notificationStatus;
 	private String xteeNotificationId;
 	private String xteeUserCode;
+	private String xteeUserName;
 
 	public DocumentHistory() {
 	}
 
-	public DocumentHistory(long id, long documentId) {
+	public DocumentHistory(Long id, long documentId) {
 		this.id = id;
 		this.documentId = documentId;
 	}
 
-	public DocumentHistory(long id, String remoteApplicationName,
+	public DocumentHistory(Long id, String remoteApplicationName,
 			long documentId, String documentHistoryType, String description,
-			Date eventDate, String userCode, String notificationStatus,
-			String xteeNotificationId, String xteeUserCode) {
+			Date eventDate, String userCode, String userName, String notificationStatus,
+			String xteeNotificationId, String xteeUserCode, String xteeUserName) {
 		this.id = id;
 		this.remoteApplicationName = remoteApplicationName;
 		this.documentId = documentId;
@@ -39,16 +42,18 @@ public class DocumentHistory implements java.io.Serializable {
 		this.description = description;
 		this.eventDate = eventDate;
 		this.userCode = userCode;
+		this.userName = userName;
 		this.notificationStatus = notificationStatus;
 		this.xteeNotificationId = xteeNotificationId;
 		this.xteeUserCode = xteeUserCode;
+		this.xteeUserName = xteeUserName;
 	}
 
-	public long getId() {
+	public Long getId() {
 		return this.id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -99,6 +104,14 @@ public class DocumentHistory implements java.io.Serializable {
 	public void setUserCode(String userCode) {
 		this.userCode = userCode;
 	}
+	
+	public String getUserName() {
+		return this.userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
 
 	public String getNotificationStatus() {
 		return this.notificationStatus;
@@ -124,4 +137,11 @@ public class DocumentHistory implements java.io.Serializable {
 		this.xteeUserCode = xteeUserCode;
 	}
 
+	public String getXteeUserName() {
+		return this.xteeUserName;
+	}
+
+	public void setXteeUserName(String xteeUserName) {
+		this.xteeUserName = xteeUserName;
+	}
 }

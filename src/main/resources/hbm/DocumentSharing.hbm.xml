@@ -6,7 +6,9 @@
     <class name="ee.adit.dao.pojo.DocumentSharing" table="DOCUMENT_SHARING" schema="ADIT">
         <id name="id" type="long">
             <column name="ID" precision="12" scale="0" />
-            <generator class="assigned" />
+            <generator class="sequence">
+            	<param name="sequence">document_sharing_id_seq</param>
+            </generator>
         </id>
         <property name="documentSharingType" type="string">
             <column name="SHARING_TYPE" length="50" not-null="true" />
@@ -29,7 +31,7 @@
         <property name="taskDescription" type="string">
             <column name="TASK_DESCRIPTION" length="4000" />
         </property>
-        <property name="creationDate" type="date">
+        <property name="creationDate" type="timestamp">
             <column name="CREATION_DATE" length="7" />
         </property>
         <property name="lastAccessDate" type="date">

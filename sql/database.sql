@@ -213,11 +213,13 @@ CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_HISTORY
 	document_history_type  VARCHAR2(50),    /* Viide dokumendi ajaloo tüübile. */
 	description            VARCHAR2(4000),    /* Toimingu täpsem kirjeldus, kui vajalik. */
 	event_date             DATE,    /* Tegevuse kuupäev ja kelaaaeg */
-	user_code              VARCHAR2(50),    /* Tegevuse läbi viinud isiku kood. Viide kasutajale. */
+	user_code              VARCHAR2(50),    /* Tegevuse läbi viinud kasutaja kood. Viide kasutajale. */
+	user_name              VARCHAR2(255),    /* Tegevuse läbi viinud kasutaja nimi (tegevuse toimumise hetke seisuga). */
 	remote_application     VARCHAR2(50),    /* Viide välisele infosüsteemile (välise infosüsteemi lühinimi), mis antud toimingu välja kutsus. */
 	notification_status    VARCHAR2(50),    /* Teavituse saatmise staatus. Kui teavistus on saatmata, siis "SAADA", kui saadetud, siis "SAADETUD". Kui teavitust ei ole vaja saata, siis väli tühi (NULL). */
 	xtee_notification_id   VARCHAR2(50),    /* Teavituskalendri X-tee teenuselt saadud teavituse ID. See väli täidetakse juhul kui teavituse saatmine teavituskalendrile õnnestus. */
-	xtee_user_code         VARCHAR2(50)    /* X-tee kasutaja isikukood, kes tegevuse käivitas. See on vajalik selleks, et asutuse dokumentide puhul teada, mis konkreetne isik tegevuse läbi viis. */
+	xtee_user_code         VARCHAR2(50),    /* X-tee kasutaja isikukood, kes tegevuse käivitas. See on vajalik selleks, et asutuse dokumentide puhul teada, milline konkreetne isik tegevuse läbi viis. */
+	xtee_user_name         VARCHAR2(255)    /* X-tee kasutaja nimi (kui oli võimalik tuvastada) */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
 COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_HISTORY IS 'Dokumendi ajalookirjed. Kirje tekib siis, kui dokumendiga viiakse läbi toiming. Tabel koondab endasse dokumendiga teostatud toimingute ajaloo.';
@@ -227,10 +229,12 @@ COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY.document_history_type  IS 'Vii
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY.description            IS 'Toimingu täpsem kirjeldus, kui vajalik.';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY.event_date             IS 'Tegevuse kuupäev ja kelaaaeg';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY.user_code              IS 'Tegevuse läbi viinud isiku kood. Viide kasutajale.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY.user_name              IS 'Tegevuse läbi viinud kasutaja nimi (tegevuse toimumise hetke seisuga).';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY.remote_application     IS 'Viide välisele infosüsteemile (välise infosüsteemi lühinimi), mis antud toimingu välja kutsus.';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY.notification_status    IS 'Teavituse saatmise staatus. Kui teavistus on saatmata, siis "SAADA", kui saadetud, siis "SAADETUD". Kui teavitust ei ole vaja saata, siis väli tühi (NULL).';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY.xtee_notification_id   IS 'Teavituskalendri X-tee teenuselt saadud teavituse ID. See väli täidetakse juhul kui teavituse saatmine teavituskalendrile õnnestus.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY.xtee_user_code         IS 'X-tee kasutaja isikukood, kes tegevuse käivitas. See on vajalik selleks, et asutuse dokumentide puhul teada, mis konkreetne isik tegevuse läbi viis.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY.xtee_user_code         IS 'X-tee kasutaja isikukood, kes tegevuse käivitas. See on vajalik selleks, et asutuse dokumentide puhul teada, milline konkreetne isik tegevuse läbi viis.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY.xtee_user_name         IS 'X-tee kasutaja nimi (kui oli võimalik tuvastada)';
 
 CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_HISTORY_TYPE
 (

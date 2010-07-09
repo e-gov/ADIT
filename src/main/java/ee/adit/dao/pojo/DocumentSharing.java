@@ -10,7 +10,7 @@ import java.util.Date;
 public class DocumentSharing implements java.io.Serializable {
 
 	private static final long serialVersionUID = 3218754276318168022L;
-	private long id;
+	private Long id;
 	private String documentSharingType;
 	private Long documentDvkStatus;
 	private Long documentWfStatus;
@@ -24,7 +24,7 @@ public class DocumentSharing implements java.io.Serializable {
 	public DocumentSharing() {
 	}
 
-	public DocumentSharing(long id, String documentSharingType,
+	public DocumentSharing(Long id, String documentSharingType,
 			long documentId, String userCode) {
 		this.id = id;
 		this.documentSharingType = documentSharingType;
@@ -32,7 +32,7 @@ public class DocumentSharing implements java.io.Serializable {
 		this.userCode = userCode;
 	}
 
-	public DocumentSharing(long id, String documentSharingType,
+	public DocumentSharing(Long id, String documentSharingType,
 			Long documentDvkStatus,
 			Long documentWfStatus, long documentId,
 			String userCode, String userName, String taskDescription,
@@ -49,11 +49,11 @@ public class DocumentSharing implements java.io.Serializable {
 		this.lastAccessDate = lastAccessDate;
 	}
 
-	public long getId() {
+	public Long getId() {
 		return this.id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
