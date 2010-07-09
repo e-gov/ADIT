@@ -368,7 +368,7 @@
 		</field>
 	</class>
  	
- 	<!-- GetDocumentFiles -->
+ 	<!-- GetDocumentFile -->
  	<class name="ee.adit.pojo.GetDocumentFileRequest">
 		<map-to xml="GetDocumentFile" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
 		<field name="documentId" type="long">
@@ -615,6 +615,74 @@
 		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
 			<bind-xml name="messages" />
 		</field>
+	</class>
+ 	
+ 	<!-- GetDocumentHistory -->
+	<class name="ee.adit.pojo.GetDocumentHistoryRequest">
+		<map-to xml="GetDocumentHistory" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<field name="documentId" type="java.lang.Long">
+			<bind-xml name="document_id" location="keha" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.GetDocumentHistoryResponse">
+		<map-to xml="keha" ns-prefix="xtee" />
+		<field name="success" type="boolean" >
+		</field>
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
+			<bind-xml name="messages" />
+		</field>
+		<field name="documentHistoryList" type="ee.adit.pojo.GetDocumentHistoryResponseDocument">
+			<bind-xml name="document_history_list" location="keha" />
+		</field>
+	</class>
+	
+	<class name="ee.adit.pojo.GetDocumentHistoryResponseDocument">
+		<map-to xml="document_history_list" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<field name="href" type="java.lang.String">
+			<bind-xml name="href" node="attribute" />
+		</field>
+	</class>
+	
+	<class name="ee.adit.pojo.GetDocumentHistoryResponseAttachment">
+		<map-to xml="document" />
+		<field name="id" type="java.lang.Long" />
+		<field name="guid" type="java.lang.String" />
+		<field name="activityList" type="ee.adit.pojo.Activity" collection="arraylist">
+			<bind-xml name="activity" location="activity_list" />
+		</field>
+	</class>
+	
+	<class name="ee.adit.pojo.Activity">
+		<map-to xml="activity" />
+		<field name="time" type="java.util.Date" />
+		<field name="type" type="java.lang.String" />
+		<field name="actors" type="ee.adit.pojo.ActivityActor" collection="arraylist">
+			<bind-xml name="actor" location="actors" />
+		</field>
+		<field name="subjects" type="ee.adit.pojo.ActivitySubject" collection="arraylist">
+			<bind-xml name="subject" location="subjects" />
+		</field>
+		<field name="description" type="java.lang.String" />
+		<field name="application" type="java.lang.String" />
+	</class>
+	
+	<class name="ee.adit.pojo.ActivityActor">
+		<map-to xml="actor" />
+		<field name="code" type="java.lang.String" />
+		<field name="name" type="java.lang.String" />
+		<field name="userCode" type="java.lang.String">
+			<bind-xml name="user_code" />
+		</field>
+		<field name="userName" type="java.lang.String">
+			<bind-xml name="user_name" />
+		</field>
+	</class>
+	
+	<class name="ee.adit.pojo.ActivitySubject">
+		<map-to xml="subject" />
+		<field name="code" type="java.lang.String" />
+		<field name="name" type="java.lang.String" />
 	</class>
  	
  	

@@ -55,7 +55,7 @@ public class GetDocumentHistoryResponse {
     @XmlElement(required = true)
     protected ArrayOfMessage messages;
     @XmlElement(name = "document_history_list", required = true)
-    protected GetDocumentHistoryResponseDocumentHistoryList documentHistoryList;
+    protected GetDocumentHistoryResponseDocument documentHistoryList;
 
     /**
      * Gets the value of the success property.
@@ -102,10 +102,10 @@ public class GetDocumentHistoryResponse {
      * 
      * @return
      *     possible object is
-     *     {@link GetDocumentHistoryResponseDocumentHistoryList }
+     *     {@link GetDocumentHistoryResponseDocument }
      *     
      */
-    public GetDocumentHistoryResponseDocumentHistoryList getDocumentHistoryList() {
+    public GetDocumentHistoryResponseDocument getDocumentHistoryList() {
         return documentHistoryList;
     }
 
@@ -114,10 +114,10 @@ public class GetDocumentHistoryResponse {
      * 
      * @param value
      *     allowed object is
-     *     {@link GetDocumentHistoryResponseDocumentHistoryList }
+     *     {@link GetDocumentHistoryResponseDocument }
      *     
      */
-    public void setDocumentHistoryList(GetDocumentHistoryResponseDocumentHistoryList value) {
+    public void setDocumentHistoryList(GetDocumentHistoryResponseDocument value) {
         this.documentHistoryList = value;
     }
 }

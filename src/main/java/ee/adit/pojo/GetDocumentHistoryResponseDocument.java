@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "document_history_list")
-public class GetDocumentHistoryResponseDocumentHistoryList {
+public class GetDocumentHistoryResponseDocument {
 
     @XmlAttribute
     protected String href;

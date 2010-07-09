@@ -99,6 +99,12 @@
 	</bean>
 	
 	<bean id="GetDocumentHistoryEndpoint" class="ee.adit.ws.endpoint.document.GetDocumentHistoryEndpoint">
+		<property name="marshaller" ref="castorMarshaller"/>
+		<property name="unmarshaller" ref="castorMarshaller"/>
+		<property name="userService" ref="userService"/>
+		<property name="messageSource" ref="messageSource"/>
+		<property name="configuration" ref="configuration"/>
+		<property name="documentService" ref="documentService"/>
 	</bean>
 	
 	<bean id="GetDocumentListEndpoint" class="ee.adit.ws.endpoint.document.GetDocumentListEndpoint">
