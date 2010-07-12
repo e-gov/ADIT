@@ -338,6 +338,71 @@
 		</field>
 	</class>
 	
+ 	<!-- GetDocumentList -->
+ 	<class name="ee.adit.pojo.GetDocumentListRequest">
+		<map-to xml="GetDocumentList" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<field name="folder" type="java.lang.String">
+			<bind-xml name="folder" location="keha" />
+		</field>
+		<field name="documentTypes" type="ee.adit.pojo.ArrayOfDocumentType">
+			<bind-xml name="document_types" location="keha" />
+		</field>
+		<field name="documentDvkStatuses" type="ee.adit.pojo.ArrayOfDocumentDvkStatus">
+			<bind-xml name="document_dvk_statuses" location="keha" />
+		</field>
+		<field name="documentWorkflowStatuses" type="ee.adit.pojo.ArrayOfDocumentWorkflowStatus">
+			<bind-xml name="document_workflow_statuses" location="keha" />
+		</field>
+		<field name="hasBeenViewed" type="java.lang.Boolean">
+			<bind-xml name="has_been_viewed" location="keha" />
+		</field>
+		<field name="isDeflated" type="java.lang.Boolean">
+			<bind-xml name="is_deflated" location="keha" />
+		</field>
+		<field name="creatorApplications" type="ee.adit.pojo.ArrayOfCreatorApplication">
+			<bind-xml name="creator_applications" location="keha" />
+		</field>
+		<field name="searchPhrase" type="java.lang.String">
+			<bind-xml name="search_phrase" location="keha" />
+		</field>
+		<field name="maxResults" type="java.lang.Long">
+			<bind-xml name="max_results" location="keha" />
+		</field>
+		<field name="startIndex" type="java.lang.Long">
+			<bind-xml name="start_index" location="keha" />
+		</field>
+	</class>
+	
+	<class name="ee.adit.pojo.GetDocumentListResponse">
+		<map-to xml="GetDocumentResponse" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<field name="success" type="java.lang.Boolean" >
+		</field>
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
+			<bind-xml name="messages" />
+		</field>
+		<field name="documentList" type="ee.adit.pojo.GetDocumentListResponseList">
+			<bind-xml name="document_list" location="keha" />
+		</field>
+	</class>
+	
+	<class name="ee.adit.pojo.GetDocumentListResponseList">
+		<map-to xml="document_list" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<field name="href" type="java.lang.String">
+			<bind-xml name="href" node="attribute" />
+		</field>
+	</class>
+	
+	<class name="ee.adit.pojo.GetDocumentListResponseAttachment">
+		<map-to xml="document_list" />
+		<field name="total" type="java.lang.Integer">
+			<bind-xml name="total" />
+		</field>
+		<field name="documentList" type="ee.adit.pojo.OutputDocument" collection="arraylist">
+			<bind-xml name="document" />
+		</field>
+	</class>
+	
+	
  	<!-- GetDocument -->
  	<class name="ee.adit.pojo.GetDocumentRequest">
 		<map-to xml="GetDocument" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
@@ -740,5 +805,29 @@
 	<class name="ee.adit.pojo.ArrayOfRecipientStatus">
 		<map-to xml="recipient_list" />
 		<field name="recipient" type="ee.adit.pojo.RecipientStatus" collection="arraylist" />
+	</class>
+	
+	<class name="ee.adit.pojo.ArrayOfDocumentType">
+		<field name="documentType" type="java.lang.String" collection="arraylist">
+			<bind-xml name="document_type" />
+		</field>
+	</class>
+	
+	<class name="ee.adit.pojo.ArrayOfDocumentDvkStatus">
+		<field name="statusId" type="java.lang.Long" collection="arraylist">
+			<bind-xml name="status_id" />
+		</field>
+	</class>
+	
+	<class name="ee.adit.pojo.ArrayOfDocumentWorkflowStatus">
+		<field name="statusId" type="java.lang.Long" collection="arraylist">
+			<bind-xml name="status_id" />
+		</field>
+	</class>
+	
+	<class name="ee.adit.pojo.ArrayOfCreatorApplication">
+		<field name="creatorApplication" type="java.lang.String" collection="arraylist">
+			<bind-xml name="creator_application" />
+		</field>
 	</class>
 </mapping>

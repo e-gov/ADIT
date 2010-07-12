@@ -10,6 +10,8 @@ import ee.adit.exception.AditException;
 import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.GetDocumentListRequest;
 import ee.adit.pojo.GetDocumentListResponse;
+import ee.adit.pojo.GetDocumentListResponseAttachment;
+import ee.adit.pojo.GetDocumentListResponseList;
 import ee.adit.pojo.Message;
 import ee.adit.service.DocumentService;
 import ee.adit.service.UserService;
@@ -93,6 +95,29 @@ public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
 				throw new AditException(errorMessage);
 			}
 
+			GetDocumentListResponseAttachment att = this.documentService.getDocumentDAO().getDocumentSearchResult(
+					request,
+					userCode,
+					this.getConfiguration().getTempDir(),
+					this.getMessageSource().getMessage("files.nonExistentOrDeleted", new Object[] { }, Locale.ENGLISH));
+			
+			if ((att.getDocumentList() != null) && !att.getDocumentList().isEmpty()) {
+				// 1. Convert java list to XML string and output to file
+				String xmlFile = marshal(att);
+				
+				// 2. GZip and Base64 encode the temporary file
+				String gzipFileName = Util.gzipAndBase64Encode(xmlFile, this.getConfiguration().getTempDir(), this.getConfiguration().getDeleteTemporaryFilesAsBoolean());
+
+				// 3. Add as an attachment
+				String contentID = addAttachment(gzipFileName);
+				GetDocumentListResponseList responseList = new GetDocumentListResponseList();
+				responseList.setHref("cid:" + contentID);
+				response.setDocumentList(responseList);				
+			} else {
+				LOG.debug("No documents were found!");
+			}
+			
+			
 			// Set response messages
 			response.setSuccess(true);
 			messages.addMessage(new Message("en", this.getMessageSource().getMessage("request.getDocumentList.success",	new Object[] {}, Locale.ENGLISH)));

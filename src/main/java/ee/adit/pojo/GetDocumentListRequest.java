@@ -8,7 +8,6 @@
 
 package ee.adit.pojo;
 
-import java.math.BigInteger;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -75,9 +74,9 @@ public class GetDocumentListRequest {
     @XmlElement(name = "search_phrase", required = true)
     protected String searchPhrase;
     @XmlElement(name = "max_results", required = true)
-    protected BigInteger maxResults;
+    protected Long maxResults;
     @XmlElement(name = "start_index", required = true)
-    protected BigInteger startIndex;
+    protected Long startIndex;
 
     /**
      * Gets the value of the folder property.
@@ -260,10 +259,10 @@ public class GetDocumentListRequest {
      * 
      * @return
      *     possible object is
-     *     {@link BigInteger }
+     *     {@link Long }
      *     
      */
-    public BigInteger getMaxResults() {
+    public Long getMaxResults() {
         return maxResults;
     }
 
@@ -272,10 +271,10 @@ public class GetDocumentListRequest {
      * 
      * @param value
      *     allowed object is
-     *     {@link BigInteger }
+     *     {@link Long }
      *     
      */
-    public void setMaxResults(BigInteger value) {
+    public void setMaxResults(Long value) {
         this.maxResults = value;
     }
 
@@ -284,10 +283,10 @@ public class GetDocumentListRequest {
      * 
      * @return
      *     possible object is
-     *     {@link BigInteger }
+     *     {@link Long }
      *     
      */
-    public BigInteger getStartIndex() {
+    public Long getStartIndex() {
         return startIndex;
     }
 
@@ -296,10 +295,10 @@ public class GetDocumentListRequest {
      * 
      * @param value
      *     allowed object is
-     *     {@link BigInteger }
+     *     {@link Long }
      *     
      */
-    public void setStartIndex(BigInteger value) {
+    public void setStartIndex(Long value) {
         this.startIndex = value;
     }
 

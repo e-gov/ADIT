@@ -15,9 +15,14 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.criterion.Disjunction;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.dao.DataAccessException;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -30,6 +35,8 @@ import ee.adit.pojo.DocumentSendingData;
 import ee.adit.pojo.DocumentSendingRecipient;
 import ee.adit.pojo.DocumentSharingData;
 import ee.adit.pojo.DocumentSharingRecipient;
+import ee.adit.pojo.GetDocumentListRequest;
+import ee.adit.pojo.GetDocumentListResponseAttachment;
 import ee.adit.pojo.OutputDocument;
 import ee.adit.pojo.OutputDocumentFile;
 import ee.adit.pojo.OutputDocumentFilesList;
@@ -66,6 +73,163 @@ public class DocumentDAO extends HibernateDaoSupport {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public GetDocumentListResponseAttachment getDocumentSearchResult(
+			final GetDocumentListRequest param,
+			final String userCode,
+			final String temporaryFilesDir,
+			final String filesNotFoundMessageBase) {
+		
+		GetDocumentListResponseAttachment result = null;
+		
+		try {
+			result = (GetDocumentListResponseAttachment) getHibernateTemplate().execute(new HibernateCallback() {
+				
+				@Override
+				public Object doInHibernate(Session session) throws HibernateException, SQLException
+	            {
+					GetDocumentListResponseAttachment innerResult = new GetDocumentListResponseAttachment();
+					innerResult.setDocumentList(new ArrayList<OutputDocument>());
+					Criteria criteria = session.createCriteria(Document.class);
+					
+					// General parameters
+					criteria.add(
+						Restrictions.or(
+							Restrictions.isNull("deleted"),
+							Restrictions.eq("deleted", false)
+						)
+					);
+					
+					// Document "folder" (local, incoming, outgoing)
+					if (param.getFolder() != null) {
+						// TODO: Mille järgi üldse otsustada, kas dokument
+						// on kohalik või saadetud?
+						if (param.getFolder().equalsIgnoreCase("local")) {
+							criteria.add(Restrictions.eq("creatorCode", userCode));
+							criteria.add(
+								Restrictions.or(
+									Restrictions.isNull("documentSharings"),
+									Restrictions.isEmpty("documentSharings")
+								)
+							);
+						}
+					}
+					
+					// Document type
+					if ((param.getDocumentTypes() != null)
+						&& (param.getDocumentTypes().getDocumentType() != null)
+						&& !param.getDocumentTypes().getDocumentType().isEmpty()) {
+						
+						Disjunction disjunction = Restrictions.disjunction();
+						for (String docType : param.getDocumentTypes().getDocumentType()) {
+							disjunction.add(Restrictions.eq("documentType", docType));
+						}
+						criteria.add(disjunction);
+					}
+					
+					// Document DVK status
+					if ((param.getDocumentDvkStatuses() != null)
+						&& (param.getDocumentDvkStatuses().getStatusId() != null)
+						&& !param.getDocumentDvkStatuses().getStatusId().isEmpty()) {
+						
+						Disjunction disjunction = Restrictions.disjunction();
+						for (Long statusId : param.getDocumentDvkStatuses().getStatusId()) {
+							disjunction.add(Restrictions.eq("documentDvkStatusId", statusId));
+						}
+						criteria.add(disjunction);
+					}
+					
+					// Document workflow status
+					if ((param.getDocumentWorkflowStatuses() != null)
+						&& (param.getDocumentWorkflowStatuses().getStatusId() != null)
+						&& !param.getDocumentWorkflowStatuses().getStatusId().isEmpty()) {
+						
+						Disjunction disjunction = Restrictions.disjunction();
+						for (Long statusId : param.getDocumentWorkflowStatuses().getStatusId()) {
+							disjunction.add(Restrictions.eq("documentWfStatusId", statusId));
+						}
+						criteria.add(disjunction);
+					}
+					
+					// Has the document been viewed?
+					// - if user is document creator, then it is viewed
+					// - if user received this document then check viewing status
+					// - if user shared the document then check recipient viewing statuses
+					if (param.isHasBeenViewed()) {
+						// TODO:
+					}
+					
+					// Include deflated documents
+					if (!param.isIsDeflated()) {
+						criteria.add(
+								Restrictions.or(
+									Restrictions.isNull("deflated"),
+									Restrictions.eq("deflated", false)
+								)
+							);
+					}
+					
+					// Creator application
+					if ((param.getCreatorApplications() != null)
+						&& (param.getCreatorApplications().getCreatorApplication() != null)
+						&& !param.getCreatorApplications().getCreatorApplication().isEmpty()) {
+						
+						Disjunction disjunction = Restrictions.disjunction();
+						for (String appName : param.getCreatorApplications().getCreatorApplication()) {
+							disjunction.add(Restrictions.eq("remoteApplication", appName));
+						}
+						criteria.add(disjunction);
+					}
+
+					
+					
+					// First get total number of matching documents
+				    criteria.setProjection(Projections.rowCount());
+				    innerResult.setTotal(((Long) criteria.uniqueResult()).intValue());
+				    criteria.setProjection(null);
+				    criteria.setResultTransformer(Criteria.ROOT_ENTITY);
+				    
+				    // Then apply paging and ordering
+				    // and get the final list
+					int startIndex = (param.getStartIndex() != null) ? param.getStartIndex().intValue() : 0;
+					if (startIndex < 1) {
+						startIndex = 1;
+					}
+					int maxResults = (param.getMaxResults() != null) ? param.getMaxResults().intValue() : 20;
+					if (maxResults < 1) {
+						maxResults = 20;
+					} else if (maxResults > 100) {
+						maxResults = 100;
+					}
+					criteria.setFirstResult(startIndex-1);
+					criteria.setMaxResults(maxResults);
+					criteria.addOrder(Order.desc("id"));
+					List<Document> docList = criteria.list();
+					
+					for (Document doc : docList) {
+						OutputDocument resultDoc = dbDocumentToOutputDocument(
+							doc,
+							null,
+							true,
+							true,
+							false,
+							temporaryFilesDir,
+							filesNotFoundMessageBase);
+						innerResult.getDocumentList().add(resultDoc);
+					}
+					
+					return innerResult;
+	            }
+	        });
+		} catch (DataAccessException ex) {
+			if (ex.getRootCause() instanceof AditException) {
+				throw (AditException) ex.getRootCause();
+			} else {
+				throw ex;
+			}
+		}
+		return result;
+	}
+	
 	public OutputDocument getDocumentWithFiles(
 			final long documentId,
 			final List<Long> fileIdList,
@@ -86,187 +250,16 @@ public class DocumentDAO extends HibernateDaoSupport {
 			result = (OutputDocument) getHibernateTemplate().execute(new HibernateCallback() {
 				
 				@Override
-				public Object doInHibernate(Session session) throws HibernateException, SQLException
-	            {
-					long totalBytes = 0;
-					OutputDocument innerResult = new OutputDocument();
-					List<OutputDocumentFile> outputFilesList = new ArrayList<OutputDocumentFile>();
-	            	Document doc = (Document)session.get(Document.class, documentId);
-	            	List<DocumentFile> filesList = new ArrayList<DocumentFile>(doc.getDocumentFiles());            	
-	            	
-	            	// Check if all requested files exist
-	            	if ((fileIdList != null) && !fileIdList.isEmpty()) {
-	            		List<Long> internalIdList = new ArrayList<Long>();
-	            		internalIdList.addAll(fileIdList);
-	            		
-	            		for (DocumentFile docFile : filesList) {
-	        				if (!docFile.getDeleted() && internalIdList.contains((Long)docFile.getId())) {
-	        					internalIdList.remove((Long)docFile.getId());
-	        				}
-	            		}
-	            		
-	            		// If some files did not exist or were deleted
-	            		// then return error message
-	            		if (!internalIdList.isEmpty()) {
-	            			String idListString = "";
-	            			for (Long id : internalIdList) {
-	            				idListString += " " + id;
-	            			}
-	            			idListString = idListString.trim().replaceAll(" ", ",");
-	            			throw new SQLException(new AditException(filesNotFoundMessageBase + " " + idListString));
-	            		}
-	            	}
-	            	
-	            	int itemIndex = 0;
-	            	for (DocumentFile docFile : filesList) {
-	            		if (!docFile.getDeleted()) {
-		            		if ((fileIdList == null) || fileIdList.isEmpty() || fileIdList.contains(docFile.getId())) {
-		            			OutputDocumentFile f = new OutputDocumentFile();
-		            			f.setContentType(docFile.getContentType());
-		            			f.setDescription(docFile.getDescription());
-		            			f.setId(docFile.getId());
-		            			f.setName(docFile.getFileName());
-		            			f.setSizeBytes(docFile.getFileSizeBytes());
-		            			
-		            			// Read file data from BLOB and write it to temporary file.
-		            			// This is necessary to avoid storing potentially large
-		            			// amounts of binary data in server memory.
-		            			if (includeFileContents) {
-			            			itemIndex++;
-			        				String outputFileName = Util.generateRandomFileNameWithoutExtension();
-			        				outputFileName = temporaryFilesDir + File.separator + outputFileName + "_" + itemIndex + "_GDFv1.adit";
-			        				InputStream blobDataStream = null;
-			        				FileOutputStream fileOutputStream = null;
-			        				try {
-			        					byte[] buffer = new byte[10240];
-			        					int len = 0;
-			        					blobDataStream = docFile.getFileData().getBinaryStream();
-			        					fileOutputStream = new FileOutputStream(outputFileName);
-			        					while ((len = blobDataStream.read(buffer)) > 0) {
-			        						fileOutputStream.write(buffer, 0, len);
-			        						totalBytes += len;
-			        					}
-			        					f.setTmpFileName(outputFileName);
-			        				} catch (IOException ex) {
-			        					throw new HibernateException(ex);
-			        				} finally {
-			        					try {
-			        						if (blobDataStream != null) {
-			        							blobDataStream.close();
-			        						}
-			        						blobDataStream = null;
-			        					} catch (Exception ex) {}
-			        					
-			        					try {
-			        						if (fileOutputStream != null) {
-			        							fileOutputStream.close();
-			        						}
-			        						fileOutputStream = null;
-			        					} catch (Exception ex) {}
-			        				}
-		            			}
-		        				
-		        				outputFilesList.add(f);
-		            		}
-	            		}
-	            	}
-	            	
-	            	OutputDocumentFilesList filesListWrapper = new OutputDocumentFilesList();
-	            	filesListWrapper.setFiles(outputFilesList);
-	            	filesListWrapper.setTotalFiles(outputFilesList.size());
-	            	filesListWrapper.setTotalBytes(totalBytes);
-	            	innerResult.setFiles(filesListWrapper);
-	            	
-	            	
-	            	// Signatures
-	            	if (includeSignatures) {
-		            	List<ee.adit.pojo.Signature> docSignatures = new ArrayList<ee.adit.pojo.Signature>();
-		            	if ((doc.getSignatures() != null) && (!doc.getSignatures().isEmpty())) {
-							Iterator it = doc.getSignatures().iterator();
-							while (it.hasNext()) {
-								ee.adit.dao.pojo.Signature sig = (ee.adit.dao.pojo.Signature)it.next();
-								ee.adit.pojo.Signature outSig = new ee.adit.pojo.Signature();
-								outSig.setCity(sig.getCity());
-								outSig.setCountry(sig.getCountry());
-								outSig.setManifest((sig.getSignerRole() + " " + sig.getResolution()).trim());
-								outSig.setSignerCode(sig.getSignerCode());
-								outSig.setSignerName(sig.getSignerName());
-								outSig.setState(sig.getCounty());
-								outSig.setZip(sig.getPostIndex());
-								docSignatures.add(outSig);
-							}
-		            	}
-		            	innerResult.setSignatures(docSignatures);
-	            	}
-	            	
-	            	// Sharing/sending
-	            	if (includeSharings) {
-	            		DocumentSendingData sendingData = new DocumentSendingData();
-	            		sendingData.setUserList(new ArrayList<DocumentSendingRecipient>());
-	            		DocumentSharingData sharingData = new DocumentSharingData();
-	            		sharingData.setUserList(new ArrayList<DocumentSharingRecipient>());
-	            		
-	            		if ((doc.getDocumentSharings() != null) && (!doc.getDocumentSharings().isEmpty())) {
-	    					Iterator it = doc.getDocumentSharings().iterator();
-	    					while (it.hasNext()) {
-	    						DocumentSharing sharing = (DocumentSharing)it.next();
-	    						
-	    						if ((sharing.getDocumentSharingType().equalsIgnoreCase(DocumentService.SharingType_Share))
-	    							|| (sharing.getDocumentSharingType().equalsIgnoreCase(DocumentService.SharingType_Sign))) {
-	    							
-	    							DocumentSharingRecipient rec = new DocumentSharingRecipient();
-	    							rec.setCode(sharing.getUserCode());
-	    							rec.setHasBeenViewed((sharing.getLastAccessDate() != null));
-	    							rec.setName(sharing.getUserName());
-	    							rec.setOpenedTime(sharing.getLastAccessDate());
-	    							rec.setWorkflowStatusId(sharing.getDocumentWfStatus());
-	    							sharingData.getUserList().add(rec);
-	    						} else {
-	    							DocumentSendingRecipient rec = new DocumentSendingRecipient();
-	    							rec.setCode(sharing.getUserCode());
-	    							rec.setHasBeenViewed((sharing.getLastAccessDate() != null));
-	    							rec.setName(sharing.getUserName());
-	    							rec.setOpenedTime(sharing.getLastAccessDate());
-	    							rec.setWorkflowStatusId(sharing.getDocumentWfStatus());
-	    							rec.setDvkStatusId(sharing.getDocumentDvkStatus());
-	    							sendingData.getUserList().add(rec);
-	    						}
-	    					}
-	            		}
-	            		
-	            		innerResult.setSentTo(sendingData);
-	            		innerResult.setSharedTo(sharingData);
-	            	}
-	            	
-	            	// Dokumendi andmed
-	            	innerResult.setCreated(doc.getCreationDate());
-	            	innerResult.setCreatorApplication(doc.getRemoteApplication());
-	            	innerResult.setCreatorCode(doc.getCreatorCode());
-	            	innerResult.setCreatorName(doc.getCreatorName());
-	            	
-	            	// TODO: Siin peaks vist tegelikult olema dokumendi
-	            	// lisanud isiku andmed, kui dokumendi omanikuks on asutus
-	            	innerResult.setCreatorUserCode(doc.getCreatorCode());
-	            	innerResult.setCreatorUserName(doc.getCreatorName());
-	            	
-	            	innerResult.setDeflated(doc.getDeflated());
-	            	innerResult.setDeflatingDate(doc.getDeflateDate());
-	            	innerResult.setDocumentType(doc.getDocumentType());
-	            	innerResult.setDvkId(doc.getDvkId());
-	            	innerResult.setDvkStatusId(doc.getDocumentDvkStatusId());
-	            	innerResult.setGuid(doc.getGuid());
-	            	innerResult.setId(doc.getId());
-	            	// TODO: innerResult.setLastAccessed(doc.getl)
-	            	innerResult.setLastModified(doc.getLastModifiedDate());
-	            	innerResult.setLocked(doc.getLocked());
-	            	innerResult.setLockingDate(doc.getLockingDate());
-	            	// TODO: innerResult.setPreviousDocumentId(previousDocumentId);
-	            	// TODO: previous document GUID
-	            	innerResult.setSignable(doc.getSignable());
-	            	innerResult.setTitle(doc.getTitle());
-	            	innerResult.setWorkflowStatusId(doc.getDocumentWfStatusId());
-	            	
-	            	return innerResult;
+				public Object doInHibernate(Session session) throws HibernateException, SQLException {
+					Document doc = (Document)session.get(Document.class, documentId);
+					return dbDocumentToOutputDocument(
+							doc,
+							fileIdList,
+							includeSignatures,
+							includeSharings,
+							includeFileContents,
+							temporaryFilesDir,
+							filesNotFoundMessageBase);
 	            }
 	        });
 		} catch (DataAccessException ex) {
@@ -278,6 +271,196 @@ public class DocumentDAO extends HibernateDaoSupport {
 		}
 		return result;
 	}
+	
+	private OutputDocument dbDocumentToOutputDocument(
+			final Document doc,
+			final List<Long> fileIdList,
+			final boolean includeSignatures,
+			final boolean includeSharings,
+			final boolean includeFileContents,
+			final String temporaryFilesDir,
+			final String filesNotFoundMessageBase) throws SQLException {
+		
+		long totalBytes = 0;
+		OutputDocument result = new OutputDocument();
+		List<OutputDocumentFile> outputFilesList = new ArrayList<OutputDocumentFile>();
+    	List<DocumentFile> filesList = new ArrayList<DocumentFile>(doc.getDocumentFiles());            	
+    	
+    	// Check if all requested files exist
+    	if ((fileIdList != null) && !fileIdList.isEmpty()) {
+    		List<Long> internalIdList = new ArrayList<Long>();
+    		internalIdList.addAll(fileIdList);
+    		
+    		for (DocumentFile docFile : filesList) {
+				if (!docFile.getDeleted() && internalIdList.contains((Long)docFile.getId())) {
+					internalIdList.remove((Long)docFile.getId());
+				}
+    		}
+    		
+    		// If some files did not exist or were deleted
+    		// then return error message
+    		if (!internalIdList.isEmpty()) {
+    			String idListString = "";
+    			for (Long id : internalIdList) {
+    				idListString += " " + id;
+    			}
+    			idListString = idListString.trim().replaceAll(" ", ",");
+    			throw new SQLException(new AditException(filesNotFoundMessageBase + " " + idListString));
+    		}
+    	}
+    	
+    	int itemIndex = 0;
+    	for (DocumentFile docFile : filesList) {
+    		if (!docFile.getDeleted()) {
+        		if ((fileIdList == null) || fileIdList.isEmpty() || fileIdList.contains(docFile.getId())) {
+        			OutputDocumentFile f = new OutputDocumentFile();
+        			f.setContentType(docFile.getContentType());
+        			f.setDescription(docFile.getDescription());
+        			f.setId(docFile.getId());
+        			f.setName(docFile.getFileName());
+        			f.setSizeBytes(docFile.getFileSizeBytes());
+        			
+        			// Read file data from BLOB and write it to temporary file.
+        			// This is necessary to avoid storing potentially large
+        			// amounts of binary data in server memory.
+        			if (includeFileContents) {
+            			itemIndex++;
+        				String outputFileName = Util.generateRandomFileNameWithoutExtension();
+        				outputFileName = temporaryFilesDir + File.separator + outputFileName + "_" + itemIndex + "_GDFv1.adit";
+        				InputStream blobDataStream = null;
+        				FileOutputStream fileOutputStream = null;
+        				try {
+        					byte[] buffer = new byte[10240];
+        					int len = 0;
+        					blobDataStream = docFile.getFileData().getBinaryStream();
+        					fileOutputStream = new FileOutputStream(outputFileName);
+        					while ((len = blobDataStream.read(buffer)) > 0) {
+        						fileOutputStream.write(buffer, 0, len);
+        						totalBytes += len;
+        					}
+        					f.setTmpFileName(outputFileName);
+        				} catch (IOException ex) {
+        					throw new HibernateException(ex);
+        				} finally {
+        					try {
+        						if (blobDataStream != null) {
+        							blobDataStream.close();
+        						}
+        						blobDataStream = null;
+        					} catch (Exception ex) {}
+        					
+        					try {
+        						if (fileOutputStream != null) {
+        							fileOutputStream.close();
+        						}
+        						fileOutputStream = null;
+        					} catch (Exception ex) {}
+        				}
+        			}
+    				
+    				outputFilesList.add(f);
+        		}
+    		}
+    	}
+    	
+    	OutputDocumentFilesList filesListWrapper = new OutputDocumentFilesList();
+    	filesListWrapper.setFiles(outputFilesList);
+    	filesListWrapper.setTotalFiles(outputFilesList.size());
+    	filesListWrapper.setTotalBytes(totalBytes);
+    	result.setFiles(filesListWrapper);
+    	
+    	
+    	// Signatures
+    	if (includeSignatures) {
+        	List<ee.adit.pojo.Signature> docSignatures = new ArrayList<ee.adit.pojo.Signature>();
+        	if ((doc.getSignatures() != null) && (!doc.getSignatures().isEmpty())) {
+				Iterator it = doc.getSignatures().iterator();
+				while (it.hasNext()) {
+					ee.adit.dao.pojo.Signature sig = (ee.adit.dao.pojo.Signature)it.next();
+					ee.adit.pojo.Signature outSig = new ee.adit.pojo.Signature();
+					outSig.setCity(sig.getCity());
+					outSig.setCountry(sig.getCountry());
+					outSig.setManifest((sig.getSignerRole() + " " + sig.getResolution()).trim());
+					outSig.setSignerCode(sig.getSignerCode());
+					outSig.setSignerName(sig.getSignerName());
+					outSig.setState(sig.getCounty());
+					outSig.setZip(sig.getPostIndex());
+					docSignatures.add(outSig);
+				}
+        	}
+        	result.setSignatures(docSignatures);
+    	}
+    	
+    	// Sharing/sending
+    	if (includeSharings) {
+    		DocumentSendingData sendingData = new DocumentSendingData();
+    		sendingData.setUserList(new ArrayList<DocumentSendingRecipient>());
+    		DocumentSharingData sharingData = new DocumentSharingData();
+    		sharingData.setUserList(new ArrayList<DocumentSharingRecipient>());
+    		
+    		if ((doc.getDocumentSharings() != null) && (!doc.getDocumentSharings().isEmpty())) {
+				Iterator it = doc.getDocumentSharings().iterator();
+				while (it.hasNext()) {
+					DocumentSharing sharing = (DocumentSharing)it.next();
+					
+					if ((sharing.getDocumentSharingType().equalsIgnoreCase(DocumentService.SharingType_Share))
+						|| (sharing.getDocumentSharingType().equalsIgnoreCase(DocumentService.SharingType_Sign))) {
+						
+						DocumentSharingRecipient rec = new DocumentSharingRecipient();
+						rec.setCode(sharing.getUserCode());
+						rec.setHasBeenViewed((sharing.getLastAccessDate() != null));
+						rec.setName(sharing.getUserName());
+						rec.setOpenedTime(sharing.getLastAccessDate());
+						rec.setWorkflowStatusId(sharing.getDocumentWfStatus());
+						sharingData.getUserList().add(rec);
+					} else {
+						DocumentSendingRecipient rec = new DocumentSendingRecipient();
+						rec.setCode(sharing.getUserCode());
+						rec.setHasBeenViewed((sharing.getLastAccessDate() != null));
+						rec.setName(sharing.getUserName());
+						rec.setOpenedTime(sharing.getLastAccessDate());
+						rec.setWorkflowStatusId(sharing.getDocumentWfStatus());
+						rec.setDvkStatusId(sharing.getDocumentDvkStatus());
+						sendingData.getUserList().add(rec);
+					}
+				}
+    		}
+    		
+    		result.setSentTo(sendingData);
+    		result.setSharedTo(sharingData);
+    	}
+    	
+    	// Dokumendi andmed
+    	result.setCreated(doc.getCreationDate());
+    	result.setCreatorApplication(doc.getRemoteApplication());
+    	result.setCreatorCode(doc.getCreatorCode());
+    	result.setCreatorName(doc.getCreatorName());
+    	
+    	// TODO: Siin peaks vist tegelikult olema dokumendi
+    	// lisanud isiku andmed, kui dokumendi omanikuks on asutus
+    	result.setCreatorUserCode(doc.getCreatorCode());
+    	result.setCreatorUserName(doc.getCreatorName());
+    	
+    	result.setDeflated(doc.getDeflated());
+    	result.setDeflatingDate(doc.getDeflateDate());
+    	result.setDocumentType(doc.getDocumentType());
+    	result.setDvkId(doc.getDvkId());
+    	result.setDvkStatusId(doc.getDocumentDvkStatusId());
+    	result.setGuid(doc.getGuid());
+    	result.setId(doc.getId());
+    	// TODO: innerResult.setLastAccessed(doc.getl)
+    	result.setLastModified(doc.getLastModifiedDate());
+    	result.setLocked(doc.getLocked());
+    	result.setLockingDate(doc.getLockingDate());
+    	// TODO: innerResult.setPreviousDocumentId(previousDocumentId);
+    	// TODO: previous document GUID
+    	result.setSignable(doc.getSignable());
+    	result.setTitle(doc.getTitle());
+    	result.setWorkflowStatusId(doc.getDocumentWfStatusId());
+    	
+    	return result;
+	}
+	
 	
 	/**
 	 * FIXME - ei tööta praegu salvestamine
