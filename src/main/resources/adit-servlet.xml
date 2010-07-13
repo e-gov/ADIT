@@ -21,6 +21,7 @@
 		<property name="marshaller" ref="castorMarshaller"/>
 		<property name="unmarshaller" ref="castorMarshaller"/>
 		<property name="userService" ref="userService"/>
+		<property name="logService" ref="logService"/>
 		<property name="messageSource" ref="messageSource"/>
 	</bean>
 	
@@ -28,6 +29,7 @@
 		<property name="marshaller" ref="castorMarshaller"/>
 		<property name="unmarshaller" ref="castorMarshaller"/>
 		<property name="userService" ref="userService"/>
+		<property name="logService" ref="logService"/>
 		<property name="messageSource" ref="messageSource"/>
 	</bean>
 	
@@ -35,6 +37,7 @@
 		<property name="marshaller" ref="castorMarshaller"/>
 		<property name="unmarshaller" ref="castorMarshaller"/>
 		<property name="userService" ref="userService"/>
+		<property name="logService" ref="logService"/>
 		<property name="messageSource" ref="messageSource"/>
 		<property name="configuration" ref="configuration"/>
 	</bean>
@@ -43,6 +46,7 @@
 		<property name="marshaller" ref="castorMarshaller"/>
 		<property name="unmarshaller" ref="castorMarshaller"/>
 		<property name="userService" ref="userService"/>
+		<property name="logService" ref="logService"/>
 		<property name="messageSource" ref="messageSource"/>
 		<property name="configuration" ref="configuration"/>
 	</bean>
@@ -57,6 +61,7 @@
 		<property name="marshaller" ref="castorMarshaller"/>
 		<property name="unmarshaller" ref="castorMarshaller"/>
 		<property name="userService" ref="userService"/>
+		<property name="logService" ref="logService"/>
 		<property name="messageSource" ref="messageSource"/>
 		<property name="configuration" ref="configuration"/>
 		<property name="documentService" ref="documentService"/>
@@ -66,6 +71,7 @@
 		<property name="marshaller" ref="castorMarshaller"/>
 		<property name="unmarshaller" ref="castorMarshaller"/>
 		<property name="userService" ref="userService"/>
+		<property name="logService" ref="logService"/>
 		<property name="messageSource" ref="messageSource"/>
 		<property name="configuration" ref="configuration"/>
 		<property name="documentService" ref="documentService"/>
@@ -75,6 +81,7 @@
 		<property name="marshaller" ref="castorMarshaller"/>
 		<property name="unmarshaller" ref="castorMarshaller"/>
 		<property name="userService" ref="userService"/>
+		<property name="logService" ref="logService"/>
 		<property name="messageSource" ref="messageSource"/>
 		<property name="configuration" ref="configuration"/>
 		<property name="documentService" ref="documentService"/>
@@ -84,6 +91,7 @@
 		<property name="marshaller" ref="castorMarshaller"/>
 		<property name="unmarshaller" ref="castorMarshaller"/>
 		<property name="userService" ref="userService"/>
+		<property name="logService" ref="logService"/>
 		<property name="messageSource" ref="messageSource"/>
 		<property name="configuration" ref="configuration"/>
 		<property name="documentService" ref="documentService"/>
@@ -93,6 +101,7 @@
 		<property name="marshaller" ref="castorMarshaller"/>
 		<property name="unmarshaller" ref="castorMarshaller"/>
 		<property name="userService" ref="userService"/>
+		<property name="logService" ref="logService"/>
 		<property name="messageSource" ref="messageSource"/>
 		<property name="configuration" ref="configuration"/>
 		<property name="documentService" ref="documentService"/>
@@ -102,6 +111,7 @@
 		<property name="marshaller" ref="castorMarshaller"/>
 		<property name="unmarshaller" ref="castorMarshaller"/>
 		<property name="userService" ref="userService"/>
+		<property name="logService" ref="logService"/>
 		<property name="messageSource" ref="messageSource"/>
 		<property name="configuration" ref="configuration"/>
 		<property name="documentService" ref="documentService"/>
@@ -111,6 +121,7 @@
 		<property name="marshaller" ref="castorMarshaller"/>
 		<property name="unmarshaller" ref="castorMarshaller"/>
 		<property name="userService" ref="userService"/>
+		<property name="logService" ref="logService"/>
 		<property name="messageSource" ref="messageSource"/>
 		<property name="configuration" ref="configuration"/>
 		<property name="documentService" ref="documentService"/>
@@ -120,6 +131,7 @@
 		<property name="marshaller" ref="castorMarshaller"/>
 		<property name="unmarshaller" ref="castorMarshaller"/>
 		<property name="userService" ref="userService"/>
+		<property name="logService" ref="logService"/>
 		<property name="messageSource" ref="messageSource"/>
 		<property name="configuration" ref="configuration"/>
 		<property name="documentService" ref="documentService"/>
@@ -129,6 +141,7 @@
 		<property name="marshaller" ref="castorMarshaller"/>
 		<property name="unmarshaller" ref="castorMarshaller"/>
 		<property name="userService" ref="userService"/>
+		<property name="logService" ref="logService"/>
 		<property name="messageSource" ref="messageSource"/>
 		<property name="configuration" ref="configuration"/>
 		<property name="documentService" ref="documentService"/>
@@ -141,6 +154,7 @@
 		<property name="marshaller" ref="castorMarshaller"/>
 		<property name="unmarshaller" ref="castorMarshaller"/>
 		<property name="userService" ref="userService"/>
+		<property name="logService" ref="logService"/>
 		<property name="messageSource" ref="messageSource"/>
 		<property name="configuration" ref="configuration"/>
 		<property name="documentService" ref="documentService"/>
@@ -156,6 +170,7 @@
 		<property name="marshaller" ref="castorMarshaller"/>
 		<property name="unmarshaller" ref="castorMarshaller"/>
 		<property name="userService" ref="userService"/>
+		<property name="logService" ref="logService"/>
 		<property name="messageSource" ref="messageSource"/>
 		<property name="configuration" ref="configuration"/>
 		<property name="documentService" ref="documentService"/>
@@ -165,6 +180,7 @@
 		<property name="marshaller" ref="castorMarshaller"/>
 		<property name="unmarshaller" ref="castorMarshaller"/>
 		<property name="userService" ref="userService"/>
+		<property name="logService" ref="logService"/>
 		<property name="messageSource" ref="messageSource"/>
 		<property name="configuration" ref="configuration"/>
 		<property name="documentService" ref="documentService"/>
@@ -251,6 +267,10 @@
 	</bean>
 
 	<!-- Service Classes -->
+	<bean id="logService" class="ee.adit.service.LogService">
+		<property name="requestLogDAO" ref="requestLogDAO"/>
+	</bean>
+	
 	<bean id="userService" class="ee.adit.service.UserService">
 		<property name="remoteApplicationDAO" ref="remoteApplicationDAO"/>
 		<property name="usertypeDAO" ref="usertypeDAO"/>
@@ -295,6 +315,7 @@
 				<value>classpath:hbm/Signature.hbm.xml</value>
 				<value>classpath:hbm/AditUser.hbm.xml</value>
 				<value>classpath:hbm/Usertype.hbm.xml</value>
+				<value>classpath:hbm/RequestLog.hbm.xml</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">
@@ -307,6 +328,10 @@
     <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
         <property name="sessionFactory" ref="mySessionFactory" />
     </bean>
+
+	<bean id="requestLogDAO" class="ee.adit.dao.RequestLogDAO">
+		<property name="sessionFactory" ref="mySessionFactory" />
+	</bean>
 
 	<bean id="remoteApplicationDAO" class="ee.adit.dao.RemoteApplicationDAO">
 		<property name="sessionFactory" ref="mySessionFactory" />

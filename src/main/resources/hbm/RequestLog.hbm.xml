@@ -6,7 +6,9 @@
     <class name="ee.adit.dao.pojo.RequestLog" table="REQUEST_LOG" schema="ADIT">
         <id name="id" type="long">
             <column name="ID" precision="18" scale="0" />
-            <generator class="assigned" />
+            <generator class="sequence">
+            	<param name="sequence">request_log_id_seq</param>
+            </generator>
         </id>
         <property name="request" type="string">
             <column name="REQUEST" length="50" />
@@ -14,7 +16,7 @@
         <property name="documentId" type="java.lang.Long">
             <column name="DOCUMENT_ID" precision="12" scale="0" />
         </property>
-        <property name="requestDate" type="date">
+        <property name="requestDate" type="timestamp">
             <column name="REQUEST_DATE" length="7" />
         </property>
         <property name="remoteApplicationShortName" type="string">

@@ -1,6 +1,7 @@
 package ee.adit.ws.endpoint.document;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -61,10 +62,16 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 	protected Object invokeInternal(Object requestObject) throws Exception {
 		GetDocumentFileResponse response = new GetDocumentFileResponse();
 		ArrayOfMessage messages = new ArrayOfMessage();
+		Date requestDate = Calendar.getInstance().getTime();
+		String additionalInformationForLog = null;
+		Long documentId = null;
 
 		try {
 			LOG.debug("getDocumentFile.v1 invoked.");
 			GetDocumentFileRequest request = (GetDocumentFileRequest) requestObject;
+			if (request != null) {
+				documentId = request.getDocumentId();
+			}
 			CustomXTeeHeader header = this.getHeader();
 			String applicationName = header.getInfosysteem();
 
@@ -225,6 +232,7 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 			messages.addMessage(new Message("en", this.getMessageSource().getMessage("request.getDocumentFile.success",	new Object[] {}, Locale.ENGLISH)));
 			response.setMessages(messages);
 		} catch (Exception e) {
+			additionalInformationForLog = "Request failed: " + e.getMessage();
 			LOG.error("Exception: ", e);
 			response.setSuccess(false);
 			ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
@@ -240,6 +248,7 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 			response.setMessages(arrayOfMessage);
 		}
 
+		super.logCurrentRequest(documentId, requestDate, additionalInformationForLog);
 		return response;
 	}
 

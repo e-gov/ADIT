@@ -1,6 +1,5 @@
 package ee.adit.ws.endpoint.document;
 
-import java.math.BigInteger;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -10,12 +9,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.ws.mime.Attachment;
 
 import ee.adit.dao.pojo.AditUser;
-import ee.adit.dao.pojo.Document;
 import ee.adit.exception.AditException;
 import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.ArrayOfMessage;
-import ee.adit.pojo.GetUserInfoRequestAttachmentUserList;
-import ee.adit.pojo.JoinRequest;
 import ee.adit.pojo.Message;
 import ee.adit.pojo.SaveDocumentRequest;
 import ee.adit.pojo.SaveDocumentRequestAttachment;
@@ -26,7 +22,6 @@ import ee.adit.service.UserService;
 import ee.adit.util.CustomXTeeHeader;
 import ee.adit.util.Util;
 import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
-import ee.adit.ws.endpoint.user.JoinEndpoint;
 import ee.webmedia.xtee.annotation.XTeeService;
 
 @XTeeService(name = "saveDocument", version = "v1")

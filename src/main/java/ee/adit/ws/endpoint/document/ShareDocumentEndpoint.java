@@ -56,6 +56,8 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 		ShareDocumentResponse response = new ShareDocumentResponse();
 		ArrayOfMessage messages = new ArrayOfMessage();
 		ArrayOfRecipientStatus statusArray = new ArrayOfRecipientStatus();
+		String additionalInformationForLog = null;
+		Long documentId = null;
 		
 		// Get a fixed request date
 		// This becomes useful if we later have to compare
@@ -65,6 +67,9 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 		try {
 			LOG.debug("shareDocument.v1 invoked.");
 			ShareDocumentRequest request = (ShareDocumentRequest) requestObject;
+			if (request != null) {
+				documentId = request.getDocumentId();
+			}
 			CustomXTeeHeader header = this.getHeader();
 			String applicationName = header.getInfosysteem();
 
@@ -239,6 +244,7 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 			response.setMessages(messages);
 			response.setRecipientList(statusArray);
 		} catch (Exception e) {
+			additionalInformationForLog = "Request failed: " + e.getMessage();
 			LOG.error("Exception: ", e);
 			response.setSuccess(false);
 			//response.setRecipientList(statusArray);
@@ -255,6 +261,7 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 			response.setMessages(arrayOfMessage);
 		}
 
+		super.logCurrentRequest(documentId, requestDate, additionalInformationForLog);
 		return response;
 	}
 	

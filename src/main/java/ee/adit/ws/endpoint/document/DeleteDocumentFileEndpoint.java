@@ -1,5 +1,6 @@
 package ee.adit.ws.endpoint.document;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -51,10 +52,16 @@ public class DeleteDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 	protected Object invokeInternal(Object requestObject) throws Exception {
 		DeleteDocumentFileResponse response = new DeleteDocumentFileResponse();
 		ArrayOfMessage messages = new ArrayOfMessage();
+		Date requestDate = Calendar.getInstance().getTime();
+		String additionalInformationForLog = null;
+		Long documentId = null;
 		
 		try {
 			LOG.debug("deleteDocumentFile.v1 invoked.");
 			DeleteDocumentFileRequest request = (DeleteDocumentFileRequest) requestObject;
+			if (request != null) {
+				documentId = request.getDocumentId();
+			}
 			CustomXTeeHeader header = this.getHeader();
 			String applicationName = header.getInfosysteem();
 			
@@ -141,6 +148,7 @@ public class DeleteDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 			response.setMessages(messages);
 		} catch (Exception e) {
 			LOG.error("Exception: ", e);
+			additionalInformationForLog = "Request failed: " + e.getMessage();
 			response.setSuccess(new Success(false));
 			ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
 			
@@ -155,6 +163,7 @@ public class DeleteDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 			response.setMessages(arrayOfMessage);
 		}
 		
+		super.logCurrentRequest(documentId, requestDate, additionalInformationForLog);
 		return response;
 	}
 

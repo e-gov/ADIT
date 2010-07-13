@@ -1,6 +1,8 @@
 package ee.adit.ws.endpoint.document;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -55,10 +57,16 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 		UnShareDocumentResponse response = new UnShareDocumentResponse();
 		ArrayOfMessage messages = new ArrayOfMessage();
 		ArrayOfRecipientStatus statusArray = new ArrayOfRecipientStatus();
+		Date requestDate = Calendar.getInstance().getTime();
+		String additionalInformationForLog = null;
+		Long documentId = null;
 
 		try {
 			LOG.debug("unShareDocument.v1 invoked.");
 			UnShareDocumentRequest request = (UnShareDocumentRequest) requestObject;
+			if (request != null) {
+				documentId = request.getDocumentId();
+			}
 			CustomXTeeHeader header = this.getHeader();
 			String applicationName = header.getInfosysteem();
 
@@ -212,6 +220,7 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 			response.setMessages(messages);
 			response.setRecipientList(statusArray);
 		} catch (Exception e) {
+			additionalInformationForLog = "Request failed: " + e.getMessage();
 			LOG.error("Exception: ", e);
 			response.setSuccess(false);
 			response.setRecipientList(statusArray);
@@ -228,6 +237,7 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 			response.setMessages(arrayOfMessage);
 		}
 
+		super.logCurrentRequest(documentId, requestDate, additionalInformationForLog);
 		return response;
 	}
 

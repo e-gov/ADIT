@@ -1,5 +1,6 @@
 package ee.adit.ws.endpoint.document;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Locale;
@@ -51,10 +52,16 @@ public class MarkDocumentViewedEndpoint extends AbstractAditBaseEndpoint {
 	protected Object invokeInternal(Object requestObject) throws Exception {
 		MarkDocumentViewedResponse response = new MarkDocumentViewedResponse();
 		ArrayOfMessage messages = new ArrayOfMessage();
+		Date requestDate = Calendar.getInstance().getTime();
+		String additionalInformationForLog = null;
+		Long documentId = null;
 
 		try {
 			LOG.debug("markDocumentViewed.v1 invoked.");
 			MarkDocumentViewedRequest request = (MarkDocumentViewedRequest) requestObject;
+			if (request != null) {
+				documentId = request.getDocumentId();
+			}
 			CustomXTeeHeader header = this.getHeader();
 			String applicationName = header.getInfosysteem();
 
@@ -191,6 +198,7 @@ public class MarkDocumentViewedEndpoint extends AbstractAditBaseEndpoint {
 			messages.addMessage(new Message("en", this.getMessageSource().getMessage("request.markDocumentViewed.success",	new Object[] { request.getDocumentId(), user.getUserCode() }, Locale.ENGLISH)));
 			response.setMessages(messages);
 		} catch (Exception e) {
+			additionalInformationForLog = "Request failed: " + e.getMessage();
 			LOG.error("Exception: ", e);
 			response.setSuccess(false);
 			ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
@@ -206,6 +214,7 @@ public class MarkDocumentViewedEndpoint extends AbstractAditBaseEndpoint {
 			response.setMessages(arrayOfMessage);
 		}
 
+		super.logCurrentRequest(documentId, requestDate, additionalInformationForLog);
 		return response;
 	}
 

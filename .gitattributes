@@ -56,6 +56,7 @@ src/main/java/ee/adit/dao/DocumentFileDAO.java -text
 src/main/java/ee/adit/dao/DocumentTypeDAO.java -text
 src/main/java/ee/adit/dao/DocumentWfStatusDAO.java -text
 src/main/java/ee/adit/dao/RemoteApplicationDAO.java -text
+src/main/java/ee/adit/dao/RequestLogDAO.java -text
 src/main/java/ee/adit/dao/UsertypeDAO.java -text
 src/main/java/ee/adit/dao/pojo/AccessRestriction.java -text
 src/main/java/ee/adit/dao/pojo/AditLog.java -text
@@ -155,6 +156,7 @@ src/main/java/ee/adit/pojo/UnShareDocumentRequest.java -text
 src/main/java/ee/adit/pojo/UnShareDocumentResponse.java -text
 src/main/java/ee/adit/pojo/UserList.java -text
 src/main/java/ee/adit/service/DocumentService.java -text
+src/main/java/ee/adit/service/LogService.java -text
 src/main/java/ee/adit/service/UserService.java -text
 src/main/java/ee/adit/util/Configuration.java -text
 src/main/java/ee/adit/util/CustomXTeeHeader.java -text

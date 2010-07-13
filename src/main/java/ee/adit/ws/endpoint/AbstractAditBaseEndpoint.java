@@ -2,14 +2,10 @@ package ee.adit.ws.endpoint;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Date;
 
-import javax.activation.DataHandler;
-import javax.activation.FileDataSource;
-import javax.activation.MimetypesFileTypeMap;
-import javax.xml.soap.AttachmentPart;
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
@@ -19,7 +15,6 @@ import javax.xml.transform.stream.StreamSource;
 import org.apache.log4j.Logger;
 import org.springframework.context.MessageSource;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
@@ -29,7 +24,7 @@ import org.springframework.ws.soap.SoapMessage;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import ee.adit.exception.AditInternalException;
+import ee.adit.service.LogService;
 import ee.adit.util.Configuration;
 import ee.adit.util.CustomXTeeHeader;
 import ee.adit.util.Util;
@@ -47,6 +42,8 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 	private MessageSource messageSource;
 
 	private Configuration configuration;
+	
+	private LogService logService;
 	
 	protected void invokeInternal(Document requestKeha, Element responseElement,
 			CustomXTeeHeader xteeHeader) throws Exception {
@@ -138,6 +135,22 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 		return result;
 	}
 	
+	public void logCurrentRequest(Long documentId, Date requestDate, String additionalInformation) {
+		try {
+			this.logService.addRequestLogEntry(
+				this.header.getNimi(),
+				documentId,
+				requestDate,
+				this.header.getInfosysteem(),
+				(((this.header.getAllasutus() != null) && (this.header.getAllasutus().length() > 0)) ? this.header.getAllasutus() : this.header.getIsikukood()),
+				this.header.getAsutus(),
+				additionalInformation);
+		} catch (Exception ex) {
+			LOG.debug("Failed logging request!", ex);
+		}
+	}
+	
+	
 	// Abstract method for implementing by subclasses
 	protected abstract Object invokeInternal(Object requestObject)
 			throws Exception;
@@ -180,6 +193,14 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 
 	public void setConfiguration(Configuration configuration) {
 		this.configuration = configuration;
+	}
+
+	public LogService getLogService() {
+		return logService;
+	}
+
+	public void setLogService(LogService logService) {
+		this.logService = logService;
 	}
 	
 }

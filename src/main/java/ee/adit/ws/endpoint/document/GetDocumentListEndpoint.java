@@ -1,5 +1,7 @@
 package ee.adit.ws.endpoint.document;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
@@ -48,6 +50,8 @@ public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
 	protected Object invokeInternal(Object requestObject) throws Exception {
 		GetDocumentListResponse response = new GetDocumentListResponse();
 		ArrayOfMessage messages = new ArrayOfMessage();
+		Date requestDate = Calendar.getInstance().getTime();
+		String additionalInformationForLog = null;
 
 		try {
 			LOG.debug("getDocumentList.v1 invoked.");
@@ -124,6 +128,7 @@ public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
 			messages.addMessage(new Message("en", this.getMessageSource().getMessage("request.getDocumentList.success",	new Object[] {}, Locale.ENGLISH)));
 			response.setMessages(messages);
 		} catch (Exception e) {
+			additionalInformationForLog = "Request failed: " + e.getMessage();
 			LOG.error("Exception: ", e);
 			response.setSuccess(false);
 			ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
@@ -139,6 +144,7 @@ public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
 			response.setMessages(arrayOfMessage);
 		}
 
+		super.logCurrentRequest(null, requestDate, additionalInformationForLog);
 		return response;
 	}
 
@@ -161,7 +167,7 @@ public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
 	private void checkRequest(GetDocumentListRequest request) {
 		String errorMessage = null;
 		if (request != null) {
-			if ((request.getFolder() == null) && (request.getFolder().length() > 0)) {
+			if ((request.getFolder() != null) && (request.getFolder().length() > 0)) {
 				if (!request.getFolder().equalsIgnoreCase("incoming")
 					&& !request.getFolder().equalsIgnoreCase("outgoing")
 					&& !request.getFolder().equalsIgnoreCase("local")) {
