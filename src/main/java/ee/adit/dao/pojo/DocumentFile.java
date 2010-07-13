@@ -2,7 +2,6 @@ package ee.adit.dao.pojo;
 
 // Generated 21.06.2010 14:02:03 by Hibernate Tools 3.2.4.GA
 
-import java.math.BigDecimal;
 import java.sql.Blob;
 
 /**
@@ -10,6 +9,7 @@ import java.sql.Blob;
  */
 public class DocumentFile implements java.io.Serializable {
 
+	private static final long serialVersionUID = 1428423268886079325L;
 	private long id;
 	private Document document;
 	private String fileName;

@@ -114,7 +114,8 @@ public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
 				responseList.setHref("cid:" + contentID);
 				response.setDocumentList(responseList);				
 			} else {
-				LOG.debug("No documents were found!");
+				String errorMessage = this.getMessageSource().getMessage("request.getDocumentList.noDocumentsFound", new Object[] { userCode }, Locale.ENGLISH);
+				throw new AditException(errorMessage);
 			}
 			
 			
@@ -159,7 +160,16 @@ public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
 
 	private void checkRequest(GetDocumentListRequest request) {
 		String errorMessage = null;
-		if (request == null) {
+		if (request != null) {
+			if ((request.getFolder() == null) && (request.getFolder().length() > 0)) {
+				if (!request.getFolder().equalsIgnoreCase("incoming")
+					&& !request.getFolder().equalsIgnoreCase("outgoing")
+					&& !request.getFolder().equalsIgnoreCase("local")) {
+					errorMessage = this.getMessageSource().getMessage("request.getDocumentList.incorrectFolderName", new Object[] {}, Locale.ENGLISH);
+					throw new AditException(errorMessage);
+				}
+			}
+		} else {
 			errorMessage = this.getMessageSource().getMessage("request.body.empty", new Object[] {}, Locale.ENGLISH);
 			throw new AditException(errorMessage);
 		}

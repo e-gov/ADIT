@@ -19,10 +19,14 @@ import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Disjunction;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.Subqueries;
 import org.springframework.dao.DataAccessException;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -89,7 +93,7 @@ public class DocumentDAO extends HibernateDaoSupport {
 	            {
 					GetDocumentListResponseAttachment innerResult = new GetDocumentListResponseAttachment();
 					innerResult.setDocumentList(new ArrayList<OutputDocument>());
-					Criteria criteria = session.createCriteria(Document.class);
+					Criteria criteria = session.createCriteria(Document.class, "doc");
 					
 					// General parameters
 					criteria.add(
@@ -109,6 +113,36 @@ public class DocumentDAO extends HibernateDaoSupport {
 								Restrictions.or(
 									Restrictions.isNull("documentSharings"),
 									Restrictions.isEmpty("documentSharings")
+								)
+							);
+						} else if (param.getFolder().equalsIgnoreCase("incoming")) {
+							// "Incoming" means that:
+							// - someone else is document creator
+							// - document kas been shared to user
+							criteria.add(Restrictions.ne("creatorCode", userCode));
+							DetachedCriteria sharedToMeSubquery = DetachedCriteria.forClass(Document.class, "doc1")
+							.createCriteria("documentSharings", "sh1")
+							.add(Restrictions.eq("userCode", userCode))
+						    .add(Property.forName("doc.id").eqProperty("doc1.id"))
+						    .setProjection(Projections.id());
+							criteria.add(Subqueries.exists(sharedToMeSubquery));
+						} else if (param.getFolder().equalsIgnoreCase("outgoing")) {
+							// "Outgoing" means that:
+							// - user is document ownar
+							// - and document has been sent or shared to someone else
+							criteria.add(Restrictions.eq("creatorCode", userCode));
+							criteria.add(Restrictions.isNotNull("documentSharings"));
+							criteria.add(Restrictions.isNotEmpty("documentSharings"));
+						} else {
+							DetachedCriteria sharedToMeSubquery = DetachedCriteria.forClass(Document.class, "doc1")
+							.createCriteria("documentSharings", "sh1")
+							.add(Restrictions.eq("userCode", userCode))
+						    .add(Property.forName("doc.id").eqProperty("doc1.id"))
+						    .setProjection(Projections.id());
+							criteria.add(
+								Restrictions.or(
+									Restrictions.eq("creatorCode", userCode),
+									Subqueries.exists(sharedToMeSubquery)
 								)
 							);
 						}
@@ -180,6 +214,42 @@ public class DocumentDAO extends HibernateDaoSupport {
 						criteria.add(disjunction);
 					}
 
+					// TODO: Phrase search
+					if ((param.getSearchPhrase() != null) && (param.getSearchPhrase().length() > 0)) {
+						Disjunction disjunction = Restrictions.disjunction();
+						disjunction.add(Restrictions.like("title", param.getSearchPhrase(), MatchMode.ANYWHERE));
+						disjunction.add(Restrictions.like("creatorCode", param.getSearchPhrase(), MatchMode.ANYWHERE));
+						disjunction.add(Restrictions.like("creatorName", param.getSearchPhrase(), MatchMode.ANYWHERE));
+						
+						DetachedCriteria sigSubquery = DetachedCriteria.forClass(Document.class, "doc2")
+							.createCriteria("signatures", "sig")
+							.add(Restrictions.or(
+								Restrictions.like("signerCode", param.getSearchPhrase(), MatchMode.ANYWHERE),
+								Restrictions.like("signerName", param.getSearchPhrase(), MatchMode.ANYWHERE)))
+					    .add(Property.forName("doc.id").eqProperty("doc2.id"))
+					    .setProjection(Projections.id());
+						disjunction.add(Subqueries.exists(sigSubquery));
+						
+						DetachedCriteria shareSubquery = DetachedCriteria.forClass(Document.class, "doc3")
+						.createCriteria("documentSharings", "sh")
+						.add(Restrictions.or(
+							Restrictions.like("userCode", param.getSearchPhrase(), MatchMode.ANYWHERE),
+							Restrictions.like("userName", param.getSearchPhrase(), MatchMode.ANYWHERE)))
+					    .add(Property.forName("doc.id").eqProperty("doc3.id"))
+					    .setProjection(Projections.id());
+						disjunction.add(Subqueries.exists(shareSubquery));
+						
+						DetachedCriteria filesSubquery = DetachedCriteria.forClass(Document.class, "doc4")
+						.createCriteria("documentFiles", "files")
+						.add(Restrictions.or(
+							Restrictions.like("fileName", param.getSearchPhrase(), MatchMode.ANYWHERE),
+							Restrictions.like("description", param.getSearchPhrase(), MatchMode.ANYWHERE)))
+					    .add(Property.forName("doc.id").eqProperty("doc4.id"))
+					    .setProjection(Projections.id());
+						disjunction.add(Subqueries.exists(filesSubquery));
+						
+						criteria.add(disjunction);
+					}
 					
 					
 					// First get total number of matching documents
