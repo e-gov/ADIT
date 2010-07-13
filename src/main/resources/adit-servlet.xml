@@ -148,6 +148,13 @@
 	</bean>
 	
 	<bean id="PrepareSignatureEndpoint" class="ee.adit.ws.endpoint.document.PrepareSignatureEndpoint">
+		<property name="marshaller" ref="castorMarshaller"/>
+		<property name="unmarshaller" ref="castorMarshaller"/>
+		<property name="userService" ref="userService"/>
+		<property name="logService" ref="logService"/>
+		<property name="messageSource" ref="messageSource"/>
+		<property name="configuration" ref="configuration"/>
+		<property name="documentService" ref="documentService"/>
 	</bean>
 	
 	<bean id="SaveDocumentEndpoint" class="ee.adit.ws.endpoint.document.SaveDocumentEndpoint">

@@ -591,6 +591,41 @@
 			<bind-xml name="messages" />
 		</field>
 	</class>
+	
+	<!-- PrepareSignature -->
+	<class name="ee.adit.pojo.PrepareSignatureRequest">
+		<map-to xml="PrepareSignature" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<field name="documentId" type="java.lang.Long">
+			<bind-xml name="document_id" location="keha" />
+		</field>
+		<field name="manifest" type="java.lang.String">
+			<bind-xml name="manifest" location="keha" />
+		</field>
+		<field name="country" type="java.lang.String">
+			<bind-xml name="country" location="keha" />
+		</field>
+		<field name="state" type="java.lang.String">
+			<bind-xml name="state" location="keha" />
+		</field>
+		<field name="city" type="java.lang.String">
+			<bind-xml name="city" location="keha" />
+		</field>
+		<field name="zip" type="java.lang.String">
+			<bind-xml name="zip" location="keha" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.PrepareSignatureResponse">
+		<map-to xml="keha" ns-prefix="xtee" />
+		<field name="success" type="ee.adit.pojo.Success" >
+		</field>
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
+			<bind-xml name="messages" />
+		</field>
+		<field name="signatureHash" type="java.lang.String">
+			<bind-xml name="signature_hash" />
+		</field>
+	</class>
  	
  	
  	<!-- ShareDocument -->

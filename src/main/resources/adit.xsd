@@ -31,6 +31,8 @@
 	<element name="DeflateDocumentResponse" type="tns:DeflateDocumentResponse"/>
 	<element name="DeleteDocumentRequest" type="tns:DeleteDocumentRequest"/>
 	<element name="DeleteDocumentResponse" type="tns:DeleteDocumentResponse"/>
+	<element name="PrepareSignatureRequest" type="tns:PrepareSignatureRequest"/>
+	<element name="PrepareSignatureResponse" type="tns:PrepareSignatureResponse"/>
 	
 	<element name="ShareDocumentRequest" type="tns:ShareDocumentRequest"/>
 	<element name="ShareDocumentResponse" type="tns:ShareDocumentResponse"/>
@@ -282,6 +284,25 @@
 		<sequence>
 			<element name="success" type="boolean"></element>
 			<element name="messages" type="tns:ArrayOfMessage"></element>
+		</sequence>
+	</complexType>
+	
+	<!-- prepareSignature päringu tüübid -->
+	<complexType name="PrepareSignatureRequest">
+		<sequence>
+			<element name="document_id" type="integer"></element>
+			<element name="manifest" type="string"></element>
+			<element name="country" type="string"></element>
+			<element name="state" type="string"></element>
+			<element name="city" type="string"></element>
+			<element name="zip" type="string"></element>
+		</sequence>
+	</complexType>
+	<complexType name="PrepareSignatureResponse">
+		<sequence>
+			<element name="success" type="boolean"></element>
+			<element name="messages" type="tns:ArrayOfMessage"></element>
+			<element name="signature_hash" type="string"></element>
 		</sequence>
 	</complexType>
 	
