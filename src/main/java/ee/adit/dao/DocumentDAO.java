@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.cert.X509Certificate;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -47,6 +48,13 @@ import ee.adit.pojo.OutputDocumentFilesList;
 import ee.adit.pojo.SaveDocumentRequestAttachmentFile;
 import ee.adit.service.DocumentService;
 import ee.adit.util.Util;
+import ee.sk.digidoc.DataFile;
+import ee.sk.digidoc.DigiDocException;
+import ee.sk.digidoc.Signature;
+import ee.sk.digidoc.SignatureProductionPlace;
+import ee.sk.digidoc.SignatureValue;
+import ee.sk.digidoc.SignedDoc;
+import ee.sk.utils.ConfigManager;
 
 public class DocumentDAO extends HibernateDaoSupport {
 
@@ -564,7 +572,7 @@ public class DocumentDAO extends HibernateDaoSupport {
 						
 						long length = (new File(fileName)).length();
 						
-						Blob fileData = Hibernate.createBlob(fileInputStream, length);
+						Blob fileData = Hibernate.createBlob(fileInputStream, length, session);
 						documentFile.setFileData(fileData);
 						documentFile.setContentType(attachmentFile.getContentType());
 						documentFile.setDescription(attachmentFile.getDescription());
@@ -585,4 +593,139 @@ public class DocumentDAO extends HibernateDaoSupport {
 		return result;
 	}
 	
+	public String prepareSignature(
+		final long documentId,
+		final String manifest,
+		final String country,
+		final String state,
+		final String city,
+		final String zip,
+		final String certFile,
+		final String digidocConfigFile,
+		final String temporaryFilesDir) {
+		
+		String signatureDigest = null;
+		signatureDigest = (String) this.getHibernateTemplate().execute(new HibernateCallback() {
+			
+			@Override
+			public Object doInHibernate(Session session) throws HibernateException, SQLException {
+				String digestHex = null;
+				File uniqueDir = null;
+				try {
+					ConfigManager.init(digidocConfigFile);
+					SignedDoc sdoc = new SignedDoc(SignedDoc.FORMAT_DIGIDOC_XML, SignedDoc.VERSION_1_3);
+					
+					String[] claimedRoles = null;
+					if ((manifest != null) && (manifest.length() > 0)) {
+						claimedRoles = new String[] { manifest };
+					}
+					SignatureProductionPlace address = null;
+					if (((country != null) && (country.length() > 0))
+						|| ((state != null) && (state.length() > 0))
+						|| ((city != null) && (city.length() > 0))
+						|| ((zip != null) && (zip.length() > 0))) {
+						
+						address = new SignatureProductionPlace();
+						address.setCountryName(country);
+						address.setStateOrProvince(state);
+						address.setCity(city);
+						address.setPostalCode(zip);
+					}
+					
+					// Create unique subdirectory for files
+					uniqueDir = new File(temporaryFilesDir + File.separator + documentId);
+					int uniqueCounter = 0;
+					while (uniqueDir.exists()) {
+						uniqueDir = new File(temporaryFilesDir + File.separator + documentId + "_" + (++uniqueCounter));
+					}
+					uniqueDir.mkdir();
+					
+					Document doc = (Document) session.get(Document.class, documentId);
+					List<DocumentFile> filesList = new ArrayList<DocumentFile>(doc.getDocumentFiles());
+			    	for (DocumentFile docFile : filesList) {
+			    		if (!docFile.getDeleted()) {
+	        				String outputFileName = uniqueDir.getAbsolutePath() + File.separator + docFile.getFileName(); 
+	        				
+	        				InputStream blobDataStream = null;
+	        				FileOutputStream fileOutputStream = null;
+	        				try {
+	        					byte[] buffer = new byte[10240];
+	        					int len = 0;
+	        					blobDataStream = docFile.getFileData().getBinaryStream();
+	        					fileOutputStream = new FileOutputStream(outputFileName);
+	        					while ((len = blobDataStream.read(buffer)) > 0) {
+	        						fileOutputStream.write(buffer, 0, len);
+	        					}
+	        					
+	        					// Add file to signature container
+	        					sdoc.addDataFile(new File(outputFileName), docFile.getContentType(), DataFile.CONTENT_EMBEDDED_BASE64);
+	        				} catch (IOException ex) {
+	        					throw new HibernateException(ex);
+	        				} finally {
+	        					try {
+	        						if (blobDataStream != null) {
+	        							blobDataStream.close();
+	        						}
+	        						blobDataStream = null;
+	        					} catch (Exception ex) {}
+	        					
+	        					try {
+	        						if (fileOutputStream != null) {
+	        							fileOutputStream.close();
+	        						}
+	        						fileOutputStream = null;
+	        					} catch (Exception ex) {}
+	        				}
+	        				
+	        				
+			    		}
+			    	}
+					
+			    	// Add signature and calculate digest
+					X509Certificate cert = SignedDoc.readCertificate(certFile);
+					Signature sig = sdoc.prepareSignature(cert,	claimedRoles, address);
+					byte[] digest = sig.calculateSignedInfoDigest();
+					digestHex = Util.convertToHexString(digest);
+					
+					// Topis
+					byte[] dummySignature = new byte[128];
+					for (int i = 0; i < dummySignature.length; i++) {
+						dummySignature[i] = 0;
+					}
+					sig.setSignatureValue(dummySignature);
+					
+					
+					// Save container to file.
+					String containerFileName = Util.generateRandomFileNameWithoutExtension();
+					containerFileName = temporaryFilesDir + File.separator + containerFileName + "_PSv1.adit";
+					sdoc.writeToFile(new File(containerFileName));
+					
+					// Add signature container to document table
+					FileInputStream fileInputStream = null;
+					try {
+						fileInputStream = new FileInputStream(containerFileName);
+					} catch (FileNotFoundException e) {
+						LOG.error("Error reading digidoc container file: ", e);
+					}
+					long length = (new File(containerFileName)).length();
+					Blob containerData = Hibernate.createBlob(fileInputStream, length, session);
+					doc.setSignatureContainer(containerData);
+					
+					// Update document
+					session.update(doc);
+				} catch (DigiDocException ex) {
+					throw new HibernateException(ex);
+				} finally {
+					// Delete temporary directory that was created
+					// only for this method.
+					try { Util.deleteDir(uniqueDir); }
+					catch (Exception ex) {}
+				}
+				
+				return digestHex;
+			}
+		});
+		
+		return signatureDigest;
+	}
 }

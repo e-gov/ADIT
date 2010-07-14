@@ -22,7 +22,7 @@
     </logger>
     
     <logger name="org.hibernate">
-    	<level value="DEBUG"></level>
+    	<level value="INFO"></level>
     	<appender ref="file" />
     </logger>
     

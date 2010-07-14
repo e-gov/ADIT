@@ -38,8 +38,5 @@
         <property name="signerName" type="string">
             <column name="SIGNER_NAME" length="100" />
         </property>
-        <property name="containerData" type="blob">
-            <column name="CONTAINER_DATA" />
-        </property>
     </class>
 </hibernate-mapping>

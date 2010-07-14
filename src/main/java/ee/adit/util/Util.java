@@ -1,39 +1,19 @@
 package ee.adit.util;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Random;
-import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-import javax.activation.DataHandler;
-import javax.activation.FileDataSource;
-import javax.activation.MimetypesFileTypeMap;
-import javax.xml.soap.AttachmentPart;
-import javax.xml.soap.SOAPMessage;
-import javax.xml.transform.Result;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.sax.SAXSource;
-import javax.xml.transform.stream.StreamResult;
-
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Base64InputStream;
 import org.apache.commons.codec.binary.Base64OutputStream;
 import org.apache.log4j.Logger;
 import org.castor.core.util.Base64Encoder;
-import org.w3c.dom.Node;
 
 public class Util {
 
@@ -257,4 +237,34 @@ public class Util {
 		LOG.debug("----------------------------");
 	}
 	
+	public static String convertToHexString(final byte[] byteArray) {
+		final byte[] HEXES = "0123456789ABCDEF".getBytes();
+		if (byteArray == null) {
+			return null;
+		}
+		final StringBuilder hex = new StringBuilder(2 * byteArray.length);
+		for (final byte b : byteArray) {
+			hex.append(HEXES[(b >> 4) & 0xF]).append(HEXES[(b ) & 0xF]);
+		}
+		return hex.toString();
+	}
+	
+    public static boolean deleteDir(File dir) {
+        if (dir == null) {
+        	return true;
+        }
+        if (!dir.exists()) {
+        	return true;
+        }
+    	if (dir.isDirectory()) {
+            String[] children = dir.list();
+            for (int i = 0; i < children.length; i++) {
+                boolean success = deleteDir(new File(dir, children[i]));
+                if (!success) {
+                    return false;
+                }
+            }
+        }
+        return dir.delete();
+    }
 }

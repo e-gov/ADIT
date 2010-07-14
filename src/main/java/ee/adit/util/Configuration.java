@@ -9,10 +9,9 @@ public class Configuration {
 	private String tempDir;
 	
 	private String deleteTemporaryFiles;
-	
+
 	public BigInteger getGetJoinedMaxResults() {
 		return getJoinedMaxResults;
-		
 	}
 
 	public void setGetJoinedMaxResults(BigInteger getJoinedMaxResults) {

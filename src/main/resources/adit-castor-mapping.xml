@@ -613,11 +613,21 @@
 		<field name="zip" type="java.lang.String">
 			<bind-xml name="zip" location="keha" />
 		</field>
+		<field name="signerCertificate" type="ee.adit.pojo.PrepareSignatureRequestCert">
+			<bind-xml name="signer_certificate" location="keha" />
+		</field>
+	</class>
+	
+	<class name="ee.adit.pojo.PrepareSignatureRequestCert">
+		<map-to xml="signer_certificate" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<field name="href" type="java.lang.String">
+			<bind-xml name="href" node="attribute" />
+		</field>
 	</class>
 
 	<class name="ee.adit.pojo.PrepareSignatureResponse">
 		<map-to xml="keha" ns-prefix="xtee" />
-		<field name="success" type="ee.adit.pojo.Success" >
+		<field name="success" type="boolean" >
 		</field>
 		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
 			<bind-xml name="messages" />

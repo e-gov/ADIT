@@ -35,9 +35,9 @@ lib/sources/xtee-server-1.0-RC1-sources.jar -text
 lib/spring-webmvc.jar -text
 lib/spring-ws-1.5.9-all.jar -text
 lib/spring.jar -text
+lib/tinyxmlcanonicalizer-0.9.0.jar -text
 lib/wsdl4j-1.6.1.jar -text
 lib/wsdl4j-qname-1.6.1.jar -text
-lib/xalan.jar -text
 lib/xercesImpl.jar -text
 lib/xml-apis.jar -text
 lib/xmlParserAPIs.jar -text
@@ -150,6 +150,7 @@ src/main/java/ee/adit/pojo/OutputDocument.java -text
 src/main/java/ee/adit/pojo/OutputDocumentFile.java -text
 src/main/java/ee/adit/pojo/OutputDocumentFilesList.java -text
 src/main/java/ee/adit/pojo/PrepareSignatureRequest.java -text
+src/main/java/ee/adit/pojo/PrepareSignatureRequestCert.java -text
 src/main/java/ee/adit/pojo/PrepareSignatureResponse.java -text
 src/main/java/ee/adit/pojo/RecipientStatus.java -text
 src/main/java/ee/adit/pojo/SaveDocumentRequest.java -text
@@ -198,6 +199,7 @@ src/main/java/ee/adit/ws/endpoint/user/GetUserInfoEndpoint.java -text
 src/main/java/ee/adit/ws/endpoint/user/JoinEndpoint.java -text
 src/main/java/ee/adit/ws/endpoint/user/UnJoinEndpoint.java -text
 src/main/resources/AccessRestriction.hbm.xml -text
+src/main/resources/SignatureLogging.properties -text
 src/main/resources/adit-castor-mapping.xml -text
 src/main/resources/adit-servlet.xml -text
 src/main/resources/adit.xsd -text
@@ -225,6 +227,7 @@ src/main/resources/hbm/UserNotification.hbm.xml -text
 src/main/resources/hbm/Usertype.hbm.xml -text
 src/main/resources/hibernate.cfg.xml -text
 src/main/resources/hibernate.reveng.xml -text
+src/main/resources/jdigidoc.cfg -text
 src/main/resources/jndi.properties -text
 src/main/resources/log4j.xml -text
 src/main/resources/messages_en.properties -text

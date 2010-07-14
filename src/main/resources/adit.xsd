@@ -296,6 +296,11 @@
 			<element name="state" type="string"></element>
 			<element name="city" type="string"></element>
 			<element name="zip" type="string"></element>
+			<element name="signer_certificate">
+				<complexType>
+					<attribute name="href" type="string"/>
+				</complexType>
+			</element>
 		</sequence>
 	</complexType>
 	<complexType name="PrepareSignatureResponse">

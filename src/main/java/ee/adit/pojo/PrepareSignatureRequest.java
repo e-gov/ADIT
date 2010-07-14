@@ -45,7 +45,8 @@ import javax.xml.bind.annotation.XmlType;
     "country",
     "state",
     "city",
-    "zip"
+    "zip",
+    "signerCertificate"
 })
 public class PrepareSignatureRequest {
 
@@ -61,6 +62,8 @@ public class PrepareSignatureRequest {
     protected String city;
     @XmlElement(required = true)
     protected String zip;
+    @XmlElement(required = true)
+    protected PrepareSignatureRequestCert signerCertificate;
 
     /**
      * Gets the value of the documentId property.
@@ -206,4 +209,27 @@ public class PrepareSignatureRequest {
         this.zip = value;
     }
 
+    /**
+     * Gets the value of the signerCertificate property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link PrepareSignatureRequestCert }
+     *     
+     */
+	public PrepareSignatureRequestCert getSignerCertificate() {
+		return signerCertificate;
+	}
+
+    /**
+     * Sets the value of the signerCertificate property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link PrepareSignatureRequestCert }
+     *     
+     */
+	public void setSignerCertificate(PrepareSignatureRequestCert signerCertificate) {
+		this.signerCertificate = signerCertificate;
+	}
 }

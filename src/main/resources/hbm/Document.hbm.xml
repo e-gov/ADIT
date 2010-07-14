@@ -64,6 +64,9 @@
         <property name="deleted" type="java.lang.Boolean">
             <column name="DELETED" precision="1" scale="0" />
         </property>
+        <property name="signatureContainer" type="blob">
+            <column name="SIGNATURE_CONTAINER" />
+        </property>
         <set name="documents" inverse="true" lazy="true" table="DOCUMENT" fetch="select">
             <key>
                 <column name="PARENT_ID" precision="12" scale="0" />

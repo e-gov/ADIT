@@ -155,6 +155,9 @@
 		<property name="messageSource" ref="messageSource"/>
 		<property name="configuration" ref="configuration"/>
 		<property name="documentService" ref="documentService"/>
+		
+		<!-- NB! Value is case sensitive -->
+		<property name="digidocConfigurationFile" value="classpath:jdigidoc.cfg" />
 	</bean>
 	
 	<bean id="SaveDocumentEndpoint" class="ee.adit.ws.endpoint.document.SaveDocumentEndpoint">

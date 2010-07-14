@@ -149,7 +149,8 @@ CREATE TABLE &&ADIT_SCHEMA..DOCUMENT
 	signable                NUMBER(1) DEFAULT 0,    /* Näitab, kas dokument on allkirjastatav. */
 	deflated                NUMBER(1) DEFAULT 0,    /* Näitab, kas dokument on arhiveeritud. "1" - arhiveeritud, "0" - ei ole arhiveeritud */
 	deflate_date            DATE,    /* Arhiveerimise kuupäev ja kellaaeg. */
-	deleted                 NUMBER(1)    /* Näitab, kas dokument on kustutatud. "1" - kustutatud, "0" - kustutamata. */
+	deleted                 NUMBER(1),    /* Näitab, kas dokument on kustutatud. "1" - kustutatud, "0" - kustutamata. */
+	signature_container		BLOB	/* Digitaalallkirja konteiner (ddoc või bdoc fail) */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
 COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT IS 'Dokumendi andmed.';
@@ -172,6 +173,7 @@ COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.signable                IS 'Näitab, k
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.deflated                IS 'Näitab, kas dokument on arhiveeritud. "1" - arhiveeritud, "0" - ei ole arhiveeritud';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.deflate_date            IS 'Arhiveerimise kuupäev ja kellaaeg.';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.deleted                 IS 'Näitab, kas dokument on kustutatud. "1" - kustutatud, "0" - kustutamata.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.signature_container     IS 'Digitaalallkirja konteiner (ddoc või bdoc fail)';
 
 CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_DVK_STATUS
 (
@@ -421,8 +423,7 @@ CREATE TABLE &&ADIT_SCHEMA..SIGNATURE
 	city            VARCHAR2(100),    /* Allkirja metaandmed - linn */
 	post_index      VARCHAR2(50),    /* Allkirja metaandmed - indeks */
 	signer_code		VARCHAR2(20),    /* Allkirja metaandmed - allkirjastaja isikukood */
-	signer_name		VARCHAR2(255),    /* Allkirja metaandmed - allkirjastaja nimi */
-	container_data  BLOB    /* Allkirja konteiner. */
+	signer_name		VARCHAR2(255)    /* Allkirja metaandmed - allkirjastaja nimi */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
 COMMENT ON TABLE &&ADIT_SCHEMA..SIGNATURE IS 'Allkirjade tabel.';
@@ -437,7 +438,6 @@ COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.city            IS 'Allkirja metaandm
 COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.post_index      IS 'Allkirja metaandmed - indeks';
 COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.signer_code     IS 'Allkirja metaandmed - allkirjastaja isikukood';
 COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.signer_name     IS 'Allkirja metaandmed - allkirjastaja nimi';
-COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.container_data  IS 'Allkirja konteiner.';
 
 CREATE TABLE &&ADIT_SCHEMA..USER_NOTIFICATION
 (

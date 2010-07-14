@@ -2,6 +2,7 @@ package ee.adit.dao.pojo;
 
 // Generated 21.06.2010 14:02:03 by Hibernate Tools 3.2.4.GA
 
+import java.sql.Blob;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -31,6 +32,7 @@ public class Document implements java.io.Serializable {
 	private Boolean deflated;
 	private Date deflateDate;
 	private Boolean deleted;
+	private Blob signatureContainer;
 	private Set documents = new HashSet(0);
 	private Set documentFiles = new HashSet(0);
 	private Set signatures = new HashSet(0);
@@ -51,8 +53,9 @@ public class Document implements java.io.Serializable {
 			Date creationDate, String remoteApplication, Date lastModifiedDate,
 			Long documentDvkStatusId, Long dvkId, Long documentWfStatusId,
 			Boolean locked, Date lockingDate, Boolean signable,
-			Boolean deflated, Date deflateDate, Boolean deleted, Set documents,
-			Set documentFiles, Set signatures, Set documentHistories, Set documentSharings) {
+			Boolean deflated, Date deflateDate, Boolean deleted, Blob signatureContainer,
+			Set documents, Set documentFiles, Set signatures,
+			Set documentHistories, Set documentSharings) {
 		this.id = id;
 		this.documentType = documentType;
 		this.document = document;
@@ -72,6 +75,7 @@ public class Document implements java.io.Serializable {
 		this.deflated = deflated;
 		this.deflateDate = deflateDate;
 		this.deleted = deleted;
+		this.signatureContainer = signatureContainer;
 		this.documents = documents;
 		this.documentFiles = documentFiles;
 		this.signatures = signatures;
@@ -231,6 +235,14 @@ public class Document implements java.io.Serializable {
 		this.deleted = deleted;
 	}
 
+	public Blob getSignatureContainer() {
+		return this.signatureContainer;
+	}
+
+	public void setSignatureContainer(Blob signatureContainer) {
+		this.signatureContainer = signatureContainer;
+	}
+	
 	public Set getDocuments() {
 		return this.documents;
 	}

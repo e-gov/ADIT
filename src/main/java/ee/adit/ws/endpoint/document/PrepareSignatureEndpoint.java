@@ -1,14 +1,14 @@
 package ee.adit.ws.endpoint.document;
 
-import java.io.File;
-import java.security.cert.X509Certificate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
+import org.springframework.ws.mime.Attachment;
 
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
@@ -23,11 +23,6 @@ import ee.adit.service.UserService;
 import ee.adit.util.CustomXTeeHeader;
 import ee.adit.util.Util;
 import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
-import ee.sk.digidoc.DataFile;
-import ee.sk.digidoc.Signature;
-import ee.sk.digidoc.SignedDoc;
-import ee.sk.digidoc.factory.SignatureFactory;
-import ee.sk.utils.ConfigManager;
 import ee.webmedia.xtee.annotation.XTeeService;
 
 @XTeeService(name = "prepareSignature", version = "v1")
@@ -36,6 +31,7 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
 	private static Logger LOG = Logger.getLogger(PrepareSignatureEndpoint.class);
 	private UserService userService;
 	private DocumentService documentService;
+	private Resource digidocConfigurationFile;
 
 	public UserService getUserService() {
 		return userService;
@@ -53,6 +49,14 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
 		this.documentService = documentService;
 	}
 	
+	public Resource getDigidocConfigurationFile() {
+		return digidocConfigurationFile;
+	}
+
+	public void setDigidocConfigurationFile(Resource digidocConfigurationFile) {
+		this.digidocConfigurationFile = digidocConfigurationFile;
+	}
+
 	@Override
 	protected Object invokeInternal(Object requestObject) throws Exception {
 		PrepareSignatureResponse response = new PrepareSignatureResponse();
@@ -136,9 +140,9 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
 			}
 			
 			// Check whether the document is marked as signable
-			if ((doc.getSignable() != null) && doc.getSignable()) {
+			if ((doc.getSignable() == null) || !doc.getSignable()) {
 				LOG.debug("Requested document is not signable. Document ID: " + request.getDocumentId());
-				String errorMessage = this.getMessageSource().getMessage("document.notSignable", new Object[] { doc.getDeflateDate() }, Locale.ENGLISH);
+				String errorMessage = this.getMessageSource().getMessage("document.notSignable", new Object[] { }, Locale.ENGLISH);
 				throw new AditException(errorMessage);
 			}
 
@@ -163,18 +167,45 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
 			}
 			
 			if (isOwner) {
-				// TODO:
-				ConfigManager.init("jar://JDigiDoc.cfg");
-				SignedDoc sdoc = new SignedDoc(SignedDoc.FORMAT_DIGIDOC_XML, SignedDoc.VERSION_1_3);
-				DataFile df = sdoc.addDataFile(new File(""), "", DataFile.CONTENT_EMBEDDED_BASE64);
-				X509Certificate cert = sdoc.readCertificate("Cert file");
-				Signature sig = sdoc.prepareSignature(cert,
-						null, // String[] claimedRoles,
-						null); // SignatureProductionPlace address
-				byte[] sidigest = sig.calculateSignedInfoDigest();
-				sdoc.writeToFile(new File("<faili-asukoht-ja-nimi>"));
+				// Get user certificate from attachment
+				String certFile = null;
+				Iterator<Attachment> i = this.getRequestMessage().getAttachments();
+				int attachmentCount = 0;
+				while(i.hasNext()) {
+					if(attachmentCount == 0) {
+						Attachment attachment = i.next();
+						LOG.debug("Attachment: " + attachment.getContentId());
+						
+						// Extract the SOAP message to a temporary file
+						String base64EncodedFile = extractXML(attachment);
+						
+						// Base64 decode and unzip the temporary file
+						certFile = Util.base64DecodeAndUnzip(base64EncodedFile, this.getConfiguration().getTempDir(), this.getConfiguration().getDeleteTemporaryFilesAsBoolean());
+						LOG.debug("Attachment unzipped to temporary file: " + certFile);
+					} else {
+						String errorMessage = this.getMessageSource().getMessage("request.attachments.tooMany", new Object[] { applicationName }, Locale.ENGLISH);
+						throw new AditException(errorMessage);
+					}
+					attachmentCount++;
+				}
 				
-				this.documentService.getDocumentDAO().save(doc, null);
+				if (certFile == null) {
+					String errorMessage = this.getMessageSource().getMessage("request.prepareSignature.missingCertificate", new Object[] { doc.getDeflateDate() }, Locale.ENGLISH);
+					throw new AditException(errorMessage);
+				}
+				
+				String digestHex = this.documentService.getDocumentDAO().prepareSignature(
+						doc.getId(),
+						request.getManifest(),
+						request.getCountry(),
+						request.getState(),
+						request.getCity(),
+						request.getZip(),
+						certFile,
+						digidocConfigurationFile.getFile().getAbsolutePath(),
+						this.getConfiguration().getTempDir());
+				
+				response.setSignatureHash(digestHex);
 			} else {
 				LOG.debug("Requested document does not belong to user. Document ID: " + request.getDocumentId() + ", User ID: " + userCode);
 				String errorMessage = this.getMessageSource().getMessage("document.doesNotBelongToUser", new Object[] { request.getDocumentId(), userCode }, Locale.ENGLISH);
@@ -186,7 +217,7 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
 
 			// Set response messages
 			response.setSuccess(true);
-			messages.addMessage(new Message("en", this.getMessageSource().getMessage("request.modifyStatus.success", new Object[] { }, Locale.ENGLISH)));
+			messages.addMessage(new Message("en", this.getMessageSource().getMessage("request.prepareSignature.success", new Object[] { }, Locale.ENGLISH)));
 			response.setMessages(messages);
 		} catch (Exception e) {
 			LOG.error("Exception: ", e);
@@ -206,7 +237,7 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
 		}
 		
 		super.logCurrentRequest(documentId, requestDate, additionalInformationForLog);
-		return null;
+		return response;
 	}
 
 	private void checkHeader(CustomXTeeHeader header) throws Exception {
@@ -240,7 +271,12 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
 	
 	private static void printRequest(PrepareSignatureRequest request) {
 		LOG.debug("-------- PrepareSignatureRequest -------");
-		LOG.debug("Document ID: " + String.valueOf(request.getDocumentId()));
+		LOG.debug("Document ID: " + request.getDocumentId());
+		LOG.debug("Role/resolution: " + request.getManifest());
+		LOG.debug("Country: " + request.getCountry());
+		LOG.debug("State: " + request.getState());
+		LOG.debug("City: " + request.getCity());
+		LOG.debug("Zip: " + request.getZip());
 		LOG.debug("----------------------------------------");
 	}
 }
