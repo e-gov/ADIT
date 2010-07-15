@@ -572,7 +572,8 @@ public class DocumentDAO extends HibernateDaoSupport {
 						
 						long length = (new File(fileName)).length();
 						
-						Blob fileData = Hibernate.createBlob(fileInputStream, length, session);
+						//Blob fileData = Hibernate.createBlob(fileInputStream, length, session);
+						Blob fileData = Hibernate.createBlob(fileInputStream, length);
 						documentFile.setFileData(fileData);
 						documentFile.setContentType(attachmentFile.getContentType());
 						documentFile.setDescription(attachmentFile.getDescription());
@@ -708,7 +709,8 @@ public class DocumentDAO extends HibernateDaoSupport {
 						LOG.error("Error reading digidoc container file: ", e);
 					}
 					long length = (new File(containerFileName)).length();
-					Blob containerData = Hibernate.createBlob(fileInputStream, length, session);
+					//Blob containerData = Hibernate.createBlob(fileInputStream, length, session);
+					Blob containerData = Hibernate.createBlob(fileInputStream, length);
 					doc.setSignatureContainer(containerData);
 					
 					// Update document
