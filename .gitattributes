@@ -104,6 +104,9 @@ src/main/java/ee/adit/pojo/ArrayOfFileId.java -text
 src/main/java/ee/adit/pojo/ArrayOfMessage.java -text
 src/main/java/ee/adit/pojo/ArrayOfRecipientStatus.java -text
 src/main/java/ee/adit/pojo/ArrayOfUserCode.java -text
+src/main/java/ee/adit/pojo/ConfirmSignatureRequest.java -text
+src/main/java/ee/adit/pojo/ConfirmSignatureRequestSignature.java -text
+src/main/java/ee/adit/pojo/ConfirmSignatureResponse.java -text
 src/main/java/ee/adit/pojo/DeflateDocumentRequest.java -text
 src/main/java/ee/adit/pojo/DeflateDocumentResponse.java -text
 src/main/java/ee/adit/pojo/DeleteDocumentFileRequest.java -text

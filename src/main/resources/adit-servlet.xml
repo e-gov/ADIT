@@ -55,6 +55,16 @@
 	<!-- Document endpoints -->
 	
 	<bean id="ConfirmSignatureEndpoint" class="ee.adit.ws.endpoint.document.ConfirmSignatureEndpoint">
+		<property name="marshaller" ref="castorMarshaller"/>
+		<property name="unmarshaller" ref="castorMarshaller"/>
+		<property name="userService" ref="userService"/>
+		<property name="logService" ref="logService"/>
+		<property name="messageSource" ref="messageSource"/>
+		<property name="configuration" ref="configuration"/>
+		<property name="documentService" ref="documentService"/>
+		
+		<!-- NB! Value is case sensitive -->
+		<property name="digidocConfigurationFile" value="classpath:jdigidoc.cfg" />
 	</bean>
 	
 	<bean id="DeflateDocumentEndpoint" class="ee.adit.ws.endpoint.document.DeflateDocumentEndpoint">

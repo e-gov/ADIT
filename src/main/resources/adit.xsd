@@ -33,6 +33,8 @@
 	<element name="DeleteDocumentResponse" type="tns:DeleteDocumentResponse"/>
 	<element name="PrepareSignatureRequest" type="tns:PrepareSignatureRequest"/>
 	<element name="PrepareSignatureResponse" type="tns:PrepareSignatureResponse"/>
+	<element name="ConfirmSignatureRequest" type="tns:ConfirmSignatureRequest"/>
+	<element name="ConfirmSignatureResponse" type="tns:ConfirmSignatureResponse"/>
 	
 	<element name="ShareDocumentRequest" type="tns:ShareDocumentRequest"/>
 	<element name="ShareDocumentResponse" type="tns:ShareDocumentResponse"/>
@@ -311,6 +313,24 @@
 		</sequence>
 	</complexType>
 	
+	<!-- confirmSignature päringu tüübid -->
+	<complexType name="ConfirmSignatureRequest">
+		<sequence>
+			<element name="document_id" type="integer"></element>
+			<element name="signature_id" type="string"></element>
+			<element name="signature">
+				<complexType>
+					<attribute name="href" type="string"/>
+				</complexType>
+			</element>
+		</sequence>
+	</complexType>
+	<complexType name="ConfirmSignatureResponse">
+		<sequence>
+			<element name="success" type="boolean"></element>
+			<element name="messages" type="tns:ArrayOfMessage"></element>
+		</sequence>
+	</complexType>
 	
 	<!-- shareDocument päringu tüübid -->
 	<complexType name="ShareDocumentRequest">

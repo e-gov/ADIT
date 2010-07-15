@@ -636,6 +636,33 @@
 			<bind-xml name="signature_hash" />
 		</field>
 	</class>
+	
+	<!-- ConfirmSignature -->
+	<class name="ee.adit.pojo.ConfirmSignatureRequest">
+		<map-to xml="ConfirmSignature" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<field name="documentId" type="java.lang.Long">
+			<bind-xml name="document_id" location="keha" />
+		</field>
+		<field name="signature" type="ee.adit.pojo.ConfirmSignatureRequestSignature">
+			<bind-xml name="signature" location="keha" />
+		</field>
+	</class>
+	
+	<class name="ee.adit.pojo.ConfirmSignatureRequestSignature">
+		<map-to xml="signature" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<field name="href" type="java.lang.String">
+			<bind-xml name="href" node="attribute" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.ConfirmSignatureResponse">
+		<map-to xml="keha" ns-prefix="xtee" />
+		<field name="success" type="boolean" >
+		</field>
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
+			<bind-xml name="messages" />
+		</field>
+	</class>
  	
  	
  	<!-- ShareDocument -->

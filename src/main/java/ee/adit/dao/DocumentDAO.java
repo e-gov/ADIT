@@ -54,6 +54,7 @@ import ee.sk.digidoc.Signature;
 import ee.sk.digidoc.SignatureProductionPlace;
 import ee.sk.digidoc.SignatureValue;
 import ee.sk.digidoc.SignedDoc;
+import ee.sk.digidoc.factory.SAXDigiDocFactory;
 import ee.sk.utils.ConfigManager;
 
 public class DocumentDAO extends HibernateDaoSupport {
@@ -730,4 +731,86 @@ public class DocumentDAO extends HibernateDaoSupport {
 		
 		return signatureDigest;
 	}
+	
+	public void confirmSignature(
+		final long documentId,
+		final String signatureFileName,
+		final String requestPersonalCode,
+		final String digidocConfigFile,
+		final String temporaryFilesDir) {
+		
+		this.getHibernateTemplate().execute(new HibernateCallback() {
+			
+			@Override
+			public Object doInHibernate(Session session) throws HibernateException, SQLException {
+				try {
+					Document doc = (Document) session.get(Document.class, documentId);
+					
+					ConfigManager.init(digidocConfigFile);
+					SAXDigiDocFactory factory = new SAXDigiDocFactory();
+					SignedDoc sdoc = factory.readSignedDoc(doc.getSignatureContainer().getBinaryStream());
+					
+					File signatureFile = new File(signatureFileName);
+					if (!signatureFile.exists()) {
+						throw new HibernateException("Signature file does not exist!");
+					}
+
+					byte[] sigValue = new byte[(int)signatureFile.length()];
+					FileInputStream fs = null;
+					try {
+						fs = new FileInputStream(signatureFileName);
+						fs.read(sigValue, 0, sigValue.length);
+					} catch (IOException ex) {
+						throw new HibernateException(ex);
+					} finally {
+						if (fs != null) {
+							try { fs.close(); }
+							catch (Exception ex1) {}
+						}
+					}
+					
+					Signature sig = null;
+					for (int i = 0; i < sdoc.countSignatures(); i++) {
+						String signerPersonalCode = SignedDoc.getSubjectPersonalCode(sdoc.getSignature(i).getLastCertValue().getCert());
+						if (requestPersonalCode.endsWith(signerPersonalCode)) {
+							sig = sdoc.getSignature(i);
+							break;
+						}
+					}
+					
+					if (sig != null) {
+						sig.setSignatureValue(sigValue);
+						sig.getConfirmation();
+						
+						// Save container to file.
+						String containerFileName = Util.generateRandomFileNameWithoutExtension();
+						containerFileName = temporaryFilesDir + File.separator + containerFileName + "_CSv1.adit";
+						sdoc.writeToFile(new File(containerFileName));
+						
+						// Add signature container to document table
+						FileInputStream fileInputStream = null;
+						try {
+							fileInputStream = new FileInputStream(containerFileName);
+						} catch (FileNotFoundException e) {
+							LOG.error("Error reading digidoc container file: ", e);
+						}
+						long length = (new File(containerFileName)).length();
+						//Blob containerData = Hibernate.createBlob(fileInputStream, length, session);
+						Blob containerData = Hibernate.createBlob(fileInputStream, length);
+						doc.setSignatureContainer(containerData);
+						
+						// Update document
+						session.update(doc);
+					} else {
+						throw new HibernateException("Could not find pending signature given by user: " + requestPersonalCode);
+					}
+				} catch (DigiDocException ex) {
+					throw new HibernateException(ex);
+				}
+				
+				return null;
+			}
+		});
+	}
+	
 }
