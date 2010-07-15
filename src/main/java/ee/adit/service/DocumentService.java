@@ -3,6 +3,8 @@ package ee.adit.service;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -23,7 +25,7 @@ import ee.adit.dao.pojo.DocumentType;
 import ee.adit.exception.AditException;
 import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.SaveDocumentRequestAttachment;
-import ee.adit.pojo.SaveDocumentRequestAttachmentFile;
+import ee.adit.pojo.OutputDocumentFile;
 import ee.adit.util.SaveDocumentAttachmentHandler;
 import ee.adit.util.Util;
 
@@ -116,54 +118,75 @@ public class DocumentService {
 				}
 			}
 			
-			// TODO: Check files - at least one file must be defined. 
-			// The <data> tags of the <file> elements did not get unmarshalled (to save memory).
-			// That is why we need to check those files on the disk. We need the sizes of the <data> elements.
-			// 1. Get the XML file
-			// 2. find the <data> elements
-			// 3. For each <data> element, create a temporary file and add a reference to the document object
-			long totalSize = 0;
-			
-			LOG.debug("Checking files");
-			try {
-				FileInputStream fileInputStream = new FileInputStream(xmlFile);
-				
-				SaveDocumentAttachmentHandler handler = new SaveDocumentAttachmentHandler(tempDir);
-				
-				XMLReader xmlReader = XMLReaderFactory.createXMLReader();
-				xmlReader.setContentHandler(handler);
-				
-				InputSource inputSource = new InputSource(fileInputStream);
-				xmlReader.parse(inputSource);
-				
-				result = handler.getFiles();
-				
-				// Add references to file objects
-				for(int i = 0; i < result.size(); i++) {
-					String fileName = result.get(i);
-					String base64DecodedFile = Util.base64DecodeFile(fileName, tempDir);
-					
-					SaveDocumentRequestAttachmentFile file = document.getFiles().get(i);
-					LOG.debug("Adding reference to file object. File ID: " + file.getId() + " (" + file.getName() + "). Temporary file: " + base64DecodedFile);
-					file.setTmpFileName(base64DecodedFile);
-					
-					totalSize += (new File(base64DecodedFile)).length();
-				}
-				
-				LOG.debug("Total size of document files: " + totalSize);
-				
-				if(remainingDiskQuota < totalSize) {
-					String errorMessage = this.getMessageSource().getMessage("request.saveDocument.document.files.quotaExceeded", new Object[] { remainingDiskQuota, totalSize }, Locale.ENGLISH);
-					throw new AditException(errorMessage);
-				}
-				
-			} catch (Exception e) {
-				throw new AditInternalException("Error parsing attachment: ", e);
-			}
+			result = extractFilesFromXML(document.getFiles(), xmlFile, remainingDiskQuota, tempDir);
 			
 			
 		} else {
 			throw new AditInternalException("Document not initialized.");
+		}
+		
+		return result;
+	}
+	
+	public List<String> extractFilesFromXML(
+		List<OutputDocumentFile> files,
+		String xmlFileName,
+		long remainingDiskQuota,
+		String tempDir) {
+
+		List<String> result = new ArrayList<String>(); 
+		
+		// TODO: Check files - at least one file must be defined. 
+		// The <data> tags of the <file> elements did not get unmarshalled (to save memory).
+		// That is why we need to check those files on the disk. We need the sizes of the <data> elements.
+		// 1. Get the XML file
+		// 2. find the <data> elements
+		// 3. For each <data> element, create a temporary file and add a reference to the document object
+		long totalSize = 0;
+		
+		LOG.debug("Checking files");
+		try {
+			FileInputStream fileInputStream = null;
+			try {
+			fileInputStream = new FileInputStream(xmlFileName);
+			
+			SaveDocumentAttachmentHandler handler = new SaveDocumentAttachmentHandler(tempDir);
+			
+			XMLReader xmlReader = XMLReaderFactory.createXMLReader();
+			xmlReader.setContentHandler(handler);
+			
+			InputSource inputSource = new InputSource(fileInputStream);
+			xmlReader.parse(inputSource);
+			
+			result = handler.getFiles();
+			} finally {
+				if (fileInputStream != null) {
+					try { fileInputStream.close(); }
+					catch (Exception ex) {}
+				}
+			}
+			
+			// Add references to file objects
+			for(int i = 0; i < result.size(); i++) {
+				String fileName = result.get(i);
+				String base64DecodedFile = Util.base64DecodeFile(fileName, tempDir);
+				
+				OutputDocumentFile file = files.get(i);
+				LOG.debug("Adding reference to file object. File ID: " + file.getId() + " (" + file.getName() + "). Temporary file: " + base64DecodedFile);
+				file.setTmpFileName(base64DecodedFile);
+				
+				totalSize += (new File(base64DecodedFile)).length();
+			}
+			
+			LOG.debug("Total size of document files: " + totalSize);
+			
+			if(remainingDiskQuota < totalSize) {
+				String errorMessage = this.getMessageSource().getMessage("request.saveDocument.document.files.quotaExceeded", new Object[] { remainingDiskQuota, totalSize }, Locale.ENGLISH);
+				throw new AditException(errorMessage);
+			}
+			
+		} catch (Exception e) {
+			throw new AditInternalException("Error parsing attachment: ", e);
 		}
 		
 		return result;

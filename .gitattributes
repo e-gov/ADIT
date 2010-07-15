@@ -156,9 +156,11 @@ src/main/java/ee/adit/pojo/PrepareSignatureRequest.java -text
 src/main/java/ee/adit/pojo/PrepareSignatureRequestCert.java -text
 src/main/java/ee/adit/pojo/PrepareSignatureResponse.java -text
 src/main/java/ee/adit/pojo/RecipientStatus.java -text
+src/main/java/ee/adit/pojo/SaveDocumentFileRequest.java -text
+src/main/java/ee/adit/pojo/SaveDocumentFileRequestFile.java -text
+src/main/java/ee/adit/pojo/SaveDocumentFileResponse.java -text
 src/main/java/ee/adit/pojo/SaveDocumentRequest.java -text
 src/main/java/ee/adit/pojo/SaveDocumentRequestAttachment.java -text
-src/main/java/ee/adit/pojo/SaveDocumentRequestAttachmentFile.java -text
 src/main/java/ee/adit/pojo/SaveDocumentRequestDocument.java -text
 src/main/java/ee/adit/pojo/SaveDocumentResponse.java -text
 src/main/java/ee/adit/pojo/ShareDocumentRequest.java -text

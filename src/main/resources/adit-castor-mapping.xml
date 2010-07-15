@@ -502,27 +502,8 @@
 		<field name="previousDocumentID" type="java.lang.Integer">
 			<bind-xml name="previous_document_id" location="document" />
 		</field>		
-		<field name="files" type="ee.adit.pojo.SaveDocumentRequestAttachmentFile" collection="arraylist">
+		<field name="files" type="ee.adit.pojo.OutputDocumentFile" collection="arraylist">
 			<bind-xml name="file" location="document/files"/>
-		</field>
-	</class>
-	
-	<class name="ee.adit.pojo.SaveDocumentRequestAttachmentFile">
-		<map-to xml="file"/>
-		<field name="id" type="java.lang.Integer">
-			<bind-xml name="id"/>
-		</field>
-		<field name="name" type="java.lang.String">
-			<bind-xml name="name"/>
-		</field>
-		<field name="contentType" type="java.lang.String">
-			<bind-xml name="content_type"/>
-		</field>
-		<field name="description" type="java.lang.String">
-			<bind-xml name="description"/>
-		</field>
-		<field name="sizeBytes" type="java.lang.Integer">
-			<bind-xml name="size_bytes"/>
 		</field>
 	</class>
 	
@@ -535,6 +516,36 @@
 		</field>
 		<field name="documentId" type="long">
 			<bind-xml name="document_id" />
+		</field>
+	</class>
+	
+ 	<!-- SaveDocumentFile -->
+ 	<class name="ee.adit.pojo.SaveDocumentFileRequest">
+		<map-to xml="SaveDocumentFile" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<field name="documentId" type="java.lang.Long">
+			<bind-xml name="document_id" location="keha" />
+		</field>
+		<field name="file" type="ee.adit.pojo.SaveDocumentFileRequestFile">
+			<bind-xml name="file" location="keha" />
+		</field>
+	</class>
+	
+	<class name="ee.adit.pojo.SaveDocumentFileRequestFile">
+		<map-to xml="file" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<field name="href" type="java.lang.String">
+			<bind-xml name="href" node="attribute" />
+		</field>
+	</class>
+	
+	<class name="ee.adit.pojo.SaveDocumentFileResponse">
+		<map-to xml="SaveDocumentFileResponse" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<field name="success" type="boolean" >
+		</field>
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
+			<bind-xml name="messages" />
+		</field>
+		<field name="fileId" type="java.lang.Long">
+			<bind-xml name="file_id" />
 		</field>
 	</class>
  	

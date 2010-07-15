@@ -45,7 +45,6 @@ import ee.adit.pojo.GetDocumentListResponseAttachment;
 import ee.adit.pojo.OutputDocument;
 import ee.adit.pojo.OutputDocumentFile;
 import ee.adit.pojo.OutputDocumentFilesList;
-import ee.adit.pojo.SaveDocumentRequestAttachmentFile;
 import ee.adit.service.DocumentService;
 import ee.adit.util.Util;
 import ee.sk.digidoc.DataFile;
@@ -547,7 +546,7 @@ public class DocumentDAO extends HibernateDaoSupport {
 	 * @param files
 	 * @return
 	 */
-	public Long save(final Document document, final List<SaveDocumentRequestAttachmentFile> files) {
+	public Long save(final Document document, final List<OutputDocumentFile> files) {
 		Long result = null;
 				
 		result = (Long) this.getHibernateTemplate().execute(new HibernateCallback() {
@@ -556,36 +555,53 @@ public class DocumentDAO extends HibernateDaoSupport {
 			public Object doInHibernate(Session session) throws HibernateException,
 					SQLException {
 				
-				Set<DocumentFile> documentFiles = new HashSet<DocumentFile>();
+				if (document.getDocumentFiles() == null) {
+					document.setDocumentFiles(new HashSet<DocumentFile>());
+				}
 				
 				if (files != null) {
 					for(int i = 0; i < files.size(); i++) {
+						OutputDocumentFile attachmentFile = files.get(i);
+
 						DocumentFile documentFile = new DocumentFile();
-						SaveDocumentRequestAttachmentFile attachmentFile = files.get(i);
-						String fileName = attachmentFile.getTmpFileName();
+						if ((attachmentFile.getId() != null) && (attachmentFile.getId() > 0)) {
+							documentFile = null;
+							Iterator it = document.getDocumentFiles().iterator();
+							while (it.hasNext()) {
+								DocumentFile f = (DocumentFile)it.next();
+								if (f.getId() == attachmentFile.getId()) {
+									documentFile = f;
+									break;
+								}
+							}
+						}
 						
+						if (documentFile == null) {
+							throw new HibernateException("Document does not have a file with ID: " + attachmentFile.getId());
+						}
+						
+						String fileName = attachmentFile.getTmpFileName();
 						FileInputStream fileInputStream = null;
 						try {
 							fileInputStream = new FileInputStream(fileName);
 						} catch (FileNotFoundException e) {
 							LOG.error("Error saving document file: ", e);
 						}
-						
 						long length = (new File(fileName)).length();
-						
 						//Blob fileData = Hibernate.createBlob(fileInputStream, length, session);
 						Blob fileData = Hibernate.createBlob(fileInputStream, length);
 						documentFile.setFileData(fileData);
+						
 						documentFile.setContentType(attachmentFile.getContentType());
+						documentFile.setDeleted(false);
 						documentFile.setDescription(attachmentFile.getDescription());
 						documentFile.setFileName(attachmentFile.getName());
 						documentFile.setFileSizeBytes(length);
 						documentFile.setDocument(document);
-						documentFiles.add(documentFile);
+						document.getDocumentFiles().add(documentFile);
 					}
 				}
 				
-				document.setDocumentFiles(documentFiles);
 				session.saveOrUpdate(document);
 				LOG.debug("Saved document ID: " + document.getId());
 				return document.getId();
@@ -594,6 +610,7 @@ public class DocumentDAO extends HibernateDaoSupport {
 		
 		return result;
 	}
+
 	
 	public String prepareSignature(
 		final long documentId,

@@ -5,18 +5,18 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 public class OutputDocumentFile {
-	private long id;
+	private Long id;
 	private String name;
 	private String contentType;
 	private String description;
-	private long sizeBytes;
+	private Long sizeBytes;
 	private String tmpFileName;
 	
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -52,11 +52,11 @@ public class OutputDocumentFile {
 		this.contentType = contentType;
 	}
 
-	public long getSizeBytes() {
+	public Long getSizeBytes() {
 		return sizeBytes;
 	}
 
-	public void setSizeBytes(long sizeBytes) {
+	public void setSizeBytes(Long sizeBytes) {
 		this.sizeBytes = sizeBytes;
 	}
 	

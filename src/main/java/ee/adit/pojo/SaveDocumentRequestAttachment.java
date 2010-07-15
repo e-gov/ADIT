@@ -14,7 +14,7 @@ public class SaveDocumentRequestAttachment {
 	
 	private Integer previousDocumentID;
 	
-	private List<SaveDocumentRequestAttachmentFile> files;
+	private List<OutputDocumentFile> files;
 
 	public Integer getId() {
 		return id;
@@ -40,11 +40,11 @@ public class SaveDocumentRequestAttachment {
 		this.title = title;
 	}
 
-	public List<SaveDocumentRequestAttachmentFile> getFiles() {
+	public List<OutputDocumentFile> getFiles() {
 		return files;
 	}
 
-	public void setFiles(List<SaveDocumentRequestAttachmentFile> files) {
+	public void setFiles(List<OutputDocumentFile> files) {
 		this.files = files;
 	}
 
