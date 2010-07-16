@@ -226,7 +226,7 @@ public class DocumentService {
 				Date creationDate = new Date();
 				Document document = new Document();
 				if ((attachmentDocument.getId() != null) && (attachmentDocument.getId() > 0)) {
-					document = (Document)session.get(Document.class, attachmentDocument.getId()); //this.getDocumentDAO().getDocument(attachmentDocument.getId());
+					document = (Document)session.get(Document.class, attachmentDocument.getId());
 					LOG.debug("Document file count: " + document.getDocumentFiles().size());
 				} else {
 					document.setCreationDate(creationDate);
@@ -250,6 +250,32 @@ public class DocumentService {
 			}
 		});
 	}
+	
+	public Long saveDocumentFile(
+		final long documentId,
+		final OutputDocumentFile file,
+		final String attachmentXmlFile,
+		final long remainingDiskQuota,
+		final String temporaryFilesDir) {
+		
+		final DocumentDAO docDao = this.getDocumentDAO();
+
+		return (Long)this.getDocumentDAO().getHibernateTemplate().execute(new HibernateCallback() {
+			public Object doInHibernate(Session session) throws HibernateException, SQLException {
+				Document document = (Document)session.get(Document.class, documentId);
+				List<OutputDocumentFile> filesList = new ArrayList<OutputDocumentFile>();
+				filesList.add(file);
+		
+				// TODO: Document to database
+				extractFilesFromXML(filesList, attachmentXmlFile, remainingDiskQuota, temporaryFilesDir);
+				docDao.save(document, filesList, session);
+				long fileId = filesList.get(0).getId();
+				LOG.debug("File saved with ID: " + fileId);
+				return fileId;
+			}
+		});
+	}
+	
 	
 	public MessageSource getMessageSource() {
 		return messageSource;

@@ -1,10 +1,8 @@
 package ee.adit.ws.endpoint.document;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
@@ -189,14 +187,7 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 							LOG.debug("XML unmarshalled to type: " + unmarshalledObject.getClass());
 							if(unmarshalledObject instanceof OutputDocumentFile) {
 								OutputDocumentFile docFile = (OutputDocumentFile) unmarshalledObject;
-								List<OutputDocumentFile> filesList = new ArrayList<OutputDocumentFile>();
-								filesList.add(docFile);
-								
-								// TODO: Document to database
-								this.getDocumentService().extractFilesFromXML(filesList, xmlFile, remainingDiskQuota, this.getConfiguration().getTempDir());
-								this.getDocumentService().getDocumentDAO().save(doc, filesList, null);
-								long fileId = filesList.get(0).getId();
-								LOG.debug("File saved with ID: " + fileId);
+								Long fileId = this.getDocumentService().saveDocumentFile(doc.getId(), docFile, xmlFile, remainingDiskQuota, this.getConfiguration().getTempDir());
 								response.setFileId(fileId);
 							} else {
 								throw new AditInternalException("Unmarshalling returned wrong type. Expected " + SaveDocumentRequestAttachment.class + ", got " + unmarshalledObject.getClass());
@@ -222,7 +213,7 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 
 			// Set response messages
 			response.setSuccess(true);
-			messages.addMessage(new Message("en", this.getMessageSource().getMessage("request.prepareSignature.success", new Object[] { }, Locale.ENGLISH)));
+			messages.addMessage(new Message("en", this.getMessageSource().getMessage("request.saveDocumentFile.success", new Object[] { }, Locale.ENGLISH)));
 			response.setMessages(messages);
 		} catch (Exception e) {
 			LOG.error("Exception: ", e);
