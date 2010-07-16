@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
@@ -51,7 +50,6 @@ import ee.sk.digidoc.DataFile;
 import ee.sk.digidoc.DigiDocException;
 import ee.sk.digidoc.Signature;
 import ee.sk.digidoc.SignatureProductionPlace;
-import ee.sk.digidoc.SignatureValue;
 import ee.sk.digidoc.SignedDoc;
 import ee.sk.digidoc.factory.SAXDigiDocFactory;
 import ee.sk.utils.ConfigManager;
@@ -203,11 +201,11 @@ public class DocumentDAO extends HibernateDaoSupport {
 					// Include deflated documents
 					if (!param.isIsDeflated()) {
 						criteria.add(
-								Restrictions.or(
-									Restrictions.isNull("deflated"),
-									Restrictions.eq("deflated", false)
-								)
-							);
+							Restrictions.or(
+								Restrictions.isNull("deflated"),
+								Restrictions.eq("deflated", false)
+							)
+						);
 					}
 					
 					// Creator application
@@ -546,69 +544,72 @@ public class DocumentDAO extends HibernateDaoSupport {
 	 * @param files
 	 * @return
 	 */
-	public Long save(final Document document, final List<OutputDocumentFile> files) {
+	public Long save(final Document document, final List<OutputDocumentFile> files, Session existingSession) {
 		Long result = null;
-				
-		result = (Long) this.getHibernateTemplate().execute(new HibernateCallback() {
-			
-			@Override
-			public Object doInHibernate(Session session) throws HibernateException,
-					SQLException {
-				
-				if (document.getDocumentFiles() == null) {
-					document.setDocumentFiles(new HashSet<DocumentFile>());
+		
+		if ((existingSession != null) && (existingSession.isOpen())) {
+			return saveImpl(document, files, existingSession);
+		} else {
+			result = (Long) this.getHibernateTemplate().execute(new HibernateCallback() {
+				public Object doInHibernate(Session session) throws HibernateException,	SQLException {
+					return saveImpl(document, files, session);
 				}
-				
-				if (files != null) {
-					for(int i = 0; i < files.size(); i++) {
-						OutputDocumentFile attachmentFile = files.get(i);
+			});
+		}
+		return result;
+	}
+	
+	private Long saveImpl(final Document document, final List<OutputDocumentFile> files, Session session) {
+		if (document.getDocumentFiles() == null) {
+			document.setDocumentFiles(new HashSet<DocumentFile>());
+		}
+		
+		if (files != null) {
+			for(int i = 0; i < files.size(); i++) {
+				OutputDocumentFile attachmentFile = files.get(i);
 
-						DocumentFile documentFile = new DocumentFile();
-						if ((attachmentFile.getId() != null) && (attachmentFile.getId() > 0)) {
-							documentFile = null;
-							Iterator it = document.getDocumentFiles().iterator();
-							while (it.hasNext()) {
-								DocumentFile f = (DocumentFile)it.next();
-								if (f.getId() == attachmentFile.getId()) {
-									documentFile = f;
-									break;
-								}
-							}
+				DocumentFile documentFile = new DocumentFile();
+				if ((attachmentFile.getId() != null) && (attachmentFile.getId() > 0)) {
+					documentFile = null;
+					Iterator it = document.getDocumentFiles().iterator();
+					while (it.hasNext()) {
+						DocumentFile f = (DocumentFile)it.next();
+						if (f.getId() == attachmentFile.getId()) {
+							documentFile = f;
+							break;
 						}
-						
-						if (documentFile == null) {
-							throw new HibernateException("Document does not have a file with ID: " + attachmentFile.getId());
-						}
-						
-						String fileName = attachmentFile.getTmpFileName();
-						FileInputStream fileInputStream = null;
-						try {
-							fileInputStream = new FileInputStream(fileName);
-						} catch (FileNotFoundException e) {
-							LOG.error("Error saving document file: ", e);
-						}
-						long length = (new File(fileName)).length();
-						//Blob fileData = Hibernate.createBlob(fileInputStream, length, session);
-						Blob fileData = Hibernate.createBlob(fileInputStream, length);
-						documentFile.setFileData(fileData);
-						
-						documentFile.setContentType(attachmentFile.getContentType());
-						documentFile.setDeleted(false);
-						documentFile.setDescription(attachmentFile.getDescription());
-						documentFile.setFileName(attachmentFile.getName());
-						documentFile.setFileSizeBytes(length);
-						documentFile.setDocument(document);
-						document.getDocumentFiles().add(documentFile);
 					}
 				}
 				
-				session.saveOrUpdate(document);
-				LOG.debug("Saved document ID: " + document.getId());
-				return document.getId();
+				if (documentFile == null) {
+					throw new HibernateException("Document does not have a file with ID: " + attachmentFile.getId());
+				}
+				
+				String fileName = attachmentFile.getTmpFileName();
+				FileInputStream fileInputStream = null;
+				try {
+					fileInputStream = new FileInputStream(fileName);
+				} catch (FileNotFoundException e) {
+					LOG.error("Error saving document file: ", e);
+				}
+				long length = (new File(fileName)).length();
+				//Blob fileData = Hibernate.createBlob(fileInputStream, length, session);
+				Blob fileData = Hibernate.createBlob(fileInputStream, length);
+				documentFile.setFileData(fileData);
+				
+				documentFile.setContentType(attachmentFile.getContentType());
+				documentFile.setDeleted(false);
+				documentFile.setDescription(attachmentFile.getDescription());
+				documentFile.setFileName(attachmentFile.getName());
+				documentFile.setFileSizeBytes(length);
+				documentFile.setDocument(document);
+				document.getDocumentFiles().add(documentFile);
 			}
-		});
+		}
 		
-		return result;
+		session.saveOrUpdate(document);
+		LOG.debug("Saved document ID: " + document.getId());
+		return document.getId();
 	}
 
 	

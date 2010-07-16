@@ -167,7 +167,7 @@ public class MarkDocumentViewedEndpoint extends AbstractAditBaseEndpoint {
 							}
 							
 							if (saveDocument) {
-								this.documentService.getDocumentDAO().save(doc, null);
+								this.documentService.getDocumentDAO().save(doc, null, null);
 							}
 							
 							// TODO: Teavituskalendri kaudu teavituse saatmine

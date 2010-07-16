@@ -161,7 +161,7 @@ public class DeflateDocumentEndpoint extends AbstractAditBaseEndpoint {
 					doc.getDocumentHistories().add(historyEvent);
 					
 					// Salvestame tehtud muudatused
-					this.documentService.getDocumentDAO().save(doc, null);
+					this.documentService.getDocumentDAO().save(doc, null, null);
 				}
 			} else {
 				String errorMessage = this.getMessageSource().getMessage("document.nonExistent", new Object[] { request.getDocumentId() }, Locale.ENGLISH);

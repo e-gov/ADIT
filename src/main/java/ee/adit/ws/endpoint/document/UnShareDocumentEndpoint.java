@@ -211,7 +211,7 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 					doc.setLockingDate(null);
 				}
 				
-				this.documentService.getDocumentDAO().save(doc, null);
+				this.documentService.getDocumentDAO().save(doc, null, null);
 			}
 
 			// Set response messages

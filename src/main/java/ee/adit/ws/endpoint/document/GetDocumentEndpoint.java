@@ -189,7 +189,7 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
 								}
 								
 								if (saveDocument) {
-									this.documentService.getDocumentDAO().save(doc, null);
+									this.documentService.getDocumentDAO().save(doc, null, null);
 								}
 							} else {
 								LOG.debug("Document has no files!");

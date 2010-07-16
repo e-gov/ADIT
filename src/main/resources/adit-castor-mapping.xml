@@ -487,7 +487,7 @@
 	
 	<class name="ee.adit.pojo.SaveDocumentRequestAttachment">
 		<map-to xml="saveDocumentRequestAttachmentV1" />
-		<field name="id" type="java.lang.Integer">
+		<field name="id" type="java.lang.Long">
 			<bind-xml name="id" location="document" />
 		</field>
 		<field name="guid" type="java.lang.String">
@@ -499,7 +499,7 @@
 		<field name="documentType" type="java.lang.String">
 			<bind-xml name="document_type" location="document" />
 		</field>
-		<field name="previousDocumentID" type="java.lang.Integer">
+		<field name="previousDocumentID" type="java.lang.Long">
 			<bind-xml name="previous_document_id" location="document" />
 		</field>		
 		<field name="files" type="ee.adit.pojo.OutputDocumentFile" collection="arraylist">

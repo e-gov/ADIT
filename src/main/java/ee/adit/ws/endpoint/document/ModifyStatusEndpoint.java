@@ -171,7 +171,7 @@ public class ModifyStatusEndpoint extends AbstractAditBaseEndpoint {
 				historyEvent.setUserCode(userCode);
 				doc.getDocumentHistories().add(historyEvent);
 				
-				this.documentService.getDocumentDAO().save(doc, null);
+				this.documentService.getDocumentDAO().save(doc, null, null);
 			} else {
 				LOG.debug("Requested document does not belong to user. Document ID: " + request.getDocumentId() + ", User ID: " + userCode);
 				String errorMessage = this.getMessageSource().getMessage("document.doesNotBelongToUser", new Object[] { request.getDocumentId(), userCode }, Locale.ENGLISH);

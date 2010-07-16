@@ -3,7 +3,7 @@ package ee.adit.service;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -11,7 +11,11 @@ import java.util.Locale;
 import java.util.UUID;
 
 import org.apache.log4j.Logger;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
 import org.springframework.context.MessageSource;
+import org.springframework.orm.hibernate3.HibernateCallback;
+import org.springframework.transaction.annotation.Transactional;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
@@ -213,34 +217,38 @@ public class DocumentService {
 		return this.getDocumentFileDAO().deflateDocumentFile(documentId, fileId, markDeleted);
 	}
 	
-	public Long save(SaveDocumentRequestAttachment attachmentDocument, List<String> fileNames, String creatorCode, String remoteApplication) throws FileNotFoundException {
+	@Transactional
+	public Long save(final SaveDocumentRequestAttachment attachmentDocument, final List<String> fileNames, final String creatorCode, final String remoteApplication) throws FileNotFoundException {
+		final DocumentDAO docDao = this.getDocumentDAO();
 		
-		// TODO
-		// 1. Construct file objects
-		
-		Date creationDate = new Date();
-		
-		Document document = new Document();
-		document.setCreationDate(creationDate);
-		document.setCreatorCode(creatorCode);
-		document.setDocumentType(attachmentDocument.getDocumentType());
-		
-		if(attachmentDocument.getGuid() != null && !"".equalsIgnoreCase(attachmentDocument.getGuid().trim())) {
-			document.setGuid(attachmentDocument.getGuid());
-		} else {
-			// Generate new GUID
-			document.setGuid(Util.generateGUID());
-		}
-		
-		
-		document.setLastModifiedDate(creationDate);
-		document.setRemoteApplication(remoteApplication);
-		document.setSignable(true);
-		document.setTitle(attachmentDocument.getTitle());
-		
-		
-		
-		return this.getDocumentDAO().save(document, attachmentDocument.getFiles());
+		return (Long)this.getDocumentDAO().getHibernateTemplate().execute(new HibernateCallback() {
+			public Object doInHibernate(Session session) throws HibernateException, SQLException {
+				Date creationDate = new Date();
+				Document document = new Document();
+				if ((attachmentDocument.getId() != null) && (attachmentDocument.getId() > 0)) {
+					document = (Document)session.get(Document.class, attachmentDocument.getId()); //this.getDocumentDAO().getDocument(attachmentDocument.getId());
+					LOG.debug("Document file count: " + document.getDocumentFiles().size());
+				} else {
+					document.setCreationDate(creationDate);
+					document.setCreatorCode(creatorCode);
+					document.setRemoteApplication(remoteApplication);
+					document.setSignable(true);
+				}
+				
+				document.setDocumentType(attachmentDocument.getDocumentType());
+				if(attachmentDocument.getGuid() != null && !"".equalsIgnoreCase(attachmentDocument.getGuid().trim())) {
+					document.setGuid(attachmentDocument.getGuid());
+				} else if ((document.getGuid() == null) || "".equalsIgnoreCase(attachmentDocument.getGuid().trim())) {
+					// Generate new GUID
+					document.setGuid(Util.generateGUID());
+				}
+				
+				document.setLastModifiedDate(creationDate);
+				document.setTitle(attachmentDocument.getTitle());
+				
+				return docDao.save(document, attachmentDocument.getFiles(), session);
+			}
+		});
 	}
 	
 	public MessageSource getMessageSource() {

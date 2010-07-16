@@ -232,7 +232,7 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 				}
 				doc.getDocumentHistories().add(lockingEvent);
 				
-				this.documentService.getDocumentDAO().save(doc, null);
+				this.documentService.getDocumentDAO().save(doc, null, null);
 			} else {
 				String errorMessage = this.getMessageSource().getMessage("request.shareDocument.recipients.noneSucceeded", new Object[] { request.getDocumentId(), userCode }, Locale.ENGLISH);
 				throw new AditException(errorMessage);

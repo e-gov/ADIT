@@ -194,7 +194,7 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 								
 								// TODO: Document to database
 								this.getDocumentService().extractFilesFromXML(filesList, xmlFile, remainingDiskQuota, this.getConfiguration().getTempDir());
-								this.getDocumentService().getDocumentDAO().save(doc, filesList);
+								this.getDocumentService().getDocumentDAO().save(doc, filesList, null);
 								long fileId = filesList.get(0).getId();
 								LOG.debug("File saved with ID: " + fileId);
 								response.setFileId(fileId);

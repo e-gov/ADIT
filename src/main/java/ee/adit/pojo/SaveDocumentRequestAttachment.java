@@ -4,7 +4,7 @@ import java.util.List;
 
 public class SaveDocumentRequestAttachment {
 
-	private Integer id;
+	private Long id;
 	
 	private String guid;
 	
@@ -12,15 +12,15 @@ public class SaveDocumentRequestAttachment {
 	
 	private String documentType;
 	
-	private Integer previousDocumentID;
+	private Long previousDocumentID;
 	
 	private List<OutputDocumentFile> files;
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -56,11 +56,11 @@ public class SaveDocumentRequestAttachment {
 		this.documentType = documentType;
 	}
 
-	public Integer getPreviousDocumentID() {
+	public Long getPreviousDocumentID() {
 		return previousDocumentID;
 	}
 
-	public void setPreviousDocumentID(Integer previousDocumentID) {
+	public void setPreviousDocumentID(Long previousDocumentID) {
 		this.previousDocumentID = previousDocumentID;
 	}
 	
