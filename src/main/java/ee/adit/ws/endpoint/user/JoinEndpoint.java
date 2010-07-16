@@ -3,7 +3,6 @@ package ee.adit.ws.endpoint.user;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 import ee.adit.dao.pojo.AditUser;

@@ -16,6 +16,10 @@
 	<element name="GetUserInfoResponse" type="tns:GetUserInfoResponse"/>
 	<element name="GetJoinedRequest" type="tns:GetJoinedRequest"/>
 	<element name="GetJoinedResponse" type="tns:GetJoinedResponse"/>
+	<element name="GetNotificationsRequest" type="tns:GetNotificationsRequest"/>
+	<element name="GetNotificationsResponse" type="tns:GetNotificationsResponse"/>
+	<element name="SetNotificationsRequest" type="tns:SetNotificationsRequest"/>
+	<element name="SetNotificationsResponse" type="tns:SetNotificationsResponse"/>
 	
 	<element name="GetDocumentListRequest" type="tns:GetDocumentListRequest"/>
 	<element name="GetDocumentListResponse" type="tns:GetDocumentListResponse"/>
@@ -112,6 +116,25 @@
 			<element name="recipient" type="tns:RecipientStatus" maxOccurs="unbounded" minOccurs="0"></element>
 		</sequence>
 	</complexType>
+	
+	<complexType name="Notification">
+		<sequence>
+			<element name="type" type="string"></element>
+			<element name="active" type="boolean"></element>
+		</sequence>
+	</complexType>
+	
+	<complexType name="ArrayOfNotification">
+		<sequence>
+			<element name="notification" type="tns:Notification" maxOccurs="unbounded" minOccurs="0"></element>
+		</sequence>
+	</complexType>
+	
+	<complexType name="ArrayOfEmailAddress">
+		<sequence>
+			<element name="email_address" type="string" maxOccurs="unbounded" minOccurs="0"></element>
+		</sequence>
+	</complexType>
 
 
 	<!-- join päringu tüübid -->
@@ -167,6 +190,35 @@
 			<element name="userList" type="base64Binary"></element>
 		</sequence>
 	</complexType>
+	
+	<!-- getNotifications päringu tüübid -->
+	<complexType name="GetNotificationsRequest">
+		<sequence/>
+	</complexType>
+	<complexType name="GetNotificationsResponse">
+		<sequence>
+			<element name="success" type="boolean"></element>
+			<element name="messages" type="tns:ArrayOfMessage"></element>
+			<element name="notifications" type="tns:ArrayOfNotification" nillable="false"></element>
+			<element name="notifications_active" type="boolean"></element>
+			<element name="address_list" type="tns:ArrayOfEmailAddress"></element>
+		</sequence>
+	</complexType>
+	
+	<!-- setNotifications päringu tüübid -->
+	<complexType name="SetNotificationsRequest">
+		<sequence>
+			<element name="notifications" type="tns:ArrayOfNotification" nillable="false"></element>
+		</sequence>
+	</complexType>
+	<complexType name="SetNotificationsResponse">
+		<sequence>
+			<element name="success" type="boolean"></element>
+			<element name="messages" type="tns:ArrayOfMessage"></element>
+		</sequence>
+	</complexType>
+	
+	
 	
 	<!-- getDocumentList päringu tüübid -->
 	<complexType name="GetDocumentListRequest">

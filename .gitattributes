@@ -64,6 +64,7 @@ src/main/java/ee/adit/dao/DocumentDAO.java -text
 src/main/java/ee/adit/dao/DocumentFileDAO.java -text
 src/main/java/ee/adit/dao/DocumentTypeDAO.java -text
 src/main/java/ee/adit/dao/DocumentWfStatusDAO.java -text
+src/main/java/ee/adit/dao/NotificationTypeDAO.java -text
 src/main/java/ee/adit/dao/RemoteApplicationDAO.java -text
 src/main/java/ee/adit/dao/RequestLogDAO.java -text
 src/main/java/ee/adit/dao/UsertypeDAO.java -text
@@ -100,8 +101,10 @@ src/main/java/ee/adit/pojo/ArrayOfCreatorApplication.java -text
 src/main/java/ee/adit/pojo/ArrayOfDocumentDvkStatus.java -text
 src/main/java/ee/adit/pojo/ArrayOfDocumentType.java -text
 src/main/java/ee/adit/pojo/ArrayOfDocumentWorkflowStatus.java -text
+src/main/java/ee/adit/pojo/ArrayOfEmailAddress.java -text
 src/main/java/ee/adit/pojo/ArrayOfFileId.java -text
 src/main/java/ee/adit/pojo/ArrayOfMessage.java -text
+src/main/java/ee/adit/pojo/ArrayOfNotification.java -text
 src/main/java/ee/adit/pojo/ArrayOfRecipientStatus.java -text
 src/main/java/ee/adit/pojo/ArrayOfUserCode.java -text
 src/main/java/ee/adit/pojo/ConfirmSignatureRequest.java -text
@@ -136,6 +139,8 @@ src/main/java/ee/adit/pojo/GetJoinedRequest.java -text
 src/main/java/ee/adit/pojo/GetJoinedResponse.java -text
 src/main/java/ee/adit/pojo/GetJoinedResponseAttachment.java -text
 src/main/java/ee/adit/pojo/GetJoinedResponseAttachmentUser.java -text
+src/main/java/ee/adit/pojo/GetNotificationsRequest.java -text
+src/main/java/ee/adit/pojo/GetNotificationsResponse.java -text
 src/main/java/ee/adit/pojo/GetUserInfoRequest.java -text
 src/main/java/ee/adit/pojo/GetUserInfoRequestAttachmentUserList.java -text
 src/main/java/ee/adit/pojo/GetUserInfoResponse.java -text
@@ -148,6 +153,7 @@ src/main/java/ee/adit/pojo/MarkDocumentViewedResponse.java -text
 src/main/java/ee/adit/pojo/Message.java -text
 src/main/java/ee/adit/pojo/ModifyStatusRequest.java -text
 src/main/java/ee/adit/pojo/ModifyStatusResponse.java -text
+src/main/java/ee/adit/pojo/Notification.java -text
 src/main/java/ee/adit/pojo/ObjectFactory.java -text
 src/main/java/ee/adit/pojo/OutputDocument.java -text
 src/main/java/ee/adit/pojo/OutputDocumentFile.java -text
@@ -163,6 +169,8 @@ src/main/java/ee/adit/pojo/SaveDocumentRequest.java -text
 src/main/java/ee/adit/pojo/SaveDocumentRequestAttachment.java -text
 src/main/java/ee/adit/pojo/SaveDocumentRequestDocument.java -text
 src/main/java/ee/adit/pojo/SaveDocumentResponse.java -text
+src/main/java/ee/adit/pojo/SetNotificationsRequest.java -text
+src/main/java/ee/adit/pojo/SetNotificationsResponse.java -text
 src/main/java/ee/adit/pojo/ShareDocumentRequest.java -text
 src/main/java/ee/adit/pojo/ShareDocumentResponse.java -text
 src/main/java/ee/adit/pojo/Signature.java -text
@@ -200,8 +208,10 @@ src/main/java/ee/adit/ws/endpoint/document/SendDocumentEndpoint.java -text
 src/main/java/ee/adit/ws/endpoint/document/ShareDocumentEndpoint.java -text
 src/main/java/ee/adit/ws/endpoint/document/UnShareDocumentEndpoint.java -text
 src/main/java/ee/adit/ws/endpoint/user/GetJoinedEndpoint.java -text
+src/main/java/ee/adit/ws/endpoint/user/GetNotificationsEndpoint.java -text
 src/main/java/ee/adit/ws/endpoint/user/GetUserInfoEndpoint.java -text
 src/main/java/ee/adit/ws/endpoint/user/JoinEndpoint.java -text
+src/main/java/ee/adit/ws/endpoint/user/SetNotificationsEndpoint.java -text
 src/main/java/ee/adit/ws/endpoint/user/UnJoinEndpoint.java -text
 src/main/resources/AccessRestriction.hbm.xml -text
 src/main/resources/SignatureLogging.properties -text

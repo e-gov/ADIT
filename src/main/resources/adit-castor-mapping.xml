@@ -143,6 +143,63 @@
 		</field>
  	</class>
  	
+ 	<!-- GetNotifications -->
+	<class name="ee.adit.pojo.GetNotificationsRequest">
+		<map-to xml="GetNotifications" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+	</class>
+	
+	<class name="ee.adit.pojo.GetNotificationsResponse">
+		<map-to xml="keha" ns-prefix="xtee" />
+		<field name="success" type="boolean" >
+		</field>
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
+			<bind-xml name="messages" />
+		</field>
+		<field name="notifications" type="ee.adit.pojo.ArrayOfNotification">
+			<bind-xml name="notifications" />
+		</field>
+		<field name="notificationsActive" type="boolean">
+			<bind-xml name="notifications_active" />
+		</field>
+		<field name="addressList" type="ee.adit.pojo.ArrayOfEmailAddress">
+			<bind-xml name="address_list" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.ArrayOfNotification">
+		<field name="notification" type="ee.adit.pojo.Notification" collection="arraylist" />
+	</class>
+	
+ 	<class name="ee.adit.pojo.Notification">
+		<field name="type" type="java.lang.String"/>
+		<field name="active" type="boolean"/>
+	</class>
+
+	<class name="ee.adit.pojo.ArrayOfEmailAddress">
+		<field name="emailAddress" type="java.lang.String" collection="arraylist">
+			<bind-xml name="email_address" />
+		</field>
+	</class>
+
+ 	
+ 	 <!-- SetNotifications -->
+	<class name="ee.adit.pojo.SetNotificationsRequest">
+		<map-to xml="SetNotifications" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<field name="notifications" type="ee.adit.pojo.ArrayOfNotification">
+			<bind-xml name="notifications" location="keha" />
+		</field>
+	</class>
+	
+	<class name="ee.adit.pojo.SetNotificationsResponse">
+		<map-to xml="keha" ns-prefix="xtee" />
+		<field name="success" type="boolean" >
+		</field>
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
+			<bind-xml name="messages" />
+		</field>
+	</class>
+ 	
+ 	
  	<!-- Document global -->
  	<class name="ee.adit.pojo.OutputDocumentFile">
 		<map-to xml="file"/>
@@ -836,20 +893,20 @@
  	
  	<!-- Common -->
  	<class name="ee.adit.pojo.Success">
-		<map-to xml="success" ns-prefix="adit" />
+		<map-to xml="success" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
 		<field name="success" type="java.lang.Boolean" container="true">
 		</field>
 	</class>
 
 	<class name="ee.adit.pojo.ArrayOfMessage">
-		<map-to xml="messages" ns-prefix="adit" />
+		<map-to xml="messages" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
 		<field name="message" type="ee.adit.pojo.Message" collection="arraylist">
 			<bind-xml name="message" />
 		</field>
 	</class>
 
  	<class name="ee.adit.pojo.Message">
-		<map-to xml="message" ns-prefix="adit" />
+		<map-to xml="message" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
 		<field name="value" type="java.lang.String" container="true">
 		</field>
 		<field name="lang" type="java.lang.String">
@@ -858,7 +915,7 @@
 	</class>
  	
  	<class name="ee.adit.pojo.UserList">
-		<map-to xml="user_list" ns-prefix="adit"/>
+		<map-to xml="user_list" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
 		<field name="href" type="java.lang.String">
 			<bind-xml name="href" node="attribute"/>
 		</field>

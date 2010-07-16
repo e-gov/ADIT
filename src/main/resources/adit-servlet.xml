@@ -51,6 +51,22 @@
 		<property name="configuration" ref="configuration"/>
 	</bean>
 	
+	<bean id="SetNotificationsEndpoint" class="ee.adit.ws.endpoint.user.SetNotificationsEndpoint">
+		<property name="marshaller" ref="castorMarshaller"/>
+		<property name="unmarshaller" ref="castorMarshaller"/>
+		<property name="userService" ref="userService"/>
+		<property name="logService" ref="logService"/>
+		<property name="messageSource" ref="messageSource"/>
+	</bean>
+	
+	<bean id="GetNotificationsEndpoint" class="ee.adit.ws.endpoint.user.GetNotificationsEndpoint">
+		<property name="marshaller" ref="castorMarshaller"/>
+		<property name="unmarshaller" ref="castorMarshaller"/>
+		<property name="userService" ref="userService"/>
+		<property name="logService" ref="logService"/>
+		<property name="messageSource" ref="messageSource"/>
+	</bean>
+	
 	
 	<!-- Document endpoints -->
 	
@@ -233,6 +249,10 @@
 				<prop
 					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}GetUserInfo">GetUserInfoEndpoint</prop>
 				<prop
+					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}SetNotifications">SetNotificationsEndpoint</prop>
+				<prop
+					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}GetNotifications">GetNotificationsEndpoint</prop>
+				<prop
 					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}ConfirmSignature">ConfirmSignatureEndpoint</prop>
 				<prop
 					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}DeflateDocument">DeflateDocumentEndpoint</prop>
@@ -301,6 +321,7 @@
 	<bean id="userService" class="ee.adit.service.UserService">
 		<property name="remoteApplicationDAO" ref="remoteApplicationDAO"/>
 		<property name="usertypeDAO" ref="usertypeDAO"/>
+		<property name="notificationTypeDAO" ref="notificationTypeDAO"/>
 		<property name="aditUserDAO" ref="aditUserDAO"/>
 		<property name="documentDAO" ref="documentDAO"/>
 		<property name="accessRestrictionDAO" ref="accessRestrictionDAO"/>
@@ -327,22 +348,24 @@
 		<property name="dataSource" ref="myDataSource" />
 		<property name="mappingLocations">
 			<list>
-				<value>classpath:hbm/DocumentType.hbm.xml</value>
+				<value>classpath:hbm/AccessRestriction.hbm.xml</value>
+				<value>classpath:hbm/AditUser.hbm.xml</value>
 				<value>classpath:hbm/Document.hbm.xml</value>
-				<value>classpath:hbm/DocumentSharing.hbm.xml</value>
+				<value>classpath:hbm/DocumentDvkStatus.hbm.xml</value>
 				<value>classpath:hbm/DocumentFile.hbm.xml</value>
 				<value>classpath:hbm/DocumentFileDeflateResult.hbm.xml</value>
 				<value>classpath:hbm/DocumentHistory.hbm.xml</value>
-				<value>classpath:hbm/DocumentWfStatus.hbm.xml</value>
-				<value>classpath:hbm/DocumentDvkStatus.hbm.xml</value>
-				<value>classpath:hbm/RemoteApplication.hbm.xml</value>
-				<value>classpath:hbm/AccessRestriction.hbm.xml</value>
 				<value>classpath:hbm/DocumentHistoryType.hbm.xml</value>
+				<value>classpath:hbm/DocumentSharing.hbm.xml</value>
 				<value>classpath:hbm/DocumentSharingType.hbm.xml</value>
-				<value>classpath:hbm/Signature.hbm.xml</value>
-				<value>classpath:hbm/AditUser.hbm.xml</value>
-				<value>classpath:hbm/Usertype.hbm.xml</value>
+				<value>classpath:hbm/DocumentType.hbm.xml</value>
+				<value>classpath:hbm/DocumentWfStatus.hbm.xml</value>
+				<value>classpath:hbm/NotificationType.hbm.xml</value>
+				<value>classpath:hbm/RemoteApplication.hbm.xml</value>
 				<value>classpath:hbm/RequestLog.hbm.xml</value>
+				<value>classpath:hbm/Signature.hbm.xml</value>
+				<value>classpath:hbm/UserNotification.hbm.xml</value>
+				<value>classpath:hbm/Usertype.hbm.xml</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">
@@ -368,6 +391,10 @@
 	</bean>
 	
 	<bean id="usertypeDAO" class="ee.adit.dao.UsertypeDAO">
+		<property name="sessionFactory" ref="mySessionFactory" />
+	</bean>
+	
+	<bean id="notificationTypeDAO" class="ee.adit.dao.NotificationTypeDAO">
 		<property name="sessionFactory" ref="mySessionFactory" />
 	</bean>
 	

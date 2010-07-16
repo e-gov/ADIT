@@ -11,6 +11,7 @@ import java.util.Set;
  */
 public class AditUser implements java.io.Serializable {
 
+	private static final long serialVersionUID = -6652721298489200200L;
 	private String userCode;
 	private Usertype usertype;
 	private String fullName;
@@ -19,6 +20,7 @@ public class AditUser implements java.io.Serializable {
 	private Long diskQuota;
 	private Date deactivationDate;
 	private Set accessRestrictions = new HashSet(0);
+	private Set userNotifications = new HashSet(0);
 
 	public AditUser() {
 	}
@@ -30,7 +32,7 @@ public class AditUser implements java.io.Serializable {
 
 	public AditUser(String userCode, Usertype usertype, String fullName,
 			Boolean active, String dvkOrgCode, Long diskQuota,
-			Date deactivationDate, Set accessRestrictions) {
+			Date deactivationDate, Set accessRestrictions, Set userNotifications) {
 		this.userCode = userCode;
 		this.usertype = usertype;
 		this.fullName = fullName;
@@ -39,6 +41,7 @@ public class AditUser implements java.io.Serializable {
 		this.diskQuota = diskQuota;
 		this.deactivationDate = deactivationDate;
 		this.accessRestrictions = accessRestrictions;
+		this.userNotifications = userNotifications;
 	}
 
 	public String getUserCode() {
@@ -105,4 +108,11 @@ public class AditUser implements java.io.Serializable {
 		this.accessRestrictions = accessRestrictions;
 	}
 
+	public Set getUserNotifications() {
+		return userNotifications;
+	}
+
+	public void setUserNotifications(Set userNotifications) {
+		this.userNotifications = userNotifications;
+	}
 }

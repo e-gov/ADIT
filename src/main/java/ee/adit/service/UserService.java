@@ -1,25 +1,36 @@
 package ee.adit.service;
 
 import java.math.BigInteger;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.springframework.orm.hibernate3.HibernateCallback;
 
 import ee.adit.dao.AccessRestrictionDAO;
 import ee.adit.dao.AditUserDAO;
 import ee.adit.dao.DocumentDAO;
+import ee.adit.dao.NotificationTypeDAO;
 import ee.adit.dao.RemoteApplicationDAO;
 import ee.adit.dao.UsertypeDAO;
 import ee.adit.dao.pojo.AccessRestriction;
 import ee.adit.dao.pojo.AditUser;
+import ee.adit.dao.pojo.NotificationType;
 import ee.adit.dao.pojo.RemoteApplication;
+import ee.adit.dao.pojo.UserNotification;
+import ee.adit.dao.pojo.UserNotificationId;
 import ee.adit.dao.pojo.Usertype;
 import ee.adit.exception.AditInternalException;
+import ee.adit.pojo.ArrayOfNotification;
 import ee.adit.pojo.GetUserInfoRequestAttachmentUserList;
 import ee.adit.pojo.GetUserInfoResponseAttachmentUser;
+import ee.adit.pojo.Notification;
 
 public class UserService {
 
@@ -28,6 +39,8 @@ public class UserService {
 	private RemoteApplicationDAO remoteApplicationDAO;
 	
 	private UsertypeDAO usertypeDAO;
+	
+	private NotificationTypeDAO notificationTypeDAO;
 	
 	private AditUserDAO aditUserDAO;
 	
@@ -291,6 +304,84 @@ public class UserService {
 		return result;
 	}
 	
+	public void setNotifications(final String userCode, final List<Notification> notifications) {
+		this.getAditUserDAO().getHibernateTemplate().execute(new HibernateCallback() {
+			public Object doInHibernate(Session session) throws HibernateException, SQLException {
+				AditUser user = (AditUser)session.get(AditUser.class, userCode);
+				
+				for (Notification item : notifications) {
+					if (item.isActive() && (findNotification(user.getUserNotifications(), item.getType()) == null)) {
+						NotificationType type = (NotificationType)session.get(NotificationType.class, item.getType());
+						
+						UserNotification notification = new UserNotification();
+						UserNotificationId notificationId = new UserNotificationId();
+						notificationId.setUserCode(userCode);
+						notificationId.setNotificationType(item.getType());
+						notification.setId(notificationId);
+						notification.setNotificationType(type);
+						
+						user.getUserNotifications().add(notification);
+						LOG.debug("Adding notification \""+ item.getType() +"\" to user " + userCode);
+					} else if (!item.isActive()) {
+						UserNotification notification = findNotification(user.getUserNotifications(), item.getType());
+						if (notification != null) {
+							session.delete(notification);
+							user.getUserNotifications().remove(notification);
+							//notification.getId().setUserCode(null);
+							LOG.debug("Removing notification \""+ item.getType() +"\" from user " + userCode);
+						}
+					}
+				}
+				
+				session.saveOrUpdate(user);
+				return null;
+			}
+		});
+	}
+	
+	public ArrayOfNotification getNotifications(final String userCode) {
+		final NotificationTypeDAO notTypeDao = this.getNotificationTypeDAO();
+		
+		return (ArrayOfNotification)this.getAditUserDAO().getHibernateTemplate().execute(new HibernateCallback() {
+			public Object doInHibernate(Session session) throws HibernateException, SQLException {
+				ArrayOfNotification innerResult = new ArrayOfNotification();
+				innerResult.setNotification(new ArrayList<Notification>());
+				
+				AditUser user = (AditUser)session.get(AditUser.class, userCode);
+				List<NotificationType> types = notTypeDao.getNotificationTypeList();
+				
+				for (NotificationType type : types) {
+					boolean notificationActive = false;
+					if (findNotification(user.getUserNotifications(), type.getShortName()) != null) {
+						notificationActive = true;
+					}
+					Notification item = new Notification();
+					item.setActive(notificationActive);
+					item.setType(type.getShortName());
+					innerResult.getNotification().add(item);
+				}
+
+				return innerResult;
+			}
+		});
+	}
+	
+	private UserNotification findNotification(final Set notifications, final String notificationType) {
+		UserNotification result = null;
+		
+		Iterator it = notifications.iterator();
+		while (it.hasNext()) {
+			UserNotification item = (UserNotification)it.next();
+			if (item.getId().getNotificationType().equalsIgnoreCase(notificationType)) {
+				result = item;
+				break;
+			}
+		}
+		
+		return result;
+	}
+	
+	
 	public RemoteApplicationDAO getRemoteApplicationDAO() {
 		return remoteApplicationDAO;
 	}
@@ -305,6 +396,14 @@ public class UserService {
 
 	public void setUsertypeDAO(UsertypeDAO usertypeDAO) {
 		this.usertypeDAO = usertypeDAO;
+	}
+
+	public NotificationTypeDAO getNotificationTypeDAO() {
+		return notificationTypeDAO;
+	}
+
+	public void setNotificationTypeDAO(NotificationTypeDAO notificationTypeDAO) {
+		this.notificationTypeDAO = notificationTypeDAO;
 	}
 
 	public AditUserDAO getAditUserDAO() {
