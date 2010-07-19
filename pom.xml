@@ -15,10 +15,24 @@
 	<dependencies>
 		<dependency>
 			<groupId>ee.webmedia</groupId>
-			<artifactId>xtee</artifactId>
+			<artifactId>xtee-server</artifactId>
 			<version>1.0</version>
 			<scope>system</scope>
 			<systemPath>${baseDir}\lib\xtee-server-1.0-RC1.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>ee.webmedia</groupId>
+			<artifactId>xtee-client</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${baseDir}\lib\xtee-client-1.0-RC1.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>ee.ria</groupId>
+			<artifactId>teavituskalender-types</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${baseDir}\lib\teavituskalender-types.jar</systemPath>
 		</dependency>
 
 		<!-- Spring -->

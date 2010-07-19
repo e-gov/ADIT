@@ -35,6 +35,7 @@ lib/sources/xtee-server-1.0-RC1-sources.jar -text
 lib/spring-webmvc.jar -text
 lib/spring-ws-1.5.9-all.jar -text
 lib/spring.jar -text
+lib/teavituskalender-types.jar -text
 lib/tinyxmlcanonicalizer-0.9.0.jar -text
 lib/wsdl4j-1.6.1.jar -text
 lib/wsdl4j-qname-1.6.1.jar -text
@@ -42,6 +43,7 @@ lib/xercesImpl.jar -text
 lib/xml-apis.jar -text
 lib/xmlParserAPIs.jar -text
 lib/xmlsec.jar -text
+lib/xtee-client-1.0-RC1.jar -text
 lib/xtee-server-1.0-RC1.jar -text
 /pom.xml -text
 sql/database.sql -text
