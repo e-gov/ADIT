@@ -2,6 +2,8 @@ package ee.adit.ws.endpoint.document;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
@@ -10,7 +12,10 @@ import org.springframework.stereotype.Component;
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.exception.AditException;
 import ee.adit.pojo.ArrayOfMessage;
+import ee.adit.pojo.ArrayOfRecipientStatus;
+import ee.adit.pojo.ArrayOfUserCode;
 import ee.adit.pojo.Message;
+import ee.adit.pojo.RecipientStatus;
 import ee.adit.pojo.SaveDocumentRequest;
 import ee.adit.pojo.SendDocumentRequest;
 import ee.adit.pojo.SendDocumentResponse;
@@ -50,6 +55,7 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 			// Check if the application is registered
 			boolean applicationRegistered = this.getUserService().isApplicationRegistered(applicationName);
 			if (!applicationRegistered) {
+				LOG.error("Application is not registered.");
 				String errorMessage = this.getMessageSource().getMessage("application.notRegistered", new Object[] { applicationName }, Locale.ENGLISH);
 				throw new AditException(errorMessage);
 			}
@@ -58,6 +64,7 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 			String userCode = ((this.getHeader().getAllasutus() != null) && (this.getHeader().getAllasutus().length() > 0)) ? this.getHeader().getAllasutus() : this.getHeader().getIsikukood();
 			AditUser user = this.getUserService().getUserByID(userCode);
 			if (user == null) {
+				LOG.error("User is not registered.");
 				String errorMessage = this.getMessageSource().getMessage("user.nonExistent", new Object[] { userCode },	Locale.ENGLISH);
 				throw new AditException(errorMessage);
 			}
@@ -65,6 +72,7 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 			// Check application access level for user
 			int applicationAccessLevelForUser = userService.getAccessLevelForUser(applicationName, user);
 			if (applicationAccessLevelForUser < 2) {
+				LOG.error("Application has insufficient privileges for user: " + user.getUserCode());
 				String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.read", new Object[] { applicationName }, Locale.ENGLISH);
 				throw new AditException(errorMessage);
 			}
@@ -72,6 +80,45 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 			// TODO: For every recipient check the following:
 			// 1. Is the recipient registered
 			// 2. Does the recipient use DVK
+			
+			ArrayOfUserCode recipientList = request.getRecipientList();
+			
+			if(recipientList != null && recipientList.getCode() != null && recipientList.getCode().size() > 0) {
+				
+				ArrayOfRecipientStatus reponseStatuses = new ArrayOfRecipientStatus();
+				Iterator<String> i = recipientList.getCode().iterator();
+				
+				while(i.hasNext()) {
+					String recipientCode = i.next();
+					
+					RecipientStatus recipientStatus = new RecipientStatus();
+					recipientStatus.setSuccess(true);
+					
+					// Check if the user is registered
+					AditUser recipient = this.getUserService().getUserByID(recipientCode);
+					
+					if(recipient == null) {
+						LOG.error("User is not registered.");
+						recipientStatus.setSuccess(false);
+						String errorMessage = this.getMessageSource().getMessage("user.nonExistent", new Object[] { userCode },	Locale.ENGLISH);
+						ArrayOfMessage recipientMessages = new ArrayOfMessage();
+						recipientMessages.addMessage(new Message("en", errorMessage));
+						recipientStatus.setMessages(recipientMessages);
+					} else {
+						if(recipient.getDvkOrgCode() != null && !"".equalsIgnoreCase(recipient.getDvkOrgCode().trim())) {
+							
+						}
+					}
+					
+					// TODO: does the recipient use DVK?
+					
+					
+					reponseStatuses.addRecipient(recipientStatus);
+				}
+				
+			} else {
+				throw new NullPointerException("Recipient list is empty or null.");
+			}
 			
 			// TODO: If the checks passed:
 			// 1. Check if the document exists
