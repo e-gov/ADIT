@@ -81,6 +81,33 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 			// Check if the document exists
 			Document doc = this.getDocumentService().getDocumentDAO().getDocument(request.getDocumentId());
 			
+			if(doc == null) {
+				LOG.debug("Requested document does not exist. Document ID: " + request.getDocumentId());
+				String errorMessage = this.getMessageSource().getMessage("document.nonExistent", new Object[] { request.getDocumentId() },	Locale.ENGLISH);
+				throw new AditException(errorMessage);
+			}
+			
+			// Check whether the document is marked as deleted
+			if ((doc.getDeleted() != null) && doc.getDeleted()) {
+				LOG.debug("Requested document is deleted. Document ID: " + request.getDocumentId());
+				String errorMessage = this.getMessageSource().getMessage("document.nonExistent", new Object[] { request.getDocumentId() }, Locale.ENGLISH);
+				throw new AditException(errorMessage);
+			}
+			
+			// Check whether the document is marked as deflated
+			if ((doc.getDeflated() != null) && doc.getDeflated()) {
+				LOG.debug("Requested document is deflated. Document ID: " + request.getDocumentId());
+				String errorMessage = this.getMessageSource().getMessage("document.deflated", new Object[] { doc.getDeflateDate() }, Locale.ENGLISH);
+				throw new AditException(errorMessage);
+			}
+			
+			// Check whether the document belongs to user
+			if (!doc.getCreatorCode().equalsIgnoreCase(userCode)) {
+				LOG.debug("Requested document does not belong to user. Document ID: " + request.getDocumentId() + ", User ID: " + userCode);
+				String errorMessage = this.getMessageSource().getMessage("document.doesNotBelongToUser", new Object[] { request.getDocumentId(), userCode }, Locale.ENGLISH);
+				throw new AditException(errorMessage);
+			}
+			
 			// TODO: For every recipient check the following:
 			// 1. Is the recipient registered
 			// 2. Does the recipient use DVK
@@ -110,17 +137,21 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 						recipientStatus.setMessages(recipientMessages);
 					} else {
 						
-						// TODO: save the document to database: 
+						// Lock the document
+						doc.setLocked(true);
+						doc.setLockingDate(new Date());
 						
-						// 2. Lock the document
-						// 3. Send a notification to the XTee teavituskalender
-						// 4. Construct the response
+						// Update the status in the database
+						this.getDocumentService().save(doc);
+						
+						// TODO
+						// 1. add a document sharing record to the database
+						
+						// 2. Send a notification to the XTee teavituskalender
+						
+						// 3. Construct the response
 						
 					}
-					
-					
-					
-					
 					reponseStatuses.addRecipient(recipientStatus);
 				}
 				

@@ -276,6 +276,10 @@ public class DocumentService {
 		});
 	}
 	
+	public void save(Document doc) {
+		this.getDocumentDAO().save(doc, null, null);
+	}
+	
 	
 	public MessageSource getMessageSource() {
 		return messageSource;
