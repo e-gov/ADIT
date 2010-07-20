@@ -21,7 +21,8 @@ public class ScheduleClient {
 	public static boolean addEvent(
 			final String eventText,
 			final String eventType,
-			final Calendar eventDate) {
+			final Calendar eventDate,
+			final long relatedDocumentId) {
 		boolean success = false;
 		
 		try {
@@ -49,10 +50,6 @@ public class ScheduleClient {
 				conf.setDatabase("teavituskalender");
 				conf.setMethod("lisaSyndmus");
 				conf.setVersion("v1");
-				
-				conf.setSecurityServer("http://192.168.80.30/cgi-bin/consumer_proxy");
-				conf.setInstitution("12345");
-				conf.setIdCode("1234");
 				LisaSyndmusResponseDocument ret = (LisaSyndmusResponseDocument) xteeService.sendRequest(doc, conf);
 				
 				if (ret != null) {
@@ -66,18 +63,19 @@ public class ScheduleClient {
 								
 								if ((resultCode != null) && (resultCode.intValue() == RESULT_OK)) {
 									success = true;
+									LOG.debug("Successfully added notification to 'teavituskalender' database. Related document ID: " + String.valueOf(relatedDocumentId));
 								}
 							} else {
-								LOG.error("Error adding notification to 'teavituskalender' database. Response's 'tulemus' part is NULL.");
+								LOG.error("Error adding notification to 'teavituskalender' database. Response's 'tulemus' part is NULL. Related document ID: " + String.valueOf(relatedDocumentId));
 							}
 						} else {
-							LOG.error("Error adding notification to 'teavituskalender' database. Response's 'keha' part is NULL.");
+							LOG.error("Error adding notification to 'teavituskalender' database. Response's 'keha' part is NULL. Related document ID: " + String.valueOf(relatedDocumentId));
 						}
 					} else {
-						LOG.error("Error adding notification to 'teavituskalender' database. Response's 'LisaSyndmusResponse' part is NULL.");
+						LOG.error("Error adding notification to 'teavituskalender' database. Response's 'LisaSyndmusResponse' part is NULL. Related document ID: " + String.valueOf(relatedDocumentId));
 					}
 				} else {
-					LOG.error("Error adding notification to 'teavituskalender' database. Response document is NULL.");
+					LOG.error("Error adding notification to 'teavituskalender' database. Response document is NULL. Related document ID: " + String.valueOf(relatedDocumentId));
 				}
 			} finally {
 				if (ctx != null) {
@@ -85,7 +83,7 @@ public class ScheduleClient {
 				}
 			}
 		} catch (Exception ex) {
-			LOG.error("Error adding notification to 'teavituskalender' database.", ex);
+			LOG.error("Error adding notification to 'teavituskalender' database. Related document ID: " + String.valueOf(relatedDocumentId), ex);
 		}
 		
 		return success;
