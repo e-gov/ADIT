@@ -53,6 +53,9 @@
 	<element name="GetDocumentHistoryRequest" type="tns:GetDocumentHistoryRequest"/>
 	<element name="GetDocumentHistoryResponse" type="tns:GetDocumentHistoryResponse"/>
 	
+	<element name="SendDocumentRequest" type="tns:SendDocumentRequest"/>
+	<element name="SendDocumentResponse" type="tns:SendDocumentResponse"/>
+	
 	<complexType name="Message">
 		<simpleContent>
 			<extension base="string">
@@ -135,7 +138,6 @@
 			<element name="email_address" type="string" maxOccurs="unbounded" minOccurs="0"></element>
 		</sequence>
 	</complexType>
-
 
 	<!-- join päringu tüübid -->
 	<complexType name="JoinRequest">
@@ -479,6 +481,21 @@
 					<attribute name="href" type="string"/>
 				</complexType>
 			</element>
+		</sequence>
+	</complexType>
+	
+	<!-- sendDocument päringu tüübid -->
+	<complexType name="SendDocumentRequest">
+		<sequence>
+			<element name="document_id" type="integer" nillable="false"></element>
+			<element name="recipient_list" type="tns:ArrayOfUserCode"/>
+		</sequence>
+	</complexType>
+	<complexType name="SendDocumentResponse">
+		<sequence>
+			<element name="success" type="boolean"></element>
+			<element name="messages" type="tns:ArrayOfMessage"/>
+			<element name="recipient_list" type="tns:ArrayOfRecipientStatus"/>
 		</sequence>
 	</complexType>
 	

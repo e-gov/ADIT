@@ -890,6 +890,28 @@
 		<field name="name" type="java.lang.String" />
 	</class>
  	
+ 	<!-- SendDocument -->
+ 	<class name="ee.adit.pojo.SendDocumentRequest">
+		<map-to xml="SendDocument" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<field name="documentId" type="java.lang.Long">
+			<bind-xml name="document_id" location="keha" />
+		</field>
+		<field name="recipientList" type="ee.adit.pojo.ArrayOfUserCode">
+			<bind-xml name="recipient_list" location="keha" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.SendDocumentResponse">
+		<map-to xml="keha" ns-prefix="xtee" />
+		<field name="success" type="boolean" >
+		</field>
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
+			<bind-xml name="messages" />
+		</field>
+		<field name="recipientList" type="ee.adit.pojo.ArrayOfRecipientStatus">
+			<bind-xml name="recipient_list" />
+		</field>
+	</class>
  	
  	<!-- Common -->
  	<class name="ee.adit.pojo.Success">
@@ -970,4 +992,5 @@
 			<bind-xml name="creator_application" />
 		</field>
 	</class>
+	
 </mapping>
