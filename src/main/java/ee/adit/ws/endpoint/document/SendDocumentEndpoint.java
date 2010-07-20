@@ -7,6 +7,7 @@ import java.util.Locale;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 
+import ee.adit.dao.pojo.AditUser;
 import ee.adit.exception.AditException;
 import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.Message;
@@ -46,18 +47,37 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 			
 			super.logCurrentRequest(documentId, requestDate, additionalInformationForLog);
 			
-			// application registered?
+			// Check if the application is registered
 			boolean applicationRegistered = this.getUserService().isApplicationRegistered(applicationName);
 			if (!applicationRegistered) {
 				String errorMessage = this.getMessageSource().getMessage("application.notRegistered", new Object[] { applicationName }, Locale.ENGLISH);
 				throw new AditException(errorMessage);
 			}
 			
-			// TODO: user registered?
+			// Check if the user is registered
+			String userCode = ((this.getHeader().getAllasutus() != null) && (this.getHeader().getAllasutus().length() > 0)) ? this.getHeader().getAllasutus() : this.getHeader().getIsikukood();
+			AditUser user = this.getUserService().getUserByID(userCode);
+			if (user == null) {
+				String errorMessage = this.getMessageSource().getMessage("user.nonExistent", new Object[] { userCode },	Locale.ENGLISH);
+				throw new AditException(errorMessage);
+			}
 			
-			// TODO: application access level for user
+			// Check application access level for user
+			int applicationAccessLevelForUser = userService.getAccessLevelForUser(applicationName, user);
+			if (applicationAccessLevelForUser < 2) {
+				String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.read", new Object[] { applicationName }, Locale.ENGLISH);
+				throw new AditException(errorMessage);
+			}
 			
-			// TODO: business logic
+			// TODO: For every recipient check the following:
+			// 1. Is the recipient registered
+			// 2. Does the recipient use DVK
+			
+			// TODO: If the checks passed:
+			// 1. Check if the document exists
+			// 2. Lock the document
+			// 3. Send a notification to the XTee teavituskalender
+			// 4. Construct the response
 		
 		} catch(Exception e) {
 			LOG.error("Exception: ", e);
