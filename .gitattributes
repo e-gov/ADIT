@@ -171,6 +171,8 @@ src/main/java/ee/adit/pojo/SaveDocumentRequest.java -text
 src/main/java/ee/adit/pojo/SaveDocumentRequestAttachment.java -text
 src/main/java/ee/adit/pojo/SaveDocumentRequestDocument.java -text
 src/main/java/ee/adit/pojo/SaveDocumentResponse.java -text
+src/main/java/ee/adit/pojo/SendDocumentRequest.java -text
+src/main/java/ee/adit/pojo/SendDocumentResponse.java -text
 src/main/java/ee/adit/pojo/SetNotificationsRequest.java -text
 src/main/java/ee/adit/pojo/SetNotificationsResponse.java -text
 src/main/java/ee/adit/pojo/ShareDocumentRequest.java -text
