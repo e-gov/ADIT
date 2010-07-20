@@ -42,6 +42,8 @@ import javax.xml.bind.annotation.XmlType;
 public class SendDocumentResponse {
 
     protected boolean success;
+    @XmlElement(required = true)
+    protected ArrayOfMessage messages;
     @XmlElement(name = "recipient_list", required = true)
     protected ArrayOfRecipientStatus recipientList;
 
@@ -84,5 +86,13 @@ public class SendDocumentResponse {
     public void setRecipientList(ArrayOfRecipientStatus value) {
         this.recipientList = value;
     }
+
+	public ArrayOfMessage getMessages() {
+		return messages;
+	}
+
+	public void setMessages(ArrayOfMessage messages) {
+		this.messages = messages;
+	}
 
 }
