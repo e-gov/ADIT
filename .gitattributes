@@ -39,9 +39,11 @@ lib/teavituskalender-types.jar -text
 lib/tinyxmlcanonicalizer-0.9.0.jar -text
 lib/wsdl4j-1.6.1.jar -text
 lib/wsdl4j-qname-1.6.1.jar -text
+lib/xbean.jar -text
 lib/xercesImpl.jar -text
 lib/xml-apis.jar -text
 lib/xmlParserAPIs.jar -text
+lib/xmlbeans-qname.jar -text
 lib/xmlsec.jar -text
 lib/xtee-client-1.0-RC1.jar -text
 lib/xtee-server-1.0-RC1.jar -text
@@ -184,6 +186,7 @@ src/main/java/ee/adit/pojo/UnJoinResponse.java -text
 src/main/java/ee/adit/pojo/UnShareDocumentRequest.java -text
 src/main/java/ee/adit/pojo/UnShareDocumentResponse.java -text
 src/main/java/ee/adit/pojo/UserList.java -text
+src/main/java/ee/adit/schedule/ScheduleClient.java -text
 src/main/java/ee/adit/service/DocumentService.java -text
 src/main/java/ee/adit/service/LogService.java -text
 src/main/java/ee/adit/service/UserService.java -text

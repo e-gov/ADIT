@@ -9,7 +9,7 @@
 	<url>http://maven.apache.org</url>
 
 	<properties>
-		<baseDir>C:\development\adit\trunk</baseDir>
+		<baseDir>C:\projektid\adit\adit</baseDir>
 	</properties>
 
 	<dependencies>
@@ -192,6 +192,15 @@
 			<version>2.3.19</version>
 			<scope>system</scope>
 			<systemPath>${baseDir}/lib/JDigiDoc.jar</systemPath>
+		</dependency>
+		
+		<!-- XmlBeans -->
+		<dependency>
+			<groupId>org.apache</groupId>
+			<artifactId>XMLBeans</artifactId>
+			<version>2.4.0</version>
+			<scope>system</scope>
+			<systemPath>${baseDir}/lib/xbean.jar</systemPath>
 		</dependency>
 		
 	</dependencies>
