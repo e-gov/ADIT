@@ -8,7 +8,6 @@
 
 package ee.adit.pojo;
 
-import java.math.BigInteger;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -43,7 +42,7 @@ import javax.xml.bind.annotation.XmlType;
 public class SendDocumentRequest {
 
     @XmlElement(name = "document_id", required = true)
-    protected BigInteger documentId;
+    protected Long documentId;
     @XmlElement(name = "recipient_list", required = true)
     protected ArrayOfUserCode recipientList;
 
@@ -52,10 +51,10 @@ public class SendDocumentRequest {
      * 
      * @return
      *     possible object is
-     *     {@link BigInteger }
+     *     {@link Long }
      *     
      */
-    public BigInteger getDocumentId() {
+    public Long getDocumentId() {
         return documentId;
     }
 
@@ -64,10 +63,10 @@ public class SendDocumentRequest {
      * 
      * @param value
      *     allowed object is
-     *     {@link BigInteger }
+     *     {@link Long }
      *     
      */
-    public void setDocumentId(BigInteger value) {
+    public void setDocumentId(Long value) {
         this.documentId = value;
     }
 

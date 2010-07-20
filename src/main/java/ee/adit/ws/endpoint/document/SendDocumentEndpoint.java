@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 
 import ee.adit.dao.pojo.AditUser;
+import ee.adit.dao.pojo.Document;
 import ee.adit.exception.AditException;
 import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.ArrayOfRecipientStatus;
@@ -77,6 +78,9 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 				throw new AditException(errorMessage);
 			}
 			
+			// Check if the document exists
+			Document doc = this.getDocumentService().getDocumentDAO().getDocument(request.getDocumentId());
+			
 			// TODO: For every recipient check the following:
 			// 1. Is the recipient registered
 			// 2. Does the recipient use DVK
@@ -105,12 +109,16 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 						recipientMessages.addMessage(new Message("en", errorMessage));
 						recipientStatus.setMessages(recipientMessages);
 					} else {
-						if(recipient.getDvkOrgCode() != null && !"".equalsIgnoreCase(recipient.getDvkOrgCode().trim())) {
-							
-						}
+						
+						// TODO: save the document to database: 
+						
+						// 2. Lock the document
+						// 3. Send a notification to the XTee teavituskalender
+						// 4. Construct the response
+						
 					}
 					
-					// TODO: does the recipient use DVK?
+					
 					
 					
 					reponseStatuses.addRecipient(recipientStatus);
@@ -120,11 +128,7 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 				throw new NullPointerException("Recipient list is empty or null.");
 			}
 			
-			// TODO: If the checks passed:
-			// 1. Check if the document exists
-			// 2. Lock the document
-			// 3. Send a notification to the XTee teavituskalender
-			// 4. Construct the response
+			
 		
 		} catch(Exception e) {
 			LOG.error("Exception: ", e);
