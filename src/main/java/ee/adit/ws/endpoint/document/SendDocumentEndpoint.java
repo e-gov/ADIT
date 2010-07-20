@@ -2,6 +2,7 @@ package ee.adit.ws.endpoint.document;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
@@ -38,22 +39,25 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 		
 		try {
 		
-		LOG.debug("SendDocumentEndpoint.v1 invoked.");
-		SendDocumentRequest request = (SendDocumentRequest) requestObject;
-		CustomXTeeHeader header = this.getHeader();
-		String applicationName = header.getInfosysteem();
-		
-		super.logCurrentRequest(documentId, requestDate, additionalInformationForLog);
-		
-		// TODO: application registered?
-		
-		
-		
-		// TODO: user registered?
-		
-		// TODO: application access level for user
-		
-		// TODO: business logic
+			LOG.debug("SendDocumentEndpoint.v1 invoked.");
+			SendDocumentRequest request = (SendDocumentRequest) requestObject;
+			CustomXTeeHeader header = this.getHeader();
+			String applicationName = header.getInfosysteem();
+			
+			super.logCurrentRequest(documentId, requestDate, additionalInformationForLog);
+			
+			// application registered?
+			boolean applicationRegistered = this.getUserService().isApplicationRegistered(applicationName);
+			if (!applicationRegistered) {
+				String errorMessage = this.getMessageSource().getMessage("application.notRegistered", new Object[] { applicationName }, Locale.ENGLISH);
+				throw new AditException(errorMessage);
+			}
+			
+			// TODO: user registered?
+			
+			// TODO: application access level for user
+			
+			// TODO: business logic
 		
 		} catch(Exception e) {
 			LOG.error("Exception: ", e);
@@ -72,6 +76,22 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 		}
 		
 		return null;
+	}
+
+	public UserService getUserService() {
+		return userService;
+	}
+
+	public void setUserService(UserService userService) {
+		this.userService = userService;
+	}
+
+	public DocumentService getDocumentService() {
+		return documentService;
+	}
+
+	public void setDocumentService(DocumentService documentService) {
+		this.documentService = documentService;
 	}
 
 }

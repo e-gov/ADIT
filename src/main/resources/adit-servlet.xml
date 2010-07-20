@@ -207,6 +207,13 @@
 	</bean>
 	
 	<bean id="SendDocumentEndpoint" class="ee.adit.ws.endpoint.document.SendDocumentEndpoint">
+		<property name="marshaller" ref="castorMarshaller"/>
+		<property name="unmarshaller" ref="castorMarshaller"/>
+		<property name="userService" ref="userService"/>
+		<property name="logService" ref="logService"/>
+		<property name="messageSource" ref="messageSource"/>
+		<property name="configuration" ref="configuration"/>
+		<property name="documentService" ref="documentService"/>
 	</bean>
 	
 	<bean id="ShareDocumentEndpoint" class="ee.adit.ws.endpoint.document.ShareDocumentEndpoint">
