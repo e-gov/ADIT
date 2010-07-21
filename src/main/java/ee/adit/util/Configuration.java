@@ -9,6 +9,8 @@ public class Configuration {
 	private String tempDir;
 	
 	private String deleteTemporaryFiles;
+	
+	private String schedulerEventTypeName;
 
 	public BigInteger getGetJoinedMaxResults() {
 		return getJoinedMaxResults;
@@ -42,5 +44,13 @@ public class Configuration {
 			result = false;
 		}
 		return result;
+	}
+
+	public String getSchedulerEventTypeName() {
+		return schedulerEventTypeName;
+	}
+
+	public void setSchedulerEventTypeName(String schedulerEventTypeName) {
+		this.schedulerEventTypeName = schedulerEventTypeName;
 	}
 }

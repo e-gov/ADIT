@@ -366,7 +366,7 @@ public class UserService {
 		});
 	}
 	
-	private UserNotification findNotification(final Set notifications, final String notificationType) {
+	public UserNotification findNotification(final Set notifications, final String notificationType) {
 		UserNotification result = null;
 		
 		Iterator it = notifications.iterator();

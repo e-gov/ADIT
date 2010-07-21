@@ -17,6 +17,7 @@ import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.MarkDocumentViewedRequest;
 import ee.adit.pojo.MarkDocumentViewedResponse;
 import ee.adit.pojo.Message;
+import ee.adit.schedule.ScheduleClient;
 import ee.adit.service.DocumentService;
 import ee.adit.service.UserService;
 import ee.adit.util.CustomXTeeHeader;
@@ -52,7 +53,7 @@ public class MarkDocumentViewedEndpoint extends AbstractAditBaseEndpoint {
 	protected Object invokeInternal(Object requestObject) throws Exception {
 		MarkDocumentViewedResponse response = new MarkDocumentViewedResponse();
 		ArrayOfMessage messages = new ArrayOfMessage();
-		Date requestDate = Calendar.getInstance().getTime();
+		Calendar requestDate = Calendar.getInstance();
 		String additionalInformationForLog = null;
 		Long documentId = null;
 
@@ -160,7 +161,7 @@ public class MarkDocumentViewedEndpoint extends AbstractAditBaseEndpoint {
 								historyEvent.setRemoteApplicationName(applicationName);
 								historyEvent.setDocumentId(doc.getId());
 								historyEvent.setDocumentHistoryType(DocumentService.HistoryType_MarkViewed);
-								historyEvent.setEventDate(new Date());
+								historyEvent.setEventDate(requestDate.getTime());
 								historyEvent.setUserCode(userCode);
 								doc.getDocumentHistories().add(historyEvent);
 								saveDocument = true;
@@ -170,7 +171,15 @@ public class MarkDocumentViewedEndpoint extends AbstractAditBaseEndpoint {
 								this.documentService.getDocumentDAO().save(doc, null, null);
 							}
 							
-							// TODO: Teavituskalendri kaudu teavituse saatmine
+							// Teavituskalendri kaudu teavituse saatmine
+							if (!isViewed && (userService.findNotification(user.getUserNotifications(), ScheduleClient.EventType_View) != null)) {
+								ScheduleClient.addEvent(
+									user,
+									this.getMessageSource().getMessage("scheduler.message.view", new Object[] { doc.getTitle(), userCode }, Locale.ENGLISH),
+									this.getConfiguration().getSchedulerEventTypeName(),
+									requestDate,
+									doc.getId());
+							}
 							
 						} else {
 							LOG.debug("Requested document does not belong to user. Document ID: " + request.getDocumentId() + ", User ID: " + userCode);
@@ -214,7 +223,7 @@ public class MarkDocumentViewedEndpoint extends AbstractAditBaseEndpoint {
 			response.setMessages(arrayOfMessage);
 		}
 
-		super.logCurrentRequest(documentId, requestDate, additionalInformationForLog);
+		super.logCurrentRequest(documentId, requestDate.getTime(), additionalInformationForLog);
 		return response;
 	}
 

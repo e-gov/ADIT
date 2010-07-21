@@ -9,6 +9,7 @@ import java.util.Date;
  */
 public class RequestLog implements java.io.Serializable {
 
+	private static final long serialVersionUID = 3617008635099835817L;
 	private long id;
 	private String request;
 	private Long documentId;
