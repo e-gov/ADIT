@@ -195,7 +195,7 @@ CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_FILE
 	content_type     VARCHAR2(255),    /* Faili MIME tüüp. (Nt. "application/rtf") */
 	description      VARCHAR2(4000),    /* Faili kirjeldus. */
 	file_data        BLOB,    /* Faili sisu binaarkujul */
-	file_size_bytes  NUMBER(38)    /* Faili suurus baitides */
+	file_size_bytes  NUMBER(38),    /* Faili suurus baitides */
 	deleted          NUMBER(1) DEFAULT 0 /* Kas antud fail on kustutatud */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
