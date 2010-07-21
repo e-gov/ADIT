@@ -68,6 +68,7 @@ src/main/java/ee/adit/dao/AccessRestrictionDAO.java -text
 src/main/java/ee/adit/dao/AditUserDAO.java -text
 src/main/java/ee/adit/dao/DocumentDAO.java -text
 src/main/java/ee/adit/dao/DocumentFileDAO.java -text
+src/main/java/ee/adit/dao/DocumentHistoryDAO.java -text
 src/main/java/ee/adit/dao/DocumentSharingDAO.java -text
 src/main/java/ee/adit/dao/DocumentTypeDAO.java -text
 src/main/java/ee/adit/dao/DocumentWfStatusDAO.java -text
