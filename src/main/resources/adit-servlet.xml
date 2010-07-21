@@ -455,9 +455,9 @@
 	<bean id="simpleTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
 	  	<property name="jobDetail" ref="sendJob"/>
 		<!-- 10 seconds -->
-	  	<property name="startDelay" value="10000"/>
+	  	<property name="startDelay" value="15000"/>
 		<!-- repeat every 50 seconds -->
-	  	<property name="repeatInterval" value="2000"/>
+	  	<property name="repeatInterval" value="10000"/>
 	</bean>
 	
 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
