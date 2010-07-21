@@ -14,11 +14,6 @@ public class SendJob {
 			throws JobExecutionException {
 
 		// TODO: actual work implementation
-
-	}
-
-	public static void main(String[] args) {
-
 		LOG.info("Executing scheduled job: Send documents to DVK");
 
 	}
