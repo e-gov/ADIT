@@ -141,6 +141,17 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 							// Lock the document
 							this.getDocumentService().lockDocument(doc);
 							
+							// Add history event
+							this.getDocumentService().addHistoryEvent(
+									applicationName, 
+									doc, 
+									userCode, 
+									DocumentService.HistoryType_Lock,
+									header.getIsikukood(),
+									null,
+									null
+							);
+							
 							// Add sharing information to database
 							this.getDocumentService().sendDocument(doc, recipient);										
 							

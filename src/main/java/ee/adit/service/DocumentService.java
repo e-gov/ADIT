@@ -298,7 +298,7 @@ public class DocumentService {
 			document.setLocked(true);
 			document.setLockingDate(new Date());
 			save(document);
-			LOG.info("Document locked: " + document.getId());
+			LOG.info("Document locked: " + document.getId());			
 		}
 	}
 	
