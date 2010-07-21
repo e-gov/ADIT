@@ -220,7 +220,6 @@ src/main/java/ee/adit/ws/endpoint/user/GetUserInfoEndpoint.java -text
 src/main/java/ee/adit/ws/endpoint/user/JoinEndpoint.java -text
 src/main/java/ee/adit/ws/endpoint/user/SetNotificationsEndpoint.java -text
 src/main/java/ee/adit/ws/endpoint/user/UnJoinEndpoint.java -text
-src/main/resources/AccessRestriction.hbm.xml -text
 src/main/resources/SignatureLogging.properties -text
 src/main/resources/adit-castor-mapping.xml -text
 src/main/resources/adit-servlet.xml -text
