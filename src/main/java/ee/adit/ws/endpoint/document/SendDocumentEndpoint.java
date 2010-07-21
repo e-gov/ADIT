@@ -110,19 +110,11 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 				throw new AditException(errorMessage);
 			}
 			
-			// TODO: For every recipient check the following:
-			// 1. Is the recipient registered
-			// 2. Does the recipient use DVK
-			
 			ArrayOfUserCode recipientList = request.getRecipientList();
 			
 			if(recipientList != null && recipientList.getCode() != null && recipientList.getCode().size() > 0) {
 				
-				
 				Iterator<String> i = recipientList.getCode().iterator();
-				
-				
-				
 				while(i.hasNext()) {
 					String recipientCode = i.next();
 					
