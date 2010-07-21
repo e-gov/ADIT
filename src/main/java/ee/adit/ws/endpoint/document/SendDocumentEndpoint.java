@@ -149,15 +149,14 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 							// Add sharing information to database
 							this.getDocumentService().sendDocument(doc, recipient);										
 							
+							// Add success message to response
 							recipientStatus.setSuccess(true);
+							recipientStatus.setCode(recipient.getUserCode());
 							
-							// TODO
-							// 1. add a document sharing record to the database
+							// TODO: Send a notification to the XTee teavituskalender
 							
-							// 2. Send a notification to the XTee teavituskalender
-							
-							// 3. Construct the response
 						} catch (Exception e) {
+							LOG.error("Exception while sharing document: ", e);
 							recipientStatus.setSuccess(false);
 							String errorMessage = this.getMessageSource().getMessage("service.error", new Object[] {},	Locale.ENGLISH);
 							ArrayOfMessage recipientMessages = new ArrayOfMessage();
