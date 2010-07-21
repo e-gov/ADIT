@@ -192,10 +192,8 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 			LOG.debug("Adding exception messages to response object.");
 			response.setMessages(arrayOfMessage);
 		}
-		
-		
-		
-		return null;
+
+		return response;
 	}
 
 	public UserService getUserService() {
