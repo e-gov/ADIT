@@ -3,8 +3,9 @@ package ee.adit.dvk;
 import org.apache.log4j.Logger;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.springframework.scheduling.quartz.QuartzJobBean;
 
-public class SendJob {
+public class SendJob extends QuartzJobBean {
 
 	private static Logger LOG = Logger.getLogger(SendJob.class);
 

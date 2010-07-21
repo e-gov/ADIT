@@ -443,7 +443,7 @@
 	</bean>
 
 	<!-- Scheduled jobs -->
-	<bean name="exampleJob" class="org.springframework.scheduling.quartz.JobDetailBean">
+	<bean name="sendJob" class="org.springframework.scheduling.quartz.JobDetailBean">
 		<property name="jobClass" value="ee.adit.dvk.SendJob"/>
 	  	<property name="jobDataAsMap">
 	    	<map>
@@ -451,7 +451,22 @@
 	    	</map>
 	  	</property>
 	</bean>
-
+	
+	<bean id="simpleTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+	  	<property name="jobDetail" ref="sendJob"/>
+		<!-- 10 seconds -->
+	  	<property name="startDelay" value="10000"/>
+		<!-- repeat every 50 seconds -->
+	  	<property name="repeatInterval" value="2000"/>
+	</bean>
+	
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+	   		<list>
+	      		<ref bean="simpleTrigger"/>
+	    	</list>
+	  	</property>
+	</bean>
 
 	<!-- MessageSource -->
 	<bean id="messageSource"
