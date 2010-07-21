@@ -290,11 +290,13 @@ public class DocumentService {
 	 * @param document the document to be locked.
 	 */
 	public void lockDocument(Document document) {
-		LOG.debug("Locking document: " + document.getId());
-		document.setLocked(true);
-		document.setLockingDate(new Date());
-		save(document);
-		LOG.info("Document locked: " + document.getId());
+		if(!document.getLocked()) { 
+			LOG.debug("Locking document: " + document.getId());
+			document.setLocked(true);
+			document.setLockingDate(new Date());
+			save(document);
+			LOG.info("Document locked: " + document.getId());
+		}
 	}
 	
 	public boolean sendDocument(Document document, AditUser recipient) {
@@ -313,9 +315,9 @@ public class DocumentService {
 		documentSharing.setUserCode(recipient.getUserCode());
 		documentSharing.setUserName(recipient.getFullName());
 		
-		Long documentSharingID = this.getDocumentSharingDAO().save(documentSharing);
+		this.getDocumentSharingDAO().save(documentSharing);
 		
-		if(documentSharingID > 0) {
+		if(documentSharing.getId() == 0) {
 			throw new AditInternalException("Could not add document sharing information to database.");
 		}
 		
