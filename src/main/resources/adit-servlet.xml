@@ -442,6 +442,17 @@
 		<property name="sessionFactory" ref="mySessionFactory" />
 	</bean>
 
+	<!-- Scheduled jobs -->
+	<bean name="exampleJob" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass" value="ee.adit.dvk.SendJob"/>
+	  	<property name="jobDataAsMap">
+	    	<map>
+	      		<entry key="timeout" value="5"/>
+	    	</map>
+	  	</property>
+	</bean>
+
+
 	<!-- MessageSource -->
 	<bean id="messageSource"
 		class="org.springframework.context.support.ResourceBundleMessageSource">

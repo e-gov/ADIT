@@ -30,6 +30,7 @@ lib/jta-1.1.jar -text
 lib/log4j-1.2.16.jar -text
 lib/ojdbc6.jar -text
 lib/orai18n.jar -text
+lib/quartz-1.8.3.jar -text
 lib/slf4j-api-1.5.8.jar -text
 lib/slf4j-log4j12-1.5.8.jar -text
 lib/sources/spring-ws-1.5.9-sources.jar -text
@@ -100,6 +101,7 @@ src/main/java/ee/adit/dao/pojo/UserNotification.java -text
 src/main/java/ee/adit/dao/pojo/UserNotificationId.java -text
 src/main/java/ee/adit/dao/pojo/Usertype.java -text
 src/main/java/ee/adit/dao/test/TestDocumentDAO.java -text
+src/main/java/ee/adit/dvk/SendJob.java -text
 src/main/java/ee/adit/exception/AditException.java -text
 src/main/java/ee/adit/exception/AditInternalException.java -text
 src/main/java/ee/adit/pojo/Activity.java -text

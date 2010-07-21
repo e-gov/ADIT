@@ -9,7 +9,7 @@
 	<url>http://maven.apache.org</url>
 
 	<properties>
-		<baseDir>C:\projektid\adit\adit</baseDir>
+		<baseDir>C:\development\adit\trunk</baseDir>
 	</properties>
 
 	<dependencies>
@@ -194,6 +194,52 @@
 			<systemPath>${baseDir}/lib/JDigiDoc.jar</systemPath>
 		</dependency>
 		
+		<!-- 
+		<dependency>
+			<groupId>xerces</groupId>
+			<artifactId>impl</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${baseDir}/lib/xercesImpl.jar</systemPath>
+		</dependency>
+		-->
+		
+		<dependency>
+			<groupId>xml</groupId>
+			<artifactId>apis</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${baseDir}/lib/xml-apis.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>xmlbeans</groupId>
+			<artifactId>qname</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${baseDir}/lib/xmlbeans-qname.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>xmlParser</groupId>
+			<artifactId>apis</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${baseDir}/lib/xmlParserAPIs.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>xml</groupId>
+			<artifactId>sec</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${baseDir}/lib/xmlsec.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>xml</groupId>
+			<artifactId>tinyxmlcanonicalizer</artifactId>
+			<version>0.9.0</version>
+			<scope>system</scope>
+			<systemPath>${baseDir}/lib/tinyxmlcanonicalizer-0.9.0.jar</systemPath>
+		</dependency>
+		
 		<!-- XmlBeans -->
 		<dependency>
 			<groupId>org.apache</groupId>
@@ -201,6 +247,15 @@
 			<version>2.4.0</version>
 			<scope>system</scope>
 			<systemPath>${baseDir}/lib/xbean.jar</systemPath>
+		</dependency>
+		
+		<!-- Quartz -->
+		<dependency>
+			<groupId>org.quartz</groupId>
+			<artifactId>scheduler</artifactId>
+			<version>1.8.3</version>
+			<scope>system</scope>
+			<systemPath>${baseDir}/lib/quartz-1.8.3.jar</systemPath>
 		</dependency>
 		
 	</dependencies>
@@ -218,6 +273,9 @@
 				<includes>
 					<include>*</include>
 				</includes>
+				<excludes>
+					<exclude>xercesImpl.jar</exclude>
+				</excludes>
 				<targetPath>../adit/WEB-INF/lib</targetPath>
 			</resource>
 			<resource>
