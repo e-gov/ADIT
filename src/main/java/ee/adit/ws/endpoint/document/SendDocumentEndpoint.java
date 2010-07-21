@@ -143,6 +143,8 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 						
 						// Update the status in the database
 						this.getDocumentService().save(doc);
+						LOG.info("Document locked: " + doc.getId());
+						
 						
 						// TODO
 						// 1. add a document sharing record to the database
