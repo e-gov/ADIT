@@ -3,7 +3,7 @@ INSERT INTO adit_user (
   full_name,
   usertype
 ) VALUES (
-  '38407054916',
+  'EE38407054916',
   'Marko Kurm',
   'person'
 );
