@@ -22,11 +22,13 @@ import org.xml.sax.helpers.XMLReaderFactory;
 
 import ee.adit.dao.DocumentDAO;
 import ee.adit.dao.DocumentFileDAO;
+import ee.adit.dao.DocumentHistoryDAO;
 import ee.adit.dao.DocumentSharingDAO;
 import ee.adit.dao.DocumentTypeDAO;
 import ee.adit.dao.DocumentWfStatusDAO;
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
+import ee.adit.dao.pojo.DocumentHistory;
 import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.dao.pojo.DocumentType;
 import ee.adit.exception.AditException;
@@ -65,6 +67,7 @@ public class DocumentService {
 	private DocumentFileDAO documentFileDAO;
 	private DocumentWfStatusDAO documentWfStatusDAO;
 	private DocumentSharingDAO documentSharingDAO;
+	private DocumentHistoryDAO documentHistoryDAO;
 	
 	public List<String> checkAttachedDocumentMetadataForNewDocument(SaveDocumentRequestAttachment document, long remainingDiskQuota, String xmlFile, String tempDir) throws AditException {
 		List<String> result = null;
@@ -324,6 +327,18 @@ public class DocumentService {
 		return result;
 	}
 	
+	public void addHistoryEvent(String applicationName, Document doc, String userCode, String historyType) {
+		// Add history event
+		DocumentHistory documentHistory = new DocumentHistory();
+		documentHistory.setRemoteApplicationName(applicationName);
+		documentHistory.setDocumentId(doc.getId());
+		documentHistory.setDocumentHistoryType(historyType);
+		documentHistory.setEventDate(new Date());
+		documentHistory.setUserCode(userCode);
+		
+		this.getDocumentHistoryDAO().save(documentHistory);
+	}
+	
 	public MessageSource getMessageSource() {
 		return messageSource;
 	}
@@ -370,5 +385,13 @@ public class DocumentService {
 
 	public void setDocumentSharingDAO(DocumentSharingDAO documentSharingDAO) {
 		this.documentSharingDAO = documentSharingDAO;
+	}
+
+	public DocumentHistoryDAO getDocumentHistoryDAO() {
+		return documentHistoryDAO;
+	}
+
+	public void setDocumentHistoryDAO(DocumentHistoryDAO documentHistoryDAO) {
+		this.documentHistoryDAO = documentHistoryDAO;
 	}
 }

@@ -343,6 +343,7 @@
 		<property name="documentFileDAO" ref="documentFileDAO"/>
 		<property name="documentWfStatusDAO" ref="documentWfStatusDAO"/>
 		<property name="documentSharingDAO" ref="documentSharingDAO"/>
+		<property name="documentHistoryDAO" ref="documentHistoryDAO"/>
 	</bean>
 
 	<bean id="myDataSource"
@@ -437,6 +438,9 @@
 		<property name="sessionFactory" ref="mySessionFactory" />
 	</bean>
 		
+	<bean id="documentHistoryDAO" class="ee.adit.dao.DocumentHistoryDAO">
+		<property name="sessionFactory" ref="mySessionFactory" />
+	</bean>
 
 	<!-- MessageSource -->
 	<bean id="messageSource"

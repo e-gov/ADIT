@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
+import ee.adit.dao.pojo.DocumentHistory;
 import ee.adit.exception.AditException;
 import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.ArrayOfRecipientStatus;
@@ -143,7 +144,7 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 							
 							// Add success message to response
 							recipientStatus.setSuccess(true);
-							recipientStatus.setCode(recipient.getUserCode());
+							recipientStatus.setCode(recipient.getUserCode());					
 							
 							// TODO: Send a notification to the XTee teavituskalender
 							
@@ -166,7 +167,9 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 			
 			response.setSuccess(success);
 			response.setRecipientList(reponseStatuses);
-		
+			
+			this.getDocumentService().addHistoryEvent(applicationName, doc, userCode, DocumentService.HistoryType_Send);
+			
 		} catch(Exception e) {
 			success = false;
 			LOG.error("Exception: ", e);
