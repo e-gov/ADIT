@@ -462,6 +462,23 @@ COMMENT ON COLUMN &&ADIT_SCHEMA..USERTYPE.description  IS 'Kasutajatüübi kirje
 COMMENT ON COLUMN &&ADIT_SCHEMA..USERTYPE.disk_quota   IS 'Määrab kasutajatüübi vaikimisi kehtiva mahupiirangu baitides.';
 
 
+CREATE TABLE &&ADIT_SCHEMA..NOTIFICATION_LOG
+(
+	ID                             NUMBER(18) NOT NULL,      /* Unikaalne identifikaator */
+	document_id                    NUMBER(12) NOT NULL,      /* Teavitusega seotud dokumendi ID */
+	notification_type              VARCHAR2(50) NOT NULL,    /* Teavituse tüübi lühinimi. */
+	user_code                      VARCHAR2(50),             /* Isiku või asutuse kood, kellele teavitus saadeti */
+	notification_date              DATE                      /* Teavituse saatmise kuupäev ja kellaaeg */
+) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
+
+COMMENT ON TABLE &&ADIT_SCHEMA..NOTIFICATION_LOG IS 'Teavituskalendrisse lisatud teavituste logi';
+COMMENT ON COLUMN &&ADIT_SCHEMA..NOTIFICATION_LOG.ID IS 'Unikaalne identifikaator';
+COMMENT ON COLUMN &&ADIT_SCHEMA..NOTIFICATION_LOG.document_id IS 'Teavitusega seotud dokumendi ID';
+COMMENT ON COLUMN &&ADIT_SCHEMA..NOTIFICATION_LOG.notification_type IS 'Teavituse tüübi lühinimetus';
+COMMENT ON COLUMN &&ADIT_SCHEMA..NOTIFICATION_LOG.user_code IS 'Isiku või asutuse kood, kellele teavitus saadeti';
+COMMENT ON COLUMN &&ADIT_SCHEMA..NOTIFICATION_LOG.notification_date IS 'Teavituse saatmise kuupäev ja kellaaeg';
+
+
 /* Create Primary Key Constraints */
 ALTER TABLE &&ADIT_SCHEMA..ACCESS_RESTRICTION ADD CONSTRAINT PK_ACCESS_RESTRICTIONS 
 	PRIMARY KEY (remote_application, user_code) 
@@ -545,6 +562,10 @@ ALTER TABLE &&ADIT_SCHEMA..USER_NOTIFICATION ADD CONSTRAINT PK_NOTIFICATIONS
 
 ALTER TABLE &&ADIT_SCHEMA..USERTYPE ADD CONSTRAINT PK_USERTYPES 
 	PRIMARY KEY (short_name) 
+ USING INDEX TABLESPACE &&ADIT_INDEX_TABLESPACE.;
+ 
+ ALTER TABLE &&ADIT_SCHEMA..NOTIFICATION_LOG ADD CONSTRAINT PK_NOTIFICATION_LOG 
+	PRIMARY KEY (ID) 
  USING INDEX TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 
 /* Create Foreign Key Constraints */
@@ -792,3 +813,12 @@ BEGIN
   FROM DUAL;
 END;
 /
+
+CREATE SEQUENCE &&ADIT_SCHEMA..NOTIFICATION_LOG_ID_SEQ
+INCREMENT BY 1
+START WITH 1
+NOMAXVALUE
+MINVALUE 1
+NOCYCLE
+NOCACHE
+NOORDER;
