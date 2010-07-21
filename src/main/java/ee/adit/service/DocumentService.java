@@ -22,9 +22,12 @@ import org.xml.sax.helpers.XMLReaderFactory;
 
 import ee.adit.dao.DocumentDAO;
 import ee.adit.dao.DocumentFileDAO;
+import ee.adit.dao.DocumentSharingDAO;
 import ee.adit.dao.DocumentTypeDAO;
 import ee.adit.dao.DocumentWfStatusDAO;
+import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
+import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.dao.pojo.DocumentType;
 import ee.adit.exception.AditException;
 import ee.adit.exception.AditInternalException;
@@ -61,6 +64,7 @@ public class DocumentService {
 	private DocumentDAO documentDAO;
 	private DocumentFileDAO documentFileDAO;
 	private DocumentWfStatusDAO documentWfStatusDAO;
+	private DocumentSharingDAO documentSharingDAO;
 	
 	public List<String> checkAttachedDocumentMetadataForNewDocument(SaveDocumentRequestAttachment document, long remainingDiskQuota, String xmlFile, String tempDir) throws AditException {
 		List<String> result = null;
@@ -280,6 +284,43 @@ public class DocumentService {
 		this.getDocumentDAO().save(doc, null, null);
 	}
 	
+	/**
+	 * Locks the document.
+	 * 
+	 * @param document the document to be locked.
+	 */
+	public void lockDocument(Document document) {
+		LOG.debug("Locking document: " + document.getId());
+		document.setLocked(true);
+		document.setLockingDate(new Date());
+		save(document);
+		LOG.info("Document locked: " + document.getId());
+	}
+	
+	public boolean sendDocument(Document document, AditUser recipient) {
+		boolean result = false;
+		
+		DocumentSharing documentSharing = new DocumentSharing();
+		documentSharing.setDocumentId(document.getId());
+		documentSharing.setCreationDate(new Date());
+		
+		if(recipient.getDvkOrgCode() != null && !"".equalsIgnoreCase(recipient.getDvkOrgCode().trim())) {
+			documentSharing.setDocumentSharingType(DocumentService.SharingType_SendDvk);
+		} else {
+			documentSharing.setDocumentSharingType(DocumentService.SharingType_SendAdit);
+		}
+		
+		documentSharing.setUserCode(recipient.getUserCode());
+		documentSharing.setUserName(recipient.getFullName());
+		
+		Long documentSharingID = this.getDocumentSharingDAO().save(documentSharing);
+		
+		if(documentSharingID > 0) {
+			result = true;
+		}
+		
+		return result;
+	}
 	
 	public MessageSource getMessageSource() {
 		return messageSource;
@@ -319,5 +360,13 @@ public class DocumentService {
 
 	public void setDocumentWfStatusDAO(DocumentWfStatusDAO documentWfStatusDAO) {
 		this.documentWfStatusDAO = documentWfStatusDAO;
+	}
+
+	public DocumentSharingDAO getDocumentSharingDAO() {
+		return documentSharingDAO;
+	}
+
+	public void setDocumentSharingDAO(DocumentSharingDAO documentSharingDAO) {
+		this.documentSharingDAO = documentSharingDAO;
 	}
 }
