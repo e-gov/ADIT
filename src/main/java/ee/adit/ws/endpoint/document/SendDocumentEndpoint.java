@@ -43,6 +43,8 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 		Date requestDate = Calendar.getInstance().getTime();
 		String additionalInformationForLog = null;
 		Long documentId = null;
+		boolean success = true;		
+		ArrayOfRecipientStatus reponseStatuses = new ArrayOfRecipientStatus();
 		
 		try {
 		
@@ -116,8 +118,10 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 			
 			if(recipientList != null && recipientList.getCode() != null && recipientList.getCode().size() > 0) {
 				
-				ArrayOfRecipientStatus reponseStatuses = new ArrayOfRecipientStatus();
+				
 				Iterator<String> i = recipientList.getCode().iterator();
+				
+				
 				
 				while(i.hasNext()) {
 					String recipientCode = i.next();
@@ -135,25 +139,32 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 						ArrayOfMessage recipientMessages = new ArrayOfMessage();
 						recipientMessages.addMessage(new Message("en", errorMessage));
 						recipientStatus.setMessages(recipientMessages);
+						success = false;
 					} else {
 						
-						// Lock the document
-						this.getDocumentService().lockDocument(doc);
-						
-						// Add sharing information to database
-						
-						
-						this.getDocumentService().sendDocument(doc, recipient);										
-						
-						recipientStatus.setSuccess(true);
-						
-						// TODO
-						// 1. add a document sharing record to the database
-						
-						// 2. Send a notification to the XTee teavituskalender
-						
-						// 3. Construct the response
-						
+						try {
+							// Lock the document
+							this.getDocumentService().lockDocument(doc);
+							
+							// Add sharing information to database
+							this.getDocumentService().sendDocument(doc, recipient);										
+							
+							recipientStatus.setSuccess(true);
+							
+							// TODO
+							// 1. add a document sharing record to the database
+							
+							// 2. Send a notification to the XTee teavituskalender
+							
+							// 3. Construct the response
+						} catch (Exception e) {
+							recipientStatus.setSuccess(false);
+							String errorMessage = this.getMessageSource().getMessage("service.error", new Object[] {},	Locale.ENGLISH);
+							ArrayOfMessage recipientMessages = new ArrayOfMessage();
+							recipientMessages.addMessage(new Message("en", errorMessage));
+							recipientStatus.setMessages(recipientMessages);
+							success = false;
+						}
 					}
 					reponseStatuses.addRecipient(recipientStatus);
 				}
@@ -162,11 +173,13 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 				throw new NullPointerException("Recipient list is empty or null.");
 			}
 			
-			
+			response.setSuccess(success);
+			response.setRecipientList(reponseStatuses);
 		
 		} catch(Exception e) {
+			success = false;
 			LOG.error("Exception: ", e);
-			response.setSuccess(false);
+			response.setSuccess(success);
 			ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
 			
 			if(e instanceof AditException) {
@@ -179,6 +192,8 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 			LOG.debug("Adding exception messages to response object.");
 			response.setMessages(arrayOfMessage);
 		}
+		
+		
 		
 		return null;
 	}
