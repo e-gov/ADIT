@@ -342,12 +342,13 @@
 		<property name="documentDAO" ref="documentDAO"/>
 		<property name="documentFileDAO" ref="documentFileDAO"/>
 		<property name="documentWfStatusDAO" ref="documentWfStatusDAO"/>
+		<property name="documentSharingDAO" ref="documentSharingDAO"/>
 	</bean>
 
 	<bean id="myDataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
-		<property name="url" value="jdbc:oracle:thin:@//localhost:1522/jaak" />
+		<property name="url" value="jdbc:oracle:thin:@//localhost:1521/XE" />
 		<property name="username" value="adit" />
 		<property name="password" value="adit" />
 	</bean>
@@ -383,6 +384,7 @@
 				<prop key="hibernate.cache.provider_class">org.hibernate.cache.NoCacheProvider</prop>
 				<prop key="hibernate.current_session_context_class">thread</prop>
 				<prop key="hibernate.transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</prop>
+				<prop key="hibernate.show_sql">true</prop>
 			</props>
 		</property>
 	</bean>
@@ -430,6 +432,11 @@
 	<bean id="documentWfStatusDAO" class="ee.adit.dao.DocumentWfStatusDAO">
 		<property name="sessionFactory" ref="mySessionFactory" />
 	</bean>
+
+	<bean id="documentSharingDAO" class="ee.adit.dao.DocumentSharingDAO">
+		<property name="sessionFactory" ref="mySessionFactory" />
+	</bean>
+		
 
 	<!-- MessageSource -->
 	<bean id="messageSource"
