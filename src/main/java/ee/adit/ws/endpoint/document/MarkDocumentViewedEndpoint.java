@@ -172,12 +172,13 @@ public class MarkDocumentViewedEndpoint extends AbstractAditBaseEndpoint {
 							}
 							
 							// Teavituskalendri kaudu teavituse saatmine
-							if (!isViewed && (userService.findNotification(user.getUserNotifications(), ScheduleClient.EventType_View) != null)) {
+							if (!isViewed && (userService.findNotification(user.getUserNotifications(), ScheduleClient.NotificationType_View) != null)) {
 								ScheduleClient.addEvent(
 									user,
 									this.getMessageSource().getMessage("scheduler.message.view", new Object[] { doc.getTitle(), userCode }, Locale.ENGLISH),
 									this.getConfiguration().getSchedulerEventTypeName(),
 									requestDate,
+									ScheduleClient.NotificationType_View,
 									doc.getId());
 							}
 							

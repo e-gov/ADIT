@@ -73,6 +73,7 @@ src/main/java/ee/adit/dao/DocumentHistoryDAO.java -text
 src/main/java/ee/adit/dao/DocumentSharingDAO.java -text
 src/main/java/ee/adit/dao/DocumentTypeDAO.java -text
 src/main/java/ee/adit/dao/DocumentWfStatusDAO.java -text
+src/main/java/ee/adit/dao/NotificationLogDAO.java -text
 src/main/java/ee/adit/dao/NotificationTypeDAO.java -text
 src/main/java/ee/adit/dao/RemoteApplicationDAO.java -text
 src/main/java/ee/adit/dao/RequestLogDAO.java -text

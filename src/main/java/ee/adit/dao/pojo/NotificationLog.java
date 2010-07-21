@@ -10,6 +10,7 @@ public class NotificationLog implements java.io.Serializable {
 	private String notificationType;
 	private String userCode;
 	private Date notificationDate;
+	private long notificationId;
 	
 	public long getId() {
 		return id;
@@ -44,5 +45,12 @@ public class NotificationLog implements java.io.Serializable {
 	}
 	public void setNotificationDate(Date notificationDate) {
 		this.notificationDate = notificationDate;
+	}
+	
+	public long getNotificationId() {
+		return notificationId;
+	}
+	public void setNotificationId(long notificationId) {
+		this.notificationId = notificationId;
 	}
 }

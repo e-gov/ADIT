@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import ee.adit.dao.pojo.AditUser;
+import ee.adit.service.LogService;
 import ee.riik.xtee.teavituskalender.producers.producer.teavituskalender.LisaSyndmusDocument;
 import ee.riik.xtee.teavituskalender.producers.producer.teavituskalender.LisaSyndmusResponseDocument;
 import ee.riik.xtee.teavituskalender.producers.producer.teavituskalender.LisaSyndmusDocument.LisaSyndmus;
@@ -22,17 +23,18 @@ public class ScheduleClient {
 	private static Logger LOG = Logger.getLogger(ScheduleClient.class);
 	private static int RESULT_OK = 0;
 
-	public static String EventType_Send = "send";
-	public static String EventType_Share = "share";
-	public static String EventType_View = "view";
-	public static String EventType_Modify = "modify";
-	public static String EventType_Sign = "sign";
+	public static String NotificationType_Send = "send";
+	public static String NotificationType_Share = "share";
+	public static String NotificationType_View = "view";
+	public static String NotificationType_Modify = "modify";
+	public static String NotificationType_Sign = "sign";
 	
 	public static long addEvent(
 			final AditUser eventOwner,
 			final String eventText,
 			final String eventType,
 			final Calendar eventDate,
+			final String notificationType,
 			final long relatedDocumentId) {
 		long eventId = 0;
 		
@@ -104,9 +106,20 @@ public class ScheduleClient {
 			LOG.error("Error adding notification to 'teavituskalender' database. Related document ID: " + String.valueOf(relatedDocumentId), ex);
 		}
 		
-		// TODO: Log successful notification
+		// Log successful notification
 		if (eventId > 0) {
-			
+			try {
+			LogService logService = new LogService();
+			logService.addNotificationLogEntry(
+				relatedDocumentId,
+				notificationType,
+				eventOwner.getUserCode(),
+				eventDate.getTime(),
+				eventId);
+			logService = null;
+			} catch (Exception ex) {
+				LOG.error("Failed logging successful notification.", ex);
+			}
 		}
 		
 		return eventId;

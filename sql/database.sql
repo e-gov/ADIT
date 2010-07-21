@@ -468,7 +468,8 @@ CREATE TABLE &&ADIT_SCHEMA..NOTIFICATION_LOG
 	document_id                    NUMBER(12) NOT NULL,      /* Teavitusega seotud dokumendi ID */
 	notification_type              VARCHAR2(50) NOT NULL,    /* Teavituse tüübi lühinimi. */
 	user_code                      VARCHAR2(50),             /* Isiku või asutuse kood, kellele teavitus saadeti */
-	notification_date              DATE                      /* Teavituse saatmise kuupäev ja kellaaeg */
+	notification_date              DATE,                     /* Teavituse saatmise kuupäev ja kellaaeg */
+	notification_id                NUMBER(12) NOT NULL       /* Teavituse ID teavituskalendris */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
 COMMENT ON TABLE &&ADIT_SCHEMA..NOTIFICATION_LOG IS 'Teavituskalendrisse lisatud teavituste logi';
@@ -477,6 +478,7 @@ COMMENT ON COLUMN &&ADIT_SCHEMA..NOTIFICATION_LOG.document_id IS 'Teavitusega se
 COMMENT ON COLUMN &&ADIT_SCHEMA..NOTIFICATION_LOG.notification_type IS 'Teavituse tüübi lühinimetus';
 COMMENT ON COLUMN &&ADIT_SCHEMA..NOTIFICATION_LOG.user_code IS 'Isiku või asutuse kood, kellele teavitus saadeti';
 COMMENT ON COLUMN &&ADIT_SCHEMA..NOTIFICATION_LOG.notification_date IS 'Teavituse saatmise kuupäev ja kellaaeg';
+COMMENT ON COLUMN &&ADIT_SCHEMA..NOTIFICATION_LOG.notification_id IS 'Teavituse ID teavituskalendris';
 
 
 /* Create Primary Key Constraints */

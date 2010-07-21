@@ -21,5 +21,8 @@
         <property name="notificationDate" type="timestamp">
             <column name="NOTIFICATION_DATE" length="7" />
         </property>
+        <property name="notificationId" type="long">
+            <column name="NOTIFICATION_ID" precision="12" scale="0" />
+        </property>
     </class>
 </hibernate-mapping>
