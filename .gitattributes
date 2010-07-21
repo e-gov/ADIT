@@ -1,5 +1,6 @@
 * text=auto !eol
 doc/environmentSetup.txt -text
+doc/redeploy_adit.cmd -text
 doc/testMessages/getDocument.v1.xml -text
 doc/testMessages/getJoined.v1.xml -text
 doc/testMessages/getUserInfo.v1/base64 -text
