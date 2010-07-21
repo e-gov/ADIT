@@ -327,7 +327,7 @@ public class DocumentService {
 		return result;
 	}
 	
-	public void addHistoryEvent(String applicationName, Document doc, String userCode, String historyType) {
+	public void addHistoryEvent(String applicationName, Document doc, String userCode, String historyType, String xteeUserCode, String xteeUserName, String description) {
 		// Add history event
 		DocumentHistory documentHistory = new DocumentHistory();
 		documentHistory.setRemoteApplicationName(applicationName);
@@ -335,6 +335,9 @@ public class DocumentService {
 		documentHistory.setDocumentHistoryType(historyType);
 		documentHistory.setEventDate(new Date());
 		documentHistory.setUserCode(userCode);
+		documentHistory.setXteeUserCode(xteeUserCode);
+		documentHistory.setXteeUserName(xteeUserName);
+		documentHistory.setDescription(description);
 		
 		this.getDocumentHistoryDAO().save(documentHistory);
 	}

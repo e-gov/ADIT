@@ -46,6 +46,8 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 		Long documentId = null;
 		boolean success = true;		
 		ArrayOfRecipientStatus reponseStatuses = new ArrayOfRecipientStatus();
+		String description = "Recipients: ";
+		int successCount = 0;
 		
 		try {
 		
@@ -144,7 +146,13 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 							
 							// Add success message to response
 							recipientStatus.setSuccess(true);
-							recipientStatus.setCode(recipient.getUserCode());					
+							recipientStatus.setCode(recipient.getUserCode());			
+							
+							if(successCount > 0) {
+								description = description + ", ";
+							}
+							description = description + recipient.getUserCode();							
+							successCount++;
 							
 							// TODO: Send a notification to the XTee teavituskalender
 							
@@ -168,7 +176,15 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 			response.setSuccess(success);
 			response.setRecipientList(reponseStatuses);
 			
-			this.getDocumentService().addHistoryEvent(applicationName, doc, userCode, DocumentService.HistoryType_Send);
+			this.getDocumentService().addHistoryEvent(
+				applicationName, 
+				doc, 
+				userCode, 
+				DocumentService.HistoryType_Send,
+				header.getIsikukood(),
+				header.getNimi(),
+				description
+			);
 			
 		} catch(Exception e) {
 			success = false;
