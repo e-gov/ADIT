@@ -145,6 +145,8 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 						
 						this.getDocumentService().sendDocument(doc, recipient);										
 						
+						
+						
 						// TODO
 						// 1. add a document sharing record to the database
 						

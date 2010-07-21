@@ -316,7 +316,7 @@ public class DocumentService {
 		Long documentSharingID = this.getDocumentSharingDAO().save(documentSharing);
 		
 		if(documentSharingID > 0) {
-			result = true;
+			throw new AditInternalException("Could not add document sharing information to database.");
 		}
 		
 		return result;
