@@ -182,7 +182,7 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 				userCode, 
 				DocumentService.HistoryType_Send,
 				header.getIsikukood(),
-				header.getNimi(),
+				null,
 				description
 			);
 			
