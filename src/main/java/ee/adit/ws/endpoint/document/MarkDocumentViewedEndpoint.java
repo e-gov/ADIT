@@ -171,17 +171,23 @@ public class MarkDocumentViewedEndpoint extends AbstractAditBaseEndpoint {
 								this.documentService.getDocumentDAO().save(doc, null, null);
 							}
 							
-							// Teavituskalendri kaudu teavituse saatmine
-							if (!isViewed && (userService.findNotification(user.getUserNotifications(), ScheduleClient.NotificationType_View) != null)) {
-								ScheduleClient.addEvent(
-									user,
-									this.getMessageSource().getMessage("scheduler.message.view", new Object[] { doc.getTitle(), userCode }, Locale.ENGLISH),
-									this.getConfiguration().getSchedulerEventTypeName(),
-									requestDate,
-									ScheduleClient.NotificationType_View,
-									doc.getId());
+							// If it was the first time for this particular user to
+							// view the document then send scheduler notification to
+							// document owner.
+							// Notification does not need to be sent if user viewed
+							// his/her own document.
+							if (!user.getUserCode().equalsIgnoreCase(doc.getCreatorCode())) {
+								AditUser docCreator = this.getUserService().getUserByID(doc.getCreatorCode());
+								if (!isViewed && (docCreator != null) && (userService.findNotification(docCreator.getUserNotifications(), ScheduleClient.NotificationType_View) != null)) {
+									ScheduleClient.addEvent(
+										docCreator,
+										this.getMessageSource().getMessage("scheduler.message.view", new Object[] { doc.getTitle(), docCreator.getUserCode() }, Locale.ENGLISH),
+										this.getConfiguration().getSchedulerEventTypeName(),
+										requestDate,
+										ScheduleClient.NotificationType_View,
+										doc.getId());
+								}
 							}
-							
 						} else {
 							LOG.debug("Requested document does not belong to user. Document ID: " + request.getDocumentId() + ", User ID: " + userCode);
 							String errorMessage = this.getMessageSource().getMessage("document.doesNotBelongToUser", new Object[] { request.getDocumentId(), userCode }, Locale.ENGLISH);

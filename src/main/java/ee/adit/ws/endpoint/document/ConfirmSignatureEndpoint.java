@@ -18,6 +18,7 @@ import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.Message;
 import ee.adit.pojo.ConfirmSignatureRequest;
 import ee.adit.pojo.ConfirmSignatureResponse;
+import ee.adit.schedule.ScheduleClient;
 import ee.adit.service.DocumentService;
 import ee.adit.service.UserService;
 import ee.adit.util.CustomXTeeHeader;
@@ -61,7 +62,7 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
 	protected Object invokeInternal(Object requestObject) throws Exception {
 		ConfirmSignatureResponse response = new ConfirmSignatureResponse();
 		ArrayOfMessage messages = new ArrayOfMessage();
-		Date requestDate = Calendar.getInstance().getTime();
+		Calendar requestDate = Calendar.getInstance();
 		String additionalInformationForLog = null;
 		Long documentId = null;
 		
@@ -200,14 +201,27 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
 						header.getIsikukood(),
 						digidocConfigurationFile.getFile().getAbsolutePath(),
 						this.getConfiguration().getTempDir());
+				
+				// Send scheduler notification to document owner.
+				// Notification does not need to be sent if user signed
+				// his/her own document.
+				if (!user.getUserCode().equalsIgnoreCase(doc.getCreatorCode())) {
+					AditUser docCreator = this.getUserService().getUserByID(doc.getCreatorCode());
+					if ((docCreator != null) && (userService.findNotification(docCreator.getUserNotifications(), ScheduleClient.NotificationType_Sign) != null)) {
+						ScheduleClient.addEvent(
+							docCreator,
+							this.getMessageSource().getMessage("scheduler.message.sign", new Object[] { doc.getTitle(), docCreator.getUserCode() }, Locale.ENGLISH),
+							this.getConfiguration().getSchedulerEventTypeName(),
+							requestDate,
+							ScheduleClient.NotificationType_Sign,
+							doc.getId());
+					}
+				}
 			} else {
 				LOG.debug("Requested document does not belong to user. Document ID: " + request.getDocumentId() + ", User ID: " + userCode);
 				String errorMessage = this.getMessageSource().getMessage("document.doesNotBelongToUser", new Object[] { request.getDocumentId(), userCode }, Locale.ENGLISH);
 				throw new AditException(errorMessage);
 			}
-			
-			// TODO: Teavituskalendri kaudu teavituse saatmine
-				
 
 			// Set response messages
 			response.setSuccess(true);
@@ -230,7 +244,7 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
 			response.setMessages(arrayOfMessage);
 		}
 		
-		super.logCurrentRequest(documentId, requestDate, additionalInformationForLog);
+		super.logCurrentRequest(documentId, requestDate.getTime(), additionalInformationForLog);
 		return response;
 	}
 

@@ -1,7 +1,6 @@
 package ee.adit.ws.endpoint.document;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Set;
@@ -20,6 +19,7 @@ import ee.adit.pojo.Message;
 import ee.adit.pojo.RecipientStatus;
 import ee.adit.pojo.ShareDocumentRequest;
 import ee.adit.pojo.ShareDocumentResponse;
+import ee.adit.schedule.ScheduleClient;
 import ee.adit.service.DocumentService;
 import ee.adit.service.UserService;
 import ee.adit.util.CustomXTeeHeader;
@@ -62,7 +62,7 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 		// Get a fixed request date
 		// This becomes useful if we later have to compare
 		// records in different database tables by date
-		Date requestDate = Calendar.getInstance().getTime();
+		Calendar requestDate = Calendar.getInstance();
 
 		try {
 			LOG.debug("shareDocument.v1 invoked.");
@@ -170,7 +170,7 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 					statusMessages.addMessage(new Message("en", this.getMessageSource().getMessage("request.shareDocument.recipientStatus.alreadySharedToUser", new Object[] { recipientCode }, Locale.ENGLISH)));
 				} else {
 					DocumentSharing sharing = new DocumentSharing();
-					sharing.setCreationDate(requestDate);
+					sharing.setCreationDate(requestDate.getTime());
 					sharing.setDocumentId(doc.getId());
 					
 					if (request.getSharedForSigning() == true) {
@@ -200,7 +200,7 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 			if (saveDocument) {
 				doc.setLocked(true);
 				if (doc.getLockingDate() == null) {
-					doc.setLockingDate(requestDate);
+					doc.setLockingDate(requestDate.getTime());
 				}
 				doc.setSignable(true);
 				
@@ -209,7 +209,7 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 				sharingEvent.setRemoteApplicationName(applicationName);
 				sharingEvent.setDocumentId(doc.getId());
 				sharingEvent.setDocumentHistoryType(DocumentService.HistoryType_Share);
-				sharingEvent.setEventDate(requestDate);
+				sharingEvent.setEventDate(requestDate.getTime());
 				sharingEvent.setUserCode(user.getUserCode());
 				sharingEvent.setUserName(user.getFullName());
 				sharingEvent.setXteeUserCode(header.getIsikukood());
@@ -223,7 +223,7 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 				lockingEvent.setRemoteApplicationName(applicationName);
 				lockingEvent.setDocumentId(doc.getId());
 				lockingEvent.setDocumentHistoryType(DocumentService.HistoryType_Lock);
-				lockingEvent.setEventDate(requestDate);
+				lockingEvent.setEventDate(requestDate.getTime());
 				lockingEvent.setUserCode(user.getUserCode());
 				lockingEvent.setUserName(user.getFullName());
 				lockingEvent.setXteeUserCode(header.getIsikukood());
@@ -233,6 +233,24 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 				doc.getDocumentHistories().add(lockingEvent);
 				
 				this.documentService.getDocumentDAO().save(doc, null, null);
+				
+				// If it was the first time for this particular user to
+				// view the document then send scheduler notification to
+				// document owner.
+				// Notification does not need to be sent if user viewed
+				// his/her own document.
+				for (String recipientCode : request.getRecipientList().getCode()) {
+					AditUser recipient = this.getUserService().getUserByID(recipientCode);
+					if ((recipient != null) && (userService.findNotification(recipient.getUserNotifications(), ScheduleClient.NotificationType_Share) != null)) {
+						ScheduleClient.addEvent(
+							recipient,
+							this.getMessageSource().getMessage("scheduler.message.share", new Object[] { doc.getTitle(), userCode }, Locale.ENGLISH),
+							this.getConfiguration().getSchedulerEventTypeName(),
+							requestDate,
+							ScheduleClient.NotificationType_Share,
+							doc.getId());
+					}
+				}
 			} else {
 				String errorMessage = this.getMessageSource().getMessage("request.shareDocument.recipients.noneSucceeded", new Object[] { request.getDocumentId(), userCode }, Locale.ENGLISH);
 				throw new AditException(errorMessage);
@@ -261,7 +279,7 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 			response.setMessages(arrayOfMessage);
 		}
 
-		super.logCurrentRequest(documentId, requestDate, additionalInformationForLog);
+		super.logCurrentRequest(documentId, requestDate.getTime(), additionalInformationForLog);
 		return response;
 	}
 	

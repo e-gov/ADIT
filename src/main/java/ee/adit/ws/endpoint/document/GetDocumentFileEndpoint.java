@@ -27,6 +27,7 @@ import ee.adit.pojo.OutputDocument;
 import ee.adit.pojo.OutputDocumentFile;
 import ee.adit.pojo.GetDocumentFileResponseFiles;
 import ee.adit.pojo.Message;
+import ee.adit.schedule.ScheduleClient;
 import ee.adit.service.DocumentService;
 import ee.adit.service.UserService;
 import ee.adit.util.CustomXTeeHeader;
@@ -62,7 +63,7 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 	protected Object invokeInternal(Object requestObject) throws Exception {
 		GetDocumentFileResponse response = new GetDocumentFileResponse();
 		ArrayOfMessage messages = new ArrayOfMessage();
-		Date requestDate = Calendar.getInstance().getTime();
+		Calendar requestDate = Calendar.getInstance();
 		String additionalInformationForLog = null;
 		Long documentId = null;
 
@@ -203,6 +204,24 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 								if (saveDocument) {
 									this.documentService.getDocumentDAO().save(doc, null, null);
 								}
+								
+								// If it was the first time for this particular user to
+								// view the document then send scheduler notification to
+								// document owner.
+								// Notification does not need to be sent if user viewed
+								// his/her own document.
+								if (!user.getUserCode().equalsIgnoreCase(doc.getCreatorCode())) {
+									AditUser docCreator = this.getUserService().getUserByID(doc.getCreatorCode());
+									if (!isViewed && (docCreator != null) && (userService.findNotification(docCreator.getUserNotifications(), ScheduleClient.NotificationType_View) != null)) {
+										ScheduleClient.addEvent(
+											docCreator,
+											this.getMessageSource().getMessage("scheduler.message.view", new Object[] { doc.getTitle(), docCreator.getUserCode() }, Locale.ENGLISH),
+											this.getConfiguration().getSchedulerEventTypeName(),
+											requestDate,
+											ScheduleClient.NotificationType_View,
+											doc.getId());
+									}
+								}
 							} else {
 								LOG.debug("Document has no files!");
 							}
@@ -248,7 +267,7 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 			response.setMessages(arrayOfMessage);
 		}
 
-		super.logCurrentRequest(documentId, requestDate, additionalInformationForLog);
+		super.logCurrentRequest(documentId, requestDate.getTime(), additionalInformationForLog);
 		return response;
 	}
 

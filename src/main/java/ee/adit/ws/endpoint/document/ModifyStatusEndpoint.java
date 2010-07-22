@@ -18,6 +18,7 @@ import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.Message;
 import ee.adit.pojo.ModifyStatusRequest;
 import ee.adit.pojo.ModifyStatusResponse;
+import ee.adit.schedule.ScheduleClient;
 import ee.adit.service.DocumentService;
 import ee.adit.service.UserService;
 import ee.adit.util.CustomXTeeHeader;
@@ -52,7 +53,7 @@ public class ModifyStatusEndpoint extends AbstractAditBaseEndpoint {
 	protected Object invokeInternal(Object requestObject) throws Exception {
 		ModifyStatusResponse response = new ModifyStatusResponse();
 		ArrayOfMessage messages = new ArrayOfMessage();
-		Date requestDate = Calendar.getInstance().getTime();
+		Calendar requestDate = Calendar.getInstance();
 		String additionalInformationForLog = null;
 		Long documentId = null;
 
@@ -172,14 +173,28 @@ public class ModifyStatusEndpoint extends AbstractAditBaseEndpoint {
 				doc.getDocumentHistories().add(historyEvent);
 				
 				this.documentService.getDocumentDAO().save(doc, null, null);
+				
+				// If document status was successfully modified then send
+				// a message to document owner.
+				// Notification does not need to be sent if user changed
+				// his/her own document.
+				if (!user.getUserCode().equalsIgnoreCase(doc.getCreatorCode())) {
+					AditUser docCreator = this.getUserService().getUserByID(doc.getCreatorCode());
+					if ((docCreator != null) && (userService.findNotification(docCreator.getUserNotifications(), ScheduleClient.NotificationType_Modify) != null)) {
+						ScheduleClient.addEvent(
+							docCreator,
+							this.getMessageSource().getMessage("scheduler.message.modify", new Object[] { doc.getTitle(), docCreator.getUserCode() }, Locale.ENGLISH),
+							this.getConfiguration().getSchedulerEventTypeName(),
+							requestDate,
+							ScheduleClient.NotificationType_Modify,
+							doc.getId());
+					}
+				}
 			} else {
 				LOG.debug("Requested document does not belong to user. Document ID: " + request.getDocumentId() + ", User ID: " + userCode);
 				String errorMessage = this.getMessageSource().getMessage("document.doesNotBelongToUser", new Object[] { request.getDocumentId(), userCode }, Locale.ENGLISH);
 				throw new AditException(errorMessage);
 			}
-			
-			// TODO: Teavituskalendri kaudu teavituse saatmine
-				
 
 			// Set response messages
 			response.setSuccess(true);
@@ -202,7 +217,7 @@ public class ModifyStatusEndpoint extends AbstractAditBaseEndpoint {
 			response.setMessages(arrayOfMessage);
 		}
 
-		super.logCurrentRequest(documentId, requestDate, additionalInformationForLog);
+		super.logCurrentRequest(documentId, requestDate.getTime(), additionalInformationForLog);
 		return response;
 	}
 
