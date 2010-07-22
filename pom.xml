@@ -258,6 +258,15 @@
 			<systemPath>${baseDir}/lib/quartz-1.8.3.jar</systemPath>
 		</dependency>
 		
+		<!-- DVKAPI -->
+		<dependency>
+			<groupId>ee.dvk</groupId>
+			<artifactId>api</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${baseDir}/lib/dvkapi.jar</systemPath>
+		</dependency>
+		
 	</dependencies>
 
 	<build>

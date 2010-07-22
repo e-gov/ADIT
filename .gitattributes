@@ -21,6 +21,7 @@ lib/commons-codec-1.4.jar -text
 lib/commons-collections-3.1.jar -text
 lib/commons-logging-1.1.1.jar -text
 lib/dom4j-1.6.1.jar -text
+lib/dvkapi.jar -text
 lib/hibernate3.jar -text
 lib/iaik_jce.jar -text
 lib/javassist-3.9.0.GA.jar -text
