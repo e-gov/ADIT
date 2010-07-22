@@ -1,5 +1,7 @@
 package ee.adit.dvk;
 
+import java.io.File;
+import java.io.FileReader;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -7,6 +9,7 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
+import dvk.api.container.Container;
 import dvk.api.container.v2.ContainerVer2;
 
 import ee.adit.dao.DocumentDAO;
@@ -38,6 +41,9 @@ public class SendJob extends QuartzJobBean {
 				ContainerVer2 dvkContainer = new ContainerVer2();
 				dvkContainer.setVersion(DVK_CONTAINER_VERSION);
 				
+				FileReader fr = new FileReader(new File("C:\test.xml"));
+				
+				Container.marshal(fr, Container.Version.Ver2);
 				
 			}
 			
