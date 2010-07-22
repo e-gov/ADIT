@@ -11,7 +11,7 @@ public class HibernateUtil {
     private static SessionFactory sessionFactory;
     private static Session session;
     
-    static {
+    /*static {
           try {
                 // Create the SessionFactory from hibernate.cfg.xml
                 sessionFactory = new org.hibernate.cfg.Configuration().configure().buildSessionFactory();
@@ -21,9 +21,10 @@ public class HibernateUtil {
                 System.err.println("Initial SessionFactory creation failed." + ex);
                 throw new ExceptionInInitializerError(ex);
           }
-    }
+    }*/
     
-    private HibernateUtil(){
+    public HibernateUtil() {
+    	;
     }
     
     public static synchronized Session getSession() {

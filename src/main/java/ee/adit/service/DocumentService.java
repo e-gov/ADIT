@@ -22,6 +22,7 @@ import org.exolab.castor.xml.ValidationException;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.springframework.context.MessageSource;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,6 +53,7 @@ import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.SaveDocumentRequestAttachment;
 import ee.adit.pojo.OutputDocumentFile;
 import ee.adit.util.Configuration;
+import ee.adit.util.HibernateUtil;
 import ee.adit.util.SaveDocumentAttachmentHandler;
 import ee.adit.util.Util;
 
@@ -380,107 +382,114 @@ public class DocumentService {
 		
 		try {
 			LOG.debug("Fetching documents for sending to DVK...");
-			result = (List<Document>) this.getDocumentDAO().getHibernateTemplate().execute(new HibernateCallback() {
-				public Object doInHibernate(Session session) throws HibernateException, SQLException {
-					Query query = session.createQuery(SQL_QUERY);
-					List<Document> documents = query.list();
+			
+			Session session = HibernateUtil.getSession();
+			Transaction tx = session.beginTransaction();
+			tx.begin();
+			
+				Query query = session.createQuery(SQL_QUERY);
+				List<Document> documents = query.list();
+				
+				LOG.debug("Documents fetched successfully (" + documents.size() + ")");
+				
+				Iterator<Document> i = documents.iterator();
+				
+				while(i.hasNext()) {
 					
-					LOG.debug("Documents fetched successfully (" + documents.size() + ")");
+					Document document = i.next();
 					
-					Iterator<Document> i = documents.iterator();
+					Iterator<DocumentSharing> documentSharings = document.getDocumentSharings().iterator();
 					
-					while(i.hasNext()) {
+					while(documentSharings.hasNext()) {
 						
-						Document document = i.next();
+						DocumentSharing documentSharing = documentSharings.next();
 						
-						Iterator<DocumentSharing> documentSharings = document.getDocumentSharings().iterator();
+						ContainerVer2 dvkContainer = new ContainerVer2();
+						dvkContainer.setVersion(DVK_CONTAINER_VERSION);
 						
-						while(documentSharings.hasNext()) {
+						Metainfo metainfo = new Metainfo();
+						
+						MetaManual metaManual = new MetaManual();
+						metaManual.setAutoriIsikukood(null);
+						metaManual.setAutoriKontakt(null);
+						metaManual.setAutoriNimi(null);
+						metaManual.setAutoriOsakond(null);
+						metaManual.setDokumentGuid(document.getGuid());
+						metaManual.setDokumentKeel(null);
+						metaManual.setDokumentLiik(document.getDocumentType());
+						metaManual.setDokumentPealkiri(document.getTitle());
+						metaManual.setDokumentViit(null);
+						metaManual.setIpr(null);
+						metaManual.setJuurdepaasPiirang(null);							
+						
+						// Recipient information
+						metaManual.setSaajaIsikukood(null);
+						metaManual.setSaajaAsutuseNr(documentSharing.getUserCode());
+						metaManual.setSaajaNimi(null);
+						metaManual.setSaajaOsakond(null);
+						
+						metainfo.setMetaManual(metaManual);
+						
+						dvkContainer.setMetainfo(metainfo);
+						
+						FailideKonteiner failideKonteiner = new FailideKonteiner();
+						
+						Set aditFiles = document.getDocumentFiles(); 
+						List dvkFiles = new ArrayList();
+						
+						Iterator aditFilesIterator = aditFiles.iterator();
+						short count = 1;
+						
+						// TODO: convert the adit file to dvk file
+						while(aditFilesIterator.hasNext()) {
+							DocumentFile f = (DocumentFile) aditFilesIterator.next();
+							Fail dvkFile = new Fail();
 							
-							DocumentSharing documentSharing = documentSharings.next();
+							dvkFile.setFailNimi(f.getFileName());
+							dvkFile.setFailPealkiri(null);
+							dvkFile.setFailSuurus(f.getFileSizeBytes());
+							dvkFile.setFailTyyp(f.getContentType());
+							dvkFile.setJrkNr(count);
 							
-							ContainerVer2 dvkContainer = new ContainerVer2();
-							dvkContainer.setVersion(DVK_CONTAINER_VERSION);
-							
-							Metainfo metainfo = new Metainfo();
-							
-							MetaManual metaManual = new MetaManual();
-							metaManual.setAutoriIsikukood(null);
-							metaManual.setAutoriKontakt(null);
-							metaManual.setAutoriNimi(null);
-							metaManual.setAutoriOsakond(null);
-							metaManual.setDokumentGuid(document.getGuid());
-							metaManual.setDokumentKeel(null);
-							metaManual.setDokumentLiik(document.getDocumentType());
-							metaManual.setDokumentPealkiri(document.getTitle());
-							metaManual.setDokumentViit(null);
-							metaManual.setIpr(null);
-							metaManual.setJuurdepaasPiirang(null);							
-							
-							// Recipient information
-							metaManual.setSaajaIsikukood(null);
-							metaManual.setSaajaAsutuseNr(documentSharing.getUserCode());
-							metaManual.setSaajaNimi(null);
-							metaManual.setSaajaOsakond(null);
-							
-							metainfo.setMetaManual(metaManual);
-							
-							dvkContainer.setMetainfo(metainfo);
-							
-							FailideKonteiner failideKonteiner = new FailideKonteiner();
-							
-							Set aditFiles = document.getDocumentFiles(); 
-							List dvkFiles = new ArrayList();
-							
-							Iterator aditFilesIterator = aditFiles.iterator();
-							short count = 1;
-							
-							// TODO: convert the adit file to dvk file
-							while(aditFilesIterator.hasNext()) {
-								DocumentFile f = (DocumentFile) aditFilesIterator.next();
-								Fail dvkFile = new Fail();
-								
-								dvkFile.setFailNimi(f.getFileName());
-								dvkFile.setFailPealkiri(null);
-								dvkFile.setFailSuurus(f.getFileSizeBytes());
-								dvkFile.setFailTyyp(f.getContentType());
-								dvkFile.setJrkNr(count);
-								
-								// TODO: create a temporary file from the ADIT file and 
-								// add a reference to the DVK file
-								try {
-									InputStream inputStream = f.getFileData().getBinaryStream();
-									String temporaryFile = Util.createTemporaryFile(inputStream, tempDir);
-									
-									dvkFile.setFile(new File(temporaryFile));
-									dvkFiles.add(dvkFile);
-									
-								} catch (IOException e) {
-									throw new HibernateException("Unable to create temporary file: ", e);
-								}						
-								
-								
-								
-								count++;
-							}
-							
-							failideKonteiner.setFailid(dvkFiles);						
-							dvkContainer.setFailideKonteiner(failideKonteiner);
-							
-							// TODO: remove
+							// TODO: create a temporary file from the ADIT file and 
+							// add a reference to the DVK file
 							try {
-								dvkContainer.save2File("C:\\XXX.xml");
+								InputStream inputStream = f.getFileData().getBinaryStream();
+								//String temporaryFile = Util.createTemporaryFile(inputStream, tempDir);
+								
+								//dvkFile.setFile(new File(temporaryFile));
+								dvkFiles.add(dvkFile);
+								
 							} catch (Exception e) {
-								throw new HibernateException("Error while saving DVK Container to temporary file: ", e);
-							}
+								throw new HibernateException("Unable to create temporary file: ", e);
+							}						
 							
-						}						
-					}
-
-					// TODO: return something meaningful
-					return null;
+							
+							
+							count++;
+						}
+						
+						failideKonteiner.setFailid(dvkFiles);						
+						dvkContainer.setFailideKonteiner(failideKonteiner);
+						
+						// TODO: remove
+						try {
+							dvkContainer.save2File("C:\\XXX.xml");
+						} catch (Exception e) {
+							throw new HibernateException("Error while saving DVK Container to temporary file: ", e);
+						}
+						
+					}						
 				}
-			});
+
+				tx.commit();
+				session.close();
+				
+				// TODO: return something meaningful
+				
+			
+			
+			
 			
 		} catch (Exception e) {
 			LOG.error("Error fetching documents from database: ", e);

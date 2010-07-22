@@ -23,22 +23,24 @@
 		<property name="hibernate.hbm2ddl.auto">update</property>
 		<property name="jndi.class">com.sun.jndi.fscontext.RefFSContextFactory</property>
 		
-		<mapping resource="DocumentType.hbm.xml"/>
-		<mapping resource="Document.hbm.xml"/>
-		<mapping resource="DocumentSharing.hbm.xml"/>
-		<mapping resource="DocumentFile.hbm.xml"/>
-		<mapping resource="DocumentHistory.hbm.xml"/>
-		<mapping resource="DocumentWfStatus.hbm.xml"/>
-		<mapping resource="DocumentDvkStatus.hbm.xml"/>
+		<mapping resource="hbm/DocumentType.hbm.xml"/>
+		<mapping resource="hbm/Document.hbm.xml"/>
+		<mapping resource="hbm/DocumentSharing.hbm.xml"/>
+		<mapping resource="hbm/DocumentFile.hbm.xml"/>
+		<mapping resource="hbm/DocumentHistory.hbm.xml"/>
+		<mapping resource="hbm/DocumentWfStatus.hbm.xml"/>
+		<mapping resource="hbm/DocumentDvkStatus.hbm.xml"/>
 		
-		<mapping resource="RemoteApplication.hbm.xml"/>
-		<mapping resource="AccessRestriction.hbm.xml"/>
-		<mapping resource="DocumentHistoryType.hbm.xml"/>
-		<mapping resource="DocumentSharingType.hbm.xml"/>
-		<mapping resource="Signature.hbm.xml"/>
-		<mapping resource="AditUser.hbm.xml"/>
-		<mapping resource="Usertype.hbm.xml"/>
-		<mapping resource="DocumentFileDeflateResult.hbm.xml"/>
+		<mapping resource="hbm/RemoteApplication.hbm.xml"/>
+		<mapping resource="hbm/AccessRestriction.hbm.xml"/>
+		<mapping resource="hbm/DocumentHistoryType.hbm.xml"/>
+		<mapping resource="hbm/DocumentSharingType.hbm.xml"/>
+		<mapping resource="hbm/Signature.hbm.xml"/>
+		<mapping resource="hbm/AditUser.hbm.xml"/>
+		<mapping resource="hbm/Usertype.hbm.xml"/>
+		<mapping resource="hbm/DocumentFileDeflateResult.hbm.xml"/>
+		<mapping resource="hbm/UserNotification.hbm.xml"/>
+		
 		
     </session-factory>
 </hibernate-configuration>
