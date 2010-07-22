@@ -15,14 +15,18 @@ doc/testMessages/unJoin.v1.xml -text
 doc/xtee_generate_objects_readme.txt -text
 lib/JDigiDoc.jar -text
 lib/antlr-2.7.6.jar -text
+lib/asm-attrs.jar -text
+lib/asm.jar -text
+lib/c3p0-0.9.0.jar -text
 lib/castor-1.3.1-core.jar -text
 lib/castor-1.3.1.jar -text
+lib/cglib-2.1.3.jar -text
 lib/commons-codec-1.4.jar -text
 lib/commons-collections-3.1.jar -text
 lib/commons-logging-1.1.1.jar -text
 lib/dom4j-1.6.1.jar -text
-lib/dvkapi.jar -text
 lib/hibernate3.jar -text
+lib/hsqldb.jar -text
 lib/iaik_jce.jar -text
 lib/javassist-3.9.0.GA.jar -text
 lib/jce-jdk13-123.jar -text
@@ -32,6 +36,7 @@ lib/log4j-1.2.16.jar -text
 lib/ojdbc6.jar -text
 lib/orai18n.jar -text
 lib/quartz-1.8.3.jar -text
+lib/simple-jndi-0.11.4.1.jar -text
 lib/slf4j-api-1.5.8.jar -text
 lib/slf4j-log4j12-1.5.8.jar -text
 lib/sources/spring-ws-1.5.9-sources.jar -text
@@ -41,6 +46,7 @@ lib/spring-ws-1.5.9-all.jar -text
 lib/spring.jar -text
 lib/teavituskalender-types.jar -text
 lib/tinyxmlcanonicalizer-0.9.0.jar -text
+lib/velocity-dep-1.5.jar -text
 lib/wsdl4j-1.6.1.jar -text
 lib/wsdl4j-qname-1.6.1.jar -text
 lib/xbean.jar -text
@@ -233,6 +239,7 @@ src/main/resources/SignatureLogging.properties -text
 src/main/resources/adit-castor-mapping.xml -text
 src/main/resources/adit-servlet.xml -text
 src/main/resources/adit.xsd -text
+src/main/resources/dhl.v2.xml -text
 src/main/resources/hbm/AccessRestriction.hbm.xml -text
 src/main/resources/hbm/AditLog.hbm.xml -text
 src/main/resources/hbm/AditUser.hbm.xml -text

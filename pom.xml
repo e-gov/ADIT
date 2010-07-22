@@ -194,7 +194,7 @@
 			<systemPath>${baseDir}/lib/JDigiDoc.jar</systemPath>
 		</dependency>
 		
-		<!-- 
+		
 		<dependency>
 			<groupId>xerces</groupId>
 			<artifactId>impl</artifactId>
@@ -202,7 +202,7 @@
 			<scope>system</scope>
 			<systemPath>${baseDir}/lib/xercesImpl.jar</systemPath>
 		</dependency>
-		-->
+		
 		
 		<dependency>
 			<groupId>xml</groupId>

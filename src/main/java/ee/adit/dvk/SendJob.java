@@ -2,9 +2,13 @@ package ee.adit.dvk;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.exolab.castor.mapping.MappingException;
+import org.exolab.castor.xml.MarshalException;
+import org.exolab.castor.xml.ValidationException;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.scheduling.quartz.QuartzJobBean;
@@ -41,9 +45,9 @@ public class SendJob extends QuartzJobBean {
 				ContainerVer2 dvkContainer = new ContainerVer2();
 				dvkContainer.setVersion(DVK_CONTAINER_VERSION);
 				
-				FileReader fr = new FileReader(new File("C:\test.xml"));
 				
-				Container.marshal(fr, Container.Version.Ver2);
+				
+				dvkContainer.save2File("C:\test_dvkcontainer_ver2.xml");
 				
 			}
 			
@@ -69,6 +73,12 @@ public class SendJob extends QuartzJobBean {
 
 	public void setDocumentDAO(DocumentDAO documentDAO) {
 		this.documentDAO = documentDAO;
+	}
+	
+	public static void main(String[] args) throws MarshalException, ValidationException, IOException, MappingException {
+		ContainerVer2 dvkContainer = new ContainerVer2();
+		dvkContainer.setVersion(DVK_CONTAINER_VERSION);
+		dvkContainer.save2File("C:\test_dvkcontainer_ver2.xml");
 	}
 	
 }
