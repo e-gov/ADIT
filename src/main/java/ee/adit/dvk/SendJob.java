@@ -1,9 +1,14 @@
 package ee.adit.dvk;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.scheduling.quartz.QuartzJobBean;
+
+import ee.adit.dao.pojo.Document;
 
 public class SendJob extends QuartzJobBean {
 
@@ -15,6 +20,8 @@ public class SendJob extends QuartzJobBean {
 		LOG.info("Executing scheduled job: Send documents to DVK");
 		
 		// TODO: Fetch all the documents that have document_sharing records that have type "send_dvk" and dvk_status_id is null or "100" (puudub)
+		List<Document> documents = this.getDocuments();
+		
 		
 		// TODO: Construct a DVK XML container for every document that is found
 		
@@ -25,4 +32,13 @@ public class SendJob extends QuartzJobBean {
 
 	}
 
+	private List<Document> getDocuments() {
+		List<Document> result = new ArrayList<Document>();
+		
+		
+		
+		
+		return result;
+	}
+	
 }
