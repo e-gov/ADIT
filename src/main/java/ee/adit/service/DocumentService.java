@@ -16,6 +16,9 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.apache.log4j.Logger;
+import org.exolab.castor.mapping.MappingException;
+import org.exolab.castor.xml.MarshalException;
+import org.exolab.castor.xml.ValidationException;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -450,19 +453,27 @@ public class DocumentService {
 									String temporaryFile = Util.createTemporaryFile(inputStream, tempDir);
 									
 									dvkFile.setFile(new File(temporaryFile));
+									dvkFiles.add(dvkFile);
 									
 								} catch (IOException e) {
 									throw new HibernateException("Unable to create temporary file: ", e);
 								}						
 								
+								
+								
 								count++;
 							}
 							
-							// TODO: set the list
-							failideKonteiner.setFailid(null);
-							
-							
+							failideKonteiner.setFailid(dvkFiles);						
 							dvkContainer.setFailideKonteiner(failideKonteiner);
+							
+							// TODO: remove
+							try {
+								dvkContainer.save2File("C:\\XXX.xml");
+							} catch (Exception e) {
+								throw new HibernateException("Error while saving DVK Container to temporary file: ", e);
+							}
+							
 						}						
 					}
 
