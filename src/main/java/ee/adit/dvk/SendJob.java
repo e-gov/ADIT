@@ -3,6 +3,7 @@ package ee.adit.dvk;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -15,6 +16,8 @@ import org.springframework.scheduling.quartz.QuartzJobBean;
 
 import dvk.api.container.Container;
 import dvk.api.container.v2.ContainerVer2;
+import dvk.api.container.v2.MetaManual;
+import dvk.api.container.v2.Metainfo;
 
 import ee.adit.dao.DocumentDAO;
 import ee.adit.dao.pojo.Document;
@@ -42,12 +45,33 @@ public class SendJob extends QuartzJobBean {
 			} else {
 				LOG.info("Number of documents to be sent to DVK: " + documents.size());
 				
-				ContainerVer2 dvkContainer = new ContainerVer2();
-				dvkContainer.setVersion(DVK_CONTAINER_VERSION);
+				Iterator<Document> i = documents.iterator();
 				
-				
-				
-				dvkContainer.save2File("C:\test_dvkcontainer_ver2.xml");
+				while(i.hasNext()) {
+					
+					Document document = i.next();
+					
+					ContainerVer2 dvkContainer = new ContainerVer2();
+					dvkContainer.setVersion(DVK_CONTAINER_VERSION);
+					
+					Metainfo metainfo = new Metainfo();
+					
+					MetaManual metaManual = new MetaManual();
+					metaManual.setAutoriIsikukood(null);
+					metaManual.setAutoriKontakt(null);
+					metaManual.setAutoriNimi(null);
+					metaManual.setAutoriOsakond(null);
+					metaManual.setDokumentGuid(document.getGuid());
+					metaManual.setDokumentKeel(null);
+					metaManual.setDokumentLiik(document.getDocumentType());
+					
+					metainfo.setMetaManual(metaManual);
+					
+					dvkContainer.setMetainfo(metainfo);
+					
+					dvkContainer.save2File("C:\\test_dvkcontainer_ver2.xml");
+					
+				}
 				
 			}
 			
@@ -78,7 +102,7 @@ public class SendJob extends QuartzJobBean {
 	public static void main(String[] args) throws MarshalException, ValidationException, IOException, MappingException {
 		ContainerVer2 dvkContainer = new ContainerVer2();
 		dvkContainer.setVersion(DVK_CONTAINER_VERSION);
-		dvkContainer.save2File("C:\test_dvkcontainer_ver2.xml");
+		dvkContainer.save2File("C:\\test_dvkcontainer_ver2.xml");
 	}
 	
 }

@@ -283,7 +283,9 @@
 					<include>*</include>
 				</includes>
 				<excludes>
+					<!-- 
 					<exclude>xercesImpl.jar</exclude>
+					-->
 				</excludes>
 				<targetPath>../adit/WEB-INF/lib</targetPath>
 			</resource>

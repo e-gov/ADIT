@@ -840,8 +840,10 @@ public class DocumentDAO extends HibernateDaoSupport {
 	 * 3. That DocumentSharing must have the "documentDvkStatus" not initialized or set to "100" 
 	 */
 	public List<Document> getDocumentsForDVK() {
-		final String SQL_QUERY = "from Document doc, DocumentSharing docSharing where docSharing.documentSharingType = 'send_dvk' and (docSharing.documentDvkStatus is null or docSharing.documentDvkStatus = 100) and docSharing.documentId = doc.id";
+		final String SQL_QUERY = "select doc from Document doc, DocumentSharing docSharing where docSharing.documentSharingType = 'send_dvk' and (docSharing.documentDvkStatus is null or docSharing.documentDvkStatus = 100) and docSharing.documentId = doc.id";
 		List<Document> result = new ArrayList<Document>();
+		
+		Object o;
 		
 		try {
 			LOG.debug("Fetching documents for sending to DVK...");
