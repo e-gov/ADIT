@@ -445,11 +445,6 @@
 	<!-- Scheduled jobs -->
 	<bean name="sendJob" class="org.springframework.scheduling.quartz.JobDetailBean">
 		<property name="jobClass" value="ee.adit.dvk.SendJob"/>
-	  	<property name="jobDataAsMap">
-	    	<map>
-	      		<entry key="timeout" value="60"/>
-	    	</map>
-	  	</property>
 	</bean>
 	
 	<bean id="simpleTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">

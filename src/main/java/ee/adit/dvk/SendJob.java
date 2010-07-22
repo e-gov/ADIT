@@ -9,8 +9,6 @@ public class SendJob extends QuartzJobBean {
 
 	private static Logger LOG = Logger.getLogger(SendJob.class);
 
-	private int timeout;
-
 	protected void executeInternal(JobExecutionContext ctx)
 			throws JobExecutionException {
 		
@@ -25,18 +23,6 @@ public class SendJob extends QuartzJobBean {
 		// TODO: Save the document DVK_ID to ADIT database
 		
 
-	}
-
-	/**
-	 * Setter called after the ExampleJob is instantiated with the value from
-	 * the JobDetailBean (5)
-	 */
-	public void setTimeout(int timeout) {
-		this.timeout = timeout;
-	}
-
-	public int getTimeout() {
-		return timeout;
 	}
 
 }
