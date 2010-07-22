@@ -240,7 +240,6 @@ src/main/resources/SignatureLogging.properties -text
 src/main/resources/adit-castor-mapping.xml -text
 src/main/resources/adit-servlet.xml -text
 src/main/resources/adit.xsd -text
-src/main/resources/dhl.v2.xml -text
 src/main/resources/hbm/AccessRestriction.hbm.xml -text
 src/main/resources/hbm/AditLog.hbm.xml -text
 src/main/resources/hbm/AditUser.hbm.xml -text
