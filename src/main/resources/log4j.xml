@@ -26,7 +26,15 @@
 		</layout>
     </appender>
     
-    <logger name="ee.adit">
+    <logger name="ee.adit.ws">
+    	<level value="DEBUG"></level>
+    </logger>
+    
+    <logger name="ee.adit.dao">
+    	<level value="DEBUG"></level>
+    </logger>
+    
+    <logger name="ee.adit.service">
     	<level value="DEBUG"></level>
     </logger>
     
