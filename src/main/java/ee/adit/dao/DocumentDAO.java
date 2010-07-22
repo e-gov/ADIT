@@ -832,35 +832,6 @@ public class DocumentDAO extends HibernateDaoSupport {
 		});
 	}
 	
-	/**
-	 * Fetches all the documents that are to be sent to DVK. 
-	 * The DVK documents are recognized by the following:
-	 * 1. The document has at least one DocumentSharing associated with it
-	 * 2. That DocumentSharing must have the "documentSharingType" equal to "send_dvk"
-	 * 3. That DocumentSharing must have the "documentDvkStatus" not initialized or set to "100" 
-	 */
-	public List<Document> getDocumentsForDVK() {
-		final String SQL_QUERY = "select doc from Document doc, DocumentSharing docSharing where docSharing.documentSharingType = 'send_dvk' and (docSharing.documentDvkStatus is null or docSharing.documentDvkStatus = 100) and docSharing.documentId = doc.id";
-		List<Document> result = new ArrayList<Document>();
-		
-		Object o;
-		
-		try {
-			LOG.debug("Fetching documents for sending to DVK...");
-			result = (List<Document>) this.getHibernateTemplate().execute(new HibernateCallback() {
-				public Object doInHibernate(Session session) throws HibernateException, SQLException {
-					Query query = session.createQuery(SQL_QUERY);
-					return query.list();				
-				}
-			});
-			LOG.debug("Documents fetched successfully (" + result.size() + ")");
-		} catch (Exception e) {
-			LOG.error("Error fetching documents from database: ", e);
-		}
-		
-		return result;
-	}
-	
 	
 	
 	

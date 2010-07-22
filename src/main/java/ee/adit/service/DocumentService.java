@@ -6,12 +6,14 @@ import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.context.MessageSource;
 import org.springframework.orm.hibernate3.HibernateCallback;
@@ -19,6 +21,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
+
+import dvk.api.container.v2.ContainerVer2;
+import dvk.api.container.v2.MetaManual;
+import dvk.api.container.v2.Metainfo;
 
 import ee.adit.dao.DocumentDAO;
 import ee.adit.dao.DocumentFileDAO;
@@ -59,6 +65,9 @@ public class DocumentService {
 	public static final String HistoryType_Sign = "sign";
 	public static final String HistoryType_Delete = "delete";
 	public static final String HistoryType_MarkViewed = "markViewed";
+	
+	// Kasutatava DVK konteineri versioon
+	public static final int DVK_CONTAINER_VERSION = 2;
 	
 	private static Logger LOG = Logger.getLogger(UserService.class);
 	private MessageSource messageSource;
@@ -340,6 +349,80 @@ public class DocumentService {
 		documentHistory.setDescription(description);
 		
 		this.getDocumentHistoryDAO().save(documentHistory);
+	}
+	
+	/**
+	 * Fetches all the documents that are to be sent to DVK. 
+	 * The DVK documents are recognized by the following:
+	 * 1. The document has at least one DocumentSharing associated with it
+	 * 2. That DocumentSharing must have the "documentSharingType" equal to "send_dvk"
+	 * 3. That DocumentSharing must have the "documentDvkStatus" not initialized or set to "100" 
+	 */
+	@SuppressWarnings("unchecked")
+	public void getDocumentsForDVKSending() {
+		
+		final String SQL_QUERY = "select doc from Document doc, DocumentSharing docSharing where docSharing.documentSharingType = 'send_dvk' and (docSharing.documentDvkStatus is null or docSharing.documentDvkStatus = 100) and docSharing.documentId = doc.id";
+		List<Document> result = new ArrayList<Document>();
+		
+		Object o;
+		
+		try {
+			LOG.debug("Fetching documents for sending to DVK...");
+			result = (List<Document>) this.getDocumentDAO().getHibernateTemplate().execute(new HibernateCallback() {
+				public Object doInHibernate(Session session) throws HibernateException, SQLException {
+					Query query = session.createQuery(SQL_QUERY);
+					List<Document> documents = query.list();
+					
+					Iterator<Document> i = documents.iterator();
+					
+					while(i.hasNext()) {
+						
+						Document document = i.next();
+						
+						Iterator<DocumentSharing> documentSharings = document.getDocumentSharings().iterator();
+						
+						while(documentSharings.hasNext()) {
+							
+							DocumentSharing documentSharing = documentSharings.next();
+							
+							ContainerVer2 dvkContainer = new ContainerVer2();
+							dvkContainer.setVersion(DVK_CONTAINER_VERSION);
+							
+							Metainfo metainfo = new Metainfo();
+							
+							MetaManual metaManual = new MetaManual();
+							metaManual.setAutoriIsikukood(null);
+							metaManual.setAutoriKontakt(null);
+							metaManual.setAutoriNimi(null);
+							metaManual.setAutoriOsakond(null);
+							metaManual.setDokumentGuid(document.getGuid());
+							metaManual.setDokumentKeel(null);
+							metaManual.setDokumentLiik(document.getDocumentType());
+							metaManual.setDokumentPealkiri(document.getTitle());
+							metaManual.setDokumentViit(null);
+							metaManual.setIpr(null);
+							metaManual.setJuurdepaasPiirang(null);
+							metaManual.setSaajaIsikukood(documentSharing.getUserCode());
+							
+							metainfo.setMetaManual(metaManual);
+							
+							dvkContainer.setMetainfo(metainfo);
+						}						
+					}
+
+					// TODO: return something meaningful
+					return null;
+				}
+			});
+			LOG.debug("Documents fetched successfully (" + result.size() + ")");
+		} catch (Exception e) {
+			LOG.error("Error fetching documents from database: ", e);
+		}
+		
+		
+		
+		
+		
 	}
 	
 	public MessageSource getMessageSource() {

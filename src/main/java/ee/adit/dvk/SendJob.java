@@ -22,14 +22,15 @@ import dvk.api.container.v2.Metainfo;
 import ee.adit.dao.DocumentDAO;
 import ee.adit.dao.pojo.Document;
 import ee.adit.exception.AditInternalException;
+import ee.adit.service.DocumentService;
 
 public class SendJob extends QuartzJobBean {
 
 	private static Logger LOG = Logger.getLogger(SendJob.class);
 
-	public static final int DVK_CONTAINER_VERSION = 2;
 	
-	private DocumentDAO documentDAO;
+	
+	private DocumentService documentService;
 	
 	protected void executeInternal(JobExecutionContext ctx)
 			throws JobExecutionException {
@@ -38,42 +39,9 @@ public class SendJob extends QuartzJobBean {
 			LOG.info("Executing scheduled job: Send documents to DVK");
 			
 			// TODO: Fetch all the documents that have document_sharing records that have type "send_dvk" and dvk_status_id is null or "100" (puudub)
-			List<Document> documents = this.getDocuments();
+			this.getDocumentService().getDocumentsForDVKSending();
 			
-			if(documents == null || documents.size() == 0) {
-				LOG.info("No documents found.");
-			} else {
-				LOG.info("Number of documents to be sent to DVK: " + documents.size());
-				
-				Iterator<Document> i = documents.iterator();
-				
-				while(i.hasNext()) {
-					
-					Document document = i.next();
-					
-					ContainerVer2 dvkContainer = new ContainerVer2();
-					dvkContainer.setVersion(DVK_CONTAINER_VERSION);
-					
-					Metainfo metainfo = new Metainfo();
-					
-					MetaManual metaManual = new MetaManual();
-					metaManual.setAutoriIsikukood(null);
-					metaManual.setAutoriKontakt(null);
-					metaManual.setAutoriNimi(null);
-					metaManual.setAutoriOsakond(null);
-					metaManual.setDokumentGuid(document.getGuid());
-					metaManual.setDokumentKeel(null);
-					metaManual.setDokumentLiik(document.getDocumentType());
-					
-					metainfo.setMetaManual(metaManual);
-					
-					dvkContainer.setMetainfo(metainfo);
-					
-					dvkContainer.save2File("C:\\test_dvkcontainer_ver2.xml");
-					
-				}
-				
-			}
+			
 			
 			// TODO: Construct a DVK XML container for every document that is found
 			
@@ -87,22 +55,12 @@ public class SendJob extends QuartzJobBean {
 
 	}
 
-	private List<Document> getDocuments() {
-		return this.getDocumentDAO().getDocumentsForDVK();
+	public DocumentService getDocumentService() {
+		return documentService;
 	}
 
-	public DocumentDAO getDocumentDAO() {
-		return documentDAO;
-	}
-
-	public void setDocumentDAO(DocumentDAO documentDAO) {
-		this.documentDAO = documentDAO;
-	}
-	
-	public static void main(String[] args) throws MarshalException, ValidationException, IOException, MappingException {
-		ContainerVer2 dvkContainer = new ContainerVer2();
-		dvkContainer.setVersion(DVK_CONTAINER_VERSION);
-		dvkContainer.save2File("C:\\test_dvkcontainer_ver2.xml");
+	public void setDocumentService(DocumentService documentService) {
+		this.documentService = documentService;
 	}
 	
 }
