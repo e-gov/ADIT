@@ -3,12 +3,16 @@ package ee.adit.service;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.UUID;
 
 import org.apache.log4j.Logger;
@@ -23,6 +27,8 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 import dvk.api.container.v2.ContainerVer2;
+import dvk.api.container.v2.Fail;
+import dvk.api.container.v2.FailideKonteiner;
 import dvk.api.container.v2.MetaManual;
 import dvk.api.container.v2.Metainfo;
 
@@ -34,6 +40,7 @@ import ee.adit.dao.DocumentTypeDAO;
 import ee.adit.dao.DocumentWfStatusDAO;
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
+import ee.adit.dao.pojo.DocumentFile;
 import ee.adit.dao.pojo.DocumentHistory;
 import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.dao.pojo.DocumentType;
@@ -41,6 +48,7 @@ import ee.adit.exception.AditException;
 import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.SaveDocumentRequestAttachment;
 import ee.adit.pojo.OutputDocumentFile;
+import ee.adit.util.Configuration;
 import ee.adit.util.SaveDocumentAttachmentHandler;
 import ee.adit.util.Util;
 
@@ -77,6 +85,7 @@ public class DocumentService {
 	private DocumentWfStatusDAO documentWfStatusDAO;
 	private DocumentSharingDAO documentSharingDAO;
 	private DocumentHistoryDAO documentHistoryDAO;
+	private Configuration configuration;
 	
 	public List<String> checkAttachedDocumentMetadataForNewDocument(SaveDocumentRequestAttachment document, long remainingDiskQuota, String xmlFile, String tempDir) throws AditException {
 		List<String> result = null;
@@ -364,7 +373,7 @@ public class DocumentService {
 		final String SQL_QUERY = "select doc from Document doc, DocumentSharing docSharing where docSharing.documentSharingType = 'send_dvk' and (docSharing.documentDvkStatus is null or docSharing.documentDvkStatus = 100) and docSharing.documentId = doc.id";
 		List<Document> result = new ArrayList<Document>();
 		
-		Object o;
+		final String tempDir = this.getConfiguration().getTempDir();
 		
 		try {
 			LOG.debug("Fetching documents for sending to DVK...");
@@ -372,6 +381,8 @@ public class DocumentService {
 				public Object doInHibernate(Session session) throws HibernateException, SQLException {
 					Query query = session.createQuery(SQL_QUERY);
 					List<Document> documents = query.list();
+					
+					LOG.debug("Documents fetched successfully (" + documents.size() + ")");
 					
 					Iterator<Document> i = documents.iterator();
 					
@@ -401,12 +412,57 @@ public class DocumentService {
 							metaManual.setDokumentPealkiri(document.getTitle());
 							metaManual.setDokumentViit(null);
 							metaManual.setIpr(null);
-							metaManual.setJuurdepaasPiirang(null);
-							metaManual.setSaajaIsikukood(documentSharing.getUserCode());
+							metaManual.setJuurdepaasPiirang(null);							
+							
+							// Recipient information
+							metaManual.setSaajaIsikukood(null);
+							metaManual.setSaajaAsutuseNr(documentSharing.getUserCode());
+							metaManual.setSaajaNimi(null);
+							metaManual.setSaajaOsakond(null);
 							
 							metainfo.setMetaManual(metaManual);
 							
 							dvkContainer.setMetainfo(metainfo);
+							
+							FailideKonteiner failideKonteiner = new FailideKonteiner();
+							
+							Set aditFiles = document.getDocumentFiles(); 
+							List dvkFiles = new ArrayList();
+							
+							Iterator aditFilesIterator = aditFiles.iterator();
+							short count = 1;
+							
+							// TODO: convert the adit file to dvk file
+							while(aditFilesIterator.hasNext()) {
+								DocumentFile f = (DocumentFile) aditFilesIterator.next();
+								Fail dvkFile = new Fail();
+								
+								dvkFile.setFailNimi(f.getFileName());
+								dvkFile.setFailPealkiri(null);
+								dvkFile.setFailSuurus(f.getFileSizeBytes());
+								dvkFile.setFailTyyp(f.getContentType());
+								dvkFile.setJrkNr(count);
+								
+								// TODO: create a temporary file from the ADIT file and 
+								// add a reference to the DVK file
+								try {
+									InputStream inputStream = f.getFileData().getBinaryStream();
+									String temporaryFile = Util.createTemporaryFile(inputStream, tempDir);
+									
+									dvkFile.setFile(new File(temporaryFile));
+									
+								} catch (IOException e) {
+									throw new HibernateException("Unable to create temporary file: ", e);
+								}						
+								
+								count++;
+							}
+							
+							// TODO: set the list
+							failideKonteiner.setFailid(null);
+							
+							
+							dvkContainer.setFailideKonteiner(failideKonteiner);
 						}						
 					}
 
@@ -414,7 +470,7 @@ public class DocumentService {
 					return null;
 				}
 			});
-			LOG.debug("Documents fetched successfully (" + result.size() + ")");
+			
 		} catch (Exception e) {
 			LOG.error("Error fetching documents from database: ", e);
 		}
@@ -479,5 +535,13 @@ public class DocumentService {
 
 	public void setDocumentHistoryDAO(DocumentHistoryDAO documentHistoryDAO) {
 		this.documentHistoryDAO = documentHistoryDAO;
+	}
+
+	public Configuration getConfiguration() {
+		return configuration;
+	}
+
+	public void setConfiguration(Configuration configuration) {
+		this.configuration = configuration;
 	}
 }
