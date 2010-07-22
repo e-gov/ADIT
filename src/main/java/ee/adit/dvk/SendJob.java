@@ -8,12 +8,15 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
+import ee.adit.dao.DocumentDAO;
 import ee.adit.dao.pojo.Document;
 
 public class SendJob extends QuartzJobBean {
 
 	private static Logger LOG = Logger.getLogger(SendJob.class);
 
+	private DocumentDAO documentDAO;
+	
 	protected void executeInternal(JobExecutionContext ctx)
 			throws JobExecutionException {
 		
@@ -33,12 +36,15 @@ public class SendJob extends QuartzJobBean {
 	}
 
 	private List<Document> getDocuments() {
-		List<Document> result = new ArrayList<Document>();
-		
-		
-		
-		
-		return result;
+		return this.getDocumentDAO().getDocumentsForDVK();
+	}
+
+	public DocumentDAO getDocumentDAO() {
+		return documentDAO;
+	}
+
+	public void setDocumentDAO(DocumentDAO documentDAO) {
+		this.documentDAO = documentDAO;
 	}
 	
 }

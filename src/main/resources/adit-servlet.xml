@@ -445,6 +445,7 @@
 	<!-- Scheduled jobs -->
 	<bean name="sendJob" class="org.springframework.scheduling.quartz.JobDetailBean">
 		<property name="jobClass" value="ee.adit.dvk.SendJob"/>
+		<property name="documentDAO" ref="documentDAO"/>
 	</bean>
 	
 	<bean id="simpleTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
