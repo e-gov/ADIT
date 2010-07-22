@@ -234,11 +234,8 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 				
 				this.documentService.getDocumentDAO().save(doc, null, null);
 				
-				// If it was the first time for this particular user to
-				// view the document then send scheduler notification to
-				// document owner.
-				// Notification does not need to be sent if user viewed
-				// his/her own document.
+				// Send notification to every user the document was shared to
+				// (assuming they have requested such notifications)
 				for (String recipientCode : request.getRecipientList().getCode()) {
 					AditUser recipient = this.getUserService().getUserByID(recipientCode);
 					if ((recipient != null) && (userService.findNotification(recipient.getUserNotifications(), ScheduleClient.NotificationType_Share) != null)) {
