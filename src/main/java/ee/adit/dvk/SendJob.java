@@ -7,6 +7,8 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
+import dvk.api.container.v2.ContainerVer2;
+
 import ee.adit.dao.DocumentDAO;
 import ee.adit.dao.pojo.Document;
 import ee.adit.exception.AditInternalException;
@@ -15,6 +17,8 @@ public class SendJob extends QuartzJobBean {
 
 	private static Logger LOG = Logger.getLogger(SendJob.class);
 
+	public static final int DVK_CONTAINER_VERSION = 2;
+	
 	private DocumentDAO documentDAO;
 	
 	protected void executeInternal(JobExecutionContext ctx)
@@ -31,6 +35,8 @@ public class SendJob extends QuartzJobBean {
 			} else {
 				LOG.info("Number of documents to be sent to DVK: " + documents.size());
 				
+				ContainerVer2 dvkContainer = new ContainerVer2();
+				dvkContainer.setVersion(DVK_CONTAINER_VERSION);
 				
 				
 			}
