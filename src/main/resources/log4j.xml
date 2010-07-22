@@ -17,8 +17,23 @@
 		</layout>
     </appender>
     
+    <appender name="dvk" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="file" value="C:/adit_dvk.log" />
+		<param name="datePattern" value="'.'yyyy-MM" />
+		<param name="append" value="true" /> 
+		<layout class="org.apache.log4j.PatternLayout">
+	    	<param name="ConversionPattern" value="%d{ABSOLUTE}%5p %C:%L - %m%n"/>
+		</layout>
+    </appender>
+    
     <logger name="ee.adit">
     	<level value="DEBUG"></level>
+    </logger>
+    
+    <logger name="ee.adit.dvk">
+    	<level value="DEBUG"/>
+    	<appender ref="dvk"/>
+    	<appender-ref ref="stdout" />    	
     </logger>
     
     <logger name="org.hibernate">
