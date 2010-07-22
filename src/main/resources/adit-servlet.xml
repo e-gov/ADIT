@@ -448,8 +448,8 @@
 		<property name="jobClass" value="ee.adit.dvk.SendJob"/>
 		<property name="jobDataAsMap">
 		    <map>
-		    	<entry key="documentDAO">
-		      		<ref bean="documentDAO"/>
+		    	<entry key="documentService">
+		      		<ref bean="documentService"/>
 		      	</entry>
 		    </map>
 	    </property>
