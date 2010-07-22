@@ -443,13 +443,16 @@
 	</bean>
 
 	<!-- Scheduled jobs -->
-	<bean name="sendJob" class="org.springframework.scheduling.quartz.JobDetailBean">
-		<property name="jobClass" value="ee.adit.dvk.SendJob"/>
+	<bean name="sendJob" class="ee.adit.dvk.SendJob">
 		<property name="documentDAO" ref="documentDAO"/>
 	</bean>
 	
+	<bean name="sendJobDetails" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass" value="ee.adit.dvk.SendJob"/>
+	</bean>
+	
 	<bean id="simpleTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
-	  	<property name="jobDetail" ref="sendJob"/>
+	  	<property name="jobDetail" ref="sendJobDetails"/>
 		<!-- 10 seconds -->
 	  	<property name="startDelay" value="20000"/>
 		<!-- repeat every 20 seconds -->
