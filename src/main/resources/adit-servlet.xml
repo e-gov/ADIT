@@ -344,6 +344,7 @@
 		<property name="documentWfStatusDAO" ref="documentWfStatusDAO"/>
 		<property name="documentSharingDAO" ref="documentSharingDAO"/>
 		<property name="documentHistoryDAO" ref="documentHistoryDAO"/>
+		<property name="configuration" ref="configuration"/>
 	</bean>
 
 	<bean id="myDataSource"
