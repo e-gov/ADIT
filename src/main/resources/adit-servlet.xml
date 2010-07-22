@@ -443,12 +443,16 @@
 	</bean>
 
 	<!-- Scheduled jobs -->
-	<bean name="sendJob" class="ee.adit.dvk.SendJob">
-		<property name="documentDAO" ref="documentDAO"/>
-	</bean>
 	
 	<bean name="sendJobDetails" class="org.springframework.scheduling.quartz.JobDetailBean">
 		<property name="jobClass" value="ee.adit.dvk.SendJob"/>
+		<property name="jobDataAsMap">
+		    <map>
+		    	<entry key="documentDAO">
+		      		<ref bean="documentDAO"/>
+		      	</entry>
+		    </map>
+	    </property>
 	</bean>
 	
 	<bean id="simpleTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
