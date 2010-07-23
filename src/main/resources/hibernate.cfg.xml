@@ -5,12 +5,12 @@
 <hibernate-configuration>
     <session-factory>
 		<property name="hibernate.connection.driver_class">oracle.jdbc.driver.OracleDriver</property>
-		<property name="hibernate.connection.url">jdbc:oracle:thin:@//localhost:1522/jaak</property>
+		<property name="hibernate.connection.url">jdbc:oracle:thin:@//localhost:1521/XE</property>
 		<property name="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</property>
 		<property name="hibernate.connection.username">adit</property>
 		<property name="hibernate.connection.password">adit</property>
 		<property name="connection.autocommit">false</property>
-		<property name="show_sql">true</property>
+		<property name="show_sql">false</property>
 		<property name="use_outer_join">false</property>
 		<property name="hibernate.cache.use_second_level_cache">false</property>
 		<property name="cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
