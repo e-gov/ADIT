@@ -258,7 +258,7 @@
 			<systemPath>${baseDir}/lib/quartz-1.8.3.jar</systemPath>
 		</dependency>
 		
-		<!-- DVKAPI -->
+		<!-- DVKAPI -->		
 		<dependency>
 			<groupId>ee.dvk</groupId>
 			<artifactId>api</artifactId>
@@ -266,6 +266,7 @@
 			<scope>system</scope>
 			<systemPath>${baseDir}/lib/dvkapi.jar</systemPath>
 		</dependency>
+		
 		
 	</dependencies>
 

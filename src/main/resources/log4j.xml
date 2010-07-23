@@ -38,6 +38,10 @@
     	<level value="DEBUG"></level>
     </logger>
     
+    <logger name="dvk">
+    	<level value="DEBUG"></level>
+    </logger>
+    
     <logger name="ee.adit.dvk">
     	<level value="DEBUG"/>
     	<appender-ref ref="dvk"/>
@@ -45,7 +49,7 @@
     </logger>
     
     <logger name="org.hibernate">
-    	<level value="INFO"></level>
+    	<level value="ERROR"></level>
     	<appender-ref ref="file" />
     </logger>
     

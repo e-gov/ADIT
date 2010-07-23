@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+	<!-- Generated 2.02.2010 20:05:51 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+	<class name="dvk.api.ml.PojoMessageRecipient" table="DHL_MESSAGE_RECIPIENT">
+		<id name="id" type="big_decimal">
+			<column name="ID" precision="38" scale="0" />
+			<generator class="assigned" />
+		</id>
+		<property name="dhlMessageId" type="long">
+			<column name="DHL_MESSAGE_ID" precision="10" scale="0" />
+		</property>
+		<property name="recipientOrgCode" type="string">
+			<column name="RECIPIENT_ORG_CODE" length="20" />
+		</property>
+		<property name="recipientPersonCode" type="string">
+			<column name="RECIPIENT_PERSON_CODE" length="20" />
+		</property>
+		<property name="recipientDivisionId" type="big_decimal">
+			<column name="RECIPIENT_DIVISION_ID" precision="38" scale="0" />
+		</property>
+		<property name="recipientPositionId" type="big_decimal">
+			<column name="RECIPIENT_POSITION_ID" precision="38" scale="0" />
+		</property>
+		<property name="recipientOrgName" type="string">
+			<column name="RECIPIENT_ORG_NAME" length="100" />
+		</property>
+		<property name="recipientName" type="string">
+			<column name="RECIPIENT_NAME" length="100" />
+		</property>
+		<property name="sendingDate" type="date">
+			<column name="SENDING_DATE" length="7" />
+		</property>
+		<property name="receivedDate" type="date">
+			<column name="RECEIVED_DATE" length="7" />
+		</property>
+		<property name="sendingStatusId" type="long">
+			<column name="SENDING_STATUS_ID" precision="10" scale="0" not-null="true" />
+		</property>
+		<property name="recipientStatusId" type="java.lang.Long">
+			<column name="RECIPIENT_STATUS_ID" precision="10" scale="0" />
+		</property>
+		<property name="faultCode" type="string">
+			<column name="FAULT_CODE" length="50" />
+		</property>
+		<property name="faultActor" type="string">
+			<column name="FAULT_ACTOR" length="250" />
+		</property>
+		<property name="faultString" type="string">
+			<column name="FAULT_STRING" length="500" />
+		</property>
+		<property name="faultDetail" type="string">
+			<column name="FAULT_DETAIL" length="2000" />
+		</property>
+		<property name="metaxml" type="clob">
+			<column name="METAXML" />
+		</property>
+		<property name="dhlId" type="big_decimal">
+			<column name="DHL_ID" precision="38" scale="0" />
+		</property>
+		<property name="queryId" type="string">
+			<column name="QUERY_ID" length="50" />
+		</property>
+		<property name="producerName" type="string">
+			<column name="PRODUCER_NAME" length="50" />
+		</property>
+		<property name="serviceUrl" type="string">
+			<column name="SERVICE_URL" length="100" />
+		</property>
+		<property name="recipientDivisionName" type="string">
+			<column name="RECIPIENT_DIVISION_NAME" length="100" />
+		</property>
+		<property name="recipientPositionName" type="string">
+			<column name="RECIPIENT_POSITION_NAME" length="100" />
+		</property>
+	</class>
+	<sql-query name="CreateNewMessageRecipient" callable="true">
+		<return alias="new_msgrecip" class="dvk.api.ml.PojoMessageRecipient">
+		</return>
+		{ ? = call insert_new_row('msgrecip', ?) }
+	</sql-query>
+</hibernate-mapping>

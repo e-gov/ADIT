@@ -6,6 +6,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Writer;
+import java.sql.Clob;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,13 +18,18 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 
+import oracle.sql.CLOB;
+
 import org.apache.log4j.Logger;
 import org.exolab.castor.mapping.MappingException;
 import org.exolab.castor.xml.MarshalException;
 import org.exolab.castor.xml.ValidationException;
+import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
+import org.hibernate.LockMode;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.springframework.context.MessageSource;
 import org.springframework.orm.hibernate3.HibernateCallback;
@@ -30,11 +38,16 @@ import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
+import dvk.api.DVKAPI;
+import dvk.api.IMessage;
+import dvk.api.ISessionCacheBox;
 import dvk.api.container.v2.ContainerVer2;
 import dvk.api.container.v2.Fail;
 import dvk.api.container.v2.FailideKonteiner;
 import dvk.api.container.v2.MetaManual;
 import dvk.api.container.v2.Metainfo;
+import dvk.api.ml.DvkSessionCacheBox;
+import dvk.api.ml.PojoMessage;
 
 import ee.adit.dao.DocumentDAO;
 import ee.adit.dao.DocumentFileDAO;
@@ -383,112 +396,189 @@ public class DocumentService {
 		try {
 			LOG.debug("Fetching documents for sending to DVK...");
 			
-			Session session = HibernateUtil.getSession();
-			Transaction tx = session.beginTransaction();
-			tx.begin();
-			
-				Query query = session.createQuery(SQL_QUERY);
-				List<Document> documents = query.list();
-				
-				LOG.debug("Documents fetched successfully (" + documents.size() + ")");
-				
-				Iterator<Document> i = documents.iterator();
-				
-				while(i.hasNext()) {
+			this.getDocumentDAO().getHibernateTemplate().execute(new HibernateCallback() {
+				public Object doInHibernate(Session session) throws HibernateException, SQLException {
 					
-					Document document = i.next();
+					Transaction tx = session.beginTransaction();
 					
-					Iterator<DocumentSharing> documentSharings = document.getDocumentSharings().iterator();
 					
-					while(documentSharings.hasNext()) {
+					Query query = session.createQuery(SQL_QUERY);
+					List<Document> documents = query.list();
+					
+					LOG.debug("Documents fetched successfully (" + documents.size() + ")");
+					
+					Iterator<Document> i = documents.iterator();
+					
+					while(i.hasNext()) {
 						
-						DocumentSharing documentSharing = documentSharings.next();
+						Document document = i.next();
 						
-						ContainerVer2 dvkContainer = new ContainerVer2();
-						dvkContainer.setVersion(DVK_CONTAINER_VERSION);
+						Iterator<DocumentSharing> documentSharings = document.getDocumentSharings().iterator();
 						
-						Metainfo metainfo = new Metainfo();
-						
-						MetaManual metaManual = new MetaManual();
-						metaManual.setAutoriIsikukood(null);
-						metaManual.setAutoriKontakt(null);
-						metaManual.setAutoriNimi(null);
-						metaManual.setAutoriOsakond(null);
-						metaManual.setDokumentGuid(document.getGuid());
-						metaManual.setDokumentKeel(null);
-						metaManual.setDokumentLiik(document.getDocumentType());
-						metaManual.setDokumentPealkiri(document.getTitle());
-						metaManual.setDokumentViit(null);
-						metaManual.setIpr(null);
-						metaManual.setJuurdepaasPiirang(null);							
-						
-						// Recipient information
-						metaManual.setSaajaIsikukood(null);
-						metaManual.setSaajaAsutuseNr(documentSharing.getUserCode());
-						metaManual.setSaajaNimi(null);
-						metaManual.setSaajaOsakond(null);
-						
-						metainfo.setMetaManual(metaManual);
-						
-						dvkContainer.setMetainfo(metainfo);
-						
-						FailideKonteiner failideKonteiner = new FailideKonteiner();
-						
-						Set aditFiles = document.getDocumentFiles(); 
-						List dvkFiles = new ArrayList();
-						
-						Iterator aditFilesIterator = aditFiles.iterator();
-						short count = 1;
-						
-						// TODO: convert the adit file to dvk file
-						while(aditFilesIterator.hasNext()) {
-							DocumentFile f = (DocumentFile) aditFilesIterator.next();
-							Fail dvkFile = new Fail();
+						while(documentSharings.hasNext()) {
+							DocumentSharing documentSharing = documentSharings.next();
 							
-							dvkFile.setFailNimi(f.getFileName());
-							dvkFile.setFailPealkiri(null);
-							dvkFile.setFailSuurus(f.getFileSizeBytes());
-							dvkFile.setFailTyyp(f.getContentType());
-							dvkFile.setJrkNr(count);
-							
-							// TODO: create a temporary file from the ADIT file and 
-							// add a reference to the DVK file
-							try {
-								InputStream inputStream = f.getFileData().getBinaryStream();
-								//String temporaryFile = Util.createTemporaryFile(inputStream, tempDir);
+							if(DocumentService.SharingType_SendDvk.equalsIgnoreCase(documentSharing.getDocumentSharingType())) {
 								
-								//dvkFile.setFile(new File(temporaryFile));
-								dvkFiles.add(dvkFile);
+								ContainerVer2 dvkContainer = new ContainerVer2();
+								dvkContainer.setVersion(DVK_CONTAINER_VERSION);
 								
-							} catch (Exception e) {
-								throw new HibernateException("Unable to create temporary file: ", e);
-							}						
-							
-							
-							
-							count++;
-						}
-						
-						failideKonteiner.setFailid(dvkFiles);						
-						dvkContainer.setFailideKonteiner(failideKonteiner);
-						
-						// TODO: remove
-						try {
-							dvkContainer.save2File("C:\\XXX.xml");
-						} catch (Exception e) {
-							throw new HibernateException("Error while saving DVK Container to temporary file: ", e);
-						}
-						
-					}						
-				}
+								Metainfo metainfo = new Metainfo();
+								
+								MetaManual metaManual = new MetaManual();
+								metaManual.setAutoriIsikukood(null);
+								metaManual.setAutoriKontakt(null);
+								metaManual.setAutoriNimi(null);
+								metaManual.setAutoriOsakond(null);
+								metaManual.setDokumentGuid(document.getGuid());
+								metaManual.setDokumentKeel(null);
+								metaManual.setDokumentLiik(document.getDocumentType());
+								metaManual.setDokumentPealkiri(document.getTitle());
+								metaManual.setDokumentViit(null);
+								metaManual.setIpr(null);
+								metaManual.setJuurdepaasPiirang(null);							
+								
+								// Recipient information
+								metaManual.setSaajaIsikukood(null);
+								metaManual.setSaajaAsutuseNr(documentSharing.getUserCode());
+								metaManual.setSaajaNimi(null);
+								metaManual.setSaajaOsakond(null);
+								
+								metainfo.setMetaManual(metaManual);
+								
+								dvkContainer.setMetainfo(metainfo);
+								
+								FailideKonteiner failideKonteiner = new FailideKonteiner();
+								
+								Set aditFiles = document.getDocumentFiles(); 
+								List dvkFiles = new ArrayList();
+								
+								Iterator aditFilesIterator = aditFiles.iterator();
+								short count = 0;
+								
+								// TODO: convert the adit file to dvk file
+								while(aditFilesIterator.hasNext()) {
+									DocumentFile f = (DocumentFile) aditFilesIterator.next();
+									Fail dvkFile = new Fail();
+									
+									LOG.debug("FileName: " + f.getFileName());
+									
+									dvkFile.setFailNimi(f.getFileName());
+									dvkFile.setFailPealkiri(null);
+									dvkFile.setFailSuurus(f.getFileSizeBytes());
+									dvkFile.setFailTyyp(f.getContentType());
+									dvkFile.setJrkNr(count++);
+									
+									// TODO: create a temporary file from the ADIT file and 
+									// add a reference to the DVK file
+									try {
+										InputStream inputStream = f.getFileData().getBinaryStream();
+										String temporaryFile = Util.createTemporaryFile(inputStream, tempDir);
+										
+										dvkFile.setFile(new File(temporaryFile));
+										dvkFiles.add(dvkFile);
+										
+									} catch (Exception e) {
+										throw new HibernateException("Unable to create temporary file: ", e);
+									}
+								}
+								
+								failideKonteiner.setKokku(count);
+								failideKonteiner.setFailid(dvkFiles);						
+								dvkContainer.setFailideKonteiner(failideKonteiner);
+								
+								// TODO: remove
+								try {
+									SessionFactory sessionFactory = DVKAPI.createSessionFactory("hibernate_ora_dvk.cfg.xml");
+									Session dvkSession = sessionFactory.openSession();
+									Transaction dvkTransaction = dvkSession.beginTransaction();
+									
+									long dvkMessageID = 0;
+									
+									// TODO: save the document to DVK Client database
+									PojoMessage dvkMessage = new PojoMessage();
+									
+									dvkMessage.setIsIncoming(false);
+									dvkMessage.setTitle(document.getTitle());
+									
+									// Get sender org code
+									String documentOwnerCode = document.getCreatorCode();
+									
+									AditUser documentOwner = (AditUser) session.get(AditUser.class, documentOwnerCode);
+									
+									dvkMessage.setSenderOrgCode(documentOwner.getDvkOrgCode());
+									dvkMessage.setSenderPersonCode(documentOwner.getUserCode());
+									dvkMessage.setSenderName(documentOwner.getFullName());
+									dvkMessage.setDhlGuid(document.getGuid());
+									
+									// TODO: insert data as stream
+									Clob clob = Hibernate.createClob(" ", dvkSession);	
+									dvkMessage.setData(clob);									
+									
+									if(dvkMessage == null)
+										LOG.debug("dvkMessage NULL before saveOrUpdate.");
+									
+									Object id = dvkSession.save(dvkMessage);									
+									LOG.debug("DVK_MESSAGE.dhl_id: " + dvkMessageID);
+									
+									dvkTransaction.commit();
+									dvkSession.close();
+									
+									if(dvkMessage == null) {
+										LOG.debug("dvkMessage NULL after saveOrUpdate.");
+									} else {
+										LOG.debug("dvkMessage NOT NULL after saveOrUpdate.");
+										try {
+											dvkMessageID = dvkMessage.getDhlMessageId();
+										} catch (Exception e) {
+											LOG.error("Error: ", e);
+										}
+										LOG.debug("DHL_MESSAGE_ID: " + dvkMessageID);
+									}
+									LOG.debug("DvkMessage checked.");
+									
+									
+									LOG.debug("DVK Message saved to client database. GUID: " + dvkMessage.getDhlGuid());
+									
+									// Update CLOB
+									Session dvkSession2 = sessionFactory.openSession();
+									
+									LOG.debug("dvkSession2.open?: " + dvkSession2.isOpen());
+									
+									Transaction dvkTransaction2 = dvkSession2.beginTransaction();
+									
+									PojoMessage dvkMessageToUpdate = (PojoMessage) dvkSession2.load(PojoMessage.class, dvkMessageID, LockMode.UPGRADE);
+									
+									String temporaryFile = Util.generateRandomFileName();
+									dvkContainer.save2File(temporaryFile);
+									
+									InputStream is = new FileInputStream(temporaryFile);
 
-				tx.commit();
-				session.close();
-				
-				// TODO: return something meaningful
-				
-			
-			
+									Writer clobWriter = dvkMessageToUpdate.getData().setCharacterStream(1);
+									
+									byte[] buf = new byte[1024];
+							        int len;
+							        while ((len = is.read(buf)) > 0) {
+							        	clobWriter.write(new String(buf, 0, len, "UTF-8"));
+							        }
+							        is.close();
+							        clobWriter.close();
+									
+							        dvkTransaction2.commit();
+							        dvkSession2.close();
+							        
+								} catch (Exception e) {
+									throw new HibernateException("Error while saving DVK Container to temporary file: ", e);
+								}
+							}
+						}						
+					}
+					
+					session.close();
+					
+					return null;
+				}
+			});
 			
 			
 		} catch (Exception e) {

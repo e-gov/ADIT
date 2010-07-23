@@ -25,7 +25,6 @@ lib/commons-codec-1.4.jar -text
 lib/commons-collections-3.1.jar -text
 lib/commons-logging-1.1.1.jar -text
 lib/dom4j-1.6.1.jar -text
-lib/dvkapi.jar -text
 lib/hibernate3.jar -text
 lib/hsqldb.jar -text
 lib/iaik_jce.jar -text
@@ -241,6 +240,14 @@ src/main/resources/SignatureLogging.properties -text
 src/main/resources/adit-castor-mapping.xml -text
 src/main/resources/adit-servlet.xml -text
 src/main/resources/adit.xsd -text
+src/main/resources/dvkapi/Counter.hbm.xml -text
+src/main/resources/dvkapi/Message.hbm.xml -text
+src/main/resources/dvkapi/MessageRecipient.hbm.xml -text
+src/main/resources/dvkapi/Occupation.hbm.xml -text
+src/main/resources/dvkapi/Organization.hbm.xml -text
+src/main/resources/dvkapi/Settings.hbm.xml -text
+src/main/resources/dvkapi/SettingsFolders.hbm.xml -text
+src/main/resources/dvkapi/Subdivision.hbm.xml -text
 src/main/resources/hbm/AccessRestriction.hbm.xml -text
 src/main/resources/hbm/AditLog.hbm.xml -text
 src/main/resources/hbm/AditUser.hbm.xml -text
