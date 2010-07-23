@@ -21,7 +21,7 @@ public class NotificationDAO extends HibernateDaoSupport {
 		
 		try {
 			LOG.debug("Finding unsent notifications... ");
-			result = this.getHibernateTemplate().find("from Notification notification where notification.notificationId = ?", null);
+			result = this.getHibernateTemplate().find("from Notification notification where notification.notificationId is null");
 		} catch (Exception e) {
 			LOG.error("Exception while finding notifications: ", e);
 		}	

@@ -485,8 +485,8 @@
 	
 	<bean id="notificationTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
 	  	<property name="jobDetail" ref="sendNotificationsJobDetails"/>
-	  	<property name="startDelay" value="600000"/>
-	  	<property name="repeatInterval" value="600000"/>
+	  	<property name="startDelay" value="120000"/>
+	  	<property name="repeatInterval" value="120000"/>
 	</bean>
 	
 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
