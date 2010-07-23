@@ -450,7 +450,6 @@
 	</bean>
 
 	<!-- Scheduled jobs -->
-	
 	<bean name="sendJobDetails" class="org.springframework.scheduling.quartz.JobDetailBean">
 		<property name="jobClass" value="ee.adit.dvk.SendJob"/>
 		<property name="jobDataAsMap">
@@ -462,7 +461,21 @@
 	    </property>
 	</bean>
 	
-	<bean id="simpleTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+	<bean name="sendNotificationsJobDetails" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass" value="ee.adit.schedule.SendNotificationsJob"/>
+		<property name="jobDataAsMap">
+		    <map>
+		    	<entry key="userService">
+		      		<ref bean="userService"/>
+		      	</entry>
+		    	<entry key="configuration">
+		      		<ref bean="configuration"/>
+		      	</entry>
+		    </map>
+	    </property>
+	</bean>
+	
+	<bean id="dvkTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
 	  	<property name="jobDetail" ref="sendJobDetails"/>
 		<!-- 10 seconds -->
 	  	<property name="startDelay" value="200000"/>
@@ -470,10 +483,17 @@
 	  	<property name="repeatInterval" value="200000"/>
 	</bean>
 	
+	<bean id="notificationTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+	  	<property name="jobDetail" ref="sendNotificationsJobDetails"/>
+	  	<property name="startDelay" value="600000"/>
+	  	<property name="repeatInterval" value="600000"/>
+	</bean>
+	
 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="triggers">
 	   		<list>
-	      		<ref bean="simpleTrigger"/>
+	      		<ref bean="dvkTrigger"/>
+	      		<ref bean="notificationTrigger"/>
 	    	</list>
 	  	</property>
 	</bean>

@@ -385,6 +385,7 @@ public class UserService {
 	}
 	
 	public long addNotification(
+		long id,
 		long documentId,
 		String notificationType,
 		String userCode,
@@ -395,6 +396,7 @@ public class UserService {
 		
 		if (this.notificationDAO != null) {
 			ee.adit.dao.pojo.Notification notification = new ee.adit.dao.pojo.Notification();
+			notification.setId(id);
 			notification.setUserCode(userCode);
 			notification.setDocumentId(documentId);
 			notification.setEventDate(eventDate);

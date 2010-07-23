@@ -240,7 +240,7 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 					AditUser recipient = this.getUserService().getUserByID(recipientCode);
 					if ((recipient != null) && (userService.findNotification(recipient.getUserNotifications(), ScheduleClient.NotificationType_Share) != null)) {
 						ScheduleClient.addEvent(
-							recipient,
+							recipient.getUserCode(),
 							this.getMessageSource().getMessage("scheduler.message.share", new Object[] { doc.getTitle(), userCode }, Locale.ENGLISH),
 							this.getConfiguration().getSchedulerEventTypeName(),
 							requestDate,

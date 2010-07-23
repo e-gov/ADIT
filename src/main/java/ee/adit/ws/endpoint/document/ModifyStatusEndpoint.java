@@ -182,7 +182,7 @@ public class ModifyStatusEndpoint extends AbstractAditBaseEndpoint {
 					AditUser docCreator = this.getUserService().getUserByID(doc.getCreatorCode());
 					if ((docCreator != null) && (userService.findNotification(docCreator.getUserNotifications(), ScheduleClient.NotificationType_Modify) != null)) {
 						ScheduleClient.addEvent(
-							docCreator,
+							docCreator.getUserCode(),
 							this.getMessageSource().getMessage("scheduler.message.modify", new Object[] { doc.getTitle(), docCreator.getUserCode() }, Locale.ENGLISH),
 							this.getConfiguration().getSchedulerEventTypeName(),
 							requestDate,

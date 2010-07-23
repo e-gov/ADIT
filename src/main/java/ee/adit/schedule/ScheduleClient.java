@@ -6,8 +6,7 @@ import java.util.Calendar;
 import org.apache.log4j.Logger;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import ee.adit.dao.pojo.AditUser;
-import ee.adit.service.LogService;
+import ee.adit.dao.pojo.Notification;
 import ee.adit.service.UserService;
 import ee.riik.xtee.teavituskalender.producers.producer.teavituskalender.LisaSyndmusDocument;
 import ee.riik.xtee.teavituskalender.producers.producer.teavituskalender.LisaSyndmusResponseDocument;
@@ -30,8 +29,35 @@ public class ScheduleClient {
 	public static String NotificationType_Modify = "modify";
 	public static String NotificationType_Sign = "sign";
 	
+	public static long addEvent(Notification notification, final String eventType, final UserService userService) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(notification.getEventDate());
+		return addEvent(
+				notification.getId(),
+				notification.getUserCode(),
+				notification.getNotificationText(),
+				eventType,
+				cal,
+				notification.getNotificationType(),
+				notification.getDocumentId(),
+				userService);
+	}
+
 	public static long addEvent(
-			final AditUser eventOwner,
+		final String eventOwnerCode,
+		final String eventText,
+		final String eventType,
+		final Calendar eventDate,
+		final String notificationType,
+		final long relatedDocumentId,
+		final UserService userService) {
+		
+		return addEvent(0, eventOwnerCode, eventText, eventType, eventDate, notificationType, relatedDocumentId, userService);
+	}
+	
+	public static long addEvent(
+			final long notificationId,
+			final String eventOwnerCode,
 			final String eventText,
 			final String eventType,
 			final Calendar eventDate,
@@ -55,7 +81,7 @@ public class ScheduleClient {
 			
 			Lugejad recipients = keha.addNewLugejad();
 			Kasutaja recipient = recipients.addNewKasutaja();
-			recipient.setKood(eventOwner.getUserCode());
+			recipient.setKood(eventOwnerCode);
 			
 			// Start and end times
 			keha.setAlgus(eventDate);
@@ -112,9 +138,10 @@ public class ScheduleClient {
 		if (eventId > 0) {
 			try {
 				userService.addNotification(
+					notificationId,
 					relatedDocumentId,
 					notificationType,
-					eventOwner.getUserCode(),
+					eventOwnerCode,
 					eventDate.getTime(),
 					eventText,
 					eventId,
@@ -125,9 +152,10 @@ public class ScheduleClient {
 		} else {
 			try {
 				userService.addNotification(
+					notificationId,
 					relatedDocumentId,
 					notificationType,
-					eventOwner.getUserCode(),
+					eventOwnerCode,
 					eventDate.getTime(),
 					eventText,
 					null,

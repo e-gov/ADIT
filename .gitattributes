@@ -203,6 +203,7 @@ src/main/java/ee/adit/pojo/UnShareDocumentRequest.java -text
 src/main/java/ee/adit/pojo/UnShareDocumentResponse.java -text
 src/main/java/ee/adit/pojo/UserList.java -text
 src/main/java/ee/adit/schedule/ScheduleClient.java -text
+src/main/java/ee/adit/schedule/SendNotificationsJob.java -text
 src/main/java/ee/adit/service/DocumentService.java -text
 src/main/java/ee/adit/service/LogService.java -text
 src/main/java/ee/adit/service/UserService.java -text
