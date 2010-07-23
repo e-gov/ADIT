@@ -187,7 +187,8 @@ public class ModifyStatusEndpoint extends AbstractAditBaseEndpoint {
 							this.getConfiguration().getSchedulerEventTypeName(),
 							requestDate,
 							ScheduleClient.NotificationType_Modify,
-							doc.getId());
+							doc.getId(),
+							this.userService);
 					}
 				}
 			} else {

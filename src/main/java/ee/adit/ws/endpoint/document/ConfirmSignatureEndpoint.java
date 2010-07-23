@@ -214,7 +214,8 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
 							this.getConfiguration().getSchedulerEventTypeName(),
 							requestDate,
 							ScheduleClient.NotificationType_Sign,
-							doc.getId());
+							doc.getId(),
+							this.userService);
 					}
 				}
 			} else {

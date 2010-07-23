@@ -2,14 +2,16 @@ package ee.adit.service;
 
 import java.util.Date;
 
+import org.apache.log4j.Logger;
+
 import ee.adit.dao.NotificationDAO;
 import ee.adit.dao.RequestLogDAO;
 import ee.adit.dao.pojo.Notification;
 import ee.adit.dao.pojo.RequestLog;
 
 public class LogService {
+	private static Logger LOG = Logger.getLogger(LogService.class);
 	private RequestLogDAO requestLogDAO;
-	private NotificationDAO notificationDAO;
 
 	public RequestLogDAO getRequestLogDAO() {
 		return requestLogDAO;
@@ -19,14 +21,8 @@ public class LogService {
 		this.requestLogDAO = requestLogDAO;
 	}
 	
-	public NotificationDAO getNotificationDAO() {
-		return notificationDAO;
-	}
-
-	public void setNotificationLogDAO(NotificationDAO notificationDAO) {
-		this.notificationDAO = notificationDAO;
-	}
-
+	
+	
 	public Long addRequestLogEntry(RequestLog requestLogEntry) {
 		return this.requestLogDAO.save(requestLogEntry);
 	}
@@ -50,26 +46,5 @@ public class LogService {
 		logEntry.setUserCode(userCode);
 		
 		return this.requestLogDAO.save(logEntry);
-	}
-	
-	public long addNotification(
-			long documentId,
-			String notificationType,
-			String userCode,
-			Date eventDate,
-			String notificationText,
-			Long notificationId,
-			Date notificationSendingDate) {
-		
-		Notification notification = new Notification();
-		notification.setUserCode(userCode);
-		notification.setDocumentId(documentId);
-		notification.setEventDate(eventDate);
-		notification.setNotificationType(notificationType);
-		notification.setNotificationText(notificationText);
-		notification.setNotificationId(notificationId);
-		notification.setNotificationSendingDate(notificationSendingDate);
-		
-		return this.notificationDAO.save(notification);
 	}
 }

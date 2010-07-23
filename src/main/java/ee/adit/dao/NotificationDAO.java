@@ -21,7 +21,7 @@ public class NotificationDAO extends HibernateDaoSupport {
 			
 			@Override
 			public Object doInHibernate(Session session) throws HibernateException,	SQLException {
-				session.save(notification);
+				session.saveOrUpdate(notification);
 				LOG.debug("Successfully saved notification with ID: " + notification.getId());
 				return notification.getId();
 			}

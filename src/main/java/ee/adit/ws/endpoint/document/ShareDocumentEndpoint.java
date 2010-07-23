@@ -245,7 +245,8 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 							this.getConfiguration().getSchedulerEventTypeName(),
 							requestDate,
 							ScheduleClient.NotificationType_Share,
-							doc.getId());
+							doc.getId(),
+							this.userService);
 					}
 				}
 			} else {

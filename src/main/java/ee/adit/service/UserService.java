@@ -16,6 +16,7 @@ import org.springframework.orm.hibernate3.HibernateCallback;
 import ee.adit.dao.AccessRestrictionDAO;
 import ee.adit.dao.AditUserDAO;
 import ee.adit.dao.DocumentDAO;
+import ee.adit.dao.NotificationDAO;
 import ee.adit.dao.NotificationTypeDAO;
 import ee.adit.dao.RemoteApplicationDAO;
 import ee.adit.dao.UsertypeDAO;
@@ -47,6 +48,8 @@ public class UserService {
 	private DocumentDAO documentDAO;
 	
 	private AccessRestrictionDAO accessRestrictionDAO;
+	
+	private NotificationDAO notificationDAO;
 	
 	private static final String USERTYPE_PERSON = "PERSON";
 	private static final String USERTYPE_INSTITUTION = "INSTITUTION";
@@ -381,6 +384,32 @@ public class UserService {
 		return result;
 	}
 	
+	public long addNotification(
+		long documentId,
+		String notificationType,
+		String userCode,
+		Date eventDate,
+		String notificationText,
+		Long notificationId,
+		Date notificationSendingDate) {
+		
+		if (this.notificationDAO != null) {
+			ee.adit.dao.pojo.Notification notification = new ee.adit.dao.pojo.Notification();
+			notification.setUserCode(userCode);
+			notification.setDocumentId(documentId);
+			notification.setEventDate(eventDate);
+			notification.setNotificationType(notificationType);
+			notification.setNotificationText(notificationText);
+			notification.setNotificationId(notificationId);
+			notification.setNotificationSendingDate(notificationSendingDate);
+			
+			return this.notificationDAO.save(notification);
+		} else {
+			LOG.debug("Cannot save snotification, notificationDAO object is NULL!");
+			return 0;
+		}
+	}
+	
 	
 	public RemoteApplicationDAO getRemoteApplicationDAO() {
 		return remoteApplicationDAO;
@@ -428,6 +457,14 @@ public class UserService {
 
 	public void setAccessRestrictionDAO(AccessRestrictionDAO accessRestrictionDAO) {
 		this.accessRestrictionDAO = accessRestrictionDAO;
+	}
+
+	public NotificationDAO getNotificationDAO() {
+		return notificationDAO;
+	}
+
+	public void setNotificationDAO(NotificationDAO notificationDAO) {
+		this.notificationDAO = notificationDAO;
 	}	
 	
 }

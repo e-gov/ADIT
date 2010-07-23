@@ -8,6 +8,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.service.LogService;
+import ee.adit.service.UserService;
 import ee.riik.xtee.teavituskalender.producers.producer.teavituskalender.LisaSyndmusDocument;
 import ee.riik.xtee.teavituskalender.producers.producer.teavituskalender.LisaSyndmusResponseDocument;
 import ee.riik.xtee.teavituskalender.producers.producer.teavituskalender.LisaSyndmusDocument.LisaSyndmus;
@@ -35,7 +36,8 @@ public class ScheduleClient {
 			final String eventType,
 			final Calendar eventDate,
 			final String notificationType,
-			final long relatedDocumentId) {
+			final long relatedDocumentId,
+			final UserService userService) {
 		long eventId = 0;
 		
 		try {
@@ -107,10 +109,9 @@ public class ScheduleClient {
 		}
 		
 		// Save notification to database
-		LogService logService = new LogService();
 		if (eventId > 0) {
 			try {
-				logService.addNotification(
+				userService.addNotification(
 					relatedDocumentId,
 					notificationType,
 					eventOwner.getUserCode(),
@@ -123,7 +124,7 @@ public class ScheduleClient {
 			}
 		} else {
 			try {
-				logService.addNotification(
+				userService.addNotification(
 					relatedDocumentId,
 					notificationType,
 					eventOwner.getUserCode(),
@@ -135,7 +136,6 @@ public class ScheduleClient {
 				LOG.error("Failed saving unsent notification.", ex);
 			}
 		}
-		logService = null;
 		
 		return eventId;
 	}

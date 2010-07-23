@@ -334,6 +334,7 @@
 		<property name="aditUserDAO" ref="aditUserDAO"/>
 		<property name="documentDAO" ref="documentDAO"/>
 		<property name="accessRestrictionDAO" ref="accessRestrictionDAO"/>
+		<property name="notificationDAO" ref="notificationDAO"/>
 	</bean>
 
 	<bean id="documentService" class="ee.adit.service.DocumentService">
@@ -350,7 +351,7 @@
 	<bean id="myDataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
-		<property name="url" value="jdbc:oracle:thin:@//localhost:1521/XE" />
+		<property name="url" value="jdbc:oracle:thin:@//localhost:1522/jaak" />
 		<property name="username" value="adit" />
 		<property name="password" value="adit" />
 	</bean>
@@ -397,6 +398,10 @@
     </bean>
 
 	<bean id="requestLogDAO" class="ee.adit.dao.RequestLogDAO">
+		<property name="sessionFactory" ref="mySessionFactory" />
+	</bean>
+	
+	<bean id="notificationDAO" class="ee.adit.dao.NotificationDAO">
 		<property name="sessionFactory" ref="mySessionFactory" />
 	</bean>
 
@@ -460,9 +465,9 @@
 	<bean id="simpleTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
 	  	<property name="jobDetail" ref="sendJobDetails"/>
 		<!-- 10 seconds -->
-	  	<property name="startDelay" value="20000"/>
+	  	<property name="startDelay" value="200000"/>
 		<!-- repeat every 20 seconds -->
-	  	<property name="repeatInterval" value="20000"/>
+	  	<property name="repeatInterval" value="200000"/>
 	</bean>
 	
 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">

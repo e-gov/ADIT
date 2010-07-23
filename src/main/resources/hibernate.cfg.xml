@@ -41,7 +41,7 @@
 		<mapping resource="hbm/DocumentFileDeflateResult.hbm.xml"/>
 		<mapping resource="hbm/UserNotification.hbm.xml"/>
 		<mapping resource="hbm/NotificationType.hbm.xml"/>
-		<mapping resource="hbm/NotificationLog.hbm.xml"/>
+		<mapping resource="hbm/Notification.hbm.xml"/>
 		
 		
     </session-factory>

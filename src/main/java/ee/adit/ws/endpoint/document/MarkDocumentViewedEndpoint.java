@@ -185,7 +185,8 @@ public class MarkDocumentViewedEndpoint extends AbstractAditBaseEndpoint {
 										this.getConfiguration().getSchedulerEventTypeName(),
 										requestDate,
 										ScheduleClient.NotificationType_View,
-										doc.getId());
+										doc.getId(),
+										this.userService);
 								}
 							}
 						} else {
