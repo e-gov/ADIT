@@ -6,6 +6,9 @@
 
 
 /* Drop Tables, Stored Procedures and Views */
+DROP TABLE &&ADIT_SCHEMA..NOTIFICATION CASCADE CONSTRAINTS;
+DROP SEQUENCE &&ADIT_SCHEMA..NOTIFICATION_ID_SEQ
+
 DROP TABLE &&ADIT_SCHEMA..ACCESS_RESTRICTION CASCADE CONSTRAINTS;
 DROP TRIGGER &&ADIT_SCHEMA..SET_ADIT_LOG_ID;
 
@@ -462,23 +465,27 @@ COMMENT ON COLUMN &&ADIT_SCHEMA..USERTYPE.description  IS 'Kasutajatüübi kirje
 COMMENT ON COLUMN &&ADIT_SCHEMA..USERTYPE.disk_quota   IS 'Määrab kasutajatüübi vaikimisi kehtiva mahupiirangu baitides.';
 
 
-CREATE TABLE &&ADIT_SCHEMA..NOTIFICATION_LOG
+CREATE TABLE &&ADIT_SCHEMA..NOTIFICATION
 (
-	ID                             NUMBER(18) NOT NULL,      /* Unikaalne identifikaator */
-	document_id                    NUMBER(12) NOT NULL,      /* Teavitusega seotud dokumendi ID */
-	notification_type              VARCHAR2(50) NOT NULL,    /* Teavituse tüübi lühinimi. */
+	ID                             NUMBER(18) NOT NULL,      /* Teavituse unikaalne identifikaator kohalikus andmebaasis */
 	user_code                      VARCHAR2(50),             /* Isiku või asutuse kood, kellele teavitus saadeti */
-	notification_date              DATE,                     /* Teavituse saatmise kuupäev ja kellaaeg */
-	notification_id                NUMBER(12) NOT NULL       /* Teavituse ID teavituskalendris */
+	document_id                    NUMBER(12) NOT NULL,      /* Teavitusega seotud dokumendi ID */
+	event_date                     DATE,                     /* Teavitatava sündmuse toimumise kuupäev ja kellaaeg */
+	notification_type              VARCHAR2(50) NOT NULL,    /* Teavituse tüübi lühinimi */
+	notification_text              VARCHAR2(4000),           /* Teavituse sisu */
+	notification_id                NUMBER(12),               /* Teavituse ID teavituskalendris */
+	notification_sending_date      DATE                      /* Teavituse teavituskalendrisse edastamise aeg */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
-COMMENT ON TABLE &&ADIT_SCHEMA..NOTIFICATION_LOG IS 'Teavituskalendrisse lisatud teavituste logi';
-COMMENT ON COLUMN &&ADIT_SCHEMA..NOTIFICATION_LOG.ID IS 'Unikaalne identifikaator';
-COMMENT ON COLUMN &&ADIT_SCHEMA..NOTIFICATION_LOG.document_id IS 'Teavitusega seotud dokumendi ID';
-COMMENT ON COLUMN &&ADIT_SCHEMA..NOTIFICATION_LOG.notification_type IS 'Teavituse tüübi lühinimetus';
-COMMENT ON COLUMN &&ADIT_SCHEMA..NOTIFICATION_LOG.user_code IS 'Isiku või asutuse kood, kellele teavitus saadeti';
-COMMENT ON COLUMN &&ADIT_SCHEMA..NOTIFICATION_LOG.notification_date IS 'Teavituse saatmise kuupäev ja kellaaeg';
-COMMENT ON COLUMN &&ADIT_SCHEMA..NOTIFICATION_LOG.notification_id IS 'Teavituse ID teavituskalendris';
+COMMENT ON TABLE &&ADIT_SCHEMA..NOTIFICATION IS 'Teavituskalendri teavitused';
+COMMENT ON COLUMN &&ADIT_SCHEMA..NOTIFICATION.ID IS 'Teavituse unikaalne identifikaator kohalikus andmebaasis';
+COMMENT ON COLUMN &&ADIT_SCHEMA..NOTIFICATION.user_code IS 'Isiku või asutuse kood, kellele teavitus saadeti';
+COMMENT ON COLUMN &&ADIT_SCHEMA..NOTIFICATION.document_id IS 'Teavitusega seotud dokumendi ID';
+COMMENT ON COLUMN &&ADIT_SCHEMA..NOTIFICATION.event_date IS 'Teavitatava sündmuse toimumise kuupäev ja kellaaeg';
+COMMENT ON COLUMN &&ADIT_SCHEMA..NOTIFICATION.notification_type IS 'Teavituse tüübi lühinimi';
+COMMENT ON COLUMN &&ADIT_SCHEMA..NOTIFICATION.notification_text IS 'Teavituse sisu';
+COMMENT ON COLUMN &&ADIT_SCHEMA..NOTIFICATION.notification_id IS 'Teavituse ID teavituskalendris';
+COMMENT ON COLUMN &&ADIT_SCHEMA..NOTIFICATION.notification_sending_date IS 'Teavituse teavituskalendrisse edastamise aeg';
 
 
 /* Create Primary Key Constraints */
@@ -816,7 +823,7 @@ BEGIN
 END;
 /
 
-CREATE SEQUENCE &&ADIT_SCHEMA..NOTIFICATION_LOG_ID_SEQ
+CREATE SEQUENCE &&ADIT_SCHEMA..NOTIFICATION_ID_SEQ
 INCREMENT BY 1
 START WITH 1
 NOMAXVALUE

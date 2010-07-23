@@ -372,6 +372,7 @@
 				<value>classpath:hbm/DocumentSharingType.hbm.xml</value>
 				<value>classpath:hbm/DocumentType.hbm.xml</value>
 				<value>classpath:hbm/DocumentWfStatus.hbm.xml</value>
+				<value>classpath:hbm/Notification.hbm.xml</value>
 				<value>classpath:hbm/NotificationType.hbm.xml</value>
 				<value>classpath:hbm/RemoteApplication.hbm.xml</value>
 				<value>classpath:hbm/RequestLog.hbm.xml</value>

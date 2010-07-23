@@ -2,7 +2,7 @@ package ee.adit.dao.pojo;
 
 import java.util.Date;
 
-public class NotificationLog implements java.io.Serializable {
+public class Notification implements java.io.Serializable {
 	
 	private static final long serialVersionUID = 1401042967511114468L;
 	private long id;

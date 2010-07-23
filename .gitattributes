@@ -81,7 +81,7 @@ src/main/java/ee/adit/dao/DocumentHistoryDAO.java -text
 src/main/java/ee/adit/dao/DocumentSharingDAO.java -text
 src/main/java/ee/adit/dao/DocumentTypeDAO.java -text
 src/main/java/ee/adit/dao/DocumentWfStatusDAO.java -text
-src/main/java/ee/adit/dao/NotificationLogDAO.java -text
+src/main/java/ee/adit/dao/NotificationDAO.java -text
 src/main/java/ee/adit/dao/NotificationTypeDAO.java -text
 src/main/java/ee/adit/dao/RemoteApplicationDAO.java -text
 src/main/java/ee/adit/dao/RequestLogDAO.java -text
@@ -102,7 +102,7 @@ src/main/java/ee/adit/dao/pojo/DocumentWfStatus.java -text
 src/main/java/ee/adit/dao/pojo/DownloadRequestLog.java -text
 src/main/java/ee/adit/dao/pojo/ErrorLog.java -text
 src/main/java/ee/adit/dao/pojo/MetadataRequestLog.java -text
-src/main/java/ee/adit/dao/pojo/NotificationLog.java -text
+src/main/java/ee/adit/dao/pojo/Notification.java -text
 src/main/java/ee/adit/dao/pojo/NotificationType.java -text
 src/main/java/ee/adit/dao/pojo/RemoteApplication.java -text
 src/main/java/ee/adit/dao/pojo/RequestLog.java -text
@@ -256,7 +256,7 @@ src/main/resources/hbm/DocumentWfStatus.hbm.xml -text
 src/main/resources/hbm/DownloadRequestLog.hbm.xml -text
 src/main/resources/hbm/ErrorLog.hbm.xml -text
 src/main/resources/hbm/MetadataRequestLog.hbm.xml -text
-src/main/resources/hbm/NotificationLog.hbm.xml -text
+src/main/resources/hbm/Notification.hbm.xml -text
 src/main/resources/hbm/NotificationType.hbm.xml -text
 src/main/resources/hbm/RemoteApplication.hbm.xml -text
 src/main/resources/hbm/RequestLog.hbm.xml -text
