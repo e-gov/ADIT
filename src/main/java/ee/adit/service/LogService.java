@@ -9,7 +9,7 @@ import ee.adit.dao.pojo.RequestLog;
 
 public class LogService {
 	private RequestLogDAO requestLogDAO;
-	private NotificationDAO notificationLogDAO;
+	private NotificationDAO notificationDAO;
 
 	public RequestLogDAO getRequestLogDAO() {
 		return requestLogDAO;
@@ -19,12 +19,12 @@ public class LogService {
 		this.requestLogDAO = requestLogDAO;
 	}
 	
-	public NotificationDAO getNotificationLogDAO() {
-		return notificationLogDAO;
+	public NotificationDAO getNotificationDAO() {
+		return notificationDAO;
 	}
 
-	public void setNotificationLogDAO(NotificationDAO notificationLogDAO) {
-		this.notificationLogDAO = notificationLogDAO;
+	public void setNotificationLogDAO(NotificationDAO notificationDAO) {
+		this.notificationDAO = notificationDAO;
 	}
 
 	public Long addRequestLogEntry(RequestLog requestLogEntry) {
@@ -52,20 +52,24 @@ public class LogService {
 		return this.requestLogDAO.save(logEntry);
 	}
 	
-	public long addNotificationLogEntry(
+	public long addNotification(
 			long documentId,
 			String notificationType,
 			String userCode,
-			Date notificationDate,
-			long notificationId) {
+			Date eventDate,
+			String notificationText,
+			Long notificationId,
+			Date notificationSendingDate) {
 		
-		Notification logEntry = new Notification();
-		logEntry.setDocumentId(documentId);
-		logEntry.setNotificationDate(notificationDate);
-		logEntry.setNotificationType(notificationType);
-		logEntry.setUserCode(userCode);
-		logEntry.setNotificationId(notificationId);
+		Notification notification = new Notification();
+		notification.setUserCode(userCode);
+		notification.setDocumentId(documentId);
+		notification.setEventDate(eventDate);
+		notification.setNotificationType(notificationType);
+		notification.setNotificationText(notificationText);
+		notification.setNotificationId(notificationId);
+		notification.setNotificationSendingDate(notificationSendingDate);
 		
-		return this.notificationLogDAO.save(logEntry);
+		return this.notificationDAO.save(notification);
 	}
 }

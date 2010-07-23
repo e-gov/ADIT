@@ -106,21 +106,36 @@ public class ScheduleClient {
 			LOG.error("Error adding notification to 'teavituskalender' database. Related document ID: " + String.valueOf(relatedDocumentId), ex);
 		}
 		
-		// Log successful notification
+		// Save notification to database
+		LogService logService = new LogService();
 		if (eventId > 0) {
 			try {
-			LogService logService = new LogService();
-			logService.addNotificationLogEntry(
-				relatedDocumentId,
-				notificationType,
-				eventOwner.getUserCode(),
-				eventDate.getTime(),
-				eventId);
-			logService = null;
+				logService.addNotification(
+					relatedDocumentId,
+					notificationType,
+					eventOwner.getUserCode(),
+					eventDate.getTime(),
+					eventText,
+					eventId,
+					Calendar.getInstance().getTime());
 			} catch (Exception ex) {
-				LOG.error("Failed logging successful notification.", ex);
+				LOG.error("Failed saving successfully sent notification.", ex);
+			}
+		} else {
+			try {
+				logService.addNotification(
+					relatedDocumentId,
+					notificationType,
+					eventOwner.getUserCode(),
+					eventDate.getTime(),
+					eventText,
+					null,
+					null);
+			} catch (Exception ex) {
+				LOG.error("Failed saving unsent notification.", ex);
 			}
 		}
+		logService = null;
 		
 		return eventId;
 	}
