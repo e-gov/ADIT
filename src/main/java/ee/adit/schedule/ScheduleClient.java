@@ -62,7 +62,7 @@ public class ScheduleClient {
 			ClassPathXmlApplicationContext ctx = null;
 			try {
 				ctx = startContext();
-				StandardXTeeConsumer xteeService = (StandardXTeeConsumer) ctx.getBean("xteeService");
+				StandardXTeeConsumer xteeService = (StandardXTeeConsumer) ctx.getBean("xteeConsumer");
 				SimpleXTeeServiceConfiguration conf = (SimpleXTeeServiceConfiguration) xteeService.getServiceConfiguration();
 				conf.setDatabase("teavituskalender");
 				conf.setMethod("lisaSyndmus");
