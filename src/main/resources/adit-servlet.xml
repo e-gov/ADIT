@@ -351,12 +351,12 @@
 	<bean id="myDataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
-		<property name="url" value="jdbc:oracle:thin:@//localhost:1522/jaak" />
+		<property name="url" value="jdbc:oracle:thin:@//localhost:1521/xe" />
 		<property name="username" value="adit" />
-		<property name="password" value="adit" />
+		<property name="password" value="adit123" />
 	</bean>
 
-	<bean id="mySessionFactory"
+	<bean id="sessionFactory"
 		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
 		<property name="dataSource" ref="myDataSource" />
 		<property name="mappingLocations">
@@ -394,59 +394,62 @@
 	</bean>
 
     <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
-        <property name="sessionFactory" ref="mySessionFactory" />
+        <property name="sessionFactory" ref="sessionFactory" />
     </bean>
 
+	<!-- Enable the configuration of transactional behavior based on annotations -->
+  	<tx:annotation-driven transaction-manager="transactionManager"/>
+	
 	<bean id="requestLogDAO" class="ee.adit.dao.RequestLogDAO">
-		<property name="sessionFactory" ref="mySessionFactory" />
+		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 	
 	<bean id="notificationDAO" class="ee.adit.dao.NotificationDAO">
-		<property name="sessionFactory" ref="mySessionFactory" />
+		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
 	<bean id="remoteApplicationDAO" class="ee.adit.dao.RemoteApplicationDAO">
-		<property name="sessionFactory" ref="mySessionFactory" />
+		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 	
 	<bean id="usertypeDAO" class="ee.adit.dao.UsertypeDAO">
-		<property name="sessionFactory" ref="mySessionFactory" />
+		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 	
 	<bean id="notificationTypeDAO" class="ee.adit.dao.NotificationTypeDAO">
-		<property name="sessionFactory" ref="mySessionFactory" />
+		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 	
 	<bean id="aditUserDAO" class="ee.adit.dao.AditUserDAO">
-		<property name="sessionFactory" ref="mySessionFactory" />
+		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 	
 	<bean id="documentDAO" class="ee.adit.dao.DocumentDAO">
-		<property name="sessionFactory" ref="mySessionFactory" />
+		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>	
 
 	<bean id="documentFileDAO" class="ee.adit.dao.DocumentFileDAO">
-		<property name="sessionFactory" ref="mySessionFactory" />
+		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
 	<bean id="accessRestrictionDAO" class="ee.adit.dao.AccessRestrictionDAO">
-		<property name="sessionFactory" ref="mySessionFactory" />
+		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>	
 
 	<bean id="documentTypeDAO" class="ee.adit.dao.DocumentTypeDAO">
-		<property name="sessionFactory" ref="mySessionFactory" />
+		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 	
 	<bean id="documentWfStatusDAO" class="ee.adit.dao.DocumentWfStatusDAO">
-		<property name="sessionFactory" ref="mySessionFactory" />
+		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
 	<bean id="documentSharingDAO" class="ee.adit.dao.DocumentSharingDAO">
-		<property name="sessionFactory" ref="mySessionFactory" />
+		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 		
 	<bean id="documentHistoryDAO" class="ee.adit.dao.DocumentHistoryDAO">
-		<property name="sessionFactory" ref="mySessionFactory" />
+		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
 	<!-- Scheduled jobs -->
@@ -511,7 +514,7 @@
 	<!-- Configuration -->
 	<bean id="configuration" class="ee.adit.util.Configuration">
 		<property name="getJoinedMaxResults" value="1000"/>
-		<property name="tempDir" value="C:\adit_temp"/>
+		<property name="tempDir" value="C:\temp"/>
 		<property name="deleteTemporaryFiles" value="true"/>
 		<property name="schedulerEventTypeName" value="ametlikud-dokumendid"/>
 	</bean>
