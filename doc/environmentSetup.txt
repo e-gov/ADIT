@@ -36,3 +36,6 @@ issus with locking files. The cure for that is to add some parameters to tomcat 
 
 <Context reloadable="true" antiResourceLocking="true">
 
+6. JDK 1.6 and the Xerces library included in this project (xercesImpl.jar) cause a conflict when deploying to Tomcat.
+   To resolve this problem, define the JAVA_ENDORSED_DIRS environment variable and point it to the directory, where 
+   the xercesImpl.jar is located. This will replace the JDK version of Xerces XML Parser.
