@@ -568,7 +568,7 @@ public class DocumentService {
 					// Write the temporary file to the database
 					InputStream is = new FileInputStream(temporaryFile);
 					Writer clobWriter = dvkMessageToUpdate.getData().setCharacterStream(1);
-
+					
 					byte[] buf = new byte[1024];
 					int len;
 					while ((len = is.read(buf)) > 0) {
@@ -601,9 +601,13 @@ public class DocumentService {
 					
 					// Remove the document with empty clob from the database
 					Session dvkSession3 = sessionFactory.openSession();
-					Transaction dvkTransaction3 = dvkSession.beginTransaction();
+					Transaction dvkTransaction3 = dvkSession3.beginTransaction();
 					try {
-						PojoMessage dvkMessageToDelete = (PojoMessage) dvkSession3.load(PojoMessage.class, dvkMessageID, LockMode.WRITE);
+						LOG.debug("Starting to delete document from DVK Client database: " + dvkMessageID);
+						PojoMessage dvkMessageToDelete = (PojoMessage) dvkSession3.load(PojoMessage.class, dvkMessageID);
+						if(dvkMessageToDelete == null) {
+							LOG.warn("DVK message to delete is not initialized.");
+						}
 						dvkSession3.delete(dvkMessageToDelete);
 						dvkTransaction3.commit();
 						LOG.info("Empty DVK document deleted from DVK Client database. ID: " + dvkMessageID);
