@@ -598,6 +598,24 @@ public class DocumentService {
 					
 				} catch (Exception e) {
 					dvkTransaction2.rollback();
+					
+					// Remove the document with empty clob from the database
+					Session dvkSession3 = sessionFactory.openSession();
+					Transaction dvkTransaction3 = dvkSession.beginTransaction();
+					try {
+						PojoMessage dvkMessageToDelete = (PojoMessage) dvkSession3.load(PojoMessage.class, dvkMessageID, LockMode.WRITE);
+						dvkSession3.delete(dvkMessageToDelete);
+						dvkTransaction3.commit();
+						LOG.info("Empty DVK document deleted from DVK Client database. ID: " + dvkMessageID);
+					} catch (Exception dvkException) {
+						dvkTransaction3.rollback();
+						LOG.error("Error deleting document from DVK database: ", dvkException);
+					} finally {
+						if(dvkSession3 != null) {
+							dvkSession3.close();
+						}
+					}
+					
 					throw new DataRetrievalFailureException("Error while adding message to DVK Client database (CLOB update): ", e);
 				} finally {
 					if (dvkSession2 != null) {
