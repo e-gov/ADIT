@@ -553,79 +553,96 @@ public class DocumentService {
 
 					// Save document to DVK Client database
 					try {
-						SessionFactory sessionFactory = DVKAPI
-								.createSessionFactory("hibernate_ora_dvk.cfg.xml");
-						Session dvkSession = sessionFactory.openSession();
-						Transaction dvkTransaction = dvkSession
-								.beginTransaction();
-
-						PojoMessage dvkMessage = new PojoMessage();
-						dvkMessage.setIsIncoming(false);
-						dvkMessage.setTitle(document.getTitle());
-
-						// Get sender org code
-						String documentOwnerCode = document.getCreatorCode();
-
-						AditUser documentOwner = (AditUser) session.get(
-								AditUser.class, documentOwnerCode);
-
-						dvkMessage.setSenderOrgCode(documentOwner
-								.getDvkOrgCode());
-						dvkMessage.setSenderPersonCode(documentOwner
-								.getUserCode());
-						dvkMessage.setSenderName(documentOwner.getFullName());
-						dvkMessage.setDhlGuid(document.getGuid());
-
-						// Insert data as stream
-						Clob clob = Hibernate.createClob(" ", dvkSession);
-						dvkMessage.setData(clob);
-
-						Long dvkMessageID = (Long) dvkSession.save(dvkMessage);
 						
-						if(dvkMessageID == null || dvkMessageID.longValue() == 0) {
-							LOG.error("Error while saving outgoing message to DVK database - no ID returned by save method.");
-							throw new DataRetrievalFailureException("Error while saving outgoing message to DVK database - no ID returned by save method.");
-						} else {
-							LOG.info("Outgoing message saved to DVK database. ID: " + dvkMessageID);
+						SessionFactory sessionFactory = DVKAPI.createSessionFactory("hibernate_ora_dvk.cfg.xml");
+						Long dvkMessageID = null;
+						Session dvkSession = sessionFactory.openSession();
+						Transaction dvkTransaction = dvkSession.beginTransaction();
+						
+						try {
+							PojoMessage dvkMessage = new PojoMessage();
+							dvkMessage.setIsIncoming(false);
+							dvkMessage.setTitle(document.getTitle());
+	
+							// Get sender org code
+							String documentOwnerCode = document.getCreatorCode();
+	
+							AditUser documentOwner = (AditUser) session.get(
+									AditUser.class, documentOwnerCode);
+	
+							dvkMessage.setSenderOrgCode(documentOwner
+									.getDvkOrgCode());
+							dvkMessage.setSenderPersonCode(documentOwner
+									.getUserCode());
+							dvkMessage.setSenderName(documentOwner.getFullName());
+							dvkMessage.setDhlGuid(document.getGuid());
+	
+							// Insert data as stream
+							Clob clob = Hibernate.createClob(" ", dvkSession);
+							dvkMessage.setData(clob);
+	
+							dvkMessageID = (Long) dvkSession.save(dvkMessage);
+							
+							if(dvkMessageID == null || dvkMessageID.longValue() == 0) {
+								LOG.error("Error while saving outgoing message to DVK database - no ID returned by save method.");
+								throw new DataRetrievalFailureException("Error while saving outgoing message to DVK database - no ID returned by save method.");
+							} else {
+								LOG.info("Outgoing message saved to DVK database. ID: " + dvkMessageID);
+							}
+	
+							LOG.debug("DVK Message saved to client database. GUID: " + dvkMessage.getDhlGuid());
+							dvkTransaction.commit();
+						
+						} catch (Exception e) {
+							dvkTransaction.rollback();
+							throw new DataRetrievalFailureException("Error while adding message to DVK Client database: ", e);
+						} finally {
+							if(dvkSession != null) {
+								dvkSession.close();
+							}
 						}
-
-						dvkTransaction.commit();
-						dvkSession.close();
-
-						LOG.debug("DVK Message saved to client database. GUID: " + dvkMessage.getDhlGuid());
 
 						// Update CLOB
 						Session dvkSession2 = sessionFactory.openSession();
-						Transaction dvkTransaction2 = dvkSession2
-								.beginTransaction();
+						Transaction dvkTransaction2 = dvkSession2.beginTransaction();
+						
+						try {
+							// Select the record for update
+							PojoMessage dvkMessageToUpdate = (PojoMessage) dvkSession2
+									.load(PojoMessage.class, dvkMessageID,
+											LockMode.UPGRADE);
+							
+							// Write the DVK Container to temporary file
+							String temporaryFile = this.getConfiguration().getTempDir() + File.separator + Util.generateRandomFileName();
+							dvkContainer.save2File(temporaryFile);
 
-						PojoMessage dvkMessageToUpdate = (PojoMessage) dvkSession2
-								.load(PojoMessage.class, dvkMessageID,
-										LockMode.UPGRADE);
+							// Write the temporary file to the database
+							InputStream is = new FileInputStream(temporaryFile);
+							Writer clobWriter = dvkMessageToUpdate.getData()
+									.setCharacterStream(1);
 
-						String temporaryFile = this.getConfiguration().getTempDir() + File.separator + Util.generateRandomFileName();
-						dvkContainer.save2File(temporaryFile);
-
-						InputStream is = new FileInputStream(temporaryFile);
-
-						Writer clobWriter = dvkMessageToUpdate.getData()
-								.setCharacterStream(1);
-
-						byte[] buf = new byte[1024];
-						int len;
-						while ((len = is.read(buf)) > 0) {
-							clobWriter.write(new String(buf, 0, len, "UTF-8"));
+							byte[] buf = new byte[1024];
+							int len;
+							while ((len = is.read(buf)) > 0) {
+								clobWriter.write(new String(buf, 0, len, "UTF-8"));
+							}
+							is.close();
+							clobWriter.close();
+							
+							dvkTransaction2.commit();
+							
+						} catch (Exception e) {
+							dvkTransaction2.rollback();
+							throw new DataRetrievalFailureException("Error while adding message to DVK Client database (CLOB update): ", e);
+						} finally {							
+							if(dvkSession2 != null) {
+								dvkSession2.close();
+							}
 						}
-						is.close();
-						clobWriter.close();
-
-						dvkTransaction2.commit();
-						dvkSession2.close();
 
 					} catch (Exception e) {
 						throw new HibernateException(
-								"Error while saving DVK Container to temporary file: ",
-								e);
+								"Error while saving DVK Container to temporary file: ", e);
 					}
 				}
 			}
