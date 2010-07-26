@@ -564,7 +564,7 @@ public class DocumentService {
 					// Write the DVK Container to temporary file
 					String temporaryFile = this.getConfiguration().getTempDir() + File.separator + Util.generateRandomFileName();
 					dvkContainer.save2File(temporaryFile);
-
+					
 					// Write the temporary file to the database
 					InputStream is = new FileInputStream(temporaryFile);
 					Writer clobWriter = dvkMessageToUpdate.getData().setCharacterStream(1);
