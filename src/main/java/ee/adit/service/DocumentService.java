@@ -83,6 +83,12 @@ public class DocumentService {
 	public static final String SharingType_SendDvk = "send_dvk";
 	public static final String SharingType_SendAdit = "send_adit";
 
+	// Document DVK statuses
+	public static final Long DVKStatus_Missing = new Long(100);
+	public static final Long DVKStatus_Sending = new Long(101);
+	public static final Long DVKStatus_Sent = new Long(102);
+	public static final Long DVKStatus_Aborted = new Long(103);
+	
 	// Dokumendi ajaloosündmuste koodid
 	public static final String HistoryType_Create = "create";
 	public static final String HistoryType_Modify = "modify";
@@ -571,14 +577,21 @@ public class DocumentService {
 					is.close();
 					clobWriter.close();
 
-					
+					// Commit to DVK database
+					dvkTransaction2.commit();
 
 					// Save the document DVK_ID to ADIT database
 					document.setDvkId(dvkMessageID);
 					session.saveOrUpdate(document);
 					
-					// Commit to DVK database
-					dvkTransaction2.commit();
+					// Update document sharings status
+					Iterator<DocumentSharing> documentSharingUpdateIterator = document.getDocumentSharings().iterator();
+					while(documentSharingUpdateIterator.hasNext()) {
+						DocumentSharing documentSharing = documentSharingUpdateIterator.next();
+						documentSharing.setDocumentDvkStatus(DVKStatus_Sending);
+						session.saveOrUpdate(documentSharing);
+					}
+					
 					result++;
 					
 				} catch (Exception e) {
@@ -590,6 +603,10 @@ public class DocumentService {
 					}
 				}				
 			} catch (Exception e) {
+				
+				// TODO: if something fails during the operation - the document.dvkId is not set and that reference is lost.
+				// The GUID reference is still valid.
+				
 				throw new AditInternalException("Error while sending documents to DVK Client database: ", e);
 			}
 		}
