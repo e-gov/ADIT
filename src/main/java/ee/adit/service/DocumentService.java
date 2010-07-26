@@ -112,9 +112,7 @@ public class DocumentService {
 	private AditUserDAO aditUserDAO;
 	private Configuration configuration;
 
-	public List<String> checkAttachedDocumentMetadataForNewDocument(
-			SaveDocumentRequestAttachment document, long remainingDiskQuota,
-			String xmlFile, String tempDir) throws AditException {
+	public List<String> checkAttachedDocumentMetadataForNewDocument(SaveDocumentRequestAttachment document, long remainingDiskQuota, String xmlFile, String tempDir) throws AditException {
 		List<String> result = null;
 		LOG.debug("Checking attached document metadata for new document...");
 		if (document != null) {
@@ -126,9 +124,7 @@ public class DocumentService {
 				try {
 					UUID.fromString(document.getGuid());
 				} catch (Exception e) {
-					String errorMessage = this.getMessageSource().getMessage(
-							"request.saveDocument.document.guid.wrongFormat",
-							new Object[] {}, Locale.ENGLISH);
+					String errorMessage = this.getMessageSource().getMessage("request.saveDocument.document.guid.wrongFormat", new Object[] {}, Locale.ENGLISH);
 					throw new AditException(errorMessage);
 				}
 
@@ -136,70 +132,48 @@ public class DocumentService {
 
 			LOG.debug("Checking title: " + document.getTitle());
 			// Check title
-			if (document.getTitle() == null
-					|| "".equalsIgnoreCase(document.getTitle())) {
-				String errorMessage = this.getMessageSource().getMessage(
-						"request.saveDocument.document.title.undefined",
-						new Object[] {}, Locale.ENGLISH);
+			if (document.getTitle() == null || "".equalsIgnoreCase(document.getTitle())) {
+				String errorMessage = this.getMessageSource().getMessage("request.saveDocument.document.title.undefined", new Object[] {}, Locale.ENGLISH);
 				throw new AditException(errorMessage);
 			}
 
 			LOG.debug("Checking document type: " + document.getDocumentType());
 			// Check document_type
 
-			if (document.getDocumentType() != null
-					&& !"".equalsIgnoreCase(document.getDocumentType().trim())) {
+			if (document.getDocumentType() != null && !"".equalsIgnoreCase(document.getDocumentType().trim())) {
 
 				// Is the document type valid?
 				LOG.debug("Document type is defined. Checking if it is valid.");
-				DocumentType documentType = this.getDocumentTypeDAO()
-						.getDocumentType(document.getDocumentType());
+				DocumentType documentType = this.getDocumentTypeDAO().getDocumentType(document.getDocumentType());
 
 				if (documentType == null) {
-					LOG.debug("Document type does not exist: "
-							+ document.getDocumentType());
+					LOG.debug("Document type does not exist: " + document.getDocumentType());
 					String validDocumentTypes = getValidDocumentTypes();
-					String errorMessage = this
-							.getMessageSource()
-							.getMessage(
-									"request.saveDocument.document.type.nonExistent",
-									new Object[] { validDocumentTypes },
-									Locale.ENGLISH);
+					String errorMessage = this.getMessageSource().getMessage("request.saveDocument.document.type.nonExistent", new Object[] { validDocumentTypes }, Locale.ENGLISH);
 					throw new AditException(errorMessage);
 				}
 
 			} else {
 				String validDocumentTypes = getValidDocumentTypes();
-				String errorMessage = this.getMessageSource().getMessage(
-						"request.saveDocument.document.type.undefined",
-						new Object[] { validDocumentTypes }, Locale.ENGLISH);
+				String errorMessage = this.getMessageSource().getMessage("request.saveDocument.document.type.undefined", new Object[] { validDocumentTypes }, Locale.ENGLISH);
 				throw new AditException(errorMessage);
 			}
 
-			LOG.debug("Checking previous document ID: "
-					+ document.getPreviousDocumentID());
+			LOG.debug("Checking previous document ID: " + document.getPreviousDocumentID());
 			// Check previous_document_id
-			if (document.getPreviousDocumentID() != null
-					&& document.getPreviousDocumentID() != 0) {
+			if (document.getPreviousDocumentID() != null && document.getPreviousDocumentID() != 0) {
 				// Check if the document exists
 
-				Document previousDocument = this.getDocumentDAO().getDocument(
-						document.getPreviousDocumentID());
+				Document previousDocument = this.getDocumentDAO().getDocument(document.getPreviousDocumentID());
 
 				if (previousDocument == null) {
-					String errorMessage = this
-							.getMessageSource()
-							.getMessage(
-									"request.saveDocument.document.previousDocument.nonExistent",
-									new Object[] { document
-											.getPreviousDocumentID() },
-									Locale.ENGLISH);
+					String errorMessage = this.getMessageSource().getMessage("request.saveDocument.document.previousDocument.nonExistent", new Object[] { document.getPreviousDocumentID() },
+							Locale.ENGLISH);
 					throw new AditException(errorMessage);
 				}
 			}
 
-			result = extractFilesFromXML(document.getFiles(), xmlFile,
-					remainingDiskQuota, tempDir);
+			result = extractFilesFromXML(document.getFiles(), xmlFile, remainingDiskQuota, tempDir);
 
 		} else {
 			throw new AditInternalException("Document not initialized.");
@@ -208,8 +182,7 @@ public class DocumentService {
 		return result;
 	}
 
-	public List<String> extractFilesFromXML(List<OutputDocumentFile> files,
-			String xmlFileName, long remainingDiskQuota, String tempDir) {
+	public List<String> extractFilesFromXML(List<OutputDocumentFile> files, String xmlFileName, long remainingDiskQuota, String tempDir) {
 
 		List<String> result = new ArrayList<String>();
 
@@ -230,8 +203,7 @@ public class DocumentService {
 			try {
 				fileInputStream = new FileInputStream(xmlFileName);
 
-				SaveDocumentAttachmentHandler handler = new SaveDocumentAttachmentHandler(
-						tempDir);
+				SaveDocumentAttachmentHandler handler = new SaveDocumentAttachmentHandler(tempDir);
 
 				XMLReader xmlReader = XMLReaderFactory.createXMLReader();
 				xmlReader.setContentHandler(handler);
@@ -252,13 +224,10 @@ public class DocumentService {
 			// Add references to file objects
 			for (int i = 0; i < result.size(); i++) {
 				String fileName = result.get(i);
-				String base64DecodedFile = Util.base64DecodeFile(fileName,
-						tempDir);
+				String base64DecodedFile = Util.base64DecodeFile(fileName, tempDir);
 
 				OutputDocumentFile file = files.get(i);
-				LOG.debug("Adding reference to file object. File ID: "
-						+ file.getId() + " (" + file.getName()
-						+ "). Temporary file: " + base64DecodedFile);
+				LOG.debug("Adding reference to file object. File ID: " + file.getId() + " (" + file.getName() + "). Temporary file: " + base64DecodedFile);
 				file.setTmpFileName(base64DecodedFile);
 
 				totalSize += (new File(base64DecodedFile)).length();
@@ -267,10 +236,7 @@ public class DocumentService {
 			LOG.debug("Total size of document files: " + totalSize);
 
 			if (remainingDiskQuota < totalSize) {
-				String errorMessage = this.getMessageSource().getMessage(
-						"request.saveDocument.document.files.quotaExceeded",
-						new Object[] { remainingDiskQuota, totalSize },
-						Locale.ENGLISH);
+				String errorMessage = this.getMessageSource().getMessage("request.saveDocument.document.files.quotaExceeded", new Object[] { remainingDiskQuota, totalSize }, Locale.ENGLISH);
 				throw new AditException(errorMessage);
 			}
 
@@ -283,8 +249,7 @@ public class DocumentService {
 
 	public String getValidDocumentTypes() {
 		StringBuffer result = new StringBuffer();
-		List<DocumentType> documentTypes = this.getDocumentTypeDAO()
-				.listDocumentTypes();
+		List<DocumentType> documentTypes = this.getDocumentTypeDAO().listDocumentTypes();
 
 		for (int i = 0; i < documentTypes.size(); i++) {
 			DocumentType documentType = documentTypes.get(i);
@@ -299,83 +264,62 @@ public class DocumentService {
 		return result.toString();
 	}
 
-	public String deflateDocumentFile(long documentId, long fileId,
-			boolean markDeleted) {
-		return this.getDocumentFileDAO().deflateDocumentFile(documentId,
-				fileId, markDeleted);
+	public String deflateDocumentFile(long documentId, long fileId, boolean markDeleted) {
+		return this.getDocumentFileDAO().deflateDocumentFile(documentId, fileId, markDeleted);
 	}
 
 	@Transactional
-	public Long save(final SaveDocumentRequestAttachment attachmentDocument,
-			final List<String> fileNames, final String creatorCode,
-			final String remoteApplication) throws FileNotFoundException {
+	public Long save(final SaveDocumentRequestAttachment attachmentDocument, final List<String> fileNames, final String creatorCode, final String remoteApplication) throws FileNotFoundException {
 		final DocumentDAO docDao = this.getDocumentDAO();
 
-		return (Long) this.getDocumentDAO().getHibernateTemplate().execute(
-				new HibernateCallback() {
-					public Object doInHibernate(Session session)
-							throws HibernateException, SQLException {
-						Date creationDate = new Date();
-						Document document = new Document();
-						if ((attachmentDocument.getId() != null)
-								&& (attachmentDocument.getId() > 0)) {
-							document = (Document) session.get(Document.class,
-									attachmentDocument.getId());
-							LOG.debug("Document file count: "
-									+ document.getDocumentFiles().size());
-						} else {
-							document.setCreationDate(creationDate);
-							document.setCreatorCode(creatorCode);
-							document.setRemoteApplication(remoteApplication);
-							document.setSignable(true);
-						}
+		return (Long) this.getDocumentDAO().getHibernateTemplate().execute(new HibernateCallback() {
+			public Object doInHibernate(Session session) throws HibernateException, SQLException {
+				Date creationDate = new Date();
+				Document document = new Document();
+				if ((attachmentDocument.getId() != null) && (attachmentDocument.getId() > 0)) {
+					document = (Document) session.get(Document.class, attachmentDocument.getId());
+					LOG.debug("Document file count: " + document.getDocumentFiles().size());
+				} else {
+					document.setCreationDate(creationDate);
+					document.setCreatorCode(creatorCode);
+					document.setRemoteApplication(remoteApplication);
+					document.setSignable(true);
+				}
 
-						document.setDocumentType(attachmentDocument
-								.getDocumentType());
-						if (attachmentDocument.getGuid() != null
-								&& !"".equalsIgnoreCase(attachmentDocument
-										.getGuid().trim())) {
-							document.setGuid(attachmentDocument.getGuid());
-						} else if ((document.getGuid() == null)
-								|| "".equalsIgnoreCase(attachmentDocument
-										.getGuid().trim())) {
-							// Generate new GUID
-							document.setGuid(Util.generateGUID());
-						}
+				document.setDocumentType(attachmentDocument.getDocumentType());
+				if (attachmentDocument.getGuid() != null && !"".equalsIgnoreCase(attachmentDocument.getGuid().trim())) {
+					document.setGuid(attachmentDocument.getGuid());
+				} else if ((document.getGuid() == null) || "".equalsIgnoreCase(attachmentDocument.getGuid().trim())) {
+					// Generate new GUID
+					document.setGuid(Util.generateGUID());
+				}
 
-						document.setLastModifiedDate(creationDate);
-						document.setTitle(attachmentDocument.getTitle());
+				document.setLastModifiedDate(creationDate);
+				document.setTitle(attachmentDocument.getTitle());
 
-						return docDao.save(document, attachmentDocument
-								.getFiles(), session);
-					}
-				});
+				return docDao.save(document, attachmentDocument.getFiles(), session);
+			}
+		});
 	}
 
-	public Long saveDocumentFile(final long documentId,
-			final OutputDocumentFile file, final String attachmentXmlFile,
-			final long remainingDiskQuota, final String temporaryFilesDir) {
+	public Long saveDocumentFile(final long documentId, final OutputDocumentFile file, final String attachmentXmlFile, final long remainingDiskQuota, final String temporaryFilesDir) {
 
 		final DocumentDAO docDao = this.getDocumentDAO();
 
-		return (Long) this.getDocumentDAO().getHibernateTemplate().execute(
-				new HibernateCallback() {
-					public Object doInHibernate(Session session)
-							throws HibernateException, SQLException {
-						Document document = (Document) session.get(
-								Document.class, documentId);
-						List<OutputDocumentFile> filesList = new ArrayList<OutputDocumentFile>();
-						filesList.add(file);
+		return (Long) this.getDocumentDAO().getHibernateTemplate().execute(new HibernateCallback() {
+			public Object doInHibernate(Session session) throws HibernateException, SQLException {
+				Document document = (Document) session.get(Document.class, documentId);
+				List<OutputDocumentFile> filesList = new ArrayList<OutputDocumentFile>();
+				filesList.add(file);
 
-						// TODO: Document to database
-						extractFilesFromXML(filesList, attachmentXmlFile,
-								remainingDiskQuota, temporaryFilesDir);
-						docDao.save(document, filesList, session);
-						long fileId = filesList.get(0).getId();
-						LOG.debug("File saved with ID: " + fileId);
-						return fileId;
-					}
-				});
+				// TODO: Document to database
+				extractFilesFromXML(filesList, attachmentXmlFile, remainingDiskQuota, temporaryFilesDir);
+				docDao.save(document, filesList, session);
+				long fileId = filesList.get(0).getId();
+				LOG.debug("File saved with ID: " + fileId);
+				return fileId;
+			}
+		});
 	}
 
 	public void save(Document doc) {
@@ -405,13 +349,10 @@ public class DocumentService {
 		documentSharing.setDocumentId(document.getId());
 		documentSharing.setCreationDate(new Date());
 
-		if (recipient.getDvkOrgCode() != null
-				&& !"".equalsIgnoreCase(recipient.getDvkOrgCode().trim())) {
-			documentSharing
-					.setDocumentSharingType(DocumentService.SharingType_SendDvk);
+		if (recipient.getDvkOrgCode() != null && !"".equalsIgnoreCase(recipient.getDvkOrgCode().trim())) {
+			documentSharing.setDocumentSharingType(DocumentService.SharingType_SendDvk);
 		} else {
-			documentSharing
-					.setDocumentSharingType(DocumentService.SharingType_SendAdit);
+			documentSharing.setDocumentSharingType(DocumentService.SharingType_SendAdit);
 		}
 
 		documentSharing.setUserCode(recipient.getUserCode());
@@ -420,16 +361,13 @@ public class DocumentService {
 		this.getDocumentSharingDAO().save(documentSharing);
 
 		if (documentSharing.getId() == 0) {
-			throw new AditInternalException(
-					"Could not add document sharing information to database.");
+			throw new AditInternalException("Could not add document sharing information to database.");
 		}
 
 		return result;
 	}
 
-	public void addHistoryEvent(String applicationName, Document doc,
-			String userCode, String historyType, String xteeUserCode,
-			String xteeUserName, String description) {
+	public void addHistoryEvent(String applicationName, Document doc, String userCode, String historyType, String xteeUserCode, String xteeUserName, String description) {
 		// Add history event
 		DocumentHistory documentHistory = new DocumentHistory();
 		documentHistory.setRemoteApplicationName(applicationName);
@@ -453,15 +391,15 @@ public class DocumentService {
 	 */
 	@SuppressWarnings("unchecked")
 	@Transactional
-	public void sendDocumentsToDVK() {
-
+	public int sendDocumentsToDVK() {
+		int result = 0;
+		
 		final String SQL_QUERY = "select doc from Document doc, DocumentSharing docSharing where docSharing.documentSharingType = 'send_dvk' and (docSharing.documentDvkStatus is null or docSharing.documentDvkStatus = 100) and docSharing.documentId = doc.id";
 
 		final String tempDir = this.getConfiguration().getTempDir();
 
 		LOG.debug("Fetching documents for sending to DVK...");
-		Session session = this.getDocumentDAO().getSessionFactory()
-				.getCurrentSession();
+		Session session = this.getDocumentDAO().getSessionFactory().getCurrentSession();
 
 		Query query = session.createQuery(SQL_QUERY);
 		List<Document> documents = query.list();
@@ -472,7 +410,9 @@ public class DocumentService {
 
 		while (i.hasNext()) {
 
-			Document document = i.next();
+			try {
+
+				Document document = i.next();
 
 				ContainerVer2 dvkContainer = new ContainerVer2();
 				dvkContainer.setVersion(DVK_CONTAINER_VERSION);
@@ -499,25 +439,23 @@ public class DocumentService {
 				Transport transport = new Transport();
 				List<Saaja> saajad = new ArrayList<Saaja>();
 
-				Iterator<DocumentSharing> documentSharings = document
-						.getDocumentSharings().iterator();
+				Iterator<DocumentSharing> documentSharings = document.getDocumentSharings().iterator();
 
 				while (documentSharings.hasNext()) {
 					DocumentSharing documentSharing = documentSharings.next();
-					
-					if (DocumentService.SharingType_SendDvk
-							.equalsIgnoreCase(documentSharing.getDocumentSharingType())) {
-											
+
+					if (DocumentService.SharingType_SendDvk.equalsIgnoreCase(documentSharing.getDocumentSharingType())) {
+
 						AditUser recipient = this.getAditUserDAO().getUserByID(documentSharing.getUserCode());
 
 						Saaja saaja = new Saaja();
 						saaja.setRegNr(recipient.getDvkOrgCode());
 						saaja.setIsikukood(recipient.getUserCode());
 						saaja.setNimi(recipient.getFullName());
-						
+
 						saajad.add(saaja);
 					}
-					
+
 				}
 
 				transport.setSaajad(saajad);
@@ -547,17 +485,14 @@ public class DocumentService {
 					// Create a temporary file from the ADIT file and
 					// add a reference to the DVK file
 					try {
-						InputStream inputStream = f.getFileData()
-								.getBinaryStream();
-						String temporaryFile = Util.createTemporaryFile(
-								inputStream, tempDir);
+						InputStream inputStream = f.getFileData().getBinaryStream();
+						String temporaryFile = Util.createTemporaryFile(inputStream, tempDir);
 
 						dvkFile.setFile(new File(temporaryFile));
 						dvkFiles.add(dvkFile);
 
 					} catch (Exception e) {
-						throw new HibernateException(
-								"Unable to create temporary file: ", e);
+						throw new HibernateException("Unable to create temporary file: ", e);
 					}
 				}
 
@@ -566,118 +501,99 @@ public class DocumentService {
 				dvkContainer.setFailideKonteiner(failideKonteiner);
 
 				// Save document to DVK Client database
+
+				SessionFactory sessionFactory = DVKAPI.createSessionFactory("hibernate_ora_dvk.cfg.xml");
+				Long dvkMessageID = null;
+				Session dvkSession = sessionFactory.openSession();
+				Transaction dvkTransaction = dvkSession.beginTransaction();
+
 				try {
+					PojoMessage dvkMessage = new PojoMessage();
+					dvkMessage.setIsIncoming(false);
+					dvkMessage.setTitle(document.getTitle());
 
-					SessionFactory sessionFactory = DVKAPI
-							.createSessionFactory("hibernate_ora_dvk.cfg.xml");
-					Long dvkMessageID = null;
-					Session dvkSession = sessionFactory.openSession();
-					Transaction dvkTransaction = dvkSession.beginTransaction();
+					// Get sender org code
+					String documentOwnerCode = document.getCreatorCode();
 
-					try {
-						PojoMessage dvkMessage = new PojoMessage();
-						dvkMessage.setIsIncoming(false);
-						dvkMessage.setTitle(document.getTitle());
+					AditUser documentOwner = (AditUser) session.get(AditUser.class, documentOwnerCode);
 
-						// Get sender org code
-						String documentOwnerCode = document.getCreatorCode();
+					dvkMessage.setSenderOrgCode(documentOwner.getDvkOrgCode());
+					dvkMessage.setSenderPersonCode(documentOwner.getUserCode());
+					dvkMessage.setSenderName(documentOwner.getFullName());
+					dvkMessage.setDhlGuid(document.getGuid());
 
-						AditUser documentOwner = (AditUser) session.get(
-								AditUser.class, documentOwnerCode);
+					// Insert data as stream
+					Clob clob = Hibernate.createClob(" ", dvkSession);
+					dvkMessage.setData(clob);
 
-						dvkMessage.setSenderOrgCode(documentOwner
-								.getDvkOrgCode());
-						dvkMessage.setSenderPersonCode(documentOwner
-								.getUserCode());
-						dvkMessage.setSenderName(documentOwner.getFullName());
-						dvkMessage.setDhlGuid(document.getGuid());
+					dvkMessageID = (Long) dvkSession.save(dvkMessage);
 
-						// Insert data as stream
-						Clob clob = Hibernate.createClob(" ", dvkSession);
-						dvkMessage.setData(clob);
-
-						dvkMessageID = (Long) dvkSession.save(dvkMessage);
-
-						if (dvkMessageID == null
-								|| dvkMessageID.longValue() == 0) {
-							LOG
-									.error("Error while saving outgoing message to DVK database - no ID returned by save method.");
-							throw new DataRetrievalFailureException(
-									"Error while saving outgoing message to DVK database - no ID returned by save method.");
-						} else {
-							LOG
-									.info("Outgoing message saved to DVK database. ID: "
-											+ dvkMessageID);
-						}
-
-						LOG
-								.debug("DVK Message saved to client database. GUID: "
-										+ dvkMessage.getDhlGuid());
-						dvkTransaction.commit();
-
-					} catch (Exception e) {
-						dvkTransaction.rollback();
-						throw new DataRetrievalFailureException(
-								"Error while adding message to DVK Client database: ",
-								e);
-					} finally {
-						if (dvkSession != null) {
-							dvkSession.close();
-						}
+					if (dvkMessageID == null || dvkMessageID.longValue() == 0) {
+						LOG.error("Error while saving outgoing message to DVK database - no ID returned by save method.");
+						throw new DataRetrievalFailureException("Error while saving outgoing message to DVK database - no ID returned by save method.");
+					} else {
+						LOG.info("Outgoing message saved to DVK database. ID: " + dvkMessageID);
 					}
 
-					// Update CLOB
-					Session dvkSession2 = sessionFactory.openSession();
-					Transaction dvkTransaction2 = dvkSession2
-							.beginTransaction();
-
-					try {
-						// Select the record for update
-						PojoMessage dvkMessageToUpdate = (PojoMessage) dvkSession2
-								.load(PojoMessage.class, dvkMessageID,
-										LockMode.UPGRADE);
-
-						// Write the DVK Container to temporary file
-						String temporaryFile = this.getConfiguration()
-								.getTempDir()
-								+ File.separator
-								+ Util.generateRandomFileName();
-						dvkContainer.save2File(temporaryFile);
-
-						// Write the temporary file to the database
-						InputStream is = new FileInputStream(temporaryFile);
-						Writer clobWriter = dvkMessageToUpdate.getData()
-								.setCharacterStream(1);
-
-						byte[] buf = new byte[1024];
-						int len;
-						while ((len = is.read(buf)) > 0) {
-							clobWriter.write(new String(buf, 0, len, "UTF-8"));
-						}
-						is.close();
-						clobWriter.close();
-
-						dvkTransaction2.commit();
-
-					} catch (Exception e) {
-						dvkTransaction2.rollback();
-						throw new DataRetrievalFailureException(
-								"Error while adding message to DVK Client database (CLOB update): ",
-								e);
-					} finally {
-						if (dvkSession2 != null) {
-							dvkSession2.close();
-						}
-					}
-
-					// TODO: Save the document DVK_ID to ADIT database
+					LOG.debug("DVK Message saved to client database. GUID: " + dvkMessage.getDhlGuid());
+					dvkTransaction.commit();
 
 				} catch (Exception e) {
-					throw new HibernateException(
-							"Error while saving DVK Container to temporary file: ",
-							e);
+					dvkTransaction.rollback();
+					throw new DataRetrievalFailureException("Error while adding message to DVK Client database: ", e);
+				} finally {
+					if (dvkSession != null) {
+						dvkSession.close();
+					}
 				}
+
+				// Update CLOB
+				Session dvkSession2 = sessionFactory.openSession();
+				Transaction dvkTransaction2 = dvkSession2.beginTransaction();
+
+				try {
+					// Select the record for update
+					PojoMessage dvkMessageToUpdate = (PojoMessage) dvkSession2.load(PojoMessage.class, dvkMessageID, LockMode.UPGRADE);
+
+					// Write the DVK Container to temporary file
+					String temporaryFile = this.getConfiguration().getTempDir() + File.separator + Util.generateRandomFileName();
+					dvkContainer.save2File(temporaryFile);
+
+					// Write the temporary file to the database
+					InputStream is = new FileInputStream(temporaryFile);
+					Writer clobWriter = dvkMessageToUpdate.getData().setCharacterStream(1);
+
+					byte[] buf = new byte[1024];
+					int len;
+					while ((len = is.read(buf)) > 0) {
+						clobWriter.write(new String(buf, 0, len, "UTF-8"));
+					}
+					is.close();
+					clobWriter.close();
+
+					
+
+					// Save the document DVK_ID to ADIT database
+					document.setDvkId(dvkMessageID);
+					session.saveOrUpdate(document);
+					
+					// Commit to DVK database
+					dvkTransaction2.commit();
+					result++;
+					
+				} catch (Exception e) {
+					dvkTransaction2.rollback();
+					throw new DataRetrievalFailureException("Error while adding message to DVK Client database (CLOB update): ", e);
+				} finally {
+					if (dvkSession2 != null) {
+						dvkSession2.close();
+					}
+				}				
+			} catch (Exception e) {
+				throw new AditInternalException("Error while sending documents to DVK Client database: ", e);
+			}
 		}
+		return result;
 	}
 
 	public MessageSource getMessageSource() {
