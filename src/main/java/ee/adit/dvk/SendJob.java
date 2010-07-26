@@ -39,7 +39,7 @@ public class SendJob extends QuartzJobBean {
 			LOG.info("Executing scheduled job: Send documents to DVK");
 			
 			// TODO: Fetch all the documents that have document_sharing records that have type "send_dvk" and dvk_status_id is null or "100" (puudub)
-			this.getDocumentService().getDocumentsForDVKSending();
+			this.getDocumentService().sendDocumentsToDVK();
 			
 			
 			

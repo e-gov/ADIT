@@ -449,7 +449,7 @@ public class DocumentService {
 	 */
 	@SuppressWarnings("unchecked")
 	@Transactional
-	public void getDocumentsForDVKSending() {
+	public void sendDocumentsToDVK() {
 
 		final String SQL_QUERY = "select doc from Document doc, DocumentSharing docSharing where docSharing.documentSharingType = 'send_dvk' and (docSharing.documentDvkStatus is null or docSharing.documentDvkStatus = 100) and docSharing.documentId = doc.id";
 
