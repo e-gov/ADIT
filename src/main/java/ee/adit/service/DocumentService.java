@@ -386,6 +386,7 @@ public class DocumentService {
 	 * 3. That DocumentSharing must have the "documentDvkStatus" not initialized or set to "100" 
 	 */
 	@SuppressWarnings("unchecked")
+	@Transactional
 	public void getDocumentsForDVKSending() {
 		
 		final String SQL_QUERY = "select doc from Document doc, DocumentSharing docSharing where docSharing.documentSharingType = 'send_dvk' and (docSharing.documentDvkStatus is null or docSharing.documentDvkStatus = 100) and docSharing.documentId = doc.id";
