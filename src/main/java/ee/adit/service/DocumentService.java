@@ -596,9 +596,6 @@ public class DocumentService {
 
 						// Update CLOB
 						Session dvkSession2 = sessionFactory.openSession();
-
-						LOG.debug("dvkSession2.open?: " + dvkSession2.isOpen());
-
 						Transaction dvkTransaction2 = dvkSession2
 								.beginTransaction();
 
@@ -606,7 +603,7 @@ public class DocumentService {
 								.load(PojoMessage.class, dvkMessageID,
 										LockMode.UPGRADE);
 
-						String temporaryFile = Util.generateRandomFileName();
+						String temporaryFile = this.getConfiguration().getTempDir() + File.separator + Util.generateRandomFileName();
 						dvkContainer.save2File(temporaryFile);
 
 						InputStream is = new FileInputStream(temporaryFile);
