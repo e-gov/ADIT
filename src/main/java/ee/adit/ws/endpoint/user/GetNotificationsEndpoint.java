@@ -85,8 +85,13 @@ public class GetNotificationsEndpoint extends AbstractAditBaseEndpoint {
 			ArrayOfNotification notificationList = this.getUserService().getNotifications(user.getUserCode());
 			response.setNotifications(notificationList);
 			
-			// TODO: Teavituste üldine staatus teavitusteenusest
-			// TODO: Teavituste e-posti aadresside nimekiri
+			/* TODO: In theory this query should also return:
+			 * - notification overall status (activated or not)
+			 * - related e-mail address list (where the notifications should be sent)
+			 * 
+			 * However this data cannot be retreived from 'teavituskalender' database,
+			 * because it's interface does not allow queying such data.
+			 */
 			
 			messages.addMessage(new Message("en", this.getMessageSource().getMessage("request.getNotifications.success", new Object[] { }, Locale.ENGLISH)));
 			

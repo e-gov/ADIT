@@ -10,12 +10,15 @@ import ee.adit.dao.pojo.Notification;
 import ee.adit.service.UserService;
 import ee.riik.xtee.teavituskalender.producers.producer.teavituskalender.LisaSyndmusDocument;
 import ee.riik.xtee.teavituskalender.producers.producer.teavituskalender.LisaSyndmusResponseDocument;
+import ee.riik.xtee.teavituskalender.producers.producer.teavituskalender.OtsiKasutajadDocument;
+import ee.riik.xtee.teavituskalender.producers.producer.teavituskalender.OtsiKasutajadResponseDocument;
 import ee.riik.xtee.teavituskalender.producers.producer.teavituskalender.LisaSyndmusDocument.LisaSyndmus;
 import ee.riik.xtee.teavituskalender.producers.producer.teavituskalender.LisaSyndmusDocument.LisaSyndmus.Keha.Lugejad;
 import ee.riik.xtee.teavituskalender.producers.producer.teavituskalender.LisaSyndmusDocument.LisaSyndmus.Keha.Tahtsus;
 import ee.riik.xtee.teavituskalender.producers.producer.teavituskalender.LisaSyndmusDocument.LisaSyndmus.Keha.SyndmuseTyyp;
 import ee.riik.xtee.teavituskalender.producers.producer.teavituskalender.LisaSyndmusDocument.LisaSyndmus.Keha.Lugejad.Kasutaja;
-import ee.riik.xtee.teavituskalender.producers.producer.teavituskalender.LisaSyndmusDocument.LisaSyndmus.Keha.Lugejad.Kasutaja.KasutajaTyyp;
+import ee.riik.xtee.teavituskalender.producers.producer.teavituskalender.OtsiKasutajadDocument.OtsiKasutajad;
+import ee.riik.xtee.teavituskalender.producers.producer.teavituskalender.OtsiKasutajadDocument.OtsiKasutajad.Keha.Kasutajad;
 import ee.webmedia.xtee.client.service.SimpleXTeeServiceConfiguration;
 import ee.webmedia.xtee.client.service.StandardXTeeConsumer;
 
@@ -166,6 +169,74 @@ public class ScheduleClient {
 		}
 		
 		return eventId;
+	}
+	
+	/**
+	 * Queries 'teavituskalender' database to find out whether it contains
+	 * a matching user in it's user database. 
+	 * 
+	 * @param userCode		User (person or organization) code.
+	 * @return				Whether or not 'teavituskalender' database contains
+	 * 						a user with given code.
+	 */
+	public static boolean userExists(String userCode) {
+		boolean result = false;
+		try {
+			OtsiKasutajadDocument doc = OtsiKasutajadDocument.Factory.newInstance();
+			OtsiKasutajad req = doc.addNewOtsiKasutajad();
+			OtsiKasutajadDocument.OtsiKasutajad.Keha keha = req.addNewKeha();
+			
+			Kasutajad users = keha.addNewKasutajad();
+			ee.riik.xtee.teavituskalender.producers.producer.teavituskalender.OtsiKasutajadDocument.OtsiKasutajad.Keha.Kasutajad.Kasutaja user = users.addNewKasutaja();
+			user.setKood(userCode);
+			
+			ClassPathXmlApplicationContext ctx = null;
+			try {
+				ctx = startContext();
+				StandardXTeeConsumer xteeService = (StandardXTeeConsumer) ctx.getBean("xteeConsumer");
+				SimpleXTeeServiceConfiguration conf = (SimpleXTeeServiceConfiguration) xteeService.getServiceConfiguration();
+				conf.setDatabase("teavituskalender");
+				conf.setMethod("otsiKasutajad");
+				conf.setVersion("v1");
+				OtsiKasutajadResponseDocument ret = (OtsiKasutajadResponseDocument) xteeService.sendRequest(doc, conf);
+				
+				if (ret != null) {
+					if (ret.getOtsiKasutajadResponse() != null) {
+						if (ret.getOtsiKasutajadResponse().getKeha() != null) {
+							BigInteger foundUserCount = ret.getOtsiKasutajadResponse().getKeha().getLeitudArv();
+							LOG.debug("OtsiKasutajad request found " + ((foundUserCount == null) ? "NULL" : foundUserCount.toString()) + " mathing users.");
+
+							if (ret.getOtsiKasutajadResponse().getKeha().getTulemus() != null) {
+								BigInteger resultCode = ret.getOtsiKasutajadResponse().getKeha().getTulemus().getTulemuseKood();
+								String resultMessage = ret.getOtsiKasutajadResponse().getKeha().getTulemus().getTulemuseTekst();
+								LOG.debug("OtsiKasutajad result code: " + ((resultCode == null) ? "NULL" : resultCode.toString()));
+								LOG.debug("OtsiKasutajad result message: " + resultMessage);
+								
+								if ((resultCode != null) && (resultCode.intValue() == RESULT_OK)) {
+									result = (foundUserCount.intValue() > 0);
+									LOG.debug("Successfully found out whether or not user "+ userCode +" exists in 'teavituskalender' database " + (result ? "(exists)." : "(does not exist)."));
+								}
+							} else {
+								LOG.error("Error finding user in 'teavituskalender' database. Response's 'tulemus' part is NULL. Related user code: " + userCode);
+							}
+						} else {
+							LOG.error("Error finding user in 'teavituskalender' database. Response's 'keha' part is NULL. Related user code: " + userCode);
+						}
+					} else {
+						LOG.error("Error finding user in 'teavituskalender' database. Response's 'LisaSyndmusResponse' part is NULL. Related user code: " + userCode);
+					}
+				} else {
+					LOG.error("Error finding user in 'teavituskalender' database. Response document is NULL. Related user code: " + userCode);
+				}
+			} finally {
+				if (ctx != null) {
+					ctx.close();
+				}
+			}
+		} catch (Exception ex) {
+			LOG.error("Error finding user in 'teavituskalender' database. Related user code: " + userCode, ex);
+		}
+		return result;
 	}
 	
 	public static ClassPathXmlApplicationContext startContext() {
