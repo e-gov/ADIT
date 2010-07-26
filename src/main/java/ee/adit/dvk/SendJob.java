@@ -38,16 +38,8 @@ public class SendJob extends QuartzJobBean {
 		try {
 			LOG.info("Executing scheduled job: Send documents to DVK");
 			
-			// TODO: Fetch all the documents that have document_sharing records that have type "send_dvk" and dvk_status_id is null or "100" (puudub)
+			// Send documents to DVK Client database
 			this.getDocumentService().sendDocumentsToDVK();
-			
-			
-			
-			// TODO: Construct a DVK XML container for every document that is found
-			
-			// TODO: Save the document in DVK Client database (including the DVK XML container and recipient data)
-			
-			// TODO: Save the document DVK_ID to ADIT database
 			
 		} catch (Exception e) {
 			LOG.error("Error executing scheduled DVK sending: ", e);
