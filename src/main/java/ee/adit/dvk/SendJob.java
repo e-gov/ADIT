@@ -39,7 +39,9 @@ public class SendJob extends QuartzJobBean {
 			LOG.info("Executing scheduled job: Send documents to DVK");
 			
 			// Send documents to DVK Client database
-			this.getDocumentService().sendDocumentsToDVK();
+			int sentDocumentsCount = this.getDocumentService().sendDocumentsToDVK();
+
+			LOG.debug("Documents sent to DVK (" + sentDocumentsCount + ")");
 			
 		} catch (Exception e) {
 			LOG.error("Error executing scheduled DVK sending: ", e);
