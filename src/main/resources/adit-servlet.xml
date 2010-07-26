@@ -481,9 +481,9 @@
 	<bean id="dvkTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
 	  	<property name="jobDetail" ref="sendJobDetails"/>
 		<!-- 10 seconds -->
-	  	<property name="startDelay" value="200000"/>
+	  	<property name="startDelay" value="60000"/>
 		<!-- repeat every 20 seconds -->
-	  	<property name="repeatInterval" value="200000"/>
+	  	<property name="repeatInterval" value="60000"/>
 	</bean>
 	
 	<bean id="notificationTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
