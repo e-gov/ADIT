@@ -353,7 +353,7 @@
 		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
 		<property name="url" value="jdbc:oracle:thin:@//localhost:1521/xe" />
 		<property name="username" value="adit" />
-		<property name="password" value="adit123" />
+		<property name="password" value="adit" />
 	</bean>
 
 	<bean id="sessionFactory"
