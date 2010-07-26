@@ -139,7 +139,7 @@ CREATE TABLE &&ADIT_SCHEMA..DOCUMENT
 	type                    VARCHAR2(50) NOT NULL,    /* Viide dokumendi tüübi lühinimele. */
 	creator_code            VARCHAR2(50) NOT NULL,    /* Dokumendi looja isikukood. */
 	creator_name            VARCHAR2(255) NULL,    /* Dokumendi looja nimi (loomise hetke seisuga) */
-	creator_user_code       VARCHAR2(50) NOT NULL,    /* Dokumendi loonud isiku isikukood (juhul, kui dokument kuulub asutusele). */
+	creator_user_code       VARCHAR2(50) NULL,    /* Dokumendi loonud isiku isikukood (juhul, kui dokument kuulub asutusele). */
 	creator_user_name       VARCHAR2(255) NULL,    /* Dokumendi loonud isiku nimi (juhul, kui dokument kuulub asutusele; loomise hetke seisuga) */
 	creation_date           DATE,    /* Dokumendi loomise kuupäev ja kellaaeg */
 	remote_application      VARCHAR2(50),    /* Viide päringu välja kutsunud infosüsteemi lühinimele. */
