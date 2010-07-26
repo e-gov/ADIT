@@ -3,7 +3,7 @@ package ee.adit.util;
 import java.math.BigInteger;
 
 public class Configuration {
-
+	
 	private BigInteger getJoinedMaxResults;
 
 	private String tempDir;
