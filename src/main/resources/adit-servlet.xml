@@ -386,7 +386,10 @@
 			<props>
 				<prop key="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</prop>
 				<prop key="hibernate.cache.provider_class">org.hibernate.cache.NoCacheProvider</prop>
+				<!-- 
+				This is not needed, because Spring manages the transactions itself, when transaction management is enabled.
 				<prop key="hibernate.current_session_context_class">thread</prop>
+				-->
 				<prop key="hibernate.transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</prop>
 				<prop key="hibernate.show_sql">false</prop>
 			</props>
@@ -486,17 +489,21 @@
 	  	<property name="repeatInterval" value="60000"/>
 	</bean>
 	
+	<!-- 
 	<bean id="notificationTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
 	  	<property name="jobDetail" ref="sendNotificationsJobDetails"/>
 	  	<property name="startDelay" value="120000"/>
 	  	<property name="repeatInterval" value="120000"/>
 	</bean>
-	
+	 -->
+	 
 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="triggers">
 	   		<list>
 	      		<ref bean="dvkTrigger"/>
+	      		<!-- 
 	      		<ref bean="notificationTrigger"/>
+	      		-->
 	    	</list>
 	  	</property>
 	</bean>
