@@ -588,8 +588,10 @@ public class DocumentService {
 					Iterator<DocumentSharing> documentSharingUpdateIterator = document.getDocumentSharings().iterator();
 					while(documentSharingUpdateIterator.hasNext()) {
 						DocumentSharing documentSharing = documentSharingUpdateIterator.next();
-						documentSharing.setDocumentDvkStatus(DVKStatus_Sending);
-						session.saveOrUpdate(documentSharing);
+						if (DocumentService.SharingType_SendDvk.equalsIgnoreCase(documentSharing.getDocumentSharingType())) {
+							documentSharing.setDocumentDvkStatus(DVKStatus_Sending);
+							session.saveOrUpdate(documentSharing);
+						}						
 					}
 					
 					result++;
