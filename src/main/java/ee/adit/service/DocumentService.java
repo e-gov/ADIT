@@ -591,23 +591,7 @@ public class DocumentService {
 						dvkTransaction.commit();
 						dvkSession.close();
 
-						if (dvkMessage == null) {
-							LOG.debug("dvkMessage NULL after saveOrUpdate.");
-						} else {
-							LOG
-									.debug("dvkMessage NOT NULL after saveOrUpdate.");
-							try {
-								dvkMessageID = dvkMessage.getDhlMessageId();
-							} catch (Exception e) {
-								LOG.error("Error: ", e);
-							}
-							LOG.debug("DHL_MESSAGE_ID: " + dvkMessageID);
-						}
-						LOG.debug("DvkMessage checked.");
-
-						LOG
-								.debug("DVK Message saved to client database. GUID: "
-										+ dvkMessage.getDhlGuid());
+						LOG.debug("DVK Message saved to client database. GUID: " + dvkMessage.getDhlGuid());
 
 						// Update CLOB
 						Session dvkSession2 = sessionFactory.openSession();
