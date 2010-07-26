@@ -51,6 +51,7 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 		this.documentService = documentService;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	protected Object invokeInternal(Object requestObject) throws Exception {
 		ShareDocumentResponse response = new ShareDocumentResponse();
@@ -157,6 +158,7 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 			
 			// All checks are successfully passed
 			boolean saveDocument = false;
+			boolean completeSuccess = true;
 			for (String recipientCode : request.getRecipientList().getCode()) {
 				boolean isSuccess = false;
 				ArrayOfMessage statusMessages = new ArrayOfMessage();
@@ -194,7 +196,9 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 				status.setSuccess(isSuccess);
 				status.setCode(recipientCode);
 				status.setMessages(statusMessages);
-				statusArray.addRecipient(status); 
+				statusArray.addRecipient(status);
+				
+				completeSuccess = (completeSuccess && isSuccess);
 			}
 						
 			if (saveDocument) {
@@ -236,17 +240,19 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 				
 				// Send notification to every user the document was shared to
 				// (assuming they have requested such notifications)
-				for (String recipientCode : request.getRecipientList().getCode()) {
-					AditUser recipient = this.getUserService().getUserByID(recipientCode);
-					if ((recipient != null) && (userService.findNotification(recipient.getUserNotifications(), ScheduleClient.NotificationType_Share) != null)) {
-						ScheduleClient.addEvent(
-							recipient.getUserCode(),
-							this.getMessageSource().getMessage("scheduler.message.share", new Object[] { doc.getTitle(), userCode }, Locale.ENGLISH),
-							this.getConfiguration().getSchedulerEventTypeName(),
-							requestDate,
-							ScheduleClient.NotificationType_Share,
-							doc.getId(),
-							this.userService);
+				for (RecipientStatus status : statusArray.getRecipient()) {
+					if ((status != null) && status.isSuccess()) {
+						AditUser recipient = this.getUserService().getUserByID(status.getCode());
+						if ((recipient != null) && (userService.findNotification(recipient.getUserNotifications(), ScheduleClient.NotificationType_Share) != null)) {
+							ScheduleClient.addEvent(
+								recipient.getUserCode(),
+								this.getMessageSource().getMessage("scheduler.message.share", new Object[] { doc.getTitle(), userCode }, Locale.ENGLISH),
+								this.getConfiguration().getSchedulerEventTypeName(),
+								requestDate,
+								ScheduleClient.NotificationType_Share,
+								doc.getId(),
+								this.userService);
+						}
 					}
 				}
 			} else {
@@ -281,6 +287,7 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 		return response;
 	}
 	
+	@SuppressWarnings("unchecked")
 	private boolean sharingExists(Set documentSharings, String userCode) {
 		boolean result = false;
 		if ((documentSharings != null) && (!documentSharings.isEmpty())) {

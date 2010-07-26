@@ -139,6 +139,8 @@ CREATE TABLE &&ADIT_SCHEMA..DOCUMENT
 	type                    VARCHAR2(50) NOT NULL,    /* Viide dokumendi tüübi lühinimele. */
 	creator_code            VARCHAR2(50) NOT NULL,    /* Dokumendi looja isikukood. */
 	creator_name            VARCHAR2(255) NULL,    /* Dokumendi looja nimi (loomise hetke seisuga) */
+	creator_user_code       VARCHAR2(50) NOT NULL,    /* Dokumendi loonud isiku isikukood (juhul, kui dokument kuulub asutusele). */
+	creator_user_name       VARCHAR2(255) NULL,    /* Dokumendi loonud isiku nimi (juhul, kui dokument kuulub asutusele; loomise hetke seisuga) */
 	creation_date           DATE,    /* Dokumendi loomise kuupäev ja kellaaeg */
 	remote_application      VARCHAR2(50),    /* Viide päringu välja kutsunud infosüsteemi lühinimele. */
 	last_modified_date      DATE,    /* Viimase muudatuse kuupäev ja kellaaeg. */
@@ -162,6 +164,8 @@ COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.title                   IS 'Dokumendi 
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.type                    IS 'Viide dokumendi tüübi lühinimele.';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.creator_code            IS 'Dokumendi looja isikukood.';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.creator_name            IS 'Dokumendi looja nimi (loomise hetke seisuga)';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.creator_user_code       IS 'Dokumendi loonud isiku isikukood (juhul, kui dokument kuulub asutusele).';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.creator_user_name       IS 'Dokumendi loonud isiku nimi (juhul, kui dokument kuulub asutusele; loomise hetke seisuga)';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.creation_date           IS 'Dokumendi loomise kuupäev ja kellaaeg';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.remote_application      IS 'Viide päringu välja kutsunud infosüsteemi lühinimele.';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.last_modified_date      IS 'Viimase muudatuse kuupäev ja kellaaeg.';

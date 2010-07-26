@@ -20,6 +20,8 @@ public class Document implements java.io.Serializable {
 	private String title;
 	private String creatorCode;
 	private String creatorName;
+	private String creatorUserCode;
+	private String creatorUserName;
 	private Date creationDate;
 	private String remoteApplication;
 	private Date lastModifiedDate;
@@ -42,15 +44,17 @@ public class Document implements java.io.Serializable {
 	public Document() {
 	}
 
-	public Document(long id, String documentType, String creatorCode) {
+	public Document(long id, String documentType, String creatorCode, String creatorUserCode) {
 		this.id = id;
 		this.documentType = documentType;
 		this.creatorCode = creatorCode;
+		this.creatorUserCode = creatorUserCode;
 	}
 
 	public Document(long id, String documentType, Document document,
 			String guid, String title, String creatorCode, String creatorName,
-			Date creationDate, String remoteApplication, Date lastModifiedDate,
+			String creatorUserCode, String creatorUserName, Date creationDate,
+			String remoteApplication, Date lastModifiedDate,
 			Long documentDvkStatusId, Long dvkId, Long documentWfStatusId,
 			Boolean locked, Date lockingDate, Boolean signable,
 			Boolean deflated, Date deflateDate, Boolean deleted, Blob signatureContainer,
@@ -63,6 +67,8 @@ public class Document implements java.io.Serializable {
 		this.title = title;
 		this.creatorCode = creatorCode;
 		this.creatorName = creatorName;
+		this.creatorUserCode = creatorUserCode;
+		this.creatorUserName = creatorUserName;
 		this.creationDate = creationDate;
 		this.remoteApplication = remoteApplication;
 		this.lastModifiedDate = lastModifiedDate;
@@ -137,6 +143,22 @@ public class Document implements java.io.Serializable {
 
 	public void setCreatorName(String creatorName) {
 		this.creatorName = creatorName;
+	}
+
+	public String getCreatorUserCode() {
+		return creatorUserCode;
+	}
+
+	public void setCreatorUserCode(String creatorUserCode) {
+		this.creatorUserCode = creatorUserCode;
+	}
+
+	public String getCreatorUserName() {
+		return creatorUserName;
+	}
+
+	public void setCreatorUserName(String creatorUserName) {
+		this.creatorUserName = creatorUserName;
 	}
 
 	public Date getCreationDate() {

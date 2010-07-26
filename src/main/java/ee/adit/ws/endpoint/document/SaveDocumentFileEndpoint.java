@@ -208,9 +208,6 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 				throw new AditException(errorMessage);
 			}
 			
-			// TODO: Teavituskalendri kaudu teavituse saatmine
-				
-
 			// Set response messages
 			response.setSuccess(true);
 			messages.addMessage(new Message("en", this.getMessageSource().getMessage("request.saveDocumentFile.success", new Object[] { }, Locale.ENGLISH)));

@@ -88,7 +88,8 @@ public class DocumentDAO extends HibernateDaoSupport {
 			final GetDocumentListRequest param,
 			final String userCode,
 			final String temporaryFilesDir,
-			final String filesNotFoundMessageBase) {
+			final String filesNotFoundMessageBase,
+			final String currentRequestUserCode) {
 		
 		GetDocumentListResponseAttachment result = null;
 		
@@ -221,7 +222,7 @@ public class DocumentDAO extends HibernateDaoSupport {
 						criteria.add(disjunction);
 					}
 
-					// TODO: Phrase search
+					// Phrase search
 					if ((param.getSearchPhrase() != null) && (param.getSearchPhrase().length() > 0)) {
 						Disjunction disjunction = Restrictions.disjunction();
 						disjunction.add(Restrictions.like("title", param.getSearchPhrase(), MatchMode.ANYWHERE));
@@ -290,7 +291,8 @@ public class DocumentDAO extends HibernateDaoSupport {
 							true,
 							false,
 							temporaryFilesDir,
-							filesNotFoundMessageBase);
+							filesNotFoundMessageBase,
+							currentRequestUserCode);
 						innerResult.getDocumentList().add(resultDoc);
 					}
 					
@@ -314,7 +316,8 @@ public class DocumentDAO extends HibernateDaoSupport {
 			final boolean includeSharings,
 			final boolean includeFileContents,
 			final String temporaryFilesDir,
-			final String filesNotFoundMessageBase) throws Exception {
+			final String filesNotFoundMessageBase,
+			final String currentRequestUserCode) throws Exception {
 		
 		if (documentId <= 0) {
 			throw new IllegalArgumentException("Document ID must be a positive integer. Currently supplied ID was " + documentId + ".");
@@ -336,7 +339,8 @@ public class DocumentDAO extends HibernateDaoSupport {
 							includeSharings,
 							includeFileContents,
 							temporaryFilesDir,
-							filesNotFoundMessageBase);
+							filesNotFoundMessageBase,
+							currentRequestUserCode);
 	            }
 	        });
 		} catch (DataAccessException ex) {
@@ -356,7 +360,8 @@ public class DocumentDAO extends HibernateDaoSupport {
 			final boolean includeSharings,
 			final boolean includeFileContents,
 			final String temporaryFilesDir,
-			final String filesNotFoundMessageBase) throws SQLException {
+			final String filesNotFoundMessageBase,
+			final String currentRequestUserCode) throws SQLException {
 		
 		long totalBytes = 0;
 		OutputDocument result = new OutputDocument();
@@ -513,10 +518,15 @@ public class DocumentDAO extends HibernateDaoSupport {
     	result.setCreatorCode(doc.getCreatorCode());
     	result.setCreatorName(doc.getCreatorName());
     	
-    	// TODO: Siin peaks vist tegelikult olema dokumendi
-    	// lisanud isiku andmed, kui dokumendi omanikuks on asutus
-    	result.setCreatorUserCode(doc.getCreatorCode());
-    	result.setCreatorUserName(doc.getCreatorName());
+    	// If current request was executed by document creator
+    	// (the same user whom the document belongs to) then return
+    	// also data about the person, who created this document.
+    	// This is useful if document creator is an organization and one
+    	// wants to find out, who exactly in this organization created the document.
+    	if ((currentRequestUserCode != null) && (currentRequestUserCode.equalsIgnoreCase(doc.getCreatorCode()))) {
+	    	result.setCreatorUserCode(doc.getCreatorUserCode());
+	    	result.setCreatorUserName(doc.getCreatorUserName());
+    	}
     	
     	result.setDeflated(doc.getDeflated());
     	result.setDeflatingDate(doc.getDeflateDate());

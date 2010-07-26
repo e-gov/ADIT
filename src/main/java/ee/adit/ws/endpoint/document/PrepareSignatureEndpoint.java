@@ -57,6 +57,7 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
 		this.digidocConfigurationFile = digidocConfigurationFile;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected Object invokeInternal(Object requestObject) throws Exception {
 		PrepareSignatureResponse response = new PrepareSignatureResponse();
@@ -211,9 +212,6 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
 				String errorMessage = this.getMessageSource().getMessage("document.doesNotBelongToUser", new Object[] { request.getDocumentId(), userCode }, Locale.ENGLISH);
 				throw new AditException(errorMessage);
 			}
-			
-			// TODO: Teavituskalendri kaudu teavituse saatmine
-				
 
 			// Set response messages
 			response.setSuccess(true);

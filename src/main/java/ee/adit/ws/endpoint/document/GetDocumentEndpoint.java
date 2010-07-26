@@ -148,7 +148,8 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
 									null,
 									false, false, includeFileContents,
 									this.getConfiguration().getTempDir(),
-									this.getMessageSource().getMessage("files.nonExistentOrDeleted", new Object[] { }, Locale.ENGLISH));
+									this.getMessageSource().getMessage("files.nonExistentOrDeleted", new Object[] { }, Locale.ENGLISH),
+									user.getUserCode());
 							
 							if (resultDoc != null) {
 								// 1. Convert java list to XML string and output to file
