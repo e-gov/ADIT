@@ -105,8 +105,8 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 		for(Iterator<Node> headerElemendid = header.getChildElements(); headerElemendid.hasNext(); ) {
 			Node headerElement = headerElemendid.next();
 			if(!SOAPUtil.isTextNode(headerElement)) {
-				LOG.debug("Parsing XTee header element: " + headerElement.getLocalName());
-				pais.addElement(new QName(headerElement.getNamespaceURI(),headerElement.getLocalName()), headerElement.getNodeValue());
+				LOG.debug("Parsing XTee header element: " + headerElement.getLocalName() + " (value="+ headerElement.getTextContent() +")");
+				pais.addElement(new QName(headerElement.getNamespaceURI(),headerElement.getLocalName()), headerElement.getTextContent());
 			}
 		}
 		return pais;
