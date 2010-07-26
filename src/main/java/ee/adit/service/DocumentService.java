@@ -32,6 +32,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.springframework.context.MessageSource;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.transaction.annotation.Transactional;
 import org.xml.sax.InputSource;
@@ -549,7 +551,7 @@ public class DocumentService {
 					failideKonteiner.setFailid(dvkFiles);
 					dvkContainer.setFailideKonteiner(failideKonteiner);
 
-					// TODO: remove
+					// Save document to DVK Client database
 					try {
 						SessionFactory sessionFactory = DVKAPI
 								.createSessionFactory("hibernate_ora_dvk.cfg.xml");
@@ -557,11 +559,7 @@ public class DocumentService {
 						Transaction dvkTransaction = dvkSession
 								.beginTransaction();
 
-						long dvkMessageID = 0;
-
-						// TODO: save the document to DVK Client database
 						PojoMessage dvkMessage = new PojoMessage();
-
 						dvkMessage.setIsIncoming(false);
 						dvkMessage.setTitle(document.getTitle());
 
@@ -582,11 +580,14 @@ public class DocumentService {
 						Clob clob = Hibernate.createClob(" ", dvkSession);
 						dvkMessage.setData(clob);
 
-						if (dvkMessage == null)
-							LOG.debug("dvkMessage NULL before saveOrUpdate.");
-
-						Object id = dvkSession.save(dvkMessage);
-						LOG.debug("DVK_MESSAGE.dhl_id: " + dvkMessageID);
+						Long dvkMessageID = (Long) dvkSession.save(dvkMessage);
+						
+						if(dvkMessageID == null || dvkMessageID.longValue() == 0) {
+							LOG.error("Error while saving outgoing message to DVK database - no ID returned by save method.");
+							throw new DataRetrievalFailureException("Error while saving outgoing message to DVK database - no ID returned by save method.");
+						} else {
+							LOG.info("Outgoing message saved to DVK database. ID: " + dvkMessageID);
+						}
 
 						dvkTransaction.commit();
 						dvkSession.close();
