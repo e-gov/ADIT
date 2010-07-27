@@ -6,6 +6,7 @@ import java.util.Calendar;
 import org.apache.log4j.Logger;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Notification;
 import ee.adit.service.UserService;
 import ee.riik.xtee.teavituskalender.producers.producer.teavituskalender.LisaSyndmusDocument;
@@ -17,6 +18,7 @@ import ee.riik.xtee.teavituskalender.producers.producer.teavituskalender.LisaSyn
 import ee.riik.xtee.teavituskalender.producers.producer.teavituskalender.LisaSyndmusDocument.LisaSyndmus.Keha.Tahtsus;
 import ee.riik.xtee.teavituskalender.producers.producer.teavituskalender.LisaSyndmusDocument.LisaSyndmus.Keha.SyndmuseTyyp;
 import ee.riik.xtee.teavituskalender.producers.producer.teavituskalender.LisaSyndmusDocument.LisaSyndmus.Keha.Lugejad.Kasutaja;
+import ee.riik.xtee.teavituskalender.producers.producer.teavituskalender.LisaSyndmusDocument.LisaSyndmus.Keha.Lugejad.Kasutaja.KasutajaTyyp;
 import ee.riik.xtee.teavituskalender.producers.producer.teavituskalender.OtsiKasutajadDocument.OtsiKasutajad;
 import ee.riik.xtee.teavituskalender.producers.producer.teavituskalender.OtsiKasutajadDocument.OtsiKasutajad.Keha.Kasutajad;
 import ee.webmedia.xtee.client.service.SimpleXTeeServiceConfiguration;
@@ -35,9 +37,10 @@ public class ScheduleClient {
 	public static long addEvent(Notification notification, final String eventType, final UserService userService) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(notification.getEventDate());
+		AditUser eventOwner = userService.getUserByID(notification.getUserCode());
 		return addEvent(
 				notification.getId(),
-				notification.getUserCode(),
+				eventOwner,
 				notification.getNotificationText(),
 				eventType,
 				cal,
@@ -47,7 +50,7 @@ public class ScheduleClient {
 	}
 
 	public static long addEvent(
-		final String eventOwnerCode,
+		final AditUser eventOwner,
 		final String eventText,
 		final String eventType,
 		final Calendar eventDate,
@@ -55,12 +58,12 @@ public class ScheduleClient {
 		final long relatedDocumentId,
 		final UserService userService) {
 		
-		return addEvent(0, eventOwnerCode, eventText, eventType, eventDate, notificationType, relatedDocumentId, userService);
+		return addEvent(0, eventOwner, eventText, eventType, eventDate, notificationType, relatedDocumentId, userService);
 	}
 	
 	public static long addEvent(
 			final long notificationId,
-			final String eventOwnerCode,
+			final AditUser eventOwner,
 			final String eventText,
 			final String eventType,
 			final Calendar eventDate,
@@ -84,7 +87,12 @@ public class ScheduleClient {
 			
 			Lugejad recipients = keha.addNewLugejad();
 			Kasutaja recipient = recipients.addNewKasutaja();
-			recipient.setKood(eventOwnerCode);
+			recipient.setKood(eventOwner.getUserCode());
+			if (UserService.USERTYPE_PERSON.equalsIgnoreCase(eventOwner.getUsertype().getShortName())) {
+				recipient.setKasutajaTyyp(KasutajaTyyp.ISIK);
+			} else{
+				recipient.setKasutajaTyyp(KasutajaTyyp.ASUTUS);
+			}
 			
 			// Start and end times
 			keha.setAlgus(eventDate);
@@ -144,7 +152,7 @@ public class ScheduleClient {
 					notificationId,
 					relatedDocumentId,
 					notificationType,
-					eventOwnerCode,
+					eventOwner.getUserCode(),
 					eventDate.getTime(),
 					eventText,
 					eventId,
@@ -158,7 +166,7 @@ public class ScheduleClient {
 					notificationId,
 					relatedDocumentId,
 					notificationType,
-					eventOwnerCode,
+					eventOwner.getUserCode(),
 					eventDate.getTime(),
 					eventText,
 					null,

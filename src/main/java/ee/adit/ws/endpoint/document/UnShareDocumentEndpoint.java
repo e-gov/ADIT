@@ -2,7 +2,6 @@ package ee.adit.ws.endpoint.document;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -12,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
+import ee.adit.dao.pojo.DocumentHistory;
 import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.exception.AditException;
 import ee.adit.pojo.ArrayOfMessage;
@@ -20,6 +20,7 @@ import ee.adit.pojo.Message;
 import ee.adit.pojo.RecipientStatus;
 import ee.adit.pojo.UnShareDocumentRequest;
 import ee.adit.pojo.UnShareDocumentResponse;
+import ee.adit.schedule.ScheduleClient;
 import ee.adit.service.DocumentService;
 import ee.adit.service.UserService;
 import ee.adit.util.CustomXTeeHeader;
@@ -58,7 +59,7 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 		UnShareDocumentResponse response = new UnShareDocumentResponse();
 		ArrayOfMessage messages = new ArrayOfMessage();
 		ArrayOfRecipientStatus statusArray = new ArrayOfRecipientStatus();
-		Date requestDate = Calendar.getInstance().getTime();
+		Calendar requestDate = Calendar.getInstance();
 		String additionalInformationForLog = null;
 		Long documentId = null;
 
@@ -103,6 +104,16 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 			if (user == null) {
 				String errorMessage = this.getMessageSource().getMessage("user.nonExistent", new Object[] { userCode },	Locale.ENGLISH);
 				throw new AditException(errorMessage);
+			}
+			AditUser xroadRequestUser = null;
+			if (user.getUsertype().getShortName().equalsIgnoreCase("person")) {
+				xroadRequestUser = user;
+			} else {
+				try {
+					xroadRequestUser = this.getUserService().getUserByID(header.getIsikukood());
+				} catch (Exception ex) {
+					LOG.debug("Error when attempting to find local user matchinig the person that executed a company request.");
+				}
 			}
 
 			// Kontrollime, et kasutajakonto ligipääs poleks peatatud (kasutaja lahkunud)
@@ -201,18 +212,50 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 				}
 			}
 			
-			// TODO: Kas siin dokumendi ajalukku ei peaks märkima,
-			// et jagamine on lõpetatud (jagamise algus läks ju kirja)
+			// Add history event about unsharing
+			doc.getDocumentHistories().add(new DocumentHistory(
+					DocumentService.HistoryType_UnShare,
+					doc.getId(),
+					requestDate.getTime(),
+					user,
+					xroadRequestUser,
+					header));
 			
 			if (saveDocument) {
-				
 				// If all sharings are removed then remove locking
 				if (doc.getDocumentSharings().isEmpty()) {
 					doc.setLocked(false);
 					doc.setLockingDate(null);
+					
+					// Lisame lukustamise ajaloosündmuse
+					doc.getDocumentHistories().add(new DocumentHistory(
+							DocumentService.HistoryType_UnLock,
+							doc.getId(),
+							requestDate.getTime(),
+							user,
+							xroadRequestUser,
+							header));
 				}
 				
 				this.documentService.getDocumentDAO().save(doc, null, null);
+				
+				// Send notification to every user who was removed from
+				// sharing recipients list (assuming they have requested such notifications)
+				for (RecipientStatus status : statusArray.getRecipient()) {
+					if ((status != null) && status.isSuccess()) {
+						AditUser recipient = this.getUserService().getUserByID(status.getCode());
+						if ((recipient != null) && (userService.findNotification(recipient.getUserNotifications(), ScheduleClient.NotificationType_Share) != null)) {
+							ScheduleClient.addEvent(
+								recipient,
+								this.getMessageSource().getMessage("scheduler.message.share", new Object[] { doc.getTitle(), userCode }, Locale.ENGLISH),
+								this.getConfiguration().getSchedulerEventTypeName(),
+								requestDate,
+								ScheduleClient.NotificationType_Share,
+								doc.getId(),
+								this.userService);
+						}
+					}
+				}
 			}
 
 			// Set response messages
@@ -238,7 +281,7 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 			response.setMessages(arrayOfMessage);
 		}
 
-		super.logCurrentRequest(documentId, requestDate, additionalInformationForLog);
+		super.logCurrentRequest(documentId, requestDate.getTime(), additionalInformationForLog);
 		return response;
 	}
 

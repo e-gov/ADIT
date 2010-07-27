@@ -366,6 +366,9 @@
 		<field name="previousDocumentId" type="java.lang.Long">
 			<bind-xml name="previous_document_id"/>
 		</field>
+		<field name="previousDocumentGuid" type="java.lang.String">
+			<bind-xml name="previous_document_guid"/>
+		</field>
 		<field name="locked" type="java.lang.Boolean">
 			<bind-xml name="locked"/>
 		</field>

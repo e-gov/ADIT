@@ -77,9 +77,6 @@ public class DeflateDocumentEndpoint extends AbstractAditBaseEndpoint {
 			// Check request body
 			checkRequest(request);
 			
-			// TODO: User-based checks might not make any sense here,
-			// because this query is not intended to be used by end users.
-			
 			// Kontrollime, kas päringu käivitanud infosüsteem on ADITis registreeritud
 			boolean applicationRegistered = this.getUserService().isApplicationRegistered(applicationName);
 			if (!applicationRegistered) {

@@ -51,12 +51,12 @@ public class UserService {
 	
 	private NotificationDAO notificationDAO;
 	
-	private static final String USERTYPE_PERSON = "PERSON";
-	private static final String USERTYPE_INSTITUTION = "INSTITUTION";
-	private static final String USERTYPE_COMPANY = "COMPANY";
+	public static final String USERTYPE_PERSON = "PERSON";
+	public static final String USERTYPE_INSTITUTION = "INSTITUTION";
+	public static final String USERTYPE_COMPANY = "COMPANY";
 	
-	private static final String ACCESS_RESTRICTION_WRITE = "WRITE";
-	private static final String ACCESS_RESTRICTION_READ = "READ";
+	public static final String ACCESS_RESTRICTION_WRITE = "WRITE";
+	public static final String ACCESS_RESTRICTION_READ = "READ";
 	
 	public boolean isApplicationRegistered(String remoteApplicationShortName) {
 		boolean result = false;

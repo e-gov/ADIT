@@ -113,8 +113,6 @@ public class DocumentDAO extends HibernateDaoSupport {
 					
 					// Document "folder" (local, incoming, outgoing)
 					if (param.getFolder() != null) {
-						// TODO: Mille järgi üldse otsustada, kas dokument
-						// on kohalik või saadetud?
 						if (param.getFolder().equalsIgnoreCase("local")) {
 							criteria.add(Restrictions.eq("creatorCode", userCode));
 							criteria.add(
@@ -194,10 +192,24 @@ public class DocumentDAO extends HibernateDaoSupport {
 					
 					// Has the document been viewed?
 					// - if user is document creator, then it is viewed
-					// - if user received this document then check viewing status
-					// - if user shared the document then check recipient viewing statuses
-					if (param.isHasBeenViewed()) {
-						// TODO:
+					// - if document was sent to user then check viewing status
+					// - if document was shared to user then check viewing status
+					if (param.isHasBeenViewed() != null) {
+						DetachedCriteria historySubquery = DetachedCriteria.forClass(Document.class, "doc5")
+						.createCriteria("documentHistories", "history")
+						.add(Restrictions.eq("userCode", userCode))
+						.add(Restrictions.eq("documentHistoryType", DocumentService.HistoryType_MarkViewed))
+					    .add(Property.forName("doc.id").eqProperty("doc5.id"))
+					    .setProjection(Projections.id());
+						
+						if (param.isHasBeenViewed()) {
+							Disjunction disjunction = Restrictions.disjunction();
+							disjunction.add(Restrictions.eq("creatorCode", userCode));
+							disjunction.add(Subqueries.exists(historySubquery));
+							criteria.add(disjunction);
+						} else {
+							criteria.add(Subqueries.notExists(historySubquery));
+						}
 					}
 					
 					// Include deflated documents
@@ -539,11 +551,16 @@ public class DocumentDAO extends HibernateDaoSupport {
     	result.setLastModified(doc.getLastModifiedDate());
     	result.setLocked(doc.getLocked());
     	result.setLockingDate(doc.getLockingDate());
-    	// TODO: innerResult.setPreviousDocumentId(previousDocumentId);
-    	// TODO: previous document GUID
     	result.setSignable(doc.getSignable());
     	result.setTitle(doc.getTitle());
     	result.setWorkflowStatusId(doc.getDocumentWfStatusId());
+    	
+    	// If data about document previous version is present
+    	// then add it to output
+    	if (doc.getDocument() != null) {
+    		result.setPreviousDocumentId(doc.getDocument().getId());
+    		result.setPreviousDocumentGuid(doc.getDocument().getGuid());
+    	}
     	
     	return result;
 	}

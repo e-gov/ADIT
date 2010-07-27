@@ -98,7 +98,9 @@ public class DocumentService {
 	public static final String HistoryType_ModifyStatus = "modify_status";
 	public static final String HistoryType_Send = "send";
 	public static final String HistoryType_Share = "share";
+	public static final String HistoryType_UnShare = "unshare";
 	public static final String HistoryType_Lock = "lock";
+	public static final String HistoryType_UnLock = "unlock";
 	public static final String HistoryType_Deflate = "deflate";
 	public static final String HistoryType_Sign = "sign";
 	public static final String HistoryType_Delete = "delete";

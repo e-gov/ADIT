@@ -94,12 +94,10 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 											if(document.getId() != null && document.getId() != 0) {
 												LOG.debug("Modifying document. ID: " + document.getId());
 												
-												//TODO: implement
-												
 												// Check document metadata
 												List<String> fileNames = this.getDocumentService().checkAttachedDocumentMetadataForNewDocument(document, remainingDiskQuota, xmlFile, this.getConfiguration().getTempDir());
 												
-												// TODO: Document to database
+												// Document to database
 												Long documentID = this.getDocumentService().save(document, fileNames, user.getUserCode(), applicationName);
 												LOG.debug("Document saved with ID: " + documentID.toString());
 												response.setDocumentId(documentID);
@@ -110,7 +108,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 												// Check document metadata
 												List<String> fileNames = this.getDocumentService().checkAttachedDocumentMetadataForNewDocument(document, remainingDiskQuota, xmlFile, this.getConfiguration().getTempDir());
 												
-												// TODO: Document to database
+												// Document to database
 												Long documentID = this.getDocumentService().save(document, fileNames, user.getUserCode(), applicationName);
 												LOG.debug("Document saved with ID: " + documentID.toString());
 												response.setDocumentId(documentID);

@@ -209,7 +209,7 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
 					AditUser docCreator = this.getUserService().getUserByID(doc.getCreatorCode());
 					if ((docCreator != null) && (userService.findNotification(docCreator.getUserNotifications(), ScheduleClient.NotificationType_Sign) != null)) {
 						ScheduleClient.addEvent(
-							docCreator.getUserCode(),
+							docCreator,
 							this.getMessageSource().getMessage("scheduler.message.sign", new Object[] { doc.getTitle(), docCreator.getUserCode() }, Locale.ENGLISH),
 							this.getConfiguration().getSchedulerEventTypeName(),
 							requestDate,

@@ -66,7 +66,7 @@ public class GetDocumentListRequest {
     @XmlElement(name = "document_workflow_statuses", required = true)
     protected ArrayOfDocumentWorkflowStatus documentWorkflowStatuses;
     @XmlElement(name = "has_been_viewed")
-    protected boolean hasBeenViewed;
+    protected Boolean hasBeenViewed;
     @XmlElement(name = "is_deflated")
     protected boolean isDeflated;
     @XmlElement(name = "creator_applications", required = true)
@@ -178,7 +178,7 @@ public class GetDocumentListRequest {
      * Gets the value of the hasBeenViewed property.
      * 
      */
-    public boolean isHasBeenViewed() {
+    public Boolean isHasBeenViewed() {
         return hasBeenViewed;
     }
 
@@ -186,7 +186,7 @@ public class GetDocumentListRequest {
      * Sets the value of the hasBeenViewed property.
      * 
      */
-    public void setHasBeenViewed(boolean value) {
+    public void setHasBeenViewed(Boolean value) {
         this.hasBeenViewed = value;
     }
 

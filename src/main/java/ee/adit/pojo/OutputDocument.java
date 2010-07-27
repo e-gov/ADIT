@@ -20,6 +20,7 @@ public class OutputDocument {
 	private Long workflowStatusId;
 	private Date lastAccessed;
 	private Long previousDocumentId;
+	private String previousDocumentGuid;
 	private Boolean locked;
 	private Date lockingDate;
 	private Boolean signable;
@@ -125,6 +126,12 @@ public class OutputDocument {
 	}
 	public void setPreviousDocumentId(Long previousDocumentId) {
 		this.previousDocumentId = previousDocumentId;
+	}
+	public String getPreviousDocumentGuid() {
+		return previousDocumentGuid;
+	}
+	public void setPreviousDocumentGuid(String previousDocumentGuid) {
+		this.previousDocumentGuid = previousDocumentGuid;
 	}
 	public Boolean getLocked() {
 		return locked;
