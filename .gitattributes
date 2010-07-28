@@ -37,6 +37,7 @@ lib/log4j-1.2.16.jar -text
 lib/ojdbc6.jar -text
 lib/orai18n.jar -text
 lib/quartz-1.8.3.jar -text
+lib/riigiportaal-types.jar -text
 lib/simple-jndi-0.11.4.1.jar -text
 lib/slf4j-api-1.5.8.jar -text
 lib/slf4j-log4j12-1.5.8.jar -text
