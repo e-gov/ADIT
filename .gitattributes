@@ -208,6 +208,8 @@ src/main/java/ee/adit/schedule/SendNotificationsJob.java -text
 src/main/java/ee/adit/service/DocumentService.java -text
 src/main/java/ee/adit/service/LogService.java -text
 src/main/java/ee/adit/service/UserService.java -text
+src/main/java/ee/adit/stateportal/NotificationStatus.java -text
+src/main/java/ee/adit/stateportal/StatePortalClient.java -text
 src/main/java/ee/adit/util/Configuration.java -text
 src/main/java/ee/adit/util/CustomXTeeHeader.java -text
 src/main/java/ee/adit/util/HibernateUtil.java -text

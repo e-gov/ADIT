@@ -76,4 +76,11 @@ public class ArrayOfEmailAddress {
     public void setEmailAddress(List<String> emailAddress) {
     	this.emailAddress = emailAddress;
     }
+    
+    public void addEmailAddress(String address) {
+    	if (this.emailAddress == null) {
+            this.emailAddress = new ArrayList<String>();
+        }
+    	this.emailAddress.add(address);
+    }
 }

@@ -9,11 +9,14 @@ import org.springframework.stereotype.Component;
 
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.exception.AditException;
+import ee.adit.pojo.ArrayOfEmailAddress;
 import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.ArrayOfNotification;
 import ee.adit.pojo.GetNotificationsResponse;
 import ee.adit.pojo.Message;
 import ee.adit.service.UserService;
+import ee.adit.stateportal.NotificationStatus;
+import ee.adit.stateportal.StatePortalClient;
 import ee.adit.util.CustomXTeeHeader;
 import ee.adit.util.Util;
 import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
@@ -85,13 +88,18 @@ public class GetNotificationsEndpoint extends AbstractAditBaseEndpoint {
 			ArrayOfNotification notificationList = this.getUserService().getNotifications(user.getUserCode());
 			response.setNotifications(notificationList);
 			
-			/* TODO: In theory this query should also return:
-			 * - notification overall status (activated or not)
-			 * - related e-mail address list (where the notifications should be sent)
-			 * 
-			 * However this data cannot be retreived from 'teavituskalender' database,
-			 * because it's interface does not allow queying such data.
-			 */
+			// Get notification overall status and e-mail list
+			// from 'riigiportaal' database
+			NotificationStatus notificationStatus = StatePortalClient.getNotificationStatus(user.getUserCode(), this.getConfiguration().getSchedulerEventTypeName());
+			if (notificationStatus != null) {
+				response.setNotificationsActive(notificationStatus.getNotificationEmailStatus());
+				if (notificationStatus.getEmailList() != null) {
+					ArrayOfEmailAddress addressList = new ArrayOfEmailAddress();
+					for (String address : notificationStatus.getEmailList()) {
+						addressList.addEmailAddress(address);
+					}
+				}
+			}
 			
 			messages.addMessage(new Message("en", this.getMessageSource().getMessage("request.getNotifications.success", new Object[] { }, Locale.ENGLISH)));
 			

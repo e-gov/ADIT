@@ -87,7 +87,20 @@ public class ScheduleClient {
 			
 			Lugejad recipients = keha.addNewLugejad();
 			Kasutaja recipient = recipients.addNewKasutaja();
-			recipient.setKood(eventOwner.getUserCode());
+			// Remove country prefix because teavituskalender does not support
+			// ID codes beginning with country prefix
+			String userCode = eventOwner.getUserCode();
+			if (userCode != null) {
+				String fixedUserCode = "";
+				for (int i = 0; i < userCode.length(); i++) {
+					if ("0123456789".contains(String.valueOf(userCode.charAt(i)))) {
+						fixedUserCode = userCode.substring(i);
+						break;
+					}
+				}
+				userCode = fixedUserCode;
+			}
+			recipient.setKood(userCode);
 			if (UserService.USERTYPE_PERSON.equalsIgnoreCase(eventOwner.getUsertype().getShortName())) {
 				recipient.setKasutajaTyyp(KasutajaTyyp.ISIK);
 			} else{
