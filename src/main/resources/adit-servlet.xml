@@ -352,7 +352,7 @@
 	<bean id="myDataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
-		<property name="url" value="jdbc:oracle:thin:@//localhost:1521/xe" />
+		<property name="url" value="jdbc:oracle:thin:@//localhost:1522/jaak" />
 		<property name="username" value="adit" />
 		<property name="password" value="adit" />
 	</bean>
@@ -524,7 +524,7 @@
 		<property name="getJoinedMaxResults" value="1000"/>
 		<property name="tempDir" value="C:\temp"/>
 		<property name="deleteTemporaryFiles" value="true"/>
-		<property name="schedulerEventTypeName" value="ametlikud-dokumendid"/>
+		<property name="schedulerEventTypeName" value="Minu dokumentide teavitus"/>
 	</bean>
 
 </beans>
