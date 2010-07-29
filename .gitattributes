@@ -61,7 +61,7 @@ lib/velocity-dep-1.5.jar -text
 lib/wsdl4j-1.6.1.jar -text
 lib/wsdl4j-qname-1.6.1.jar -text
 lib/xbean.jar -text
-lib/xercesImpl.jar -text
+lib/xercesImpl-2.9.1.jar -text
 lib/xml-apis.jar -text
 lib/xmlParserAPIs.jar -text
 lib/xmlbeans-qname.jar -text
