@@ -2,20 +2,20 @@ package ee.adit.ws.endpoint.user;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 
 import ee.adit.dao.pojo.AditUser;
+import ee.adit.dao.pojo.NotificationType;
 import ee.adit.exception.AditException;
 import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.Message;
 import ee.adit.pojo.Notification;
 import ee.adit.pojo.SetNotificationsRequest;
 import ee.adit.pojo.SetNotificationsResponse;
-import ee.adit.pojo.Success;
-import ee.adit.pojo.UnJoinResponse;
 import ee.adit.service.UserService;
 import ee.adit.util.CustomXTeeHeader;
 import ee.adit.util.Util;
@@ -87,6 +87,19 @@ public class SetNotificationsEndpoint extends AbstractAditBaseEndpoint {
 			if ((user.getActive() == null) || !user.getActive()) {
 				String errorMessage = this.getMessageSource().getMessage("user.inactive", new Object[] { userCode }, Locale.ENGLISH);
 				throw new AditException(errorMessage);
+			}
+			
+			// Check whether or not all given notification types really exist
+			List<NotificationType> existingTypes = this.userService.getNotificationTypeDAO().getNotificationTypeList();
+			String incorrectNotificationTypes = "";
+			for (Notification item : request.getNotifications().getNotification()) {
+				if (NotificationType.findFromList(existingTypes, item.getType()) == null) {
+					incorrectNotificationTypes += item.getType() + "  ";
+				}
+			}
+			if (incorrectNotificationTypes.length() > 0) {
+				incorrectNotificationTypes = incorrectNotificationTypes.trim().replace("  ", ", ");
+				messages.addMessage(new Message("en", this.getMessageSource().getMessage("request.setNotifications.incorrectNotificationTypesProvided", new Object[] { incorrectNotificationTypes }, Locale.ENGLISH)));
 			}
 			
 			// Set notification data

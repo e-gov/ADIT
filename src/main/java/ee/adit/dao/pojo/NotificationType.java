@@ -3,6 +3,7 @@ package ee.adit.dao.pojo;
 // Generated 21.06.2010 14:02:03 by Hibernate Tools 3.2.4.GA
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -10,6 +11,7 @@ import java.util.Set;
  */
 public class NotificationType implements java.io.Serializable {
 
+	private static final long serialVersionUID = 7045236652674886470L;
 	private String shortName;
 	private String description;
 	private Set userNotifications = new HashSet(0);
@@ -51,5 +53,23 @@ public class NotificationType implements java.io.Serializable {
 	public void setUserNotifications(Set userNotifications) {
 		this.userNotifications = userNotifications;
 	}
-
+	
+	/**
+	 * Finds matching notification type from list by type's short name.
+	 * 
+	 * @param list				List containing notification types
+	 * @param typeShortName		Short name of notification type to be found 
+	 * @return					Found type or null if no matching type was found
+	 */
+	public static NotificationType findFromList(List<NotificationType> list, String typeShortName) {
+		if (list == null) {
+			return null;
+		}
+		for (NotificationType item : list) {
+			if ((item != null) && (item.getShortName() != null) && (item.getShortName().equalsIgnoreCase(typeShortName))) {
+				return item;
+			}
+		}
+		return null;
+	}
 }
