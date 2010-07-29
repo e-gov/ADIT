@@ -652,6 +652,15 @@ public class DocumentService {
 		return result;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
+	public int updateDocumentsFromDVK() {
+		int result = 0;
+		
+		return result;
+	}
 	
 	public MessageSource getMessageSource() {
 		return messageSource;

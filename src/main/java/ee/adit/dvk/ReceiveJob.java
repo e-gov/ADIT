@@ -19,7 +19,7 @@ public class ReceiveJob extends QuartzJobBean {
 		try {
 			LOG.info("Executing scheduled job: Receive documents from DVK");
 			
-			// TODO: receive documents from DVK Client database		
+			// Receive documents from DVK Client database		
 			int receivedDocumentsCount = this.getDocumentService().receiveDocumentsFromDVK();
 
 			LOG.debug("Documents received from DVK (" + receivedDocumentsCount + ")");

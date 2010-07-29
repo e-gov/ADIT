@@ -5,16 +5,37 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
+import ee.adit.service.DocumentService;
+
 public class UpdateStatusJob extends QuartzJobBean {
 
 	private static Logger LOG = Logger.getLogger(UpdateStatusJob.class);
 	
+	private DocumentService documentService;
+	
 	@Override
 	protected void executeInternal(JobExecutionContext arg0) throws JobExecutionException {
 		
-		// TODO: update document status from DVK
+		try {
+			LOG.info("Executing scheduled job: Updating document statuses from DVK");
+			
+			// Update document statuses from DVK		
+			int updatedDocumentsCount = this.getDocumentService().updateDocumentsFromDVK();
+
+			LOG.debug("Document statuses updated from DVK (" + updatedDocumentsCount + ")");
+			
+		} catch (Exception e) {
+			LOG.error("Error executing scheduled DVK statuses update: ", e);
+		}
 		
-		
+	}
+
+	public DocumentService getDocumentService() {
+		return documentService;
+	}
+
+	public void setDocumentService(DocumentService documentService) {
+		this.documentService = documentService;
 	}
 
 }
