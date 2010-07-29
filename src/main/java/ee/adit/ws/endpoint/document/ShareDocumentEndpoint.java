@@ -15,6 +15,7 @@ import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.exception.AditException;
 import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.ArrayOfRecipientStatus;
+import ee.adit.pojo.GetNotificationsResponse;
 import ee.adit.pojo.Message;
 import ee.adit.pojo.RecipientStatus;
 import ee.adit.pojo.ShareDocumentRequest;
@@ -289,6 +290,16 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 		}
 
 		super.logCurrentRequest(documentId, requestDate.getTime(), additionalInformationForLog);
+		return response;
+	}
+	
+	@Override
+	protected Object getResultForGenericException(Exception ex) {
+		ShareDocumentResponse response = new ShareDocumentResponse();
+		response.setSuccess(false);
+		ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
+		arrayOfMessage.getMessage().add(new Message("en", ex.getMessage()));
+		response.setMessages(arrayOfMessage);
 		return response;
 	}
 	

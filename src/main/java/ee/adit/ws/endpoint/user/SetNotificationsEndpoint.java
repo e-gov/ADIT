@@ -14,6 +14,8 @@ import ee.adit.pojo.Message;
 import ee.adit.pojo.Notification;
 import ee.adit.pojo.SetNotificationsRequest;
 import ee.adit.pojo.SetNotificationsResponse;
+import ee.adit.pojo.Success;
+import ee.adit.pojo.UnJoinResponse;
 import ee.adit.service.UserService;
 import ee.adit.util.CustomXTeeHeader;
 import ee.adit.util.Util;
@@ -115,6 +117,16 @@ public class SetNotificationsEndpoint extends AbstractAditBaseEndpoint {
 		return response;
 	}
 
+	@Override
+	protected Object getResultForGenericException(Exception ex) {
+		SetNotificationsResponse response = new SetNotificationsResponse();
+		response.setSuccess(false);
+		ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
+		arrayOfMessage.getMessage().add(new Message("en", ex.getMessage()));
+		response.setMessages(arrayOfMessage);
+		return response;
+	}
+	
 	private void checkHeader(CustomXTeeHeader header) throws Exception {
 		String errorMessage = null;
 		if(header != null) {

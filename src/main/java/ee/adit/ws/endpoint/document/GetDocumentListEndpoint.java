@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.exception.AditException;
 import ee.adit.pojo.ArrayOfMessage;
+import ee.adit.pojo.ConfirmSignatureResponse;
 import ee.adit.pojo.GetDocumentListRequest;
 import ee.adit.pojo.GetDocumentListResponse;
 import ee.adit.pojo.GetDocumentListResponseAttachment;
@@ -149,6 +150,16 @@ public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
 		return response;
 	}
 
+	@Override
+	protected Object getResultForGenericException(Exception ex) {
+		GetDocumentListResponse response = new GetDocumentListResponse();
+		response.setSuccess(false);
+		ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
+		arrayOfMessage.getMessage().add(new Message("en", ex.getMessage()));
+		response.setMessages(arrayOfMessage);
+		return response;
+	}
+	
 	private void checkHeader(CustomXTeeHeader header) throws Exception {
 		String errorMessage = null;
 		if (header != null) {

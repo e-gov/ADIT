@@ -16,6 +16,7 @@ import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.exception.AditException;
 import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.ArrayOfRecipientStatus;
+import ee.adit.pojo.GetNotificationsResponse;
 import ee.adit.pojo.Message;
 import ee.adit.pojo.RecipientStatus;
 import ee.adit.pojo.UnShareDocumentRequest;
@@ -285,6 +286,16 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 		return response;
 	}
 
+	@Override
+	protected Object getResultForGenericException(Exception ex) {
+		UnShareDocumentResponse response = new UnShareDocumentResponse();
+		response.setSuccess(false);
+		ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
+		arrayOfMessage.getMessage().add(new Message("en", ex.getMessage()));
+		response.setMessages(arrayOfMessage);
+		return response;
+	}
+	
 	private void checkHeader(CustomXTeeHeader header) throws Exception {
 		String errorMessage = null;
 		if (header != null) {

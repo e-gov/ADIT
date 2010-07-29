@@ -13,6 +13,10 @@ doc/testMessages/saveDocument.v1/base64 -text
 doc/testMessages/saveDocument.v1/saveDocument.v1.attachment.xml -text
 doc/testMessages/saveDocument.v1/saveDocument.v1.xml -text
 doc/testMessages/sendDocument.v1/sendDocument.v1.xml -text
+doc/testMessages/setNotifications.v1/activate_view_and_sign_notifications.xml -text
+doc/testMessages/setNotifications.v1/activate_view_and_sign_notifications_response.xml -text
+doc/testMessages/setNotifications.v1/deactivate_sign_notification.xml -text
+doc/testMessages/setNotifications.v1/deactivate_sign_notification_response.xml -text
 doc/testMessages/shareDocument.v1/shareDocument.v1.xml -text
 doc/testMessages/unJoin.v1.xml -text
 doc/xtee_generate_objects_readme.txt -text

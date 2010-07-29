@@ -16,6 +16,7 @@ import ee.adit.exception.AditException;
 import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.ArrayOfRecipientStatus;
 import ee.adit.pojo.ArrayOfUserCode;
+import ee.adit.pojo.GetNotificationsResponse;
 import ee.adit.pojo.Message;
 import ee.adit.pojo.RecipientStatus;
 import ee.adit.pojo.SaveDocumentRequest;
@@ -217,6 +218,16 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 		return response;
 	}
 
+	@Override
+	protected Object getResultForGenericException(Exception ex) {
+		SendDocumentResponse response = new SendDocumentResponse();
+		response.setSuccess(false);
+		ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
+		arrayOfMessage.getMessage().add(new Message("en", ex.getMessage()));
+		response.setMessages(arrayOfMessage);
+		return response;
+	}
+	
 	public UserService getUserService() {
 		return userService;
 	}

@@ -4,23 +4,17 @@ import java.util.Locale;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.exception.AditException;
 import ee.adit.pojo.ArrayOfMessage;
-import ee.adit.pojo.JoinRequest;
-import ee.adit.pojo.JoinResponse;
 import ee.adit.pojo.Message;
 import ee.adit.pojo.Success;
-import ee.adit.pojo.UnJoinRequest;
 import ee.adit.pojo.UnJoinResponse;
 import ee.adit.service.UserService;
 import ee.adit.util.CustomXTeeHeader;
 import ee.adit.util.Util;
 import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
-import ee.webmedia.xtee.XTeeHeader;
 import ee.webmedia.xtee.annotation.XTeeService;
 
 @XTeeService(name = "unJoin", version = "v1")
@@ -120,6 +114,16 @@ public class UnJoinEndpoint extends AbstractAditBaseEndpoint {
 		return response;
 	}
 
+	@Override
+	protected Object getResultForGenericException(Exception ex) {
+		UnJoinResponse response = new UnJoinResponse();
+		response.setSuccess(new Success(false));
+		ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
+		arrayOfMessage.getMessage().add(new Message("en", ex.getMessage()));
+		response.setMessages(arrayOfMessage);
+		return response;
+	}
+	
 	public UserService getUserService() {
 		return userService;
 	}

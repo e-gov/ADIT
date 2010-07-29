@@ -14,6 +14,7 @@ import ee.adit.dao.pojo.DocumentHistory;
 import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.exception.AditException;
 import ee.adit.pojo.ArrayOfMessage;
+import ee.adit.pojo.ConfirmSignatureResponse;
 import ee.adit.pojo.GetDocumentRequest;
 import ee.adit.pojo.GetDocumentResponse;
 import ee.adit.pojo.GetDocumentResponseDocument;
@@ -261,6 +262,16 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
 		return response;
 	}
 
+	@Override
+	protected Object getResultForGenericException(Exception ex) {
+		GetDocumentResponse response = new GetDocumentResponse();
+		response.setSuccess(false);
+		ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
+		arrayOfMessage.getMessage().add(new Message("en", ex.getMessage()));
+		response.setMessages(arrayOfMessage);
+		return response;
+	}
+	
 	private void checkHeader(CustomXTeeHeader header) throws Exception {
 		String errorMessage = null;
 		if (header != null) {

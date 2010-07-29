@@ -27,6 +27,7 @@ import ee.adit.pojo.GetUserInfoResponse;
 import ee.adit.pojo.GetUserInfoResponseAttachment;
 import ee.adit.pojo.GetUserInfoResponseAttachmentUser;
 import ee.adit.pojo.Message;
+import ee.adit.pojo.SetNotificationsResponse;
 import ee.adit.pojo.Success;
 import ee.adit.pojo.UserList;
 import ee.adit.service.UserService;
@@ -154,6 +155,16 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 			response.setMessages(arrayOfMessage);
 		}
 		
+		return response;
+	}
+	
+	@Override
+	protected Object getResultForGenericException(Exception ex) {
+		GetUserInfoResponse response = new GetUserInfoResponse();
+		response.setSuccess(new Success(false));
+		ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
+		arrayOfMessage.getMessage().add(new Message("en", ex.getMessage()));
+		response.setMessages(arrayOfMessage);
 		return response;
 	}
 		

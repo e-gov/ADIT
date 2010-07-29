@@ -15,6 +15,7 @@ import ee.adit.pojo.ArrayOfNotification;
 import ee.adit.pojo.EmailAddress;
 import ee.adit.pojo.GetNotificationsResponse;
 import ee.adit.pojo.Message;
+import ee.adit.pojo.SetNotificationsResponse;
 import ee.adit.service.UserService;
 import ee.adit.stateportal.NotificationStatus;
 import ee.adit.stateportal.StatePortalClient;
@@ -128,6 +129,16 @@ public class GetNotificationsEndpoint extends AbstractAditBaseEndpoint {
 		return response;
 	}
 
+	@Override
+	protected Object getResultForGenericException(Exception ex) {
+		GetNotificationsResponse response = new GetNotificationsResponse();
+		response.setSuccess(false);
+		ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
+		arrayOfMessage.getMessage().add(new Message("en", ex.getMessage()));
+		response.setMessages(arrayOfMessage);
+		return response;
+	}
+	
 	private void checkHeader(CustomXTeeHeader header) throws Exception {
 		String errorMessage = null;
 		if(header != null) {

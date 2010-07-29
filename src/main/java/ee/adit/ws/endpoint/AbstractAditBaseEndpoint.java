@@ -49,13 +49,13 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 			CustomXTeeHeader xteeHeader) throws Exception {
 		
 		LOG.debug("AbstractAditBaseEndpoint invoked");
+		Object responseObject = null;
 		
 		if (requestKeha == null) {
 			throw new Exception("Failed unmarshalling request because request body is null!");
 		}
 		
 		try {
-			
 			// Set the header as a property
 			this.setHeader(xteeHeader);
 			
@@ -65,24 +65,23 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 			Object requestObject = this.getUnmarshaller().unmarshal(requestObjectSource);
 			
 			// Excecute business logic
-			Object responseObject = invokeInternal(requestObject);
-			
-			if(responseObject != null) {
-				// Marshall the response object
-				DOMResult reponseObjectResult = new DOMResult(responseElement);
-				this.getMarshaller().marshal(responseObject, reponseObjectResult);				
-				
-				// Add the reponse DOM tree as a child element to the responseKeha element				
-				responseElement = (Element) reponseObjectResult.getNode();
-			} else {
-				LOG.error("Response object not initialized.");
-			}
-			
-			
+			responseObject = invokeInternal(requestObject);
 		} catch (Exception e) {
 			LOG.error("Exception while marshalling response object: ", e);
+			responseObject = getResultForGenericException(e);
 		}
 		
+		if(responseObject != null) {
+			// Marshall the response object
+			DOMResult reponseObjectResult = new DOMResult(responseElement);
+			this.getMarshaller().marshal(responseObject, reponseObjectResult);				
+			
+			// Add the reponse DOM tree as a child element to the responseKeha element				
+			responseElement = (Element) reponseObjectResult.getNode();
+		} else {
+			LOG.error("Response object not initialized.");
+		}
+
 	}
 
 	public String addAttachment(String fileName) throws Exception {	
@@ -154,6 +153,8 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 	// Abstract method for implementing by subclasses
 	protected abstract Object invokeInternal(Object requestObject)
 			throws Exception;
+	
+	protected abstract Object getResultForGenericException(Exception ex);
 	
 	public Marshaller getMarshaller() {
 		return marshaller;

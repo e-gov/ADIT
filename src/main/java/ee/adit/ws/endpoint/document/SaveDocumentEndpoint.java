@@ -12,6 +12,7 @@ import ee.adit.dao.pojo.AditUser;
 import ee.adit.exception.AditException;
 import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.ArrayOfMessage;
+import ee.adit.pojo.ConfirmSignatureResponse;
 import ee.adit.pojo.Message;
 import ee.adit.pojo.SaveDocumentRequest;
 import ee.adit.pojo.SaveDocumentRequestAttachment;
@@ -163,6 +164,16 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 		return response;
 	}
 
+	@Override
+	protected Object getResultForGenericException(Exception ex) {
+		SaveDocumentResponse response = new SaveDocumentResponse();
+		response.setSuccess(new Success(false));
+		ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
+		arrayOfMessage.getMessage().add(new Message("en", ex.getMessage()));
+		response.setMessages(arrayOfMessage);
+		return response;
+	}
+	
 	public UserService getUserService() {
 		return userService;
 	}

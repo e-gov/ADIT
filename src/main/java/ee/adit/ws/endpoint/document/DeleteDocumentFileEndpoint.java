@@ -13,6 +13,7 @@ import ee.adit.dao.pojo.DocumentHistory;
 import ee.adit.dao.pojo.DocumentType;
 import ee.adit.exception.AditException;
 import ee.adit.pojo.ArrayOfMessage;
+import ee.adit.pojo.ConfirmSignatureResponse;
 import ee.adit.pojo.DeleteDocumentFileRequest;
 import ee.adit.pojo.DeleteDocumentFileResponse;
 import ee.adit.pojo.Message;
@@ -167,6 +168,16 @@ public class DeleteDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 		return response;
 	}
 
+	@Override
+	protected Object getResultForGenericException(Exception ex) {
+		DeleteDocumentFileResponse response = new DeleteDocumentFileResponse();
+		response.setSuccess(new Success(false));
+		ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
+		arrayOfMessage.getMessage().add(new Message("en", ex.getMessage()));
+		response.setMessages(arrayOfMessage);
+		return response;
+	}
+	
 	private void checkHeader(CustomXTeeHeader header) throws Exception {
 		String errorMessage = null;
 		if(header != null) {

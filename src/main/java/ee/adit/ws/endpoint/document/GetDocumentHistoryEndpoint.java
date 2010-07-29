@@ -19,6 +19,7 @@ import ee.adit.pojo.Activity;
 import ee.adit.pojo.ActivityActor;
 import ee.adit.pojo.ActivitySubject;
 import ee.adit.pojo.ArrayOfMessage;
+import ee.adit.pojo.ConfirmSignatureResponse;
 import ee.adit.pojo.GetDocumentHistoryResponseAttachment;
 import ee.adit.pojo.GetDocumentHistoryRequest;
 import ee.adit.pojo.GetDocumentHistoryResponse;
@@ -240,6 +241,16 @@ public class GetDocumentHistoryEndpoint extends AbstractAditBaseEndpoint {
 		}
 
 		super.logCurrentRequest(documentId, requestDate, additionalInformationForLog);
+		return response;
+	}
+	
+	@Override
+	protected Object getResultForGenericException(Exception ex) {
+		GetDocumentHistoryResponse response = new GetDocumentHistoryResponse();
+		response.setSuccess(false);
+		ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
+		arrayOfMessage.getMessage().add(new Message("en", ex.getMessage()));
+		response.setMessages(arrayOfMessage);
 		return response;
 	}
 	

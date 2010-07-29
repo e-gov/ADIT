@@ -14,6 +14,7 @@ import ee.adit.dao.pojo.DocumentFile;
 import ee.adit.dao.pojo.DocumentHistory;
 import ee.adit.exception.AditException;
 import ee.adit.pojo.ArrayOfMessage;
+import ee.adit.pojo.ConfirmSignatureResponse;
 import ee.adit.pojo.DeflateDocumentRequest;
 import ee.adit.pojo.DeflateDocumentResponse;
 import ee.adit.pojo.Message;
@@ -191,6 +192,16 @@ public class DeflateDocumentEndpoint extends AbstractAditBaseEndpoint {
 		}
 		
 		super.logCurrentRequest(documentId, requestDate, additionalInformationForLog);
+		return response;
+	}
+	
+	@Override
+	protected Object getResultForGenericException(Exception ex) {
+		DeflateDocumentResponse response = new DeflateDocumentResponse();
+		response.setSuccess(new Success(false));
+		ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
+		arrayOfMessage.getMessage().add(new Message("en", ex.getMessage()));
+		response.setMessages(arrayOfMessage);
 		return response;
 	}
 	

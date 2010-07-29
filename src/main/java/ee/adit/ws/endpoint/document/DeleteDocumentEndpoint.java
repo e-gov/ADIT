@@ -16,6 +16,7 @@ import ee.adit.dao.pojo.DocumentHistory;
 import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.exception.AditException;
 import ee.adit.pojo.ArrayOfMessage;
+import ee.adit.pojo.ConfirmSignatureResponse;
 import ee.adit.pojo.DeleteDocumentRequest;
 import ee.adit.pojo.DeleteDocumentResponse;
 import ee.adit.pojo.Message;
@@ -214,7 +215,15 @@ public class DeleteDocumentEndpoint extends AbstractAditBaseEndpoint {
 		return response;
 	}
 
-	
+	@Override
+	protected Object getResultForGenericException(Exception ex) {
+		DeleteDocumentResponse response = new DeleteDocumentResponse();
+		response.setSuccess(new Success(false));
+		ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
+		arrayOfMessage.getMessage().add(new Message("en", ex.getMessage()));
+		response.setMessages(arrayOfMessage);
+		return response;
+	}
 	
 	private void checkHeader(CustomXTeeHeader header) throws Exception {
 		String errorMessage = null;
