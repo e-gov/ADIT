@@ -27,8 +27,6 @@ import ee.adit.service.DocumentService;
 public class SendJob extends QuartzJobBean {
 
 	private static Logger LOG = Logger.getLogger(SendJob.class);
-
-	
 	
 	private DocumentService documentService;
 	

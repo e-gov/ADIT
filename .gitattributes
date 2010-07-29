@@ -112,6 +112,7 @@ src/main/java/ee/adit/dao/pojo/UserNotification.java -text
 src/main/java/ee/adit/dao/pojo/UserNotificationId.java -text
 src/main/java/ee/adit/dao/pojo/Usertype.java -text
 src/main/java/ee/adit/dao/test/TestDocumentDAO.java -text
+src/main/java/ee/adit/dvk/ReceiveJob.java -text
 src/main/java/ee/adit/dvk/SendJob.java -text
 src/main/java/ee/adit/exception/AditException.java -text
 src/main/java/ee/adit/exception/AditInternalException.java -text
