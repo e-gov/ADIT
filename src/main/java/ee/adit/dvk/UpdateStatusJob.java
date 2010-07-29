@@ -5,14 +5,15 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
-public class ReceiveJob extends QuartzJobBean {
+public class UpdateStatusJob extends QuartzJobBean {
 
-	private static Logger LOG = Logger.getLogger(ReceiveJob.class);
+	private static Logger LOG = Logger.getLogger(UpdateStatusJob.class);
 	
 	@Override
 	protected void executeInternal(JobExecutionContext arg0) throws JobExecutionException {
 		
-		// TODO: receive documents from DVK Client database		
+		// TODO: update document status from DVK
+		
 		
 	}
 
