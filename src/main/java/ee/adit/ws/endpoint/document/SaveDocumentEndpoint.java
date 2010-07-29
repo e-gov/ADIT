@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.ws.mime.Attachment;
 
 import ee.adit.dao.pojo.AditUser;
+import ee.adit.dao.pojo.Document;
 import ee.adit.exception.AditException;
 import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.ArrayOfMessage;
@@ -95,6 +96,10 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 											SaveDocumentRequestAttachment document = (SaveDocumentRequestAttachment) unmarshalledObject;
 											
 											if(document.getId() != null && document.getId() != 0) {
+												// Determine whether or not this document can be modified
+												Document doc = this.documentService.getDocumentDAO().getDocument(document.getId());
+												runExistingDocumentChecks(doc, user.getUserCode());
+												
 												LOG.debug("Modifying document. ID: " + document.getId());
 												
 												// Check document metadata
@@ -180,6 +185,25 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 		arrayOfMessage.getMessage().add(new Message("en", ex.getMessage()));
 		response.setMessages(arrayOfMessage);
 		return response;
+	}
+	
+	protected void runExistingDocumentChecks(Document existingDoc, String userCode) throws AditException {
+		if (!userCode.equalsIgnoreCase(existingDoc.getCreatorCode())) {
+			String errorMessage = this.getMessageSource().getMessage("document.doesNotBelongToUser", new Object[] { existingDoc.getId(), userCode }, Locale.ENGLISH);
+			throw new AditException(errorMessage);
+		}
+		if (existingDoc.getLocked()) {
+			String errorMessage = this.getMessageSource().getMessage("request.saveDocument.document.locked", new Object[] { existingDoc.getId(), userCode }, Locale.ENGLISH);
+			throw new AditException(errorMessage);
+		}
+		if (existingDoc.getDeflated()) {
+			String errorMessage = this.getMessageSource().getMessage("request.saveDocument.document.deflated", new Object[] { existingDoc.getDeflateDate() }, Locale.ENGLISH);
+			throw new AditException(errorMessage);
+		}
+		if (existingDoc.getDeleted()) {
+			String errorMessage = this.getMessageSource().getMessage("request.saveDocument.document.deleted", new Object[] { }, Locale.ENGLISH);
+			throw new AditException(errorMessage);
+		}
 	}
 	
 	public UserService getUserService() {
