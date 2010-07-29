@@ -1,4 +1,5 @@
 * text=auto !eol
+doc/dvk_test/insert_dhl_message.sql -text
 doc/environmentSetup.txt -text
 doc/redeploy_adit.cmd -text
 doc/testMessages/getDocument.v1.xml -text
