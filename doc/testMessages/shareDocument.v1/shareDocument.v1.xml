@@ -14,6 +14,8 @@
             <adit:recipient_list>
                <adit:code>EE38407089745</adit:code>
             </adit:recipient_list>
+            <adit:reason_for_sharing>Teadmiseks</adit:reason_for_sharing>
+            <adit:shared_for_signing>false</adit:shared_for_signing>
          </keha>
       </adit:ShareDocument>
    </soapenv:Body>
