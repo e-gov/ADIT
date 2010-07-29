@@ -11,13 +11,11 @@ INSERT INTO adit_user (
 INSERT INTO adit_user (
   user_code,
   full_name,
-  usertype,
-  dvk_org_code
+  usertype
 ) VALUES (
   'EE38407089745',
   'Kalle Kalamees',
-  'person',
-  '10111249'
+  'person'
 );
 
 INSERT INTO adit_user (
@@ -28,4 +26,16 @@ INSERT INTO adit_user (
   'EE48407089933',
   'Mari Maasikas',
   'person'
+);
+
+INSERT INTO adit_user (
+  user_code,
+  full_name,
+  usertype,
+  dvk_org_code
+) VALUES (
+  '99954321',
+  'Maa-amet',
+  'institution',
+  '99954321'
 );
