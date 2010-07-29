@@ -54,6 +54,7 @@ import dvk.api.container.v2.Saaja;
 import dvk.api.container.v2.Transport;
 import dvk.api.ml.DvkSessionCacheBox;
 import dvk.api.ml.PojoMessage;
+import dvk.api.ml.PojoMessageRecipient;
 
 import ee.adit.dao.AditUserDAO;
 import ee.adit.dao.DocumentDAO;
@@ -651,6 +652,7 @@ public class DocumentService {
 	 * 
 	 * @return
 	 */
+	@Transactional
 	public int receiveDocumentsFromDVK() {
 		int result = 0;
 		final String SQL = "from PojoMessage where isIncoming = true and (recipientStatusId = null or recipientStatusId = 101)";
@@ -684,15 +686,12 @@ public class DocumentService {
 						fileWriter.write(cbuf, 0, readCount);
 					}
 					
+					fileWriter.close();
+					clobReader.close();
+					
 					// TODO: Stream it - do not build the whole document model to memory
 					ContainerVer2 dvkContainer = null;
-					try {
-						dvkContainer = ContainerVer2.parseFile(tmpFile);
-					} finally {
-						fileWriter.close();
-						clobReader.close();
-					}					
-					
+					dvkContainer = ContainerVer2.parseFile(tmpFile);
 					
 					if(dvkContainer == null) {
 						throw new AditInternalException("DVK Container not initialized.");
@@ -730,7 +729,7 @@ public class DocumentService {
 									// Add document for this recipient to ADIT database
 									Document aditDocument = new Document();
 									aditDocument.setCreationDate(new Date());
-									aditDocument.setDocumentDvkStatusId(dvkDocument.getRecipientStatusId());
+									aditDocument.setDocumentDvkStatusId(DVKStatus_Sent);
 									aditDocument.setDvkId(dvkDocument.getDhlId());
 									aditDocument.setGuid(dvkDocument.getDhlGuid());
 									aditDocument.setLocked(true);
@@ -751,12 +750,23 @@ public class DocumentService {
 										
 										// Save the document
 										aditSession = this.getDocumentDAO().getSessionFactory().openSession();
+										Transaction aditTransaction = aditSession.beginTransaction();
 										Long aditDocumentID = (Long) aditSession.save(aditDocument);
 										
 										LOG.info("Document saved to ADIT database. ID: " + aditDocumentID);
 	
 										// TODO: update document status to "sent" (recipient_status_id = "102")
-
+										dvkDocument.setRecipientStatusId(DVKStatus_Sent);
+										//Transaction dvkTransaction = dvkSession.beginTransaction();
+										//dvkSession.saveOrUpdate(dvkDocument);
+										
+										
+										
+										//dvkTransaction.commit();
+										
+										// Finally commit
+										aditTransaction.commit();
+										
 									} catch (Exception e) {
 										LOG.debug("Error saving document to ADIT database: ", e);
 									} finally {
