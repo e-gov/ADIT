@@ -180,6 +180,7 @@ public class UserService {
 		aditUser.setUserCode(usercode);
 		aditUser.setFullName(username);
 		aditUser.setUsertype(usertype);
+		aditUser.setActive(true);
 		this.getAditUserDAO().saveOrUpdate(aditUser);
 	}
 	
