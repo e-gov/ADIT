@@ -468,6 +468,28 @@
 	    </property>
 	</bean>
 	
+	<bean name="receiveJobDetails" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass" value="ee.adit.dvk.ReceiveJob"/>
+		<property name="jobDataAsMap">
+		    <map>
+		    	<entry key="documentService">
+		      		<ref bean="documentService"/>
+		      	</entry>
+		    </map>
+	    </property>
+	</bean>
+	
+	<bean name="updateStatusJobDetails" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass" value="ee.adit.dvk.UpdateStatusJob"/>
+		<property name="jobDataAsMap">
+		    <map>
+		    	<entry key="documentService">
+		      		<ref bean="documentService"/>
+		      	</entry>
+		    </map>
+	    </property>
+	</bean>
+	
 	<bean name="sendNotificationsJobDetails" class="org.springframework.scheduling.quartz.JobDetailBean">
 		<property name="jobClass" value="ee.adit.schedule.SendNotificationsJob"/>
 		<property name="jobDataAsMap">
@@ -482,10 +504,26 @@
 	    </property>
 	</bean>
 	
-	<bean id="dvkTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+	<bean id="dvkSendTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
 	  	<property name="jobDetail" ref="sendJobDetails"/>
 		<!-- 10 seconds -->
 	  	<property name="startDelay" value="60000"/>
+		<!-- repeat every 20 seconds -->
+	  	<property name="repeatInterval" value="60000"/>
+	</bean>
+	
+	<bean id="dvkReceiveTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+	  	<property name="jobDetail" ref="receiveJobDetails"/>
+		<!-- 10 seconds -->
+	  	<property name="startDelay" value="30000"/>
+		<!-- repeat every 20 seconds -->
+	  	<property name="repeatInterval" value="60000"/>
+	</bean>
+	
+	<bean id="dvkUpdateStatusTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+	  	<property name="jobDetail" ref="updateStatusJobDetails"/>
+		<!-- 10 seconds -->
+	  	<property name="startDelay" value="120000"/>
 		<!-- repeat every 20 seconds -->
 	  	<property name="repeatInterval" value="60000"/>
 	</bean>
@@ -501,7 +539,9 @@
 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="triggers">
 	   		<list>
-	      		<ref bean="dvkTrigger"/>
+	      		<ref bean="dvkSendTrigger"/>
+	      		<ref bean="dvkReceiveTrigger"/>
+	      		<ref bean="dvkUpdateStatusTrigger"/>
 	      		<!-- 
 	      		<ref bean="notificationTrigger"/>
 	      		-->
