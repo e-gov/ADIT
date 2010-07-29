@@ -97,9 +97,10 @@ public class SetNotificationsEndpoint extends AbstractAditBaseEndpoint {
 					incorrectNotificationTypes += item.getType() + "  ";
 				}
 			}
-			if (incorrectNotificationTypes.length() > 0) {
+			if (incorrectNotificationTypes.length() > 0) {			 
 				incorrectNotificationTypes = incorrectNotificationTypes.trim().replace("  ", ", ");
-				messages.addMessage(new Message("en", this.getMessageSource().getMessage("request.setNotifications.incorrectNotificationTypesProvided", new Object[] { incorrectNotificationTypes }, Locale.ENGLISH)));
+				String errorMessage = this.getMessageSource().getMessage("request.setNotifications.incorrectNotificationTypesProvided", new Object[] { incorrectNotificationTypes }, Locale.ENGLISH);
+				throw new AditException(errorMessage);
 			}
 			
 			// Set notification data
