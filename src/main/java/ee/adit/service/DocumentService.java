@@ -643,7 +643,7 @@ public class DocumentService {
 	 * 
 	 * @return
 	 */
-	public int receiveFromDVK() {
+	public int receiveDocumentsFromDVK() {
 		int result = 0;
 		
 		
