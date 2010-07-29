@@ -484,12 +484,6 @@ public class DocumentService {
 
 					LOG.debug("FileName: " + f.getFileName());
 
-					dvkFile.setFailNimi(f.getFileName());
-					dvkFile.setFailPealkiri(null);
-					dvkFile.setFailSuurus(f.getFileSizeBytes());
-					dvkFile.setFailTyyp(f.getContentType());
-					dvkFile.setJrkNr(count++);
-
 					// Create a temporary file from the ADIT file and
 					// add a reference to the DVK file
 					try {
@@ -502,6 +496,12 @@ public class DocumentService {
 					} catch (Exception e) {
 						throw new HibernateException("Unable to create temporary file: ", e);
 					}
+					
+					dvkFile.setFailNimi(f.getFileName());
+					dvkFile.setFailPealkiri(null);
+					dvkFile.setFailSuurus(f.getFileSizeBytes());
+					dvkFile.setFailTyyp(f.getContentType());
+					dvkFile.setJrkNr(count++);
 				}
 
 				failideKonteiner.setKokku(count);
@@ -593,10 +593,12 @@ public class DocumentService {
 						if (DocumentService.SharingType_SendDvk.equalsIgnoreCase(documentSharing.getDocumentSharingType())) {
 							documentSharing.setDocumentDvkStatus(DVKStatus_Sending);
 							session.saveOrUpdate(documentSharing);
+							LOG.debug("DocumentSharing status updated to: '" + DVKStatus_Sending + "'.");
 						}						
 					}
 					
 					result++;
+					
 					
 				} catch (Exception e) {
 					dvkTransaction2.rollback();
@@ -645,9 +647,25 @@ public class DocumentService {
 	 */
 	public int receiveDocumentsFromDVK() {
 		int result = 0;
+		final String SQL = "from PojoMessage where ";
 		
-		
-		
+		try {
+			
+			// TODO: fetch all incoming documents from DVK Client database which have the required status - "sending" (recipient_status_id = "101"); 
+			LOG.debug("Fetching documents from DVK Client database.");
+			
+			/*SessionFactory sessionFactory = DVKAPI.createSessionFactory("hibernate_ora_dvk.cfg.xml");
+			Session dvkSession = sessionFactory.openSession();
+			
+			dvkSession.createQuery(SQL);*/
+			
+			// TODO: extract document metadata and files - add to ADIT database
+			
+			// TODO: update document status to "sent" (recipient_status_id = "102")
+			
+		} catch (Exception e) {
+			throw new AditInternalException("Error while receiving documents from DVK Client database: ", e);
+		}
 		
 		return result;
 	}
