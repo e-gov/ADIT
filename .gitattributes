@@ -144,6 +144,7 @@ src/main/java/ee/adit/pojo/DocumentSendingData.java -text
 src/main/java/ee/adit/pojo/DocumentSendingRecipient.java -text
 src/main/java/ee/adit/pojo/DocumentSharingData.java -text
 src/main/java/ee/adit/pojo/DocumentSharingRecipient.java -text
+src/main/java/ee/adit/pojo/EmailAddress.java -text
 src/main/java/ee/adit/pojo/GetDocumentFileRequest.java -text
 src/main/java/ee/adit/pojo/GetDocumentFileResponse.java -text
 src/main/java/ee/adit/pojo/GetDocumentFileResponseAttachment.java -text

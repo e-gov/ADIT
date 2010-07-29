@@ -2,10 +2,12 @@ package ee.adit.stateportal;
 
 import java.util.List;
 
+import ee.adit.pojo.EmailAddress;
+
 public class NotificationStatus {
 	private String notificationTypeName;
 	private boolean notificationEmailStatus;
-	private List<String> emailList;
+	private List<EmailAddress> emailList;
 	
 	public String getNotificationTypeName() {
 		return notificationTypeName;
@@ -21,10 +23,10 @@ public class NotificationStatus {
 		this.notificationEmailStatus = notificationEmailStatus;
 	}
 	
-	public List<String> getEmailList() {
+	public List<EmailAddress> getEmailList() {
 		return emailList;
 	}
-	public void setEmailList(List<String> emailList) {
+	public void setEmailList(List<EmailAddress> emailList) {
 		this.emailList = emailList;
 	}
 }

@@ -133,9 +133,16 @@
 		</sequence>
 	</complexType>
 	
+	<complexType name="EmailAddress">
+		<sequence>
+			<element name="address" type="string"></element>
+			<element name="redirected_to" type="string"></element>
+		</sequence>
+	</complexType>
+	
 	<complexType name="ArrayOfEmailAddress">
 		<sequence>
-			<element name="email_address" type="string" maxOccurs="unbounded" minOccurs="0"></element>
+			<element name="email_address" type="tns:EmailAddress" maxOccurs="unbounded" minOccurs="0"></element>
 		</sequence>
 	</complexType>
 

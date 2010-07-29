@@ -176,11 +176,15 @@
 	</class>
 
 	<class name="ee.adit.pojo.ArrayOfEmailAddress">
-		<field name="emailAddress" type="java.lang.String" collection="arraylist">
+		<field name="emailAddress" type="ee.adit.pojo.EmailAddress" collection="arraylist">
 			<bind-xml name="email_address" />
 		</field>
 	</class>
 
+ 	<class name="ee.adit.pojo.EmailAddress">
+		<field name="address" type="java.lang.String"/>
+		<field name="redirectedTo" type="java.lang.String"/>
+	</class>
  	
  	 <!-- SetNotifications -->
 	<class name="ee.adit.pojo.SetNotificationsRequest">

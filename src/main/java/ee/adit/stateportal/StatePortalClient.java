@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import ee.adit.pojo.EmailAddress;
 import ee.riik.xtee.riigiportaal.producers.producer.riigiportaal.TellimusteStaatusDocument;
 import ee.riik.xtee.riigiportaal.producers.producer.riigiportaal.TellimusteStaatusResponseDocument;
 import ee.riik.xtee.riigiportaal.producers.producer.riigiportaal.TellimusteStaatusDocument.TellimusteStaatus;
@@ -75,10 +76,13 @@ public class StatePortalClient {
 									}
 									
 									if (ret.getTellimusteStaatusResponse().getKeha().getSuunamised() != null) {
-										result.setEmailList(new ArrayList<String>());
+										result.setEmailList(new ArrayList<EmailAddress>());
 										List<Suunamine> emails = ret.getTellimusteStaatusResponse().getKeha().getSuunamised().getSuunamineList();
 										for (Suunamine item : emails) {
-											result.getEmailList().add(item.getEpost());
+											EmailAddress address = new EmailAddress();
+											address.setAddress(item.getEpost());
+											address.setRedirectedTo(item.getAadress());
+											result.getEmailList().add(address);
 										}
 									}
 									

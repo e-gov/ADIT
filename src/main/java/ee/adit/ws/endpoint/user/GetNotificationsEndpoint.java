@@ -12,6 +12,7 @@ import ee.adit.exception.AditException;
 import ee.adit.pojo.ArrayOfEmailAddress;
 import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.ArrayOfNotification;
+import ee.adit.pojo.EmailAddress;
 import ee.adit.pojo.GetNotificationsResponse;
 import ee.adit.pojo.Message;
 import ee.adit.service.UserService;
@@ -95,7 +96,7 @@ public class GetNotificationsEndpoint extends AbstractAditBaseEndpoint {
 				response.setNotificationsActive(notificationStatus.getNotificationEmailStatus());
 				if (notificationStatus.getEmailList() != null) {
 					ArrayOfEmailAddress addressList = new ArrayOfEmailAddress();
-					for (String address : notificationStatus.getEmailList()) {
+					for (EmailAddress address : notificationStatus.getEmailList()) {
 						addressList.addEmailAddress(address);
 					}
 				}
