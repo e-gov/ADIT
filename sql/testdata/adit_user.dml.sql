@@ -11,11 +11,13 @@ INSERT INTO adit_user (
 INSERT INTO adit_user (
   user_code,
   full_name,
-  usertype
+  usertype,
+  dvk_org_code
 ) VALUES (
   'EE38407089745',
   'Kalle Kalamees',
-  'person'
+  'person',
+  '10111249'
 );
 
 INSERT INTO adit_user (
