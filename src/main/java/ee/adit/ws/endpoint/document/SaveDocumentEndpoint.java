@@ -1,5 +1,6 @@
 package ee.adit.ws.endpoint.document;
 
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -12,7 +13,6 @@ import ee.adit.dao.pojo.AditUser;
 import ee.adit.exception.AditException;
 import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.ArrayOfMessage;
-import ee.adit.pojo.ConfirmSignatureResponse;
 import ee.adit.pojo.Message;
 import ee.adit.pojo.SaveDocumentRequest;
 import ee.adit.pojo.SaveDocumentRequestAttachment;
@@ -37,11 +37,13 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 	
 	@Override
 	protected Object invokeInternal(Object requestObject) throws Exception {
-		
 		SaveDocumentResponse response = new SaveDocumentResponse();
+		ArrayOfMessage messages = new ArrayOfMessage();
+		Calendar requestDate = Calendar.getInstance();
+		String additionalInformationForLog = null;
+		Long documentId = null;
 		
 		try {
-			
 			LOG.debug("SaveDocumentEndpoint.v1 invoked.");
 			SaveDocumentRequest request = (SaveDocumentRequest) requestObject;
 			CustomXTeeHeader header = this.getHeader();
@@ -99,9 +101,9 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 												List<String> fileNames = this.getDocumentService().checkAttachedDocumentMetadataForNewDocument(document, remainingDiskQuota, xmlFile, this.getConfiguration().getTempDir());
 												
 												// Document to database
-												Long documentID = this.getDocumentService().save(document, fileNames, user.getUserCode(), applicationName);
-												LOG.debug("Document saved with ID: " + documentID.toString());
-												response.setDocumentId(documentID);
+												documentId = this.getDocumentService().save(document, fileNames, user.getUserCode(), applicationName);
+												LOG.debug("Document saved with ID: " + documentId.toString());
+												response.setDocumentId(documentId);
 												
 											} else {
 												LOG.debug("Saving document. GUID: " + document.getGuid());
@@ -110,9 +112,9 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 												List<String> fileNames = this.getDocumentService().checkAttachedDocumentMetadataForNewDocument(document, remainingDiskQuota, xmlFile, this.getConfiguration().getTempDir());
 												
 												// Document to database
-												Long documentID = this.getDocumentService().save(document, fileNames, user.getUserCode(), applicationName);
-												LOG.debug("Document saved with ID: " + documentID.toString());
-												response.setDocumentId(documentID);
+												documentId = this.getDocumentService().save(document, fileNames, user.getUserCode(), applicationName);
+												LOG.debug("Document saved with ID: " + documentId.toString());
+												response.setDocumentId(documentId);
 											}
 											
 										} else {
@@ -143,9 +145,15 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 			} else {
 				String errorMessage = this.getMessageSource().getMessage("application.notRegistered", new Object[] { applicationName }, Locale.ENGLISH);
 				throw new AditException(errorMessage);
-			}			
+			}
+			
+			// Set response messages
+			response.setSuccess(new Success(true));
+			messages.addMessage(new Message("en", this.getMessageSource().getMessage("request.saveDocument.success", new Object[] { }, Locale.ENGLISH)));
+			response.setMessages(messages);
 		} catch (Exception e) {
 			LOG.error("Exception: ", e);
+			additionalInformationForLog = "Request failed: " + e.getMessage();
 			response.setSuccess(new Success(false));
 			ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
 			
@@ -160,7 +168,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 			response.setMessages(arrayOfMessage);
 		}
 		
-		
+		super.logCurrentRequest(documentId, requestDate.getTime(), additionalInformationForLog);
 		return response;
 	}
 
