@@ -649,8 +649,13 @@ public class DocumentService {
 	}
 
 	/**
+	 * Transfers incoming documents from DVK Client database to ADIT database.
 	 * 
-	 * @return
+	 * Note: DVK stores the recipient status in the DHL_MESSAGE table (field RECIPIENT_STATUS_ID).
+	 *       The situation where two recipients from the same institution receive the same document,
+	 *       is not allowed (or at least DVK stores only one status ID for this document). 
+	 * 
+	 * @return the number of documents received
 	 */
 	@Transactional
 	public int receiveDocumentsFromDVK() {
