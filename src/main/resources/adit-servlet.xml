@@ -395,7 +395,7 @@
 				<prop key="hibernate.current_session_context_class">thread</prop>
 				-->
 				<prop key="hibernate.transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</prop>
-				<prop key="hibernate.show_sql">false</prop>
+				<prop key="hibernate.show_sql">true</prop>
 			</props>
 		</property>
 	</bean>
@@ -513,9 +513,9 @@
 	<bean id="dvkSendTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
 	  	<property name="jobDetail" ref="sendJobDetails"/>
 		<!-- 10 seconds -->
-	  	<property name="startDelay" value="10000"/>
+	  	<property name="startDelay" value="60000"/>
 		<!-- repeat every 20 seconds -->
-	  	<property name="repeatInterval" value="3600000"/>
+	  	<property name="repeatInterval" value="30000"/>
 	</bean>
 	
 	<bean id="dvkReceiveTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
@@ -523,15 +523,15 @@
 		<!-- 10 seconds -->
 	  	<property name="startDelay" value="3600000"/>
 		<!-- repeat every 20 seconds -->
-	  	<property name="repeatInterval" value="3600000"/>
+	  	<property name="repeatInterval" value="30000"/>
 	</bean>
 	
 	<bean id="dvkUpdateStatusTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
 	  	<property name="jobDetail" ref="updateStatusJobDetails"/>
 		<!-- 10 seconds -->
-	  	<property name="startDelay" value="3600000"/>
+	  	<property name="startDelay" value="0"/>
 		<!-- repeat every 20 seconds -->
-	  	<property name="repeatInterval" value="3600000"/>
+	  	<property name="repeatInterval" value="30000"/>
 	</bean>
 	
 	<!-- 
