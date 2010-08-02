@@ -11,6 +11,10 @@ doc/testMessages/getNotifications.v1/error_deleted_user.xml -text
 doc/testMessages/getNotifications.v1/error_deleted_user_response.xml -text
 doc/testMessages/getNotifications.v1/error_nonexistent_user.xml -text
 doc/testMessages/getNotifications.v1/error_nonexistent_user_response.xml -text
+doc/testMessages/getNotifications.v1/error_riigiportaal_error.xml -text
+doc/testMessages/getNotifications.v1/error_riigiportaal_error_response.xml -text
+doc/testMessages/getNotifications.v1/error_riigiportaal_unavailable.xml -text
+doc/testMessages/getNotifications.v1/error_riigiportaal_unavailable_response.xml -text
 doc/testMessages/getNotifications.v1/error_unknown_application.xml -text
 doc/testMessages/getNotifications.v1/error_unknown_application_response.xml -text
 doc/testMessages/getNotifications.v1/success_case.xml -text
@@ -19,6 +23,9 @@ doc/testMessages/getUserInfo.v1/base64 -text
 doc/testMessages/getUserInfo.v1/getUserInfo.v1.attachment.xml -text
 doc/testMessages/getUserInfo.v1/getUserInfo.v1.xml -text
 doc/testMessages/join.v1.xml -text
+doc/testMessages/join.v1/add_company.xml -text
+doc/testMessages/join.v1/add_person.xml -text
+doc/testMessages/join.v1/add_person_response.xml -text
 doc/testMessages/saveDocument.v1/base64 -text
 doc/testMessages/saveDocument.v1/saveDocument.v1.attachment.xml -text
 doc/testMessages/saveDocument.v1/saveDocument.v1.xml -text
