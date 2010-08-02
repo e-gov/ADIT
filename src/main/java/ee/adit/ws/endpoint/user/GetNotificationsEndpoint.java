@@ -15,7 +15,6 @@ import ee.adit.pojo.ArrayOfNotification;
 import ee.adit.pojo.EmailAddress;
 import ee.adit.pojo.GetNotificationsResponse;
 import ee.adit.pojo.Message;
-import ee.adit.pojo.SetNotificationsResponse;
 import ee.adit.service.UserService;
 import ee.adit.stateportal.NotificationStatus;
 import ee.adit.stateportal.StatePortalClient;
@@ -27,7 +26,7 @@ import ee.webmedia.xtee.annotation.XTeeService;
 @XTeeService(name = "getNotifications", version = "v1")
 @Component
 public class GetNotificationsEndpoint extends AbstractAditBaseEndpoint {
-	private static Logger LOG = Logger.getLogger(JoinEndpoint.class);
+	private static Logger LOG = Logger.getLogger(GetNotificationsEndpoint.class);
 	private UserService userService;
 
 	public UserService getUserService() {
@@ -100,6 +99,7 @@ public class GetNotificationsEndpoint extends AbstractAditBaseEndpoint {
 					for (EmailAddress address : notificationStatus.getEmailList()) {
 						addressList.addEmailAddress(address);
 					}
+					response.setAddressList(addressList);
 				}
 			}
 			

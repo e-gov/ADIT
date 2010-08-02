@@ -59,6 +59,7 @@
 		<property name="userService" ref="userService"/>
 		<property name="logService" ref="logService"/>
 		<property name="messageSource" ref="messageSource"/>
+		<property name="configuration" ref="configuration"/>
 	</bean>
 	
 	<bean id="GetNotificationsEndpoint" class="ee.adit.ws.endpoint.user.GetNotificationsEndpoint">
@@ -67,6 +68,7 @@
 		<property name="userService" ref="userService"/>
 		<property name="logService" ref="logService"/>
 		<property name="messageSource" ref="messageSource"/>
+		<property name="configuration" ref="configuration"/>
 	</bean>
 	
 	

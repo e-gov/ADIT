@@ -24,7 +24,7 @@ public class StatePortalClient {
 	public static NotificationStatus getNotificationStatus(String userCode, String eventTypeName) {
 		NotificationStatus result = null;
 		try {
-			TellimusteStaatusDocument doc = TellimusteStaatusDocument.Factory.newInstance(); 
+			TellimusteStaatusDocument doc = TellimusteStaatusDocument.Factory.newInstance();
 			TellimusteStaatus req = doc.addNewTellimusteStaatus();
 			TellimusteStaatusDocument.TellimusteStaatus.Keha keha = req.addNewKeha();
 			
@@ -67,7 +67,7 @@ public class StatePortalClient {
 										List<TkalTeenus> notifications = ret.getTellimusteStaatusResponse().getKeha().getTkalTeenused().getTkalTeenusList();
 										for (TkalTeenus item : notifications) {
 											if (eventTypeName.equalsIgnoreCase(item.getNimetus())) {
-												result.setNotificationEmailStatus(item.getEpostStaatus() != EpostStaatus.EI);
+												result.setNotificationEmailStatus(item.getEpostStaatus() != EpostStaatus.NO);
 												break;
 											}
 										}

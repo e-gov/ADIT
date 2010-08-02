@@ -111,7 +111,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 												response.setDocumentId(documentId);
 												
 											} else {
-												LOG.debug("Saving document. GUID: " + document.getGuid());
+												LOG.debug("Adding new document. GUID: " + document.getGuid());
 												
 												// Check document metadata
 												List<String> fileNames = this.getDocumentService().checkAttachedDocumentMetadataForNewDocument(document, remainingDiskQuota, xmlFile, this.getConfiguration().getTempDir());
