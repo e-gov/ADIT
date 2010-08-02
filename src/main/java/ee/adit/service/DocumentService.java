@@ -76,9 +76,11 @@ public class DocumentService {
 
 	// Document DVK statuses
 	public static final Long DVKStatus_Missing = new Long(100);
-	public static final Long DVKStatus_Sending = new Long(101);
-	public static final Long DVKStatus_Sent = new Long(102);
-	public static final Long DVKStatus_Aborted = new Long(103);
+	public static final Long DVKStatus_Waiting = new Long(101);
+	public static final Long DVKStatus_Sending = new Long(102);
+	public static final Long DVKStatus_Sent = new Long(103);
+	public static final Long DVKStatus_Aborted = new Long(104);
+	public static final Long DVKStatus_Received = new Long(105);
 
 	// Dokumendi ajaloosündmuste koodid
 	public static final String HistoryType_Create = "create";
@@ -525,6 +527,7 @@ public class DocumentService {
 					dvkMessage.setSenderPersonCode(documentOwner.getUserCode());
 					dvkMessage.setSenderName(documentOwner.getFullName());
 					dvkMessage.setDhlGuid(document.getGuid());
+					dvkMessage.setSendingStatusId(DocumentService.DVKStatus_Waiting);
 
 					// Insert data as stream
 					Clob clob = Hibernate.createClob(" ", dvkSession);

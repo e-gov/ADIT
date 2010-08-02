@@ -511,7 +511,7 @@
 	<bean id="dvkSendTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
 	  	<property name="jobDetail" ref="sendJobDetails"/>
 		<!-- 10 seconds -->
-	  	<property name="startDelay" value="3600000"/>
+	  	<property name="startDelay" value="10000"/>
 		<!-- repeat every 20 seconds -->
 	  	<property name="repeatInterval" value="3600000"/>
 	</bean>
@@ -527,9 +527,9 @@
 	<bean id="dvkUpdateStatusTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
 	  	<property name="jobDetail" ref="updateStatusJobDetails"/>
 		<!-- 10 seconds -->
-	  	<property name="startDelay" value="10000"/>
+	  	<property name="startDelay" value="3600000"/>
 		<!-- repeat every 20 seconds -->
-	  	<property name="repeatInterval" value="60000"/>
+	  	<property name="repeatInterval" value="3600000"/>
 	</bean>
 	
 	<!-- 
