@@ -666,15 +666,11 @@ public class DocumentService {
 	public int receiveDocumentsFromDVK() {
 		int result = 0;
 		
-		
 		try {
 			
 			// Fetch all incoming documents from DVK Client database which have the required status - "sending" (recipient_status_id = "101" or "1"); 
 			LOG.info("Fetching documents from DVK Client database.");
-			
 			List<PojoMessage> dvkDocuments = this.getDvkDAO().getIncomingDocuments();
-						
-			
 			
 			if(dvkDocuments != null && dvkDocuments.size() > 0) {
 			
@@ -684,33 +680,9 @@ public class DocumentService {
 				while(dvkDocumentsIterator.hasNext()) {
 					PojoMessage dvkDocument = dvkDocumentsIterator.next();
 					
-					// Write the clob data to a temporary file
-					Reader clobReader = dvkDocument.getData().getCharacterStream();
-					String tmpFile = this.getConfiguration().getTempDir() + File.separator + Util.generateRandomFileName();
-					FileWriter fileWriter = new FileWriter(tmpFile);
-					
-					char[] cbuf = new char[1024];
-					int readCount = 0;
-					while((readCount = clobReader.read(cbuf)) > 0) {
-						fileWriter.write(cbuf, 0, readCount);
-					}
-					
-					fileWriter.close();
-					clobReader.close();
-					
-					// TODO: STREAM
-					ContainerVer2 dvkContainer = null;
-					dvkContainer = ContainerVer2.parseFile(tmpFile);
-					
-					if(dvkContainer == null) {
-						throw new AditInternalException("DVK Container not initialized.");
-					} else {
-						if(dvkContainer.getTransport() == null) {
-							throw new AditInternalException("DVK Container not properly initialized: <transport> section not initialized");
-						}
-					}
-					
-					LOG.debug("DVK Container successfully parsed from clob field.");					
+					// Get the DVK Container
+					ContainerVer2 dvkContainer = this.getDVKContainer(dvkDocument);
+										
 					List<Saaja> recipients = dvkContainer.getTransport().getSaajad();
 					
 					if(recipients != null && recipients.size() > 0) {
@@ -725,7 +697,7 @@ public class DocumentService {
 							LOG.info("Recipient: " + recipient.getRegNr() + " (" + recipient.getAsutuseNimi() + "). Isikukood: '" + recipient.getIsikukood() + "'.");
 							
 							// The ADIT internal recipient is always marked by the field <isikukood> in the DVK container,
-							// regardless if it is really a person or an institution.
+							// regardless if it is actually a person or an institution / company.
 							if(recipient.getRegNr() != null && !recipient.getRegNr().equalsIgnoreCase("")) {
 								if(recipient.getIsikukood() != null && !recipient.getIsikukood().equals("")) {
 									// The recipient is specified - check if it's a DVK user
@@ -759,80 +731,26 @@ public class DocumentService {
 										aditDocument.setCreatorCode(user.getUserCode());
 										aditDocument.setCreatorName(user.getFullName());
 										
-										List<OutputDocumentFile> tempDocuments = new ArrayList<OutputDocumentFile>();
-										// Process files
-										try {
-											List<Fail> dvkFiles = dvkContainer.getFailideKonteiner().getFailid();
-											Iterator<Fail> dvkFilesIterator = dvkFiles.iterator();
-										
-											LOG.debug("Total number of files in DVK Container: " + dvkContainer.getFailideKonteiner().getKokku());
-											
-											while(dvkFilesIterator.hasNext()) {
-												Fail dvkFile = dvkFilesIterator.next();
-												LOG.debug("Processing file nr.: " + dvkFile.getJrkNr());
-												
-												// TODO: STREAM
-												String fileContents = dvkFile.getZipBase64Sisu();
-												InputStream inputStream = new StringBufferInputStream(fileContents);
-												String tempFile = Util.createTemporaryFile(inputStream, this.getConfiguration().getTempDir());
-												
-												String decodedTempFile = Util.base64DecodeAndUnzip(tempFile, this.getConfiguration().getTempDir(), this.getConfiguration().getDeleteTemporaryFilesAsBoolean());
-												
-												OutputDocumentFile tempDocument = new OutputDocumentFile();
-												tempDocument.setTmpFileName(decodedTempFile);
-												tempDocument.setContentType(dvkFile.getFailTyyp());
-												tempDocument.setName(dvkFile.getFailNimi());
-												tempDocument.setSizeBytes(dvkFile.getFailSuurus());
-												
-												// Add the temporary file to the list
-												tempDocuments.add(tempDocument);
-											}
-											
-										} catch (Exception e) {
-											if(tempDocuments != null && tempDocuments.size() > 0) {
-												// Delete temporary files
-												Iterator<OutputDocumentFile> documentsToDelete = tempDocuments.iterator();
-												while(documentsToDelete.hasNext()) {
-													OutputDocumentFile documentToDelete = documentsToDelete.next();
-													try {
-														if(documentToDelete.getTmpFileName() != null && !documentToDelete.getTmpFileName().trim().equalsIgnoreCase("")) {
-															File f = new File(documentToDelete.getTmpFileName());
-															if(f.exists()) {
-																f.delete();
-															} else {
-																throw new FileNotFoundException("Could not find temporary file (to delete): " + documentToDelete.getTmpFileName());
-															}
-														}
-													} catch (Exception exc) {
-														LOG.debug("Error while deleting temporary files: ", exc);
-													}
-												}
-												LOG.info("Temporary files deleted.");
-											}
-											throw new AditInternalException("Error while saving files: ", e);
-										}
+										// Get document files from DVK container
+										List<OutputDocumentFile> tempDocuments = this.getDocumentOutputFiles(dvkContainer);
 										
 										Session aditSession = null;
+										Transaction aditTransaction = null;
 										try {
 											
 											// Save the document
 											aditSession = this.getDocumentDAO().getSessionFactory().openSession();
-											Transaction aditTransaction = aditSession.beginTransaction();	
+											aditTransaction = aditSession.beginTransaction();	
 											
 											// Before we save the document to ADIT, check if the recipient has already received a document
-											// with the same GUID or DVK ID.
-											String EXISTING_DOC_SQL = "from Document where dvkId = " + dvkDocument.getDhlId() + " and creatorCode = '" + recipient.getIsikukood().trim() + "'";
-											List<Document> existingDocuments = aditSession.createQuery(EXISTING_DOC_SQL).list();
-											
-											if(existingDocuments != null && existingDocuments.size() > 0) {
+											// with the same GUID or DVK ID.											
+											if(this.getDocumentDAO().checkIfDocumentExists(dvkDocument, recipient)) {
 												throw new AditInternalException("Document already sent to user. DVK ID: " + dvkDocument.getDhlId() + ", recipient: " + recipient.getIsikukood().trim());
 											}
-											
-											//Long aditDocumentID = (Long) aditSession.save(aditDocument);
-											//LOG.info("Document saved to ADIT database. ID: " + aditDocumentID);
 		
 											// Save document
-											this.getDocumentDAO().save(aditDocument, tempDocuments, aditSession);
+											Long aditDocumentID = this.getDocumentDAO().save(aditDocument, tempDocuments, aditSession);
+											LOG.info("Document saved to ADIT database. ID: " + aditDocumentID);
 											
 											// Update document status to "sent" (recipient_status_id = "102") in DVK Client database
 											dvkDocument.setRecipientStatusId(DVKStatus_Sent);
@@ -843,6 +761,9 @@ public class DocumentService {
 											
 										} catch (Exception e) {
 											LOG.debug("Error saving document to ADIT database: ", e);
+											if(aditTransaction != null) {
+												aditTransaction.rollback();
+											}
 										} finally {
 											if(aditSession != null) {
 												aditSession.close();
@@ -868,12 +789,120 @@ public class DocumentService {
 		return result;
 	}
 	
-	/**
-	 * 
-	 * @return
-	 */
+	public ContainerVer2 getDVKContainer(PojoMessage document) throws AditInternalException {
+		ContainerVer2 result = null;
+		
+		// Write the clob data to a temporary file
+		Reader clobReader = null;
+		FileWriter fileWriter = null;
+		try {
+			clobReader = document.getData().getCharacterStream();
+			String tmpFile = this.getConfiguration().getTempDir() + File.separator + Util.generateRandomFileName();
+			fileWriter = new FileWriter(tmpFile);
+			
+			char[] cbuf = new char[1024];
+			int readCount = 0;
+			while((readCount = clobReader.read(cbuf)) > 0) {
+				fileWriter.write(cbuf, 0, readCount);
+			}
+			
+			fileWriter.close();
+			clobReader.close();
+			
+			result = ContainerVer2.parseFile(tmpFile);
+			
+			if(result == null) {
+				throw new AditInternalException("DVK Container not initialized.");
+			} else {
+				if(result.getTransport() == null) {
+					throw new AditInternalException("DVK Container not properly initialized: <transport> section not initialized");
+				}
+			}
+			
+		} catch (Exception e) {
+			throw new AditInternalException("Exception while reading DVK container from database: ", e);
+		} finally {
+			if(fileWriter != null) {
+				try {
+					fileWriter.close();
+				} catch (Exception e) {
+					LOG.warn("Error while closing file writer: ", e);
+				}
+			}
+			
+			if(clobReader != null) {
+				try {
+					clobReader.close();
+				} catch (Exception e) {
+					LOG.warn("Error while closing Clob reader: ", e);
+				}
+			}
+		}
+		
+		return result;
+	}
+	
+	public List<OutputDocumentFile> getDocumentOutputFiles(ContainerVer2 dvkContainer) {
+		List<OutputDocumentFile> result = new ArrayList<OutputDocumentFile>();
+		
+		try {
+			List<Fail> dvkFiles = dvkContainer.getFailideKonteiner().getFailid();
+			Iterator<Fail> dvkFilesIterator = dvkFiles.iterator();
+		
+			LOG.debug("Total number of files in DVK Container: " + dvkContainer.getFailideKonteiner().getKokku());
+			
+			while(dvkFilesIterator.hasNext()) {
+				Fail dvkFile = dvkFilesIterator.next();
+				LOG.debug("Processing file nr.: " + dvkFile.getJrkNr());
+				
+				// TODO: STREAM
+				String fileContents = dvkFile.getZipBase64Sisu();
+				InputStream inputStream = new StringBufferInputStream(fileContents);
+				String tempFile = Util.createTemporaryFile(inputStream, this.getConfiguration().getTempDir());
+				
+				String decodedTempFile = Util.base64DecodeAndUnzip(tempFile, this.getConfiguration().getTempDir(), this.getConfiguration().getDeleteTemporaryFilesAsBoolean());
+				
+				OutputDocumentFile tempDocument = new OutputDocumentFile();
+				tempDocument.setTmpFileName(decodedTempFile);
+				tempDocument.setContentType(dvkFile.getFailTyyp());
+				tempDocument.setName(dvkFile.getFailNimi());
+				tempDocument.setSizeBytes(dvkFile.getFailSuurus());
+				
+				// Add the temporary file to the list
+				result.add(tempDocument);
+			}
+			
+		} catch (Exception e) {
+			if(result != null && result.size() > 0) {
+				// Delete temporary files
+				Iterator<OutputDocumentFile> documentsToDelete = result.iterator();
+				while(documentsToDelete.hasNext()) {
+					OutputDocumentFile documentToDelete = documentsToDelete.next();
+					try {
+						if(documentToDelete.getTmpFileName() != null && !documentToDelete.getTmpFileName().trim().equalsIgnoreCase("")) {
+							File f = new File(documentToDelete.getTmpFileName());
+							if(f.exists()) {
+								f.delete();
+							} else {
+								throw new FileNotFoundException("Could not find temporary file (to delete): " + documentToDelete.getTmpFileName());
+							}
+						}
+					} catch (Exception exc) {
+						LOG.debug("Error while deleting temporary files: ", exc);
+					}
+				}
+				LOG.info("Temporary files deleted.");
+			}
+			throw new AditInternalException("Error while saving files: ", e);
+		}
+		
+		return result;
+	}
+	
 	public int updateDocumentsFromDVK() {
 		int result = 0;
+		
+		
 		
 		return result;
 	}

@@ -32,6 +32,9 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+import dvk.api.container.v2.Saaja;
+import dvk.api.ml.PojoMessage;
+
 import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.DocumentFile;
 import ee.adit.dao.pojo.DocumentSharing;
@@ -859,7 +862,18 @@ public class DocumentDAO extends HibernateDaoSupport {
 		});
 	}
 	
-	
+	public boolean checkIfDocumentExists(PojoMessage document, Saaja recipient) {
+		boolean result = true;
+		
+		String EXISTING_DOC_SQL = "from Document where dvkId = " + document.getDhlId() + " and creatorCode = '" + recipient.getIsikukood().trim() + "'";
+		List<Document> existingDocuments = this.getSessionFactory().openSession().createQuery(EXISTING_DOC_SQL).list();
+		
+		if(existingDocuments == null || existingDocuments.size() == 0) {
+			result = false;
+		} 
+		
+		return result;
+	}
 	
 	
 }
