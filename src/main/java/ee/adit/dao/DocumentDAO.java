@@ -916,4 +916,23 @@ public class DocumentDAO extends HibernateDaoSupport {
 			}
 		}		
 	}
+	
+	public Document getDocumentByDVKID(Long dvkMessageID) {
+		Document result = null;
+		String SQL = "from Document where dvkId = " + dvkMessageID; 
+		
+		Session session = null;
+		try {
+			session = this.getSessionFactory().openSession();
+			result = (Document) session.createQuery(SQL).uniqueResult();
+		} catch (Exception e) {
+			throw new AditInternalException("Error while updating Document: ", e);
+		} finally {
+			if(session != null) {
+				session.close();
+			}
+		}
+			
+		return result;
+	}
 }

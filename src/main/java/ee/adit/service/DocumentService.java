@@ -901,7 +901,7 @@ public class DocumentService {
 	}
 
 	/**
-	 * Updates statuses for incoming messages.
+	 * Updates statuses for outgoing messages.
 	 * 
 	 * @return number of messages updated.
 	 */
@@ -912,35 +912,35 @@ public class DocumentService {
 		// ole "saadetud"
 		List<Document> documents = this.getDocumentDAO().getDocumentsWithoutDVKStatus(DVKStatus_Sent);
 		Iterator<Document> documentsIterator = documents.iterator();
-		
+
 		while (documentsIterator.hasNext()) {
 			Document document = documentsIterator.next();
 
 			try {
 				LOG.info("Updating DVK status for document. DocumentID: " + document.getId());
-				
-				List<PojoMessageRecipient> messageRecipients = this.getDvkDAO().getMessageRecipients(document.getDvkId());
+
+				List<PojoMessageRecipient> messageRecipients = this.getDvkDAO().getMessageRecipients(document.getDvkId(), false);
 				Iterator<PojoMessageRecipient> messageRecipientIterator = messageRecipients.iterator();
 				List<DocumentSharing> documentSharings = this.getDocumentSharingDAO().getDVKSharings(document.getId());
 
-				if(messageRecipients != null)
+				if (messageRecipients != null)
 					LOG.debug("messageRecipients.size: " + messageRecipients.size());
-				
-				if(documentSharings != null)
+
+				if (documentSharings != null)
 					LOG.debug("documentSharings.size: " + documentSharings.size());
-				
+
 				while (messageRecipientIterator.hasNext()) {
 					PojoMessageRecipient messageRecipient = messageRecipientIterator.next();
 
 					LOG.debug("Updating for messageRecipient: " + messageRecipient.getRecipientOrgCode());
-					
+
 					boolean allDocumentSharingsSent = true;
 
 					// Compare the status with the status of the sharing in ADIT
 					for (int i = 0; i < documentSharings.size(); i++) {
 						DocumentSharing documentSharing = documentSharings.get(i);
 						LOG.debug("Updating for documentSharing: " + documentSharing.getId());
-						
+
 						if (documentSharing.getUserCode().equalsIgnoreCase(messageRecipient.getRecipientPersonCode())
 								|| documentSharing.getUserCode().equalsIgnoreCase(messageRecipient.getRecipientOrgCode())) {
 
@@ -978,18 +978,59 @@ public class DocumentService {
 	}
 
 	/**
-	 * Updates document statuses for outgoing messages.
+	 * Updates document statuses for incoming messages.
 	 * 
 	 * @return number of messages updated.
 	 */
 	public int updateDocumentsToDVK() {
 		int result = 0;
-		
-		// TODO: implement
-		
+
+		// List<Document> documents =
+		// this.getDocumentDAO().getDocumentsWithoutDVKStatus(DVKStatus_Sent);
+		// Iterator<Document> documentsIterator = documents.iterator();
+		List<PojoMessage> dvkDocuments = this.getDvkDAO().getIncomingDocumentsWithoutStatus(DocumentService.DVKStatus_Sent);
+		Iterator<PojoMessage> dvkDocumentsIterator = dvkDocuments.iterator();
+
+		/*
+		 * Sissetulevate dokumentide puhul tekib DVK kliendi andmebaasi üks
+		 * kirje - DHL_MESSAGE tabelisse. Selle kirje juures peab muutma ära
+		 * staatuse, kui see on muutunud ADIT andmebaasis.
+		 */
+		while (dvkDocumentsIterator.hasNext()) {
+			PojoMessage dvkDocument = dvkDocumentsIterator.next();
+
+			try {
+				// Find the message from ADIT database
+				Document document = this.getDocumentDAO().getDocumentByDVKID(dvkDocument.getDhlMessageId());
+
+				if (document != null) {
+					
+					// Compare the statuses - ADIT status prevails
+					if(document.getDocumentDvkStatusId() != null) {
+						if(!document.getDocumentDvkStatusId().equals(dvkDocument.getRecipientStatusId())) {
+							// If the statuses do not match, update from ADIT to DVK
+							dvkDocument.setRecipientStatusId(document.getDocumentDvkStatusId());
+							
+							// Update DVK document
+							this.getDvkDAO().updateDocument(dvkDocument);
+							
+						}
+					} else {
+						throw new AditInternalException("Could not update document with DVK_ID: " + dvkDocument.getDhlMessageId() + ". Document's DVK status is not defined in ADIT.");
+					}
+					
+				} else {
+					throw new AditInternalException("Could not find document with DVK_ID: " + dvkDocument.getDhlMessageId());
+				}
+			} catch (Exception e) {
+				LOG.error("Error while updating DVK status for document. DVK_ID: " + dvkDocument.getDhlMessageId());
+				LOG.error("Continue...");
+			}
+		}
+
 		return result;
 	}
-	
+
 	public MessageSource getMessageSource() {
 		return messageSource;
 	}

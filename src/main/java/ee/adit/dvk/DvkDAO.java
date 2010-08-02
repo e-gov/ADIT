@@ -28,6 +28,15 @@ public class DvkDAO {
 		return result;
 	}
 
+	public List<PojoMessage> getIncomingDocumentsWithoutStatus(Long statusID) {
+		List<PojoMessage> result = new ArrayList<PojoMessage>();
+
+		final String SQL = "from PojoMessage where isIncoming = true and (recipientStatusId != " + statusID + " or recipientStatusId is null)";
+		result = this.getSessionFactory().openSession().createQuery(SQL).list();
+
+		return result;
+	}
+	
 	public void updateDocument(PojoMessage document) throws Exception {
 		
 		Session session = this.getSessionFactory().openSession();
@@ -48,9 +57,14 @@ public class DvkDAO {
 		
 	}
 
-	public List<PojoMessageRecipient> getMessageRecipients(Long dvkMessageID) {
+	public List<PojoMessageRecipient> getMessageRecipients(Long dvkMessageID, boolean incoming) {
 		// TODO: pojomesage.ID - invalid identifier
-		String SQL = "select mr from PojoMessageRecipient mr, PojoMessage m where mr.dhlMessageId = m.dhlMessageId and m.dhlMessageId = " + dvkMessageID + " and m.isIncoming = 0";
+		int incomingInt = 0;
+		if(incoming) {
+			incomingInt = 1;
+		}
+		
+		String SQL = "select mr from PojoMessageRecipient mr, PojoMessage m where mr.dhlMessageId = m.dhlMessageId and m.dhlMessageId = " + dvkMessageID + " and m.isIncoming = " + incomingInt;
 		return this.getSessionFactory().openSession().createQuery(SQL).list();
 	}
 	
