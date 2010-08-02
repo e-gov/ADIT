@@ -5,7 +5,7 @@
 <hibernate-mapping>
 	<class name="dvk.api.ml.PojoMessageRecipient" table="DHL_MESSAGE_RECIPIENT">
 		<id name="id" type="big_decimal">
-			<column name="ID" precision="38" scale="0" />
+			<column name="DHL_MESSAGE_RECIPIENT_ID" precision="38" scale="0" />
 			<generator class="assigned" />
 		</id>
 		<property name="dhlMessageId" type="long">
