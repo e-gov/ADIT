@@ -53,7 +53,7 @@ public class GetNotificationsResponse {
     @XmlElement(required = true)
     protected ArrayOfNotification notifications;
     @XmlElement(name = "notifications_active")
-    protected boolean notificationsActive;
+    protected Boolean notificationsActive;
     @XmlElement(name = "address_list", required = true)
     protected ArrayOfEmailAddress addressList;
 
@@ -125,7 +125,7 @@ public class GetNotificationsResponse {
      * Gets the value of the notificationsActive property.
      * 
      */
-    public boolean isNotificationsActive() {
+    public Boolean isNotificationsActive() {
         return notificationsActive;
     }
 
@@ -133,7 +133,7 @@ public class GetNotificationsResponse {
      * Sets the value of the notificationsActive property.
      * 
      */
-    public void setNotificationsActive(boolean value) {
+    public void setNotificationsActive(Boolean value) {
         this.notificationsActive = value;
     }
 

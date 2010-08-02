@@ -158,7 +158,7 @@
 		<field name="notifications" type="ee.adit.pojo.ArrayOfNotification">
 			<bind-xml name="notifications" />
 		</field>
-		<field name="notificationsActive" type="boolean">
+		<field name="notificationsActive" type="java.lang.Boolean">
 			<bind-xml name="notifications_active" />
 		</field>
 		<field name="addressList" type="ee.adit.pojo.ArrayOfEmailAddress">

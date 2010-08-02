@@ -5,6 +5,16 @@ doc/environmentSetup.txt -text
 doc/redeploy_adit.cmd -text
 doc/testMessages/getDocument.v1.xml -text
 doc/testMessages/getJoined.v1.xml -text
+doc/testMessages/getNotifications.v1/error_database_down.xml -text
+doc/testMessages/getNotifications.v1/error_database_down_response.xml -text
+doc/testMessages/getNotifications.v1/error_deleted_user.xml -text
+doc/testMessages/getNotifications.v1/error_deleted_user_response.xml -text
+doc/testMessages/getNotifications.v1/error_nonexistent_user.xml -text
+doc/testMessages/getNotifications.v1/error_nonexistent_user_response.xml -text
+doc/testMessages/getNotifications.v1/error_unknown_application.xml -text
+doc/testMessages/getNotifications.v1/error_unknown_application_response.xml -text
+doc/testMessages/getNotifications.v1/success_case.xml -text
+doc/testMessages/getNotifications.v1/success_case_response.xml -text
 doc/testMessages/getUserInfo.v1/base64 -text
 doc/testMessages/getUserInfo.v1/getUserInfo.v1.attachment.xml -text
 doc/testMessages/getUserInfo.v1/getUserInfo.v1.xml -text
