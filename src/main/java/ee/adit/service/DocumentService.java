@@ -917,7 +917,6 @@ public class DocumentService {
 
 			List<PojoMessageRecipient> messageRecipients = this.getDvkDAO().getMessageRecipients(document.getDvkId());
 			Iterator<PojoMessageRecipient> messageRecipientIterator = messageRecipients.iterator();
-
 			List<DocumentSharing> documentSharings = this.getDocumentSharingDAO().getDVKSharings(document.getId());
 
 			while (messageRecipientIterator.hasNext()) {
@@ -942,9 +941,7 @@ public class DocumentService {
 						if(messageRecipient.getSendingStatusId() != DocumentService.DVKStatus_Sent) {
 							allDocumentSharingsSent = false;
 						}
-						
 					}
-
 				}
 				
 				// If all documentSharings statuses are "sent" then update the document's dvk status
@@ -953,9 +950,7 @@ public class DocumentService {
 					document.setDocumentDvkStatusId(DocumentService.DVKStatus_Sent);
 					this.getDocumentDAO().update(document);
 				}
-
 			}
-
 		}
 
 		return result;
