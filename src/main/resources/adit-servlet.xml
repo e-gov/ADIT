@@ -568,6 +568,7 @@
 	      		<ref bean="dvkSendTrigger"/>
 	      		<ref bean="dvkReceiveTrigger"/>
 	      		<ref bean="dvkUpdateStatusTrigger"/>
+	      		<ref bean="dvkUpdateStatusToDVKTrigger"/>
 	      		<!-- 
 	      		<ref bean="notificationTrigger"/>
 	      		-->

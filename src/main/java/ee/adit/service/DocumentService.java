@@ -698,7 +698,7 @@ public class DocumentService {
 									LOG.debug("Getting AditUser by personal code: " + recipient.getIsikukood().trim());
 									AditUser user = this.getAditUserDAO().getUserByID(recipient.getIsikukood().trim());
 
-									if (user != null) {
+									if (user != null && user.getActive()) {
 
 										// Check if user uses DVK
 										if (user.getDvkOrgCode() != null && !user.getDvkOrgCode().equalsIgnoreCase("")) {
@@ -707,6 +707,7 @@ public class DocumentService {
 											// to exchange
 											// documents with other users that
 											// use DVK, over DVK.
+											this.composeErrorResponse();											
 											throw new AditInternalException("User uses DVK - not allowed.");
 										}
 
@@ -772,6 +773,7 @@ public class DocumentService {
 										}
 									} else {
 										LOG.error("User not found. Personal code: " + recipient.getIsikukood().trim());
+										this.composeErrorResponse();										
 									}
 								}
 							}
@@ -790,6 +792,19 @@ public class DocumentService {
 		return result;
 	}
 
+	/**
+	 * TODO: IMPLEMENT
+	 * 
+	 * Kui dokumendi sidumisel kasutajaga ilmnes, et kasutajat pole ADIT aktiivsete kasutajate hulgas, 
+	 * siis märgitakse dokument DVKs katkestatuks (staatus 103) ning algsele saatjale koostatakse 
+	 * automaatselt vastuskiri, milles on toodud kaaskirja dokument (muudetav ADIT haldaja poolt) ning 
+	 * algne dokument. Kui dokumendi adressaadiks on DVK kasutaja, siis talitatakse sarnaselt eeltoodule, 
+	 * kuna DVK kasutajad peavad suhtlema otse omavahel, mitte ADIT kaudu.
+	 */
+	public void composeErrorResponse() {
+		
+	}
+	
 	public ContainerVer2 getDVKContainer(PojoMessage document) throws AditInternalException {
 		ContainerVer2 result = null;
 
