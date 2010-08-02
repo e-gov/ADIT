@@ -71,7 +71,6 @@ import ee.adit.dao.pojo.DocumentFile;
 import ee.adit.dao.pojo.DocumentHistory;
 import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.dao.pojo.DocumentType;
-import ee.adit.dao.pojo.helper.DocumentFileHolder;
 import ee.adit.dvk.DvkDAO;
 import ee.adit.exception.AditException;
 import ee.adit.exception.AditInternalException;
