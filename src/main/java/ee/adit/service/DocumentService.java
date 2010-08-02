@@ -901,9 +901,9 @@ public class DocumentService {
 	}
 
 	/**
-	 * TODO: comment
+	 * Updates statuses for incoming messages.
 	 * 
-	 * @return
+	 * @return number of messages updated.
 	 */
 	public int updateDocumentsFromDVK() {
 		int result = 0;
@@ -977,6 +977,19 @@ public class DocumentService {
 		return result;
 	}
 
+	/**
+	 * Updates document statuses for outgoing messages.
+	 * 
+	 * @return number of messages updated.
+	 */
+	public int updateDocumentsToDVK() {
+		int result = 0;
+		
+		// TODO: implement
+		
+		return result;
+	}
+	
 	public MessageSource getMessageSource() {
 		return messageSource;
 	}
