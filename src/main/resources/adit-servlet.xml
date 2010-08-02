@@ -347,6 +347,7 @@
 		<property name="documentHistoryDAO" ref="documentHistoryDAO"/>
 		<property name="aditUserDAO" ref="aditUserDAO"/>
 		<property name="configuration" ref="configuration"/>
+		<property name="dvkDAO" ref="dvkDAO"/>
 	</bean>
 
 	<bean id="myDataSource"
@@ -454,6 +455,9 @@
 		
 	<bean id="documentHistoryDAO" class="ee.adit.dao.DocumentHistoryDAO">
 		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="dvkDAO" class="ee.adit.dvk.DvkDAO">
 	</bean>
 
 	<!-- Scheduled jobs -->

@@ -72,6 +72,7 @@ import ee.adit.dao.pojo.DocumentHistory;
 import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.dao.pojo.DocumentType;
 import ee.adit.dao.pojo.helper.DocumentFileHolder;
+import ee.adit.dvk.DvkDAO;
 import ee.adit.exception.AditException;
 import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.SaveDocumentRequestAttachment;
@@ -129,7 +130,8 @@ public class DocumentService {
 	private DocumentHistoryDAO documentHistoryDAO;
 	private AditUserDAO aditUserDAO;
 	private Configuration configuration;
-
+	private DvkDAO dvkDAO;
+	
 	public List<String> checkAttachedDocumentMetadataForNewDocument(SaveDocumentRequestAttachment document, long remainingDiskQuota, String xmlFile, String tempDir) throws AditException {
 		List<String> result = null;
 		LOG.debug("Checking attached document metadata for new document...");
@@ -663,17 +665,16 @@ public class DocumentService {
 	@Transactional
 	public int receiveDocumentsFromDVK() {
 		int result = 0;
-		final String SQL = "from PojoMessage where isIncoming = true and (recipientStatusId = null or recipientStatusId = 0 or recipientStatusId = 101 or recipientStatusId = 1)";
+		
 		
 		try {
 			
 			// Fetch all incoming documents from DVK Client database which have the required status - "sending" (recipient_status_id = "101" or "1"); 
 			LOG.info("Fetching documents from DVK Client database.");
 			
-			SessionFactory sessionFactory = DVKAPI.createSessionFactory("hibernate_ora_dvk.cfg.xml");
-			Session dvkSession = sessionFactory.openSession();
+			List<PojoMessage> dvkDocuments = this.getDvkDAO().getIncomingDocuments();
+						
 			
-			List<PojoMessage> dvkDocuments = dvkSession.createQuery(SQL).list();
 			
 			if(dvkDocuments != null && dvkDocuments.size() > 0) {
 			
@@ -835,9 +836,7 @@ public class DocumentService {
 											
 											// Update document status to "sent" (recipient_status_id = "102") in DVK Client database
 											dvkDocument.setRecipientStatusId(DVKStatus_Sent);
-											Transaction dvkTransaction = dvkSession.beginTransaction();
-											dvkSession.saveOrUpdate(dvkDocument);
-											dvkTransaction.commit();
+											this.getDvkDAO().updateDocument(dvkDocument);
 											
 											// Finally commit
 											aditTransaction.commit();
@@ -949,5 +948,13 @@ public class DocumentService {
 
 	public void setAditUserDAO(AditUserDAO aditUserDAO) {
 		this.aditUserDAO = aditUserDAO;
+	}
+
+	public DvkDAO getDvkDAO() {
+		return dvkDAO;
+	}
+
+	public void setDvkDAO(DvkDAO dvkDAO) {
+		this.dvkDAO = dvkDAO;
 	}
 }
