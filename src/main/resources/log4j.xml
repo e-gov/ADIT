@@ -57,10 +57,11 @@
     	<appender-ref ref="file" />
     </logger>
     
+    <!-- 
     <logger name="org.hibernate.SQL">
-    	<level value="debug"></level>
-    	<appender-ref ref="file" />
+    	<level value="error"></level>
     </logger>
+     -->
     
     <logger name="org.springframework.orm.hibernate3">
     	<level value="debug"/>

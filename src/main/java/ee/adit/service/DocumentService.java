@@ -923,15 +923,24 @@ public class DocumentService {
 				Iterator<PojoMessageRecipient> messageRecipientIterator = messageRecipients.iterator();
 				List<DocumentSharing> documentSharings = this.getDocumentSharingDAO().getDVKSharings(document.getId());
 
+				if(messageRecipients != null)
+					LOG.debug("messageRecipients.size: " + messageRecipients.size());
+				
+				if(documentSharings != null)
+					LOG.debug("documentSharings.size: " + documentSharings.size());
+				
 				while (messageRecipientIterator.hasNext()) {
 					PojoMessageRecipient messageRecipient = messageRecipientIterator.next();
 
+					LOG.debug("Updating for messageRecipient: " + messageRecipient.getRecipientOrgCode());
+					
 					boolean allDocumentSharingsSent = true;
 
 					// Compare the status with the status of the sharing in ADIT
 					for (int i = 0; i < documentSharings.size(); i++) {
 						DocumentSharing documentSharing = documentSharings.get(i);
-
+						LOG.debug("Updating for documentSharing: " + documentSharing.getId());
+						
 						if (documentSharing.getUserCode().equalsIgnoreCase(messageRecipient.getRecipientPersonCode())
 								|| documentSharing.getUserCode().equalsIgnoreCase(messageRecipient.getRecipientOrgCode())) {
 

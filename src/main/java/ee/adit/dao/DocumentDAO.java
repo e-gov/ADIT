@@ -877,9 +877,22 @@ public class DocumentDAO extends HibernateDaoSupport {
 		return result;
 	}
 	
-	public List<Document> getDocumentsWithoutDVKStatus(Long dvkStatusId) {		
-		String SQL = "from Document where documentDvkStatusId != " + dvkStatusId;
-		return this.getSessionFactory().openSession().createQuery(SQL).list();
+	public List<Document> getDocumentsWithoutDVKStatus(Long dvkStatusId) {
+		List<Document> result = null;
+		String SQL = "from Document where documentDvkStatusId is null or documentDvkStatusId != " + dvkStatusId;
+		Session session = null;
+		try {
+			session = this.getSessionFactory().openSession();
+			result = session.createQuery(SQL).list();
+		} catch (Exception e) {
+			throw new AditInternalException("Error while updating Document: ", e);
+		} finally {
+			if(session != null) {
+				session.close();
+			}
+		}
+		
+		return result;
 	}
 
 	public void update(Document document) {
