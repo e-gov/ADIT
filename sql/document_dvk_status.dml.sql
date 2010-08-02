@@ -13,7 +13,7 @@ INSERT INTO &&ADIT_SCHEMA..document_dvk_status (
 	description
 ) VALUES (
 	101,
-	'Saatmisel'
+	'Ootel'
 );
 
 INSERT INTO &&ADIT_SCHEMA..document_dvk_status (
@@ -21,7 +21,7 @@ INSERT INTO &&ADIT_SCHEMA..document_dvk_status (
 	description
 ) VALUES (
 	102,
-	'Saadetud'
+	'Saatmisel'
 );
 
 INSERT INTO &&ADIT_SCHEMA..document_dvk_status (
@@ -29,5 +29,21 @@ INSERT INTO &&ADIT_SCHEMA..document_dvk_status (
 	description
 ) VALUES (
 	103,
+	'Saadetud'
+);
+
+INSERT INTO &&ADIT_SCHEMA..document_dvk_status (
+	ID,
+	description
+) VALUES (
+	104,
 	'Katkestatud'
+);
+
+INSERT INTO &&ADIT_SCHEMA..document_dvk_status (
+	ID,
+	description
+) VALUES (
+	105,
+	'Vastu võetud'
 );
