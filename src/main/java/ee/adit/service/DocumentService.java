@@ -936,6 +936,7 @@ public class DocumentService {
 							if (!documentSharing.getDocumentDvkStatus().equals(messageRecipient.getSendingStatusId())) {
 								documentSharing.setDocumentDvkStatus(messageRecipient.getSendingStatusId());
 								this.getDocumentSharingDAO().update(documentSharing);
+								LOG.debug("DocumentSharing DVK status updated: documentSharingID: " + documentSharing.getId() + ", DVK status: " + documentSharing.getDocumentDvkStatus());
 								result++;
 							}
 
@@ -951,6 +952,7 @@ public class DocumentService {
 						// Update document DVK status ID
 						document.setDocumentDvkStatusId(DocumentService.DVKStatus_Sent);
 						this.getDocumentDAO().update(document);
+						LOG.debug("All DVK sharings for this document updated to 'sent'. Updating document DVK status.");
 					}
 				}
 			} catch (Exception e) {
