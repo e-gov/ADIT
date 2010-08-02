@@ -49,6 +49,7 @@ public class DvkDAO {
 	}
 
 	public List<PojoMessageRecipient> getMessageRecipients(Long dvkMessageID) {
+		// TODO: pojomesage.ID - invalid identifier
 		String SQL = "select mr from PojoMessageRecipient mr, PojoMessage m where mr.dhlMessageId = m.dhlMessageId and m.dhlMessageId = " + dvkMessageID + " and m.isIncoming = 0";
 		return this.getSessionFactory().openSession().createQuery(SQL).list();
 	}

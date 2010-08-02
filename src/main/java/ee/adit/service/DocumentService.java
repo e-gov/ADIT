@@ -918,6 +918,7 @@ public class DocumentService {
 
 			try {
 				LOG.info("Updating DVK status for document. DocumentID: " + document.getId());
+				
 				List<PojoMessageRecipient> messageRecipients = this.getDvkDAO().getMessageRecipients(document.getDvkId());
 				Iterator<PojoMessageRecipient> messageRecipientIterator = messageRecipients.iterator();
 				List<DocumentSharing> documentSharings = this.getDocumentSharingDAO().getDVKSharings(document.getId());
@@ -959,7 +960,7 @@ public class DocumentService {
 					}
 				}
 			} catch (Exception e) {
-				LOG.error("Error while updating status from DVK. DocumentID: " + document.getId());
+				LOG.error("Error while updating status from DVK. DocumentID: " + document.getId(), e);
 				LOG.info("Continue...");
 			}
 		}
