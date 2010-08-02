@@ -983,19 +983,11 @@ public class DocumentService {
 	 * @return number of messages updated.
 	 */
 	public int updateDocumentsToDVK() {
+		
 		int result = 0;
-
-		// List<Document> documents =
-		// this.getDocumentDAO().getDocumentsWithoutDVKStatus(DVKStatus_Sent);
-		// Iterator<Document> documentsIterator = documents.iterator();
 		List<PojoMessage> dvkDocuments = this.getDvkDAO().getIncomingDocumentsWithoutStatus(DocumentService.DVKStatus_Sent);
 		Iterator<PojoMessage> dvkDocumentsIterator = dvkDocuments.iterator();
 
-		/*
-		 * Sissetulevate dokumentide puhul tekib DVK kliendi andmebaasi üks
-		 * kirje - DHL_MESSAGE tabelisse. Selle kirje juures peab muutma ära
-		 * staatuse, kui see on muutunud ADIT andmebaasis.
-		 */
 		while (dvkDocumentsIterator.hasNext()) {
 			PojoMessage dvkDocument = dvkDocumentsIterator.next();
 
@@ -1008,17 +1000,16 @@ public class DocumentService {
 					// Compare the statuses - ADIT status prevails
 					if(document.getDocumentDvkStatusId() != null) {
 						if(!document.getDocumentDvkStatusId().equals(dvkDocument.getRecipientStatusId())) {
+							
 							// If the statuses do not match, update from ADIT to DVK
 							dvkDocument.setRecipientStatusId(document.getDocumentDvkStatusId());
 							
 							// Update DVK document
 							this.getDvkDAO().updateDocument(dvkDocument);
-							
 						}
 					} else {
 						throw new AditInternalException("Could not update document with DVK_ID: " + dvkDocument.getDhlMessageId() + ". Document's DVK status is not defined in ADIT.");
 					}
-					
 				} else {
 					throw new AditInternalException("Could not find document with DVK_ID: " + dvkDocument.getDhlMessageId());
 				}
