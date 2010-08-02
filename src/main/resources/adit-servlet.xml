@@ -496,6 +496,17 @@
 	    </property>
 	</bean>
 	
+	<bean name="UpdateStatusToDVKJobDetails" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass" value="ee.adit.dvk.UpdateStatusToDVKJob"/>
+		<property name="jobDataAsMap">
+		    <map>
+		    	<entry key="documentService">
+		      		<ref bean="documentService"/>
+		      	</entry>
+		    </map>
+	    </property>
+	</bean>
+	
 	<bean name="sendNotificationsJobDetails" class="org.springframework.scheduling.quartz.JobDetailBean">
 		<property name="jobClass" value="ee.adit.schedule.SendNotificationsJob"/>
 		<property name="jobDataAsMap">
@@ -533,6 +544,15 @@
 		<!-- repeat every 20 seconds -->
 	  	<property name="repeatInterval" value="30000"/>
 	</bean>
+	
+	<bean id="dvkUpdateStatusToDVKTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+	  	<property name="jobDetail" ref="UpdateStatusToDVKJobDetails"/>
+		<!-- 10 seconds -->
+	  	<property name="startDelay" value="15000"/>
+		<!-- repeat every 20 seconds -->
+	  	<property name="repeatInterval" value="30000"/>
+	</bean>
+	
 	
 	<!-- 
 	<bean id="notificationTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
