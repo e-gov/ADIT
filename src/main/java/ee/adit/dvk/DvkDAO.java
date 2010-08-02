@@ -9,6 +9,7 @@ import org.hibernate.Transaction;
 
 import dvk.api.DVKAPI;
 import dvk.api.ml.PojoMessage;
+import dvk.api.ml.PojoMessageRecipient;
 
 public class DvkDAO {
 
@@ -47,6 +48,11 @@ public class DvkDAO {
 		
 	}
 
+	public List<PojoMessageRecipient> getMessageRecipients(Long dvkMessageID) {
+		String SQL = "select mr from PojoMessageRecipient mr, PojoMessage m where mr.dhlMessageId = m.dhlMessageId and m.dhlMessageId = " + dvkMessageID + " and m.isIncoming = 0";
+		return this.getSessionFactory().openSession().createQuery(SQL).list();
+	}
+	
 	public SessionFactory getSessionFactory() {
 		return sessionFactory;
 	}

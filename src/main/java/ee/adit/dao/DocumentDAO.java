@@ -20,6 +20,7 @@ import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.MatchMode;
@@ -39,6 +40,7 @@ import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.DocumentFile;
 import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.exception.AditException;
+import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.DocumentSendingData;
 import ee.adit.pojo.DocumentSendingRecipient;
 import ee.adit.pojo.DocumentSharingData;
@@ -865,8 +867,8 @@ public class DocumentDAO extends HibernateDaoSupport {
 	public boolean checkIfDocumentExists(PojoMessage document, Saaja recipient) {
 		boolean result = true;
 		
-		String EXISTING_DOC_SQL = "from Document where dvkId = " + document.getDhlId() + " and creatorCode = '" + recipient.getIsikukood().trim() + "'";
-		List<Document> existingDocuments = this.getSessionFactory().openSession().createQuery(EXISTING_DOC_SQL).list();
+		String SQL = "from Document where dvkId = " + document.getDhlId() + " and creatorCode = '" + recipient.getIsikukood().trim() + "'";
+		List<Document> existingDocuments = this.getSessionFactory().openSession().createQuery(SQL).list();
 		
 		if(existingDocuments == null || existingDocuments.size() == 0) {
 			result = false;
@@ -875,5 +877,30 @@ public class DocumentDAO extends HibernateDaoSupport {
 		return result;
 	}
 	
-	
+	public List<Document> getDocumentsWithoutDVKStatus(Long dvkStatusId) {		
+		String SQL = "from Document where documentDvkStatusId != " + dvkStatusId;
+		return this.getSessionFactory().openSession().createQuery(SQL).list();
+	}
+
+	public void update(Document document) {
+		Session session = null;
+		Transaction transaction = null;
+		try {
+			
+			session = this.getSessionFactory().openSession();
+			transaction = session.beginTransaction();
+			session.saveOrUpdate(document);
+			transaction.commit();
+			
+		} catch (Exception e) {
+			if(transaction != null) {
+				transaction.rollback();
+			}
+			throw new AditInternalException("Error while updating Document: ", e);
+		} finally {
+			if(session != null) {
+				session.close();
+			}
+		}		
+	}
 }

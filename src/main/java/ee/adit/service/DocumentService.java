@@ -43,6 +43,7 @@ import dvk.api.container.v2.Metainfo;
 import dvk.api.container.v2.Saaja;
 import dvk.api.container.v2.Transport;
 import dvk.api.ml.PojoMessage;
+import dvk.api.ml.PojoMessageRecipient;
 import ee.adit.dao.AditUserDAO;
 import ee.adit.dao.DocumentDAO;
 import ee.adit.dao.DocumentFileDAO;
@@ -78,7 +79,7 @@ public class DocumentService {
 	public static final Long DVKStatus_Sending = new Long(101);
 	public static final Long DVKStatus_Sent = new Long(102);
 	public static final Long DVKStatus_Aborted = new Long(103);
-	
+
 	// Dokumendi ajaloosündmuste koodid
 	public static final String HistoryType_Create = "create";
 	public static final String HistoryType_Modify = "modify";
@@ -102,7 +103,7 @@ public class DocumentService {
 	// Document types
 	public static final String DocType_Letter = "letter";
 	public static final String DocType_Application = "application";
-	
+
 	private static Logger LOG = Logger.getLogger(UserService.class);
 	private MessageSource messageSource;
 	private DocumentTypeDAO documentTypeDAO;
@@ -114,7 +115,7 @@ public class DocumentService {
 	private AditUserDAO aditUserDAO;
 	private Configuration configuration;
 	private DvkDAO dvkDAO;
-	
+
 	public List<String> checkAttachedDocumentMetadataForNewDocument(SaveDocumentRequestAttachment document, long remainingDiskQuota, String xmlFile, String tempDir) throws AditException {
 		List<String> result = null;
 		LOG.debug("Checking attached document metadata for new document...");
@@ -396,7 +397,7 @@ public class DocumentService {
 	@Transactional
 	public int sendDocumentsToDVK() {
 		int result = 0;
-		
+
 		final String SQL_QUERY = "select doc from Document doc, DocumentSharing docSharing where docSharing.documentSharingType = 'send_dvk' and (docSharing.documentDvkStatus is null or docSharing.documentDvkStatus = 100) and docSharing.documentId = doc.id";
 
 		final String tempDir = this.getConfiguration().getTempDir();
@@ -491,7 +492,7 @@ public class DocumentService {
 					} catch (Exception e) {
 						throw new HibernateException("Unable to create temporary file: ", e);
 					}
-					
+
 					dvkFile.setFailNimi(f.getFileName());
 					dvkFile.setFailPealkiri(null);
 					dvkFile.setFailSuurus(f.getFileSizeBytes());
@@ -561,11 +562,11 @@ public class DocumentService {
 					// Write the DVK Container to temporary file
 					String temporaryFile = this.getConfiguration().getTempDir() + File.separator + Util.generateRandomFileName();
 					dvkContainer.save2File(temporaryFile);
-					
+
 					// Write the temporary file to the database
 					InputStream is = new FileInputStream(temporaryFile);
 					Writer clobWriter = dvkMessageToUpdate.getData().setCharacterStream(1);
-					
+
 					byte[] buf = new byte[1024];
 					int len;
 					while ((len = is.read(buf)) > 0) {
@@ -580,31 +581,30 @@ public class DocumentService {
 					// Save the document DVK_ID to ADIT database
 					document.setDvkId(dvkMessageID);
 					session.saveOrUpdate(document);
-					
+
 					// Update document sharings status
 					Iterator<DocumentSharing> documentSharingUpdateIterator = document.getDocumentSharings().iterator();
-					while(documentSharingUpdateIterator.hasNext()) {
+					while (documentSharingUpdateIterator.hasNext()) {
 						DocumentSharing documentSharing = documentSharingUpdateIterator.next();
 						if (DocumentService.SharingType_SendDvk.equalsIgnoreCase(documentSharing.getDocumentSharingType())) {
 							documentSharing.setDocumentDvkStatus(DVKStatus_Sending);
 							session.saveOrUpdate(documentSharing);
 							LOG.debug("DocumentSharing status updated to: '" + DVKStatus_Sending + "'.");
-						}						
+						}
 					}
-					
+
 					result++;
-					
-					
+
 				} catch (Exception e) {
 					dvkTransaction2.rollback();
-					
+
 					// Remove the document with empty clob from the database
 					Session dvkSession3 = sessionFactory.openSession();
 					Transaction dvkTransaction3 = dvkSession3.beginTransaction();
 					try {
 						LOG.debug("Starting to delete document from DVK Client database: " + dvkMessageID);
 						PojoMessage dvkMessageToDelete = (PojoMessage) dvkSession3.load(PojoMessage.class, dvkMessageID);
-						if(dvkMessageToDelete == null) {
+						if (dvkMessageToDelete == null) {
 							LOG.warn("DVK message to delete is not initialized.");
 						}
 						dvkSession3.delete(dvkMessageToDelete);
@@ -614,22 +614,23 @@ public class DocumentService {
 						dvkTransaction3.rollback();
 						LOG.error("Error deleting document from DVK database: ", dvkException);
 					} finally {
-						if(dvkSession3 != null) {
+						if (dvkSession3 != null) {
 							dvkSession3.close();
 						}
 					}
-					
+
 					throw new DataRetrievalFailureException("Error while adding message to DVK Client database (CLOB update): ", e);
 				} finally {
 					if (dvkSession2 != null) {
 						dvkSession2.close();
 					}
-				}				
+				}
 			} catch (Exception e) {
-				
-				// TODO: if something fails during the operation - the document.dvkId is not set and that reference is lost.
+
+				// TODO: if something fails during the operation - the
+				// document.dvkId is not set and that reference is lost.
 				// The GUID reference is still valid.
-				
+
 				throw new AditInternalException("Error while sending documents to DVK Client database: ", e);
 			}
 		}
@@ -639,66 +640,76 @@ public class DocumentService {
 	/**
 	 * Transfers incoming documents from DVK Client database to ADIT database.
 	 * 
-	 * Note: DVK stores the recipient status in the DHL_MESSAGE table (field RECIPIENT_STATUS_ID).
-	 *       The situation where two recipients from the same institution receive the same document,
-	 *       is not allowed (or at least DVK stores only one status ID for this document). 
+	 * Note: DVK stores the recipient status in the DHL_MESSAGE table (field
+	 * RECIPIENT_STATUS_ID). The situation where two recipients from the same
+	 * institution receive the same document, is not allowed (or at least DVK
+	 * stores only one status ID for this document).
 	 * 
 	 * @return the number of documents received
 	 */
 	@Transactional
 	public int receiveDocumentsFromDVK() {
 		int result = 0;
-		
+
 		try {
-			
-			// Fetch all incoming documents from DVK Client database which have the required status - "sending" (recipient_status_id = "101" or "1"); 
+
+			// Fetch all incoming documents from DVK Client database which have
+			// the required status - "sending" (recipient_status_id = "101" or
+			// "1");
 			LOG.info("Fetching documents from DVK Client database.");
 			List<PojoMessage> dvkDocuments = this.getDvkDAO().getIncomingDocuments();
-			
-			if(dvkDocuments != null && dvkDocuments.size() > 0) {
-			
-				LOG.debug("Found " + dvkDocuments.size());				
+
+			if (dvkDocuments != null && dvkDocuments.size() > 0) {
+
+				LOG.debug("Found " + dvkDocuments.size());
 				Iterator<PojoMessage> dvkDocumentsIterator = dvkDocuments.iterator();
-				
-				while(dvkDocumentsIterator.hasNext()) {
+
+				while (dvkDocumentsIterator.hasNext()) {
 					PojoMessage dvkDocument = dvkDocumentsIterator.next();
-					
+
 					// Get the DVK Container
 					ContainerVer2 dvkContainer = this.getDVKContainer(dvkDocument);
-										
+
 					List<Saaja> recipients = dvkContainer.getTransport().getSaajad();
-					
-					if(recipients != null && recipients.size() > 0) {
+
+					if (recipients != null && recipients.size() > 0) {
 						LOG.debug("Recipients for this message: " + recipients.size());
-						
+
 						// For every recipient - check if registered in ADIT
 						Iterator<Saaja> recipientsIterator = recipients.iterator();
-						
-						while(recipientsIterator.hasNext()) {
+
+						while (recipientsIterator.hasNext()) {
 							Saaja recipient = recipientsIterator.next();
-							
+
 							LOG.info("Recipient: " + recipient.getRegNr() + " (" + recipient.getAsutuseNimi() + "). Isikukood: '" + recipient.getIsikukood() + "'.");
-							
-							// The ADIT internal recipient is always marked by the field <isikukood> in the DVK container,
-							// regardless if it is actually a person or an institution / company.
-							if(recipient.getRegNr() != null && !recipient.getRegNr().equalsIgnoreCase("")) {
-								if(recipient.getIsikukood() != null && !recipient.getIsikukood().equals("")) {
-									// The recipient is specified - check if it's a DVK user
-									
+
+							// The ADIT internal recipient is always marked by
+							// the field <isikukood> in the DVK container,
+							// regardless if it is actually a person or an
+							// institution / company.
+							if (recipient.getRegNr() != null && !recipient.getRegNr().equalsIgnoreCase("")) {
+								if (recipient.getIsikukood() != null && !recipient.getIsikukood().equals("")) {
+									// The recipient is specified - check if
+									// it's a DVK user
+
 									LOG.debug("Getting AditUser by personal code: " + recipient.getIsikukood().trim());
 									AditUser user = this.getAditUserDAO().getUserByID(recipient.getIsikukood().trim());
-									
-									if(user != null) {
-										
+
+									if (user != null) {
+
 										// Check if user uses DVK
-										if(user.getDvkOrgCode() != null && !user.getDvkOrgCode().equalsIgnoreCase("")) {
-											// The user uses DVK - this is not allowed. Users that use DVK have to exchange
-											// documents with other users that use DVK, over DVK.
+										if (user.getDvkOrgCode() != null && !user.getDvkOrgCode().equalsIgnoreCase("")) {
+											// The user uses DVK - this is not
+											// allowed. Users that use DVK have
+											// to exchange
+											// documents with other users that
+											// use DVK, over DVK.
 											throw new AditInternalException("User uses DVK - not allowed.");
 										}
-										
+
 										LOG.debug("Constructing ADIT message");
-										// Add document for this recipient to ADIT database
+										// Add document for this recipient to
+										// ADIT database
 										Document aditDocument = new Document();
 										aditDocument.setCreationDate(new Date());
 										aditDocument.setDocumentDvkStatusId(DVKStatus_Sent);
@@ -707,48 +718,52 @@ public class DocumentService {
 										aditDocument.setLocked(true);
 										aditDocument.setLockingDate(new Date());
 										aditDocument.setSignable(true);
-										aditDocument.setTitle(dvkDocument.getTitle());									
+										aditDocument.setTitle(dvkDocument.getTitle());
 										aditDocument.setDocumentType(DocType_Letter);
-										
+
 										// The creator is the recipient
 										aditDocument.setCreatorCode(user.getUserCode());
 										aditDocument.setCreatorName(user.getFullName());
-										
+
 										// Get document files from DVK container
 										List<OutputDocumentFile> tempDocuments = this.getDocumentOutputFiles(dvkContainer);
-										
+
 										Session aditSession = null;
 										Transaction aditTransaction = null;
 										try {
-											
+
 											// Save the document
 											aditSession = this.getDocumentDAO().getSessionFactory().openSession();
-											aditTransaction = aditSession.beginTransaction();	
-											
-											// Before we save the document to ADIT, check if the recipient has already received a document
-											// with the same GUID or DVK ID.											
-											if(this.getDocumentDAO().checkIfDocumentExists(dvkDocument, recipient)) {
+											aditTransaction = aditSession.beginTransaction();
+
+											// Before we save the document to
+											// ADIT, check if the recipient has
+											// already received a document
+											// with the same GUID or DVK ID.
+											if (this.getDocumentDAO().checkIfDocumentExists(dvkDocument, recipient)) {
 												throw new AditInternalException("Document already sent to user. DVK ID: " + dvkDocument.getDhlId() + ", recipient: " + recipient.getIsikukood().trim());
 											}
-		
+
 											// Save document
 											Long aditDocumentID = this.getDocumentDAO().save(aditDocument, tempDocuments, aditSession);
 											LOG.info("Document saved to ADIT database. ID: " + aditDocumentID);
-											
-											// Update document status to "sent" (recipient_status_id = "102") in DVK Client database
+
+											// Update document status to "sent"
+											// (recipient_status_id = "102") in
+											// DVK Client database
 											dvkDocument.setRecipientStatusId(DVKStatus_Sent);
 											this.getDvkDAO().updateDocument(dvkDocument);
-											
+
 											// Finally commit
 											aditTransaction.commit();
-											
+
 										} catch (Exception e) {
 											LOG.debug("Error saving document to ADIT database: ", e);
-											if(aditTransaction != null) {
+											if (aditTransaction != null) {
 												aditTransaction.rollback();
 											}
 										} finally {
-											if(aditSession != null) {
+											if (aditSession != null) {
 												aditSession.close();
 											}
 										}
@@ -756,25 +771,25 @@ public class DocumentService {
 										LOG.error("User not found. Personal code: " + recipient.getIsikukood().trim());
 									}
 								}
-							}						
+							}
 						}
 					} else {
 						LOG.warn("No recipients found for this message: " + dvkDocument.getDhlGuid());
-					}										
-				}				
+					}
+				}
 			} else {
 				LOG.info("No incoming messages found in DVK Client database.");
 			}
 		} catch (Exception e) {
 			throw new AditInternalException("Error while receiving documents from DVK Client database: ", e);
 		}
-		
+
 		return result;
 	}
-	
+
 	public ContainerVer2 getDVKContainer(PojoMessage document) throws AditInternalException {
 		ContainerVer2 result = null;
-		
+
 		// Write the clob data to a temporary file
 		Reader clobReader = null;
 		FileWriter fileWriter = null;
@@ -782,38 +797,38 @@ public class DocumentService {
 			clobReader = document.getData().getCharacterStream();
 			String tmpFile = this.getConfiguration().getTempDir() + File.separator + Util.generateRandomFileName();
 			fileWriter = new FileWriter(tmpFile);
-			
+
 			char[] cbuf = new char[1024];
 			int readCount = 0;
-			while((readCount = clobReader.read(cbuf)) > 0) {
+			while ((readCount = clobReader.read(cbuf)) > 0) {
 				fileWriter.write(cbuf, 0, readCount);
 			}
-			
+
 			fileWriter.close();
 			clobReader.close();
-			
+
 			result = ContainerVer2.parseFile(tmpFile);
-			
-			if(result == null) {
+
+			if (result == null) {
 				throw new AditInternalException("DVK Container not initialized.");
 			} else {
-				if(result.getTransport() == null) {
+				if (result.getTransport() == null) {
 					throw new AditInternalException("DVK Container not properly initialized: <transport> section not initialized");
 				}
 			}
-			
+
 		} catch (Exception e) {
 			throw new AditInternalException("Exception while reading DVK container from database: ", e);
 		} finally {
-			if(fileWriter != null) {
+			if (fileWriter != null) {
 				try {
 					fileWriter.close();
 				} catch (Exception e) {
 					LOG.warn("Error while closing file writer: ", e);
 				}
 			}
-			
-			if(clobReader != null) {
+
+			if (clobReader != null) {
 				try {
 					clobReader.close();
 				} catch (Exception e) {
@@ -821,50 +836,50 @@ public class DocumentService {
 				}
 			}
 		}
-		
+
 		return result;
 	}
-	
+
 	public List<OutputDocumentFile> getDocumentOutputFiles(ContainerVer2 dvkContainer) {
 		List<OutputDocumentFile> result = new ArrayList<OutputDocumentFile>();
-		
+
 		try {
 			List<Fail> dvkFiles = dvkContainer.getFailideKonteiner().getFailid();
 			Iterator<Fail> dvkFilesIterator = dvkFiles.iterator();
-		
+
 			LOG.debug("Total number of files in DVK Container: " + dvkContainer.getFailideKonteiner().getKokku());
-			
-			while(dvkFilesIterator.hasNext()) {
+
+			while (dvkFilesIterator.hasNext()) {
 				Fail dvkFile = dvkFilesIterator.next();
 				LOG.debug("Processing file nr.: " + dvkFile.getJrkNr());
-				
+
 				// TODO: STREAM
 				String fileContents = dvkFile.getZipBase64Sisu();
 				InputStream inputStream = new StringBufferInputStream(fileContents);
 				String tempFile = Util.createTemporaryFile(inputStream, this.getConfiguration().getTempDir());
-				
+
 				String decodedTempFile = Util.base64DecodeAndUnzip(tempFile, this.getConfiguration().getTempDir(), this.getConfiguration().getDeleteTemporaryFilesAsBoolean());
-				
+
 				OutputDocumentFile tempDocument = new OutputDocumentFile();
 				tempDocument.setTmpFileName(decodedTempFile);
 				tempDocument.setContentType(dvkFile.getFailTyyp());
 				tempDocument.setName(dvkFile.getFailNimi());
 				tempDocument.setSizeBytes(dvkFile.getFailSuurus());
-				
+
 				// Add the temporary file to the list
 				result.add(tempDocument);
 			}
-			
+
 		} catch (Exception e) {
-			if(result != null && result.size() > 0) {
+			if (result != null && result.size() > 0) {
 				// Delete temporary files
 				Iterator<OutputDocumentFile> documentsToDelete = result.iterator();
-				while(documentsToDelete.hasNext()) {
+				while (documentsToDelete.hasNext()) {
 					OutputDocumentFile documentToDelete = documentsToDelete.next();
 					try {
-						if(documentToDelete.getTmpFileName() != null && !documentToDelete.getTmpFileName().trim().equalsIgnoreCase("")) {
+						if (documentToDelete.getTmpFileName() != null && !documentToDelete.getTmpFileName().trim().equalsIgnoreCase("")) {
 							File f = new File(documentToDelete.getTmpFileName());
-							if(f.exists()) {
+							if (f.exists()) {
 								f.delete();
 							} else {
 								throw new FileNotFoundException("Could not find temporary file (to delete): " + documentToDelete.getTmpFileName());
@@ -878,18 +893,74 @@ public class DocumentService {
 			}
 			throw new AditInternalException("Error while saving files: ", e);
 		}
-		
+
 		return result;
 	}
-	
+
+	/**
+	 * TODO: implement
+	 * 
+	 * @return
+	 */
 	public int updateDocumentsFromDVK() {
 		int result = 0;
-		
-		
-		
+
+		// 1. Võtame kõik dokumendid ADIT andmebaasist, millel DVK staatus ei
+		// ole "saadetud"
+		List<Document> documents = this.getDocumentDAO().getDocumentsWithoutDVKStatus(DVKStatus_Sent);
+		Iterator<Document> documentsIterator = documents.iterator();
+
+		SessionFactory sessionFactory = DVKAPI.createSessionFactory("hibernate_ora_dvk.cfg.xml");
+		Session dvkSession = sessionFactory.openSession();
+		while (documentsIterator.hasNext()) {
+			Document document = documentsIterator.next();
+
+			List<PojoMessageRecipient> messageRecipients = this.getDvkDAO().getMessageRecipients(document.getDvkId());
+			Iterator<PojoMessageRecipient> messageRecipientIterator = messageRecipients.iterator();
+
+			List<DocumentSharing> documentSharings = this.getDocumentSharingDAO().getDVKSharings(document.getId());
+
+			while (messageRecipientIterator.hasNext()) {
+				PojoMessageRecipient messageRecipient = messageRecipientIterator.next();
+
+				boolean allDocumentSharingsSent = true;
+				
+				// Compare the status with the status of the sharing in ADIT
+				for (int i = 0; i < documentSharings.size(); i++) {
+					DocumentSharing documentSharing = documentSharings.get(i);
+
+					if (documentSharing.getUserCode().equalsIgnoreCase(messageRecipient.getRecipientPersonCode())
+							|| documentSharing.getUserCode().equalsIgnoreCase(messageRecipient.getRecipientOrgCode())) {
+						
+						// If the statuses differ, update the one in ADIT database
+						if(!documentSharing.getDocumentDvkStatus().equals(messageRecipient.getSendingStatusId())) {
+							documentSharing.setDocumentDvkStatus(messageRecipient.getSendingStatusId());
+							this.getDocumentSharingDAO().update(documentSharing);
+							result++;
+						}
+						
+						if(messageRecipient.getSendingStatusId() != DocumentService.DVKStatus_Sent) {
+							allDocumentSharingsSent = false;
+						}
+						
+					}
+
+				}
+				
+				// If all documentSharings statuses are "sent" then update the document's dvk status
+				if(allDocumentSharingsSent) {
+					// Update document DVK status ID
+					document.setDocumentDvkStatusId(DocumentService.DVKStatus_Sent);
+					this.getDocumentDAO().update(document);
+				}
+
+			}
+
+		}
+
 		return result;
 	}
-	
+
 	public MessageSource getMessageSource() {
 		return messageSource;
 	}
