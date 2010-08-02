@@ -909,47 +909,53 @@ public class DocumentService {
 		// ole "saadetud"
 		List<Document> documents = this.getDocumentDAO().getDocumentsWithoutDVKStatus(DVKStatus_Sent);
 		Iterator<Document> documentsIterator = documents.iterator();
-
-		SessionFactory sessionFactory = DVKAPI.createSessionFactory("hibernate_ora_dvk.cfg.xml");
-		Session dvkSession = sessionFactory.openSession();
+		
 		while (documentsIterator.hasNext()) {
 			Document document = documentsIterator.next();
 
-			List<PojoMessageRecipient> messageRecipients = this.getDvkDAO().getMessageRecipients(document.getDvkId());
-			Iterator<PojoMessageRecipient> messageRecipientIterator = messageRecipients.iterator();
-			List<DocumentSharing> documentSharings = this.getDocumentSharingDAO().getDVKSharings(document.getId());
+			try {
+				LOG.info("Updating DVK status for document. DocumentID: " + document.getId());
+				List<PojoMessageRecipient> messageRecipients = this.getDvkDAO().getMessageRecipients(document.getDvkId());
+				Iterator<PojoMessageRecipient> messageRecipientIterator = messageRecipients.iterator();
+				List<DocumentSharing> documentSharings = this.getDocumentSharingDAO().getDVKSharings(document.getId());
 
-			while (messageRecipientIterator.hasNext()) {
-				PojoMessageRecipient messageRecipient = messageRecipientIterator.next();
+				while (messageRecipientIterator.hasNext()) {
+					PojoMessageRecipient messageRecipient = messageRecipientIterator.next();
 
-				boolean allDocumentSharingsSent = true;
-				
-				// Compare the status with the status of the sharing in ADIT
-				for (int i = 0; i < documentSharings.size(); i++) {
-					DocumentSharing documentSharing = documentSharings.get(i);
+					boolean allDocumentSharingsSent = true;
 
-					if (documentSharing.getUserCode().equalsIgnoreCase(messageRecipient.getRecipientPersonCode())
-							|| documentSharing.getUserCode().equalsIgnoreCase(messageRecipient.getRecipientOrgCode())) {
-						
-						// If the statuses differ, update the one in ADIT database
-						if(!documentSharing.getDocumentDvkStatus().equals(messageRecipient.getSendingStatusId())) {
-							documentSharing.setDocumentDvkStatus(messageRecipient.getSendingStatusId());
-							this.getDocumentSharingDAO().update(documentSharing);
-							result++;
-						}
-						
-						if(messageRecipient.getSendingStatusId() != DocumentService.DVKStatus_Sent) {
-							allDocumentSharingsSent = false;
+					// Compare the status with the status of the sharing in ADIT
+					for (int i = 0; i < documentSharings.size(); i++) {
+						DocumentSharing documentSharing = documentSharings.get(i);
+
+						if (documentSharing.getUserCode().equalsIgnoreCase(messageRecipient.getRecipientPersonCode())
+								|| documentSharing.getUserCode().equalsIgnoreCase(messageRecipient.getRecipientOrgCode())) {
+
+							// If the statuses differ, update the one in ADIT
+							// database
+							if (!documentSharing.getDocumentDvkStatus().equals(messageRecipient.getSendingStatusId())) {
+								documentSharing.setDocumentDvkStatus(messageRecipient.getSendingStatusId());
+								this.getDocumentSharingDAO().update(documentSharing);
+								result++;
+							}
+
+							if (messageRecipient.getSendingStatusId() != DocumentService.DVKStatus_Sent) {
+								allDocumentSharingsSent = false;
+							}
 						}
 					}
+
+					// If all documentSharings statuses are "sent" then update
+					// the document's dvk status
+					if (allDocumentSharingsSent) {
+						// Update document DVK status ID
+						document.setDocumentDvkStatusId(DocumentService.DVKStatus_Sent);
+						this.getDocumentDAO().update(document);
+					}
 				}
-				
-				// If all documentSharings statuses are "sent" then update the document's dvk status
-				if(allDocumentSharingsSent) {
-					// Update document DVK status ID
-					document.setDocumentDvkStatusId(DocumentService.DVKStatus_Sent);
-					this.getDocumentDAO().update(document);
-				}
+			} catch (Exception e) {
+				LOG.error("Error while updating status from DVK. DocumentID: " + document.getId());
+				LOG.info("Continue...");
 			}
 		}
 
