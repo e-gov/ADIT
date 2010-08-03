@@ -13,7 +13,6 @@ INSERT INTO remote_application (
   1
 );
 
-
 -- KOV Portaal (Eesti Linnade Liit)
 INSERT INTO remote_application (
   short_name,
