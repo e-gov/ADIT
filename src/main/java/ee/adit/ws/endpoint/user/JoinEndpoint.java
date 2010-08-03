@@ -70,7 +70,8 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 						// Kontrollime, kas kasutaja juba eksisteerib
 						// s.t. kas lisame uue kasutaja või muudame olemasolevat
 						LOG.debug("Checking if user already exists...");
-						AditUser aditUser = userService.getUserByID(header.getIsikukood());
+						String userCode = ((this.getHeader().getAllasutus() != null) && (this.getHeader().getAllasutus().length() > 0)) ? this.getHeader().getAllasutus() : this.getHeader().getIsikukood();
+						AditUser aditUser = userService.getUserByID(userCode);
 						
 						// Lisame kasutaja või muudame olemasolevat
 						if(aditUser != null) { 
@@ -92,7 +93,7 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 						} else {
 							// Lisame uue kasutaja
 							LOG.info("Adding new user.");
-							userService.addUser(request.getUserName(), usertype, header.getAsutus(), header.getIsikukood());
+							userService.addUser(request.getUserName(), usertype, header.getAllasutus(), header.getIsikukood());
 							response.setSuccess(new Success(true));
 							String message = this.getMessageSource().getMessage("request.join.success.userAdded", new Object[] { request.getUserType() }, Locale.ENGLISH);
 							messages.addMessage(new Message("en", message));
