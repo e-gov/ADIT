@@ -3,6 +3,7 @@ doc/dvk_test/data.xml -text
 doc/dvk_test/insert_dhl_message.sql -text
 doc/environmentSetup.txt -text
 doc/redeploy_adit.cmd -text
+doc/test/Join.v1/Join.v1.odt -text
 doc/testMessages/getDocument.v1.xml -text
 doc/testMessages/getJoined.v1.xml -text
 doc/testMessages/getNotifications.v1/error_database_down.xml -text

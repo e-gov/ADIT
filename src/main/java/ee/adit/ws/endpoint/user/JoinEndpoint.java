@@ -168,10 +168,10 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 	private void checkRequest(JoinRequest request) {
 		String errorMessage = null; 
 		if(request != null) {
-			if(request.getUserType() == null) {
+			if(request.getUserType() == null || "".equalsIgnoreCase(request.getUserType().trim())) {
 				errorMessage = this.getMessageSource().getMessage("request.body.undefined.usertype", new Object[] {}, Locale.ENGLISH);
 				throw new AditException(errorMessage);
-			} else if(request.getUserName() == null) {
+			} else if(request.getUserName() == null || "".equalsIgnoreCase(request.getUserName().trim())) {
 				errorMessage = this.getMessageSource().getMessage("request.body.undefined.username", new Object[] {}, Locale.ENGLISH);
 				throw new AditException(errorMessage);
 			}
