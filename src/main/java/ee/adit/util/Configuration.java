@@ -12,6 +12,8 @@ public class Configuration {
 	
 	private String schedulerEventTypeName;
 
+	private String dvkResponseMessageStylesheet;
+	
 	public BigInteger getGetJoinedMaxResults() {
 		return getJoinedMaxResults;
 	}
@@ -52,5 +54,13 @@ public class Configuration {
 
 	public void setSchedulerEventTypeName(String schedulerEventTypeName) {
 		this.schedulerEventTypeName = schedulerEventTypeName;
+	}
+
+	public String getDvkResponseMessageStylesheet() {
+		return dvkResponseMessageStylesheet;
+	}
+
+	public void setDvkResponseMessageStylesheet(String dvkResponseMessageStylesheet) {
+		this.dvkResponseMessageStylesheet = dvkResponseMessageStylesheet;
 	}
 }

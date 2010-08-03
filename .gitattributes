@@ -50,15 +50,19 @@ lib/JDigiDoc.jar -text
 lib/antlr-2.7.6.jar -text
 lib/asm-attrs.jar -text
 lib/asm.jar -text
+lib/avalon-framework-4.2.0.jar -text
+lib/batik-all-1.7.jar -text
 lib/c3p0-0.9.0.jar -text
 lib/castor-1.3.1-core.jar -text
 lib/castor-1.3.1.jar -text
 lib/cglib-2.1.3.jar -text
 lib/commons-codec-1.4.jar -text
 lib/commons-collections-3.1.jar -text
+lib/commons-io-1.3.1.jar -text
 lib/commons-logging-1.1.1.jar -text
 lib/dom4j-1.6.1.jar -text
 lib/dvkapi.jar -text
+lib/fop.jar -text
 lib/hibernate3.jar -text
 lib/hsqldb.jar -text
 lib/iaik_jce.jar -text
@@ -89,6 +93,7 @@ lib/xercesImpl-2.9.1.jar -text
 lib/xml-apis.jar -text
 lib/xmlParserAPIs.jar -text
 lib/xmlbeans-qname.jar -text
+lib/xmlgraphics-commons-1.4.jar -text
 lib/xmlsec.jar -text
 lib/xtee-client-1.0-RC1.jar -text
 lib/xtee-server-1.0-RC1.jar -text

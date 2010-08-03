@@ -18,6 +18,8 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.xml.transform.TransformerException;
+
 import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
@@ -41,6 +43,7 @@ import dvk.api.container.v2.FailideKonteiner;
 import dvk.api.container.v2.MetaManual;
 import dvk.api.container.v2.Metainfo;
 import dvk.api.container.v2.Saaja;
+import dvk.api.container.v2.Saatja;
 import dvk.api.container.v2.Transport;
 import dvk.api.ml.PojoMessage;
 import dvk.api.ml.PojoMessageRecipient;
@@ -105,6 +108,9 @@ public class DocumentService {
 	// Document types
 	public static final String DocType_Letter = "letter";
 	public static final String DocType_Application = "application";
+
+	public static final Integer DvkReceiveFailReason_UserDoesNotExist = 1;
+	public static final Integer DvkReceiveFailReason_UserUsesDvk = 2;
 
 	private static Logger LOG = Logger.getLogger(UserService.class);
 	private MessageSource messageSource;
@@ -707,7 +713,7 @@ public class DocumentService {
 											// to exchange
 											// documents with other users that
 											// use DVK, over DVK.
-											this.composeErrorResponse();											
+											this.composeErrorResponse(DocumentService.DvkReceiveFailReason_UserUsesDvk, dvkContainer, recipient.getIsikukood().trim(), dvkDocument.getReceivedDate(), recipient.getNimi());
 											throw new AditInternalException("User uses DVK - not allowed.");
 										}
 
@@ -773,7 +779,7 @@ public class DocumentService {
 										}
 									} else {
 										LOG.error("User not found. Personal code: " + recipient.getIsikukood().trim());
-										this.composeErrorResponse();										
+										this.composeErrorResponse(DocumentService.DvkReceiveFailReason_UserDoesNotExist, dvkContainer, recipient.getIsikukood().trim(), dvkDocument.getReceivedDate(), recipient.getNimi());
 									}
 								}
 							}
@@ -792,19 +798,6 @@ public class DocumentService {
 		return result;
 	}
 
-	/**
-	 * TODO: IMPLEMENT
-	 * 
-	 * Kui dokumendi sidumisel kasutajaga ilmnes, et kasutajat pole ADIT aktiivsete kasutajate hulgas, 
-	 * siis märgitakse dokument DVKs katkestatuks (staatus 103) ning algsele saatjale koostatakse 
-	 * automaatselt vastuskiri, milles on toodud kaaskirja dokument (muudetav ADIT haldaja poolt) ning 
-	 * algne dokument. Kui dokumendi adressaadiks on DVK kasutaja, siis talitatakse sarnaselt eeltoodule, 
-	 * kuna DVK kasutajad peavad suhtlema otse omavahel, mitte ADIT kaudu.
-	 */
-	public void composeErrorResponse() {
-		
-	}
-	
 	public ContainerVer2 getDVKContainer(PojoMessage document) throws AditInternalException {
 		ContainerVer2 result = null;
 
@@ -998,7 +991,7 @@ public class DocumentService {
 	 * @return number of messages updated.
 	 */
 	public int updateDocumentsToDVK() {
-		
+
 		int result = 0;
 		List<PojoMessage> dvkDocuments = this.getDvkDAO().getIncomingDocumentsWithoutStatus(DocumentService.DVKStatus_Sent);
 		Iterator<PojoMessage> dvkDocumentsIterator = dvkDocuments.iterator();
@@ -1011,14 +1004,15 @@ public class DocumentService {
 				Document document = this.getDocumentDAO().getDocumentByDVKID(dvkDocument.getDhlMessageId());
 
 				if (document != null) {
-					
+
 					// Compare the statuses - ADIT status prevails
-					if(document.getDocumentDvkStatusId() != null) {
-						if(!document.getDocumentDvkStatusId().equals(dvkDocument.getRecipientStatusId())) {
-							
-							// If the statuses do not match, update from ADIT to DVK
+					if (document.getDocumentDvkStatusId() != null) {
+						if (!document.getDocumentDvkStatusId().equals(dvkDocument.getRecipientStatusId())) {
+
+							// If the statuses do not match, update from ADIT to
+							// DVK
 							dvkDocument.setRecipientStatusId(document.getDocumentDvkStatusId());
-							
+
 							// Update DVK document
 							this.getDvkDAO().updateDocument(dvkDocument);
 						}
@@ -1033,6 +1027,153 @@ public class DocumentService {
 				LOG.error("Continue...");
 			}
 		}
+
+		return result;
+	}
+
+	/**
+	 * TODO: IMPLEMENT
+	 * 
+	 * Kui dokumendi sidumisel kasutajaga ilmnes, et kasutajat pole ADIT
+	 * aktiivsete kasutajate hulgas, siis märgitakse dokument DVKs katkestatuks
+	 * ning algsele saatjale koostatakse automaatselt vastuskiri, milles on
+	 * toodud kaaskirja dokument (muudetav ADIT haldaja poolt) ning algne
+	 * dokument. Kui dokumendi adressaadiks on DVK kasutaja, siis talitatakse
+	 * sarnaselt eeltoodule, kuna DVK kasutajad peavad suhtlema otse omavahel,
+	 * mitte ADIT kaudu.
+	 */
+	public void composeErrorResponse(Integer reasonCode, ContainerVer2 dvkContainer, String recipientCode, Date receivedDate, String recipientName) throws AditInternalException {
+
+		// TODO:
+		try {
+			// 1. Gather data required for response message
+			String xml = this.createErrorResponseDataXML(dvkContainer, recipientCode, receivedDate, recipientName);
+			
+			// 2. Transform to XSL-FO
+			StringBufferInputStream stringBufferInputStream = new StringBufferInputStream(xml);
+			String xmlTempFile = Util.createTemporaryFile(stringBufferInputStream, this.getConfiguration().getTempDir());
+			String outputXslFoFile = Util.generateRandomFileName();
+			Util.applyXSLT(xmlTempFile, this.getConfiguration().getDvkResponseMessageStylesheet(), outputXslFoFile);
+			
+			// 3. Transform to PDF
+			String outputPDFFile = Util.generateRandomFileName();
+			Util.generatePDF(outputPDFFile, outputXslFoFile);
+			
+			// 4. Save the response message PDF to DVK
+			LOG.debug("DVK error response message composed. FileName: " + outputPDFFile);
+			
+		} catch (Exception e) {
+			LOG.error("Error while composing DVK error response message: ", e);
+			throw new AditInternalException("Error while composing DVK error response message: ", e);
+		}
+	}
+
+	public String createErrorResponseDataXML(ContainerVer2 dvkContainer, String recipientCode, Date receivedDate, String recipientName) {
+		StringBuffer result = new StringBuffer();
+
+		String senderOrgCode = null;
+		String senderPersonCode = null;
+		String senderOrgName = null;
+		String senderName = null;
+		String receiveDateTmp = null;
+		String dhlId = null;
+		String guid = null;
+		String title = null;
+		
+		try {
+			// DVK Container can contain only one sender
+			Saatja sender = dvkContainer.getTransport().getSaatjad().get(0);
+			senderOrgCode = sender.getRegNr();
+			senderPersonCode = sender.getIsikukood();
+			senderOrgName = sender.getAsutuseNimi();
+			senderName = sender.getNimi();
+		} catch (Exception e) {
+			LOG.error("Error while getting Sender information: ", e);
+		}
+
+		try {
+			receiveDateTmp = Util.dateToXMLDate(receivedDate);
+		} catch (Exception e) {
+			try {
+				receiveDateTmp = Util.dateToXMLDate(new Date());
+			} catch (Exception exc) {
+				LOG.error("Error while parsing received date (system date): ", exc);
+			}
+			LOG.error("Error while parsing received date: ", e);
+		}
+
+		try {
+			dhlId = dvkContainer.getMetainfo().getMetaAutomatic().getDhlId();
+		} catch (Exception e) {
+			LOG.error("Error while getting document DHL ID: ", e);
+		}
+		
+		try {
+			guid = dvkContainer.getMetainfo().getMetaManual().getDokumentGuid();
+		} catch (Exception e) {
+			LOG.error("Error while getting document GUID: ", e);
+		}
+		
+		try {
+			title = dvkContainer.getMetainfo().getMetaManual().getDokumentPealkiri();
+		} catch (Exception e) {
+			LOG.error("Error while getting document title: ", e);
+		}
+
+		result.append("<document>");
+
+		result.append("<sender_org_code>");
+		result.append(senderOrgCode);
+		result.append("</sender_org_code>");
+
+		result.append("<sender_person_code>");
+		result.append(senderPersonCode);
+		result.append("</sender_person_code>");
+
+		result.append("<sender_org_name>");
+		result.append(senderOrgName);
+		result.append("</sender_org_name>");
+
+		result.append("<sender_name>");
+		result.append(senderName);
+		result.append("</sender_name>");
+
+		result.append("<receiving_date>");
+		result.append(receiveDateTmp);
+		result.append("</receiving_date>");
+
+		result.append("<dhl_message_id>");
+		result.append(dhlId);
+		result.append("</dhl_message_id>");
+
+		result.append("<guid>");
+		result.append(guid);
+		result.append("</guid>");
+		
+		result.append("<title>");
+		result.append(title);
+		result.append("</title>");
+		
+		result.append("<recipient_personal_code>");
+		result.append(recipientCode);
+		result.append("</recipient_personal_code>");
+
+		result.append("<recipient_name>");
+		result.append(recipientName);
+		result.append("</recipient_name>");
+
+		result.append("</document>");
+
+		return result.toString();
+	}
+
+	/**
+	 * Create a PDF from the XSL-FO stylesheet and XML.
+	 * 
+	 * @return
+	 */
+	public String createResponseMessage(String xml) {
+		String result = null;
 
 		return result;
 	}
@@ -1116,4 +1257,5 @@ public class DocumentService {
 	public void setDvkDAO(DvkDAO dvkDAO) {
 		this.dvkDAO = dvkDAO;
 	}
+
 }

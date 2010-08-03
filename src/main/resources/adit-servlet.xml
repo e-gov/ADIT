@@ -592,6 +592,7 @@
 		<property name="tempDir" value="C:\temp"/>
 		<property name="deleteTemporaryFiles" value="true"/>
 		<property name="schedulerEventTypeName" value="Minu dokumentide teavitus"/>
+		<property name="dvkResponseMessageStylesheet" value="C:\development\adit\trunk\src\main\resources\DVKresponseMessage.xsl"/>
 	</bean>
 
 </beans>
