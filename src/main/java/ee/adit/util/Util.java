@@ -1,5 +1,7 @@
 package ee.adit.util;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -7,11 +9,19 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.io.Writer;
+import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -47,21 +57,13 @@ public class Util {
 
 	public static String generateRandomFileName() {
 		StringBuffer result = new StringBuffer();
-		Random r = new Random();
-		for (int i = 0; i < 30; i++) {
-			result.append(r.nextInt(10));
-		}
+		result.append(generateRandomFileNameWithoutExtension());
 		result.append(".adit");
 		return result.toString();
 	}
 
 	public static String generateRandomFileNameWithoutExtension() {
-		StringBuffer result = new StringBuffer();
-		Random r = new Random();
-		for (int i = 0; i < 30; i++) {
-			result.append(r.nextInt(10));
-		}
-		return result.toString();
+		return generateRandomID();
 	}
 
 	public static String generateRandomID() {
@@ -72,7 +74,58 @@ public class Util {
 		}
 		return result.toString();
 	}
-
+	
+	/**
+	 * Creates an empty temporary file to given folder.
+	 * 
+	 * @param itemIndex		Number of current file. Enables to give an index to all files related to same object etc.
+	 * @param filesFolder	Folder path where the temporary file will be created. 
+	 * @return				Full name of created file (absolute path)
+	 */
+	public static String createTemporaryFile(int itemIndex, String filesFolder) {
+		return createTemporaryFile(itemIndex, "", filesFolder);
+	}
+	
+	/**
+	 * Creates an empty temporary file to given folder.
+	 * 
+	 * @param itemIndex		Number of current file. Enables to give an index to all files related to same object etc.
+	 * @param extension		File extension to be given to the temporary file. 
+	 * @param filesFolder	Folder path where the temporary file will be created. 
+	 * @return				Full name of created file (absolute path)
+	 */
+    public static String createTemporaryFile(int itemIndex, String extension, String filesFolder) {
+        try {
+            if (extension == null) {
+            	extension = "";
+            }
+            if ((extension.length() > 0) && !extension.startsWith(".")) {
+            	extension = "." + extension;
+            }
+        	
+        	String tmpDir = System.getProperty("java.io.tmpdir", "");
+        	File filesDir = new File(filesFolder);
+        	if (filesDir.exists() && filesDir.isDirectory()) {
+        		tmpDir = filesFolder;
+        	} else {
+        		LOG.warn("Cannot find folder \"" + filesFolder + "\". Using system temporary folder for temporary files instead.");
+        	}
+        	
+            String result = tmpDir + File.separator + String.valueOf((new Date()).getTime()) + ((itemIndex > 0) ? "_item" + String.valueOf(itemIndex) : "") + extension;
+            int uniqueCounter = 0;
+            while ((new File(result)).exists()) {
+                ++uniqueCounter;
+                result = tmpDir + File.separator + String.valueOf((new Date()).getTime()) + ((itemIndex > 0) ? "_item" + String.valueOf(itemIndex) : "") + "_" + String.valueOf(uniqueCounter) + extension;
+            }
+            File file = new File(result);
+            file.createNewFile();
+            return result;
+        } catch (Exception ex) {
+        	LOG.error("Failed creating a temporary file!", ex);
+            return null;
+        }
+    }
+	
 	public static String gzipAndBase64Encode(String inputFile, String tempDir, boolean deleteTemporaryFiles) throws IOException {
 		String resultFileName = null;
 
@@ -340,4 +393,373 @@ public class Util {
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-d'T'HH:mm:ss");
 		return df.format(date);
 	}
+    
+    public static FileSplitResult splitOutTags(String xmlFileName, String tagLocalName, boolean noMainFile, boolean noSubFiles, boolean replaceMain) {
+        FileSplitResult result = new FileSplitResult();
+        
+        // Attempt to save extracted files in the same directory
+        // where the original file is located
+        File originalFile = new File(xmlFileName);
+        String filesDir = originalFile.getParent();
+        
+        FileInputStream mainInStream = null;
+        InputStreamReader mainInReader = null;
+        BufferedReader mainReader = null;
+        FileOutputStream mainOutStream = null;
+        OutputStreamWriter mainOutWriter = null;
+        BufferedWriter mainWriter = null;
+        FileOutputStream subOutStream = null;
+        OutputStreamWriter subOutWriter = null;
+        BufferedWriter subWriter = null;
+
+        Pattern startPattern = Pattern.compile("<([\\w]+:)?" + tagLocalName, Pattern.DOTALL | Pattern.CANON_EQ | Pattern.CASE_INSENSITIVE);
+        Pattern endPattern = Pattern.compile("<\\/([\\w]+:)?" + tagLocalName, Pattern.DOTALL | Pattern.CANON_EQ | Pattern.CASE_INSENSITIVE);
+        Pattern startAndEndPattern = Pattern.compile("<([\\w]+:)?" + tagLocalName + "([^>])*\\/([\\s])*>", Pattern.DOTALL | Pattern.CANON_EQ | Pattern.CASE_INSENSITIVE);
+
+        int charsRead = 0;
+        char[] readBuffer = new char[1];
+        String ioBuffer = "";
+        boolean isTag = false;
+        boolean isMainDocument = true;
+        int currentLevel = 0;
+        int itemNr = 0;
+
+        String mainDataFile = null;
+        String subFileName = null;
+
+        if (!noMainFile) {
+            mainDataFile = createTemporaryFile(0, "adit", filesDir);
+        }
+
+        try {
+            mainInStream = new FileInputStream(xmlFileName);
+            mainInReader = new InputStreamReader(mainInStream, "UTF-8");
+            mainReader = new BufferedReader(mainInReader);
+
+            if (!noMainFile) {
+                mainOutStream = new FileOutputStream(mainDataFile, false);
+                mainOutWriter = new OutputStreamWriter(mainOutStream, "UTF-8");
+                mainWriter = new BufferedWriter(mainOutWriter);
+            }
+
+            while ((charsRead = mainReader.read(readBuffer, 0, readBuffer.length)) > 0) {
+                if (readBuffer[0] == '<') {
+                    isTag = true;
+                }
+
+                // Kui asume keset lõputähiseta TAGi, siis lisame sümboli puhvrisse
+                if (isTag) {
+                    ioBuffer += readBuffer[0];
+                } else {
+                    if (isMainDocument) {
+                        if (!noMainFile) {
+                            mainWriter.write(readBuffer, 0, charsRead);
+                        }
+                    } else {
+                        if (!noSubFiles) {
+                            subWriter.write(readBuffer, 0, charsRead);
+                        }
+                    }
+                }
+
+                if (readBuffer[0] == '>') {
+                    isTag = false;
+
+                    Matcher startMatcher = startPattern.matcher(ioBuffer);
+                    Matcher endMatcher = endPattern.matcher(ioBuffer);
+                    Matcher startAndEndMatcher = startAndEndPattern.matcher(ioBuffer);
+
+                    if (startAndEndMatcher.find()) {
+                        if (!noSubFiles) {
+                            if (currentLevel == 0) {
+                                subFileName = createTemporaryFile(++itemNr, "adit", filesDir);
+                                result.getSubFiles().add(subFileName);
+                                subOutStream = new FileOutputStream(subFileName, false);
+                                subOutWriter = new OutputStreamWriter(subOutStream, "UTF-8");
+                                subWriter = new BufferedWriter(subOutWriter);
+                                subWriter.write(ioBuffer);
+
+                                // Kirjutame põhifaili kommentaari, mille alusel me pärast
+                                // eraldatud TAGi tagasi saame panna.
+                                if (!noMainFile) {
+                                    mainWriter.write("<!--SYS_INCLUDE_" + (new File(subFileName)).getName() + "-->");
+                                }
+
+                                safeCloseWriter(subWriter);
+                                safeCloseWriter(subOutWriter);
+                                safeCloseStream(subOutStream);
+                            } else {
+                                subWriter.write(ioBuffer);
+                            }
+                        }
+                    } else if (startMatcher.find()) {
+                        // Puhvris on eraldatava TAGi algus
+                        ++currentLevel;
+
+                        // Veendume, et tegemist on kõige ülemise taseme algusega
+                        if (currentLevel == 1) {
+                            isMainDocument = false;
+                            if (!noSubFiles) {
+                                subFileName = createTemporaryFile(++itemNr, "adit", filesDir);
+                                result.getSubFiles().add(subFileName);
+                                subOutStream = new FileOutputStream(subFileName, false);
+                                subOutWriter = new OutputStreamWriter(subOutStream, "UTF-8");
+                                subWriter = new BufferedWriter(subOutWriter);
+                            }
+                        }
+
+                        if (!noSubFiles) {
+                            subWriter.write(ioBuffer);
+
+                            // Kirjutame põhifaili kommentaari, mille alusel me pärast
+                            // eraldatud TAGi tagasi saame panna.
+                            if (!noMainFile && (currentLevel == 1)) {
+                                mainWriter.write("<!--SYS_INCLUDE_" + (new File(subFileName)).getName() + "-->");
+                            }
+                        }
+                    } else if (endMatcher.find()) {
+                        if (!noSubFiles) {
+                            // Puhvris on eraldatava TAGi lõpp
+                            subWriter.write(ioBuffer);
+                        }
+                        // Veendume, et tegemist on kõige ülemise taseme lõpuga
+                        if (currentLevel == 1) {
+                            if (!noSubFiles) {
+                                safeCloseWriter(subWriter);
+                                safeCloseWriter(subOutWriter);
+                                safeCloseStream(subOutStream);
+                            }
+                            isMainDocument = true;
+                        }
+                        --currentLevel;
+                    } else {
+                        if (isMainDocument) {
+                            if (!noMainFile) {
+                                mainWriter.write(ioBuffer);
+                            }
+                        } else {
+                            if (!noSubFiles) {
+                                subWriter.write(ioBuffer);
+                            }
+                        }
+                    }
+
+                    ioBuffer = "";
+                    startMatcher = null;
+                    endMatcher = null;
+                    startAndEndMatcher = null;
+                }
+            }
+
+            // Paneme kasutatud failid kinni
+            safeCloseReader(mainReader);
+            safeCloseReader(mainInReader);
+            safeCloseStream(mainInStream);
+            safeCloseWriter(mainWriter);
+            safeCloseWriter(mainOutWriter);
+            safeCloseStream(mainOutStream);
+            safeCloseWriter(subWriter);
+            safeCloseWriter(subOutWriter);
+            safeCloseStream(subOutStream);
+
+            // Nimetame failid ümber nii, et töödeldud fail asendaks algselt
+            // ette antud faili.
+            if (!noMainFile) {
+                if (replaceMain) {
+                    (new File(xmlFileName)).delete();
+                    (new File(mainDataFile)).renameTo(new File(xmlFileName));
+                    result.setMainFile(xmlFileName);
+                } else {
+                    result.setMainFile(mainDataFile);
+                }
+            }
+        } catch (Exception ex) {
+            LOG.error("Failed extracting elements "+ tagLocalName +" into separate files!", ex);
+        } finally {
+            // Streamid kinni
+            safeCloseReader(mainReader);
+            safeCloseReader(mainInReader);
+            safeCloseStream(mainInStream);
+            safeCloseWriter(mainWriter);
+            safeCloseWriter(mainOutWriter);
+            safeCloseStream(mainOutStream);
+            safeCloseWriter(subWriter);
+            safeCloseWriter(subOutWriter);
+            safeCloseStream(subOutStream);
+
+            mainInStream = null;
+            mainInReader = null;
+            mainReader = null;
+            mainOutStream = null;
+            mainOutWriter = null;
+            mainWriter = null;
+            subOutStream = null;
+            subOutWriter = null;
+            subWriter = null;
+
+            startPattern = null;
+            endPattern = null;
+            startAndEndPattern = null;
+            ioBuffer = null;
+            mainDataFile = null;
+        }
+
+        return result;
+    }
+    
+    public static void joinSplitXML(String xmlFileName, BufferedWriter mainOutWriter) {
+        FileInputStream mainInStream = null;
+        InputStreamReader mainInReader = null;
+        BufferedReader mainReader = null;
+        FileInputStream subInStream = null;
+        InputStreamReader subInReader = null;
+        BufferedReader subReader = null;
+
+        int charsRead = 0;
+        char[] readBuffer = new char[1];
+        String ioBuffer = "";
+        boolean isTag = false;
+        String tmpDir = System.getProperty("java.io.tmpdir", "");
+
+        try {
+            mainInStream = new FileInputStream(xmlFileName);
+            mainInReader = new InputStreamReader(mainInStream, "UTF-8");
+            mainReader = new BufferedReader(mainInReader);
+            while ((charsRead = mainReader.read(readBuffer, 0, readBuffer.length)) > 0) {
+                if (readBuffer[0] == '<') {
+                    isTag = true;
+                }
+
+                // Kui asume keset lõputähiseta TAGi, siis lisame sümboli puhvrisse
+                if (isTag) {
+                    ioBuffer += readBuffer[0];
+                } else {
+                    mainOutWriter.write(readBuffer, 0, charsRead);
+                }
+
+                if (readBuffer[0] == '>') {
+                    isTag = false;
+
+                    if (ioBuffer.startsWith("<!--SYS_INCLUDE_")) {
+                        String subFileName = tmpDir + File.separator + ioBuffer.replace("<!--SYS_INCLUDE_", "").replace("-->", "").trim();
+                        if ((new File(subFileName)).exists()) {
+                            subInStream = new FileInputStream(subFileName);
+                            subInReader = new InputStreamReader(subInStream, "UTF-8");
+                            subReader = new BufferedReader(subInReader);
+                            int subCharsRead = 0;
+                            char[] subReadBuffer = new char[102400];
+                            while ((subCharsRead = subReader.read(subReadBuffer, 0, subReadBuffer.length)) > 0) {
+                                mainOutWriter.write(subReadBuffer, 0, subCharsRead);
+                            }
+                            safeCloseReader(subReader);
+                            safeCloseReader(subInReader);
+                            safeCloseStream(subInStream);
+
+                            // Kustutame ajutise faili
+                            (new File(subFileName)).delete();
+                        }
+                    } else {
+                        mainOutWriter.write(ioBuffer);
+                    }
+
+                    ioBuffer = "";
+                }
+            }
+
+            // Paneme sisendfaili kinni, et saaks ülearuse faili ära kustutada
+            safeCloseReader(mainReader);
+            safeCloseReader(mainInReader);
+            safeCloseStream(mainInStream);
+
+            // Kustutame ajutise faili 
+            (new File(xmlFileName)).delete();
+        } catch (Exception ex) {
+        	LOG.error("Failed joining separate files into one XML file!", ex);
+        } finally {
+            safeCloseReader(mainReader);
+            safeCloseReader(mainInReader);
+            safeCloseStream(mainInStream);
+            safeCloseReader(subReader);
+            safeCloseReader(subInReader);
+            safeCloseStream(subInStream);
+
+            mainInStream = null;
+            mainInReader = null;
+            mainReader = null;
+            subInStream = null;
+            subInReader = null;
+            subReader = null;
+
+            ioBuffer = null;
+        }
+    }
+    
+    /**
+     * Flushes and closes a Reader.
+     * Useful when a reader needs to be closed and no
+     * reasonable action could be taken in case of an error. 
+     * 
+     * @param r		Reader to be closed
+     */
+    public static void safeCloseReader(Reader r) {
+        if (r != null) {
+            try {
+                r.close();
+            } catch (Exception ex) {
+            	LOG.warn("Failed closing reader!", ex);
+            } finally {
+                r = null;
+            }
+        }
+    }
+
+    /**
+     * Flushes and closes a Writer.
+     * Useful when a writer needs to be closed and no
+     * reasonable action could be taken in case of an error. 
+     * 
+     * @param w		Writer to be closed
+     */
+    public static void safeCloseWriter(Writer w) {
+        if (w != null) {
+            try {
+                w.flush();
+                w.close();
+            } catch (Exception ex) {
+            	LOG.warn("Failed closing writer!", ex);
+            } finally {
+                w = null;
+            }
+        }
+    }
+
+    /**
+     * Closes an input stream ignoring all errors.
+     * Useful when a stream needs to be closed and no
+     * reasonable action could be taken in case of an error. 
+     * 
+     * @param s		InputStream to be closed
+     */
+    public static void safeCloseStream(InputStream s) {
+        if (s != null) {
+            try { s.close(); }
+            catch (Exception ex) { LOG.warn("Failed closing input stream!", ex); }
+            finally { s = null; }
+        }
+    }
+
+    /**
+     * Closes an output stream ignoring all errors.
+     * Useful when a stream needs to be closed and no
+     * reasonable action could be taken in case of an error. 
+     * 
+     * @param s		OutputStream to be closed
+     */
+    public static void safeCloseStream(OutputStream s) {
+        if (s != null) {
+            try { s.close(); }
+            catch (Exception ex) { LOG.warn("Failed closing output stream!", ex); }
+            finally { s = null; }
+        }
+    }
 }
