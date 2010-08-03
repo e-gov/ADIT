@@ -21,6 +21,7 @@ import java.util.UUID;
 
 import javax.xml.transform.TransformerException;
 
+import org.apache.fop.apps.MimeConstants;
 import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
@@ -45,9 +46,11 @@ import dvk.api.container.v2.MetaManual;
 import dvk.api.container.v2.Metainfo;
 import dvk.api.container.v2.Saaja;
 import dvk.api.container.v2.Saatja;
+import dvk.api.container.v2.SaatjaKontekst;
 import dvk.api.container.v2.Transport;
 import dvk.api.ml.PojoMessage;
 import dvk.api.ml.PojoMessageRecipient;
+import dvk.api.ml.PojoSettings;
 import ee.adit.dao.AditUserDAO;
 import ee.adit.dao.DocumentDAO;
 import ee.adit.dao.DocumentFileDAO;
@@ -105,6 +108,12 @@ public class DocumentService {
 
 	// Kasutatava DVK konteineri versioon
 	public static final int DVK_CONTAINER_VERSION = 2;
+
+	// DVK vastuskirja dokumendi pealkiri
+	public static final String DvkErrorResponseMessage_Title = "ADIT vastuskiri";
+
+	// DVK vastuskirja faili nimi
+	public static final String DvkErrorResponseMessage_FileName = "ADIT_vastuskiri.pdf";
 
 	// Document types
 	public static final String DocType_Letter = "letter";
@@ -714,7 +723,8 @@ public class DocumentService {
 											// to exchange
 											// documents with other users that
 											// use DVK, over DVK.
-											this.composeErrorResponse(DocumentService.DvkReceiveFailReason_UserUsesDvk, dvkContainer, recipient.getIsikukood().trim(), dvkDocument.getReceivedDate(), recipient.getNimi());
+											this.composeErrorResponse(DocumentService.DvkReceiveFailReason_UserUsesDvk, dvkContainer, recipient.getIsikukood().trim(), dvkDocument.getReceivedDate(),
+													recipient.getNimi());
 											throw new AditInternalException("User uses DVK - not allowed.");
 										}
 
@@ -780,7 +790,8 @@ public class DocumentService {
 										}
 									} else {
 										LOG.error("User not found. Personal code: " + recipient.getIsikukood().trim());
-										this.composeErrorResponse(DocumentService.DvkReceiveFailReason_UserDoesNotExist, dvkContainer, recipient.getIsikukood().trim(), dvkDocument.getReceivedDate(), recipient.getNimi());
+										this.composeErrorResponse(DocumentService.DvkReceiveFailReason_UserDoesNotExist, dvkContainer, recipient.getIsikukood().trim(), dvkDocument.getReceivedDate(),
+												recipient.getNimi());
 									}
 								}
 							}
@@ -1049,20 +1060,21 @@ public class DocumentService {
 		try {
 			// 1. Gather data required for response message
 			String xml = this.createErrorResponseDataXML(dvkContainer, recipientCode, receivedDate, recipientName);
-			
+
 			// 2. Transform to XSL-FO
 			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xml.getBytes("UTF-8"));
 			String xmlTempFile = Util.createTemporaryFile(byteArrayInputStream, this.getConfiguration().getTempDir());
 			String outputXslFoFile = Util.generateRandomFileName();
 			Util.applyXSLT(xmlTempFile, this.getConfiguration().getDvkResponseMessageStylesheet(), outputXslFoFile);
-			
+
 			// 3. Transform to PDF
 			String outputPDFFile = Util.generateRandomFileName();
 			Util.generatePDF(outputPDFFile, outputXslFoFile);
-			
+
 			// 4. Save the response message PDF to DVK
 			LOG.debug("DVK error response message composed. FileName: " + outputPDFFile);
-			
+			this.saveErrorResponseMessageToDVK(outputPDFFile, dvkContainer);
+
 		} catch (Exception e) {
 			LOG.error("Error while composing DVK error response message: ", e);
 			throw new AditInternalException("Error while composing DVK error response message: ", e);
@@ -1080,7 +1092,7 @@ public class DocumentService {
 		String dhlId = null;
 		String guid = null;
 		String title = null;
-		
+
 		try {
 			// DVK Container can contain only one sender
 			Saatja sender = dvkContainer.getTransport().getSaatjad().get(0);
@@ -1108,13 +1120,13 @@ public class DocumentService {
 		} catch (Exception e) {
 			LOG.error("Error while getting document DHL ID: ", e);
 		}
-		
+
 		try {
 			guid = dvkContainer.getMetainfo().getMetaManual().getDokumentGuid();
 		} catch (Exception e) {
 			LOG.error("Error while getting document GUID: ", e);
 		}
-		
+
 		try {
 			title = dvkContainer.getMetainfo().getMetaManual().getDokumentPealkiri();
 		} catch (Exception e) {
@@ -1150,11 +1162,11 @@ public class DocumentService {
 		result.append("<guid>");
 		result.append(guid);
 		result.append("</guid>");
-		
+
 		result.append("<title>");
 		result.append(title);
 		result.append("</title>");
-		
+
 		result.append("<recipient_personal_code>");
 		result.append(recipientCode);
 		result.append("</recipient_personal_code>");
@@ -1168,15 +1180,196 @@ public class DocumentService {
 		return result.toString();
 	}
 
-	/**
-	 * Create a PDF from the XSL-FO stylesheet and XML.
-	 * 
-	 * @return
-	 */
-	public String createResponseMessage(String xml) {
-		String result = null;
+	public void saveErrorResponseMessageToDVK(String fileName, ContainerVer2 originalContainer) throws Exception {
 
-		return result;
+		String guid = null;
+		Long dvkMessageID = null;
+		
+		try {
+			PojoSettings settings = this.getDvkDAO().getDVKSettings();
+
+			// 1. Construct a DVK Container
+			ContainerVer2 container = new ContainerVer2();
+			container.setVersion(DVK_CONTAINER_VERSION);
+
+			// Transport
+			List<Saatja> senders = new ArrayList<Saatja>();
+			Saatja sender = new Saatja();
+			sender.setRegNr(settings.getInstitutionCode());
+			sender.setAsutuseNimi(settings.getInstitutionName());
+			senders.add(sender);
+
+			List<Saaja> recipients = new ArrayList<Saaja>();
+			Saaja recipient = new Saaja();
+			Saatja originalSender = null;
+
+			originalSender = originalContainer.getTransport().getSaatjad().get(0);
+			
+			if (originalSender != null) {
+				recipient.setRegNr(originalSender.getRegNr());
+				recipient.setAsutuseNimi(originalSender.getAsutuseNimi());
+				recipient.setAllyksuseLyhinimetus(originalSender.getAllyksuseLyhinimetus());
+				recipient.setAllyksuseNimetus(originalSender.getAllyksuseNimetus());
+				recipient.setAmetikohaLyhinimetus(originalSender.getAmetikohaLyhinimetus());
+				recipient.setAmetikohaNimetus(originalSender.getAmetikohaNimetus());
+				recipient.setEpost(originalSender.getEpost());
+				recipient.setIsikukood(originalSender.getIsikukood());
+				recipient.setNimi(originalSender.getNimi());
+				recipient.setOsakonnaKood(originalSender.getOsakonnaKood());
+				recipient.setOsakonnaNimi(originalSender.getOsakonnaNimi());
+			} else {
+				throw new AditInternalException("Error while saving error message response to DVK: original sender not found.");
+			}
+
+			recipients.add(recipient);
+			Transport transport = new Transport();
+			transport.setSaatjad(senders);
+			transport.setSaajad(recipients);
+			container.setTransport(transport);
+
+			// MetaManual
+			Metainfo metainfo = new Metainfo();
+			MetaManual metaManual = new MetaManual();
+
+			guid = Util.generateGUID();
+
+			metaManual.setDokumentGuid(guid);
+			metaManual.setDokumentLiik(DocType_Letter);
+			metaManual.setDokumentPealkiri(DvkErrorResponseMessage_Title);
+
+			SaatjaKontekst saatjaKontekst = new SaatjaKontekst();
+			saatjaKontekst.setDokumentSaatjaGuid(originalContainer.getMetainfo().getMetaManual().getDokumentGuid());
+			saatjaKontekst.setSeosviit(originalContainer.getMetainfo().getMetaManual().getDokumentViit());
+
+			metaManual.setSaatjaKontekst(saatjaKontekst);
+			metaManual.setSeotudDhlId(originalContainer.getMetainfo().getMetaAutomatic().getDhlId());
+			metaManual.setSeotudDokumendinrSaajal(originalContainer.getMetainfo().getMetaManual().getDokumentViit());
+
+			metainfo.setMetaManual(metaManual);
+			container.setMetainfo(metainfo);
+			FailideKonteiner failideKonteiner = new FailideKonteiner();
+			failideKonteiner.setKokku((short) 1);
+
+			List<Fail> files = new ArrayList<Fail>();
+
+			Fail responseFile = new Fail();
+			File dataFile = new File(fileName);
+			responseFile.setFile(dataFile);
+			responseFile.setFailNimi(DvkErrorResponseMessage_FileName);
+			responseFile.setFailPealkiri(DvkErrorResponseMessage_Title);
+			responseFile.setFailSuurus(dataFile.length());
+			responseFile.setFailTyyp(MimeConstants.MIME_PDF);
+			responseFile.setJrkNr((short) 1);
+			responseFile.setKrypteering(false);
+			responseFile.setPohiDokument(true);
+			files.add(responseFile);
+			failideKonteiner.setFailid(files);
+
+			container.setFailideKonteiner(failideKonteiner);
+
+			String temporaryFile = this.getConfiguration().getTempDir() + File.separator + Util.generateRandomFileName();
+			container.save2File(temporaryFile);
+			
+			LOG.info("DVK error response message DVK container saved to temporary file: " + temporaryFile);
+			
+			
+			// 2. Construct a DVK PojoMessage
+			PojoMessage message = new PojoMessage();
+			message.setDhlGuid(guid);
+			message.setDhlFolderName(null);
+			message.setIsIncoming(false);
+			message.setSendingStatusId(DVKStatus_Waiting);
+			message.setTitle(DvkErrorResponseMessage_Title);
+			
+			Session dvkSession = null;
+			Transaction dvkTransaction = null;
+			try {
+				dvkSession = this.getDocumentDAO().getSessionFactory().openSession();
+				dvkTransaction = dvkSession.beginTransaction();
+				
+				Clob clob = Hibernate.createClob(" ", dvkSession);
+				message.setData(clob);
+	
+				dvkMessageID = (Long) dvkSession.save(message);
+				message.setData(null);
+				
+				if (dvkMessageID == null || dvkMessageID.longValue() == 0) {
+					LOG.error("Error while saving outgoing message to DVK database - no ID returned by save method.");
+					throw new DataRetrievalFailureException("Error while saving outgoing message to DVK database - no ID returned by save method.");
+				} else {
+					LOG.info("Outgoing message saved to DVK database. ID: " + dvkMessageID);
+				}
+			} catch (Exception e) {
+				if(dvkTransaction != null) {
+					dvkTransaction.rollback();
+				}
+				throw new DataRetrievalFailureException("Error while adding message to DVK Client database: ", e);
+			} finally {
+				if (dvkSession != null) {
+					dvkSession.close();
+				}
+			}
+			
+			LOG.debug("DVK Message saved to client database. GUID: " + message.getDhlGuid());
+			dvkTransaction.commit();
+			
+			// Update CLOB
+			Session dvkSession2 = this.getDocumentDAO().getSessionFactory().openSession();
+			Transaction dvkTransaction2 = dvkSession2.beginTransaction();
+			
+			try {
+				// Select the record for update
+				PojoMessage dvkMessageToUpdate = (PojoMessage) dvkSession2.load(PojoMessage.class, dvkMessageID, LockMode.UPGRADE);
+
+				// Write the temporary file to the database
+				InputStream is = new FileInputStream(temporaryFile);
+				Writer clobWriter = dvkMessageToUpdate.getData().setCharacterStream(1);
+
+				byte[] buf = new byte[1024];
+				int len;
+				while ((len = is.read(buf)) > 0) {
+					clobWriter.write(new String(buf, 0, len, "UTF-8"));
+				}
+				is.close();
+				clobWriter.close();
+
+				// Commit to DVK database
+				dvkTransaction2.commit();
+			} catch (Exception e) {
+				dvkTransaction2.rollback();
+
+				// Remove the document with empty clob from the database
+				Session dvkSession3 = this.getDocumentDAO().getSessionFactory().openSession();
+				Transaction dvkTransaction3 = dvkSession3.beginTransaction();
+				try {
+					LOG.debug("Starting to delete document from DVK Client database: " + dvkMessageID);
+					PojoMessage dvkMessageToDelete = (PojoMessage) dvkSession3.load(PojoMessage.class, dvkMessageID);
+					if (dvkMessageToDelete == null) {
+						LOG.warn("DVK message to delete is not initialized.");
+					}
+					dvkSession3.delete(dvkMessageToDelete);
+					dvkTransaction3.commit();
+					LOG.info("Empty DVK document deleted from DVK Client database. ID: " + dvkMessageID);
+				} catch (Exception dvkException) {
+					dvkTransaction3.rollback();
+					LOG.error("Error deleting document from DVK database: ", dvkException);
+				} finally {
+					if (dvkSession3 != null) {
+						dvkSession3.close();
+					}
+				}
+
+				throw new DataRetrievalFailureException("Error while adding message to DVK Client database (CLOB update): ", e);
+			} finally {
+				if (dvkSession2 != null) {
+					dvkSession2.close();
+				}
+			}
+			
+		} catch (Exception e) {
+			LOG.error("Error while constructing DVK response message: ", e);
+			throw e;
+		}
 	}
 
 	public MessageSource getMessageSource() {
