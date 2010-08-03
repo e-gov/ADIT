@@ -1,5 +1,6 @@
 package ee.adit.service;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -1050,8 +1051,8 @@ public class DocumentService {
 			String xml = this.createErrorResponseDataXML(dvkContainer, recipientCode, receivedDate, recipientName);
 			
 			// 2. Transform to XSL-FO
-			StringBufferInputStream stringBufferInputStream = new StringBufferInputStream(xml);
-			String xmlTempFile = Util.createTemporaryFile(stringBufferInputStream, this.getConfiguration().getTempDir());
+			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xml.getBytes("UTF-8"));
+			String xmlTempFile = Util.createTemporaryFile(byteArrayInputStream, this.getConfiguration().getTempDir());
 			String outputXslFoFile = Util.generateRandomFileName();
 			Util.applyXSLT(xmlTempFile, this.getConfiguration().getDvkResponseMessageStylesheet(), outputXslFoFile);
 			
