@@ -413,6 +413,33 @@ public class UserService {
 		}
 	}
 	
+	public List<Usertype> listUsertypes() {
+		try {
+			return this.getUsertypeDAO().listUsertypes();
+		} catch (Exception e) {
+			LOG.error("Error while listing usertypes: ", e);
+			return null;
+		}
+	}
+	
+	public String getUsertypesString() {
+		List<Usertype> usertypes = this.listUsertypes();
+		StringBuffer result = new StringBuffer();
+		
+		if(usertypes == null || usertypes.size() == 0) {
+			return null;
+		} else {
+			for(int i = 0; i < usertypes.size(); i++) {
+				Usertype usertype = usertypes.get(i);
+				if(i > 0) {
+					result.append(" / ");
+				}
+				result.append(usertype.getShortName());
+			}
+		}
+		
+		return result.toString();
+	}
 	
 	public RemoteApplicationDAO getRemoteApplicationDAO() {
 		return remoteApplicationDAO;

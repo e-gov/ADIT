@@ -922,20 +922,20 @@
  	
  	<!-- Common -->
  	<class name="ee.adit.pojo.Success">
-		<map-to xml="success" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="success" ns-prefix="adit" />
 		<field name="success" type="java.lang.Boolean" container="true">
 		</field>
 	</class>
 
 	<class name="ee.adit.pojo.ArrayOfMessage">
-		<map-to xml="messages" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="messages" ns-prefix="adit" />
 		<field name="message" type="ee.adit.pojo.Message" collection="arraylist">
 			<bind-xml name="message" />
 		</field>
 	</class>
 
  	<class name="ee.adit.pojo.Message">
-		<map-to xml="message" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="message" ns-prefix="adit" />
 		<field name="value" type="java.lang.String" container="true">
 		</field>
 		<field name="lang" type="java.lang.String">

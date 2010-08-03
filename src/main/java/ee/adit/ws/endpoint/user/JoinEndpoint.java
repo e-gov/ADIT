@@ -1,5 +1,6 @@
 package ee.adit.ws.endpoint.user;
 
+import java.util.List;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
@@ -100,7 +101,8 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 						}
 						
 					} else {
-						String errorMessage = this.getMessageSource().getMessage("usertype.nonExistent", new Object[] { request.getUserType() }, Locale.ENGLISH);
+						String usertypes = this.getUserService().getUsertypesString();
+						String errorMessage = this.getMessageSource().getMessage("usertype.nonExistent", new Object[] { request.getUserType(), usertypes }, Locale.ENGLISH);
 						throw new AditException(errorMessage);
 					}
 					

@@ -3,6 +3,7 @@ package ee.adit.dao;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Session;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import ee.adit.dao.pojo.AditUser;
@@ -34,6 +35,19 @@ public class UsertypeDAO extends HibernateDaoSupport {
 		}
 		
 		return result;
+	}
+	
+	public List<Usertype> listUsertypes() {
+		Session session = null;
+		String SQL = "from Usertype";
+		try {
+			session = this.getSessionFactory().openSession();
+			return (List<Usertype>) session.createQuery(SQL).list();
+		} finally {
+			if(session != null) {
+				session.clear();
+			}
+		}
 	}
 	
 }
