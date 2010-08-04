@@ -30,8 +30,6 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 	private static Logger LOG = Logger.getLogger(JoinEndpoint.class);
 
 	private UserService userService;
-
-	private LogService logService;
 	
 	@Override
 	protected Object invokeInternal(Object requestObject) throws Exception {
@@ -207,14 +205,6 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 
 	public void setUserService(UserService userService) {
 		this.userService = userService;
-	}
-
-	public LogService getLogService() {
-		return logService;
-	}
-
-	public void setLogService(LogService logService) {
-		this.logService = logService;
 	}
 	
 }

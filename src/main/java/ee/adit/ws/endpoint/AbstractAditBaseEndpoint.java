@@ -136,14 +136,18 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 	
 	public void logCurrentRequest(Long documentId, Date requestDate, String additionalInformation) {
 		try {
-			this.logService.addRequestLogEntry(
-				this.header.getNimi(),
-				documentId,
-				requestDate,
-				this.header.getInfosysteem(),
-				(((this.header.getAllasutus() != null) && (this.header.getAllasutus().length() > 0)) ? this.header.getAllasutus() : this.header.getIsikukood()),
-				this.header.getAsutus(),
-				additionalInformation);
+			if(this.header != null) {
+				this.logService.addRequestLogEntry(
+						this.header.getNimi(),
+						documentId,
+						requestDate,
+						this.header.getInfosysteem(),
+						(((this.header.getAllasutus() != null) && (this.header.getAllasutus().length() > 0)) ? this.header.getAllasutus() : this.header.getIsikukood()),
+						this.header.getAsutus(),
+						additionalInformation);
+			} else {
+				throw new NullPointerException("Request header not initialized.");
+			}			
 		} catch (Exception ex) {
 			LOG.debug("Failed logging request!", ex);
 		}
