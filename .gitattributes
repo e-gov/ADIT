@@ -34,6 +34,8 @@ doc/testMessages/join.v1/error_incorrect_soap_body.xml -text
 doc/testMessages/join.v1/error_incorrect_soap_body_response.xml -text
 doc/testMessages/join.v1/error_incorrect_usertype.xml -text
 doc/testMessages/join.v1/error_incorrect_usertype_response.xml -text
+doc/testMessages/saveDocument.v1/addDocument_5MB/saveDocumentV1.base64 -text
+doc/testMessages/saveDocument.v1/addDocument_5MB/saveDocumentV1.xml -text
 doc/testMessages/saveDocument.v1/base64 -text
 doc/testMessages/saveDocument.v1/saveDocument.v1.attachment.xml -text
 doc/testMessages/saveDocument.v1/saveDocument.v1.xml -text

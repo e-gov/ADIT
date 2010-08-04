@@ -31,6 +31,10 @@
     	<appender-ref ref="file" />
     </logger>
     
+    <logger name="ee.adit.util">
+    	<level value="DEBUG"></level>
+    </logger>
+    
     <logger name="ee.adit.dao">
     	<level value="DEBUG"></level>
     	<appender-ref ref="file" />

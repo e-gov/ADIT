@@ -167,6 +167,7 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 								
 								// 1. Convert java list to XML string and output to file
 								String xmlFile = outputToFile(docFiles);
+								Util.joinSplitXML(xmlFile, "data");
 								
 								// 2. GZip and Base64 encode the temporary file
 								String gzipFileName = Util.gzipAndBase64Encode(xmlFile, this.getConfiguration().getTempDir(), this.getConfiguration().getDeleteTemporaryFilesAsBoolean());

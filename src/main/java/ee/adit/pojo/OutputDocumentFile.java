@@ -10,7 +10,7 @@ public class OutputDocumentFile {
 	private String contentType;
 	private String description;
 	private Long sizeBytes;
-	private String tmpFileName;
+	private String sysTempFile;
 	
 	public Long getId() {
 		return id;
@@ -36,12 +36,12 @@ public class OutputDocumentFile {
 		this.description = description;
 	}
 
-	public String getTmpFileName() {
-		return tmpFileName;
+	public String getSysTempFile() {
+		return sysTempFile;
 	}
 
-	public void setTmpFileName(String tmpFileName) {
-		this.tmpFileName = tmpFileName;
+	public void setSysTempFile(String sysTempFile) {
+		this.sysTempFile = sysTempFile;
 	}
 
 	public String getContentType() {
@@ -60,6 +60,7 @@ public class OutputDocumentFile {
 		this.sizeBytes = sizeBytes;
 	}
 	
+	/*
 	public byte[] getData() {
 		byte[] result = new byte[]{};
 		
@@ -88,4 +89,5 @@ public class OutputDocumentFile {
 		
 		return result;
 	}
+	*/
 }

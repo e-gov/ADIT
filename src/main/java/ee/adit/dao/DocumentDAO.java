@@ -349,6 +349,66 @@ public class DocumentDAO extends HibernateDaoSupport {
 				@Override
 				public Object doInHibernate(Session session) throws HibernateException, SQLException {
 					Document doc = (Document)session.get(Document.class, documentId);
+					
+					List<DocumentFile> filesList = new ArrayList<DocumentFile>(doc.getDocumentFiles());
+			    	int itemIndex = 0;
+			    	for (DocumentFile docFile : filesList) {
+			    		if (!docFile.getDeleted()) {
+			        		if ((fileIdList == null) || fileIdList.isEmpty() || fileIdList.contains(docFile.getId())) {
+			        			OutputDocumentFile f = new OutputDocumentFile();
+			        			f.setContentType(docFile.getContentType());
+			        			f.setDescription(docFile.getDescription());
+			        			f.setId(docFile.getId());
+			        			f.setName(docFile.getFileName());
+			        			f.setSizeBytes(docFile.getFileSizeBytes());
+			        			
+			        			// Read file data from BLOB and write it to temporary file.
+			        			// This is necessary to avoid storing potentially large
+			        			// amounts of binary data in server memory.
+			        			if (includeFileContents) {
+			            			itemIndex++;
+			        				String outputFileName = Util.generateRandomFileNameWithoutExtension();
+			        				outputFileName = temporaryFilesDir + File.separator + outputFileName + "_" + itemIndex + "_GDFv1.adit";
+			        				InputStream blobDataStream = null;
+			        				FileOutputStream fileOutputStream = null;
+			        				try {
+			        					byte[] buffer = new byte[10240];
+			        					int len = 0;
+			        					blobDataStream = docFile.getFileData().getBinaryStream();
+			        					fileOutputStream = new FileOutputStream(outputFileName);
+			        					while ((len = blobDataStream.read(buffer)) > 0) {
+			        						fileOutputStream.write(buffer, 0, len);
+			        					}
+			        				} catch (IOException ex) {
+			        					throw new HibernateException(ex);
+			        				} finally {
+			        					try {
+			        						if (blobDataStream != null) {
+			        							blobDataStream.close();
+			        						}
+			        						blobDataStream = null;
+			        					} catch (Exception ex) {}
+			        					
+			        					try {
+			        						if (fileOutputStream != null) {
+			        							fileOutputStream.close();
+			        						}
+			        						fileOutputStream = null;
+			        					} catch (Exception ex) {}
+			        				}
+			        				
+			        				// Base64 encode file
+			        				try {
+			        					f.setSysTempFile(Util.base64EncodeFile(outputFileName, temporaryFilesDir));
+			        				} catch (IOException ex) {
+			        					throw new HibernateException(ex);
+			        				} 
+			        			}
+			        		}
+			    		}
+			    	}
+			    	
+					
 					return dbDocumentToOutputDocument(
 							doc,
 							fileIdList,
@@ -371,7 +431,7 @@ public class DocumentDAO extends HibernateDaoSupport {
 	}
 	
 	private OutputDocument dbDocumentToOutputDocument(
-			final Document doc,
+			Document doc,
 			final List<Long> fileIdList,
 			final boolean includeSignatures,
 			final boolean includeSharings,
@@ -437,7 +497,6 @@ public class DocumentDAO extends HibernateDaoSupport {
         						fileOutputStream.write(buffer, 0, len);
         						totalBytes += len;
         					}
-        					f.setTmpFileName(outputFileName);
         				} catch (IOException ex) {
         					throw new HibernateException(ex);
         				} finally {
@@ -455,6 +514,13 @@ public class DocumentDAO extends HibernateDaoSupport {
         						fileOutputStream = null;
         					} catch (Exception ex) {}
         				}
+        				
+        				// Base64 encode file
+        				try {
+        					f.setSysTempFile(Util.base64EncodeFile(outputFileName, temporaryFilesDir));
+        				} catch (IOException ex) {
+        					throw new HibernateException(ex);
+        				} 
         			}
     				
     				outputFilesList.add(f);
@@ -577,7 +643,7 @@ public class DocumentDAO extends HibernateDaoSupport {
 	 * @param files
 	 * @return
 	 */
-	public Long save(final Document document, final List<OutputDocumentFile> files, Session existingSession) {
+	public Long save(final Document document, final List<OutputDocumentFile> files, Session existingSession) throws Exception {
 		Long result = null;
 		
 		if ((existingSession != null) && (existingSession.isOpen())) {
@@ -585,14 +651,23 @@ public class DocumentDAO extends HibernateDaoSupport {
 		} else {
 			result = (Long) this.getHibernateTemplate().execute(new HibernateCallback() {
 				public Object doInHibernate(Session session) throws HibernateException,	SQLException {
-					return saveImpl(document, files, session);
+					try {
+						return saveImpl(document, files, session);
+					} catch (Exception ex) {
+						throw new HibernateException(ex);
+					}
 				}
 			});
 		}
 		return result;
 	}
 	
-	private Long saveImpl(final Document document, final List<OutputDocumentFile> files, Session session) {
+	public Long save(final Document document, Session existingSession) throws Exception {
+		List<OutputDocumentFile> files = new ArrayList<OutputDocumentFile>(document.getDocumentFiles());
+		return save(document, files, existingSession);
+	}
+	
+	private Long saveImpl(final Document document, final List<OutputDocumentFile> files, Session session) throws IOException {
 		if (document.getDocumentFiles() == null) {
 			document.setDocumentFiles(new HashSet<DocumentFile>());
 		}
@@ -618,14 +693,15 @@ public class DocumentDAO extends HibernateDaoSupport {
 					throw new HibernateException("Document does not have a file with ID: " + attachmentFile.getId());
 				}
 				
-				String fileName = attachmentFile.getTmpFileName();
+				String fileName = attachmentFile.getSysTempFile();
+				String base64DecodedFile = Util.base64DecodeFile(fileName, (new File(fileName)).getParent());
 				FileInputStream fileInputStream = null;
 				try {
-					fileInputStream = new FileInputStream(fileName);
+					fileInputStream = new FileInputStream(base64DecodedFile);
 				} catch (FileNotFoundException e) {
 					LOG.error("Error saving document file: ", e);
 				}
-				long length = (new File(fileName)).length();
+				long length = (new File(base64DecodedFile)).length();
 				//Blob fileData = Hibernate.createBlob(fileInputStream, length, session);
 				Blob fileData = Hibernate.createBlob(fileInputStream, length);
 				documentFile.setFileData(fileData);

@@ -222,8 +222,8 @@
 		<field name="sizeBytes" type="java.lang.Long">
 			<bind-xml name="size_bytes"/>
 		</field>
-		<field name="data" type="bytes">
-			<bind-xml name="data"/>
+		<field name="sysTempFile" type="java.lang.String">
+			<bind-xml name="sysTempFile"/>
 		</field>
 	</class>
  	

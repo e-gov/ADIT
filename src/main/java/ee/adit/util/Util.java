@@ -128,14 +128,14 @@ public class Util {
 
 		// Pack data to GZip format
 		String zipOutFileName = inputFile + "_zipOutBuffer.adit";
-		LOG.debug("Packing data to GZip format. Output file: " + zipOutFileName);
+		LOG.debug("Packing data to GZip format. Input file: \""+ inputFile +"\", output file: \"" + zipOutFileName + "\"");
 		FileInputStream in = new FileInputStream(inputFile);
 		FileOutputStream zipOutFile = new FileOutputStream(zipOutFileName, false);
 		GZIPOutputStream out = new GZIPOutputStream(zipOutFile);
 		byte[] buf = new byte[1024];
 		int len;
 		while ((len = in.read(buf)) > 0) {
-			LOG.debug(new String(buf, "UTF-8"));
+			LOG.debug(new String(buf, 0, len, "UTF-8"));
 			out.write(buf, 0, len);
 		}
 		in.close();
@@ -391,7 +391,7 @@ public class Util {
 		return df.format(date);
 	}
     
-    public static FileSplitResult splitOutTags(String xmlFileName, String tagLocalName, boolean noMainFile, boolean noSubFiles, boolean replaceMain) {
+    public static FileSplitResult splitOutTags(String xmlFileName, String tagLocalName, boolean noMainFile, boolean noSubFiles, boolean replaceMain, boolean removeSubFileRootTags) {
         FileSplitResult result = new FileSplitResult();
         
         // Attempt to save extracted files in the same directory
@@ -474,12 +474,15 @@ public class Util {
                                 subOutStream = new FileOutputStream(subFileName, false);
                                 subOutWriter = new OutputStreamWriter(subOutStream, "UTF-8");
                                 subWriter = new BufferedWriter(subOutWriter);
+                                if (removeSubFileRootTags) {
+                                	ioBuffer = startAndEndMatcher.replaceAll("");
+                                }
                                 subWriter.write(ioBuffer);
 
                                 // Kirjutame põhifaili kommentaari, mille alusel me pärast
                                 // eraldatud TAGi tagasi saame panna.
                                 if (!noMainFile) {
-                                    mainWriter.write("<!--SYS_INCLUDE_" + (new File(subFileName)).getName() + "-->");
+                                    mainWriter.write("<sysTempFile>" + subFileName + "</sysTempFile>");
                                 }
 
                                 safeCloseWriter(subWriter);
@@ -506,17 +509,25 @@ public class Util {
                         }
 
                         if (!noSubFiles) {
+                            if (removeSubFileRootTags) {
+                            	ioBuffer = startMatcher.replaceAll("");
+                            }
+                        	
                             subWriter.write(ioBuffer);
 
                             // Kirjutame põhifaili kommentaari, mille alusel me pärast
                             // eraldatud TAGi tagasi saame panna.
                             if (!noMainFile && (currentLevel == 1)) {
-                                mainWriter.write("<!--SYS_INCLUDE_" + (new File(subFileName)).getName() + "-->");
+                                mainWriter.write("<sysTempFile>" + subFileName + "</sysTempFile>");
                             }
                         }
                     } else if (endMatcher.find()) {
                         if (!noSubFiles) {
                             // Puhvris on eraldatava TAGi lõpp
+                            if (removeSubFileRootTags) {
+                            	ioBuffer = endMatcher.replaceAll("");
+                            }
+                        	
                             subWriter.write(ioBuffer);
                         }
                         // Veendume, et tegemist on kõige ülemise taseme lõpuga
@@ -604,22 +615,34 @@ public class Util {
         return result;
     }
     
-    public static void joinSplitXML(String xmlFileName, BufferedWriter mainOutWriter) {
-        FileInputStream mainInStream = null;
+    public static void joinSplitXML(String xmlFileName, String appendTags) {
+    	LOG.debug("Startinx XML file merge joinSplitXML()");
+    	FileInputStream mainInStream = null;
         InputStreamReader mainInReader = null;
         BufferedReader mainReader = null;
         FileInputStream subInStream = null;
         InputStreamReader subInReader = null;
         BufferedReader subReader = null;
+        FileOutputStream mainOutStream = null;
+        OutputStreamWriter mainOutWriter = null;
+        BufferedWriter mainWriter = null;
 
         int charsRead = 0;
         char[] readBuffer = new char[1];
         String ioBuffer = "";
         boolean isTag = false;
-        String tmpDir = System.getProperty("java.io.tmpdir", "");
+        boolean isPlaceholderTag = false;
 
         try {
-            mainInStream = new FileInputStream(xmlFileName);
+            String filesDir = (new File(xmlFileName)).getParent();
+        	String resultFile = createTemporaryFile(0, filesDir);
+        	
+        	mainOutStream = new FileOutputStream(resultFile, false);
+            mainOutWriter = new OutputStreamWriter(mainOutStream, "UTF-8");
+            mainWriter = new BufferedWriter(mainOutWriter);
+        	
+            
+        	mainInStream = new FileInputStream(xmlFileName);
             mainInReader = new InputStreamReader(mainInStream, "UTF-8");
             mainReader = new BufferedReader(mainInReader);
             while ((charsRead = mainReader.read(readBuffer, 0, readBuffer.length)) > 0) {
@@ -628,25 +651,34 @@ public class Util {
                 }
 
                 // Kui asume keset lõputähiseta TAGi, siis lisame sümboli puhvrisse
-                if (isTag) {
+                if (isTag || isPlaceholderTag) {
                     ioBuffer += readBuffer[0];
                 } else {
-                    mainOutWriter.write(readBuffer, 0, charsRead);
+                    mainWriter.write(readBuffer, 0, charsRead);
                 }
 
                 if (readBuffer[0] == '>') {
                     isTag = false;
+                    
+                    if (ioBuffer.startsWith("<sysTempFile>")) {
+                    	isPlaceholderTag = true;
+                    }
 
-                    if (ioBuffer.startsWith("<!--SYS_INCLUDE_")) {
-                        String subFileName = tmpDir + File.separator + ioBuffer.replace("<!--SYS_INCLUDE_", "").replace("-->", "").trim();
+                    if (ioBuffer.endsWith("</sysTempFile>")) {
+                    	isPlaceholderTag = false;
+                        String subFileName = ioBuffer.replace("<sysTempFile>", "").replace("</sysTempFile>", "").trim();
                         if ((new File(subFileName)).exists()) {
-                            subInStream = new FileInputStream(subFileName);
+                            if ((appendTags != null) && (appendTags.length() > 0)) {
+                            	mainWriter.write(("<" + appendTags + ">").toCharArray());
+                            }
+                        	
+                        	subInStream = new FileInputStream(subFileName);
                             subInReader = new InputStreamReader(subInStream, "UTF-8");
                             subReader = new BufferedReader(subInReader);
                             int subCharsRead = 0;
                             char[] subReadBuffer = new char[102400];
                             while ((subCharsRead = subReader.read(subReadBuffer, 0, subReadBuffer.length)) > 0) {
-                                mainOutWriter.write(subReadBuffer, 0, subCharsRead);
+                                mainWriter.write(subReadBuffer, 0, subCharsRead);
                             }
                             safeCloseReader(subReader);
                             safeCloseReader(subInReader);
@@ -654,9 +686,13 @@ public class Util {
 
                             // Kustutame ajutise faili
                             (new File(subFileName)).delete();
+                            
+                            if ((appendTags != null) && (appendTags.length() > 0)) {
+                            	mainWriter.write(("</" + appendTags + ">").toCharArray());
+                            }
                         }
-                    } else {
-                        mainOutWriter.write(ioBuffer);
+                    } else if (!isPlaceholderTag) {
+                        mainWriter.write(ioBuffer);
                     }
 
                     ioBuffer = "";
@@ -667,9 +703,15 @@ public class Util {
             safeCloseReader(mainReader);
             safeCloseReader(mainInReader);
             safeCloseStream(mainInStream);
+            safeCloseWriter(mainWriter);
+            safeCloseWriter(mainOutWriter);
+            safeCloseStream(mainOutStream);
 
-            // Kustutame ajutise faili 
+            // Kustutame ajutise faili
+            LOG.debug("Deleting file \""+ xmlFileName +"\"");
             (new File(xmlFileName)).delete();
+            LOG.debug("Saving file \""+ resultFile +"\" as \""+ xmlFileName +"\"");
+            (new File(resultFile)).renameTo(new File(xmlFileName));
         } catch (Exception ex) {
         	LOG.error("Failed joining separate files into one XML file!", ex);
         } finally {
@@ -679,6 +721,9 @@ public class Util {
             safeCloseReader(subReader);
             safeCloseReader(subInReader);
             safeCloseStream(subInStream);
+            safeCloseWriter(mainWriter);
+            safeCloseWriter(mainOutWriter);
+            safeCloseStream(mainOutStream);
 
             mainInStream = null;
             mainInReader = null;
@@ -686,6 +731,9 @@ public class Util {
             subInStream = null;
             subInReader = null;
             subReader = null;
+            mainWriter = null;
+            mainOutWriter = null;
+            mainOutStream = null;
 
             ioBuffer = null;
         }
@@ -702,11 +750,8 @@ public class Util {
         if (r != null) {
             try {
                 r.close();
-            } catch (Exception ex) {
-            	LOG.warn("Failed closing reader!", ex);
-            } finally {
-                r = null;
-            }
+            } catch (Exception ex) {}
+            finally {r = null;}
         }
     }
 
@@ -722,11 +767,8 @@ public class Util {
             try {
                 w.flush();
                 w.close();
-            } catch (Exception ex) {
-            	LOG.warn("Failed closing writer!", ex);
-            } finally {
-                w = null;
-            }
+            } catch (Exception ex) {}
+            finally {w = null;}
         }
     }
 
@@ -740,7 +782,7 @@ public class Util {
     public static void safeCloseStream(InputStream s) {
         if (s != null) {
             try { s.close(); }
-            catch (Exception ex) { LOG.warn("Failed closing input stream!", ex); }
+            catch (Exception ex) {}
             finally { s = null; }
         }
     }
@@ -755,7 +797,7 @@ public class Util {
     public static void safeCloseStream(OutputStream s) {
         if (s != null) {
             try { s.close(); }
-            catch (Exception ex) { LOG.warn("Failed closing output stream!", ex); }
+            catch (Exception ex) {}
             finally { s = null; }
         }
     }

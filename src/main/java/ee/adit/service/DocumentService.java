@@ -134,8 +134,7 @@ public class DocumentService {
 	private Configuration configuration;
 	private DvkDAO dvkDAO;
 
-	public List<String> checkAttachedDocumentMetadataForNewDocument(SaveDocumentRequestAttachment document, long remainingDiskQuota, String xmlFile, String tempDir) throws AditException {
-		List<String> result = null;
+	public void checkAttachedDocumentMetadataForNewDocument(SaveDocumentRequestAttachment document, long remainingDiskQuota, String xmlFile, String tempDir) throws AditException {
 		LOG.debug("Checking attached document metadata for new document...");
 		if (document != null) {
 
@@ -194,14 +193,9 @@ public class DocumentService {
 					throw new AditException(errorMessage);
 				}
 			}
-
-			result = extractFilesFromXML(document.getFiles(), xmlFile, remainingDiskQuota, tempDir);
-
 		} else {
 			throw new AditInternalException("Document not initialized.");
 		}
-
-		return result;
 	}
 
 	public List<String> extractFilesFromXML(List<OutputDocumentFile> files, String xmlFileName, long remainingDiskQuota, String tempDir) {
@@ -250,7 +244,7 @@ public class DocumentService {
 
 				OutputDocumentFile file = files.get(i);
 				LOG.debug("Adding reference to file object. File ID: " + file.getId() + " (" + file.getName() + "). Temporary file: " + base64DecodedFile);
-				file.setTmpFileName(base64DecodedFile);
+				file.setSysTempFile(base64DecodedFile);
 
 				totalSize += (new File(base64DecodedFile)).length();
 			}
@@ -291,7 +285,7 @@ public class DocumentService {
 	}
 
 	@Transactional
-	public Long save(final SaveDocumentRequestAttachment attachmentDocument, final List<String> fileNames, final String creatorCode, final String remoteApplication) throws FileNotFoundException {
+	public Long save(final SaveDocumentRequestAttachment attachmentDocument, final String creatorCode, final String remoteApplication) throws FileNotFoundException {
 		final DocumentDAO docDao = this.getDocumentDAO();
 
 		return (Long) this.getDocumentDAO().getHibernateTemplate().execute(new HibernateCallback() {
@@ -319,7 +313,11 @@ public class DocumentService {
 				document.setLastModifiedDate(creationDate);
 				document.setTitle(attachmentDocument.getTitle());
 
-				return docDao.save(document, attachmentDocument.getFiles(), session);
+				try {
+					return docDao.save(document, attachmentDocument.getFiles(), session);
+				} catch (Exception e) {
+					throw new HibernateException(e);
+				}
 			}
 		});
 	}
@@ -335,8 +333,12 @@ public class DocumentService {
 				filesList.add(file);
 
 				// TODO: Document to database
-				extractFilesFromXML(filesList, attachmentXmlFile, remainingDiskQuota, temporaryFilesDir);
-				docDao.save(document, filesList, session);
+				//extractFilesFromXML(filesList, attachmentXmlFile, remainingDiskQuota, temporaryFilesDir);
+				try {
+					docDao.save(document, session);
+				} catch (Exception e) {
+					throw new HibernateException(e);
+				}
 				long fileId = filesList.get(0).getId();
 				LOG.debug("File saved with ID: " + fileId);
 				return fileId;
@@ -344,7 +346,7 @@ public class DocumentService {
 		});
 	}
 
-	public void save(Document doc) {
+	public void save(Document doc) throws Exception {
 		this.getDocumentDAO().save(doc, null, null);
 	}
 
@@ -353,8 +355,9 @@ public class DocumentService {
 	 * 
 	 * @param document
 	 *            the document to be locked.
+	 * @throws Exception 
 	 */
-	public void lockDocument(Document document) {
+	public void lockDocument(Document document) throws Exception {
 		if (!document.getLocked()) {
 			LOG.debug("Locking document: " + document.getId());
 			document.setLocked(true);
@@ -884,7 +887,7 @@ public class DocumentService {
 				String decodedTempFile = Util.base64DecodeAndUnzip(tempFile, this.getConfiguration().getTempDir(), this.getConfiguration().getDeleteTemporaryFilesAsBoolean());
 
 				OutputDocumentFile tempDocument = new OutputDocumentFile();
-				tempDocument.setTmpFileName(decodedTempFile);
+				tempDocument.setSysTempFile(decodedTempFile);
 				tempDocument.setContentType(dvkFile.getFailTyyp());
 				tempDocument.setName(dvkFile.getFailNimi());
 				tempDocument.setSizeBytes(dvkFile.getFailSuurus());
@@ -900,12 +903,12 @@ public class DocumentService {
 				while (documentsToDelete.hasNext()) {
 					OutputDocumentFile documentToDelete = documentsToDelete.next();
 					try {
-						if (documentToDelete.getTmpFileName() != null && !documentToDelete.getTmpFileName().trim().equalsIgnoreCase("")) {
-							File f = new File(documentToDelete.getTmpFileName());
+						if(documentToDelete.getSysTempFile() != null && !documentToDelete.getSysTempFile().trim().equalsIgnoreCase("")) {
+							File f = new File(documentToDelete.getSysTempFile());
 							if (f.exists()) {
 								f.delete();
 							} else {
-								throw new FileNotFoundException("Could not find temporary file (to delete): " + documentToDelete.getTmpFileName());
+								throw new FileNotFoundException("Could not find temporary file (to delete): " + documentToDelete.getSysTempFile());
 							}
 						}
 					} catch (Exception exc) {

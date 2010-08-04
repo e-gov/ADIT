@@ -22,6 +22,7 @@ import ee.adit.pojo.Success;
 import ee.adit.service.DocumentService;
 import ee.adit.service.UserService;
 import ee.adit.util.CustomXTeeHeader;
+import ee.adit.util.FileSplitResult;
 import ee.adit.util.Util;
 import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
 import ee.webmedia.xtee.annotation.XTeeService;
@@ -85,6 +86,9 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 									String xmlFile = Util.base64DecodeAndUnzip(base64EncodedFile, this.getConfiguration().getTempDir(), this.getConfiguration().getDeleteTemporaryFilesAsBoolean());
 									LOG.debug("Attachment unzipped to temporary file: " + xmlFile);
 									
+									// Extract large files from main document
+									Util.splitOutTags(xmlFile, "data", false, false, true, true);
+									
 									// Unmarshal the XML from the temporary file
 									Object unmarshalledObject = unMarshal(xmlFile);
 									
@@ -95,6 +99,9 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 											
 											SaveDocumentRequestAttachment document = (SaveDocumentRequestAttachment) unmarshalledObject;
 											
+											// Check document metadata
+											this.getDocumentService().checkAttachedDocumentMetadataForNewDocument(document, remainingDiskQuota, xmlFile, this.getConfiguration().getTempDir());
+											
 											if(document.getId() != null && document.getId() != 0) {
 												// Determine whether or not this document can be modified
 												Document doc = this.documentService.getDocumentDAO().getDocument(document.getId());
@@ -103,10 +110,10 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 												LOG.debug("Modifying document. ID: " + document.getId());
 												
 												// Check document metadata
-												List<String> fileNames = this.getDocumentService().checkAttachedDocumentMetadataForNewDocument(document, remainingDiskQuota, xmlFile, this.getConfiguration().getTempDir());
+												// List<String> fileNames = this.getDocumentService().checkAttachedDocumentMetadataForNewDocument(document, remainingDiskQuota, xmlFile, this.getConfiguration().getTempDir());
 												
 												// Document to database
-												documentId = this.getDocumentService().save(document, fileNames, user.getUserCode(), applicationName);
+												documentId = this.getDocumentService().save(document, user.getUserCode(), applicationName);
 												LOG.debug("Document saved with ID: " + documentId.toString());
 												response.setDocumentId(documentId);
 												
@@ -114,10 +121,10 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 												LOG.debug("Adding new document. GUID: " + document.getGuid());
 												
 												// Check document metadata
-												List<String> fileNames = this.getDocumentService().checkAttachedDocumentMetadataForNewDocument(document, remainingDiskQuota, xmlFile, this.getConfiguration().getTempDir());
+												// List<String> fileNames = this.getDocumentService().checkAttachedDocumentMetadataForNewDocument(document, remainingDiskQuota, xmlFile, this.getConfiguration().getTempDir());
 												
 												// Document to database
-												documentId = this.getDocumentService().save(document, fileNames, user.getUserCode(), applicationName);
+												documentId = this.getDocumentService().save(document, user.getUserCode(), applicationName);
 												LOG.debug("Document saved with ID: " + documentId.toString());
 												response.setDocumentId(documentId);
 											}
