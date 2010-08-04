@@ -1,5 +1,7 @@
 package ee.adit.ws.endpoint.user;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -14,6 +16,7 @@ import ee.adit.pojo.JoinRequest;
 import ee.adit.pojo.JoinResponse;
 import ee.adit.pojo.Message;
 import ee.adit.pojo.Success;
+import ee.adit.service.LogService;
 import ee.adit.service.UserService;
 import ee.adit.util.CustomXTeeHeader;
 import ee.adit.util.Util;
@@ -28,11 +31,16 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 
 	private UserService userService;
 
+	private LogService logService;
+	
 	@Override
 	protected Object invokeInternal(Object requestObject) throws Exception {
 
 		JoinResponse response = new JoinResponse();
 		ArrayOfMessage messages = new ArrayOfMessage();
+		Calendar requestDate = Calendar.getInstance();
+		String additionalInformationForLog = null;
+		Long documentId = null;
 		
 		try {
 
@@ -86,6 +94,7 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 								response.setSuccess(new Success(true));
 								String message = this.getMessageSource().getMessage("request.join.success.userModified", new Object[] { request.getUserType() }, Locale.ENGLISH);
 								messages.addMessage(new Message("en", message));
+								additionalInformationForLog = "SUCCESS: " + message;
 							} else {
 								String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.forUser.write", new Object[] { applicationName, aditUser.getUserCode() }, Locale.ENGLISH);
 								throw new AditException(errorMessage);
@@ -98,6 +107,7 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 							response.setSuccess(new Success(true));
 							String message = this.getMessageSource().getMessage("request.join.success.userAdded", new Object[] { request.getUserType() }, Locale.ENGLISH);
 							messages.addMessage(new Message("en", message));
+							additionalInformationForLog = "SUCCESS: " + message;
 						}
 						
 					} else {
@@ -120,8 +130,8 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 			response.setMessages(messages);
 			
 		} catch (Exception e) {
-			
 			LOG.error("Exception: ", e);
+			additionalInformationForLog = "ERROR: " + e.getMessage();
 			response.setSuccess(new Success(false));
 			ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
 			
@@ -136,6 +146,7 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 			response.setMessages(arrayOfMessage);
 		}
 		
+		super.logCurrentRequest(documentId, requestDate.getTime(), additionalInformationForLog);
 		return response;
 	}
 
@@ -196,6 +207,14 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 
 	public void setUserService(UserService userService) {
 		this.userService = userService;
+	}
+
+	public LogService getLogService() {
+		return logService;
+	}
+
+	public void setLogService(LogService logService) {
+		this.logService = logService;
 	}
 	
 }
