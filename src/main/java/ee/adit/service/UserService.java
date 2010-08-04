@@ -185,6 +185,13 @@ public class UserService {
 	}
 	
 	public void modifyUser(AditUser aditUser, String username, Usertype usertype) throws AditInternalException {
+		
+		// Activate the user account if needed
+		if(!aditUser.getActive()) {
+			aditUser.setActive(true);
+			aditUser.setDeactivationDate(null);
+		}
+		
 		if(USERTYPE_PERSON.equalsIgnoreCase(usertype.getShortName())) {
 			modifyUser(aditUser, username);
 		} else if(USERTYPE_INSTITUTION.equalsIgnoreCase(usertype.getShortName()) || USERTYPE_COMPANY.equalsIgnoreCase(usertype.getShortName())) {
