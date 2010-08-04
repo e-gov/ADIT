@@ -327,6 +327,8 @@
 	<!-- Service Classes -->
 	<bean id="logService" class="ee.adit.service.LogService">
 		<property name="requestLogDAO" ref="requestLogDAO"/>
+		<property name="errorLogDAO" ref="errorLogDAO"/>
+		
 	</bean>
 	
 	<bean id="userService" class="ee.adit.service.UserService">
@@ -410,6 +412,10 @@
 	<bean id="requestLogDAO" class="ee.adit.dao.RequestLogDAO">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
+	
+	<bean id="errorLogDAO" class="ee.adit.dao.ErrorLogDAO">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>	
 	
 	<bean id="notificationDAO" class="ee.adit.dao.NotificationDAO">
 		<property name="sessionFactory" ref="sessionFactory" />
