@@ -15,6 +15,10 @@ public class LogService {
 	
 	private static Logger LOG = Logger.getLogger(LogService.class);
 	
+	public static final String ErrorLogLevel_Warn = "WARN";
+	public static final String ErrorLogLevel_Error = "ERROR";
+	public static final String ErrorLogLevel_Fatal = "FATAL";
+	
 	private RequestLogDAO requestLogDAO;
 
 	private ErrorLogDAO errorLogDAO;

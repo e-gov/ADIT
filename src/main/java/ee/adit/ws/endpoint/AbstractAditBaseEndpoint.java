@@ -153,6 +153,24 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 		}
 	}
 	
+	public void logError(Long documentId, Date errorDate, String level, String errorMessage) {
+		try {
+			if(this.header != null) {
+				this.logService.addErrorLogEntry(
+						this.header.getNimi(),
+						documentId,
+						errorDate,
+						this.header.getInfosysteem(),
+						(((this.header.getAllasutus() != null) && (this.header.getAllasutus().length() > 0)) ? this.header.getAllasutus() : this.header.getIsikukood()),
+						level,
+						errorMessage);
+			} else {
+				throw new NullPointerException("Request header not initialized.");
+			}			
+		} catch (Exception ex) {
+			LOG.debug("Failed logging request!", ex);
+		}
+	}
 	
 	// Abstract method for implementing by subclasses
 	protected abstract Object invokeInternal(Object requestObject)
