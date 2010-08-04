@@ -184,12 +184,21 @@ public class UserService {
 		this.getAditUserDAO().saveOrUpdate(aditUser);
 	}
 	
-	public void modifyUser(AditUser aditUser, String username, Usertype usertype) throws AditInternalException {
-		
+	/**
+	 * 
+	 * @param aditUser
+	 * @param username
+	 * @param usertype
+	 * @return true if the user was reactivated
+	 * @throws AditInternalException
+	 */
+	public boolean modifyUser(AditUser aditUser, String username, Usertype usertype) throws AditInternalException {
+		boolean result = false;
 		// Activate the user account if needed
 		if(!aditUser.getActive()) {
 			aditUser.setActive(true);
 			aditUser.setDeactivationDate(null);
+			result = true;
 		}
 		
 		if(USERTYPE_PERSON.equalsIgnoreCase(usertype.getShortName())) {
@@ -199,6 +208,8 @@ public class UserService {
 		} else {
 			throw new AditInternalException("Unknown usertype");
 		}
+		
+		return result;
 	}
 	
 	public void modifyUser(AditUser aditUser, String username) {
