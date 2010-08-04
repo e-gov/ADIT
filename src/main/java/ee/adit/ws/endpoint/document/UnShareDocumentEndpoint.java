@@ -16,7 +16,6 @@ import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.exception.AditException;
 import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.ArrayOfRecipientStatus;
-import ee.adit.pojo.GetNotificationsResponse;
 import ee.adit.pojo.Message;
 import ee.adit.pojo.RecipientStatus;
 import ee.adit.pojo.UnShareDocumentRequest;
@@ -238,7 +237,7 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 							header));
 				}
 				
-				this.documentService.getDocumentDAO().save(doc, null, null);
+				this.documentService.getDocumentDAO().save(doc, null, Long.MAX_VALUE, null);
 				
 				// Send notification to every user who was removed from
 				// sharing recipients list (assuming they have requested such notifications)

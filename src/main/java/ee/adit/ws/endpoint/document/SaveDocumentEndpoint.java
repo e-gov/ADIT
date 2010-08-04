@@ -47,116 +47,125 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 		
 		try {
 			LOG.debug("SaveDocumentEndpoint.v1 invoked.");
-			SaveDocumentRequest request = (SaveDocumentRequest) requestObject;
+			
 			CustomXTeeHeader header = this.getHeader();
 			String applicationName = header.getInfosysteem();
 			
-			// Kontrollime, kas päringu käivitanud infosüsteem on ADITis registreeritud
-			boolean applicationRegistered = this.getUserService().isApplicationRegistered(applicationName);
+			// Log request
+			Util.printHeader(header);
 			
-			if (applicationRegistered) {
-				
-				// Kas päringus märgitud isik on teenuse kasutaja
-				AditUser user = this.getUserService().getUserByID(this.getHeader().getIsikukood());
-				
-				if(user != null) {
-					if(user.getActive() != null && user.getActive()) {
-						
-						// Kas infosüsteemil on antud kasutaja jaoks kirjutamisõigus
-						int applicationAccessLevelForUser = userService.getAccessLevelForUser(applicationName, user);
-						
-						if(applicationAccessLevelForUser == 2) {
+			// Check header for required fields
+			checkHeader(header);
+			
+			// Check whether or not the application that executed
+			// current query is registered.
+			boolean applicationRegistered = this.getUserService().isApplicationRegistered(applicationName);
+			if (!applicationRegistered) {
+				String errorMessage = this.getMessageSource().getMessage("application.notRegistered", new Object[] { applicationName }, Locale.ENGLISH);
+				throw new AditException(errorMessage);
+			}
+
+			// Check whether or not the application is allowed
+			// to view or modify data.
+			int accessLevel = this.getUserService().getAccessLevel(applicationName);
+			if (accessLevel != 2) {
+				String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.write", new Object[] { applicationName }, Locale.ENGLISH);
+				throw new AditException(errorMessage);
+			}
+
+			// Check whether or not the user who executed
+			// current query is registered.
+			String userCode = ((this.getHeader().getAllasutus() != null) && (this.getHeader().getAllasutus().length() > 0)) ? this.getHeader().getAllasutus() : this.getHeader().getIsikukood();
+			AditUser user = this.getUserService().getUserByID(userCode);
+			if (user == null) {
+				String errorMessage = this.getMessageSource().getMessage("user.nonExistent", new Object[] { userCode },	Locale.ENGLISH);
+				throw new AditException(errorMessage);
+			}
+
+			// Check whether or not the user is active (account not deleted)
+			if ((user.getActive() == null) || !user.getActive()) {
+				String errorMessage = this.getMessageSource().getMessage("user.inactive", new Object[] { userCode }, Locale.ENGLISH);
+				throw new AditException(errorMessage);
+			}
+			
+			// Check whether or not the application has rights to
+			// modify current user's data.
+			int applicationAccessLevelForUser = userService.getAccessLevelForUser(applicationName, user);
+			if(applicationAccessLevelForUser != 2) {
+				String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.forUser.write", new Object[] { applicationName, user.getUserCode() }, Locale.ENGLISH);
+				throw new AditException(errorMessage);
+			}
+
+			// All primary checks passed.
+			Iterator<Attachment> i = this.getRequestMessage().getAttachments();
+			int attachmentCount = 0;
+			while(i.hasNext()) {
+				if(attachmentCount == 0) {
+					Attachment attachment = i.next();
+					LOG.debug("Attachment: " + attachment.getContentId());
+					
+					// Extract the SOAP message to a temporary file
+					String base64EncodedFile = extractXML(attachment);
+					
+					// Base64 decode and unzip the temporary file
+					String xmlFile = Util.base64DecodeAndUnzip(base64EncodedFile, this.getConfiguration().getTempDir(), this.getConfiguration().getDeleteTemporaryFilesAsBoolean());
+					LOG.debug("Attachment unzipped to temporary file: " + xmlFile);
+					
+					// Extract large files from main document
+					FileSplitResult splitResult = Util.splitOutTags(xmlFile, "data", false, false, true, true);
+					
+					// Decode base64-encoded files
+					if ((splitResult.getSubFiles() != null) && (splitResult.getSubFiles().size() > 0)) {
+						splitResult.getSubFiles();
+					}
+					
+					// Unmarshal the XML from the temporary file
+					Object unmarshalledObject = unMarshal(xmlFile);
+					
+					// Check if the marshalling result is what we expected
+					if(unmarshalledObject != null) {
+						LOG.debug("XML unmarshalled to type: " + unmarshalledObject.getClass());
+						if(unmarshalledObject instanceof SaveDocumentRequestAttachment) {
+							SaveDocumentRequestAttachment document = (SaveDocumentRequestAttachment) unmarshalledObject;
+							
+							// Check document metadata
+							this.getDocumentService().checkAttachedDocumentMetadataForNewDocument(document);
 							
 							// Kas kasutajal on piisavalt vaba kettaruumi
 							long remainingDiskQuota = this.getUserService().getRemainingDiskQuota(user);
 							
-							// TODO: check the size of the incoming document and compare it to the remaining disk space
-							Iterator<Attachment> i = this.getRequestMessage().getAttachments();
-							
-							int attachmentCount = 0;
-							while(i.hasNext()) {
-								if(attachmentCount == 0) {
-									Attachment attachment = i.next();
-									LOG.debug("Attachment: " + attachment.getContentId());
-									
-									// Extract the SOAP message to a temporary file
-									String base64EncodedFile = extractXML(attachment);
-									
-									// Base64 decode and unzip the temporary file
-									String xmlFile = Util.base64DecodeAndUnzip(base64EncodedFile, this.getConfiguration().getTempDir(), this.getConfiguration().getDeleteTemporaryFilesAsBoolean());
-									LOG.debug("Attachment unzipped to temporary file: " + xmlFile);
-									
-									// Extract large files from main document
-									Util.splitOutTags(xmlFile, "data", false, false, true, true);
-									
-									// Unmarshal the XML from the temporary file
-									Object unmarshalledObject = unMarshal(xmlFile);
-									
-									// Check if the marshalling result is what we expected
-									if(unmarshalledObject != null) {
-										LOG.debug("XML unmarshalled to type: " + unmarshalledObject.getClass());
-										if(unmarshalledObject instanceof SaveDocumentRequestAttachment) {
-											
-											SaveDocumentRequestAttachment document = (SaveDocumentRequestAttachment) unmarshalledObject;
-											
-											// Check document metadata
-											this.getDocumentService().checkAttachedDocumentMetadataForNewDocument(document, remainingDiskQuota, xmlFile, this.getConfiguration().getTempDir());
-											
-											if(document.getId() != null && document.getId() != 0) {
-												// Determine whether or not this document can be modified
-												Document doc = this.documentService.getDocumentDAO().getDocument(document.getId());
-												runExistingDocumentChecks(doc, user.getUserCode());
-												
-												LOG.debug("Modifying document. ID: " + document.getId());
-												
-												// Check document metadata
-												// List<String> fileNames = this.getDocumentService().checkAttachedDocumentMetadataForNewDocument(document, remainingDiskQuota, xmlFile, this.getConfiguration().getTempDir());
-												
-												// Document to database
-												documentId = this.getDocumentService().save(document, user.getUserCode(), applicationName);
-												LOG.debug("Document saved with ID: " + documentId.toString());
-												response.setDocumentId(documentId);
-												
-											} else {
-												LOG.debug("Adding new document. GUID: " + document.getGuid());
-												
-												// Check document metadata
-												// List<String> fileNames = this.getDocumentService().checkAttachedDocumentMetadataForNewDocument(document, remainingDiskQuota, xmlFile, this.getConfiguration().getTempDir());
-												
-												// Document to database
-												documentId = this.getDocumentService().save(document, user.getUserCode(), applicationName);
-												LOG.debug("Document saved with ID: " + documentId.toString());
-												response.setDocumentId(documentId);
-											}
-											
-										} else {
-											throw new AditInternalException("Unmarshalling returned wrong type. Expected " + SaveDocumentRequestAttachment.class + ", got " + unmarshalledObject.getClass());
-										}
-									} else {
-										throw new AditInternalException("Unmarshalling failed for XML in file: " + xmlFile);
-									}
-								} else {
-									String errorMessage = this.getMessageSource().getMessage("request.attachments.tooMany", new Object[] { applicationName }, Locale.ENGLISH);
-									throw new AditException(errorMessage);
-								}
-								attachmentCount++;
+							if(document.getId() != null && document.getId() != 0) {
+								// Determine whether or not this document can be modified
+								Document doc = this.documentService.getDocumentDAO().getDocument(document.getId());
+								runExistingDocumentChecks(doc, user.getUserCode());
+								
+								LOG.debug("Modifying document. ID: " + document.getId());
+								
+								// Document to database
+								documentId = this.getDocumentService().save(document, user.getUserCode(), applicationName, remainingDiskQuota);
+								LOG.debug("Document saved with ID: " + documentId.toString());
+								response.setDocumentId(documentId);
+								
+							} else {
+								LOG.debug("Adding new document. GUID: " + document.getGuid());
+								
+								// Document to database
+								documentId = this.getDocumentService().save(document, user.getUserCode(), applicationName, remainingDiskQuota);
+								LOG.debug("Document saved with ID: " + documentId.toString());
+								response.setDocumentId(documentId);
 							}
 							
 						} else {
-							String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.forUser.write", new Object[] { applicationName, user.getUserCode() }, Locale.ENGLISH);
-							throw new AditException(errorMessage);
-						}						
+							throw new AditInternalException("Unmarshalling returned wrong type. Expected " + SaveDocumentRequestAttachment.class + ", got " + unmarshalledObject.getClass());
+						}
 					} else {
-						String errorMessage = this.getMessageSource().getMessage("user.inactive", new Object[] { this.getHeader().getIsikukood() }, Locale.ENGLISH);
-						throw new AditException(errorMessage);
+						throw new AditInternalException("Unmarshalling failed for XML in file: " + xmlFile);
 					}
 				} else {
-					String errorMessage = this.getMessageSource().getMessage("user.nonExistent", new Object[] { this.getHeader().getIsikukood() }, Locale.ENGLISH);
+					String errorMessage = this.getMessageSource().getMessage("request.attachments.tooMany", new Object[] { applicationName }, Locale.ENGLISH);
 					throw new AditException(errorMessage);
-				}				
-			} else {
-				String errorMessage = this.getMessageSource().getMessage("application.notRegistered", new Object[] { applicationName }, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				}
+				attachmentCount++;
 			}
 			
 			// Set response messages
@@ -210,6 +219,22 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 		if (existingDoc.getDeleted()) {
 			String errorMessage = this.getMessageSource().getMessage("request.saveDocument.document.deleted", new Object[] { }, Locale.ENGLISH);
 			throw new AditException(errorMessage);
+		}
+	}
+	
+	private void checkHeader(CustomXTeeHeader header) throws Exception {
+		String errorMessage = null;
+		if (header != null) {
+			if ((header.getIsikukood() == null)	|| (header.getIsikukood().length() < 1)) {
+				errorMessage = this.getMessageSource().getMessage("request.header.undefined.personalCode", new Object[] {}, Locale.ENGLISH);
+				throw new AditException(errorMessage);
+			} else if ((header.getInfosysteem() == null) || (header.getInfosysteem().length() < 1)) {
+				errorMessage = this.getMessageSource().getMessage("request.header.undefined.systemName", new Object[] {}, Locale.ENGLISH);
+				throw new AditException(errorMessage);
+			} else if ((header.getAsutus() == null) || (header.getAsutus().length() < 1)) {
+				errorMessage = this.getMessageSource().getMessage("request.header.undefined.institution", new Object[] {}, Locale.ENGLISH);
+				throw new AditException(errorMessage);
+			}
 		}
 	}
 	

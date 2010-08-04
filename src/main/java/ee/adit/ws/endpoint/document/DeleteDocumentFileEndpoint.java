@@ -123,7 +123,7 @@ public class DeleteDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 						doc.getDocumentHistories().add(historyEvent);
 						
 						// Salvestame tehtud muudatused
-						this.documentService.getDocumentDAO().save(doc, null, null);
+						this.documentService.getDocumentDAO().save(doc, null, Long.MAX_VALUE, null);
 					} else if (resultCode.equalsIgnoreCase("already_deleted")) {
 						String errorMessage = this.getMessageSource().getMessage("file.isDeleted", new Object[] { request.getFileId() }, Locale.ENGLISH);
 						throw new AditException(errorMessage);

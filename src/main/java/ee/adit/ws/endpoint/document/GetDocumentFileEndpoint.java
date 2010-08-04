@@ -205,7 +205,7 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 								}
 								
 								if (saveDocument) {
-									this.documentService.getDocumentDAO().save(doc, null, null);
+									this.documentService.getDocumentDAO().save(doc, null, Long.MAX_VALUE, null);
 								}
 								
 								// If it was the first time for this particular user to

@@ -183,7 +183,7 @@ public class DeleteDocumentEndpoint extends AbstractAditBaseEndpoint {
 					doc.getDocumentHistories().add(historyEvent);
 					
 					// Salvestame tehtud muudatused
-					this.documentService.getDocumentDAO().save(doc, null, null);
+					this.documentService.getDocumentDAO().save(doc, null, Long.MAX_VALUE, null);
 				}
 			} else {
 				String errorMessage = this.getMessageSource().getMessage("document.nonExistent", new Object[] { request.getDocumentId() }, Locale.ENGLISH);

@@ -643,16 +643,16 @@ public class DocumentDAO extends HibernateDaoSupport {
 	 * @param files
 	 * @return
 	 */
-	public Long save(final Document document, final List<OutputDocumentFile> files, Session existingSession) throws Exception {
+	public Long save(final Document document, final List<OutputDocumentFile> files, final long remainingDiskQuota, Session existingSession) throws Exception {
 		Long result = null;
 		
 		if ((existingSession != null) && (existingSession.isOpen())) {
-			return saveImpl(document, files, existingSession);
+			return saveImpl(document, files, remainingDiskQuota, existingSession);
 		} else {
 			result = (Long) this.getHibernateTemplate().execute(new HibernateCallback() {
 				public Object doInHibernate(Session session) throws HibernateException,	SQLException {
 					try {
-						return saveImpl(document, files, session);
+						return saveImpl(document, files, remainingDiskQuota, session);
 					} catch (Exception ex) {
 						throw new HibernateException(ex);
 					}
@@ -662,12 +662,12 @@ public class DocumentDAO extends HibernateDaoSupport {
 		return result;
 	}
 	
-	public Long save(final Document document, Session existingSession) throws Exception {
+	public Long save(final Document document, final long remainingDiskQuota, Session existingSession) throws Exception {
 		List<OutputDocumentFile> files = new ArrayList<OutputDocumentFile>(document.getDocumentFiles());
-		return save(document, files, existingSession);
+		return save(document, files, remainingDiskQuota, existingSession);
 	}
 	
-	private Long saveImpl(final Document document, final List<OutputDocumentFile> files, Session session) throws IOException {
+	private Long saveImpl(final Document document, final List<OutputDocumentFile> files, long remainingDiskQuota, Session session) throws IOException {
 		if (document.getDocumentFiles() == null) {
 			document.setDocumentFiles(new HashSet<DocumentFile>());
 		}
@@ -702,6 +702,14 @@ public class DocumentDAO extends HibernateDaoSupport {
 					LOG.error("Error saving document file: ", e);
 				}
 				long length = (new File(base64DecodedFile)).length();
+
+				
+				if (remainingDiskQuota < length) {
+					throw new HibernateException("Disc quota exceeded");
+				} else {
+					remainingDiskQuota -= length;
+				}
+				
 				//Blob fileData = Hibernate.createBlob(fileInputStream, length, session);
 				Blob fileData = Hibernate.createBlob(fileInputStream, length);
 				documentFile.setFileData(fileData);

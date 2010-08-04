@@ -242,7 +242,7 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 				}
 				doc.getDocumentHistories().add(lockingEvent);
 				
-				this.documentService.getDocumentDAO().save(doc, null, null);
+				this.documentService.getDocumentDAO().save(doc, null, Long.MAX_VALUE, null);
 				
 				// Send notification to every user the document was shared to
 				// (assuming they have requested such notifications)

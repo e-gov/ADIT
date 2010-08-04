@@ -134,7 +134,7 @@ public class DocumentService {
 	private Configuration configuration;
 	private DvkDAO dvkDAO;
 
-	public void checkAttachedDocumentMetadataForNewDocument(SaveDocumentRequestAttachment document, long remainingDiskQuota, String xmlFile, String tempDir) throws AditException {
+	public void checkAttachedDocumentMetadataForNewDocument(SaveDocumentRequestAttachment document) throws AditException {
 		LOG.debug("Checking attached document metadata for new document...");
 		if (document != null) {
 
@@ -198,6 +198,7 @@ public class DocumentService {
 		}
 	}
 
+	/*
 	public List<String> extractFilesFromXML(List<OutputDocumentFile> files, String xmlFileName, long remainingDiskQuota, String tempDir) {
 
 		List<String> result = new ArrayList<String>();
@@ -262,6 +263,7 @@ public class DocumentService {
 
 		return result;
 	}
+	*/
 
 	public String getValidDocumentTypes() {
 		StringBuffer result = new StringBuffer();
@@ -285,7 +287,7 @@ public class DocumentService {
 	}
 
 	@Transactional
-	public Long save(final SaveDocumentRequestAttachment attachmentDocument, final String creatorCode, final String remoteApplication) throws FileNotFoundException {
+	public Long save(final SaveDocumentRequestAttachment attachmentDocument, final String creatorCode, final String remoteApplication, final long remainingDiskQuota) throws FileNotFoundException {
 		final DocumentDAO docDao = this.getDocumentDAO();
 
 		return (Long) this.getDocumentDAO().getHibernateTemplate().execute(new HibernateCallback() {
@@ -314,7 +316,7 @@ public class DocumentService {
 				document.setTitle(attachmentDocument.getTitle());
 
 				try {
-					return docDao.save(document, attachmentDocument.getFiles(), session);
+					return docDao.save(document, attachmentDocument.getFiles(), remainingDiskQuota, session);
 				} catch (Exception e) {
 					throw new HibernateException(e);
 				}
@@ -332,10 +334,9 @@ public class DocumentService {
 				List<OutputDocumentFile> filesList = new ArrayList<OutputDocumentFile>();
 				filesList.add(file);
 
-				// TODO: Document to database
-				//extractFilesFromXML(filesList, attachmentXmlFile, remainingDiskQuota, temporaryFilesDir);
+				// Document to database
 				try {
-					docDao.save(document, session);
+					docDao.save(document, remainingDiskQuota, session);
 				} catch (Exception e) {
 					throw new HibernateException(e);
 				}
@@ -346,8 +347,8 @@ public class DocumentService {
 		});
 	}
 
-	public void save(Document doc) throws Exception {
-		this.getDocumentDAO().save(doc, null, null);
+	public void save(Document doc, long remainingDiskQuota) throws Exception {
+		this.getDocumentDAO().save(doc, null, remainingDiskQuota, null);
 	}
 
 	/**
@@ -362,7 +363,7 @@ public class DocumentService {
 			LOG.debug("Locking document: " + document.getId());
 			document.setLocked(true);
 			document.setLockingDate(new Date());
-			save(document);
+			save(document, Long.MAX_VALUE);
 			LOG.info("Document locked: " + document.getId());
 		}
 	}
@@ -769,7 +770,7 @@ public class DocumentService {
 											}
 
 											// Save document
-											Long aditDocumentID = this.getDocumentDAO().save(aditDocument, tempDocuments, aditSession);
+											Long aditDocumentID = this.getDocumentDAO().save(aditDocument, tempDocuments, Long.MAX_VALUE, aditSession);
 											LOG.info("Document saved to ADIT database. ID: " + aditDocumentID);
 
 											// Update document status to "sent"

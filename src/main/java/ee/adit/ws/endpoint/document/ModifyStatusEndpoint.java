@@ -173,7 +173,7 @@ public class ModifyStatusEndpoint extends AbstractAditBaseEndpoint {
 				historyEvent.setUserCode(userCode);
 				doc.getDocumentHistories().add(historyEvent);
 				
-				this.documentService.getDocumentDAO().save(doc, null, null);
+				this.documentService.getDocumentDAO().save(doc, null, Long.MAX_VALUE, null);
 				
 				// If document status was successfully modified then send
 				// a message to document owner.
