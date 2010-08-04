@@ -88,11 +88,19 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 							
 							if(applicationAccessLevelForUser == 2) {
 								LOG.info("Modifying existing user.");
-								userService.modifyUser(aditUser, request.getUserName(), usertype);
+								boolean userReactivated = userService.modifyUser(aditUser, request.getUserName(), usertype);
+								
+								String message =  null;
+								if(userReactivated) {
+									message = this.getMessageSource().getMessage("request.join.success.userReactivated", new Object[] { request.getUserType() }, Locale.ENGLISH);
+								} else {
+									message = this.getMessageSource().getMessage("request.join.success.userModified", new Object[] { request.getUserType() }, Locale.ENGLISH);
+								}
+								
 								response.setSuccess(new Success(true));
-								String message = this.getMessageSource().getMessage("request.join.success.userModified", new Object[] { request.getUserType() }, Locale.ENGLISH);
 								messages.addMessage(new Message("en", message));
 								additionalInformationForLog = "SUCCESS: " + message;
+								
 							} else {
 								String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.forUser.write", new Object[] { applicationName, aditUser.getUserCode() }, Locale.ENGLISH);
 								throw new AditException(errorMessage);
