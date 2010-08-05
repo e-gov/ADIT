@@ -188,8 +188,8 @@
 	<!-- getJoined päringu tüübid -->
 	<complexType name="GetJoinedRequest">
 		<sequence>
-			<element name="maxResults" type="integer"></element>
-			<element name="startIndex" type="integer"></element>
+			<element name="maxResults" type="integer" minOccurs="0" maxOccurs="1"></element>
+			<element name="startIndex" type="integer" minOccurs="0" maxOccurs="1"></element>
 		</sequence>
 	</complexType>
 	<complexType name="GetJoinedResponse">

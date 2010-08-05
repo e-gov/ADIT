@@ -85,6 +85,9 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 			CustomXTeeHeader header = this.getHeader();
 			String applicationName = header.getInfosysteem();
 			
+			// Check request
+			checkRequest(request);
+			
 			// Kontrollime, kas päringu käivitanud infosüsteem on ADITis registreeritud
 			boolean applicationRegistered = this.getUserService().isApplicationRegistered(applicationName);
 			
@@ -98,6 +101,10 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 					// Kontrollime, kas küsitud kirjete arv jääb maksimaalse lubatud vahemiku piiresse
 					BigInteger maxResults = request.getMaxResults();
 					BigInteger configurationMaxResults = this.getConfiguration().getGetJoinedMaxResults();
+					
+					if(maxResults == null) {
+						maxResults = configurationMaxResults;
+					}
 					
 					if(maxResults.intValue() <= configurationMaxResults.intValue()) {
 						
@@ -187,6 +194,22 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 		getJoinedResponseAttachment.setTotal(getJoinedResponseAttachmentUserList.size());
 
 		return marshal(getJoinedResponseAttachment);
+	}
+	
+	private void checkRequest(GetJoinedRequest request) {
+		String errorMessage = null; 
+		if(request != null) {
+			if(request.getMaxResults() != null && request.getMaxResults().longValue() <= 0) {
+				errorMessage = this.getMessageSource().getMessage("request.getJoined.body.invalid.maxResults", new Object[] {}, Locale.ENGLISH);
+				throw new AditException(errorMessage);
+			} else if(request.getStartIndex() != null && request.getStartIndex().longValue() < 0) {
+				errorMessage = this.getMessageSource().getMessage("request.getJoined.body.invalid.startIndex", new Object[] {}, Locale.ENGLISH);
+				throw new AditException(errorMessage);
+			}
+		} else {
+			errorMessage = this.getMessageSource().getMessage("request.body.empty", new Object[] {}, Locale.ENGLISH);
+			throw new AditException(errorMessage);
+		}
 	}
 	
 	private void checkConfiguration() throws AditInternalException {

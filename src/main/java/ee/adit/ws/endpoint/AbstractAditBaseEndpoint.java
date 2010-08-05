@@ -24,6 +24,7 @@ import org.springframework.ws.soap.SoapMessage;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import ee.adit.exception.AditInternalException;
 import ee.adit.service.LogService;
 import ee.adit.util.Configuration;
 import ee.adit.util.CustomXTeeHeader;
@@ -62,7 +63,14 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 			// Unmarshall the request object
 			Source requestObjectSource = new DOMSource(requestKeha);
 			LOG.debug(requestKeha.toString());
-			Object requestObject = this.getUnmarshaller().unmarshal(requestObjectSource);
+			Object requestObject = null;
+			
+			try {
+				requestObject = this.getUnmarshaller().unmarshal(requestObjectSource);
+			} catch (Exception e) {
+				LOG.error("Exception while unmarshalling request: ", e);
+				throw new AditInternalException("Error in request SOAP envelope: check parameters and XML syntax.");
+			}
 			
 			// Excecute business logic
 			responseObject = invokeInternal(requestObject);
