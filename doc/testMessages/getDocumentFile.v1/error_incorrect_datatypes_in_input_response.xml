@@ -14,12 +14,12 @@
                <adit:file_id>fail</adit:file_id>
             </adit:file_id_list>
          </paring>
-         <GetDocumentFileResponse xmlns="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid">
+         <keha>
             <success>false</success>
             <adit:messages>
                <adit:message lang="en">Castor unmarshalling exception: The following error occured while trying to unmarshal field documentId.; nested exception is org.exolab.castor.xml.MarshalException: The following error occured while trying to unmarshal field documentId.</adit:message>
             </adit:messages>
-         </GetDocumentFileResponse>
+         </keha>
       </adit:GetDocumentFileResponse>
    </SOAP-ENV:Body>
 </SOAP-ENV:Envelope>

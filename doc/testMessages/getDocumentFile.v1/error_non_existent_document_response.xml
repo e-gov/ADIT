@@ -14,12 +14,12 @@
                <adit:file_id>44</adit:file_id>
             </adit:file_id_list>
          </paring>
-         <GetDocumentFileResponse xmlns="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid">
+         <keha>
             <success>false</success>
             <adit:messages>
                <adit:message lang="en">Document does not exist. Document ID: 12,345,678</adit:message>
             </adit:messages>
-         </GetDocumentFileResponse>
+         </keha>
       </adit:GetDocumentFileResponse>
    </SOAP-ENV:Body>
 </SOAP-ENV:Envelope>

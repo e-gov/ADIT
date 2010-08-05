@@ -14,12 +14,12 @@
                <adit:file_id>12345678</adit:file_id>
             </adit:file_id_list>
          </paring>
-         <GetDocumentFileResponse xmlns="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid">
+         <keha>
             <success>false</success>
             <adit:messages>
                <adit:message lang="en">Following files do not exist or are deleted: 12345678</adit:message>
             </adit:messages>
-         </GetDocumentFileResponse>
+         </keha>
       </adit:GetDocumentFileResponse>
    </SOAP-ENV:Body>
 </SOAP-ENV:Envelope>
