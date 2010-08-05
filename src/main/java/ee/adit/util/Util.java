@@ -390,6 +390,14 @@ public class Util {
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-d'T'HH:mm:ss");
 		return df.format(date);
 	}
+	
+	public static String dateToEstonianDateString(Date date) {
+		if (date == null) {
+			return "";
+		} else {
+			return (new SimpleDateFormat("dd.MM.yyyy HH:mm")).format(date);
+		}
+	}
     
     public static FileSplitResult splitOutTags(String xmlFileName, String tagLocalName, boolean noMainFile, boolean noSubFiles, boolean replaceMain, boolean removeSubFileRootTags) {
         FileSplitResult result = new FileSplitResult();

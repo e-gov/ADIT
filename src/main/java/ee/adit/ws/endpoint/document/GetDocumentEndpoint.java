@@ -1,5 +1,6 @@
 package ee.adit.ws.endpoint.document;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -14,7 +15,6 @@ import ee.adit.dao.pojo.DocumentHistory;
 import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.exception.AditException;
 import ee.adit.pojo.ArrayOfMessage;
-import ee.adit.pojo.ConfirmSignatureResponse;
 import ee.adit.pojo.GetDocumentRequest;
 import ee.adit.pojo.GetDocumentResponse;
 import ee.adit.pojo.GetDocumentResponseDocument;
@@ -51,6 +51,7 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
 		this.documentService = documentService;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	protected Object invokeInternal(Object requestObject) throws Exception {
 		GetDocumentResponse response = new GetDocumentResponse();
@@ -224,7 +225,7 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
 						}
 					} else {
 						LOG.debug("Requested document is deflated. Document ID: " + request.getDocumentId());
-						String errorMessage = this.getMessageSource().getMessage("document.deflated", new Object[] { doc.getDeflateDate() }, Locale.ENGLISH);
+						String errorMessage = this.getMessageSource().getMessage("document.deflated", new Object[] { Util.dateToEstonianDateString(doc.getDeflateDate()) }, Locale.ENGLISH);
 						throw new AditException(errorMessage);
 					}
 				} else {
