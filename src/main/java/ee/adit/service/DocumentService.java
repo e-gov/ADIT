@@ -19,8 +19,6 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.xml.transform.TransformerException;
-
 import org.apache.fop.apps.MimeConstants;
 import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
@@ -34,9 +32,6 @@ import org.springframework.context.MessageSource;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.transaction.annotation.Transactional;
-import org.xml.sax.InputSource;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 import dvk.api.DVKAPI;
 import dvk.api.container.v2.ContainerVer2;
@@ -70,7 +65,6 @@ import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.OutputDocumentFile;
 import ee.adit.pojo.SaveDocumentRequestAttachment;
 import ee.adit.util.Configuration;
-import ee.adit.util.SaveDocumentAttachmentHandler;
 import ee.adit.util.Util;
 
 public class DocumentService {
@@ -1370,6 +1364,98 @@ public class DocumentService {
 		} catch (Exception e) {
 			LOG.error("Error while constructing DVK response message: ", e);
 			throw e;
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Transactional
+	public void DeleteDocument(long documentId, String userCode, String applicationName) throws Exception {
+		Document doc = this.getDocumentDAO().getDocument(documentId);
+		
+		// Check whether or not the document exists
+		if (doc == null) {
+			String errorMessage = this.getMessageSource().getMessage("document.nonExistent", new Object[] { documentId }, Locale.ENGLISH);
+			throw new AditException(errorMessage);
+		}
+		
+		// Make sure that the document is not already deleted
+		// NB! doc.getDeleted() can be NULL
+		if ((doc.getDeleted() != null) && doc.getDeleted()) {
+			String errorMessage = this.getMessageSource().getMessage("request.deleteDocument.document.deleted", new Object[] { documentId }, Locale.ENGLISH);
+			throw new AditException(errorMessage);
+		}
+		
+		boolean saveDocument = false;
+		
+		// Kontrollime, kas dokument kuulub päringu käivitanud kasutajale
+		if (doc.getCreatorCode().equalsIgnoreCase(userCode)) {
+			// Kontrollime, ega dokument ei ole lukustatud.
+			if ((doc.getLocked() == null) || !doc.getLocked()) {
+				// Failide sisu asendamine failide MD5 räsikoodiga
+				if ((doc.getDocumentSharings() == null) || (doc.getDocumentSharings().size() < 1)) {
+					Iterator it = doc.getDocumentFiles().iterator();
+					while (it.hasNext()) {
+						DocumentFile docFile = (DocumentFile)it.next();
+						String resultCode = this.deflateDocumentFile(doc.getId(), docFile.getId(), true);
+						
+						// Kontrollime üle võimalikud veaolukorrad
+						if (resultCode.equalsIgnoreCase("already_deleted")) {
+							String errorMessage = this.getMessageSource().getMessage("file.isDeleted", new Object[] { docFile.getId() }, Locale.ENGLISH);
+							throw new AditException(errorMessage);
+						} else if (resultCode.equalsIgnoreCase("file_does_not_exist")) {
+							String errorMessage = this.getMessageSource().getMessage("file.nonExistent", new Object[] { docFile.getId() }, Locale.ENGLISH);
+							throw new AditException(errorMessage);
+						} else if (resultCode.equalsIgnoreCase("file_does_not_belong_to_document")) {
+							String errorMessage = this.getMessageSource().getMessage("file.doesNotBelongToDocument", new Object[] { docFile.getId(), doc.getId() }, Locale.ENGLISH);
+							throw new AditException(errorMessage);
+						}
+					}
+				}
+				
+				// Märgime dokumendi kustutatuks
+				doc.setDeleted(true);
+				saveDocument = true;
+			} else {
+				String errorMessage = this.getMessageSource().getMessage("request.deleteDocument.document.locked", new Object[] { documentId }, Locale.ENGLISH);
+				throw new AditException(errorMessage);
+			}
+		} else if (doc.getDocumentSharings() != null) {
+			// Kontrollime, kas dokument on kasutajale jagatud.
+			boolean changesMade = false;
+			Iterator it = doc.getDocumentSharings().iterator();
+			while (it.hasNext()) {
+				DocumentSharing sharing = (DocumentSharing)it.next();
+				// TODO: Kas siin ikka peaks saama kustutada DVK kaudu saatmise andmeid?
+				if (sharing.getUserCode().equalsIgnoreCase(userCode)) {
+					doc.getDocumentSharings().remove(sharing);
+					sharing.setDocumentId(0);
+					changesMade = true;
+				}
+			}
+			if (changesMade) {
+				saveDocument = true;
+			} else {
+				String errorMessage = this.getMessageSource().getMessage("document.doesNotBelongToUser", new Object[] { documentId, userCode }, Locale.ENGLISH);
+				throw new AditException(errorMessage);
+			}
+		} else {
+			String errorMessage = this.getMessageSource().getMessage("document.doesNotBelongToUser", new Object[] { documentId, userCode }, Locale.ENGLISH);
+			throw new AditException(errorMessage);
+		}
+		
+		// Salvestame dokumendi
+		if (saveDocument) {
+			// Lisame kustutamise ajaloosündmuse
+			DocumentHistory historyEvent = new DocumentHistory();
+			historyEvent.setRemoteApplicationName(applicationName);
+			historyEvent.setDocumentId(doc.getId());
+			historyEvent.setDocumentHistoryType(DocumentService.HistoryType_Delete);
+			historyEvent.setEventDate(new Date());
+			historyEvent.setUserCode(userCode);
+			doc.getDocumentHistories().add(historyEvent);
+			
+			// Salvestame tehtud muudatused
+			this.getDocumentDAO().save(doc, null, Long.MAX_VALUE, null);
 		}
 	}
 

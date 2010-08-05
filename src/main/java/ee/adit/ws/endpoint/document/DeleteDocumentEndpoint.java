@@ -16,7 +16,6 @@ import ee.adit.dao.pojo.DocumentHistory;
 import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.exception.AditException;
 import ee.adit.pojo.ArrayOfMessage;
-import ee.adit.pojo.ConfirmSignatureResponse;
 import ee.adit.pojo.DeleteDocumentRequest;
 import ee.adit.pojo.DeleteDocumentResponse;
 import ee.adit.pojo.Message;
@@ -52,6 +51,7 @@ public class DeleteDocumentEndpoint extends AbstractAditBaseEndpoint {
 		this.documentService = documentService;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional
 	protected Object invokeInternal(Object requestObject) throws Exception {
@@ -109,86 +109,7 @@ public class DeleteDocumentEndpoint extends AbstractAditBaseEndpoint {
 				throw new AditException(errorMessage);
 			}
 				
-			Document doc = this.documentService.getDocumentDAO().getDocument(request.getDocumentId());
-			
-			// Kontrollime, kas ID-le vastav dokument on olemas
-			if (doc != null) {
-				boolean saveDocument = false;
-				
-				// Kontrollime, kas dokument kuulub päringu käivitanud kasutajale
-				if (doc.getCreatorCode().equalsIgnoreCase(userCode)) {
-					// Kontrollime, ega dokument ei ole lukustatud.
-					if (!doc.getLocked()) {
-						// Failide sisu asendamine failide MD5 räsikoodiga
-						if ((doc.getDocumentSharings() == null) || (doc.getDocumentSharings().size() < 1)) {
-							Iterator it = doc.getDocumentFiles().iterator();
-							while (it.hasNext()) {
-								DocumentFile docFile = (DocumentFile)it.next();
-								String resultCode = this.documentService.deflateDocumentFile(doc.getId(), docFile.getId(), true);
-								
-								// Kontrollime üle võimalikud veaolukorrad
-								if (resultCode.equalsIgnoreCase("already_deleted")) {
-									String errorMessage = this.getMessageSource().getMessage("file.isDeleted", new Object[] { docFile.getId() }, Locale.ENGLISH);
-									throw new AditException(errorMessage);
-								} else if (resultCode.equalsIgnoreCase("file_does_not_exist")) {
-									String errorMessage = this.getMessageSource().getMessage("file.nonExistent", new Object[] { docFile.getId() }, Locale.ENGLISH);
-									throw new AditException(errorMessage);
-								} else if (resultCode.equalsIgnoreCase("file_does_not_belong_to_document")) {
-									String errorMessage = this.getMessageSource().getMessage("file.doesNotBelongToDocument", new Object[] { docFile.getId(), doc.getId() }, Locale.ENGLISH);
-									throw new AditException(errorMessage);
-								}
-							}
-						}
-						
-						// Märgime dokumendi kustutatuks
-						doc.setDeleted(true);
-						saveDocument = true;
-					} else {
-						String errorMessage = this.getMessageSource().getMessage("request.deleteDocument.document.locked", new Object[] { request.getDocumentId() }, Locale.ENGLISH);
-						throw new AditException(errorMessage);
-					}
-				} else if (doc.getDocumentSharings() != null) {
-					// Kontrollime, kas dokument on kasutajale jagatud.
-					boolean changesMade = false;
-					Iterator it = doc.getDocumentSharings().iterator();
-					while (it.hasNext()) {
-						DocumentSharing sharing = (DocumentSharing)it.next();
-						// TODO: Kas siin ikka peaks saama kustutada DVK kaudu saatmise andmeid?
-						if (sharing.getUserCode().equalsIgnoreCase(userCode)) {
-							doc.getDocumentSharings().remove(sharing);
-							sharing.setDocumentId(0);
-							changesMade = true;
-						}
-					}
-					if (changesMade) {
-						saveDocument = true;
-					} else {
-						String errorMessage = this.getMessageSource().getMessage("document.doesNotBelongToUser", new Object[] { request.getDocumentId(), userCode }, Locale.ENGLISH);
-						throw new AditException(errorMessage);
-					}
-				} else {
-					String errorMessage = this.getMessageSource().getMessage("document.doesNotBelongToUser", new Object[] { request.getDocumentId(), userCode }, Locale.ENGLISH);
-					throw new AditException(errorMessage);
-				}
-				
-				// Salvestame dokumendi
-				if (saveDocument) {
-					// Lisame kustutamise ajaloosündmuse
-					DocumentHistory historyEvent = new DocumentHistory();
-					historyEvent.setRemoteApplicationName(applicationName);
-					historyEvent.setDocumentId(doc.getId());
-					historyEvent.setDocumentHistoryType(DocumentService.HistoryType_Delete);
-					historyEvent.setEventDate(new Date());
-					historyEvent.setUserCode(userCode);
-					doc.getDocumentHistories().add(historyEvent);
-					
-					// Salvestame tehtud muudatused
-					this.documentService.getDocumentDAO().save(doc, null, Long.MAX_VALUE, null);
-				}
-			} else {
-				String errorMessage = this.getMessageSource().getMessage("document.nonExistent", new Object[] { request.getDocumentId() }, Locale.ENGLISH);
-				throw new AditException(errorMessage);
-			}
+			this.getDocumentService().DeleteDocument(request.getDocumentId(), userCode, applicationName);
 			
 			// Set response messages
 			response.setSuccess(new Success(true));
