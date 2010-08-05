@@ -120,7 +120,6 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 							response.setUserList(getJoinedResponseUserList);
 							
 							String message = message = this.getMessageSource().getMessage("request.getJoined.success", new Object[] { userList.size() }, Locale.ENGLISH);
-							
 							response.setSuccess(new Success(true));
 							messages.addMessage(new Message("en", message));
 							
