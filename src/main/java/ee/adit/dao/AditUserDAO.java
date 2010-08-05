@@ -44,7 +44,7 @@ public class AditUserDAO extends HibernateDaoSupport {
 		DetachedCriteria dt = DetachedCriteria.forClass(AditUser.class, "aditUser");
 		dt.add(Property.forName("aditUser.active").eq(new Boolean(true)));
 		dt.addOrder(Order.asc("aditUser.fullName"));
-		result = this.getHibernateTemplate().findByCriteria(dt, 0, maxResults);
+		result = this.getHibernateTemplate().findByCriteria(dt, startIndex, maxResults);
 		
 		return result;
 	}
