@@ -18,7 +18,6 @@ import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.DetachedCriteria;
@@ -346,13 +345,15 @@ public class DocumentDAO extends HibernateDaoSupport {
 			LOG.debug("Attempting to load document files for document " + documentId);
 			result = (OutputDocument) getHibernateTemplate().execute(new HibernateCallback() {
 				
+				@SuppressWarnings("unchecked")
 				@Override
 				public Object doInHibernate(Session session) throws HibernateException, SQLException {
 					Document doc = (Document)session.get(Document.class, documentId);
 					
-					List<DocumentFile> filesList = new ArrayList<DocumentFile>(doc.getDocumentFiles());
-			    	int itemIndex = 0;
-			    	for (DocumentFile docFile : filesList) {
+					int itemIndex = 0;
+					Iterator it = doc.getDocumentFiles().iterator();
+					while (it.hasNext()) {
+						DocumentFile docFile = (DocumentFile)it.next();
 			    		if (!docFile.getDeleted()) {
 			        		if ((fileIdList == null) || fileIdList.isEmpty() || fileIdList.contains(docFile.getId())) {
 			        			OutputDocumentFile f = new OutputDocumentFile();
@@ -430,6 +431,7 @@ public class DocumentDAO extends HibernateDaoSupport {
 		return result;
 	}
 	
+	@SuppressWarnings("unchecked")
 	private OutputDocument dbDocumentToOutputDocument(
 			Document doc,
 			final List<Long> fileIdList,
@@ -662,11 +664,7 @@ public class DocumentDAO extends HibernateDaoSupport {
 		return result;
 	}
 	
-	public Long save(final Document document, final long remainingDiskQuota, Session existingSession) throws Exception {
-		List<OutputDocumentFile> files = new ArrayList<OutputDocumentFile>(document.getDocumentFiles());
-		return save(document, files, remainingDiskQuota, existingSession);
-	}
-	
+	@SuppressWarnings("unchecked")
 	private Long saveImpl(final Document document, final List<OutputDocumentFile> files, long remainingDiskQuota, Session session) throws IOException {
 		if (document.getDocumentFiles() == null) {
 			document.setDocumentFiles(new HashSet<DocumentFile>());
@@ -948,6 +946,7 @@ public class DocumentDAO extends HibernateDaoSupport {
 		});
 	}
 	
+	@SuppressWarnings("unchecked")
 	public boolean checkIfDocumentExists(PojoMessage document, Saaja recipient) {
 		boolean result = true;
 		
@@ -961,6 +960,7 @@ public class DocumentDAO extends HibernateDaoSupport {
 		return result;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<Document> getDocumentsWithoutDVKStatus(Long dvkStatusId) {
 		List<Document> result = null;
 		String SQL = "from Document where documentDvkStatusId is null or documentDvkStatusId != " + dvkStatusId;

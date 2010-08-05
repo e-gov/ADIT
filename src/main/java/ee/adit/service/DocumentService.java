@@ -336,7 +336,7 @@ public class DocumentService {
 
 				// Document to database
 				try {
-					docDao.save(document, remainingDiskQuota, session);
+					docDao.save(document, filesList, remainingDiskQuota, session);
 				} catch (Exception e) {
 					throw new HibernateException(e);
 				}
