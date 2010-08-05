@@ -594,7 +594,7 @@
 	
 	<!-- Configuration -->
 	<bean id="configuration" class="ee.adit.util.Configuration">
-		<property name="getJoinedMaxResults" value="1000"/>
+		<property name="getJoinedMaxResults" value="2"/>
 		<property name="tempDir" value="C:\temp"/>
 		<property name="deleteTemporaryFiles" value="true"/>
 		<property name="schedulerEventTypeName" value="Minu dokumentide teavitus"/>

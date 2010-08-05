@@ -101,15 +101,20 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 					// Kontrollime, kas küsitud kirjete arv jääb maksimaalse lubatud vahemiku piiresse
 					BigInteger maxResults = request.getMaxResults();
 					BigInteger configurationMaxResults = this.getConfiguration().getGetJoinedMaxResults();
+					BigInteger startIndex = request.getStartIndex();
 					
 					if(maxResults == null) {
 						maxResults = configurationMaxResults;
 					}
 					
+					if(startIndex == null) {
+						startIndex = BigInteger.ZERO;
+					}
+					
 					if(maxResults.intValue() <= configurationMaxResults.intValue()) {
 						
 						// Teeme andmebaasist väljavõtte vastavalt offset-ile ja maksimaalsele ridade arvule
-						List<AditUser> userList = this.getUserService().listUsers(request.getStartIndex(), maxResults);
+						List<AditUser> userList = this.getUserService().listUsers(startIndex, maxResults);
 						
 						if(userList != null && userList.size() > 0) {
 							LOG.debug("Number of users found: " + userList.size());
@@ -170,11 +175,13 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 	
 	@Override
 	protected Object getResultForGenericException(Exception ex) {
+		LOG.debug("Constructing result for generic exception...");
 		GetJoinedResponse response = new GetJoinedResponse();
 		response.setSuccess(new Success(false));
 		ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
 		arrayOfMessage.getMessage().add(new Message("en", ex.getMessage()));
 		response.setMessages(arrayOfMessage);
+		LOG.debug("Returning generic exception response");
 		return response;
 	}
 
