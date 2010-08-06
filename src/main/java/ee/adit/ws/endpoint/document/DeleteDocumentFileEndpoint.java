@@ -10,10 +10,8 @@ import org.springframework.stereotype.Component;
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.DocumentHistory;
-import ee.adit.dao.pojo.DocumentType;
 import ee.adit.exception.AditException;
 import ee.adit.pojo.ArrayOfMessage;
-import ee.adit.pojo.ConfirmSignatureResponse;
 import ee.adit.pojo.DeleteDocumentFileRequest;
 import ee.adit.pojo.DeleteDocumentFileResponse;
 import ee.adit.pojo.Message;
@@ -49,6 +47,7 @@ public class DeleteDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 		this.documentService = documentService;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	protected Object invokeInternal(Object requestObject) throws Exception {
 		DeleteDocumentFileResponse response = new DeleteDocumentFileResponse();
@@ -111,6 +110,20 @@ public class DeleteDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 			if (doc != null) {
 				// Kontrollime, kas dokument kuulub päringu käivitanud kasutajale
 				if (doc.getCreatorCode().equalsIgnoreCase(userCode)) {
+					// Make sure that the document is not deleted
+					// NB! doc.getDeleted() can be NULL
+					if ((doc.getDeleted() != null) && doc.getDeleted()) {
+						String errorMessage = this.getMessageSource().getMessage("document.deleted", new Object[] { documentId }, Locale.ENGLISH);
+						throw new AditException(errorMessage);
+					}
+					
+					// Make sure that the document is not locked
+					// NB! doc.getLocked() can be NULL
+					if ((doc.getLocked() != null) && doc.getLocked()) {
+						String errorMessage = this.getMessageSource().getMessage("request.deleteDocumentFile.document.locked", new Object[] { documentId }, Locale.ENGLISH);
+						throw new AditException(errorMessage);
+					}
+					
 					String resultCode = this.documentService.deflateDocumentFile(request.getDocumentId(), request.getFileId(), true);
 					if (resultCode.equalsIgnoreCase("ok")) {
 						// Lisame ajaloosündmuse
