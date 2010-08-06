@@ -78,6 +78,12 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 					
 					Iterator<Attachment> i = this.getRequestMessage().getAttachments();
 					
+					// If there are no attachments
+					if(!i.hasNext()) {
+						String errorMessage = this.getMessageSource().getMessage("request.attachments.missing", new Object[] { }, Locale.ENGLISH);
+						throw new AditException(errorMessage);
+					}
+					
 					int attachmentCount = 0;
 					while(i.hasNext()) {
 						if(attachmentCount == 0) {
