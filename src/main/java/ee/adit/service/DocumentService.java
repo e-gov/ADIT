@@ -1529,6 +1529,7 @@ public class DocumentService {
 		doc.setDeflateDate(new Date());
 		doc.setLocked(true);
 		doc.setLockingDate(new Date());
+		doc.setSignable(false);
 		saveDocument = true;
 		
 		// Salvestame dokumendi
