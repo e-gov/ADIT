@@ -1459,6 +1459,94 @@ public class DocumentService {
 		}
 	}
 
+	/**
+	 * Deflates document matching the given ID.
+	 * Deflation means that document file contents will be replaced
+	 * with their MD5 hash codes. Document and individual files will
+	 * be marked as "deflated".  
+	 * 
+	 * @param documentId		ID of document to be deflated
+	 * @param userCode			Code of the user who executed current request
+	 * @param applicationName	Short name pf application that executed current request
+	 * @throws Exception		
+	 */
+	@SuppressWarnings("unchecked")
+	@Transactional
+	public void DeflateDocument(long documentId, String userCode, String applicationName) throws Exception {
+		Document doc = this.getDocumentDAO().getDocument(documentId);
+		
+		// Check whether or not the document exists
+		if (doc == null) {
+			String errorMessage = this.getMessageSource().getMessage("document.nonExistent", new Object[] { documentId }, Locale.ENGLISH);
+			throw new AditException(errorMessage);
+		}
+		
+		// Make sure that the document is not deleted
+		// NB! doc.getDeleted() can be NULL
+		if ((doc.getDeleted() != null) && doc.getDeleted()) {
+			String errorMessage = this.getMessageSource().getMessage("document.deleted", new Object[] { documentId }, Locale.ENGLISH);
+			throw new AditException(errorMessage);
+		}
+		
+		// Make sure that the document is not already deflated
+		// NB! doc.getDeflated() can be NULL
+		if ((doc.getDeflated() != null) && doc.getDeflated()) {
+			String errorMessage = this.getMessageSource().getMessage("document.deflated", new Object[] { Util.dateToEstonianDateString(doc.getDeflateDate()) }, Locale.ENGLISH);
+			throw new AditException(errorMessage);
+		}
+		
+		// Check whether or not the document belongs to user
+		if (!doc.getCreatorCode().equalsIgnoreCase(userCode)) {
+			String errorMessage = this.getMessageSource().getMessage("document.doesNotBelongToUser", new Object[] { documentId, userCode }, Locale.ENGLISH);
+			throw new AditException(errorMessage);
+
+		}
+		
+		boolean saveDocument = false;
+		
+		// Replace file contents with their MD5 hash codes
+		Iterator it = doc.getDocumentFiles().iterator();
+		while (it.hasNext()) {
+			DocumentFile docFile = (DocumentFile)it.next();
+			String resultCode = deflateDocumentFile(doc.getId(), docFile.getId(), false);
+			
+			// Handle possible exceptions
+			if (!resultCode.equalsIgnoreCase("already_deleted")) {
+				// Ignore files that are already deleted
+				
+				if (resultCode.equalsIgnoreCase("file_does_not_exist")) {
+					String errorMessage = this.getMessageSource().getMessage("file.nonExistent", new Object[] { docFile.getId() }, Locale.ENGLISH);
+					throw new AditException(errorMessage);
+				} else if (resultCode.equalsIgnoreCase("file_does_not_belong_to_document")) {
+					String errorMessage = this.getMessageSource().getMessage("file.doesNotBelongToDocument", new Object[] { docFile.getId(), doc.getId() }, Locale.ENGLISH);
+					throw new AditException(errorMessage);
+				}
+			}
+		}
+		
+		// Märgime dokumendi tühjendatuks ja lukustatuks
+		doc.setDeflated(true);
+		doc.setDeflateDate(new Date());
+		doc.setLocked(true);
+		doc.setLockingDate(new Date());
+		saveDocument = true;
+		
+		// Salvestame dokumendi
+		if (saveDocument) {
+			// Lisame kustutamise ajaloosündmuse
+			DocumentHistory historyEvent = new DocumentHistory();
+			historyEvent.setRemoteApplicationName(applicationName);
+			historyEvent.setDocumentId(doc.getId());
+			historyEvent.setDocumentHistoryType(DocumentService.HistoryType_Deflate);
+			historyEvent.setEventDate(new Date());
+			historyEvent.setUserCode(userCode);
+			doc.getDocumentHistories().add(historyEvent);
+			
+			// Salvestame tehtud muudatused
+			this.getDocumentDAO().save(doc, null, Long.MAX_VALUE, null);
+		}
+	}
+	
 	public MessageSource getMessageSource() {
 		return messageSource;
 	}

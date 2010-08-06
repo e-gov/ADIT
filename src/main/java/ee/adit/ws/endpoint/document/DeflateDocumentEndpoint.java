@@ -106,68 +106,7 @@ public class DeflateDocumentEndpoint extends AbstractAditBaseEndpoint {
 				throw new AditException(errorMessage);
 			}
 				
-			Document doc = this.documentService.getDocumentDAO().getDocument(request.getDocumentId());
-			
-			// Kontrollime, kas ID-le vastav dokument on olemas
-			if (doc != null) {
-				boolean saveDocument = false;
-				
-				// Kontrollime, kas dokument kuulub päringu käivitanud kasutajale
-				if (doc.getCreatorCode().equalsIgnoreCase(userCode)) {
-					// Kontrollime, ega dokument ei ole juba tühjendatud.
-					if (!doc.getDeflated()) {
-						// Failide sisu asendamine failide MD5 räsikoodiga
-						Iterator it = doc.getDocumentFiles().iterator();
-						while (it.hasNext()) {
-							DocumentFile docFile = (DocumentFile)it.next();
-							String resultCode = this.documentService.deflateDocumentFile(doc.getId(), docFile.getId(), false);
-							
-							// Kontrollime üle võimalikud veaolukorrad
-							if (resultCode.equalsIgnoreCase("already_deleted")) {
-								String errorMessage = this.getMessageSource().getMessage("file.isDeleted", new Object[] { docFile.getId() }, Locale.ENGLISH);
-								throw new AditException(errorMessage);
-							} else if (resultCode.equalsIgnoreCase("file_does_not_exist")) {
-								String errorMessage = this.getMessageSource().getMessage("file.nonExistent", new Object[] { docFile.getId() }, Locale.ENGLISH);
-								throw new AditException(errorMessage);
-							} else if (resultCode.equalsIgnoreCase("file_does_not_belong_to_document")) {
-								String errorMessage = this.getMessageSource().getMessage("file.doesNotBelongToDocument", new Object[] { docFile.getId(), doc.getId() }, Locale.ENGLISH);
-								throw new AditException(errorMessage);
-							}
-						}
-						
-						// Märgime dokumendi tühjendatuks ja lukustatuks
-						doc.setDeflated(true);
-						doc.setDeflateDate(new Date());
-						doc.setLocked(true);
-						doc.setLockingDate(new Date());
-						saveDocument = true;
-					} else {
-						String errorMessage = this.getMessageSource().getMessage("request.deflateDocument.document.alreadyDeflated", new Object[] { request.getDocumentId() }, Locale.ENGLISH);
-						throw new AditException(errorMessage);
-					}
-				} else {
-					String errorMessage = this.getMessageSource().getMessage("document.doesNotBelongToUser", new Object[] { request.getDocumentId(), userCode }, Locale.ENGLISH);
-					throw new AditException(errorMessage);
-				}
-				
-				// Salvestame dokumendi
-				if (saveDocument) {
-					// Lisame kustutamise ajaloosündmuse
-					DocumentHistory historyEvent = new DocumentHistory();
-					historyEvent.setRemoteApplicationName(applicationName);
-					historyEvent.setDocumentId(doc.getId());
-					historyEvent.setDocumentHistoryType(DocumentService.HistoryType_Deflate);
-					historyEvent.setEventDate(new Date());
-					historyEvent.setUserCode(userCode);
-					doc.getDocumentHistories().add(historyEvent);
-					
-					// Salvestame tehtud muudatused
-					this.documentService.getDocumentDAO().save(doc, null, Long.MAX_VALUE, null);
-				}
-			} else {
-				String errorMessage = this.getMessageSource().getMessage("document.nonExistent", new Object[] { request.getDocumentId() }, Locale.ENGLISH);
-				throw new AditException(errorMessage);
-			}
+			this.getDocumentService().DeflateDocument(request.getDocumentId(), userCode, applicationName);
 			
 			// Set response messages
 			response.setSuccess(new Success(true));
