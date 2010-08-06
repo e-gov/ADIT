@@ -131,12 +131,14 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 							getJoinedResponseUserList.setHref("cid:" + contentID);
 							response.setUserList(getJoinedResponseUserList);
 							
-							String message = message = this.getMessageSource().getMessage("request.getJoined.success", new Object[] { userList.size() }, Locale.ENGLISH);
+							String message = this.getMessageSource().getMessage("request.getJoined.success", new Object[] { userList.size() }, Locale.ENGLISH);
 							response.setSuccess(new Success(true));
 							messages.addMessage(new Message("en", message));
 							
 						} else {
 							LOG.warn("No users were found.");
+							String message = this.getMessageSource().getMessage("request.getJoined.noUsersFound", new Object[] { }, Locale.ENGLISH);
+							throw new AditException(message);
 						}						
 						
 					} else {
