@@ -141,7 +141,6 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 							String errorMessage = this.getMessageSource().getMessage("request.attachments.tooMany", new Object[] { applicationName }, Locale.ENGLISH);
 							throw new AditException(errorMessage);
 						}
-						attachmentCount++;
 					}					
 				} else {
 					String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.read", new Object[] { applicationName }, Locale.ENGLISH);
