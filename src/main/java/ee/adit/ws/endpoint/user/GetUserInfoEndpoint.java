@@ -92,7 +92,14 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 							LOG.debug("Attachment unzipped to temporary file: " + xmlFile);
 							
 							// Unmarshal the XML from the temporary file
-							Object unmarshalledObject = unMarshal(xmlFile);
+							Object unmarshalledObject = null;
+							try {
+								unmarshalledObject = unMarshal(xmlFile);
+							} catch (Exception e) {
+								LOG.error("Error while unmarshalling SOAP attachment: ", e);
+								String errorMessage = this.getMessageSource().getMessage("request.attachments.invalidFormat", new Object[] { }, Locale.ENGLISH);
+								throw new AditException(errorMessage);
+							}
 							
 							// Check if the marshalling result is what we expected
 							if(unmarshalledObject != null) {
