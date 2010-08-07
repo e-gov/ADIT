@@ -171,6 +171,8 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 					statusMessages.addMessage(new Message("en", this.getMessageSource().getMessage("request.shareDocument.recipientStatus.recipient.inactive", new Object[] { }, Locale.ENGLISH)));
 				} else if (sharingExists(doc.getDocumentSharings(), recipientCode)) {
 					statusMessages.addMessage(new Message("en", this.getMessageSource().getMessage("request.shareDocument.recipientStatus.alreadySharedToUser", new Object[] { recipientCode }, Locale.ENGLISH)));
+				} else if (recipient.getDvkOrgCode() != null && !"".equalsIgnoreCase(recipient.getDvkOrgCode().trim())) {
+					statusMessages.addMessage(new Message("en", this.getMessageSource().getMessage("request.shareDocument.recipient.usesDVK", new Object[] { recipientCode }, Locale.ENGLISH)));
 				} else {
 					DocumentSharing sharing = new DocumentSharing();
 					sharing.setCreationDate(requestDate.getTime());
@@ -180,12 +182,6 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 						sharing.setDocumentSharingType(DocumentService.SharingType_Sign);
 					} else {
 						sharing.setDocumentSharingType(DocumentService.SharingType_Share);
-					}
-					
-					// If the recipient is using DVK to exchange documents, mark the sharing type as "send_dvk"
-					if(recipient.getDvkOrgCode() != null && !"".equalsIgnoreCase(recipient.getDvkOrgCode())) {
-						String errorMessage = this.getMessageSource().getMessage("request.shareDocument.recipient.usesDVK", new Object[] { recipient.getUserCode() }, Locale.ENGLISH);
-						throw new AditException(errorMessage);
 					}
 					
 					sharing.setTaskDescription(request.getReasonForSharing());
@@ -268,8 +264,14 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 			}
 
 			// Set response messages
-			response.setSuccess(true);
-			messages.addMessage(new Message("en", this.getMessageSource().getMessage("request.shareDocument.success",	new Object[] { request.getDocumentId() }, Locale.ENGLISH)));
+			response.setSuccess(completeSuccess);
+			
+			if(completeSuccess) {
+				messages.addMessage(new Message("en", this.getMessageSource().getMessage("request.shareDocument.success",	new Object[] { request.getDocumentId() }, Locale.ENGLISH)));
+			} else {
+				messages.addMessage(new Message("en", this.getMessageSource().getMessage("request.shareDocument.fail",	new Object[] { request.getDocumentId() }, Locale.ENGLISH)));
+			}
+			
 			response.setMessages(messages);
 			response.setRecipientList(statusArray);
 		} catch (Exception e) {
