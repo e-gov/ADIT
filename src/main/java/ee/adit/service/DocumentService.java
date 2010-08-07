@@ -425,7 +425,7 @@ public class DocumentService {
 		final String tempDir = this.getConfiguration().getTempDir();
 
 		LOG.debug("Fetching documents for sending to DVK...");
-		Session session = this.getDocumentDAO().getSessionFactory().getCurrentSession();
+		Session session = this.getDocumentDAO().getSessionFactory().openSession();
 
 		Query query = session.createQuery(SQL_QUERY);
 		List<Document> documents = query.list();
