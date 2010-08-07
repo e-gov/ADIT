@@ -260,6 +260,8 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 				}
 			} else {
 				String errorMessage = this.getMessageSource().getMessage("request.shareDocument.recipients.noneSucceeded", new Object[] { request.getDocumentId(), userCode }, Locale.ENGLISH);
+				response.setMessages(messages);
+				response.setRecipientList(statusArray);
 				throw new AditException(errorMessage);
 			}
 
