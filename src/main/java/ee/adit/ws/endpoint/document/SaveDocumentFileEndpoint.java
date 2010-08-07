@@ -15,14 +15,12 @@ import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.exception.AditException;
 import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.ArrayOfMessage;
-import ee.adit.pojo.ConfirmSignatureResponse;
 import ee.adit.pojo.Message;
 import ee.adit.pojo.SaveDocumentFileRequest;
 import ee.adit.pojo.SaveDocumentFileRequestFile;
 import ee.adit.pojo.SaveDocumentFileResponse;
 import ee.adit.pojo.SaveDocumentRequestAttachment;
 import ee.adit.pojo.OutputDocumentFile;
-import ee.adit.pojo.SaveDocumentRequestDocument;
 import ee.adit.service.DocumentService;
 import ee.adit.service.UserService;
 import ee.adit.util.CustomXTeeHeader;
@@ -53,6 +51,7 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 		this.documentService = documentService;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	protected Object invokeInternal(Object requestObject) throws Exception {
 		SaveDocumentFileResponse response = new SaveDocumentFileResponse();
@@ -252,6 +251,7 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 		return response;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected Object getResultForGenericException(Exception ex) {
 		SaveDocumentFileResponse response = new SaveDocumentFileResponse();
@@ -259,6 +259,21 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 		ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
 		arrayOfMessage.getMessage().add(new Message("en", ex.getMessage()));
 		response.setMessages(arrayOfMessage);
+		LOG.debug("Adding request attachments to response object.");
+		try {
+			boolean cidAdded = false;
+			Iterator<Attachment> i = this.getRequestMessage().getAttachments();
+			while(i.hasNext()) {
+				Attachment attachment = i.next();
+				this.getResponseMessage().addAttachment(attachment.getContentId(), attachment.getDataHandler());
+				if (!cidAdded) {
+					response.setFile(new SaveDocumentFileRequestFile("cid:" + attachment.getContentId()));
+					cidAdded = true;
+				}
+			}
+		} catch (Exception e) {
+			LOG.error("Failed sending request attachments back within response object!", ex);
+		}
 		return response;
 	}
 	
