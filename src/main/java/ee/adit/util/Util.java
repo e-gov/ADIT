@@ -624,7 +624,8 @@ public class Util {
     }
     
     public static void joinSplitXML(String xmlFileName, String appendTags) {
-    	LOG.debug("Startinx XML file merge joinSplitXML()");
+    	LOG.debug("Starting XML file merge joinSplitXML()");
+    	
     	FileInputStream mainInStream = null;
         InputStreamReader mainInReader = null;
         BufferedReader mainReader = null;
@@ -715,11 +716,25 @@ public class Util {
             safeCloseWriter(mainOutWriter);
             safeCloseStream(mainOutStream);
 
+            mainInStream = null;
+            mainInReader = null;
+            mainReader = null;
+            subInStream = null;
+            subInReader = null;
+            subReader = null;
+            mainWriter = null;
+            mainOutWriter = null;
+            mainOutStream = null;
+            
             // Kustutame ajutise faili
-            LOG.debug("Deleting file \""+ xmlFileName +"\"");
-            (new File(xmlFileName)).delete();
+            LOG.debug("Deleting original file \""+ xmlFileName +"\"");
+            if (!deleteUntilSucceed(xmlFileName, 20)) {
+            	LOG.debug("Failed deleting original file \""+ xmlFileName +"\"");
+            }
             LOG.debug("Saving file \""+ resultFile +"\" as \""+ xmlFileName +"\"");
-            (new File(resultFile)).renameTo(new File(xmlFileName));
+            if (!renameUntilSucceed(resultFile, xmlFileName, 20)) {
+            	LOG.debug("Failed Saving file \""+ resultFile +"\" as \""+ xmlFileName +"\"");
+            }
         } catch (Exception ex) {
         	LOG.error("Failed joining separate files into one XML file!", ex);
         } finally {
@@ -808,5 +823,38 @@ public class Util {
             catch (Exception ex) {}
             finally { s = null; }
         }
+    }
+    
+    public static boolean deleteUntilSucceed(String fileName, int timeoutSeconds) throws InterruptedException {
+    	File f = new File(fileName);
+    	
+    	int elapsedTime = 0;
+    	if (f.exists() && f.isFile()) {
+    		while (!f.delete() && (elapsedTime < timeoutSeconds)) {
+    			Thread.sleep(1000);
+    			elapsedTime++;
+    		}
+    	} else {
+    		return false;
+    	}
+    	
+    	return (elapsedTime == timeoutSeconds);
+    }
+    
+    public static boolean renameUntilSucceed(String originalFileName, String destinationFileName, int timeoutSeconds) throws InterruptedException {
+    	File of = new File(originalFileName);
+    	File df = new File(destinationFileName);
+    	
+    	int elapsedTime = 0;
+    	if (of.exists() && of.isFile() && !df.exists()) {
+    		while (!of.renameTo(df) && (elapsedTime < timeoutSeconds)) {
+    			Thread.sleep(1000);
+    			elapsedTime++;
+    		}
+    	} else {
+    		return false;
+    	}
+    	
+    	return (elapsedTime == timeoutSeconds);
     }
 }

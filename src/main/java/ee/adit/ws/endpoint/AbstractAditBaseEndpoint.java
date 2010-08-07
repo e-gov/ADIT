@@ -110,21 +110,23 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 	
 	public String marshal(Object object) {
 		String result = null;
+		FileOutputStream fos = null;
 		try {
-			
 			// Create outputStream
 			String tempFileName = Util.generateRandomFileName();
 			String tempFileFullName = this.getConfiguration().getTempDir() + File.separator + tempFileName;
-			FileOutputStream fos = new FileOutputStream(tempFileFullName);
+			fos = new FileOutputStream(tempFileFullName);
 			StreamResult reponseObjectResult = new StreamResult(fos);
 			
 			// Marshal to output
 			this.getMarshaller().marshal(object, reponseObjectResult);
 			
 			result = tempFileFullName;
-			
 		} catch (Exception e) {
 			LOG.error("Error while marshalling object: " + object.getClass());
+		} finally {
+			Util.safeCloseStream(fos);
+			fos = null;
 		}
 		
 		return result;
