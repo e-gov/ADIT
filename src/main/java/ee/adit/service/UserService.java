@@ -460,6 +460,25 @@ public class UserService {
 		return result.toString();
 	}
 	
+	public String getNotificationTypesString() {
+		List<NotificationType> notificationTypes = this.getNotificationTypeDAO().getNotificationTypeList();
+		StringBuffer result = new StringBuffer();
+		
+		if(notificationTypes == null || notificationTypes.size() == 0) {
+			return null;
+		} else {
+			for(int i = 0; i < notificationTypes.size(); i++) {
+				NotificationType notificationType = notificationTypes.get(i);
+				if(i > 0) {
+					result.append(" / ");
+				}
+				result.append(notificationType.getShortName());
+			}
+		}
+		
+		return result.toString();
+	}
+	
 	public RemoteApplicationDAO getRemoteApplicationDAO() {
 		return remoteApplicationDAO;
 	}
