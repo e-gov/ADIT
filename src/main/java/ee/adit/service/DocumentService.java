@@ -64,6 +64,7 @@ import ee.adit.exception.AditException;
 import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.OutputDocumentFile;
 import ee.adit.pojo.SaveDocumentRequestAttachment;
+import ee.adit.pojo.SaveItemInternalResult;
 import ee.adit.util.Configuration;
 import ee.adit.util.Util;
 
@@ -281,10 +282,10 @@ public class DocumentService {
 	}
 
 	@Transactional
-	public Long save(final SaveDocumentRequestAttachment attachmentDocument, final String creatorCode, final String remoteApplication, final long remainingDiskQuota) throws FileNotFoundException {
+	public SaveItemInternalResult save(final SaveDocumentRequestAttachment attachmentDocument, final String creatorCode, final String remoteApplication, final long remainingDiskQuota) throws FileNotFoundException {
 		final DocumentDAO docDao = this.getDocumentDAO();
 
-		return (Long) this.getDocumentDAO().getHibernateTemplate().execute(new HibernateCallback() {
+		return (SaveItemInternalResult) this.getDocumentDAO().getHibernateTemplate().execute(new HibernateCallback() {
 			public Object doInHibernate(Session session) throws HibernateException, SQLException {
 				Date creationDate = new Date();
 				Document document = new Document();
@@ -764,8 +765,19 @@ public class DocumentService {
 											}
 
 											// Save document
-											Long aditDocumentID = this.getDocumentDAO().save(aditDocument, tempDocuments, Long.MAX_VALUE, aditSession);
-											LOG.info("Document saved to ADIT database. ID: " + aditDocumentID);
+											SaveItemInternalResult saveResult = this.getDocumentDAO().save(aditDocument, tempDocuments, Long.MAX_VALUE, aditSession);
+											if (saveResult == null) {
+												throw new AditInternalException("Document saving failed!");
+											}
+											if (saveResult.isSuccess()) {
+												LOG.info("Document saved to ADIT database. ID: " + saveResult.getItemId());
+											} else {
+												if ((saveResult.getMessages() != null) && (saveResult.getMessages().size() > 0)) {
+													throw new AditInternalException(saveResult.getMessages().get(0).getValue());
+												} else {
+													throw new AditInternalException("Document saving failed!");
+												}
+											}
 
 											// Update document status to "sent"
 											// (recipient_status_id = "102") in

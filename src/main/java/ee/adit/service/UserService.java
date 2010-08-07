@@ -310,17 +310,29 @@ public class UserService {
 		this.getAditUserDAO().saveOrUpdate(user);		
 	}
 	
-	public long getRemainingDiskQuota(AditUser user) {
+	public long getRemainingDiskQuota(AditUser user, long globalDiskQuota) {
+		long totalDiskQuota = getTotalDiskQuota(user, globalDiskQuota);
+		long usedDiskSpace = getDocumentDAO().getUsedSpaceForUser(user.getUserCode());
+		long result = totalDiskQuota - usedDiskSpace;
+		LOG.debug("Remaining disk quota for user \""+ user.getUserCode() +"\" is " + result + " (total: "+ totalDiskQuota +", used: "+ usedDiskSpace +")");
+		return result;
+	}
+	
+	public long getTotalDiskQuota(AditUser user, long globalDiskQuota) {
 		long result = 0;
 		
 		if(user.getDiskQuota() != null) {
 			result = user.getDiskQuota();
 		} else {
 			Usertype usertype = this.getUsertypeDAO().getUsertype(user);
-			if(usertype != null) {
-				result = usertype.getDiskQuota();
+			if (usertype != null) {
+				if (usertype.getDiskQuota() != null) {
+					result = usertype.getDiskQuota();
+				} else {
+					result = globalDiskQuota;
+				}
 			} else {
-				throw new AditInternalException("Error getting remaining disk quota for user: " + user.getUserCode());
+				throw new AditInternalException("Error getting total disk quota for user: " + user.getUserCode());
 			}
 		}
 		

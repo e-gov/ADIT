@@ -14,6 +14,8 @@ public class Configuration {
 
 	private String dvkResponseMessageStylesheet;
 	
+	private Long globalDiskQuota;
+	
 	public BigInteger getGetJoinedMaxResults() {
 		return getJoinedMaxResults;
 	}
@@ -62,5 +64,13 @@ public class Configuration {
 
 	public void setDvkResponseMessageStylesheet(String dvkResponseMessageStylesheet) {
 		this.dvkResponseMessageStylesheet = dvkResponseMessageStylesheet;
+	}
+
+	public Long getGlobalDiskQuota() {
+		return globalDiskQuota;
+	}
+
+	public void setGlobalDiskQuota(Long globalDiskQuota) {
+		this.globalDiskQuota = globalDiskQuota;
 	}
 }

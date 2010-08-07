@@ -1,5 +1,6 @@
 package ee.adit.ws.endpoint.document;
 
+import java.io.File;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.Locale;
@@ -17,6 +18,7 @@ import ee.adit.pojo.Message;
 import ee.adit.pojo.SaveDocumentRequestAttachment;
 import ee.adit.pojo.SaveDocumentRequestDocument;
 import ee.adit.pojo.SaveDocumentResponse;
+import ee.adit.pojo.SaveItemInternalResult;
 import ee.adit.pojo.Success;
 import ee.adit.service.DocumentService;
 import ee.adit.service.UserService;
@@ -115,7 +117,12 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 					
 					// Decode base64-encoded files
 					if ((splitResult.getSubFiles() != null) && (splitResult.getSubFiles().size() > 0)) {
-						splitResult.getSubFiles();
+						for (String fileName : splitResult.getSubFiles()) {
+							String resultFile = Util.base64DecodeFile(fileName, this.getConfiguration().getTempDir());
+							// Replace encoded file with decoded file
+							(new File(fileName)).delete();
+							(new File(resultFile)).renameTo(new File(fileName));
+						}
 					}
 					
 					// Unmarshal the XML from the temporary file
@@ -131,7 +138,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 							this.getDocumentService().checkAttachedDocumentMetadataForNewDocument(document);
 							
 							// Kas kasutajal on piisavalt vaba kettaruumi
-							long remainingDiskQuota = this.getUserService().getRemainingDiskQuota(user);
+							long remainingDiskQuota = this.getUserService().getRemainingDiskQuota(user, this.getConfiguration().getGlobalDiskQuota());
 							
 							if(document.getId() != null && document.getId() != 0) {
 								// Determine whether or not this document can be modified
@@ -141,17 +148,34 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 								LOG.debug("Modifying document. ID: " + document.getId());
 								
 								// Document to database
-								documentId = this.getDocumentService().save(document, user.getUserCode(), applicationName, remainingDiskQuota);
-								LOG.debug("Document saved with ID: " + documentId.toString());
-								response.setDocumentId(documentId);
-								
+								SaveItemInternalResult saveResult = this.getDocumentService().save(document, user.getUserCode(), applicationName, remainingDiskQuota);
+								if (saveResult.isSuccess()) {
+									documentId = saveResult.getItemId();
+									LOG.debug("Document saved with ID: " + documentId.toString());
+									response.setDocumentId(documentId);
+								} else {
+									if ((saveResult.getMessages() != null) && (saveResult.getMessages().size() > 0)) {
+										throw new AditException(saveResult.getMessages().get(0).getValue());
+									} else {
+										throw new AditException("Document saving failed!");
+									}
+								}
 							} else {
 								LOG.debug("Adding new document. GUID: " + document.getGuid());
 								
 								// Document to database
-								documentId = this.getDocumentService().save(document, user.getUserCode(), applicationName, remainingDiskQuota);
-								LOG.debug("Document saved with ID: " + documentId.toString());
-								response.setDocumentId(documentId);
+								SaveItemInternalResult saveResult = this.getDocumentService().save(document, user.getUserCode(), applicationName, remainingDiskQuota);
+								if (saveResult.isSuccess()) {
+									documentId = saveResult.getItemId();
+									LOG.debug("Document saved with ID: " + documentId.toString());
+									response.setDocumentId(documentId);
+								} else {
+									if ((saveResult.getMessages() != null) && (saveResult.getMessages().size() > 0)) {
+										throw new AditException(saveResult.getMessages().get(0).getValue());
+									} else {
+										throw new AditException("Document saving failed!");
+									}
+								}
 							}
 							
 						} else {

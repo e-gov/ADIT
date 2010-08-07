@@ -104,7 +104,7 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 			}
 			
 			// Check user's disk quota
-			long remainingDiskQuota = this.getUserService().getRemainingDiskQuota(user);
+			long remainingDiskQuota = this.getUserService().getRemainingDiskQuota(user, this.getConfiguration().getGlobalDiskQuota());
 
 			// Kontrollime, et kasutajakonto ligipääs poleks peatatud (kasutaja lahkunud)
 			if ((user.getActive() == null) || !user.getActive()) {

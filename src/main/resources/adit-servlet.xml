@@ -357,7 +357,7 @@
 	<bean id="myDataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
-		<property name="url" value="jdbc:oracle:thin:@//localhost:1521/xe" />
+		<property name="url" value="jdbc:oracle:thin:@//localhost:1522/jaak" />
 		<property name="username" value="adit" />
 		<property name="password" value="adit" />
 	</bean>
@@ -393,10 +393,11 @@
 				<prop key="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</prop>
 				<prop key="hibernate.cache.provider_class">org.hibernate.cache.NoCacheProvider</prop>
 				<!-- 
-				This is not needed, because Spring manages the transactions itself, when transaction management is enabled.
+				This is not needed, because Spring manages the transactions itself, when transaction management is enabled.-->
 				<prop key="hibernate.current_session_context_class">thread</prop>
+
+				<!--<prop key="hibernate.transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</prop>
 				-->
-				<prop key="hibernate.transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</prop>
 				<prop key="hibernate.show_sql">false</prop>
 			</props>
 		</property>
@@ -439,6 +440,7 @@
 	
 	<bean id="documentDAO" class="ee.adit.dao.DocumentDAO">
 		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="messageSource" ref="messageSource"/>
 	</bean>	
 
 	<bean id="documentFileDAO" class="ee.adit.dao.DocumentFileDAO">
@@ -599,6 +601,9 @@
 		<property name="deleteTemporaryFiles" value="true"/>
 		<property name="schedulerEventTypeName" value="Minu dokumentide teavitus"/>
 		<property name="dvkResponseMessageStylesheet" value="C:\development\adit\trunk\src\main\resources\DVKresponseMessage.xsl"/>
+		
+		<!-- Üldine kettamahu piirang ühe kasutaja kohta baitides -->
+		<property name="globalDiskQuota" value="10240000"/>
 	</bean>
 
 </beans>

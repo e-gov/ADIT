@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
@@ -28,6 +29,7 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.Subqueries;
+import org.springframework.context.MessageSource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -46,9 +48,11 @@ import ee.adit.pojo.DocumentSharingData;
 import ee.adit.pojo.DocumentSharingRecipient;
 import ee.adit.pojo.GetDocumentListRequest;
 import ee.adit.pojo.GetDocumentListResponseAttachment;
+import ee.adit.pojo.Message;
 import ee.adit.pojo.OutputDocument;
 import ee.adit.pojo.OutputDocumentFile;
 import ee.adit.pojo.OutputDocumentFilesList;
+import ee.adit.pojo.SaveItemInternalResult;
 import ee.adit.service.DocumentService;
 import ee.adit.util.Util;
 import ee.sk.digidoc.DataFile;
@@ -60,18 +64,23 @@ import ee.sk.digidoc.factory.SAXDigiDocFactory;
 import ee.sk.utils.ConfigManager;
 
 public class DocumentDAO extends HibernateDaoSupport {
-
 	private static Logger LOG = Logger.getLogger(DocumentDAO.class);
+	private MessageSource messageSource;
 	
+	public MessageSource getMessageSource() {
+		return messageSource;
+	}
+
+	public void setMessageSource(MessageSource messageSource) {
+		this.messageSource = messageSource;
+	}
+
+	@SuppressWarnings("unchecked")
 	public long getUsedSpaceForUser(String userCode) {
-		
-		// TODO: add conditions for files - do not count in deflated/deleted
-		
 		Boolean deflated = new Boolean(true);
 		Boolean deleted = new Boolean(true);
 		
-		//List<DocumentFile> userFiles = this.getHibernateTemplate().find("from DocumentFile docFile where docFile.document in (select doc.id from Document doc where doc.creatorCode = ? and doc.deleted != ? and doc.deflated != ?)", new Object[] {userCode, new Boolean(true), new Boolean(true)});
-		List<DocumentFile> userFiles = this.getHibernateTemplate().find("from DocumentFile docFile where docFile.document in (select doc.id from Document doc where doc.creatorCode = ? and (doc.deflated is null or doc.deflated != ?) and (doc.deleted is null or doc.deleted != ?))", new Object[] {userCode, deflated, deleted});
+		List<DocumentFile> userFiles = this.getHibernateTemplate().find("from DocumentFile docFile where docFile.document in (select doc.id from Document doc where doc.creatorCode = ? and (doc.deflated is null or doc.deflated != ?) and (doc.deleted is null or doc.deleted != ?)) and (docFile.deleted is null or docFile.deleted != ?)", new Object[] {userCode, deflated, deleted, deleted});
 		
 		long result = 0;
 		for(DocumentFile docFile : userFiles) {
@@ -645,13 +654,13 @@ public class DocumentDAO extends HibernateDaoSupport {
 	 * @param files
 	 * @return
 	 */
-	public Long save(final Document document, final List<OutputDocumentFile> files, final long remainingDiskQuota, Session existingSession) throws Exception {
-		Long result = null;
+	public SaveItemInternalResult save(final Document document, final List<OutputDocumentFile> files, final long remainingDiskQuota, Session existingSession) throws Exception {
+		SaveItemInternalResult result = new SaveItemInternalResult();
 		
 		if ((existingSession != null) && (existingSession.isOpen())) {
 			return saveImpl(document, files, remainingDiskQuota, existingSession);
 		} else {
-			result = (Long) this.getHibernateTemplate().execute(new HibernateCallback() {
+			result = (SaveItemInternalResult) this.getHibernateTemplate().execute(new HibernateCallback() {
 				public Object doInHibernate(Session session) throws HibernateException,	SQLException {
 					try {
 						return saveImpl(document, files, remainingDiskQuota, session);
@@ -665,12 +674,17 @@ public class DocumentDAO extends HibernateDaoSupport {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private Long saveImpl(final Document document, final List<OutputDocumentFile> files, long remainingDiskQuota, Session session) throws IOException {
+	private SaveItemInternalResult saveImpl(final Document document, final List<OutputDocumentFile> files, final long remainingDiskQuota, Session session) throws IOException {
+		SaveItemInternalResult result = new SaveItemInternalResult();
+		
 		if (document.getDocumentFiles() == null) {
 			document.setDocumentFiles(new HashSet<DocumentFile>());
 		}
 		
+		
 		if (files != null) {
+			// Before actually saving files check data and disk quota
+			long requiredDiskSpace = 0;
 			for(int i = 0; i < files.size(); i++) {
 				OutputDocumentFile attachmentFile = files.get(i);
 
@@ -688,25 +702,55 @@ public class DocumentDAO extends HibernateDaoSupport {
 				}
 				
 				if (documentFile == null) {
-					throw new HibernateException("Document does not have a file with ID: " + attachmentFile.getId());
+					result.setSuccess(false);
+					Message msg = new Message("en", this.getMessageSource().getMessage("request.saveDocument.document.noFileToUpdate", new Object[] { attachmentFile.getId(), document.getId() }, Locale.ENGLISH));
+					result.getMessages().add(msg);
+					return result;
+				}
+				
+				long length = (new File(attachmentFile.getSysTempFile())).length();
+				if ((documentFile != null) && (documentFile.getId() > 0)) {
+					Long currentVersionLength = (documentFile.getFileSizeBytes() == null) ? 0 : documentFile.getFileSizeBytes();
+					requiredDiskSpace += (length - currentVersionLength);
+				} else {
+					requiredDiskSpace += length;
+				}
+			}
+			
+			// If disk quota is exceeded then return
+			// a result indicating failure
+			if (requiredDiskSpace > remainingDiskQuota) {
+				result.setSuccess(false);
+				Message msg = new Message("en", this.getMessageSource().getMessage("request.saveDocument.document.files.quotaExceeded", new Object[] { remainingDiskQuota, requiredDiskSpace }, Locale.ENGLISH));
+				result.getMessages().add(msg);
+				return result;
+			}
+			
+			// Save document and files
+			for(int i = 0; i < files.size(); i++) {
+				OutputDocumentFile attachmentFile = files.get(i);
+
+				DocumentFile documentFile = new DocumentFile();
+				if ((attachmentFile.getId() != null) && (attachmentFile.getId() > 0)) {
+					documentFile = null;
+					Iterator it = document.getDocumentFiles().iterator();
+					while (it.hasNext()) {
+						DocumentFile f = (DocumentFile)it.next();
+						if (f.getId() == attachmentFile.getId()) {
+							documentFile = f;
+							break;
+						}
+					}
 				}
 				
 				String fileName = attachmentFile.getSysTempFile();
-				String base64DecodedFile = Util.base64DecodeFile(fileName, (new File(fileName)).getParent());
 				FileInputStream fileInputStream = null;
 				try {
-					fileInputStream = new FileInputStream(base64DecodedFile);
+					fileInputStream = new FileInputStream(fileName);
 				} catch (FileNotFoundException e) {
 					LOG.error("Error saving document file: ", e);
 				}
-				long length = (new File(base64DecodedFile)).length();
-
-				
-				if (remainingDiskQuota < length) {
-					throw new HibernateException("Disc quota exceeded");
-				} else {
-					remainingDiskQuota -= length;
-				}
+				long length = (new File(fileName)).length();
 				
 				//Blob fileData = Hibernate.createBlob(fileInputStream, length, session);
 				Blob fileData = Hibernate.createBlob(fileInputStream, length);
@@ -724,7 +768,11 @@ public class DocumentDAO extends HibernateDaoSupport {
 		
 		session.saveOrUpdate(document);
 		LOG.debug("Saved document ID: " + document.getId());
-		return document.getId();
+		
+		result.setItemId(document.getId());
+		result.setSuccess(document.getId() > 0);
+		
+		return result;
 	}
 
 	
