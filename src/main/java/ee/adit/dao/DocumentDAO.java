@@ -431,6 +431,7 @@ public class DocumentDAO extends HibernateDaoSupport {
 	            }
 	        });
 		} catch (DataAccessException ex) {
+			LOG.error("Error while fetching document data from database: ", ex);
 			if (ex.getRootCause() instanceof AditException) {
 				throw (AditException) ex.getRootCause();
 			} else {
