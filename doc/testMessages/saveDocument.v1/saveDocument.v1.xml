@@ -1,6 +1,6 @@
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xtee="http://x-tee.riik.ee/xsd/xtee.xsd" xmlns:adit="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid">
    <soapenv:Header>
-     <xtee:nimi>ametlikud-dokumendid.sendDocument.v1</xtee:nimi>
+     <xtee:nimi>ametlikud-dokumendid.saveDocument.v1</xtee:nimi>
       <xtee:id>00000000000000</xtee:id>
       <xtee:isikukood>EE38407054916</xtee:isikukood>
       <xtee:andmekogu>ametlikud-dokumendid</xtee:andmekogu>
