@@ -184,7 +184,8 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 					
 					// If the recipient is using DVK to exchange documents, mark the sharing type as "send_dvk"
 					if(recipient.getDvkOrgCode() != null && !"".equalsIgnoreCase(recipient.getDvkOrgCode())) {
-						sharing.setDocumentSharingType(DocumentService.SharingType_SendDvk);
+						String errorMessage = this.getMessageSource().getMessage("request.shareDocument.recipient.usesDVK", new Object[] { recipient.getUserCode() }, Locale.ENGLISH);
+						throw new AditException(errorMessage);
 					}
 					
 					sharing.setTaskDescription(request.getReasonForSharing());
