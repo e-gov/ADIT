@@ -204,6 +204,12 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 					}
 					attachmentCount++;
 				}
+				
+				// If no attachments were found then throw exception
+				if (attachmentCount < 1) {
+					String errorMessage = this.getMessageSource().getMessage("request.saveDocumentFile.file.noFilesSupplied", new Object[] { }, Locale.ENGLISH);
+					throw new AditException(errorMessage);
+				}
 			} else {
 				LOG.debug("Requested document does not belong to user. Document ID: " + request.getDocumentId() + ", User ID: " + userCode);
 				String errorMessage = this.getMessageSource().getMessage("document.doesNotBelongToUser", new Object[] { request.getDocumentId(), userCode }, Locale.ENGLISH);

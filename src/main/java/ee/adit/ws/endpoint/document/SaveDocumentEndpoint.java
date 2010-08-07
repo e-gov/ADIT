@@ -167,6 +167,12 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 				attachmentCount++;
 			}
 			
+			// If no attachments were found then throw exception
+			if (attachmentCount < 1) {
+				String errorMessage = this.getMessageSource().getMessage("request.saveDocument.document.noDocumentsSupplied", new Object[] { }, Locale.ENGLISH);
+				throw new AditException(errorMessage);
+			}
+			
 			// Set response messages
 			response.setSuccess(new Success(true));
 			messages.addMessage(new Message("en", this.getMessageSource().getMessage("request.saveDocument.success", new Object[] { }, Locale.ENGLISH)));

@@ -88,16 +88,17 @@ public class UserService {
 		int result = 0;
 		
 		RemoteApplication remoteApplication = this.getRemoteApplicationDAO().getByShortName(remoteApplicationShortName);
-		if(remoteApplication != null) {
-			if(remoteApplication.getCanWrite()) {
+		if (remoteApplication != null) {
+			if ((remoteApplication.getCanWrite() != null) && remoteApplication.getCanWrite()) {
 				result = 2;
-			} else if(remoteApplication.getCanRead()) {
+			} else if ((remoteApplication.getCanRead() != null) && remoteApplication.getCanRead()) {
 				result = 1;
 			}
 		}
 		
 		return result;
 	}
+	
 	/**
 	 * Determines the level of access on user for this application:
 	 * 0 - no access
