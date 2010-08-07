@@ -269,15 +269,18 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 			String errorMessage = this.getMessageSource().getMessage("document.doesNotBelongToUser", new Object[] { existingDoc.getId(), userCode }, Locale.ENGLISH);
 			throw new AditException(errorMessage);
 		}
-		if (existingDoc.getLocked()) {
+		
+		// Null checks in following statements need to be there
+		// (i.e. don't remove them).
+		if ((existingDoc.getLocked() != null) && existingDoc.getLocked()) {
 			String errorMessage = this.getMessageSource().getMessage("request.saveDocument.document.locked", new Object[] { existingDoc.getId(), userCode }, Locale.ENGLISH);
 			throw new AditException(errorMessage);
 		}
-		if (existingDoc.getDeflated()) {
+		if ((existingDoc.getDeflated() != null) && existingDoc.getDeflated()) {
 			String errorMessage = this.getMessageSource().getMessage("request.saveDocument.document.deflated", new Object[] { existingDoc.getDeflateDate() }, Locale.ENGLISH);
 			throw new AditException(errorMessage);
 		}
-		if (existingDoc.getDeleted()) {
+		if ((existingDoc.getDeleted() != null) && existingDoc.getDeleted()) {
 			String errorMessage = this.getMessageSource().getMessage("request.saveDocument.document.deleted", new Object[] { }, Locale.ENGLISH);
 			throw new AditException(errorMessage);
 		}

@@ -354,7 +354,6 @@ public class DocumentService {
 	 * @throws Exception 
 	 */
 	public void lockDocument(Document document) throws Exception {
-		
 		if(document.getLocked() == null) {
 			document.setLocked(new Boolean(false));
 		}
