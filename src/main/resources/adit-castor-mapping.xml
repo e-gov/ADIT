@@ -581,6 +581,9 @@
 		<field name="documentId" type="long">
 			<bind-xml name="document_id" />
 		</field>
+		<field name="document" type="ee.adit.pojo.SaveDocumentRequestDocument">
+			<bind-xml name="document" />
+		</field>
 	</class>
 	
  	<!-- SaveDocumentFile -->
@@ -610,6 +613,9 @@
 		</field>
 		<field name="fileId" type="java.lang.Long">
 			<bind-xml name="file_id" />
+		</field>
+		<field name="file" type="ee.adit.pojo.SaveDocumentFileRequestFile">
+			<bind-xml name="file" />
 		</field>
 	</class>
  	

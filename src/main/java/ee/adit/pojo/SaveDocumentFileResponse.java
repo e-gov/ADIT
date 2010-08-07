@@ -39,7 +39,8 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "SaveDocumentFileResponse", propOrder = {
     "success",
     "messages",
-    "fileId"
+    "fileId",
+    "file"
 })
 public class SaveDocumentFileResponse {
 
@@ -48,6 +49,7 @@ public class SaveDocumentFileResponse {
     protected ArrayOfMessage messages;
     @XmlElement(name = "file_id", required = true)
     protected Long fileId;
+    protected SaveDocumentFileRequestFile file;
 
     /**
      * Gets the value of the success property.
@@ -113,4 +115,27 @@ public class SaveDocumentFileResponse {
         this.fileId = value;
     }
 
+    /**
+     * Gets the value of the file property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link SaveDocumentFileRequestFile }
+     *     
+     */
+    public SaveDocumentFileRequestFile getFile() {
+        return file;
+    }
+
+    /**
+     * Sets the value of the file property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link SaveDocumentFileRequestFile }
+     *     
+     */
+    public void setFile(SaveDocumentFileRequestFile value) {
+        this.file = value;
+    }
 }

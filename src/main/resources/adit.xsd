@@ -309,6 +309,11 @@
 			<element name="success" type="boolean"></element>
 			<element name="messages" type="tns:ArrayOfMessage"></element>
 			<element name="document_id" type="integer"></element>
+			<element name="document">
+				<complexType>
+					<attribute name="href" type="string"/>
+				</complexType>
+			</element>
 		</sequence>
 	</complexType>
 	
@@ -328,6 +333,11 @@
 			<element name="success" type="boolean"></element>
 			<element name="messages" type="tns:ArrayOfMessage"></element>
 			<element name="file_id" type="integer"></element>
+			<element name="file">
+				<complexType>
+					<attribute name="href" type="string"/>
+				</complexType>
+			</element>
 		</sequence>
 	</complexType>
 	

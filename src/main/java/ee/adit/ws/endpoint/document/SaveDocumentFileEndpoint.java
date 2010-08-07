@@ -18,9 +18,11 @@ import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.ConfirmSignatureResponse;
 import ee.adit.pojo.Message;
 import ee.adit.pojo.SaveDocumentFileRequest;
+import ee.adit.pojo.SaveDocumentFileRequestFile;
 import ee.adit.pojo.SaveDocumentFileResponse;
 import ee.adit.pojo.SaveDocumentRequestAttachment;
 import ee.adit.pojo.OutputDocumentFile;
+import ee.adit.pojo.SaveDocumentRequestDocument;
 import ee.adit.service.DocumentService;
 import ee.adit.service.UserService;
 import ee.adit.util.CustomXTeeHeader;
@@ -228,6 +230,22 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 
 			LOG.debug("Adding exception messages to response object.");
 			response.setMessages(arrayOfMessage);
+			
+			LOG.debug("Adding request attachments to response object.");
+			try {
+				boolean cidAdded = false;
+				Iterator<Attachment> i = this.getRequestMessage().getAttachments();
+				while(i.hasNext()) {
+					Attachment attachment = i.next();
+					this.getResponseMessage().addAttachment(attachment.getContentId(), attachment.getDataHandler());
+					if (!cidAdded) {
+						response.setFile(new SaveDocumentFileRequestFile("cid:" + attachment.getContentId()));
+						cidAdded = true;
+					}
+				}
+			} catch (Exception ex) {
+				LOG.error("Failed sending request attachments back within response object!", ex);
+			}
 		}
 		
 		super.logCurrentRequest(documentId, requestDate, additionalInformationForLog);

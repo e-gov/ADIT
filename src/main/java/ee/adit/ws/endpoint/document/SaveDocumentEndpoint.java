@@ -2,7 +2,6 @@ package ee.adit.ws.endpoint.document;
 
 import java.util.Calendar;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
@@ -15,8 +14,10 @@ import ee.adit.exception.AditException;
 import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.Message;
+import ee.adit.pojo.PrepareSignatureRequest;
 import ee.adit.pojo.SaveDocumentRequest;
 import ee.adit.pojo.SaveDocumentRequestAttachment;
+import ee.adit.pojo.SaveDocumentRequestDocument;
 import ee.adit.pojo.SaveDocumentResponse;
 import ee.adit.pojo.Success;
 import ee.adit.service.DocumentService;
@@ -47,7 +48,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 		
 		try {
 			LOG.debug("SaveDocumentEndpoint.v1 invoked.");
-			
+			SaveDocumentRequest request = (SaveDocumentRequest) requestObject;
 			CustomXTeeHeader header = this.getHeader();
 			String applicationName = header.getInfosysteem();
 			
@@ -187,6 +188,22 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 			
 			LOG.debug("Adding exception messages to response object.");
 			response.setMessages(arrayOfMessage);
+			
+			LOG.debug("Adding request attachments to response object.");
+			try {
+				boolean cidAdded = false;
+				Iterator<Attachment> i = this.getRequestMessage().getAttachments();
+				while(i.hasNext()) {
+					Attachment attachment = i.next();
+					this.getResponseMessage().addAttachment(attachment.getContentId(), attachment.getDataHandler());
+					if (!cidAdded) {
+						response.setDocument(new SaveDocumentRequestDocument("cid:" + attachment.getContentId()));
+						cidAdded = true;
+					}
+				}
+			} catch (Exception ex) {
+				LOG.error("Failed sending request attachments back within response object!", ex);
+			}
 		}
 		
 		super.logCurrentRequest(documentId, requestDate.getTime(), additionalInformationForLog);

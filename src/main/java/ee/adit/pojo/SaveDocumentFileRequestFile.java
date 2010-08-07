@@ -29,6 +29,12 @@ public class SaveDocumentFileRequestFile {
     @XmlAttribute
     protected String href;
 
+    public SaveDocumentFileRequestFile() {}
+    
+    public SaveDocumentFileRequestFile(String href) {
+    	this.href = href;
+    }
+    
     /**
      * Gets the value of the href property.
      * 

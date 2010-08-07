@@ -23,6 +23,12 @@ package ee.adit.pojo;
 public class SaveDocumentRequestDocument {
 
 	protected String href;
+	
+	public SaveDocumentRequestDocument() {}
+	
+	public SaveDocumentRequestDocument(String href) {
+		this.href = href;
+	}
 
 	/**
 	 * Gets the value of the href property.

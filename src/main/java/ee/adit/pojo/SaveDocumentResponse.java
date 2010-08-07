@@ -42,7 +42,8 @@ import ee.adit.pojo.ArrayOfMessage;
 @XmlType(name = "SaveDocumentResponse", propOrder = {
     "success",
     "messages",
-    "documentId"
+    "documentId",
+    "document"
 })
 public class SaveDocumentResponse {
 
@@ -51,6 +52,7 @@ public class SaveDocumentResponse {
     protected ArrayOfMessage messages;
     @XmlElement(name = "document_id", required = true)
     protected long documentId;
+    protected SaveDocumentRequestDocument document;
 
     /**
      * Gets the value of the messages property.
@@ -108,4 +110,27 @@ public class SaveDocumentResponse {
 		this.success = success;
 	}
 
+    /**
+     * Gets the value of the document property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link SaveDocumentRequest.Document }
+     *     
+     */
+    public SaveDocumentRequestDocument getDocument() {
+        return document;
+    }
+
+    /**
+     * Sets the value of the document property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link SaveDocumentRequest.Document }
+     *     
+     */
+    public void setDocument(SaveDocumentRequestDocument value) {
+        this.document = value;
+    }
 }

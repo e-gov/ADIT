@@ -15,7 +15,6 @@ import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.dao.pojo.DocumentWfStatus;
 import ee.adit.exception.AditException;
 import ee.adit.pojo.ArrayOfMessage;
-import ee.adit.pojo.ConfirmSignatureResponse;
 import ee.adit.pojo.Message;
 import ee.adit.pojo.ModifyStatusRequest;
 import ee.adit.pojo.ModifyStatusResponse;
@@ -50,6 +49,7 @@ public class ModifyStatusEndpoint extends AbstractAditBaseEndpoint {
 		this.documentService = documentService;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	protected Object invokeInternal(Object requestObject) throws Exception {
 		ModifyStatusResponse response = new ModifyStatusResponse();
@@ -128,14 +128,14 @@ public class ModifyStatusEndpoint extends AbstractAditBaseEndpoint {
 			// Check whether the document is marked as deleted
 			if ((doc.getDeleted() != null) && doc.getDeleted()) {
 				LOG.debug("Requested document is deleted. Document ID: " + request.getDocumentId());
-				String errorMessage = this.getMessageSource().getMessage("document.nonExistent", new Object[] { request.getDocumentId() }, Locale.ENGLISH);
+				String errorMessage = this.getMessageSource().getMessage("document.deleted", new Object[] { request.getDocumentId() }, Locale.ENGLISH);
 				throw new AditException(errorMessage);
 			}
 			
 			// Check whether the document is marked as deflated
 			if ((doc.getDeflated() != null) && doc.getDeflated()) {
 				LOG.debug("Requested document is deflated. Document ID: " + request.getDocumentId());
-				String errorMessage = this.getMessageSource().getMessage("document.deflated", new Object[] { doc.getDeflateDate() }, Locale.ENGLISH);
+				String errorMessage = this.getMessageSource().getMessage("document.deflated", new Object[] { Util.dateToEstonianDateString(doc.getDeflateDate()) }, Locale.ENGLISH);
 				throw new AditException(errorMessage);
 			}
 
