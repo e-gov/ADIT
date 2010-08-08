@@ -1,6 +1,14 @@
 <?xml version="1.0"?>
 <!DOCTYPE mapping PUBLIC "-//EXOLAB/Castor Mapping DTD Version 1.0//EN" "http://castor.org/mapping.dtd">
 <mapping>
+	<!-- listMethods -->
+	<class name="ee.adit.pojo.ListMethodsResponse">
+		<map-to xml="keha" />
+		<field name="item" type="java.lang.String" collection="arraylist">
+			<bind-xml name="item" location="keha" />
+		</field>		
+	</class>
+	
 	<!-- Join -->
 	<class name="ee.adit.pojo.JoinRequest">
 		<map-to xml="Join" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
@@ -19,7 +27,7 @@
 		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
 			<bind-xml name="messages" />
 		</field>
-	</class>	
+	</class>
 
 	<!-- UnJoin -->
 	<class name="ee.adit.pojo.UnJoinRequest">
@@ -1004,6 +1012,5 @@
 		<field name="creatorApplication" type="java.lang.String" collection="arraylist">
 			<bind-xml name="creator_application" />
 		</field>
-	</class>
-	
+	</class>	
 </mapping>

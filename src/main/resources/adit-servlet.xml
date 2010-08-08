@@ -242,8 +242,13 @@
 	</bean>
 	
 	<!-- Meta service endpoint -->
-	
+	<!--
 	<bean id="ListMethodsEndpoint" class="ee.webmedia.xtee.endpoint.ListMethodsEndpoint">
+	</bean>
+	-->
+	<bean id="ListMethodsEndpoint" class="ee.adit.ws.endpoint.ListMethodsEndpoint">
+		<property name="marshaller" ref="castorMarshaller"/>
+		<property name="unmarshaller" ref="castorMarshaller"/>
 	</bean>
 
 	<!-- Endpoint Mappings -->
@@ -578,11 +583,13 @@
 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="triggers">
 	   		<list>
+	      		<!--
 	      		<ref bean="dvkSendTrigger"/>
 	      		<ref bean="dvkReceiveTrigger"/>
 	      		<ref bean="dvkUpdateStatusTrigger"/>
 	      		<ref bean="dvkUpdateStatusToDVKTrigger"/>
-	      		<ref bean="notificationTrigger"/>	      		
+	      		<ref bean="notificationTrigger"/>
+	      		-->
 	    	</list>
 	  	</property>
 	</bean>
@@ -600,10 +607,10 @@
 	<!-- Configuration -->
 	<bean id="configuration" class="ee.adit.util.Configuration">
 		<property name="getJoinedMaxResults" value="2"/>
-		<property name="tempDir" value="E:\temp"/>
+		<property name="tempDir" value="C:\temp"/>
 		<property name="deleteTemporaryFiles" value="true"/>
 		<property name="schedulerEventTypeName" value="Minu dokumentide teavitus"/>
-		<property name="dvkResponseMessageStylesheet" value="E:\dev\microlink\adit\src\main\resources\DVKresponseMessage.xsl"/>
+		<property name="dvkResponseMessageStylesheet" value="C:\dev\microlink\adit\src\main\resources\DVKresponseMessage.xsl"/>
 		<!-- Üldine kettamahu piirang ühe kasutaja kohta baitides -->
 		<property name="globalDiskQuota" value="10240000"/>
 		<property name="locales">

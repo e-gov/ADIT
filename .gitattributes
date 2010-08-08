@@ -239,6 +239,7 @@ src/main/java/ee/adit/pojo/GetUserInfoResponseAttachment.java -text
 src/main/java/ee/adit/pojo/GetUserInfoResponseAttachmentUser.java -text
 src/main/java/ee/adit/pojo/JoinRequest.java -text
 src/main/java/ee/adit/pojo/JoinResponse.java -text
+src/main/java/ee/adit/pojo/ListMethodsResponse.java -text
 src/main/java/ee/adit/pojo/MarkDocumentViewedRequest.java -text
 src/main/java/ee/adit/pojo/MarkDocumentViewedResponse.java -text
 src/main/java/ee/adit/pojo/Message.java -text
@@ -290,6 +291,7 @@ src/main/java/ee/adit/util/SaveDocumentAttachmentHandler.java -text
 src/main/java/ee/adit/util/Util.java -text
 src/main/java/ee/adit/util/XMLUtil.java -text
 src/main/java/ee/adit/ws/endpoint/AbstractAditBaseEndpoint.java -text
+src/main/java/ee/adit/ws/endpoint/ListMethodsEndpoint.java -text
 src/main/java/ee/adit/ws/endpoint/XteeCustomEndpoint.java -text
 src/main/java/ee/adit/ws/endpoint/document/ConfirmSignatureEndpoint.java -text
 src/main/java/ee/adit/ws/endpoint/document/DeflateDocumentEndpoint.java -text
