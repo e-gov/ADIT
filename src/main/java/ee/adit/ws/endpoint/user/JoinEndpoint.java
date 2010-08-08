@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Usertype;
+import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditException;
 import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.JoinRequest;
@@ -128,8 +129,10 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 				}
 				
 			} else {
-				String errorMessage = this.getMessageSource().getMessage("application.notRegistered", new Object[] { applicationName }, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				//String errorMessage = this.getMessageSource().getMessage("application.notRegistered", new Object[] { applicationName }, Locale.ENGLISH);
+				AditCodedException aditCodedException = new AditCodedException("application.notRegistered");
+				aditCodedException.setParameters(new Object[] { applicationName });
+				throw aditCodedException;
 			}
 			
 			// Set response messages
@@ -146,6 +149,9 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 			if(e instanceof AditException) {
 				LOG.debug("Adding exception message to response object.");
 				arrayOfMessage.getMessage().add(new Message("en", e.getMessage()));
+			} else if(e instanceof AditCodedException) {
+				LOG.debug("Adding exception messages to response object.");
+				arrayOfMessage.setMessage(this.getMessageService().getMessages((AditCodedException) e));
 			} else {
 				arrayOfMessage.getMessage().add(new Message("en", "Service error"));
 			}

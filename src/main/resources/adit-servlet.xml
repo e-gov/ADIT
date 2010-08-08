@@ -25,6 +25,7 @@
 		<property name="userService" ref="userService"/>
 		<property name="logService" ref="logService"/>
 		<property name="messageSource" ref="messageSource"/>
+		<property name="messageService" ref="messageService"/>
 	</bean>
 	
 	<bean id="UnJoinEndpoint" class="ee.adit.ws.endpoint.user.UnJoinEndpoint">
@@ -354,10 +355,15 @@
 		<property name="dvkDAO" ref="dvkDAO"/>
 	</bean>
 
+	<bean id="messageService" class="ee.adit.service.MessageService">
+		<property name="messageSource" ref="messageSource"/>
+		<property name="configuration" ref="configuration"/>
+	</bean>
+
 	<bean id="aditDataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
-		<property name="url" value="jdbc:oracle:thin:@//localhost:1522/jaak" />
+		<property name="url" value="jdbc:oracle:thin:@//localhost:1521/XE" />
 		<property name="username" value="adit" />
 		<property name="password" value="adit" />
 	</bean>
@@ -386,6 +392,7 @@
 				<value>classpath:hbm/Signature.hbm.xml</value>
 				<value>classpath:hbm/UserNotification.hbm.xml</value>
 				<value>classpath:hbm/Usertype.hbm.xml</value>
+				<value>classpath:hbm/ErrorLog.hbm.xml</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">
@@ -561,14 +568,12 @@
 	  	<property name="repeatInterval" value="60000"/>
 	</bean>
 	
-	
-	<!-- 
 	<bean id="notificationTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
 	  	<property name="jobDetail" ref="sendNotificationsJobDetails"/>
 	  	<property name="startDelay" value="120000"/>
 	  	<property name="repeatInterval" value="120000"/>
 	</bean>
-	 -->
+	 
 	 
 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="triggers">
@@ -577,9 +582,7 @@
 	      		<ref bean="dvkReceiveTrigger"/>
 	      		<ref bean="dvkUpdateStatusTrigger"/>
 	      		<ref bean="dvkUpdateStatusToDVKTrigger"/>
-	      		<!-- 
-	      		<ref bean="notificationTrigger"/>
-	      		-->
+	      		<ref bean="notificationTrigger"/>	      		
 	    	</list>
 	  	</property>
 	</bean>
@@ -601,9 +604,14 @@
 		<property name="deleteTemporaryFiles" value="true"/>
 		<property name="schedulerEventTypeName" value="Minu dokumentide teavitus"/>
 		<property name="dvkResponseMessageStylesheet" value="E:\dev\microlink\adit\src\main\resources\DVKresponseMessage.xsl"/>
-		
 		<!-- Üldine kettamahu piirang ühe kasutaja kohta baitides -->
 		<property name="globalDiskQuota" value="10240000"/>
+		<property name="locales">
+			<list>
+				<value>en</value>
+				<value>ee</value>
+			</list>
+		</property>
 	</bean>
 
 </beans>

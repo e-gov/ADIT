@@ -1,6 +1,7 @@
 package ee.adit.util;
 
 import java.math.BigInteger;
+import java.util.List;
 
 public class Configuration {
 	
@@ -16,6 +17,16 @@ public class Configuration {
 	
 	private Long globalDiskQuota;
 	
+	private List<String> locales;
+	
+	public List<String> getLocales() {
+		return locales;
+	}
+
+	public void setLocales(List<String> locales) {
+		this.locales = locales;
+	}
+
 	public BigInteger getGetJoinedMaxResults() {
 		return getJoinedMaxResults;
 	}

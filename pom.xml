@@ -9,7 +9,7 @@
 	<url>http://maven.apache.org</url>
 
 	<properties>
-		<baseDir>C:\development\adit\trunk</baseDir>
+		<baseDir>E:\dev\microlink\adit</baseDir>
 	</properties>
 
 	<dependencies>
@@ -320,6 +320,11 @@
 			<resource>
 				<directory>src/main/resources</directory>
 				<filtering>false</filtering>
+			</resource>
+			<resource>
+				<directory>${baseDir}/sql</directory>
+				<filtering>false</filtering>
+				<targetPath>../adit/sql</targetPath>
 			</resource>
 			<resource>
 				<directory>${baseDir}/lib</directory>

@@ -181,6 +181,7 @@ src/main/java/ee/adit/dvk/ReceiveJob.java -text
 src/main/java/ee/adit/dvk/SendJob.java -text
 src/main/java/ee/adit/dvk/UpdateStatusJob.java -text
 src/main/java/ee/adit/dvk/UpdateStatusToDVKJob.java -text
+src/main/java/ee/adit/exception/AditCodedException.java -text
 src/main/java/ee/adit/exception/AditException.java -text
 src/main/java/ee/adit/exception/AditInternalException.java -text
 src/main/java/ee/adit/pojo/Activity.java -text
@@ -277,6 +278,7 @@ src/main/java/ee/adit/schedule/ScheduleClient.java -text
 src/main/java/ee/adit/schedule/SendNotificationsJob.java -text
 src/main/java/ee/adit/service/DocumentService.java -text
 src/main/java/ee/adit/service/LogService.java -text
+src/main/java/ee/adit/service/MessageService.java -text
 src/main/java/ee/adit/service/UserService.java -text
 src/main/java/ee/adit/stateportal/NotificationStatus.java -text
 src/main/java/ee/adit/stateportal/StatePortalClient.java -text

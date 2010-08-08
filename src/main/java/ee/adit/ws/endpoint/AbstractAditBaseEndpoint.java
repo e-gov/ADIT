@@ -26,6 +26,7 @@ import org.w3c.dom.Element;
 
 import ee.adit.exception.AditInternalException;
 import ee.adit.service.LogService;
+import ee.adit.service.MessageService;
 import ee.adit.util.Configuration;
 import ee.adit.util.CustomXTeeHeader;
 import ee.adit.util.Util;
@@ -46,6 +47,8 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 	
 	private LogService logService;
 	
+	private MessageService messageService;
+
 	protected void invokeInternal(Document requestKeha, Element responseElement,
 			CustomXTeeHeader xteeHeader) throws Exception {
 		
@@ -236,4 +239,11 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 		this.logService = logService;
 	}
 	
+	public MessageService getMessageService() {
+		return messageService;
+	}
+
+	public void setMessageService(MessageService messageService) {
+		this.messageService = messageService;
+	}
 }
