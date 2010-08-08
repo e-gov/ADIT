@@ -40,6 +40,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import ee.adit.dao.pojo.AditUser;
+import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditException;
 import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.ArrayOfMessage;
@@ -131,27 +132,28 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 							getJoinedResponseUserList.setHref("cid:" + contentID);
 							response.setUserList(getJoinedResponseUserList);
 							
-							String message = this.getMessageSource().getMessage("request.getJoined.success", new Object[] { userList.size() }, Locale.ENGLISH);
-							response.setSuccess(new Success(true));
-							messages.addMessage(new Message("en", message));
+							response.setSuccess(new Success(true));							
+							messages.setMessage(this.getMessageService().getMessages("request.getJoined.success", new Object[] { userList.size() }));
 							
 						} else {
 							LOG.warn("No users were found.");
-							String message = this.getMessageSource().getMessage("request.getJoined.noUsersFound", new Object[] { }, Locale.ENGLISH);
-							throw new AditException(message);
+							throw new AditCodedException("request.getJoined.noUsersFound");
 						}						
 						
 					} else {
-						String errorMessage = this.getMessageSource().getMessage("request.getJoined.maxResults.tooLarge", new Object[] { configurationMaxResults.toString() }, Locale.ENGLISH);
-						throw new AditException(errorMessage);
+						AditCodedException aditCodedException = new AditCodedException("request.getJoined.maxResults.tooLarge");
+						aditCodedException.setParameters(new Object[] { configurationMaxResults.toString() });
+						throw aditCodedException;	
 					}
 				} else {
-					String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.read", new Object[] { applicationName }, Locale.ENGLISH);
-					throw new AditException(errorMessage);
+					AditCodedException aditCodedException = new AditCodedException("application.insufficientPrivileges.read");
+					aditCodedException.setParameters(new Object[] { applicationName });
+					throw aditCodedException;
 				}				
 			} else {
-				String errorMessage = this.getMessageSource().getMessage("application.notRegistered", new Object[] { applicationName }, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				AditCodedException aditCodedException = new AditCodedException("application.notRegistered");
+				aditCodedException.setParameters(new Object[] { applicationName });
+				throw aditCodedException;
 			}
 			
 			response.setMessages(messages);
@@ -161,9 +163,9 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 			response.setSuccess(new Success(false));
 			ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
 			
-			if(e instanceof AditException) {
-				LOG.debug("Adding exception message to response object.");
-				arrayOfMessage.getMessage().add(new Message("en", e.getMessage()));
+			if(e instanceof AditCodedException) {
+				LOG.debug("Adding exception messages to response object.");
+				arrayOfMessage.setMessage(this.getMessageService().getMessages((AditCodedException) e));
 			} else {
 				arrayOfMessage.getMessage().add(new Message("en", "Service error"));
 			}
@@ -206,18 +208,14 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 	}
 	
 	private void checkRequest(GetJoinedRequest request) {
-		String errorMessage = null; 
 		if(request != null) {
 			if(request.getMaxResults() != null && request.getMaxResults().longValue() <= 0) {
-				errorMessage = this.getMessageSource().getMessage("request.getJoined.body.invalid.maxResults", new Object[] {}, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				throw new AditCodedException("request.getJoined.body.invalid.maxResults");
 			} else if(request.getStartIndex() != null && request.getStartIndex().longValue() < 0) {
-				errorMessage = this.getMessageSource().getMessage("request.getJoined.body.invalid.startIndex", new Object[] {}, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				throw new AditCodedException("request.getJoined.body.invalid.startIndex");
 			}
 		} else {
-			errorMessage = this.getMessageSource().getMessage("request.body.empty", new Object[] {}, Locale.ENGLISH);
-			throw new AditException(errorMessage);
+			throw new AditCodedException("request.body.empty");
 		}
 	}
 	
