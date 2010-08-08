@@ -19,7 +19,6 @@ import ee.adit.pojo.Activity;
 import ee.adit.pojo.ActivityActor;
 import ee.adit.pojo.ActivitySubject;
 import ee.adit.pojo.ArrayOfMessage;
-import ee.adit.pojo.ConfirmSignatureResponse;
 import ee.adit.pojo.GetDocumentHistoryResponseAttachment;
 import ee.adit.pojo.GetDocumentHistoryRequest;
 import ee.adit.pojo.GetDocumentHistoryResponse;
@@ -153,9 +152,8 @@ public class GetDocumentHistoryEndpoint extends AbstractAditBaseEndpoint {
 			if (docBelongsToUser) {
 				List<Activity> activityList = new ArrayList<Activity>();
 				if ((doc.getDocumentHistories() != null) && (!doc.getDocumentHistories().isEmpty())) {
-					Iterator it = doc.getDocumentHistories().iterator();
-					while (it.hasNext()) {
-						DocumentHistory historyEvent = (DocumentHistory)it.next();
+					List<DocumentHistory> historyList = this.getDocumentService().getDocumentHistoryDAO().getSortedList(documentId);
+					for (DocumentHistory historyEvent : historyList) {
 						Activity activity = new Activity();
 						activity.setTime(historyEvent.getEventDate());
 						activity.setType(historyEvent.getDocumentHistoryType());
