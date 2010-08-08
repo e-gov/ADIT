@@ -60,6 +60,7 @@ import ee.adit.dao.pojo.DocumentHistory;
 import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.dao.pojo.DocumentType;
 import ee.adit.dvk.DvkDAO;
+import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditException;
 import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.OutputDocumentFile;
@@ -129,7 +130,7 @@ public class DocumentService {
 	private Configuration configuration;
 	private DvkDAO dvkDAO;
 
-	public void checkAttachedDocumentMetadataForNewDocument(SaveDocumentRequestAttachment document) throws AditException {
+	public void checkAttachedDocumentMetadataForNewDocument(SaveDocumentRequestAttachment document) throws AditCodedException {
 		LOG.debug("Checking attached document metadata for new document...");
 		if (document != null) {
 
@@ -140,17 +141,14 @@ public class DocumentService {
 				try {
 					UUID.fromString(document.getGuid());
 				} catch (Exception e) {
-					String errorMessage = this.getMessageSource().getMessage("request.saveDocument.document.guid.wrongFormat", new Object[] {}, Locale.ENGLISH);
-					throw new AditException(errorMessage);
+					throw new AditCodedException("request.saveDocument.document.guid.wrongFormat");
 				}
-
 			}
 
 			LOG.debug("Checking title: " + document.getTitle());
 			// Check title
 			if (document.getTitle() == null || "".equalsIgnoreCase(document.getTitle())) {
-				String errorMessage = this.getMessageSource().getMessage("request.saveDocument.document.title.undefined", new Object[] {}, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				throw new AditCodedException("request.saveDocument.document.title.undefined");
 			}
 
 			LOG.debug("Checking document type: " + document.getDocumentType());
@@ -165,14 +163,17 @@ public class DocumentService {
 				if (documentType == null) {
 					LOG.debug("Document type does not exist: " + document.getDocumentType());
 					String validDocumentTypes = getValidDocumentTypes();
-					String errorMessage = this.getMessageSource().getMessage("request.saveDocument.document.type.nonExistent", new Object[] { validDocumentTypes }, Locale.ENGLISH);
-					throw new AditException(errorMessage);
+					
+					AditCodedException aditCodedException = new AditCodedException("request.saveDocument.document.type.nonExistent");
+					aditCodedException.setParameters(new Object[] { validDocumentTypes });
+					throw aditCodedException;
 				}
 
 			} else {
 				String validDocumentTypes = getValidDocumentTypes();
-				String errorMessage = this.getMessageSource().getMessage("request.saveDocument.document.type.undefined", new Object[] { validDocumentTypes }, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				AditCodedException aditCodedException = new AditCodedException("request.saveDocument.document.type.undefined");
+				aditCodedException.setParameters(new Object[] { validDocumentTypes });
+				throw aditCodedException;
 			}
 
 			LOG.debug("Checking previous document ID: " + document.getPreviousDocumentID());
@@ -182,10 +183,10 @@ public class DocumentService {
 
 				Document previousDocument = this.getDocumentDAO().getDocument(document.getPreviousDocumentID());
 
-				if (previousDocument == null) {
-					String errorMessage = this.getMessageSource().getMessage("request.saveDocument.document.previousDocument.nonExistent", new Object[] { document.getPreviousDocumentID() },
-							Locale.ENGLISH);
-					throw new AditException(errorMessage);
+				if (previousDocument == null) {					
+					AditCodedException aditCodedException = new AditCodedException("request.saveDocument.document.previousDocument.nonExistent");
+					aditCodedException.setParameters(new Object[] { document.getPreviousDocumentID() });
+					throw aditCodedException;
 				}
 			}
 		} else {
@@ -1358,16 +1359,18 @@ public class DocumentService {
 		Document doc = this.getDocumentDAO().getDocument(documentId);
 		
 		// Check whether or not the document exists
-		if (doc == null) {
-			String errorMessage = this.getMessageSource().getMessage("document.nonExistent", new Object[] { documentId }, Locale.ENGLISH);
-			throw new AditException(errorMessage);
+		if (doc == null) {			
+			AditCodedException aditCodedException = new AditCodedException("document.nonExistent");
+			aditCodedException.setParameters(new Object[] { documentId });
+			throw aditCodedException;
 		}
 		
 		// Make sure that the document is not already deleted
 		// NB! doc.getDeleted() can be NULL
 		if ((doc.getDeleted() != null) && doc.getDeleted()) {
-			String errorMessage = this.getMessageSource().getMessage("request.deleteDocument.document.deleted", new Object[] { documentId }, Locale.ENGLISH);
-			throw new AditException(errorMessage);
+			AditCodedException aditCodedException = new AditCodedException("request.deleteDocument.document.deleted");
+			aditCodedException.setParameters(new Object[] { documentId });
+			throw aditCodedException;
 		}
 		
 		boolean saveDocument = false;
@@ -1385,14 +1388,17 @@ public class DocumentService {
 						
 						// Kontrollime üle võimalikud veaolukorrad
 						if (resultCode.equalsIgnoreCase("already_deleted")) {
-							String errorMessage = this.getMessageSource().getMessage("file.isDeleted", new Object[] { docFile.getId() }, Locale.ENGLISH);
-							throw new AditException(errorMessage);
-						} else if (resultCode.equalsIgnoreCase("file_does_not_exist")) {
-							String errorMessage = this.getMessageSource().getMessage("file.nonExistent", new Object[] { docFile.getId() }, Locale.ENGLISH);
-							throw new AditException(errorMessage);
-						} else if (resultCode.equalsIgnoreCase("file_does_not_belong_to_document")) {
-							String errorMessage = this.getMessageSource().getMessage("file.doesNotBelongToDocument", new Object[] { docFile.getId(), doc.getId() }, Locale.ENGLISH);
-							throw new AditException(errorMessage);
+							AditCodedException aditCodedException = new AditCodedException("file.isDeleted");
+							aditCodedException.setParameters(new Object[] { docFile.getId() });
+							throw aditCodedException;
+						} else if (resultCode.equalsIgnoreCase("file_does_not_exist")) {							
+							AditCodedException aditCodedException = new AditCodedException("file.nonExistent");
+							aditCodedException.setParameters(new Object[] { docFile.getId() });
+							throw aditCodedException;
+						} else if (resultCode.equalsIgnoreCase("file_does_not_belong_to_document")) {							
+							AditCodedException aditCodedException = new AditCodedException("file.doesNotBelongToDocument");
+							aditCodedException.setParameters(new Object[] { docFile.getId(), doc.getId() });
+							throw aditCodedException;
 						}
 					}
 				}
@@ -1401,8 +1407,9 @@ public class DocumentService {
 				doc.setDeleted(true);
 				saveDocument = true;
 			} else {
-				String errorMessage = this.getMessageSource().getMessage("request.deleteDocument.document.locked", new Object[] { documentId }, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				AditCodedException aditCodedException = new AditCodedException("request.deleteDocument.document.locked");
+				aditCodedException.setParameters(new Object[] { documentId });
+				throw aditCodedException;
 			}
 		} else if (doc.getDocumentSharings() != null) {
 			// Kontrollime, kas dokument on kasutajale jagatud.
@@ -1420,12 +1427,14 @@ public class DocumentService {
 			if (changesMade) {
 				saveDocument = true;
 			} else {
-				String errorMessage = this.getMessageSource().getMessage("document.doesNotBelongToUser", new Object[] { documentId, userCode }, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				AditCodedException aditCodedException = new AditCodedException("document.doesNotBelongToUser");
+				aditCodedException.setParameters(new Object[] { documentId, userCode });
+				throw aditCodedException;
 			}
 		} else {
-			String errorMessage = this.getMessageSource().getMessage("document.doesNotBelongToUser", new Object[] { documentId, userCode }, Locale.ENGLISH);
-			throw new AditException(errorMessage);
+			AditCodedException aditCodedException = new AditCodedException("document.doesNotBelongToUser");
+			aditCodedException.setParameters(new Object[] { documentId, userCode });
+			throw aditCodedException;
 		}
 		
 		// Salvestame dokumendi
@@ -1453,28 +1462,32 @@ public class DocumentService {
 		
 		// Check whether or not the document exists
 		if (doc == null) {
-			String errorMessage = this.getMessageSource().getMessage("document.nonExistent", new Object[] { documentId }, Locale.ENGLISH);
-			throw new AditException(errorMessage);
+			AditCodedException aditCodedException = new AditCodedException("document.nonExistent");
+			aditCodedException.setParameters(new Object[] { documentId });
+			throw aditCodedException;
 		}
 		
 		// Make sure that the document is not deleted
 		// NB! doc.getDeleted() can be NULL
 		if ((doc.getDeleted() != null) && doc.getDeleted()) {
-			String errorMessage = this.getMessageSource().getMessage("document.deleted", new Object[] { documentId }, Locale.ENGLISH);
-			throw new AditException(errorMessage);
+			AditCodedException aditCodedException = new AditCodedException("document.deleted");
+			aditCodedException.setParameters(new Object[] { documentId });
+			throw aditCodedException;
 		}
 		
 		// Make sure that the document is not already deflated
 		// NB! doc.getDeflated() can be NULL
 		if ((doc.getDeflated() != null) && doc.getDeflated()) {
-			String errorMessage = this.getMessageSource().getMessage("document.deflated", new Object[] { Util.dateToEstonianDateString(doc.getDeflateDate()) }, Locale.ENGLISH);
-			throw new AditException(errorMessage);
+			AditCodedException aditCodedException = new AditCodedException("document.deflated");
+			aditCodedException.setParameters(new Object[] { Util.dateToEstonianDateString(doc.getDeflateDate()) });
+			throw aditCodedException;
 		}
 		
 		// Check whether or not the document belongs to user
 		if (!doc.getCreatorCode().equalsIgnoreCase(userCode)) {
-			String errorMessage = this.getMessageSource().getMessage("document.doesNotBelongToUser", new Object[] { documentId, userCode }, Locale.ENGLISH);
-			throw new AditException(errorMessage);
+			AditCodedException aditCodedException = new AditCodedException("document.doesNotBelongToUser");
+			aditCodedException.setParameters(new Object[] { documentId, userCode });
+			throw aditCodedException;
 
 		}
 		
@@ -1489,11 +1502,13 @@ public class DocumentService {
 				// Ignore files that are already deleted
 				
 				if (resultCode.equalsIgnoreCase("file_does_not_exist")) {
-					String errorMessage = this.getMessageSource().getMessage("file.nonExistent", new Object[] { docFile.getId() }, Locale.ENGLISH);
-					throw new AditException(errorMessage);
+					AditCodedException aditCodedException = new AditCodedException("file.nonExistent");
+					aditCodedException.setParameters(new Object[] { docFile.getId() });
+					throw aditCodedException;
 				} else if (resultCode.equalsIgnoreCase("file_does_not_belong_to_document")) {
-					String errorMessage = this.getMessageSource().getMessage("file.doesNotBelongToDocument", new Object[] { docFile.getId(), doc.getId() }, Locale.ENGLISH);
-					throw new AditException(errorMessage);
+					AditCodedException aditCodedException = new AditCodedException("file.doesNotBelongToDocument");
+					aditCodedException.setParameters(new Object[] { docFile.getId(), doc.getId() });
+					throw aditCodedException;
 				}
 			}
 		}
