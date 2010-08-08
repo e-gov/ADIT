@@ -242,7 +242,7 @@ public class DocumentService {
 
 				document.setLastModifiedDate(creationDate);
 				document.setTitle(attachmentDocument.getTitle());
-
+				
 				try {
 					return docDao.save(document, attachmentDocument.getFiles(), remainingDiskQuota, session);
 				} catch (Exception e) {
@@ -1430,15 +1430,6 @@ public class DocumentService {
 		
 		// Salvestame dokumendi
 		if (saveDocument) {
-			// Lisame kustutamise ajaloosündmuse
-			DocumentHistory historyEvent = new DocumentHistory();
-			historyEvent.setRemoteApplicationName(applicationName);
-			historyEvent.setDocumentId(doc.getId());
-			historyEvent.setDocumentHistoryType(DocumentService.HistoryType_Delete);
-			historyEvent.setEventDate(new Date());
-			historyEvent.setUserCode(userCode);
-			doc.getDocumentHistories().add(historyEvent);
-			
 			// Salvestame tehtud muudatused
 			this.getDocumentDAO().save(doc, null, Long.MAX_VALUE, null);
 		}

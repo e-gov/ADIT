@@ -2,7 +2,6 @@ package ee.adit.ws.endpoint.document;
 
 import java.io.File;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.Locale;
 
@@ -12,6 +11,7 @@ import org.springframework.ws.mime.Attachment;
 
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
+import ee.adit.dao.pojo.DocumentHistory;
 import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.exception.AditException;
 import ee.adit.exception.AditInternalException;
@@ -59,7 +59,7 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 	protected Object invokeInternal(Object requestObject) throws Exception {
 		SaveDocumentFileResponse response = new SaveDocumentFileResponse();
 		ArrayOfMessage messages = new ArrayOfMessage();
-		Date requestDate = Calendar.getInstance().getTime();
+		Calendar requestDate = Calendar.getInstance();
 		String additionalInformationForLog = null;
 		Long documentId = null;
 		
@@ -104,6 +104,16 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 			if (user == null) {
 				String errorMessage = this.getMessageSource().getMessage("user.nonExistent", new Object[] { userCode },	Locale.ENGLISH);
 				throw new AditException(errorMessage);
+			}
+			AditUser xroadRequestUser = null;
+			if (user.getUsertype().getShortName().equalsIgnoreCase("person")) {
+				xroadRequestUser = user;
+			} else {
+				try {
+					xroadRequestUser = this.getUserService().getUserByID(header.getIsikukood());
+				} catch (Exception ex) {
+					LOG.debug("Error when attempting to find local user matchinig the person that executed a company request.");
+				}
 			}
 			
 			// Check user's disk quota
@@ -175,80 +185,92 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 				}
 			}
 			
-			if (isOwner) {
-				// Get user certificate from attachment
-				String xmlFile = null;
-				Iterator<Attachment> i = this.getRequestMessage().getAttachments();
-				int attachmentCount = 0;
-				while(i.hasNext()) {
-					if(attachmentCount == 0) {
-						Attachment attachment = i.next();
-						LOG.debug("Attachment: " + attachment.getContentId());
-						
-						// Extract the SOAP message to a temporary file
-						String base64EncodedFile = extractXML(attachment);
-						
-						// Base64 decode and unzip the temporary file
-						xmlFile = Util.base64DecodeAndUnzip(base64EncodedFile, this.getConfiguration().getTempDir(), this.getConfiguration().getDeleteTemporaryFilesAsBoolean());
-						LOG.debug("Attachment unzipped to temporary file: " + xmlFile);
-						
-						// Extract large files from main document
-						FileSplitResult splitResult = Util.splitOutTags(xmlFile, "data", false, false, true, true);
-						
-						// Decode base64-encoded files
-						if ((splitResult.getSubFiles() != null) && (splitResult.getSubFiles().size() > 0)) {
-							for (String fileName : splitResult.getSubFiles()) {
-								String resultFile = Util.base64DecodeFile(fileName, this.getConfiguration().getTempDir());
-								// Replace encoded file with decoded file
-								(new File(fileName)).delete();
-								(new File(resultFile)).renameTo(new File(fileName));
-							}
-						}
-						
-						// Unmarshal the XML from the temporary file
-						Object unmarshalledObject = unMarshal(xmlFile);
-						
-						// Check if the marshalling result is what we expected
-						if(unmarshalledObject != null) {
-							LOG.debug("XML unmarshalled to type: " + unmarshalledObject.getClass());
-							if(unmarshalledObject instanceof OutputDocumentFile) {
-								OutputDocumentFile docFile = (OutputDocumentFile) unmarshalledObject;
-								SaveItemInternalResult saveResult = this.getDocumentService().saveDocumentFile(doc.getId(), docFile, xmlFile, remainingDiskQuota, this.getConfiguration().getTempDir());
-								if (saveResult.isSuccess()) {
-									long fileId = saveResult.getItemId();
-									LOG.debug("File saved with ID: " + fileId);
-									response.setFileId(fileId);
-								} else {
-									if ((saveResult.getMessages() != null) && (saveResult.getMessages().size() > 0)) {
-										throw new AditException(saveResult.getMessages().get(0).getValue());
-									} else {
-										throw new AditInternalException("File saving failed!");
-									}
-								}
-							} else {
-								throw new AditInternalException("Unmarshalling returned wrong type. Expected " + SaveDocumentRequestAttachment.class + ", got " + unmarshalledObject.getClass());
-							}
-						} else {
-							throw new AditInternalException("Unmarshalling failed for XML in file: " + xmlFile);
-						}
-						
-					} else {
-						String errorMessage = this.getMessageSource().getMessage("request.attachments.tooMany", new Object[] { applicationName }, Locale.ENGLISH);
-						throw new AditException(errorMessage);
-					}
-					attachmentCount++;
-				}
-				
-				// If no attachments were found then throw exception
-				if (attachmentCount < 1) {
-					String errorMessage = this.getMessageSource().getMessage("request.saveDocumentFile.file.noFilesSupplied", new Object[] { }, Locale.ENGLISH);
-					throw new AditException(errorMessage);
-				}
-			} else {
+			if (!isOwner) {
 				LOG.debug("Requested document does not belong to user. Document ID: " + request.getDocumentId() + ", User ID: " + userCode);
 				String errorMessage = this.getMessageSource().getMessage("document.doesNotBelongToUser", new Object[] { request.getDocumentId(), userCode }, Locale.ENGLISH);
 				throw new AditException(errorMessage);
+
 			}
+			
+			String xmlFile = null;
+			Iterator<Attachment> i = this.getRequestMessage().getAttachments();
+			int attachmentCount = 0;
+			boolean updatedExistingFile = false;
+			while(i.hasNext()) {
+				if(attachmentCount == 0) {
+					Attachment attachment = i.next();
+					LOG.debug("Attachment: " + attachment.getContentId());
+					
+					// Extract the SOAP message to a temporary file
+					String base64EncodedFile = extractXML(attachment);
+					
+					// Base64 decode and unzip the temporary file
+					xmlFile = Util.base64DecodeAndUnzip(base64EncodedFile, this.getConfiguration().getTempDir(), this.getConfiguration().getDeleteTemporaryFilesAsBoolean());
+					LOG.debug("Attachment unzipped to temporary file: " + xmlFile);
+					
+					// Extract large files from main document
+					FileSplitResult splitResult = Util.splitOutTags(xmlFile, "data", false, false, true, true);
+					
+					// Decode base64-encoded files
+					if ((splitResult.getSubFiles() != null) && (splitResult.getSubFiles().size() > 0)) {
+						for (String fileName : splitResult.getSubFiles()) {
+							String resultFile = Util.base64DecodeFile(fileName, this.getConfiguration().getTempDir());
+							// Replace encoded file with decoded file
+							(new File(fileName)).delete();
+							(new File(resultFile)).renameTo(new File(fileName));
+						}
+					}
+					
+					// Unmarshal the XML from the temporary file
+					Object unmarshalledObject = unMarshal(xmlFile);
+					
+					// Check if the marshalling result is what we expected
+					if(unmarshalledObject != null) {
+						LOG.debug("XML unmarshalled to type: " + unmarshalledObject.getClass());
+						if(unmarshalledObject instanceof OutputDocumentFile) {
+							OutputDocumentFile docFile = (OutputDocumentFile) unmarshalledObject;
+							updatedExistingFile = ((docFile.getId() != null) &&(docFile.getId() > 0)); 
+							SaveItemInternalResult saveResult = this.getDocumentService().saveDocumentFile(doc.getId(), docFile, xmlFile, remainingDiskQuota, this.getConfiguration().getTempDir());
+							if (saveResult.isSuccess()) {
+								long fileId = saveResult.getItemId();
+								LOG.debug("File saved with ID: " + fileId);
+								response.setFileId(fileId);
+							} else {
+								if ((saveResult.getMessages() != null) && (saveResult.getMessages().size() > 0)) {
+									throw new AditException(saveResult.getMessages().get(0).getValue());
+								} else {
+									throw new AditInternalException("File saving failed!");
+								}
+							}
+						} else {
+							throw new AditInternalException("Unmarshalling returned wrong type. Expected " + SaveDocumentRequestAttachment.class + ", got " + unmarshalledObject.getClass());
+						}
+					} else {
+						throw new AditInternalException("Unmarshalling failed for XML in file: " + xmlFile);
+					}
+					
+				} else {
+					String errorMessage = this.getMessageSource().getMessage("request.attachments.tooMany", new Object[] { applicationName }, Locale.ENGLISH);
+					throw new AditException(errorMessage);
+				}
+				attachmentCount++;
+			}
+			
+			// If no attachments were found then throw exception
+			if (attachmentCount < 1) {
+				String errorMessage = this.getMessageSource().getMessage("request.saveDocumentFile.file.noFilesSupplied", new Object[] { }, Locale.ENGLISH);
+				throw new AditException(errorMessage);
+			}
+			
+			// If saving was successful then add history event
+			DocumentHistory historyEvent = new DocumentHistory(
+				(updatedExistingFile ? DocumentService.HistoryType_ModifyFile : DocumentService.HistoryType_AddFile),
+				documentId,
+				requestDate.getTime(),
+				user,
+				xroadRequestUser,
+				header);
+			this.getDocumentService().getDocumentHistoryDAO().save(historyEvent);
 			
 			// Set response messages
 			response.setSuccess(true);
@@ -291,7 +313,7 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 			}
 		}
 		
-		super.logCurrentRequest(documentId, requestDate, additionalInformationForLog);
+		super.logCurrentRequest(documentId, requestDate.getTime(), additionalInformationForLog);
 		return response;
 	}
 

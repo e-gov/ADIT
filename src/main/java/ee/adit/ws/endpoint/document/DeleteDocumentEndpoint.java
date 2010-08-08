@@ -1,8 +1,6 @@
 package ee.adit.ws.endpoint.document;
 
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Iterator;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
@@ -10,10 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import ee.adit.dao.pojo.AditUser;
-import ee.adit.dao.pojo.Document;
-import ee.adit.dao.pojo.DocumentFile;
 import ee.adit.dao.pojo.DocumentHistory;
-import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.exception.AditException;
 import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.DeleteDocumentRequest;
@@ -51,13 +46,12 @@ public class DeleteDocumentEndpoint extends AbstractAditBaseEndpoint {
 		this.documentService = documentService;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional
 	protected Object invokeInternal(Object requestObject) throws Exception {
 		DeleteDocumentResponse response = new DeleteDocumentResponse();
 		ArrayOfMessage messages = new ArrayOfMessage();
-		Date requestDate = Calendar.getInstance().getTime();
+		Calendar requestDate = Calendar.getInstance();
 		String additionalInformationForLog = null;
 		Long documentId = null;
 		
@@ -102,6 +96,16 @@ public class DeleteDocumentEndpoint extends AbstractAditBaseEndpoint {
 				String errorMessage = this.getMessageSource().getMessage("user.nonExistent", new Object[] { userCode }, Locale.ENGLISH);
 				throw new AditException(errorMessage);
 			}
+			AditUser xroadRequestUser = null;
+			if (user.getUsertype().getShortName().equalsIgnoreCase("person")) {
+				xroadRequestUser = user;
+			} else {
+				try {
+					xroadRequestUser = this.getUserService().getUserByID(header.getIsikukood());
+				} catch (Exception ex) {
+					LOG.debug("Error when attempting to find local user matchinig the person that executed a company request.");
+				}
+			}
 			
 			// Kontrollime, et kasutajakonto ligipääs poleks peatatud (kasutaja lahkunud)
 			if((user.getActive() == null) || !user.getActive()) {
@@ -110,6 +114,16 @@ public class DeleteDocumentEndpoint extends AbstractAditBaseEndpoint {
 			}
 				
 			this.getDocumentService().DeleteDocument(request.getDocumentId(), userCode, applicationName);
+			
+			// If deletion was successful then add history event
+			DocumentHistory historyEvent = new DocumentHistory(
+				DocumentService.HistoryType_Delete,
+				documentId,
+				requestDate.getTime(),
+				user,
+				xroadRequestUser,
+				header);
+			this.getDocumentService().getDocumentHistoryDAO().save(historyEvent);
 			
 			// Set response messages
 			response.setSuccess(new Success(true));
@@ -132,7 +146,7 @@ public class DeleteDocumentEndpoint extends AbstractAditBaseEndpoint {
 			response.setMessages(arrayOfMessage);
 		}
 		
-		super.logCurrentRequest(documentId, requestDate, additionalInformationForLog);
+		super.logCurrentRequest(documentId, requestDate.getTime(), additionalInformationForLog);
 		return response;
 	}
 

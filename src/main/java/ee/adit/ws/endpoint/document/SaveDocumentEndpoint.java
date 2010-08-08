@@ -11,6 +11,7 @@ import org.springframework.ws.mime.Attachment;
 
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
+import ee.adit.dao.pojo.DocumentHistory;
 import ee.adit.exception.AditException;
 import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.ArrayOfMessage;
@@ -82,6 +83,16 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 				String errorMessage = this.getMessageSource().getMessage("user.nonExistent", new Object[] { userCode },	Locale.ENGLISH);
 				throw new AditException(errorMessage);
 			}
+			AditUser xroadRequestUser = null;
+			if (user.getUsertype().getShortName().equalsIgnoreCase("person")) {
+				xroadRequestUser = user;
+			} else {
+				try {
+					xroadRequestUser = this.getUserService().getUserByID(header.getIsikukood());
+				} catch (Exception ex) {
+					LOG.debug("Error when attempting to find local user matchinig the person that executed a company request.");
+				}
+			}
 
 			// Check whether or not the user is active (account not deleted)
 			if ((user.getActive() == null) || !user.getActive()) {
@@ -100,6 +111,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 			// All primary checks passed.
 			Iterator<Attachment> i = this.getRequestMessage().getAttachments();
 			int attachmentCount = 0;
+			boolean updatedExistingDocument = false;
 			while(i.hasNext()) {
 				if(attachmentCount == 0) {
 					Attachment attachment = i.next();
@@ -141,6 +153,8 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 							long remainingDiskQuota = this.getUserService().getRemainingDiskQuota(user, this.getConfiguration().getGlobalDiskQuota());
 							
 							if(document.getId() != null && document.getId() != 0) {
+								updatedExistingDocument = false;
+								
 								// Determine whether or not this document can be modified
 								Document doc = this.documentService.getDocumentDAO().getDocument(document.getId());
 								runExistingDocumentChecks(doc, user.getUserCode());
@@ -196,6 +210,16 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 				String errorMessage = this.getMessageSource().getMessage("request.saveDocument.document.noDocumentsSupplied", new Object[] { }, Locale.ENGLISH);
 				throw new AditException(errorMessage);
 			}
+			
+			// If saving was successful then add history event
+			DocumentHistory historyEvent = new DocumentHistory(
+				(updatedExistingDocument ? DocumentService.HistoryType_Modify : DocumentService.HistoryType_Create),
+				documentId,
+				requestDate.getTime(),
+				user,
+				xroadRequestUser,
+				header);
+			this.getDocumentService().getDocumentHistoryDAO().save(historyEvent);
 			
 			// Set response messages
 			response.setSuccess(new Success(true));
