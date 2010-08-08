@@ -368,7 +368,6 @@ src/main/resources/hbm/Usertype.hbm.xml -text
 src/main/resources/hibernate.cfg.xml -text
 src/main/resources/hibernate.reveng.xml -text
 src/main/resources/jdigidoc.cfg -text
-src/main/resources/jndi.properties -text
 src/main/resources/log4j.xml -text
 src/main/resources/messages_en.properties -text
 src/main/resources/xtee.properties -text
