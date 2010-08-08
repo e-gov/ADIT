@@ -223,9 +223,13 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 				Iterator<Attachment> i = this.getRequestMessage().getAttachments();
 				while(i.hasNext()) {
 					Attachment attachment = i.next();
-					this.getResponseMessage().addAttachment(attachment.getContentId(), attachment.getDataHandler());
+					String contentId = attachment.getContentId();
+					if ((contentId == null) || (contentId.length() < 1)) {
+						contentId = Util.generateRandomID();
+					}
+					this.getResponseMessage().addAttachment(contentId, attachment.getDataHandler());
 					if (!cidAdded) {
-						response.setDocument(new SaveDocumentRequestDocument("cid:" + attachment.getContentId()));
+						response.setDocument(new SaveDocumentRequestDocument("cid:" + contentId));
 						cidAdded = true;
 					}
 				}
@@ -252,9 +256,13 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 			Iterator<Attachment> i = this.getRequestMessage().getAttachments();
 			while(i.hasNext()) {
 				Attachment attachment = i.next();
-				this.getResponseMessage().addAttachment(attachment.getContentId(), attachment.getDataHandler());
+				String contentId = attachment.getContentId();
+				if ((contentId == null) || (contentId.length() < 1)) {
+					contentId = Util.generateRandomID();
+				}
+				this.getResponseMessage().addAttachment(contentId, attachment.getDataHandler());
 				if (!cidAdded) {
-					response.setDocument(new SaveDocumentRequestDocument("cid:" + attachment.getContentId()));
+					response.setDocument(new SaveDocumentRequestDocument("cid:" + contentId));
 					cidAdded = true;
 				}
 			}
