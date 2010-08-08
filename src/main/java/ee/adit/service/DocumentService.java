@@ -61,7 +61,6 @@ import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.dao.pojo.DocumentType;
 import ee.adit.dvk.DvkDAO;
 import ee.adit.exception.AditCodedException;
-import ee.adit.exception.AditException;
 import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.OutputDocumentFile;
 import ee.adit.pojo.SaveDocumentRequestAttachment;
