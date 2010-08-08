@@ -1,16 +1,12 @@
 package ee.adit.ws.endpoint.document;
 
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Iterator;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 
 import ee.adit.dao.pojo.AditUser;
-import ee.adit.dao.pojo.Document;
-import ee.adit.dao.pojo.DocumentFile;
 import ee.adit.dao.pojo.DocumentHistory;
 import ee.adit.exception.AditException;
 import ee.adit.pojo.ArrayOfMessage;
@@ -112,6 +108,14 @@ public class DeflateDocumentEndpoint extends AbstractAditBaseEndpoint {
 			// Kontrollime, et kasutajakonto ligipääs poleks peatatud (kasutaja lahkunud)
 			if((user.getActive() == null) || !user.getActive()) {
 				String errorMessage = this.getMessageSource().getMessage("user.inactive", new Object[] { userCode }, Locale.ENGLISH);
+				throw new AditException(errorMessage);
+			}
+			
+			// Check whether or not the application has rights to
+			// modify current user's data.
+			int applicationAccessLevelForUser = userService.getAccessLevelForUser(applicationName, user);
+			if(applicationAccessLevelForUser != 2) {
+				String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.forUser.write", new Object[] { applicationName, user.getUserCode() }, Locale.ENGLISH);
 				throw new AditException(errorMessage);
 			}
 				

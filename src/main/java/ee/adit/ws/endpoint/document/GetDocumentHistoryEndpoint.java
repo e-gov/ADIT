@@ -55,6 +55,7 @@ public class GetDocumentHistoryEndpoint extends AbstractAditBaseEndpoint {
 		this.documentService = documentService;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	protected Object invokeInternal(Object requestObject) throws Exception {
 		GetDocumentHistoryResponse response = new GetDocumentHistoryResponse();
@@ -113,7 +114,7 @@ public class GetDocumentHistoryEndpoint extends AbstractAditBaseEndpoint {
 			}
 			
 			// Check whether or not the application has rights to
-			// modify current user's data.
+			// read current user's data.
 			int applicationAccessLevelForUser = userService.getAccessLevelForUser(applicationName, user);
 			if(applicationAccessLevelForUser < 1) {
 				String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.forUser.read", new Object[] { applicationName, user.getUserCode() }, Locale.ENGLISH);
@@ -134,7 +135,7 @@ public class GetDocumentHistoryEndpoint extends AbstractAditBaseEndpoint {
 			// Check whether the document is marked as deleted
 			if ((doc.getDeleted() != null) && doc.getDeleted()) {
 				LOG.debug("Requested document is deleted. Document ID: " + request.getDocumentId());
-				String errorMessage = this.getMessageSource().getMessage("document.nonExistent", new Object[] { request.getDocumentId() }, Locale.ENGLISH);
+				String errorMessage = this.getMessageSource().getMessage("document.deleted", new Object[] { request.getDocumentId() }, Locale.ENGLISH);
 				throw new AditException(errorMessage);
 			}
 			

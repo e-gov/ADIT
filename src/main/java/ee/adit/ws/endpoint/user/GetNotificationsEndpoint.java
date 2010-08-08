@@ -85,6 +85,14 @@ public class GetNotificationsEndpoint extends AbstractAditBaseEndpoint {
 				throw new AditException(errorMessage);
 			}
 			
+			// Check whether or not the application has rights to
+			// read current user's data.
+			int applicationAccessLevelForUser = userService.getAccessLevelForUser(applicationName, user);
+			if(applicationAccessLevelForUser < 1) {
+				String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.forUser.read", new Object[] { applicationName, user.getUserCode() }, Locale.ENGLISH);
+				throw new AditException(errorMessage);
+			}
+			
 			// Set notification data
 			ArrayOfNotification notificationList = this.getUserService().getNotifications(user.getUserCode());
 			response.setNotifications(notificationList);

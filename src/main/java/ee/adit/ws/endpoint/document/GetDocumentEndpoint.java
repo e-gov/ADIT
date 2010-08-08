@@ -88,10 +88,10 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
 			}
 
 			// Kontrollime, kas päringu käivitanud infosüsteem tohib
-			// andmeid muuta (või üldse näha)
+			// andmeid näha
 			int accessLevel = this.getUserService().getAccessLevel(applicationName);
-			if (accessLevel != 2) {
-				String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.write", new Object[] { applicationName }, Locale.ENGLISH);
+			if (accessLevel < 1) {
+				String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.read", new Object[] { applicationName }, Locale.ENGLISH);
 				throw new AditException(errorMessage);
 			}
 
@@ -106,6 +106,14 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
 			// Kontrollime, et kasutajakonto ligipääs poleks peatatud (kasutaja lahkunud)
 			if ((user.getActive() == null) || !user.getActive()) {
 				String errorMessage = this.getMessageSource().getMessage("user.inactive", new Object[] { userCode }, Locale.ENGLISH);
+				throw new AditException(errorMessage);
+			}
+			
+			// Check whether or not the application has rights to
+			// read current user's data.
+			int applicationAccessLevelForUser = userService.getAccessLevelForUser(applicationName, user);
+			if(applicationAccessLevelForUser < 1) {
+				String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.forUser.read", new Object[] { applicationName, user.getUserCode() }, Locale.ENGLISH);
 				throw new AditException(errorMessage);
 			}
 

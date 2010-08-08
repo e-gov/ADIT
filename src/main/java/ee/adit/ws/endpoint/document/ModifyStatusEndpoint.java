@@ -117,6 +117,14 @@ public class ModifyStatusEndpoint extends AbstractAditBaseEndpoint {
 				throw new AditException(errorMessage);
 			}
 
+			// Check whether or not the application has rights to
+			// read current user's data.
+			int applicationAccessLevelForUser = userService.getAccessLevelForUser(applicationName, user);
+			if(applicationAccessLevelForUser < 1) {
+				String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.forUser.read", new Object[] { applicationName, user.getUserCode() }, Locale.ENGLISH);
+				throw new AditException(errorMessage);
+			}
+			
 			// Check whether the specified workflow status exists
 			DocumentWfStatus status = this.documentService.getDocumentWfStatusDAO().getDocumentWfStatus(request.getDocumentStatusId());
 			if (status == null) {

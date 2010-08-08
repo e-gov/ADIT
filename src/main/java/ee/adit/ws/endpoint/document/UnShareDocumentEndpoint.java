@@ -121,6 +121,14 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 				String errorMessage = this.getMessageSource().getMessage("user.inactive", new Object[] { userCode }, Locale.ENGLISH);
 				throw new AditException(errorMessage);
 			}
+			
+			// Check whether or not the application has rights to
+			// read current user's data.
+			int applicationAccessLevelForUser = userService.getAccessLevelForUser(applicationName, user);
+			if(applicationAccessLevelForUser < 1) {
+				String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.forUser.read", new Object[] { applicationName, user.getUserCode() }, Locale.ENGLISH);
+				throw new AditException(errorMessage);
+			}
 
 			// Now it is safe to load the document from database
 			// (and even necessary to do all the document-specific checks)

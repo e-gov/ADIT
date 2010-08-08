@@ -111,7 +111,15 @@ public class DeleteDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 				String errorMessage = this.getMessageSource().getMessage("user.inactive", new Object[] { userCode }, Locale.ENGLISH);
 				throw new AditException(errorMessage);
 			}
-				
+			
+			// Check whether or not the application has rights to
+			// modify current user's data.
+			int applicationAccessLevelForUser = userService.getAccessLevelForUser(applicationName, user);
+			if(applicationAccessLevelForUser != 2) {
+				String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.forUser.write", new Object[] { applicationName, user.getUserCode() }, Locale.ENGLISH);
+				throw new AditException(errorMessage);
+			}
+			
 			Document doc = this.documentService.getDocumentDAO().getDocument(request.getDocumentId());
 			
 			// Kontrollime, kas ID-le vastav dokument on olemas

@@ -89,6 +89,14 @@ public class SetNotificationsEndpoint extends AbstractAditBaseEndpoint {
 				throw new AditException(errorMessage);
 			}
 			
+			// Check whether or not the application has rights to
+			// modify current user's data.
+			int applicationAccessLevelForUser = userService.getAccessLevelForUser(applicationName, user);
+			if(applicationAccessLevelForUser != 2) {
+				String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.forUser.write", new Object[] { applicationName, user.getUserCode() }, Locale.ENGLISH);
+				throw new AditException(errorMessage);
+			}
+			
 			// Check whether or not all given notification types really exist
 			List<NotificationType> existingTypes = this.userService.getNotificationTypeDAO().getNotificationTypeList();
 			String incorrectNotificationTypes = "";
