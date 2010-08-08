@@ -264,18 +264,21 @@ public class DocumentService {
 				
 				Document document = (Document) session.get(Document.class, documentId);
 
-				// Remember IDs of existing files.
-				// This is useful later to find out which file(s) were added.
-				List<Long> existingFileIdList = new ArrayList<Long>();
+				// Remember highest ID of existing files.
+				// This is useful later to find out which file was added.
+				long maxId = -1;
 				if ((document != null) && (document.getDocumentFiles() != null)) {
 					Iterator it = document.getDocumentFiles().iterator();
 					if (it != null) {
 						while (it.hasNext()) {
 							DocumentFile f = (DocumentFile)it.next();
-							existingFileIdList.add(f.getId());
+							if (f.getId() > maxId) {
+								maxId = f.getId();
+							}
 						}
 					}
 				}
+				LOG.debug("Highest existing file ID: " + maxId);
 
 				// Document to database
 				try {
@@ -286,22 +289,22 @@ public class DocumentService {
 				
 				long fileId = 0;
 				if ((file.getId() != null) && (file.getId() > 0)) {
-					result.setItemId(file.getId());
-					LOG.debug("File saved with ID: " + file.getId());
+					fileId = file.getId();
+					LOG.debug("Existing file saved with ID: " + fileId);
 				} else if ((document != null) && (document.getDocumentFiles() != null)) {
 					Iterator it = document.getDocumentFiles().iterator();
 					if (it != null) {
 						while (it.hasNext()) {
 							DocumentFile f = (DocumentFile)it.next();
-							if (!existingFileIdList.contains(file.getId())) {
+							if (f.getId() > maxId) {
 								fileId = f.getId();
-								result.setItemId(fileId);
-								LOG.debug("File saved with ID: " + fileId);
+								LOG.debug("New file saved with ID: " + fileId);
 								break;
 							}
 						}
 					}
 				}
+				result.setItemId(fileId);
 				
 				return result;
 			}

@@ -733,10 +733,13 @@ public class DocumentDAO extends HibernateDaoSupport {
 					while (it.hasNext()) {
 						DocumentFile f = (DocumentFile)it.next();
 						if (f.getId() == attachmentFile.getId()) {
+							LOG.debug("Found existing file with ID " + attachmentFile.getId() + ". Updating existing file.");
 							documentFile = f;
 							break;
 						}
 					}
+				} else {
+					LOG.debug("Adding file as new file.");
 				}
 				
 				if ((document.getId() > 0) && (documentFile != null) && (documentFile.getId() < 1)) {
@@ -768,12 +771,12 @@ public class DocumentDAO extends HibernateDaoSupport {
 		
 		session.saveOrUpdate(document);
 		
-		// If new files werre added to an existing document then
-		// we have to reload document data from database. Otherwise
-		// we will not be able to return IDs of added files in
-		// query result.
+		// If new files were added to an existing document then
+		// we have to forcibly flush the session at this point.
+		// Otherwise we will not be able to return IDs of added
+		// files in query result.
 		if (newFilesAddedToExistingDocument) {
-			session.refresh(document);
+			session.flush();
 		}
 		
 		LOG.debug("Saved document ID: " + document.getId());
