@@ -1,13 +1,9 @@
 package ee.adit.ws.endpoint.user;
 
-import java.util.Locale;
-
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
-
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.exception.AditCodedException;
-import ee.adit.exception.AditException;
 import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.Message;
 import ee.adit.pojo.Success;
