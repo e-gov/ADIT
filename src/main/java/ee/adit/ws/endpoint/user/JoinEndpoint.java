@@ -94,42 +94,42 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 								String message =  null;
 								if(userReactivated) {
 									message = this.getMessageSource().getMessage("request.join.success.userReactivated", new Object[] { request.getUserType() }, Locale.ENGLISH);
+									messages.setMessage(this.getMessageService().getMessages("request.join.success.userReactivated", new Object[] { request.getUserType() }));
 								} else {
 									message = this.getMessageSource().getMessage("request.join.success.userModified", new Object[] { request.getUserType() }, Locale.ENGLISH);
+									messages.setMessage(this.getMessageService().getMessages("request.join.success.userModified", new Object[] { request.getUserType() }));
 								}
 								
 								response.setSuccess(new Success(true));
-								messages.addMessage(new Message("en", message));
 								additionalInformationForLog = "SUCCESS: " + message;
 								
-							} else {
-								String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.forUser.write", new Object[] { applicationName, aditUser.getUserCode() }, Locale.ENGLISH);
-								throw new AditException(errorMessage);
+							} else {								
+								AditCodedException aditCodedException = new AditCodedException("application.insufficientPrivileges.forUser.write");
+								aditCodedException.setParameters(new Object[] { applicationName, aditUser.getUserCode() });
+								throw aditCodedException;
 							}
-							
 						} else {
-							// Lisame uue kasutaja
 							LOG.info("Adding new user.");
 							userService.addUser(request.getUserName(), usertype, header.getAllasutus(), header.getIsikukood());
 							response.setSuccess(new Success(true));
 							String message = this.getMessageSource().getMessage("request.join.success.userAdded", new Object[] { request.getUserType() }, Locale.ENGLISH);
-							messages.addMessage(new Message("en", message));
 							additionalInformationForLog = "SUCCESS: " + message;
+							messages.setMessage(this.getMessageService().getMessages("request.join.success.userAdded", new Object[] { request.getUserType() }));
 						}
-						
 					} else {
 						String usertypes = this.getUserService().getUsertypesString();
-						String errorMessage = this.getMessageSource().getMessage("usertype.nonExistent", new Object[] { request.getUserType(), usertypes }, Locale.ENGLISH);
-						throw new AditException(errorMessage);
+						AditCodedException aditCodedException = new AditCodedException("application.insufficientPrivileges.write");
+						aditCodedException.setParameters(new Object[] { request.getUserType(), usertypes });
+						throw aditCodedException;						
 					}
 					
 				} else {
-					String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.write", new Object[] { applicationName }, Locale.ENGLISH);
-					throw new AditException(errorMessage);
+					AditCodedException aditCodedException = new AditCodedException("application.insufficientPrivileges.write");
+					aditCodedException.setParameters(new Object[] { applicationName });
+					throw aditCodedException;
 				}
 				
 			} else {
-				//String errorMessage = this.getMessageSource().getMessage("application.notRegistered", new Object[] { applicationName }, Locale.ENGLISH);
 				AditCodedException aditCodedException = new AditCodedException("application.notRegistered");
 				aditCodedException.setParameters(new Object[] { applicationName });
 				throw aditCodedException;
@@ -146,10 +146,7 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 			response.setSuccess(new Success(false));
 			ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
 			
-			if(e instanceof AditException) {
-				LOG.debug("Adding exception message to response object.");
-				arrayOfMessage.getMessage().add(new Message("en", e.getMessage()));
-			} else if(e instanceof AditCodedException) {
+			if(e instanceof AditCodedException) {
 				LOG.debug("Adding exception messages to response object.");
 				arrayOfMessage.setMessage(this.getMessageService().getMessages((AditCodedException) e));
 			} else {
@@ -175,34 +172,26 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 	}
 	
 	private void checkHeader(CustomXTeeHeader header) throws Exception {
-		String errorMessage = null;
 		if(header != null) {
 			if(header.getIsikukood() == null) {
-				errorMessage = this.getMessageSource().getMessage("request.header.undefined.personalCode", new Object[] {}, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				throw new AditCodedException("request.header.undefined.personalCode");
 			} else if(header.getInfosysteem() == null) {
-				errorMessage = this.getMessageSource().getMessage("request.header.undefined.systemName", new Object[] {}, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				throw new AditCodedException("request.header.undefined.systemName");
 			} else if(header.getAsutus() == null) {
-				errorMessage = this.getMessageSource().getMessage("request.header.undefined.institution", new Object[] {}, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				throw new AditCodedException("request.header.undefined.institution");
 			}
 		}
 	}
 	
 	private void checkRequest(JoinRequest request) {
-		String errorMessage = null; 
 		if(request != null) {
 			if(request.getUserType() == null || "".equalsIgnoreCase(request.getUserType().trim())) {
-				errorMessage = this.getMessageSource().getMessage("request.body.undefined.usertype", new Object[] {}, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				throw new AditCodedException("request.body.undefined.usertype");
 			} else if(request.getUserName() == null || "".equalsIgnoreCase(request.getUserName().trim())) {
-				errorMessage = this.getMessageSource().getMessage("request.body.undefined.username", new Object[] {}, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				throw new AditCodedException("request.body.undefined.username");
 			}
 		} else {
-			errorMessage = this.getMessageSource().getMessage("request.body.empty", new Object[] {}, Locale.ENGLISH);
-			throw new AditException(errorMessage);
+			throw new AditCodedException("request.body.empty");
 		}
 	}
 	
