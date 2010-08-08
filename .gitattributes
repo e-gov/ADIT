@@ -369,6 +369,7 @@ src/main/resources/hbm/Usertype.hbm.xml -text
 src/main/resources/jdigidoc.cfg -text
 src/main/resources/log4j.xml -text
 src/main/resources/messages_en.properties -text
+src/main/resources/messages_et.properties -text
 src/main/resources/xtee.properties -text
 src/main/webapp/META-INF/MANIFEST.MF -text
 src/main/webapp/WEB-INF/web.xml -text

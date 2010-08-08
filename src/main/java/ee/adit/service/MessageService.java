@@ -33,7 +33,8 @@ public class MessageService {
 				
 				for(int i = 0; i < locales.length; i++) {
 					Locale locale = locales[i];
-					if(locale.getLanguage().equalsIgnoreCase(language)) {
+					String langCountry = locale.getLanguage() + "_" + locale.getCountry();
+					if(langCountry.equalsIgnoreCase(language)) {
 						LOG.debug("Adding message for language: " + language);
 						String message = this.getMessageSource().getMessage(messageCode, parameters, locale);
 						result.add(new Message(locale.getLanguage(), message));

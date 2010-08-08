@@ -608,8 +608,8 @@
 		<property name="globalDiskQuota" value="10240000"/>
 		<property name="locales">
 			<list>
-				<value>en</value>
-				<value>ee</value>
+				<value>en_us</value>
+				<value>et_ee</value>
 			</list>
 		</property>
 	</bean>
