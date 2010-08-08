@@ -82,7 +82,7 @@ public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
 			// andmeid näha
 			int accessLevel = this.getUserService().getAccessLevel(applicationName);
 			if (accessLevel < 1) {
-				String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.write", new Object[] { applicationName }, Locale.ENGLISH);
+				String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.read", new Object[] { applicationName }, Locale.ENGLISH);
 				throw new AditException(errorMessage);
 			}
 
