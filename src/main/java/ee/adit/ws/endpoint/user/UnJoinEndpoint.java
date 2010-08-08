@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 
 import ee.adit.dao.pojo.AditUser;
+import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditException;
 import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.Message;
@@ -65,31 +66,34 @@ public class UnJoinEndpoint extends AbstractAditBaseEndpoint {
 							if(aditUser.getActive()) {
 								// Märgime kasutaja lahkunuks
 								this.getUserService().deactivateUser(aditUser);
-								
-								String message = this.getMessageSource().getMessage("request.unJoin.success", new Object[] { aditUser.getUserCode() }, Locale.ENGLISH);
-								messages.addMessage(new Message("en", message));
-								response.setSuccess(new Success(true));
 								LOG.info("User (" + aditUser.getUserCode() + ") deactivated.");
+								response.setSuccess(new Success(true));
+								messages.setMessage(this.getMessageService().getMessages("request.unJoin.success", new Object[] { aditUser.getUserCode() }));
 								
 							} else {
-								String errorMessage = this.getMessageSource().getMessage("request.unJoin.alreadyUnJoined", new Object[] { aditUser.getUserCode() }, Locale.ENGLISH);
-								throw new AditException(errorMessage);
+								AditCodedException aditCodedException = new AditCodedException("request.unJoin.alreadyUnJoined");
+								aditCodedException.setParameters(new Object[] { aditUser.getUserCode() });
+								throw aditCodedException;
 							}
 						} else {
-							String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.forUser.write", new Object[] { applicationName, aditUser.getUserCode() }, Locale.ENGLISH);
-							throw new AditException(errorMessage);
+							AditCodedException aditCodedException = new AditCodedException("application.insufficientPrivileges.forUser.write");
+							aditCodedException.setParameters(new Object[] { applicationName, aditUser.getUserCode() });
+							throw aditCodedException;
 						}
 					} else {
-						String errorMessage = this.getMessageSource().getMessage("user.nonExistent", new Object[] { header.getIsikukood() }, Locale.ENGLISH);
-						throw new AditException(errorMessage);
+						AditCodedException aditCodedException = new AditCodedException("user.nonExistent");
+						aditCodedException.setParameters(new Object[] { header.getIsikukood() });
+						throw aditCodedException;
 					}
 				} else {
-					String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.write", new Object[] { applicationName }, Locale.ENGLISH);
-					throw new AditException(errorMessage);
+					AditCodedException aditCodedException = new AditCodedException("application.insufficientPrivileges.write");
+					aditCodedException.setParameters(new Object[] { applicationName });
+					throw aditCodedException;
 				}				
 			} else {
-				String errorMessage = this.getMessageSource().getMessage("application.notRegistered", new Object[] { applicationName }, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				AditCodedException aditCodedException = new AditCodedException("application.notRegistered");
+				aditCodedException.setParameters(new Object[] { applicationName });
+				throw aditCodedException;
 			}
 			
 			// Set response messages
@@ -100,9 +104,9 @@ public class UnJoinEndpoint extends AbstractAditBaseEndpoint {
 			response.setSuccess(new Success(false));
 			ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
 			
-			if(e instanceof AditException) {
-				LOG.debug("Adding exception message to response object.");
-				arrayOfMessage.getMessage().add(new Message("en", e.getMessage()));
+			if(e instanceof AditCodedException) {
+				LOG.debug("Adding exception messages to response object.");
+				arrayOfMessage.setMessage(this.getMessageService().getMessages((AditCodedException) e));
 			} else {
 				arrayOfMessage.getMessage().add(new Message("en", "Service error"));
 			}
