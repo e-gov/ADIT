@@ -285,7 +285,10 @@ public class DocumentService {
 				}
 				
 				long fileId = 0;
-				if ((document != null) && (document.getDocumentFiles() != null)) {
+				if ((file.getId() != null) && (file.getId() > 0)) {
+					result.setItemId(file.getId());
+					LOG.debug("File saved with ID: " + file.getId());
+				} else if ((document != null) && (document.getDocumentFiles() != null)) {
 					Iterator it = document.getDocumentFiles().iterator();
 					if (it != null) {
 						while (it.hasNext()) {
