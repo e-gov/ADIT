@@ -100,6 +100,16 @@ public class ModifyStatusEndpoint extends AbstractAditBaseEndpoint {
 				String errorMessage = this.getMessageSource().getMessage("user.nonExistent", new Object[] { userCode },	Locale.ENGLISH);
 				throw new AditException(errorMessage);
 			}
+			AditUser xroadRequestUser = null;
+			if (user.getUsertype().getShortName().equalsIgnoreCase("person")) {
+				xroadRequestUser = user;
+			} else {
+				try {
+					xroadRequestUser = this.getUserService().getUserByID(header.getIsikukood());
+				} catch (Exception ex) {
+					LOG.debug("Error when attempting to find local user matchinig the person that executed a company request.");
+				}
+			}
 
 			// Kontrollime, et kasutajakonto ligipääs poleks peatatud (kasutaja lahkunud)
 			if ((user.getActive() == null) || !user.getActive()) {
@@ -164,15 +174,6 @@ public class ModifyStatusEndpoint extends AbstractAditBaseEndpoint {
 			}
 			
 			if (saveDocument) {
-				// Add history event
-				DocumentHistory historyEvent = new DocumentHistory();
-				historyEvent.setRemoteApplicationName(applicationName);
-				historyEvent.setDocumentId(doc.getId());
-				historyEvent.setDocumentHistoryType(DocumentService.HistoryType_ModifyStatus);
-				historyEvent.setEventDate(new Date());
-				historyEvent.setUserCode(userCode);
-				doc.getDocumentHistories().add(historyEvent);
-				
 				this.documentService.getDocumentDAO().save(doc, null, Long.MAX_VALUE, null);
 				
 				// If document status was successfully modified then send
@@ -198,6 +199,17 @@ public class ModifyStatusEndpoint extends AbstractAditBaseEndpoint {
 				throw new AditException(errorMessage);
 			}
 
+			// If status change was successful then add history event
+			DocumentHistory historyEvent = new DocumentHistory(
+				DocumentService.HistoryType_ModifyStatus,
+				documentId,
+				requestDate.getTime(),
+				user,
+				xroadRequestUser,
+				header);
+			this.getDocumentService().getDocumentHistoryDAO().save(historyEvent);
+
+			
 			// Set response messages
 			response.setSuccess(true);
 			messages.addMessage(new Message("en", this.getMessageSource().getMessage("request.modifyStatus.success", new Object[] { }, Locale.ENGLISH)));

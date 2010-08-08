@@ -1478,8 +1478,6 @@ public class DocumentService {
 
 		}
 		
-		boolean saveDocument = false;
-		
 		// Replace file contents with their MD5 hash codes
 		Iterator it = doc.getDocumentFiles().iterator();
 		while (it.hasNext()) {
@@ -1506,22 +1504,7 @@ public class DocumentService {
 		doc.setLocked(true);
 		doc.setLockingDate(new Date());
 		doc.setSignable(false);
-		saveDocument = true;
-		
-		// Salvestame dokumendi
-		if (saveDocument) {
-			// Lisame kustutamise ajaloosündmuse
-			DocumentHistory historyEvent = new DocumentHistory();
-			historyEvent.setRemoteApplicationName(applicationName);
-			historyEvent.setDocumentId(doc.getId());
-			historyEvent.setDocumentHistoryType(DocumentService.HistoryType_Deflate);
-			historyEvent.setEventDate(new Date());
-			historyEvent.setUserCode(userCode);
-			doc.getDocumentHistories().add(historyEvent);
-			
-			// Salvestame tehtud muudatused
-			this.getDocumentDAO().save(doc, null, Long.MAX_VALUE, null);
-		}
+		this.getDocumentDAO().save(doc, null, Long.MAX_VALUE, null);
 	}
 	
 	public MessageSource getMessageSource() {

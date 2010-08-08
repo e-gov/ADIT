@@ -49,12 +49,11 @@ public class DeflateDocumentEndpoint extends AbstractAditBaseEndpoint {
 		this.documentService = documentService;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	protected Object invokeInternal(Object requestObject) throws Exception {
 		DeflateDocumentResponse response = new DeflateDocumentResponse();
 		ArrayOfMessage messages = new ArrayOfMessage();
-		Date requestDate = Calendar.getInstance().getTime();
+		Calendar requestDate = Calendar.getInstance();
 		String additionalInformationForLog = null;
 		Long documentId = null;
 		
@@ -99,6 +98,16 @@ public class DeflateDocumentEndpoint extends AbstractAditBaseEndpoint {
 				String errorMessage = this.getMessageSource().getMessage("user.nonExistent", new Object[] { userCode }, Locale.ENGLISH);
 				throw new AditException(errorMessage);
 			}
+			AditUser xroadRequestUser = null;
+			if (user.getUsertype().getShortName().equalsIgnoreCase("person")) {
+				xroadRequestUser = user;
+			} else {
+				try {
+					xroadRequestUser = this.getUserService().getUserByID(header.getIsikukood());
+				} catch (Exception ex) {
+					LOG.debug("Error when attempting to find local user matchinig the person that executed a company request.");
+				}
+			}
 			
 			// Kontrollime, et kasutajakonto ligipääs poleks peatatud (kasutaja lahkunud)
 			if((user.getActive() == null) || !user.getActive()) {
@@ -107,6 +116,26 @@ public class DeflateDocumentEndpoint extends AbstractAditBaseEndpoint {
 			}
 				
 			this.getDocumentService().DeflateDocument(request.getDocumentId(), userCode, applicationName);
+			
+			// If deflation was successful then add history events
+			// for deflation and locking.
+			DocumentHistory deflateEvent = new DocumentHistory(
+				DocumentService.HistoryType_Deflate,
+				documentId,
+				requestDate.getTime(),
+				user,
+				xroadRequestUser,
+				header);
+			DocumentHistory lockEvent = new DocumentHistory(
+				DocumentService.HistoryType_Lock,
+				documentId,
+				requestDate.getTime(),
+				user,
+				xroadRequestUser,
+				header);
+			this.getDocumentService().getDocumentHistoryDAO().save(deflateEvent);
+			this.getDocumentService().getDocumentHistoryDAO().save(lockEvent);
+
 			
 			// Set response messages
 			response.setSuccess(new Success(true));
@@ -129,7 +158,7 @@ public class DeflateDocumentEndpoint extends AbstractAditBaseEndpoint {
 			response.setMessages(arrayOfMessage);
 		}
 		
-		super.logCurrentRequest(documentId, requestDate, additionalInformationForLog);
+		super.logCurrentRequest(documentId, requestDate.getTime(), additionalInformationForLog);
 		return response;
 	}
 	
