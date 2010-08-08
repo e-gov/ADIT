@@ -1,5 +1,6 @@
 package ee.adit.ws.endpoint.document;
 
+import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -21,9 +22,11 @@ import ee.adit.pojo.SaveDocumentFileRequestFile;
 import ee.adit.pojo.SaveDocumentFileResponse;
 import ee.adit.pojo.SaveDocumentRequestAttachment;
 import ee.adit.pojo.OutputDocumentFile;
+import ee.adit.pojo.SaveItemInternalResult;
 import ee.adit.service.DocumentService;
 import ee.adit.service.UserService;
 import ee.adit.util.CustomXTeeHeader;
+import ee.adit.util.FileSplitResult;
 import ee.adit.util.Util;
 import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
 import ee.webmedia.xtee.annotation.XTeeService;
@@ -181,6 +184,19 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 						xmlFile = Util.base64DecodeAndUnzip(base64EncodedFile, this.getConfiguration().getTempDir(), this.getConfiguration().getDeleteTemporaryFilesAsBoolean());
 						LOG.debug("Attachment unzipped to temporary file: " + xmlFile);
 						
+						// Extract large files from main document
+						FileSplitResult splitResult = Util.splitOutTags(xmlFile, "data", false, false, true, true);
+						
+						// Decode base64-encoded files
+						if ((splitResult.getSubFiles() != null) && (splitResult.getSubFiles().size() > 0)) {
+							for (String fileName : splitResult.getSubFiles()) {
+								String resultFile = Util.base64DecodeFile(fileName, this.getConfiguration().getTempDir());
+								// Replace encoded file with decoded file
+								(new File(fileName)).delete();
+								(new File(resultFile)).renameTo(new File(fileName));
+							}
+						}
+						
 						// Unmarshal the XML from the temporary file
 						Object unmarshalledObject = unMarshal(xmlFile);
 						
@@ -189,8 +205,18 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 							LOG.debug("XML unmarshalled to type: " + unmarshalledObject.getClass());
 							if(unmarshalledObject instanceof OutputDocumentFile) {
 								OutputDocumentFile docFile = (OutputDocumentFile) unmarshalledObject;
-								Long fileId = this.getDocumentService().saveDocumentFile(doc.getId(), docFile, xmlFile, remainingDiskQuota, this.getConfiguration().getTempDir());
-								response.setFileId(fileId);
+								SaveItemInternalResult saveResult = this.getDocumentService().saveDocumentFile(doc.getId(), docFile, xmlFile, remainingDiskQuota, this.getConfiguration().getTempDir());
+								if (saveResult.isSuccess()) {
+									long fileId = saveResult.getItemId();
+									LOG.debug("File saved with ID: " + fileId);
+									response.setFileId(fileId);
+								} else {
+									if ((saveResult.getMessages() != null) && (saveResult.getMessages().size() > 0)) {
+										throw new AditException(saveResult.getMessages().get(0).getValue());
+									} else {
+										throw new AditInternalException("File saving failed!");
+									}
+								}
 							} else {
 								throw new AditInternalException("Unmarshalling returned wrong type. Expected " + SaveDocumentRequestAttachment.class + ", got " + unmarshalledObject.getClass());
 							}

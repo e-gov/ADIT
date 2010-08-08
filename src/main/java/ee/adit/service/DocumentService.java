@@ -193,73 +193,6 @@ public class DocumentService {
 		}
 	}
 
-	/*
-	public List<String> extractFilesFromXML(List<OutputDocumentFile> files, String xmlFileName, long remainingDiskQuota, String tempDir) {
-
-		List<String> result = new ArrayList<String>();
-
-		// TODO: Check files - at least one file must be defined.
-		// The <data> tags of the <file> elements did not get unmarshalled (to
-		// save memory).
-		// That is why we need to check those files on the disk. We need the
-		// sizes of the <data> elements.
-		// 1. Get the XML file
-		// 2. find the <data> elements
-		// 3. For each <data> element, create a temporary file and add a
-		// reference to the document object
-		long totalSize = 0;
-
-		LOG.debug("Checking files");
-		try {
-			FileInputStream fileInputStream = null;
-			try {
-				fileInputStream = new FileInputStream(xmlFileName);
-
-				SaveDocumentAttachmentHandler handler = new SaveDocumentAttachmentHandler(tempDir);
-
-				XMLReader xmlReader = XMLReaderFactory.createXMLReader();
-				xmlReader.setContentHandler(handler);
-
-				InputSource inputSource = new InputSource(fileInputStream);
-				xmlReader.parse(inputSource);
-
-				result = handler.getFiles();
-			} finally {
-				if (fileInputStream != null) {
-					try {
-						fileInputStream.close();
-					} catch (Exception ex) {
-					}
-				}
-			}
-
-			// Add references to file objects
-			for (int i = 0; i < result.size(); i++) {
-				String fileName = result.get(i);
-				String base64DecodedFile = Util.base64DecodeFile(fileName, tempDir);
-
-				OutputDocumentFile file = files.get(i);
-				LOG.debug("Adding reference to file object. File ID: " + file.getId() + " (" + file.getName() + "). Temporary file: " + base64DecodedFile);
-				file.setSysTempFile(base64DecodedFile);
-
-				totalSize += (new File(base64DecodedFile)).length();
-			}
-
-			LOG.debug("Total size of document files: " + totalSize);
-
-			if (remainingDiskQuota < totalSize) {
-				String errorMessage = this.getMessageSource().getMessage("request.saveDocument.document.files.quotaExceeded", new Object[] { remainingDiskQuota, totalSize }, Locale.ENGLISH);
-				throw new AditException(errorMessage);
-			}
-
-		} catch (Exception e) {
-			throw new AditInternalException("Error parsing attachment: ", e);
-		}
-
-		return result;
-	}
-	*/
-
 	public String getValidDocumentTypes() {
 		StringBuffer result = new StringBuffer();
 		List<DocumentType> documentTypes = this.getDocumentTypeDAO().listDocumentTypes();
@@ -319,25 +252,55 @@ public class DocumentService {
 		});
 	}
 
-	public Long saveDocumentFile(final long documentId, final OutputDocumentFile file, final String attachmentXmlFile, final long remainingDiskQuota, final String temporaryFilesDir) {
-
+	public SaveItemInternalResult saveDocumentFile(final long documentId, final OutputDocumentFile file, final String attachmentXmlFile, final long remainingDiskQuota, final String temporaryFilesDir) {
 		final DocumentDAO docDao = this.getDocumentDAO();
 
-		return (Long) this.getDocumentDAO().getHibernateTemplate().execute(new HibernateCallback() {
+		return (SaveItemInternalResult) this.getDocumentDAO().getHibernateTemplate().execute(new HibernateCallback() {
+			@SuppressWarnings("unchecked")
 			public Object doInHibernate(Session session) throws HibernateException, SQLException {
-				Document document = (Document) session.get(Document.class, documentId);
+				SaveItemInternalResult result = new SaveItemInternalResult();
 				List<OutputDocumentFile> filesList = new ArrayList<OutputDocumentFile>();
 				filesList.add(file);
+				
+				Document document = (Document) session.get(Document.class, documentId);
+
+				// Remember IDs of existing files.
+				// This is useful later to find out which file(s) were added.
+				List<Long> existingFileIdList = new ArrayList<Long>();
+				if ((document != null) && (document.getDocumentFiles() != null)) {
+					Iterator it = document.getDocumentFiles().iterator();
+					if (it != null) {
+						while (it.hasNext()) {
+							DocumentFile f = (DocumentFile)it.next();
+							existingFileIdList.add(f.getId());
+						}
+					}
+				}
 
 				// Document to database
 				try {
-					docDao.save(document, filesList, remainingDiskQuota, session);
+					result = docDao.save(document, filesList, remainingDiskQuota, session);
 				} catch (Exception e) {
 					throw new HibernateException(e);
 				}
-				long fileId = filesList.get(0).getId();
-				LOG.debug("File saved with ID: " + fileId);
-				return fileId;
+				
+				long fileId = 0;
+				if ((document != null) && (document.getDocumentFiles() != null)) {
+					Iterator it = document.getDocumentFiles().iterator();
+					if (it != null) {
+						while (it.hasNext()) {
+							DocumentFile f = (DocumentFile)it.next();
+							if (!existingFileIdList.contains(file.getId())) {
+								fileId = f.getId();
+								result.setItemId(fileId);
+								LOG.debug("File saved with ID: " + fileId);
+								break;
+							}
+						}
+					}
+				}
+				
+				return result;
 			}
 		});
 	}

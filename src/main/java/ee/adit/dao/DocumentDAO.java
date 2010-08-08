@@ -649,40 +649,35 @@ public class DocumentDAO extends HibernateDaoSupport {
 	}
 	
 	
-	/**
-	 * FIXME - ei tööta praegu salvestamine
-	 * @param document
-	 * @param files
-	 * @return
-	 */
-	public SaveItemInternalResult save(final Document document, final List<OutputDocumentFile> files, final long remainingDiskQuota, Session existingSession) throws Exception {
-		SaveItemInternalResult result = new SaveItemInternalResult();
-		
+	public SaveItemInternalResult save(Document document, List<OutputDocumentFile> files, long remainingDiskQuota, Session existingSession) throws Exception {
 		if ((existingSession != null) && (existingSession.isOpen())) {
 			return saveImpl(document, files, remainingDiskQuota, existingSession);
 		} else {
-			result = (SaveItemInternalResult) this.getHibernateTemplate().execute(new HibernateCallback() {
-				public Object doInHibernate(Session session) throws HibernateException,	SQLException {
-					try {
-						return saveImpl(document, files, remainingDiskQuota, session);
-					} catch (Exception ex) {
-						throw new HibernateException(ex);
-					}
-				}
-			});
+			return save(document, files, remainingDiskQuota);
 		}
-		return result;
+	}
+	
+	public SaveItemInternalResult save(final Document document, final List<OutputDocumentFile> files, final long remainingDiskQuota) throws Exception {
+		return (SaveItemInternalResult) this.getHibernateTemplate().execute(new HibernateCallback() {
+			public Object doInHibernate(Session session) throws HibernateException,	SQLException {
+				try {
+					return saveImpl(document, files, remainingDiskQuota, session);
+				} catch (Exception ex) {
+					throw new HibernateException(ex);
+				}
+			}
+		});
 	}
 	
 	@SuppressWarnings("unchecked")
-	private SaveItemInternalResult saveImpl(final Document document, final List<OutputDocumentFile> files, final long remainingDiskQuota, Session session) throws IOException {
+	private SaveItemInternalResult saveImpl(Document document, List<OutputDocumentFile> files, long remainingDiskQuota, Session session) throws IOException {
 		SaveItemInternalResult result = new SaveItemInternalResult();
 		
 		if (document.getDocumentFiles() == null) {
 			document.setDocumentFiles(new HashSet<DocumentFile>());
 		}
 		
-		
+		boolean newFilesAddedToExistingDocument = false;
 		if (files != null) {
 			// Before actually saving files check data and disk quota
 			long requiredDiskSpace = 0;
@@ -744,6 +739,10 @@ public class DocumentDAO extends HibernateDaoSupport {
 					}
 				}
 				
+				if ((document.getId() > 0) && (documentFile != null) && (documentFile.getId() < 1)) {
+					newFilesAddedToExistingDocument = true;
+				}
+				
 				String fileName = attachmentFile.getSysTempFile();
 				FileInputStream fileInputStream = null;
 				try {
@@ -768,6 +767,15 @@ public class DocumentDAO extends HibernateDaoSupport {
 		}
 		
 		session.saveOrUpdate(document);
+		
+		// If new files werre added to an existing document then
+		// we have to reload document data from database. Otherwise
+		// we will not be able to return IDs of added files in
+		// query result.
+		if (newFilesAddedToExistingDocument) {
+			session.refresh(document);
+		}
+		
 		LOG.debug("Saved document ID: " + document.getId());
 		
 		result.setItemId(document.getId());
