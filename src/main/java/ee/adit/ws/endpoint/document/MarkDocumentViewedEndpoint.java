@@ -216,7 +216,7 @@ public class MarkDocumentViewedEndpoint extends AbstractAditBaseEndpoint {
 						}
 					} else {
 						LOG.debug("Requested document is deflated. Document ID: " + request.getDocumentId());
-						String errorMessage = this.getMessageSource().getMessage("document.deflated", new Object[] { doc.getDeflateDate() }, Locale.ENGLISH);
+						String errorMessage = this.getMessageSource().getMessage("document.deflated", new Object[] { Util.dateToEstonianDateString(doc.getDeflateDate()) }, Locale.ENGLISH);
 						throw new AditException(errorMessage);
 					}
 				} else {

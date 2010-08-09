@@ -144,7 +144,7 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
 			// Check whether the document is marked as deflated
 			if ((doc.getDeflated() != null) && doc.getDeflated()) {
 				LOG.debug("Requested document is deflated. Document ID: " + request.getDocumentId());
-				String errorMessage = this.getMessageSource().getMessage("document.deflated", new Object[] { doc.getDeflateDate() }, Locale.ENGLISH);
+				String errorMessage = this.getMessageSource().getMessage("document.deflated", new Object[] { Util.dateToEstonianDateString(doc.getDeflateDate()) }, Locale.ENGLISH);
 				throw new AditException(errorMessage);
 			}
 			

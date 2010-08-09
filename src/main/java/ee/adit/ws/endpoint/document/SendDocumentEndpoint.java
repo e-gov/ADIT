@@ -26,6 +26,7 @@ import ee.adit.pojo.Success;
 import ee.adit.service.DocumentService;
 import ee.adit.service.UserService;
 import ee.adit.util.CustomXTeeHeader;
+import ee.adit.util.Util;
 import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
 import ee.webmedia.xtee.annotation.XTeeService;
 
@@ -103,7 +104,7 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 			// Check whether the document is marked as deflated
 			if ((doc.getDeflated() != null) && doc.getDeflated()) {
 				LOG.debug("Requested document is deflated. Document ID: " + request.getDocumentId());
-				String errorMessage = this.getMessageSource().getMessage("document.deflated", new Object[] { doc.getDeflateDate() }, Locale.ENGLISH);
+				String errorMessage = this.getMessageSource().getMessage("document.deflated", new Object[] { Util.dateToEstonianDateString(doc.getDeflateDate()) }, Locale.ENGLISH);
 				throw new AditException(errorMessage);
 			}
 			

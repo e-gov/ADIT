@@ -311,7 +311,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 			throw new AditException(errorMessage);
 		}
 		if ((existingDoc.getDeflated() != null) && existingDoc.getDeflated()) {
-			String errorMessage = this.getMessageSource().getMessage("request.saveDocument.document.deflated", new Object[] { existingDoc.getDeflateDate() }, Locale.ENGLISH);
+			String errorMessage = this.getMessageSource().getMessage("request.saveDocument.document.deflated", new Object[] { Util.dateToEstonianDateString(existingDoc.getDeflateDate()) }, Locale.ENGLISH);
 			throw new AditException(errorMessage);
 		}
 		if ((existingDoc.getDeleted() != null) && existingDoc.getDeleted()) {
