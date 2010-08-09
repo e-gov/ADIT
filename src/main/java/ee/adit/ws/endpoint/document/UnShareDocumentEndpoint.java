@@ -255,7 +255,7 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 						if ((recipient != null) && (userService.findNotification(recipient.getUserNotifications(), ScheduleClient.NotificationType_Share) != null)) {
 							ScheduleClient.addEvent(
 								recipient,
-								this.getMessageSource().getMessage("scheduler.message.share", new Object[] { doc.getTitle(), userCode }, Locale.ENGLISH),
+								this.getMessageSource().getMessage("scheduler.message.unShare", new Object[] { userCode, doc.getTitle() }, Locale.ENGLISH),
 								this.getConfiguration().getSchedulerEventTypeName(),
 								requestDate,
 								ScheduleClient.NotificationType_Share,

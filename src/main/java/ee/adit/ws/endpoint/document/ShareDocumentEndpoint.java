@@ -15,7 +15,6 @@ import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.exception.AditException;
 import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.ArrayOfRecipientStatus;
-import ee.adit.pojo.GetNotificationsResponse;
 import ee.adit.pojo.Message;
 import ee.adit.pojo.RecipientStatus;
 import ee.adit.pojo.ShareDocumentRequest;
@@ -220,32 +219,24 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 				doc.setSignable(true);
 				
 				// Lisame jagamise ajaloosündmuse
-				DocumentHistory sharingEvent = new DocumentHistory();
-				sharingEvent.setRemoteApplicationName(applicationName);
-				sharingEvent.setDocumentId(doc.getId());
-				sharingEvent.setDocumentHistoryType(DocumentService.HistoryType_Share);
-				sharingEvent.setEventDate(requestDate.getTime());
-				sharingEvent.setUserCode(user.getUserCode());
-				sharingEvent.setUserName(user.getFullName());
-				sharingEvent.setXteeUserCode(header.getIsikukood());
-				if (xroadRequestUser != null) {
-					sharingEvent.setXteeUserName(xroadRequestUser.getFullName());
-				}
+				DocumentHistory sharingEvent = new DocumentHistory(
+						DocumentService.HistoryType_Share,
+						documentId,
+						requestDate.getTime(),
+						user,
+						xroadRequestUser,
+						header);
 				doc.getDocumentHistories().add(sharingEvent);
 				
 				// Lisame lukustamise ajaloosündmuse
-				DocumentHistory lockingEvent = new DocumentHistory();
-				lockingEvent.setRemoteApplicationName(applicationName);
-				lockingEvent.setDocumentId(doc.getId());
-				lockingEvent.setDocumentHistoryType(DocumentService.HistoryType_Lock);
-				lockingEvent.setEventDate(requestDate.getTime());
-				lockingEvent.setUserCode(user.getUserCode());
-				lockingEvent.setUserName(user.getFullName());
-				lockingEvent.setXteeUserCode(header.getIsikukood());
-				if (xroadRequestUser != null) {
-					lockingEvent.setXteeUserName(xroadRequestUser.getFullName());
-				}
-				doc.getDocumentHistories().add(lockingEvent);
+				DocumentHistory lockEvent = new DocumentHistory(
+						DocumentService.HistoryType_Lock,
+						documentId,
+						requestDate.getTime(),
+						user,
+						xroadRequestUser,
+						header);
+				doc.getDocumentHistories().add(lockEvent);
 				
 				this.documentService.getDocumentDAO().save(doc, null, Long.MAX_VALUE, null);
 				

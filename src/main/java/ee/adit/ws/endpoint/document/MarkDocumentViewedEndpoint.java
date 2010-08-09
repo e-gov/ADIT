@@ -14,7 +14,6 @@ import ee.adit.dao.pojo.DocumentHistory;
 import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.exception.AditException;
 import ee.adit.pojo.ArrayOfMessage;
-import ee.adit.pojo.ConfirmSignatureResponse;
 import ee.adit.pojo.MarkDocumentViewedRequest;
 import ee.adit.pojo.MarkDocumentViewedResponse;
 import ee.adit.pojo.Message;
@@ -50,6 +49,7 @@ public class MarkDocumentViewedEndpoint extends AbstractAditBaseEndpoint {
 		this.documentService = documentService;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	protected Object invokeInternal(Object requestObject) throws Exception {
 		MarkDocumentViewedResponse response = new MarkDocumentViewedResponse();
@@ -99,6 +99,16 @@ public class MarkDocumentViewedEndpoint extends AbstractAditBaseEndpoint {
 			if (user == null) {
 				String errorMessage = this.getMessageSource().getMessage("user.nonExistent", new Object[] { userCode },	Locale.ENGLISH);
 				throw new AditException(errorMessage);
+			}
+			AditUser xroadRequestUser = null;
+			if (user.getUsertype().getShortName().equalsIgnoreCase("person")) {
+				xroadRequestUser = user;
+			} else {
+				try {
+					xroadRequestUser = this.getUserService().getUserByID(header.getIsikukood());
+				} catch (Exception ex) {
+					LOG.debug("Error when attempting to find local user matchinig the person that executed a company request.");
+				}
 			}
 
 			// Kontrollime, et kasutajakonto ligipääs poleks peatatud (kasutaja lahkunud)
@@ -166,12 +176,13 @@ public class MarkDocumentViewedEndpoint extends AbstractAditBaseEndpoint {
 							
 							if (!isViewed) {
 								// Add first viewing history event
-								DocumentHistory historyEvent = new DocumentHistory();
-								historyEvent.setRemoteApplicationName(applicationName);
-								historyEvent.setDocumentId(doc.getId());
-								historyEvent.setDocumentHistoryType(DocumentService.HistoryType_MarkViewed);
-								historyEvent.setEventDate(requestDate.getTime());
-								historyEvent.setUserCode(userCode);
+								DocumentHistory historyEvent = new DocumentHistory(
+										DocumentService.HistoryType_MarkViewed,
+										documentId,
+										requestDate.getTime(),
+										user,
+										xroadRequestUser,
+										header);
 								doc.getDocumentHistories().add(historyEvent);
 								saveDocument = true;
 							}
