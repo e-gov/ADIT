@@ -59,7 +59,7 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	protected Object invokeInternal(Object requestObject) throws Exception {
+	protected Object invokeInternal(Object requestObject) {
 		ConfirmSignatureResponse response = new ConfirmSignatureResponse();
 		ArrayOfMessage messages = new ArrayOfMessage();
 		Calendar requestDate = Calendar.getInstance();

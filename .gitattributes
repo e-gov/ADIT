@@ -55,6 +55,9 @@ doc/testMessages/join.v1/error_incorrect_soap_body.xml -text
 doc/testMessages/join.v1/error_incorrect_soap_body_response.xml -text
 doc/testMessages/join.v1/error_incorrect_usertype.xml -text
 doc/testMessages/join.v1/error_incorrect_usertype_response.xml -text
+doc/testMessages/prepareSignature.v1/38005130332.cer -text
+doc/testMessages/prepareSignature.v1/38005130332.cer.base64 -text
+doc/testMessages/prepareSignature.v1/38005130332.cer.gz -text
 doc/testMessages/saveDocument.v1/addDocument_5MB/saveDocumentV1.base64 -text
 doc/testMessages/saveDocument.v1/addDocument_5MB/saveDocumentV1.xml -text
 doc/testMessages/saveDocument.v1/addDocument_5MB/saveDocumentV1_request.xml -text
@@ -78,6 +81,12 @@ lib/asm-attrs.jar -text
 lib/asm.jar -text
 lib/avalon-framework-4.2.0.jar -text
 lib/batik-all-1.7.jar -text
+lib/bcprov-jdk13-118.jar -text
+lib/bcprov-jdk14-125.jar -text
+lib/bcprov-jdk14-126.jar -text
+lib/bcprov-jdk14-133.jar -text
+lib/bcprov-jdk15-125.jar -text
+lib/bctsp-jdk14-133.jar -text
 lib/c3p0-0.9.0.jar -text
 lib/castor-1.3.1-core.jar -text
 lib/castor-1.3.1.jar -text
