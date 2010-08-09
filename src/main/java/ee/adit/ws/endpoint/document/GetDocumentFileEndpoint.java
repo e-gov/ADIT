@@ -177,8 +177,9 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 								String xmlFile = outputToFile(docFiles);
 								Util.joinSplitXML(xmlFile, "data");
 								
-								// 2. GZip and Base64 encode the temporary file
-								String gzipFileName = Util.gzipAndBase64Encode(xmlFile, this.getConfiguration().getTempDir(), this.getConfiguration().getDeleteTemporaryFilesAsBoolean());
+								// 2. GZip the temporary file
+								// Base64 encoding will be done at SOAP envelope level
+								String gzipFileName = Util.gzipFile(xmlFile, this.getConfiguration().getTempDir());
 		
 								// 3. Add as an attachment
 								String contentID = addAttachment(gzipFileName);

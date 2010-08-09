@@ -15,7 +15,6 @@ import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.exception.AditException;
 import ee.adit.pojo.ArrayOfMessage;
-import ee.adit.pojo.ConfirmSignatureResponse;
 import ee.adit.pojo.Message;
 import ee.adit.pojo.PrepareSignatureRequest;
 import ee.adit.pojo.PrepareSignatureResponse;

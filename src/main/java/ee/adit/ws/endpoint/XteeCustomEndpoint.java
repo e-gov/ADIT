@@ -22,6 +22,7 @@ import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.soap.AttachmentPart;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeader;
@@ -62,6 +63,8 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 	private SaajSoapMessage responseMessage; 
 	
 	private SaajSoapMessage requestMessage;
+	
+	private boolean ignoreAttachmentHeaders;
 	
 	public final void invoke(MessageContext messageContext) throws Exception {	
 		
@@ -125,11 +128,23 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 		return query;
 	}
 	
+	@SuppressWarnings("unchecked")
 	private void getResponse(CustomXTeeHeader header, Document query, SOAPMessage responseMessage, SOAPMessage requestMessage, Document operationNode) throws Exception {
 		SOAPElement teenusElement = createXteeMessageStructure(requestMessage, responseMessage);
 		if (!metaService) copyParing(query, teenusElement);
 		invokeInternal(operationNode, teenusElement, header);
 		if (!metaService) addHeader(header, responseMessage);
+		
+		if ((responseMessage != null) && !this.ignoreAttachmentHeaders) {
+			Iterator it = responseMessage.getAttachments();
+			if (it != null) {
+				while (it.hasNext()) {
+					AttachmentPart at = (AttachmentPart) it.next();
+					at.setMimeHeader("Content-Transfer-Encoding", "base64");
+					at.setMimeHeader("Content-Encoding", "gzip");
+				}
+			}
+		}
 	}
 	
 	private SOAPElement createXteeMessageStructure(SOAPMessage requestMessage, SOAPMessage responseMessage) throws Exception {
@@ -207,6 +222,19 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 
 	public void setRequestMessage(SaajSoapMessage requestMessage) {
 		this.requestMessage = requestMessage;
+	}
+
+	public boolean isIgnoreAttachmentHeaders() {
+		return ignoreAttachmentHeaders;
+	}
+
+	/**
+	 * If true then SOAP attachment headers will not be corrected before
+	 * sending query response. This is useful when returning original
+	 * attachments within an error message.
+	 */
+	public void setIgnoreAttachmentHeaders(boolean ignoreAttachmentHeaders) {
+		this.ignoreAttachmentHeaders = ignoreAttachmentHeaders;
 	}
 
 }

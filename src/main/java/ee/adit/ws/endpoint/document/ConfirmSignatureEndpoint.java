@@ -1,7 +1,6 @@
 package ee.adit.ws.endpoint.document;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.Locale;
 
@@ -15,7 +14,6 @@ import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.exception.AditException;
 import ee.adit.pojo.ArrayOfMessage;
-import ee.adit.pojo.GetNotificationsResponse;
 import ee.adit.pojo.Message;
 import ee.adit.pojo.ConfirmSignatureRequest;
 import ee.adit.pojo.ConfirmSignatureResponse;
@@ -59,6 +57,7 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
 		this.digidocConfigurationFile = digidocConfigurationFile;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected Object invokeInternal(Object requestObject) throws Exception {
 		ConfirmSignatureResponse response = new ConfirmSignatureResponse();

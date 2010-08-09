@@ -243,6 +243,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 			
 			LOG.debug("Adding request attachments to response object.");
 			try {
+				super.setIgnoreAttachmentHeaders(true);
 				boolean cidAdded = false;
 				Iterator<Attachment> i = this.getRequestMessage().getAttachments();
 				while(i.hasNext()) {
@@ -276,6 +277,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 		response.setMessages(arrayOfMessage);
 		LOG.debug("Adding request attachments to response object.");
 		try {
+			super.setIgnoreAttachmentHeaders(true);
 			boolean cidAdded = false;
 			Iterator<Attachment> i = this.getRequestMessage().getAttachments();
 			while(i.hasNext()) {

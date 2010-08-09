@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.exception.AditException;
 import ee.adit.pojo.ArrayOfMessage;
-import ee.adit.pojo.ConfirmSignatureResponse;
 import ee.adit.pojo.GetDocumentListRequest;
 import ee.adit.pojo.GetDocumentListResponse;
 import ee.adit.pojo.GetDocumentListResponseAttachment;
@@ -119,8 +118,9 @@ public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
 				// 1. Convert java list to XML string and output to file
 				String xmlFile = marshal(att);
 				
-				// 2. GZip and Base64 encode the temporary file
-				String gzipFileName = Util.gzipAndBase64Encode(xmlFile, this.getConfiguration().getTempDir(), this.getConfiguration().getDeleteTemporaryFilesAsBoolean());
+				// 2. GZip the temporary file
+				// Base64 encoding will be done at SOAP envelope level
+				String gzipFileName = Util.gzipFile(xmlFile, this.getConfiguration().getTempDir());
 
 				// 3. Add as an attachment
 				String contentID = addAttachment(gzipFileName);

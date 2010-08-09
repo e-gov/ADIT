@@ -92,10 +92,11 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 							// 1. Convert java list to XML string and output to file
 							String xmlFile = outputToFile(userList);
 							
-							// 3. GZip and Base64 encode the temporary file
-							String gzipFileName = Util.gzipAndBase64Encode(xmlFile, this.getConfiguration().getTempDir(), this.getConfiguration().getDeleteTemporaryFilesAsBoolean());
+							// 2. GZip the temporary file
+							// Base64 encoding will be done at SOAP envelope level
+							String gzipFileName = Util.gzipFile(xmlFile, this.getConfiguration().getTempDir());
 
-							// 4. Add as an attachment
+							// 3. Add as an attachment
 							String contentID = addAttachment(gzipFileName);
 							UserList getJoinedResponseUserList = new UserList();
 							getJoinedResponseUserList.setHref("cid:" + contentID);

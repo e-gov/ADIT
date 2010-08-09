@@ -1,6 +1,5 @@
 package ee.adit.ws.endpoint.document;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -166,8 +165,9 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
 								String xmlFile = marshal(resultDoc);
 								Util.joinSplitXML(xmlFile, "data");
 								
-								// 2. GZip and Base64 encode the temporary file
-								String gzipFileName = Util.gzipAndBase64Encode(xmlFile, this.getConfiguration().getTempDir(), this.getConfiguration().getDeleteTemporaryFilesAsBoolean());
+								// 2. GZip the temporary file
+								// Base64 encoding will be done at SOAP envelope level
+								String gzipFileName = Util.gzipFile(xmlFile, this.getConfiguration().getTempDir());
 		
 								// 3. Add as an attachment
 								String contentID = addAttachment(gzipFileName);

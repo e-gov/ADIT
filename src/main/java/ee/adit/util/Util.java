@@ -171,6 +171,38 @@ public class Util {
 		return resultFileName;
 	}
 
+	public static String gzipFile(String inputFile, String tempDir) throws IOException {
+		FileInputStream in = null;
+		FileOutputStream zipOutFile = null;
+		GZIPOutputStream out = null;
+		
+		// Pack data to GZip format
+		String zipOutFileName = inputFile + "_zipOutBuffer.adit";
+		LOG.debug("Packing data to GZip format. Input file: \""+ inputFile +"\", output file: \"" + zipOutFileName + "\"");
+		try {
+			in = new FileInputStream(inputFile);
+			zipOutFile = new FileOutputStream(zipOutFileName, false);
+			out = new GZIPOutputStream(zipOutFile);
+			byte[] buf = new byte[1024];
+			int len;
+			while ((len = in.read(buf)) > 0) {
+				LOG.debug(new String(buf, 0, len, "UTF-8"));
+				out.write(buf, 0, len);
+			}
+			out.finish();
+		} finally {
+			safeCloseStream(out);
+			safeCloseStream(zipOutFile);
+			safeCloseStream(in);
+			out = null;
+			zipOutFile = null;
+			in = null;
+		}
+
+		LOG.debug("GZip complete");
+		return zipOutFileName;
+	}
+	
 	public static String base64EncodeFile(String inputFile, String tempDir) throws IOException {
 		String resultFileName = null;
 

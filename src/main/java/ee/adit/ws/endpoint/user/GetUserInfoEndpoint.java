@@ -1,40 +1,28 @@
 package ee.adit.ws.endpoint.user;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
-import javax.xml.soap.AttachmentPart;
-import javax.xml.soap.SOAPElement;
-import javax.xml.soap.SOAPMessage;
-
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.ws.mime.Attachment;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import ee.adit.exception.AditException;
 import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.ArrayOfMessage;
-import ee.adit.pojo.GetJoinedRequest;
-import ee.adit.pojo.GetJoinedResponse;
 import ee.adit.pojo.GetUserInfoRequest;
 import ee.adit.pojo.GetUserInfoRequestAttachmentUserList;
 import ee.adit.pojo.GetUserInfoResponse;
 import ee.adit.pojo.GetUserInfoResponseAttachment;
 import ee.adit.pojo.GetUserInfoResponseAttachmentUser;
 import ee.adit.pojo.Message;
-import ee.adit.pojo.SetNotificationsResponse;
 import ee.adit.pojo.Success;
 import ee.adit.pojo.UserList;
 import ee.adit.service.UserService;
 import ee.adit.util.CustomXTeeHeader;
 import ee.adit.util.Util;
 import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
-import ee.webmedia.xtee.XTeeHeader;
 import ee.webmedia.xtee.annotation.XTeeService;
 
 @XTeeService(name = "getUserInfo", version = "v1")
@@ -120,7 +108,9 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 									
 									String responseAttachmentXMLFile = this.marshal(responseAttachment);
 									
-									String attachmentFile = Util.gzipAndBase64Encode(responseAttachmentXMLFile, this.getConfiguration().getTempDir(), this.getConfiguration().getDeleteTemporaryFilesAsBoolean());
+									// Compress response attachment
+									// Base64 encoding will be done at SOAP envelope level
+									String attachmentFile = Util.gzipFile(responseAttachmentXMLFile, this.getConfiguration().getTempDir());
 									
 									// Add as an attachment
 									String contentID = addAttachment(attachmentFile);
@@ -152,6 +142,8 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 				throw new AditException(errorMessage);
 			}
 			
+			response.setSuccess(new Success(true));
+			// TODO: Add success message
 		} catch (Exception e) {
 			LOG.error("Exception: ", e);
 			response.setSuccess(new Success(false));
