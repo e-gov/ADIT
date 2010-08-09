@@ -19,15 +19,12 @@ package ee.adit.ws.endpoint;
 import java.util.Iterator;
 
 import javax.xml.namespace.QName;
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.soap.AttachmentPart;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPMessage;
-import javax.xml.ws.handler.soap.SOAPMessageContext;
 
 import org.apache.log4j.Logger;
 import org.springframework.ws.context.MessageContext;
@@ -66,6 +63,7 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 	
 	private boolean ignoreAttachmentHeaders;
 	
+	@SuppressWarnings("unchecked")
 	public final void invoke(MessageContext messageContext) throws Exception {	
 		
 		SOAPMessage paringMessage = SOAPUtil.extractSoapMessage(messageContext.getRequest());
