@@ -1,4 +1,4 @@
--- USERTYPE --
+﻿-- USERTYPE --
 
 INSERT INTO &&ADIT_SCHEMA..usertype (
 	short_name,

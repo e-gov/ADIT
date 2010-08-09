@@ -14,3 +14,4 @@ accept ADIT_INDEX_TABLESPACE default 'ADIT_INDX';
 
 -- Insert classificators
 @@run_dml.sql
+
