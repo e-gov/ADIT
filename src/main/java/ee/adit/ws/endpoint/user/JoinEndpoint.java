@@ -115,7 +115,7 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 						}
 					} else {
 						String usertypes = this.getUserService().getUsertypesString();
-						AditCodedException aditCodedException = new AditCodedException("application.insufficientPrivileges.write");
+						AditCodedException aditCodedException = new AditCodedException("usertype.nonExistent");
 						aditCodedException.setParameters(new Object[] { request.getUserType(), usertypes });
 						throw aditCodedException;						
 					}
