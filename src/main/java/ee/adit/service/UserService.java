@@ -512,6 +512,14 @@ public class UserService {
 		}
 	}
 	
+	public void checkApplicationReadPrivilege(String applicationName) {
+		int accessLevel = getAccessLevel(applicationName);
+		if(accessLevel < 1) {
+			AditCodedException aditCodedException = new AditCodedException("application.insufficientPrivileges.read");
+			aditCodedException.setParameters(new Object[] { applicationName });
+			throw aditCodedException;
+		}
+	}
 	
 	public RemoteApplicationDAO getRemoteApplicationDAO() {
 		return remoteApplicationDAO;

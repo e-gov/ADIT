@@ -118,6 +118,7 @@ public class DeflateDocumentEndpoint extends AbstractAditBaseEndpoint {
 				throw aditCodedException;
 			}
 			
+			
 			// Check whether or not the application has rights to
 			// modify current user's data.
 			int applicationAccessLevelForUser = userService.getAccessLevelForUser(applicationName, user);

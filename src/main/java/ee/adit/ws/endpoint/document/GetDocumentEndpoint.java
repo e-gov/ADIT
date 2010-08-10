@@ -14,7 +14,7 @@ import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.DocumentHistory;
 import ee.adit.dao.pojo.DocumentSharing;
-import ee.adit.exception.AditException;
+import ee.adit.exception.AditCodedException;
 import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.GetDocumentRequest;
 import ee.adit.pojo.GetDocumentResponse;
@@ -85,40 +85,35 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
 
 			// Kontrollime, kas päringu käivitanud infosüsteem on ADITis
 			// registreeritud
-			boolean applicationRegistered = this.getUserService().isApplicationRegistered(applicationName);
-			if (!applicationRegistered) {
-				String errorMessage = this.getMessageSource().getMessage("application.notRegistered", new Object[] { applicationName }, Locale.ENGLISH);
-				throw new AditException(errorMessage);
-			}
+			this.getUserService().checkApplicationRegistered(applicationName);
 
 			// Kontrollime, kas päringu käivitanud infosüsteem tohib
 			// andmeid näha
-			int accessLevel = this.getUserService().getAccessLevel(applicationName);
-			if (accessLevel < 1) {
-				String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.read", new Object[] { applicationName }, Locale.ENGLISH);
-				throw new AditException(errorMessage);
-			}
+			this.getUserService().checkApplicationReadPrivilege(applicationName);
 
 			// Kontrollime, kas päringus märgitud isik on teenuse kasutaja
 			String userCode = ((this.getHeader().getAllasutus() != null) && (this.getHeader().getAllasutus().length() > 0)) ? this.getHeader().getAllasutus() : this.getHeader().getIsikukood();
 			AditUser user = this.getUserService().getUserByID(userCode);
 			if (user == null) {
-				String errorMessage = this.getMessageSource().getMessage("user.nonExistent", new Object[] { userCode },	Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				AditCodedException aditCodedException = new AditCodedException("user.nonExistent");
+				aditCodedException.setParameters(new Object[] { userCode });
+				throw aditCodedException;
 			}
 
 			// Kontrollime, et kasutajakonto ligipääs poleks peatatud (kasutaja lahkunud)
 			if ((user.getActive() == null) || !user.getActive()) {
-				String errorMessage = this.getMessageSource().getMessage("user.inactive", new Object[] { userCode }, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				AditCodedException aditCodedException = new AditCodedException("user.inactive");
+				aditCodedException.setParameters(new Object[] { userCode });
+				throw aditCodedException;
 			}
 			
 			// Check whether or not the application has rights to
 			// read current user's data.
 			int applicationAccessLevelForUser = userService.getAccessLevelForUser(applicationName, user);
-			if(applicationAccessLevelForUser < 1) {
-				String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.forUser.read", new Object[] { applicationName, user.getUserCode() }, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+			if(applicationAccessLevelForUser < 1) {				
+				AditCodedException aditCodedException = new AditCodedException("application.insufficientPrivileges.forUser.read");
+				aditCodedException.setParameters(new Object[] { applicationName, user.getUserCode() });
+				throw aditCodedException;
 			}
 
 			Document doc = this.documentService.getDocumentDAO().getDocument(request.getDocumentId());
@@ -240,24 +235,28 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
 								LOG.debug("Document has no files!");
 							}
 						} else {
-							LOG.debug("Requested document does not belong to user. Document ID: " + request.getDocumentId() + ", User ID: " + userCode);
-							String errorMessage = this.getMessageSource().getMessage("document.doesNotBelongToUser", new Object[] { request.getDocumentId(), userCode }, Locale.ENGLISH);
-							throw new AditException(errorMessage);
+							LOG.debug("Requested document does not belong to user. Document ID: " + request.getDocumentId() + ", User ID: " + userCode);							
+							AditCodedException aditCodedException = new AditCodedException("document.doesNotBelongToUser");
+							aditCodedException.setParameters(new Object[] { request.getDocumentId(), userCode });
+							throw aditCodedException;
 						}
 					} else {
 						LOG.debug("Requested document is deflated. Document ID: " + request.getDocumentId());
-						String errorMessage = this.getMessageSource().getMessage("document.deflated", new Object[] { Util.dateToEstonianDateString(doc.getDeflateDate()) }, Locale.ENGLISH);
-						throw new AditException(errorMessage);
+						AditCodedException aditCodedException = new AditCodedException("document.deflated");
+						aditCodedException.setParameters(new Object[] { Util.dateToEstonianDateString(doc.getDeflateDate()) });
+						throw aditCodedException;
 					}
 				} else {
 					LOG.debug("Requested document is deleted. Document ID: " + request.getDocumentId());
-					String errorMessage = this.getMessageSource().getMessage("document.deleted", new Object[] { request.getDocumentId() },	Locale.ENGLISH);
-					throw new AditException(errorMessage);
+					AditCodedException aditCodedException = new AditCodedException("document.deleted");
+					aditCodedException.setParameters(new Object[] { request.getDocumentId() });
+					throw aditCodedException;
 				}
 			} else {
 				LOG.debug("Requested document does not exist. Document ID: " + request.getDocumentId());
-				String errorMessage = this.getMessageSource().getMessage("document.nonExistent", new Object[] { request.getDocumentId() },	Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				AditCodedException aditCodedException = new AditCodedException("document.nonExistent");
+				aditCodedException.setParameters(new Object[] { request.getDocumentId() });
+				throw aditCodedException;
 			}
 
 			// Set response messages
@@ -272,9 +271,9 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
 			response.setSuccess(false);
 			ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
 
-			if (e instanceof AditException) {
-				LOG.debug("Adding exception message to response object.");
-				arrayOfMessage.getMessage().add(new Message("en", e.getMessage()));
+			if(e instanceof AditCodedException) {
+				LOG.debug("Adding exception messages to response object.");
+				arrayOfMessage.setMessage(this.getMessageService().getMessages((AditCodedException) e));
 			} else {
 				arrayOfMessage.getMessage().add(new Message("en", "Service error"));
 			}
@@ -309,31 +308,24 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
 	}
 	
 	private void checkHeader(CustomXTeeHeader header) throws Exception {
-		String errorMessage = null;
-		if (header != null) {
-			if ((header.getIsikukood() == null)	|| (header.getIsikukood().length() < 1)) {
-				errorMessage = this.getMessageSource().getMessage("request.header.undefined.personalCode", new Object[] {}, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+		if(header != null) {
+			if ((header.getIsikukood() == null) || (header.getIsikukood().length() < 1)) {
+				throw new AditCodedException("request.header.undefined.personalCode");
 			} else if ((header.getInfosysteem() == null) || (header.getInfosysteem().length() < 1)) {
-				errorMessage = this.getMessageSource().getMessage("request.header.undefined.systemName", new Object[] {}, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				throw new AditCodedException("request.header.undefined.systemName");
 			} else if ((header.getAsutus() == null) || (header.getAsutus().length() < 1)) {
-				errorMessage = this.getMessageSource().getMessage("request.header.undefined.institution", new Object[] {}, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				throw new AditCodedException("request.header.undefined.institution");
 			}
 		}
 	}
 
 	private void checkRequest(GetDocumentRequest request) {
-		String errorMessage = null;
 		if (request != null) {
 			if (request.getDocumentId() <= 0) {
-				errorMessage = this.getMessageSource().getMessage("request.body.undefined.documentId", new Object[] {},	Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				throw new AditCodedException("request.body.undefined.documentId");
 			}
 		} else {
-			errorMessage = this.getMessageSource().getMessage("request.body.empty", new Object[] {}, Locale.ENGLISH);
-			throw new AditException(errorMessage);
+			throw new AditCodedException("request.body.empty");
 		}
 	}
 
