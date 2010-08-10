@@ -9,8 +9,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.DocumentHistory;
+import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditException;
 import ee.adit.pojo.ArrayOfMessage;
+import ee.adit.pojo.DeflateDocumentRequest;
 import ee.adit.pojo.DeleteDocumentRequest;
 import ee.adit.pojo.DeleteDocumentResponse;
 import ee.adit.pojo.Message;
@@ -86,8 +88,9 @@ public class DeleteDocumentEndpoint extends AbstractAditBaseEndpoint {
 			String userCode = ((this.getHeader().getAllasutus() != null) && (this.getHeader().getAllasutus().length() > 0)) ? this.getHeader().getAllasutus() : this.getHeader().getIsikukood(); 
 			AditUser user = this.getUserService().getUserByID(userCode);
 			if(user == null) {
-				String errorMessage = this.getMessageSource().getMessage("user.nonExistent", new Object[] { userCode }, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				AditCodedException aditCodedException = new AditCodedException("user.nonExistent");
+				aditCodedException.setParameters(new Object[] { userCode });
+				throw aditCodedException;
 			}
 			AditUser xroadRequestUser = null;
 			if (user.getUsertype().getShortName().equalsIgnoreCase("person")) {
@@ -102,16 +105,18 @@ public class DeleteDocumentEndpoint extends AbstractAditBaseEndpoint {
 			
 			// Kontrollime, et kasutajakonto ligipääs poleks peatatud (kasutaja lahkunud)
 			if((user.getActive() == null) || !user.getActive()) {
-				String errorMessage = this.getMessageSource().getMessage("user.inactive", new Object[] { userCode }, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				AditCodedException aditCodedException = new AditCodedException("user.inactive");
+				aditCodedException.setParameters(new Object[] { userCode });
+				throw aditCodedException;
 			}
 			
 			// Check whether or not the application has rights to
 			// modify current user's data.
 			int applicationAccessLevelForUser = userService.getAccessLevelForUser(applicationName, user);
 			if(applicationAccessLevelForUser != 2) {
-				String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.forUser.write", new Object[] { applicationName, user.getUserCode() }, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				AditCodedException aditCodedException = new AditCodedException("application.insufficientPrivileges.forUser.write");
+				aditCodedException.setParameters(new Object[] { applicationName, user.getUserCode() });
+				throw aditCodedException;
 			}
 				
 			this.getDocumentService().DeleteDocument(request.getDocumentId(), userCode, applicationName);
@@ -128,7 +133,7 @@ public class DeleteDocumentEndpoint extends AbstractAditBaseEndpoint {
 			
 			// Set response messages
 			response.setSuccess(new Success(true));
-			messages.addMessage(new Message("en", this.getMessageSource().getMessage("request.deleteDocument.success", new Object[] { }, Locale.ENGLISH)));
+			messages.setMessage(this.getMessageService().getMessages("request.deleteDocument.success", new Object[] { }));
 			response.setMessages(messages);
 		} catch (Exception e) {
 			LOG.error("Exception: ", e);
@@ -138,9 +143,9 @@ public class DeleteDocumentEndpoint extends AbstractAditBaseEndpoint {
 			response.setSuccess(new Success(false));
 			ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
 			
-			if(e instanceof AditException) {
-				LOG.debug("Adding exception message to response object.");
-				arrayOfMessage.getMessage().add(new Message("en", e.getMessage()));
+			if(e instanceof AditCodedException) {
+				LOG.debug("Adding exception messages to response object.");
+				arrayOfMessage.setMessage(this.getMessageService().getMessages((AditCodedException) e));
 			} else {
 				arrayOfMessage.getMessage().add(new Message("en", "Service error"));
 			}
@@ -165,31 +170,24 @@ public class DeleteDocumentEndpoint extends AbstractAditBaseEndpoint {
 	}
 	
 	private void checkHeader(CustomXTeeHeader header) throws Exception {
-		String errorMessage = null;
 		if(header != null) {
 			if ((header.getIsikukood() == null) || (header.getIsikukood().length() < 1)) {
-				errorMessage = this.getMessageSource().getMessage("request.header.undefined.personalCode", new Object[] {}, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				throw new AditCodedException("request.header.undefined.personalCode");
 			} else if ((header.getInfosysteem() == null) || (header.getInfosysteem().length() < 1)) {
-				errorMessage = this.getMessageSource().getMessage("request.header.undefined.systemName", new Object[] {}, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				throw new AditCodedException("request.header.undefined.systemName");
 			} else if ((header.getAsutus() == null) || (header.getAsutus().length() < 1)) {
-				errorMessage = this.getMessageSource().getMessage("request.header.undefined.institution", new Object[] {}, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				throw new AditCodedException("request.header.undefined.institution");
 			}
 		}
 	}
 	
 	private void checkRequest(DeleteDocumentRequest request) {
-		String errorMessage = null; 
 		if(request != null) {
 			if(request.getDocumentId() <= 0) {
-				errorMessage = this.getMessageSource().getMessage("request.body.undefined.documentid", new Object[] {}, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				throw new AditCodedException("request.body.undefined.documentId");
 			}
 		} else {
-			errorMessage = this.getMessageSource().getMessage("request.body.empty", new Object[] {}, Locale.ENGLISH);
-			throw new AditException(errorMessage);
+			throw new AditCodedException("request.body.empty");
 		}
 	}
 	
