@@ -283,7 +283,6 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
 	}
 
 	private void checkHeader(CustomXTeeHeader header) throws Exception {
-		String errorMessage = null;
 		if(header != null) {
 			if ((header.getIsikukood() == null) || (header.getIsikukood().length() < 1)) {
 				throw new AditCodedException("request.header.undefined.personalCode");
