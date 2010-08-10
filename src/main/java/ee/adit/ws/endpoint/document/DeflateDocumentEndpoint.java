@@ -1,7 +1,6 @@
 package ee.adit.ws.endpoint.document;
 
 import java.util.Calendar;
-import java.util.Locale;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
@@ -9,9 +8,7 @@ import org.springframework.stereotype.Component;
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.DocumentHistory;
 import ee.adit.exception.AditCodedException;
-import ee.adit.exception.AditException;
 import ee.adit.pojo.ArrayOfMessage;
-import ee.adit.pojo.ConfirmSignatureRequest;
 import ee.adit.pojo.DeflateDocumentRequest;
 import ee.adit.pojo.DeflateDocumentResponse;
 import ee.adit.pojo.Message;
