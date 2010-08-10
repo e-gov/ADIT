@@ -503,6 +503,16 @@ public class UserService {
 		}
 	}
 	
+	public void checkApplicationWritePrivilege(String applicationName) {
+		int accessLevel = getAccessLevel(applicationName);
+		if(accessLevel != 2) {
+			AditCodedException aditCodedException = new AditCodedException("application.insufficientPrivileges.write");
+			aditCodedException.setParameters(new Object[] { applicationName });
+			throw aditCodedException;
+		}
+	}
+	
+	
 	public RemoteApplicationDAO getRemoteApplicationDAO() {
 		return remoteApplicationDAO;
 	}

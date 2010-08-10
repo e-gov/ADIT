@@ -80,11 +80,7 @@ public class DeleteDocumentEndpoint extends AbstractAditBaseEndpoint {
 
 			// Kontrollime, kas päringu käivitanud infosüsteem tohib
 			// andmeid muuta (või üldse näha)
-			int accessLevel = this.getUserService().getAccessLevel(applicationName);
-			if(accessLevel != 2) {
-				String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.write", new Object[] { applicationName }, Locale.ENGLISH);
-				throw new AditException(errorMessage);
-			}
+			this.getUserService().checkApplicationWritePrivilege(applicationName);
 			
 			// Kontrollime, kas päringus märgitud isik on teenuse kasutaja
 			String userCode = ((this.getHeader().getAllasutus() != null) && (this.getHeader().getAllasutus().length() > 0)) ? this.getHeader().getAllasutus() : this.getHeader().getIsikukood(); 
