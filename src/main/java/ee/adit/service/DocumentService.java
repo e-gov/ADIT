@@ -1543,7 +1543,7 @@ public class DocumentService {
 		final String certFile,
 		final String digidocConfigFile,
 		final String temporaryFilesDir,
-		final AditUser xroadUser) {
+		final AditUser xroadUser) throws Exception {
 
 		PrepareSignatureInternalResult result = new PrepareSignatureInternalResult();
 		result.setSuccess(true);
@@ -1560,8 +1560,58 @@ public class DocumentService {
 				
 		    	// Load certificate from file
 		    	X509Certificate cert = SignedDoc.readCertificate(certFile);
+		    	
+		    	// Remove country prefix from request user code, so it can be
+		    	// compared to cert personal id code more reliably
+				String fixedUserCode = "";
+				if ((xroadUser != null) && (xroadUser.getUserCode() != null)) {
+					for (int i = 0; i < xroadUser.getUserCode().length(); i++) {
+						if ("0123456789".contains(String.valueOf(xroadUser.getUserCode().charAt(i)))) {
+							fixedUserCode = xroadUser.getUserCode().substring(i);
+							break;
+						}
+					}
+				}
+		    	
+		    	// Determine if certificate belongs to same person
+		    	// who executed current query
+		    	String certPersonalIdCode = SignedDoc.getSubjectPersonalCode(cert);
+				if (!fixedUserCode.equalsIgnoreCase(certPersonalIdCode)) {
+					LOG.info("Attempted to sign document "+ documentId + " by person \"" + certPersonalIdCode + "\" while logged in as person \"" + fixedUserCode + "\"");
+					result.setSuccess(false);
+					result.setErrorCode("request.prepareSignature.signer.notCurrentUser");
+					return result;
+				}
+		    	
+		    	// Load document
+		    	Document doc = (Document) session.get(Document.class, documentId);
 				
-				SignedDoc sdoc = new SignedDoc(SignedDoc.FORMAT_DIGIDOC_XML, SignedDoc.VERSION_1_3);
+		    	SignedDoc sdoc = null;
+		    	if (doc.getSignatureContainer() == null) {
+		    		LOG.debug("Creating new signature container.");
+		    		sdoc = new SignedDoc(SignedDoc.FORMAT_DIGIDOC_XML, SignedDoc.VERSION_1_3);
+		    	} else {
+		    		LOG.debug("Loading existing signature container");
+		    		SAXDigiDocFactory factory = new SAXDigiDocFactory();
+					sdoc = factory.readSignedDoc(doc.getSignatureContainer().getBinaryStream());
+					
+					// Make sure that document is not already signed
+					// by the same person.
+					int sigCount = sdoc.countSignatures();
+					for (int i = 0; i < sigCount; i++) {
+						Signature existingSig = sdoc.getSignature(i);
+						if (existingSig != null) {
+							int certCount = existingSig.countCertValues();
+							for (int j = 0; j < certCount; j++) {
+								if ((existingSig.getCertValue(j) != null) && (existingSig.getCertValue(j).getCert() != null)) {
+									if (fixedUserCode.equalsIgnoreCase(SignedDoc.getSubjectPersonalCode(existingSig.getCertValue(j).getCert()))) {
+										throw new AditCodedException("request.prepareSignature.signer.hasAlreadySigned");
+									}
+								}
+							}
+						}
+					}
+		    	}
 				
 				String[] claimedRoles = null;
 				if ((manifest != null) && (manifest.length() > 0)) {
@@ -1588,7 +1638,6 @@ public class DocumentService {
 				}
 				uniqueDir.mkdir();
 				
-				Document doc = (Document) session.get(Document.class, documentId);
 				List<DocumentFile> filesList = new ArrayList<DocumentFile>(doc.getDocumentFiles());
 		    	for (DocumentFile docFile : filesList) {
 		    		if (!docFile.getDeleted()) {
@@ -1628,28 +1677,6 @@ public class DocumentService {
         				
 		    		}
 		    	}
-		    	
-		    	// Remove country prefix from request user code, so it can be
-		    	// compared to cert personal id code more reliably
-				String fixedUserCode = "";
-				if ((xroadUser != null) && (xroadUser.getUserCode() != null)) {
-					for (int i = 0; i < xroadUser.getUserCode().length(); i++) {
-						if ("0123456789".contains(String.valueOf(xroadUser.getUserCode().charAt(i)))) {
-							fixedUserCode = xroadUser.getUserCode().substring(i);
-							break;
-						}
-					}
-				}
-		    	
-		    	// Determine if certificate belongs to same person
-		    	// who executed current query
-		    	String certPersonalIdCode = SignedDoc.getSubjectPersonalCode(cert);
-				if (!fixedUserCode.equalsIgnoreCase(certPersonalIdCode)) {
-					LOG.info("Attempted to sign document "+ documentId + " by person \"" + certPersonalIdCode + "\" while logged in as person \"" + fixedUserCode + "\"");
-					result.setSuccess(false);
-					result.setErrorCode("request.prepareSignature.signer.notCurrentUser");
-					return result;
-				}
 		    	
 		    	// Add signature and calculate digest
 				Signature sig = sdoc.prepareSignature(cert,	claimedRoles, address);
@@ -1696,6 +1723,7 @@ public class DocumentService {
 			if (tx != null) {
 				tx.rollback();
 			}
+			throw ex;
 		} finally {
 			if ((session != null) && session.isOpen()) {
 				session.close();
@@ -1710,7 +1738,7 @@ public class DocumentService {
 		final String signatureFileName,
 		final String requestPersonalCode,
 		final String digidocConfigFile,
-		final String temporaryFilesDir) {
+		final String temporaryFilesDir) throws Exception {
 		
 		Session session = null;
 		Transaction tx = null;
@@ -1806,6 +1834,7 @@ public class DocumentService {
 			if (tx != null) {
 				tx.rollback();
 			}
+			throw ex;
 		} finally {
 			if ((session != null) && session.isOpen()) {
 				session.close();
