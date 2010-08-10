@@ -117,7 +117,7 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 					} else {
 						AditCodedException aditCodedException = new AditCodedException("request.getJoined.maxResults.tooLarge");
 						aditCodedException.setParameters(new Object[] { configurationMaxResults.toString() });
-						throw aditCodedException;	
+						throw aditCodedException;
 					}
 				} else {
 					AditCodedException aditCodedException = new AditCodedException("application.insufficientPrivileges.read");

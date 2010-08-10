@@ -12,7 +12,7 @@ import org.springframework.ws.mime.Attachment;
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.DocumentSharing;
-import ee.adit.exception.AditException;
+import ee.adit.exception.AditCodedException;
 import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.Message;
 import ee.adit.pojo.ConfirmSignatureRequest;
@@ -90,38 +90,43 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
 			// registreeritud
 			boolean applicationRegistered = this.getUserService().isApplicationRegistered(applicationName);
 			if (!applicationRegistered) {
-				String errorMessage = this.getMessageSource().getMessage("application.notRegistered", new Object[] { applicationName }, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				AditCodedException aditCodedException = new AditCodedException("application.notRegistered");
+				aditCodedException.setParameters(new Object[] { applicationName });
+				throw aditCodedException;
 			}
 
 			// Kontrollime, kas päringu käivitanud infosüsteem tohib
 			// andmeid muuta
 			int accessLevel = this.getUserService().getAccessLevel(applicationName);
 			if (accessLevel != 2) {
-				String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.write", new Object[] { applicationName }, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				AditCodedException aditCodedException = new AditCodedException("application.insufficientPrivileges.write");
+				aditCodedException.setParameters(new Object[] { applicationName });
+				throw aditCodedException;
 			}
 
 			// Kontrollime, kas päringus märgitud isik on teenuse kasutaja
 			String userCode = ((this.getHeader().getAllasutus() != null) && (this.getHeader().getAllasutus().length() > 0)) ? this.getHeader().getAllasutus() : this.getHeader().getIsikukood();
 			AditUser user = this.getUserService().getUserByID(userCode);
 			if (user == null) {
-				String errorMessage = this.getMessageSource().getMessage("user.nonExistent", new Object[] { userCode },	Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				AditCodedException aditCodedException = new AditCodedException("user.nonExistent");
+				aditCodedException.setParameters(new Object[] { userCode });
+				throw aditCodedException;
 			}
 
 			// Kontrollime, et kasutajakonto ligipääs poleks peatatud (kasutaja lahkunud)
 			if ((user.getActive() == null) || !user.getActive()) {
-				String errorMessage = this.getMessageSource().getMessage("user.inactive", new Object[] { userCode }, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				AditCodedException aditCodedException = new AditCodedException("user.inactive");
+				aditCodedException.setParameters(new Object[] { userCode });
+				throw aditCodedException;
 			}
 			
 			// Check whether or not the application has rights to
 			// modify current user's data.
 			int applicationAccessLevelForUser = userService.getAccessLevelForUser(applicationName, user);
 			if(applicationAccessLevelForUser != 2) {
-				String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.forUser.write", new Object[] { applicationName, user.getUserCode() }, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				AditCodedException aditCodedException = new AditCodedException("application.insufficientPrivileges.forUser.write");
+				aditCodedException.setParameters(new Object[] { applicationName, user.getUserCode() });
+				throw aditCodedException;
 			}
 
 			// Now it is safe to load the document from database
@@ -130,32 +135,35 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
 
 			// Check whether the document exists
 			if (doc == null) {
-				LOG.debug("Requested document does not exist. Document ID: " + request.getDocumentId());
-				String errorMessage = this.getMessageSource().getMessage("document.nonExistent", new Object[] { request.getDocumentId() },	Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				LOG.debug("Requested document does not exist. Document ID: " + request.getDocumentId());				
+				AditCodedException aditCodedException = new AditCodedException("document.nonExistent");
+				aditCodedException.setParameters(new Object[] { request.getDocumentId() });
+				throw aditCodedException;
 			}
 			
 			// Check whether the document is marked as deleted
 			if ((doc.getDeleted() != null) && doc.getDeleted()) {
-				LOG.debug("Requested document is deleted. Document ID: " + request.getDocumentId());
-				String errorMessage = this.getMessageSource().getMessage("document.nonExistent", new Object[] { request.getDocumentId() }, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				LOG.debug("Requested document is deleted. Document ID: " + request.getDocumentId());				
+				AditCodedException aditCodedException = new AditCodedException("document.deleted");
+				aditCodedException.setParameters(new Object[] { request.getDocumentId() });
+				throw aditCodedException;
 			}
 			
 			// Check whether the document is marked as deflated
 			if ((doc.getDeflated() != null) && doc.getDeflated()) {
 				LOG.debug("Requested document is deflated. Document ID: " + request.getDocumentId());
-				String errorMessage = this.getMessageSource().getMessage("document.deflated", new Object[] { Util.dateToEstonianDateString(doc.getDeflateDate()) }, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				AditCodedException aditCodedException = new AditCodedException("document.deflated");
+				aditCodedException.setParameters(new Object[] { Util.dateToEstonianDateString(doc.getDeflateDate()) });
+				throw aditCodedException;
 			}
 			
 			// Check whether the document is marked as signable
 			if ((doc.getSignable() == null) || !doc.getSignable()) {
-				LOG.debug("Requested document is not signable. Document ID: " + request.getDocumentId());
-				String errorMessage = this.getMessageSource().getMessage("document.notSignable", new Object[] { }, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				LOG.debug("Requested document is not signable. Document ID: " + request.getDocumentId());				
+				AditCodedException aditCodedException = new AditCodedException("document.notSignable");
+				aditCodedException.setParameters(new Object[] { });
+				throw aditCodedException;
 			}
-
 
 			// Document can be signed only if:
 			// a) document belongs to user
@@ -192,16 +200,18 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
 						// Base64 decode and unzip the temporary file
 						signatureFile = Util.base64DecodeAndUnzip(base64EncodedFile, this.getConfiguration().getTempDir(), this.getConfiguration().getDeleteTemporaryFilesAsBoolean());
 						LOG.debug("Attachment unzipped to temporary file: " + signatureFile);
-					} else {
-						String errorMessage = this.getMessageSource().getMessage("request.attachments.tooMany", new Object[] { applicationName }, Locale.ENGLISH);
-						throw new AditException(errorMessage);
+					} else {						
+						AditCodedException aditCodedException = new AditCodedException("request.attachments.tooMany");
+						aditCodedException.setParameters(new Object[] { applicationName });
+						throw aditCodedException;
 					}
 					attachmentCount++;
 				}
 				
-				if (signatureFile == null) {
-					String errorMessage = this.getMessageSource().getMessage("request.confirmSignature.missingSignature", new Object[] { doc.getDeflateDate() }, Locale.ENGLISH);
-					throw new AditException(errorMessage);
+				if (signatureFile == null) {					
+					AditCodedException aditCodedException = new AditCodedException("request.confirmSignature.missingSignature");
+					aditCodedException.setParameters(new Object[] { doc.getDeflateDate() });
+					throw aditCodedException;
 				}
 				
 				this.documentService.getDocumentDAO().confirmSignature(
@@ -228,15 +238,16 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
 					}
 				}
 			} else {
-				LOG.debug("Requested document does not belong to user. Document ID: " + request.getDocumentId() + ", User ID: " + userCode);
-				String errorMessage = this.getMessageSource().getMessage("document.doesNotBelongToUser", new Object[] { request.getDocumentId(), userCode }, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				LOG.debug("Requested document does not belong to user. Document ID: " + request.getDocumentId() + ", User ID: " + userCode);				
+				AditCodedException aditCodedException = new AditCodedException("document.doesNotBelongToUser");
+				aditCodedException.setParameters(new Object[] { request.getDocumentId(), userCode });
+				throw aditCodedException;
 			}
 
 			// Set response messages
 			response.setSuccess(true);
-			messages.addMessage(new Message("en", this.getMessageSource().getMessage("request.confirmSignature.success", new Object[] { }, Locale.ENGLISH)));
-			response.setMessages(messages);
+			messages.setMessage(this.getMessageService().getMessages("request.confirmSignature.success", new Object[] { }));
+			response.setMessages(messages);			
 		} catch (Exception e) {
 			LOG.error("Exception: ", e);
 			additionalInformationForLog = "Request failed: " + e.getMessage();
@@ -245,9 +256,9 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
 			response.setSuccess(false);
 			ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
 
-			if (e instanceof AditException) {
-				LOG.debug("Adding exception message to response object.");
-				arrayOfMessage.getMessage().add(new Message("en", e.getMessage()));
+			if(e instanceof AditCodedException) {
+				LOG.debug("Adding exception messages to response object.");
+				arrayOfMessage.setMessage(this.getMessageService().getMessages((AditCodedException) e));
 			} else {
 				arrayOfMessage.getMessage().add(new Message("en", "Service error"));
 			}
@@ -275,28 +286,22 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
 		String errorMessage = null;
 		if(header != null) {
 			if ((header.getIsikukood() == null) || (header.getIsikukood().length() < 1)) {
-				errorMessage = this.getMessageSource().getMessage("request.header.undefined.personalCode", new Object[] {}, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				throw new AditCodedException("request.header.undefined.personalCode");
 			} else if ((header.getInfosysteem() == null) || (header.getInfosysteem().length() < 1)) {
-				errorMessage = this.getMessageSource().getMessage("request.header.undefined.systemName", new Object[] {}, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				throw new AditCodedException("request.header.undefined.systemName");
 			} else if ((header.getAsutus() == null) || (header.getAsutus().length() < 1)) {
-				errorMessage = this.getMessageSource().getMessage("request.header.undefined.institution", new Object[] {}, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				throw new AditCodedException("request.header.undefined.institution");
 			}
 		}
 	}
 	
 	private void checkRequest(ConfirmSignatureRequest request) {
-		String errorMessage = null; 
 		if(request != null) {
 			if(request.getDocumentId() <= 0) {
-				errorMessage = this.getMessageSource().getMessage("request.body.undefined.documentId", new Object[] {}, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				throw new AditCodedException("request.body.undefined.documentId");
 			}
 		} else {
-			errorMessage = this.getMessageSource().getMessage("request.body.empty", new Object[] {}, Locale.ENGLISH);
-			throw new AditException(errorMessage);
+			throw new AditCodedException("request.body.empty");
 		}
 	}
 	
