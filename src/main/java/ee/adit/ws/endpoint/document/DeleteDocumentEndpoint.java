@@ -76,11 +76,7 @@ public class DeleteDocumentEndpoint extends AbstractAditBaseEndpoint {
 			checkRequest(request);
 			
 			// Kontrollime, kas päringu käivitanud infosüsteem on ADITis registreeritud
-			boolean applicationRegistered = this.getUserService().isApplicationRegistered(applicationName);
-			if (!applicationRegistered) {
-				String errorMessage = this.getMessageSource().getMessage("application.notRegistered", new Object[] { applicationName }, Locale.ENGLISH);
-				throw new AditException(errorMessage);
-			}
+			this.getUserService().checkApplicationRegistered(applicationName);
 
 			// Kontrollime, kas päringu käivitanud infosüsteem tohib
 			// andmeid muuta (või üldse näha)

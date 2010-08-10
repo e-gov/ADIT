@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -27,6 +28,8 @@ import ee.adit.dao.pojo.RemoteApplication;
 import ee.adit.dao.pojo.UserNotification;
 import ee.adit.dao.pojo.UserNotificationId;
 import ee.adit.dao.pojo.Usertype;
+import ee.adit.exception.AditCodedException;
+import ee.adit.exception.AditException;
 import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.ArrayOfNotification;
 import ee.adit.pojo.GetUserInfoRequestAttachmentUserList;
@@ -489,6 +492,15 @@ public class UserService {
 		}
 		
 		return result.toString();
+	}
+	
+	public void checkApplicationRegistered(String applicationName) throws AditCodedException {
+		boolean applicationRegistered = isApplicationRegistered(applicationName);
+		if (!applicationRegistered) {
+			AditCodedException aditCodedException = new AditCodedException("application.notRegistered");
+			aditCodedException.setParameters(new Object[] { applicationName });
+			throw aditCodedException;
+		}
 	}
 	
 	public RemoteApplicationDAO getRemoteApplicationDAO() {
