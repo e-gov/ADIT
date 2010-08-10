@@ -160,6 +160,7 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 
 	@Override
 	protected Object getResultForGenericException(Exception ex) {
+		super.logError(null, Calendar.getInstance().getTime(), LogService.ErrorLogLevel_Fatal, ex.getMessage());
 		JoinResponse response = new JoinResponse();
 		response.setSuccess(new Success(false));
 		ArrayOfMessage arrayOfMessage = new ArrayOfMessage();

@@ -1,7 +1,6 @@
 package ee.adit.ws.endpoint.document;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.Locale;
 
@@ -21,6 +20,7 @@ import ee.adit.pojo.PrepareSignatureInternalResult;
 import ee.adit.pojo.PrepareSignatureRequest;
 import ee.adit.pojo.PrepareSignatureResponse;
 import ee.adit.service.DocumentService;
+import ee.adit.service.LogService;
 import ee.adit.service.UserService;
 import ee.adit.util.CustomXTeeHeader;
 import ee.adit.util.Util;
@@ -64,7 +64,7 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
 	protected Object invokeInternal(Object requestObject) throws Exception {
 		PrepareSignatureResponse response = new PrepareSignatureResponse();
 		ArrayOfMessage messages = new ArrayOfMessage();
-		Date requestDate = Calendar.getInstance().getTime();
+		Calendar requestDate = Calendar.getInstance();
 		String additionalInformationForLog = null;
 		Long documentId = null;
 		
@@ -246,6 +246,8 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
 		} catch (Exception e) {
 			LOG.error("Exception: ", e);
 			additionalInformationForLog = "Request failed: " + e.getMessage();
+			super.logError(documentId, requestDate.getTime(), LogService.ErrorLogLevel_Error, e.getMessage());
+			
 			response.setSuccess(false);
 			ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
 
@@ -263,12 +265,13 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
 			response.setMessages(arrayOfMessage);
 		}
 		
-		super.logCurrentRequest(documentId, requestDate, additionalInformationForLog);
+		super.logCurrentRequest(documentId, requestDate.getTime(), additionalInformationForLog);
 		return response;
 	}
 
 	@Override
 	protected Object getResultForGenericException(Exception ex) {
+		super.logError(null, Calendar.getInstance().getTime(), LogService.ErrorLogLevel_Fatal, ex.getMessage());
 		PrepareSignatureResponse response = new PrepareSignatureResponse();
 		response.setSuccess(false);
 		ArrayOfMessage arrayOfMessage = new ArrayOfMessage();

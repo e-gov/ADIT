@@ -1,7 +1,6 @@
 package ee.adit.ws.endpoint.document;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
@@ -16,6 +15,7 @@ import ee.adit.pojo.GetDocumentListResponseAttachment;
 import ee.adit.pojo.GetDocumentListResponseList;
 import ee.adit.pojo.Message;
 import ee.adit.service.DocumentService;
+import ee.adit.service.LogService;
 import ee.adit.service.UserService;
 import ee.adit.util.CustomXTeeHeader;
 import ee.adit.util.Util;
@@ -50,7 +50,7 @@ public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
 	protected Object invokeInternal(Object requestObject) throws Exception {
 		GetDocumentListResponse response = new GetDocumentListResponse();
 		ArrayOfMessage messages = new ArrayOfMessage();
-		Date requestDate = Calendar.getInstance().getTime();
+		Calendar requestDate = Calendar.getInstance();
 		String additionalInformationForLog = null;
 
 		try {
@@ -140,6 +140,8 @@ public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
 		} catch (Exception e) {
 			additionalInformationForLog = "Request failed: " + e.getMessage();
 			LOG.error("Exception: ", e);
+			super.logError(null, requestDate.getTime(), LogService.ErrorLogLevel_Error, e.getMessage());
+			
 			response.setSuccess(false);
 			ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
 
@@ -154,12 +156,13 @@ public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
 			response.setMessages(arrayOfMessage);
 		}
 
-		super.logCurrentRequest(null, requestDate, additionalInformationForLog);
+		super.logCurrentRequest(null, requestDate.getTime(), additionalInformationForLog);
 		return response;
 	}
 
 	@Override
 	protected Object getResultForGenericException(Exception ex) {
+		super.logError(null, Calendar.getInstance().getTime(), LogService.ErrorLogLevel_Fatal, ex.getMessage());
 		GetDocumentListResponse response = new GetDocumentListResponse();
 		response.setSuccess(false);
 		ArrayOfMessage arrayOfMessage = new ArrayOfMessage();

@@ -15,6 +15,7 @@ import ee.adit.pojo.DeflateDocumentResponse;
 import ee.adit.pojo.Message;
 import ee.adit.pojo.Success;
 import ee.adit.service.DocumentService;
+import ee.adit.service.LogService;
 import ee.adit.service.UserService;
 import ee.adit.util.CustomXTeeHeader;
 import ee.adit.util.Util;
@@ -148,6 +149,8 @@ public class DeflateDocumentEndpoint extends AbstractAditBaseEndpoint {
 		} catch (Exception e) {
 			LOG.error("Exception: ", e);
 			additionalInformationForLog = "Request failed: " + e.getMessage();
+			super.logError(documentId, requestDate.getTime(), LogService.ErrorLogLevel_Error, e.getMessage());
+			
 			response.setSuccess(new Success(false));
 			ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
 			
@@ -168,6 +171,7 @@ public class DeflateDocumentEndpoint extends AbstractAditBaseEndpoint {
 	
 	@Override
 	protected Object getResultForGenericException(Exception ex) {
+		super.logError(null, Calendar.getInstance().getTime(), LogService.ErrorLogLevel_Fatal, ex.getMessage());
 		DeflateDocumentResponse response = new DeflateDocumentResponse();
 		response.setSuccess(new Success(false));
 		ArrayOfMessage arrayOfMessage = new ArrayOfMessage();

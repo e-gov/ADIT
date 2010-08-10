@@ -2,7 +2,6 @@ package ee.adit.ws.endpoint.document;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -25,6 +24,7 @@ import ee.adit.pojo.GetDocumentHistoryResponse;
 import ee.adit.pojo.GetDocumentHistoryResponseDocument;
 import ee.adit.pojo.Message;
 import ee.adit.service.DocumentService;
+import ee.adit.service.LogService;
 import ee.adit.service.UserService;
 import ee.adit.util.CustomXTeeHeader;
 import ee.adit.util.Util;
@@ -60,7 +60,7 @@ public class GetDocumentHistoryEndpoint extends AbstractAditBaseEndpoint {
 	protected Object invokeInternal(Object requestObject) throws Exception {
 		GetDocumentHistoryResponse response = new GetDocumentHistoryResponse();
 		ArrayOfMessage messages = new ArrayOfMessage();
-		Date requestDate = Calendar.getInstance().getTime();
+		Calendar requestDate = Calendar.getInstance();
 		String additionalInformationForLog = null;
 		Long documentId = null;
 
@@ -234,6 +234,8 @@ public class GetDocumentHistoryEndpoint extends AbstractAditBaseEndpoint {
 		} catch (Exception e) {
 			additionalInformationForLog = "Request failed: " + e.getMessage();
 			LOG.error("Exception: ", e);
+			super.logError(documentId, requestDate.getTime(), LogService.ErrorLogLevel_Error, e.getMessage());
+			
 			response.setSuccess(false);
 			ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
 
@@ -248,12 +250,13 @@ public class GetDocumentHistoryEndpoint extends AbstractAditBaseEndpoint {
 			response.setMessages(arrayOfMessage);
 		}
 
-		super.logCurrentRequest(documentId, requestDate, additionalInformationForLog);
+		super.logCurrentRequest(documentId, requestDate.getTime(), additionalInformationForLog);
 		return response;
 	}
 	
 	@Override
 	protected Object getResultForGenericException(Exception ex) {
+		super.logError(null, Calendar.getInstance().getTime(), LogService.ErrorLogLevel_Fatal, ex.getMessage());
 		GetDocumentHistoryResponse response = new GetDocumentHistoryResponse();
 		response.setSuccess(false);
 		ArrayOfMessage arrayOfMessage = new ArrayOfMessage();

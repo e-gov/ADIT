@@ -1,7 +1,6 @@
 package ee.adit.ws.endpoint.user;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -16,6 +15,7 @@ import ee.adit.pojo.Message;
 import ee.adit.pojo.Notification;
 import ee.adit.pojo.SetNotificationsRequest;
 import ee.adit.pojo.SetNotificationsResponse;
+import ee.adit.service.LogService;
 import ee.adit.service.UserService;
 import ee.adit.util.CustomXTeeHeader;
 import ee.adit.util.Util;
@@ -40,7 +40,7 @@ public class SetNotificationsEndpoint extends AbstractAditBaseEndpoint {
 	protected Object invokeInternal(Object requestObject) throws Exception {
 		SetNotificationsResponse response = new SetNotificationsResponse();
 		ArrayOfMessage messages = new ArrayOfMessage();
-		Date requestDate = Calendar.getInstance().getTime();
+		Calendar requestDate = Calendar.getInstance();
 		String additionalInformationForLog = null;
 		
 		try {
@@ -122,6 +122,8 @@ public class SetNotificationsEndpoint extends AbstractAditBaseEndpoint {
 		} catch (Exception e) {
 			LOG.error("Exception: ", e);
 			additionalInformationForLog = "Request failed: " + e.getMessage();
+			super.logError(null, requestDate.getTime(), LogService.ErrorLogLevel_Error, e.getMessage());
+			
 			response.setSuccess(false);
 			ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
 			
@@ -136,12 +138,13 @@ public class SetNotificationsEndpoint extends AbstractAditBaseEndpoint {
 			response.setMessages(arrayOfMessage);
 		}
 		
-		super.logCurrentRequest(null, requestDate, additionalInformationForLog);
+		super.logCurrentRequest(null, requestDate.getTime(), additionalInformationForLog);
 		return response;
 	}
 
 	@Override
 	protected Object getResultForGenericException(Exception ex) {
+		super.logError(null, Calendar.getInstance().getTime(), LogService.ErrorLogLevel_Fatal, ex.getMessage());
 		SetNotificationsResponse response = new SetNotificationsResponse();
 		response.setSuccess(false);
 		ArrayOfMessage arrayOfMessage = new ArrayOfMessage();

@@ -1,9 +1,7 @@
 package ee.adit.ws.endpoint.document;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
@@ -11,19 +9,16 @@ import org.springframework.stereotype.Component;
 
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
-import ee.adit.dao.pojo.DocumentHistory;
 import ee.adit.exception.AditException;
 import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.ArrayOfRecipientStatus;
 import ee.adit.pojo.ArrayOfUserCode;
-import ee.adit.pojo.GetNotificationsResponse;
 import ee.adit.pojo.Message;
 import ee.adit.pojo.RecipientStatus;
-import ee.adit.pojo.SaveDocumentRequest;
 import ee.adit.pojo.SendDocumentRequest;
 import ee.adit.pojo.SendDocumentResponse;
-import ee.adit.pojo.Success;
 import ee.adit.service.DocumentService;
+import ee.adit.service.LogService;
 import ee.adit.service.UserService;
 import ee.adit.util.CustomXTeeHeader;
 import ee.adit.util.Util;
@@ -43,7 +38,7 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 	@Override
 	protected Object invokeInternal(Object requestObject) throws Exception {
 		SendDocumentResponse response = new SendDocumentResponse();
-		Date requestDate = Calendar.getInstance().getTime();
+		Calendar requestDate = Calendar.getInstance();
 		String additionalInformationForLog = null;
 		Long documentId = null;
 		boolean success = true;		
@@ -58,7 +53,7 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 			CustomXTeeHeader header = this.getHeader();
 			String applicationName = header.getInfosysteem();
 			
-			super.logCurrentRequest(documentId, requestDate, additionalInformationForLog);
+			super.logCurrentRequest(documentId, requestDate.getTime(), additionalInformationForLog);
 			
 			// Check if the application is registered
 			boolean applicationRegistered = this.getUserService().isApplicationRegistered(applicationName);
@@ -202,6 +197,8 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 		} catch(Exception e) {
 			success = false;
 			LOG.error("Exception: ", e);
+			super.logError(documentId, requestDate.getTime(), LogService.ErrorLogLevel_Error, e.getMessage());
+
 			response.setSuccess(success);
 			ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
 			
@@ -221,6 +218,7 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 
 	@Override
 	protected Object getResultForGenericException(Exception ex) {
+		super.logError(null, Calendar.getInstance().getTime(), LogService.ErrorLogLevel_Fatal, ex.getMessage());
 		SendDocumentResponse response = new SendDocumentResponse();
 		response.setSuccess(false);
 		ArrayOfMessage arrayOfMessage = new ArrayOfMessage();

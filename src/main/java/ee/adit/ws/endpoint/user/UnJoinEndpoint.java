@@ -1,5 +1,7 @@
 package ee.adit.ws.endpoint.user;
 
+import java.util.Calendar;
+
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import ee.adit.dao.pojo.AditUser;
@@ -8,6 +10,7 @@ import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.Message;
 import ee.adit.pojo.Success;
 import ee.adit.pojo.UnJoinResponse;
+import ee.adit.service.LogService;
 import ee.adit.service.UserService;
 import ee.adit.util.CustomXTeeHeader;
 import ee.adit.util.Util;
@@ -27,6 +30,8 @@ public class UnJoinEndpoint extends AbstractAditBaseEndpoint {
 		
 		UnJoinResponse response = new UnJoinResponse();
 		ArrayOfMessage messages = new ArrayOfMessage();
+		Calendar requestDate = Calendar.getInstance();
+		String additionalInformationForLog = null;
 		
 		try {
 			LOG.debug("UnJoinEndpoint.v1 invoked.");
@@ -97,6 +102,9 @@ public class UnJoinEndpoint extends AbstractAditBaseEndpoint {
 			
 		} catch (Exception e) {
 			LOG.error("Exception: ", e);
+			additionalInformationForLog = "Request failed: " + e.getMessage();
+			super.logError(null, requestDate.getTime(), LogService.ErrorLogLevel_Error, e.getMessage());
+			
 			response.setSuccess(new Success(false));
 			ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
 			
@@ -111,11 +119,13 @@ public class UnJoinEndpoint extends AbstractAditBaseEndpoint {
 			response.setMessages(arrayOfMessage);
 		}
 		
+		super.logCurrentRequest(null, requestDate.getTime(), additionalInformationForLog);
 		return response;
 	}
 
 	@Override
 	protected Object getResultForGenericException(Exception ex) {
+		super.logError(null, Calendar.getInstance().getTime(), LogService.ErrorLogLevel_Fatal, ex.getMessage());
 		UnJoinResponse response = new UnJoinResponse();
 		response.setSuccess(new Success(false));
 		ArrayOfMessage arrayOfMessage = new ArrayOfMessage();

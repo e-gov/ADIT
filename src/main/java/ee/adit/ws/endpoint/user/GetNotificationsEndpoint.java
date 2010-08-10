@@ -1,7 +1,6 @@
 package ee.adit.ws.endpoint.user;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
@@ -15,6 +14,7 @@ import ee.adit.pojo.ArrayOfNotification;
 import ee.adit.pojo.EmailAddress;
 import ee.adit.pojo.GetNotificationsResponse;
 import ee.adit.pojo.Message;
+import ee.adit.service.LogService;
 import ee.adit.service.UserService;
 import ee.adit.stateportal.NotificationStatus;
 import ee.adit.stateportal.StatePortalClient;
@@ -41,7 +41,7 @@ public class GetNotificationsEndpoint extends AbstractAditBaseEndpoint {
 	protected Object invokeInternal(Object requestObject) throws Exception {
 		GetNotificationsResponse response = new GetNotificationsResponse();
 		ArrayOfMessage messages = new ArrayOfMessage();
-		Date requestDate = Calendar.getInstance().getTime();
+		Calendar requestDate = Calendar.getInstance();
 		String additionalInformationForLog = null;
 		
 		try {
@@ -119,6 +119,8 @@ public class GetNotificationsEndpoint extends AbstractAditBaseEndpoint {
 		} catch (Exception e) {
 			LOG.error("Exception: ", e);
 			additionalInformationForLog = "Request failed: " + e.getMessage();
+			super.logError(null, requestDate.getTime(), LogService.ErrorLogLevel_Error, e.getMessage());
+			
 			response.setSuccess(false);
 			ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
 			
@@ -133,12 +135,13 @@ public class GetNotificationsEndpoint extends AbstractAditBaseEndpoint {
 			response.setMessages(arrayOfMessage);
 		}
 		
-		super.logCurrentRequest(null, requestDate, additionalInformationForLog);
+		super.logCurrentRequest(null, requestDate.getTime(), additionalInformationForLog);
 		return response;
 	}
 
 	@Override
 	protected Object getResultForGenericException(Exception ex) {
+		super.logError(null, Calendar.getInstance().getTime(), LogService.ErrorLogLevel_Fatal, ex.getMessage());
 		GetNotificationsResponse response = new GetNotificationsResponse();
 		response.setSuccess(false);
 		ArrayOfMessage arrayOfMessage = new ArrayOfMessage();

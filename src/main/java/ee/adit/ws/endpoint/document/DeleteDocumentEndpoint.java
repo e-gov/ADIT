@@ -16,6 +16,7 @@ import ee.adit.pojo.DeleteDocumentResponse;
 import ee.adit.pojo.Message;
 import ee.adit.pojo.Success;
 import ee.adit.service.DocumentService;
+import ee.adit.service.LogService;
 import ee.adit.service.UserService;
 import ee.adit.util.CustomXTeeHeader;
 import ee.adit.util.Util;
@@ -140,6 +141,8 @@ public class DeleteDocumentEndpoint extends AbstractAditBaseEndpoint {
 		} catch (Exception e) {
 			LOG.error("Exception: ", e);
 			additionalInformationForLog = "Request failed: " + e.getMessage();
+			super.logError(documentId, requestDate.getTime(), LogService.ErrorLogLevel_Error, e.getMessage());
+			
 			response.setSuccess(new Success(false));
 			ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
 			
@@ -160,6 +163,7 @@ public class DeleteDocumentEndpoint extends AbstractAditBaseEndpoint {
 
 	@Override
 	protected Object getResultForGenericException(Exception ex) {
+		super.logError(null, Calendar.getInstance().getTime(), LogService.ErrorLogLevel_Fatal, ex.getMessage());
 		DeleteDocumentResponse response = new DeleteDocumentResponse();
 		response.setSuccess(new Success(false));
 		ArrayOfMessage arrayOfMessage = new ArrayOfMessage();

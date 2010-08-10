@@ -21,6 +21,7 @@ import ee.adit.pojo.Message;
 import ee.adit.pojo.OutputDocument;
 import ee.adit.schedule.ScheduleClient;
 import ee.adit.service.DocumentService;
+import ee.adit.service.LogService;
 import ee.adit.service.UserService;
 import ee.adit.util.CustomXTeeHeader;
 import ee.adit.util.Util;
@@ -254,6 +255,8 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
 		} catch (Exception e) {
 			additionalInformationForLog = "Request failed: " + e.getMessage();
 			LOG.error("Exception: ", e);
+			super.logError(documentId, requestDate.getTime(), LogService.ErrorLogLevel_Error, e.getMessage());
+			
 			response.setSuccess(false);
 			ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
 
@@ -274,6 +277,7 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
 
 	@Override
 	protected Object getResultForGenericException(Exception ex) {
+		super.logError(null, Calendar.getInstance().getTime(), LogService.ErrorLogLevel_Fatal, ex.getMessage());
 		GetDocumentResponse response = new GetDocumentResponse();
 		response.setSuccess(false);
 		ArrayOfMessage arrayOfMessage = new ArrayOfMessage();

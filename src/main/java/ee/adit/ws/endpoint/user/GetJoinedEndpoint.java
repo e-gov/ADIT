@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -25,6 +26,7 @@ import ee.adit.pojo.GetJoinedResponseAttachmentUser;
 import ee.adit.pojo.Message;
 import ee.adit.pojo.Success;
 import ee.adit.pojo.UserList;
+import ee.adit.service.LogService;
 import ee.adit.service.UserService;
 import ee.adit.util.CustomXTeeHeader;
 import ee.adit.util.Util;
@@ -45,6 +47,8 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 		
 		GetJoinedResponse response = new GetJoinedResponse();
 		ArrayOfMessage messages = new ArrayOfMessage();
+		Calendar requestDate = Calendar.getInstance();
+		String additionalInformationForLog = null;
 		
 		try {
 			
@@ -130,6 +134,9 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 			
 		} catch (Exception e) {
 			LOG.error("Exception: ", e);
+			additionalInformationForLog = "Request failed: " + e.getMessage();
+			super.logError(null, requestDate.getTime(), LogService.ErrorLogLevel_Error, e.getMessage());
+			
 			response.setSuccess(new Success(false));
 			ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
 			
@@ -144,6 +151,7 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 			response.setMessages(arrayOfMessage);
 		}
 		
+		super.logCurrentRequest(null, requestDate.getTime(), additionalInformationForLog);
 		return response;
 	}
 	
