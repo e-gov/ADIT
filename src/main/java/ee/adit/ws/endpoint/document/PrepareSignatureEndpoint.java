@@ -215,7 +215,7 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
 					throw new AditException(errorMessage);
 				}
 				
-				PrepareSignatureInternalResult sigResult = this.documentService.getDocumentDAO().prepareSignature(
+				PrepareSignatureInternalResult sigResult = this.documentService.prepareSignature(
 						doc.getId(),
 						request.getManifest(),
 						request.getCountry(),

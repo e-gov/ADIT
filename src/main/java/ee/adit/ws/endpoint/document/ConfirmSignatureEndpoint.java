@@ -214,7 +214,7 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
 					throw aditCodedException;
 				}
 				
-				this.documentService.getDocumentDAO().confirmSignature(
+				this.documentService.confirmSignature(
 						doc.getId(),
 						signatureFile,
 						header.getIsikukood(),
