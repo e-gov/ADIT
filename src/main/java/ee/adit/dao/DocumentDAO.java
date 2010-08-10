@@ -37,6 +37,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import dvk.api.container.v2.Saaja;
 import dvk.api.ml.PojoMessage;
 
+import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.DocumentFile;
 import ee.adit.dao.pojo.DocumentSharing;
@@ -52,6 +53,7 @@ import ee.adit.pojo.Message;
 import ee.adit.pojo.OutputDocument;
 import ee.adit.pojo.OutputDocumentFile;
 import ee.adit.pojo.OutputDocumentFilesList;
+import ee.adit.pojo.PrepareSignatureInternalResult;
 import ee.adit.pojo.SaveItemInternalResult;
 import ee.adit.service.DocumentService;
 import ee.adit.util.Util;
@@ -788,7 +790,7 @@ public class DocumentDAO extends HibernateDaoSupport {
 	}
 
 	
-	public String prepareSignature(
+	public PrepareSignatureInternalResult prepareSignature(
 		final long documentId,
 		final String manifest,
 		final String country,
@@ -797,14 +799,16 @@ public class DocumentDAO extends HibernateDaoSupport {
 		final String zip,
 		final String certFile,
 		final String digidocConfigFile,
-		final String temporaryFilesDir) {
+		final String temporaryFilesDir,
+		final AditUser xroadUser) {
 		
-		String signatureDigest = null;
-		signatureDigest = (String) this.getHibernateTemplate().execute(new HibernateCallback() {
+		return (PrepareSignatureInternalResult) this.getHibernateTemplate().execute(new HibernateCallback() {
 			
 			@Override
 			public Object doInHibernate(Session session) throws HibernateException, SQLException {
-				String digestHex = null;
+				PrepareSignatureInternalResult result = new PrepareSignatureInternalResult();
+				result.setSuccess(true);
+				
 				File uniqueDir = null;
 				try {
 					ConfigManager.init(digidocConfigFile);
@@ -876,11 +880,36 @@ public class DocumentDAO extends HibernateDaoSupport {
 			    		}
 			    	}
 					
+			    	// Load certificate from file
+			    	X509Certificate cert = SignedDoc.readCertificate(certFile);
+			    	
+			    	
+			    	// Remove country prefix from request user code, so it can be
+			    	// compared to cert personal id code more reliably
+					String fixedUserCode = "";
+					if ((xroadUser != null) && (xroadUser.getUserCode() != null)) {
+						for (int i = 0; i < xroadUser.getUserCode().length(); i++) {
+							if ("0123456789".contains(String.valueOf(xroadUser.getUserCode().charAt(i)))) {
+								fixedUserCode = xroadUser.getUserCode().substring(i);
+								break;
+							}
+						}
+					}
+			    	
+			    	// Determine if certificate belongs to same person
+			    	// who executed current query
+			    	String certPersonalIdCode = SignedDoc.getSubjectPersonalCode(cert);
+					if (!fixedUserCode.equalsIgnoreCase(certPersonalIdCode)) {
+						LOG.info("Attempted to sign document "+ documentId + " by person \"" + certPersonalIdCode + "\" while logged in as person \"" + fixedUserCode + "\"");
+						result.setSuccess(false);
+						result.setErrorCode("request.prepareSignature.signer.notCurrentUser");
+						return result;
+					}
+			    	
 			    	// Add signature and calculate digest
-					X509Certificate cert = SignedDoc.readCertificate(certFile);
 					Signature sig = sdoc.prepareSignature(cert,	claimedRoles, address);
 					byte[] digest = sig.calculateSignedInfoDigest();
-					digestHex = Util.convertToHexString(digest);
+					result.setSignatureHash(Util.convertToHexString(digest));
 					
 					// Topis
 					byte[] dummySignature = new byte[128];
@@ -918,11 +947,9 @@ public class DocumentDAO extends HibernateDaoSupport {
 					catch (Exception ex) {}
 				}
 				
-				return digestHex;
+				return result;
 			}
 		});
-		
-		return signatureDigest;
 	}
 	
 	public void confirmSignature(

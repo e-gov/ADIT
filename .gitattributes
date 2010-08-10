@@ -258,6 +258,7 @@ src/main/java/ee/adit/pojo/ObjectFactory.java -text
 src/main/java/ee/adit/pojo/OutputDocument.java -text
 src/main/java/ee/adit/pojo/OutputDocumentFile.java -text
 src/main/java/ee/adit/pojo/OutputDocumentFilesList.java -text
+src/main/java/ee/adit/pojo/PrepareSignatureInternalResult.java -text
 src/main/java/ee/adit/pojo/PrepareSignatureRequest.java -text
 src/main/java/ee/adit/pojo/PrepareSignatureRequestCert.java -text
 src/main/java/ee/adit/pojo/PrepareSignatureResponse.java -text

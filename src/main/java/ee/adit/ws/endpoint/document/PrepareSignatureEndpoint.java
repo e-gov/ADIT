@@ -13,9 +13,11 @@ import org.springframework.ws.mime.Attachment;
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.DocumentSharing;
+import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditException;
 import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.Message;
+import ee.adit.pojo.PrepareSignatureInternalResult;
 import ee.adit.pojo.PrepareSignatureRequest;
 import ee.adit.pojo.PrepareSignatureResponse;
 import ee.adit.service.DocumentService;
@@ -108,6 +110,16 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
 				String errorMessage = this.getMessageSource().getMessage("user.nonExistent", new Object[] { userCode },	Locale.ENGLISH);
 				throw new AditException(errorMessage);
 			}
+			AditUser xroadRequestUser = null;
+			if (user.getUsertype().getShortName().equalsIgnoreCase("person")) {
+				xroadRequestUser = user;
+			} else {
+				try {
+					xroadRequestUser = this.getUserService().getUserByID(header.getIsikukood());
+				} catch (Exception ex) {
+					LOG.debug("Error when attempting to find local user matchinig the person that executed a company request.");
+				}
+			}
 
 			// Kontrollime, et kasutajakonto ligipääs poleks peatatud (kasutaja lahkunud)
 			if ((user.getActive() == null) || !user.getActive()) {
@@ -158,7 +170,7 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
 
 			// Document can be signed only if:
 			// a) document belongs to user
-			// b) document is sent or shared to user
+			// b) document is sent or shared to user for signing
 			boolean isOwner = false;
 			if (doc.getCreatorCode().equalsIgnoreCase(userCode)) {
 				isOwner = true;
@@ -167,7 +179,7 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
 					Iterator it = doc.getDocumentSharings().iterator();
 					while (it.hasNext()) {
 						DocumentSharing sharing = (DocumentSharing)it.next();
-						if (sharing.getUserCode().equalsIgnoreCase(userCode)) {
+						if (sharing.getUserCode().equalsIgnoreCase(userCode) && DocumentService.SharingType_Sign.equalsIgnoreCase(sharing.getDocumentSharingType())) {
 							isOwner = true;
 							break;
 						}
@@ -203,7 +215,7 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
 					throw new AditException(errorMessage);
 				}
 				
-				String digestHex = this.documentService.getDocumentDAO().prepareSignature(
+				PrepareSignatureInternalResult sigResult = this.documentService.getDocumentDAO().prepareSignature(
 						doc.getId(),
 						request.getManifest(),
 						request.getCountry(),
@@ -212,9 +224,15 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
 						request.getZip(),
 						certFile,
 						digidocConfigurationFile.getFile().getAbsolutePath(),
-						this.getConfiguration().getTempDir());
+						this.getConfiguration().getTempDir(),
+						xroadRequestUser);
 				
-				response.setSignatureHash(digestHex);
+				if (sigResult.isSuccess()) {
+					response.setSignatureHash(sigResult.getSignatureHash());
+				} else {
+					AditCodedException aditCodedException = new AditCodedException(sigResult.getErrorCode());
+					throw aditCodedException;
+				}
 			} else {
 				LOG.debug("Requested document does not belong to user. Document ID: " + request.getDocumentId() + ", User ID: " + userCode);
 				String errorMessage = this.getMessageSource().getMessage("document.doesNotBelongToUser", new Object[] { request.getDocumentId(), userCode }, Locale.ENGLISH);
@@ -231,7 +249,10 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
 			response.setSuccess(false);
 			ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
 
-			if (e instanceof AditException) {
+			if(e instanceof AditCodedException) {
+				LOG.debug("Adding exception messages to response object.");
+				arrayOfMessage.setMessage(this.getMessageService().getMessages((AditCodedException) e));
+			} else if (e instanceof AditException) {
 				LOG.debug("Adding exception message to response object.");
 				arrayOfMessage.getMessage().add(new Message("en", e.getMessage()));
 			} else {

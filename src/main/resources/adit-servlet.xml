@@ -186,6 +186,7 @@
 		<property name="messageSource" ref="messageSource"/>
 		<property name="configuration" ref="configuration"/>
 		<property name="documentService" ref="documentService"/>
+		<property name="messageService" ref="messageService"/>
 		
 		<!-- NB! Value is case sensitive -->
 		<property name="digidocConfigurationFile" value="classpath:jdigidoc.cfg" />
@@ -368,7 +369,7 @@
 	<bean id="aditDataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
-		<property name="url" value="jdbc:oracle:thin:@//localhost:1521/XE" />
+		<property name="url" value="jdbc:oracle:thin:@//localhost:1521/xe" />
 		<property name="username" value="adit" />
 		<property name="password" value="adit" />
 	</bean>
@@ -607,10 +608,10 @@
 	<!-- Configuration -->
 	<bean id="configuration" class="ee.adit.util.Configuration">
 		<property name="getJoinedMaxResults" value="2"/>
-		<property name="tempDir" value="C:\temp"/>
+		<property name="tempDir" value="E:\temp"/>
 		<property name="deleteTemporaryFiles" value="true"/>
 		<property name="schedulerEventTypeName" value="Minu dokumentide teavitus"/>
-		<property name="dvkResponseMessageStylesheet" value="C:\dev\microlink\adit\src\main\resources\DVKresponseMessage.xsl"/>
+		<property name="dvkResponseMessageStylesheet" value="E:\dev\microlink\adit\src\main\resources\DVKresponseMessage.xsl"/>
 		<!-- Üldine kettamahu piirang ühe kasutaja kohta baitides -->
 		<property name="globalDiskQuota" value="10240000"/>
 		<property name="locales">
