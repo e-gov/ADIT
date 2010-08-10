@@ -4,15 +4,14 @@ import java.util.Date;
 
 import org.apache.log4j.Logger;
 
+import ee.adit.dao.DownloadRequestLogDAO;
 import ee.adit.dao.ErrorLogDAO;
-import ee.adit.dao.NotificationDAO;
 import ee.adit.dao.RequestLogDAO;
+import ee.adit.dao.pojo.DownloadRequestLog;
 import ee.adit.dao.pojo.ErrorLog;
-import ee.adit.dao.pojo.Notification;
 import ee.adit.dao.pojo.RequestLog;
 
 public class LogService {
-	
 	private static Logger LOG = Logger.getLogger(LogService.class);
 	
 	public static final String ErrorLogLevel_Warn = "WARN";
@@ -20,8 +19,8 @@ public class LogService {
 	public static final String ErrorLogLevel_Fatal = "FATAL";
 	
 	private RequestLogDAO requestLogDAO;
-
 	private ErrorLogDAO errorLogDAO;
+	private DownloadRequestLogDAO downloadRequestLogDAO;
 	
 	public RequestLogDAO getRequestLogDAO() {
 		return requestLogDAO;
@@ -77,12 +76,45 @@ public class LogService {
 		return this.errorLogDAO.save(logEntry);
 	}
 
+	public Long addDownloadRequestLogEntry(
+			Long documentId,
+			Long documentFileId,
+			Date requestDate,
+			String appName,
+			String userCode,
+			String orgCode) {
+		
+		Long result = 0L;
+		try {
+			DownloadRequestLog logEntry = new DownloadRequestLog();
+			logEntry.setDocumentId(documentId);
+			logEntry.setDocumentFileId(documentFileId);
+			logEntry.setRequestDate(requestDate);
+			logEntry.setRemoteApplicationShortName(appName);
+			logEntry.setUserCode(userCode);
+			logEntry.setOrganizationCode(orgCode);
+			result = this.downloadRequestLogDAO.save(logEntry);
+		} catch (Exception ex) {
+			// Do not throw exception if logging fails!
+			LOG.warn("Failed logging document/file download!", ex);
+		}
+		return result;
+	}
+	
 	public ErrorLogDAO getErrorLogDAO() {
 		return errorLogDAO;
 	}
 
 	public void setErrorLogDAO(ErrorLogDAO errorLogDAO) {
 		this.errorLogDAO = errorLogDAO;
+	}
+
+	public DownloadRequestLogDAO getDownloadRequestLogDAO() {
+		return downloadRequestLogDAO;
+	}
+
+	public void setDownloadRequestLogDAO(DownloadRequestLogDAO downloadRequestLogDAO) {
+		this.downloadRequestLogDAO = downloadRequestLogDAO;
 	}
 		
 	

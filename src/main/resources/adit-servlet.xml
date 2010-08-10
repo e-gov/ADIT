@@ -335,7 +335,7 @@
 	<bean id="logService" class="ee.adit.service.LogService">
 		<property name="requestLogDAO" ref="requestLogDAO"/>
 		<property name="errorLogDAO" ref="errorLogDAO"/>
-		
+		<property name="downloadRequestLogDAO" ref="downloadRequestLogDAO"/>
 	</bean>
 	
 	<bean id="userService" class="ee.adit.service.UserService">
@@ -369,7 +369,7 @@
 	<bean id="aditDataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
-		<property name="url" value="jdbc:oracle:thin:@//localhost:1521/xe" />
+		<property name="url" value="jdbc:oracle:thin:@//localhost:1521/XE" />
 		<property name="username" value="adit" />
 		<property name="password" value="adit" />
 	</bean>
@@ -399,6 +399,7 @@
 				<value>classpath:hbm/UserNotification.hbm.xml</value>
 				<value>classpath:hbm/Usertype.hbm.xml</value>
 				<value>classpath:hbm/ErrorLog.hbm.xml</value>
+				<value>classpath:hbm/DownloadRequestLog.hbm.xml</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">
@@ -429,7 +430,11 @@
 	
 	<bean id="errorLogDAO" class="ee.adit.dao.ErrorLogDAO">
 		<property name="sessionFactory" ref="sessionFactory" />
-	</bean>	
+	</bean>
+	
+	<bean id="downloadRequestLogDAO" class="ee.adit.dao.DownloadRequestLogDAO">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
 	
 	<bean id="notificationDAO" class="ee.adit.dao.NotificationDAO">
 		<property name="sessionFactory" ref="sessionFactory" />

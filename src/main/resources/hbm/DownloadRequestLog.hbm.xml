@@ -6,7 +6,9 @@
     <class name="ee.adit.dao.pojo.DownloadRequestLog" table="DOWNLOAD_REQUEST_LOG" schema="ADIT">
         <id name="id" type="long">
             <column name="ID" precision="18" scale="0" />
-            <generator class="assigned" />
+            <generator class="sequence">
+            	<param name="sequence">DOWNLOAD_REQUEST_LOG_ID_SEQ</param>
+            </generator>
         </id>
         <property name="documentId" type="java.lang.Long">
             <column name="DOCUMENT_ID" precision="12" scale="0" />

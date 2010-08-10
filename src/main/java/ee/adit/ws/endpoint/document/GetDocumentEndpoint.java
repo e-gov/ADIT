@@ -1,8 +1,10 @@
 package ee.adit.ws.endpoint.document;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
@@ -19,6 +21,7 @@ import ee.adit.pojo.GetDocumentResponse;
 import ee.adit.pojo.GetDocumentResponseDocument;
 import ee.adit.pojo.Message;
 import ee.adit.pojo.OutputDocument;
+import ee.adit.pojo.OutputDocumentFile;
 import ee.adit.schedule.ScheduleClient;
 import ee.adit.service.DocumentService;
 import ee.adit.service.LogService;
@@ -59,6 +62,7 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
 		Calendar requestDate = Calendar.getInstance();
 		String additionalInformationForLog = null;
 		Long documentId = null;
+		List<Long> fileIdList = new ArrayList<Long>();
 
 		try {
 			LOG.debug("getDocument.v1 invoked.");
@@ -162,6 +166,14 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
 									user.getUserCode());
 							
 							if (resultDoc != null) {
+								// Remember file IDs for logging later on.
+								List<OutputDocumentFile> docFiles = resultDoc.getFiles().getFiles();
+								if ((docFiles != null) && (docFiles.size() > 0)) {
+									for (OutputDocumentFile file : docFiles) {
+										fileIdList.add(file.getId());
+									}
+								}
+								
 								// 1. Convert java list to XML string and output to file
 								String xmlFile = marshal(resultDoc);
 								Util.joinSplitXML(xmlFile, "data");
@@ -272,6 +284,16 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
 		}
 
 		super.logCurrentRequest(documentId, requestDate.getTime(), additionalInformationForLog);
+		
+		// Log document/file download
+		if ((fileIdList == null) || (fileIdList.size() < 1)) {
+			super.logDownloadRequest(documentId, null, requestDate.getTime());
+		} else {
+			for (Long fileId : fileIdList) {
+				super.logDownloadRequest(documentId, fileId, requestDate.getTime());
+			}
+		}
+		
 		return response;
 	}
 

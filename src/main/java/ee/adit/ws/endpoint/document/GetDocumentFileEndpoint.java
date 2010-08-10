@@ -1,6 +1,7 @@
 package ee.adit.ws.endpoint.document;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -68,6 +69,7 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 		Calendar requestDate = Calendar.getInstance();
 		String additionalInformationForLog = null;
 		Long documentId = null;
+		List<Long> fileIdList = new ArrayList<Long>();
 
 		try {
 			LOG.debug("getDocumentFile.v1 invoked.");
@@ -173,6 +175,11 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 							
 							if ((docFiles != null) && (docFiles.size() > 0)) {
 								LOG.debug("Document has " + docFiles.size()  + " files.");
+								
+								// Remember file IDs for logging later on.
+								for (OutputDocumentFile file : docFiles) {
+									fileIdList.add(file.getId());
+								}
 								
 								// 1. Convert java list to XML string and output to file
 								String xmlFile = outputToFile(docFiles);
@@ -284,6 +291,16 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 		}
 
 		super.logCurrentRequest(documentId, requestDate.getTime(), additionalInformationForLog);
+		
+		// Log document/file download
+		if ((fileIdList == null) || (fileIdList.size() < 1)) {
+			super.logDownloadRequest(documentId, null, requestDate.getTime());
+		} else {
+			for (Long fileId : fileIdList) {
+				super.logDownloadRequest(documentId, fileId, requestDate.getTime());
+			}
+		}
+		
 		return response;
 	}
 
