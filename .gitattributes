@@ -348,6 +348,16 @@ src/main/resources/castor-mapping/xsd.v1/rkel_letter.xsd -text
 src/main/resources/castor-mapping/xsd.v2/dhl-meta-automatic.xsd -text
 src/main/resources/castor-mapping/xsd.v2/dhl-meta-manual.xsd -text
 src/main/resources/castor-mapping/xsd.v2/dhl.xsd -text
+src/main/resources/dev/DVKresponseMessage.xsl -text
+src/main/resources/dev/adit-castor-mapping.xml -text
+src/main/resources/dev/adit-servlet.xml -text
+src/main/resources/dev/adit.xsd -text
+src/main/resources/dev/jdigidoc.cfg -text
+src/main/resources/dev/log4j.xml -text
+src/main/resources/dev/messages_en.properties -text
+src/main/resources/dev/messages_et.properties -text
+src/main/resources/dev/web.xml -text
+src/main/resources/dev/xtee.properties -text
 src/main/resources/dvkapi/Counter.hbm.xml -text
 src/main/resources/dvkapi/Message.hbm.xml -text
 src/main/resources/dvkapi/MessageRecipient.hbm.xml -text
