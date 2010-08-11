@@ -6,9 +6,11 @@ import org.apache.log4j.Logger;
 
 import ee.adit.dao.DownloadRequestLogDAO;
 import ee.adit.dao.ErrorLogDAO;
+import ee.adit.dao.MetadataRequestLogDAO;
 import ee.adit.dao.RequestLogDAO;
 import ee.adit.dao.pojo.DownloadRequestLog;
 import ee.adit.dao.pojo.ErrorLog;
+import ee.adit.dao.pojo.MetadataRequestLog;
 import ee.adit.dao.pojo.RequestLog;
 
 public class LogService {
@@ -21,18 +23,7 @@ public class LogService {
 	private RequestLogDAO requestLogDAO;
 	private ErrorLogDAO errorLogDAO;
 	private DownloadRequestLogDAO downloadRequestLogDAO;
-	
-	public RequestLogDAO getRequestLogDAO() {
-		return requestLogDAO;
-	}
-
-	public void setRequestLogDAO(RequestLogDAO requestLogDAO) {
-		this.requestLogDAO = requestLogDAO;
-	}
-	
-	public Long addRequestLogEntry(RequestLog requestLogEntry) {
-		return this.requestLogDAO.save(requestLogEntry);
-	}
+	private MetadataRequestLogDAO metadataRequestLogDAO;
 	
 	public Long addRequestLogEntry(
 			String requestName,
@@ -101,6 +92,41 @@ public class LogService {
 		return result;
 	}
 	
+	public Long addMetadataRequestLogEntry(
+			Long documentId,
+			Date requestDate,
+			String appName,
+			String userCode,
+			String orgCode) {
+		
+		Long result = 0L;
+		try {
+			MetadataRequestLog logEntry = new MetadataRequestLog();
+			logEntry.setDocumentId(documentId);
+			logEntry.setRequestDate(requestDate);
+			logEntry.setRemoteApplicationShortName(appName);
+			logEntry.setUserCode(userCode);
+			logEntry.setOrganizationCode(orgCode);
+			result = this.metadataRequestLogDAO.save(logEntry);
+		} catch (Exception ex) {
+			// Do not throw exception if logging fails!
+			LOG.warn("Failed logging document/file download!", ex);
+		}
+		return result;
+	}
+
+	public RequestLogDAO getRequestLogDAO() {
+		return requestLogDAO;
+	}
+
+	public void setRequestLogDAO(RequestLogDAO requestLogDAO) {
+		this.requestLogDAO = requestLogDAO;
+	}
+	
+	public Long addRequestLogEntry(RequestLog requestLogEntry) {
+		return this.requestLogDAO.save(requestLogEntry);
+	}
+	
 	public ErrorLogDAO getErrorLogDAO() {
 		return errorLogDAO;
 	}
@@ -116,6 +142,12 @@ public class LogService {
 	public void setDownloadRequestLogDAO(DownloadRequestLogDAO downloadRequestLogDAO) {
 		this.downloadRequestLogDAO = downloadRequestLogDAO;
 	}
-		
-	
+
+	public MetadataRequestLogDAO getMetadataRequestLogDAO() {
+		return metadataRequestLogDAO;
+	}
+
+	public void setMetadataRequestLogDAO(MetadataRequestLogDAO metadataRequestLogDAO) {
+		this.metadataRequestLogDAO = metadataRequestLogDAO;
+	}
 }

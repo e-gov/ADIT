@@ -63,6 +63,7 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
 		String additionalInformationForLog = null;
 		Long documentId = null;
 		List<Long> fileIdList = new ArrayList<Long>();
+		boolean includeFileContents = false;
 
 		try {
 			LOG.debug("getDocument.v1 invoked.");
@@ -151,7 +152,7 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
 						
 						// Kui kasutaja tohib dokumendile ligi pääseda, siis tagastame dokumendi
 						if (userIsDocOwner) {
-							boolean includeFileContents = (request.isIncludeFileContents() == null) ? false : request.isIncludeFileContents(); 
+							includeFileContents = (request.isIncludeFileContents() == null) ? false : request.isIncludeFileContents(); 
 							OutputDocument resultDoc = this.documentService.getDocumentDAO().getDocumentWithFiles(
 									doc.getId(),
 									null,
@@ -285,12 +286,16 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
 		super.logCurrentRequest(documentId, requestDate.getTime(), additionalInformationForLog);
 		
 		// Log document/file download
-		if ((fileIdList == null) || (fileIdList.size() < 1)) {
-			super.logDownloadRequest(documentId, null, requestDate.getTime());
-		} else {
-			for (Long fileId : fileIdList) {
-				super.logDownloadRequest(documentId, fileId, requestDate.getTime());
+		if (includeFileContents) {
+			if ((fileIdList == null) || (fileIdList.size() < 1)) {
+				super.logDownloadRequest(documentId, null, requestDate.getTime());
+			} else {
+				for (Long fileId : fileIdList) {
+					super.logDownloadRequest(documentId, fileId, requestDate.getTime());
+				}
 			}
+		} else {
+			super.logMetadataRequest(documentId, requestDate.getTime());
 		}
 		
 		return response;

@@ -355,6 +355,7 @@
 		<property name="requestLogDAO" ref="requestLogDAO"/>
 		<property name="errorLogDAO" ref="errorLogDAO"/>
 		<property name="downloadRequestLogDAO" ref="downloadRequestLogDAO"/>
+		<property name="metadataRequestLogDAO" ref="metadataRequestLogDAO"/>
 	</bean>
 	
 	<bean id="userService" class="ee.adit.service.UserService">
@@ -388,7 +389,7 @@
 	<bean id="aditDataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
-		<property name="url" value="jdbc:oracle:thin:@//localhost:1521/XE" />
+		<property name="url" value="jdbc:oracle:thin:@//localhost:1522/jaak" />
 		<property name="username" value="adit" />
 		<property name="password" value="adit" />
 	</bean>
@@ -452,6 +453,10 @@
 	</bean>
 	
 	<bean id="downloadRequestLogDAO" class="ee.adit.dao.DownloadRequestLogDAO">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="metadataRequestLogDAO" class="ee.adit.dao.MetadataRequestLogDAO">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 	
@@ -632,10 +637,10 @@
 	<!-- Configuration -->
 	<bean id="configuration" class="ee.adit.util.Configuration">
 		<property name="getJoinedMaxResults" value="2"/>
-		<property name="tempDir" value="E:\temp"/>
+		<property name="tempDir" value="C:\temp"/>
 		<property name="deleteTemporaryFiles" value="true"/>
 		<property name="schedulerEventTypeName" value="Minu dokumentide teavitus"/>
-		<property name="dvkResponseMessageStylesheet" value="E:\dev\microlink\adit\src\main\resources\DVKresponseMessage.xsl"/>
+		<property name="dvkResponseMessageStylesheet" value="C:\dev\microlink\adit\src\main\resources\DVKresponseMessage.xsl"/>
 		<!-- Üldine kettamahu piirang ühe kasutaja kohta baitides -->
 		<property name="globalDiskQuota" value="10240000"/>
 		<property name="locales">

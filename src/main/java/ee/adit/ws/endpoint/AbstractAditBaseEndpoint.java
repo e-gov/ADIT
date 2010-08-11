@@ -184,6 +184,23 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 		}
 	}
 	
+	public void logMetadataRequest(Long documentId, Date requestDate) {
+		try {
+			if(this.header != null) {
+				this.logService.addMetadataRequestLogEntry(
+						documentId,
+						requestDate,
+						this.header.getInfosysteem(),
+						(((this.header.getAllasutus() != null) && (this.header.getAllasutus().length() > 0)) ? this.header.getAllasutus() : this.header.getIsikukood()),
+						this.header.getAsutus());
+			} else {
+				throw new NullPointerException("Request header not initialized.");
+			}			
+		} catch (Exception ex) {
+			LOG.debug("Failed logging request!", ex);
+		}
+	}
+	
 	public void logError(Long documentId, Date errorDate, String level, String errorMessage) {
 		try {
 			if(this.header != null) {

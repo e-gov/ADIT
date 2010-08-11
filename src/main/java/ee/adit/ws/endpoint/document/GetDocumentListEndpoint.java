@@ -1,6 +1,8 @@
 package ee.adit.ws.endpoint.document;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
@@ -14,6 +16,7 @@ import ee.adit.pojo.GetDocumentListResponse;
 import ee.adit.pojo.GetDocumentListResponseAttachment;
 import ee.adit.pojo.GetDocumentListResponseList;
 import ee.adit.pojo.Message;
+import ee.adit.pojo.OutputDocument;
 import ee.adit.service.DocumentService;
 import ee.adit.service.LogService;
 import ee.adit.service.UserService;
@@ -52,6 +55,7 @@ public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
 		ArrayOfMessage messages = new ArrayOfMessage();
 		Calendar requestDate = Calendar.getInstance();
 		String additionalInformationForLog = null;
+		List<Long> documentIdList = new ArrayList<Long>();
 
 		try {
 			LOG.debug("getDocumentList.v1 invoked.");
@@ -115,6 +119,11 @@ public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
 					user.getUserCode());
 			
 			if ((att.getDocumentList() != null) && !att.getDocumentList().isEmpty()) {
+				// Remember document ID-s for logging
+				for (OutputDocument outputDoc : att.getDocumentList()) {
+					documentIdList.add(outputDoc.getId());
+				}
+				
 				// 1. Convert java list to XML string and output to file
 				String xmlFile = marshal(att);
 				
@@ -157,6 +166,14 @@ public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
 		}
 
 		super.logCurrentRequest(null, requestDate.getTime(), additionalInformationForLog);
+		
+		// Log metadata download
+		if ((documentIdList == null) || (documentIdList.size() < 1)) {
+			for (Long documentId : documentIdList) {
+				super.logMetadataRequest(documentId, requestDate.getTime());
+			}
+		}
+		
 		return response;
 	}
 
