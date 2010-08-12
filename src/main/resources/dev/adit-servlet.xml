@@ -18,7 +18,7 @@
 	<!-- X-Road client import (located in jar) -->
 	<import resource="classpath:xtee.xml" />
 
-	!-- User endpoints -->
+	<!-- User endpoints -->
 	<bean id="JoinEndpoint" class="ee.adit.ws.endpoint.user.JoinEndpoint">
 		<property name="marshaller" ref="castorMarshaller"/>
 		<property name="unmarshaller" ref="castorMarshaller"/>
