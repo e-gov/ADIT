@@ -9,7 +9,7 @@
 	<url>http://maven.apache.org</url>
 
 	<properties>
-		<baseDir>E:\dev\microlink\adit</baseDir>
+		<baseDir>C:\projektid\adit\adit</baseDir>
 	</properties>
 
 	<dependencies>
@@ -106,6 +106,13 @@
 			<version>1.2.16</version>
 			<scope>system</scope>
 			<systemPath>${baseDir}\lib\log4j-1.2.16.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>org.apache</groupId>
+			<artifactId>log4j.nagios</artifactId>
+			<version>1.5.1</version>
+			<scope>system</scope>
+			<systemPath>${baseDir}\lib\NagiosAppender-1.5.1.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>org.apache</groupId>
@@ -310,7 +317,7 @@
 			<scope>system</scope>
 			<systemPath>${baseDir}/lib/commons-io-1.3.1.jar</systemPath>
 		</dependency>
-		
+	
 	</dependencies>
 
 	<build>

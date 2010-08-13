@@ -622,7 +622,9 @@
 	 
 	<bean id="temporaryFolderCleanerTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
 	  	<property name="jobDetail" ref="temporaryFolderCleanerJobDetails"/>
+	  	<!-- First execute 10 seconds after application start -->
 	  	<property name="startDelay" value="10000"/>
+	  	<!-- Repeat every 1 hour -->
 	  	<property name="repeatInterval" value="360000"/>
 	</bean>
 	 
