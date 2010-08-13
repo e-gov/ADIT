@@ -751,6 +751,14 @@ NOCACHE
 NOORDER;
 
 
+/* Create indexes */
+/* All primary key indexes were created with primary key constraints */
+CREATE INDEX adit_user_active_idx ON adit_user (active);
+CREATE INDEX document_file_docid_idx ON document_file (document_id);
+CREATE INDEX document_history_docid_idx ON document_history (document_id);
+CREATE INDEX document_sharing_docid_idx ON document_sharing (document_id);
+CREATE INDEX signature_docid_idx ON signature (document_id);
+/* End of indexes */
 
 -- ADIT user must have execute rights for dbms_crypto package
 grant execute on dbms_crypto to &&ADIT_SCHEMA;
