@@ -571,6 +571,17 @@
 	    </property>
 	</bean>
 	
+	<bean name="temporaryFolderCleanerJobDetails" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass" value="ee.adit.util.TemporaryFolderCleanerJob"/>
+		<property name="jobDataAsMap">
+		    <map>
+		    	<entry key="configuration">
+		      		<ref bean="configuration"/>
+		      	</entry>
+		    </map>
+	    </property>
+	</bean>
+	
 	<bean id="dvkSendTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
 	  	<property name="jobDetail" ref="sendJobDetails"/>
 		<!-- 10 seconds -->
@@ -609,6 +620,11 @@
 	  	<property name="repeatInterval" value="120000"/>
 	</bean>
 	 
+	<bean id="temporaryFolderCleanerTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+	  	<property name="jobDetail" ref="temporaryFolderCleanerJobDetails"/>
+	  	<property name="startDelay" value="10000"/>
+	  	<property name="repeatInterval" value="360000"/>
+	</bean>
 	 
 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="triggers">
@@ -620,6 +636,7 @@
 	      		<ref bean="dvkUpdateStatusToDVKTrigger"/>
 	      		<ref bean="notificationTrigger"/>
 	      		-->
+	      		<ref bean="temporaryFolderCleanerTrigger"/>
 	    	</list>
 	  	</property>
 	</bean>

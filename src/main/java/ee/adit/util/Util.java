@@ -76,17 +76,6 @@ public class Util {
 	 * Creates an empty temporary file to given folder.
 	 * 
 	 * @param itemIndex		Number of current file. Enables to give an index to all files related to same object etc.
-	 * @param filesFolder	Folder path where the temporary file will be created. 
-	 * @return				Full name of created file (absolute path)
-	 */
-	public static String createTemporaryFile(int itemIndex, String filesFolder) {
-		return createTemporaryFile(itemIndex, "", filesFolder);
-	}
-	
-	/**
-	 * Creates an empty temporary file to given folder.
-	 * 
-	 * @param itemIndex		Number of current file. Enables to give an index to all files related to same object etc.
 	 * @param extension		File extension to be given to the temporary file. 
 	 * @param filesFolder	Folder path where the temporary file will be created. 
 	 * @return				Full name of created file (absolute path)
@@ -676,7 +665,7 @@ public class Util {
 
         try {
             String filesDir = (new File(xmlFileName)).getParent();
-        	String resultFile = createTemporaryFile(0, filesDir);
+        	String resultFile = createTemporaryFile(0, "adit", filesDir);
         	
         	mainOutStream = new FileOutputStream(resultFile, false);
             mainOutWriter = new OutputStreamWriter(mainOutStream, "UTF-8");
