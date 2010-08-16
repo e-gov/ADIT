@@ -66,6 +66,7 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 	@SuppressWarnings("unchecked")
 	public final void invoke(MessageContext messageContext) throws Exception {	
 		
+		try {
 		SOAPMessage paringMessage = SOAPUtil.extractSoapMessage(messageContext.getRequest());
 		SOAPMessage responseMessage = SOAPUtil.extractSoapMessage(messageContext.getResponse());
 		
@@ -96,6 +97,10 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 		operationDocument.appendChild(operationNode);	
 		
 		getResponse(pais, paring, responseMessage, paringMessage, operationDocument);
+		} catch (Exception e) {
+			LOG.error("Exception while processing request: ", e);
+			throw new Exception("Service error");
+		}
 	}
 	
 	
