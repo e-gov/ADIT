@@ -1563,15 +1563,7 @@ public class DocumentService {
 		    	
 		    	// Remove country prefix from request user code, so it can be
 		    	// compared to cert personal id code more reliably
-				String fixedUserCode = "";
-				if ((xroadUser != null) && (xroadUser.getUserCode() != null)) {
-					for (int i = 0; i < xroadUser.getUserCode().length(); i++) {
-						if ("0123456789".contains(String.valueOf(xroadUser.getUserCode().charAt(i)))) {
-							fixedUserCode = xroadUser.getUserCode().substring(i);
-							break;
-						}
-					}
-				}
+				String fixedUserCode = Util.getPersonalIdCodeWithoutCountryPrefix(xroadUser.getUserCode());
 		    	
 		    	// Determine if certificate belongs to same person
 		    	// who executed current query

@@ -878,4 +878,24 @@ public class Util {
     	
     	return (elapsedTime == timeoutSeconds);
     }
+    
+    /**
+     * Removes country prefix from personal ID code.
+     * For example: EE37001010001 will be changed to 37001010001
+     * 
+     * @param personalIdCode	Personal ID code with country prefix
+     * @return					Personal ID code without country prefix
+     */
+    public static String getPersonalIdCodeWithoutCountryPrefix(String personalIdCode) {
+		String fixedUserCode = "";
+		if (personalIdCode != null) {
+			for (int i = 0; i < personalIdCode.length(); i++) {
+				if ("0123456789".contains(String.valueOf(personalIdCode.charAt(i)))) {
+					fixedUserCode = personalIdCode.substring(i);
+					break;
+				}
+			}
+		}
+		return fixedUserCode;
+    }
 }

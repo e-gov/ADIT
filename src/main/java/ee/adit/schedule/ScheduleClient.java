@@ -9,6 +9,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Notification;
 import ee.adit.service.UserService;
+import ee.adit.util.Util;
 import ee.riik.xtee.teavituskalender.producers.producer.teavituskalender.LisaSyndmusDocument;
 import ee.riik.xtee.teavituskalender.producers.producer.teavituskalender.LisaSyndmusResponseDocument;
 import ee.riik.xtee.teavituskalender.producers.producer.teavituskalender.OtsiKasutajadDocument;
@@ -90,17 +91,7 @@ public class ScheduleClient {
 			// Remove country prefix because teavituskalender does not support
 			// ID codes beginning with country prefix
 			String userCode = eventOwner.getUserCode();
-			if (userCode != null) {
-				String fixedUserCode = "";
-				for (int i = 0; i < userCode.length(); i++) {
-					if ("0123456789".contains(String.valueOf(userCode.charAt(i)))) {
-						fixedUserCode = userCode.substring(i);
-						break;
-					}
-				}
-				userCode = fixedUserCode;
-			}
-			recipient.setKood(userCode);
+			recipient.setKood(Util.getPersonalIdCodeWithoutCountryPrefix(userCode));
 			if (UserService.USERTYPE_PERSON.equalsIgnoreCase(eventOwner.getUsertype().getShortName())) {
 				recipient.setKasutajaTyyp(KasutajaTyyp.ISIK);
 			} else{

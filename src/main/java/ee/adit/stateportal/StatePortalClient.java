@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import ee.adit.pojo.EmailAddress;
+import ee.adit.util.Util;
 import ee.riik.xtee.riigiportaal.producers.producer.riigiportaal.TellimusteStaatusDocument;
 import ee.riik.xtee.riigiportaal.producers.producer.riigiportaal.TellimusteStaatusResponseDocument;
 import ee.riik.xtee.riigiportaal.producers.producer.riigiportaal.TellimusteStaatusDocument.TellimusteStaatus;
@@ -17,10 +18,31 @@ import ee.riik.xtee.riigiportaal.producers.producer.riigiportaal.TellimusteStaat
 import ee.webmedia.xtee.client.service.SimpleXTeeServiceConfiguration;
 import ee.webmedia.xtee.client.service.StandardXTeeConsumer;
 
+/**
+ * Client class for state portal (riigiportaal) X-Road database.
+ * Enables execution of state portal web service requests. 
+  */
 public class StatePortalClient {
 	private static Logger LOG = Logger.getLogger(StatePortalClient.class);
 	private static int RESULT_OK = 0;
 	
+	/**
+	 * Executes X-Road request "riigiportaal.tellimusteStaatus.v1" and
+	 * returns data about given person's ordering status of specified notification.
+	 * <br><br>
+	 * This method throws no exceptions even if failing.
+	 * This is necessary to avoid breaking current applications main
+	 * functionality, even if interfaces with other systems are
+	 * temporarily unavailable. 
+	 * 
+	 * @param userCode			Personal ID code of person, whose
+	 * 							notification ordering status will be checked.
+	 * 
+	 * @param eventTypeName		Full name of notification type. Only this type's
+	 * 							ordering status will be checked.
+	 * 
+	 * @return					Data about notification status as {@link NotificationStatus} object.
+	 */
 	public static NotificationStatus getNotificationStatus(String userCode, String eventTypeName) {
 		NotificationStatus result = null;
 		try {
@@ -28,18 +50,9 @@ public class StatePortalClient {
 			TellimusteStaatus req = doc.addNewTellimusteStaatus();
 			TellimusteStaatusDocument.TellimusteStaatus.Keha keha = req.addNewKeha();
 			
-			// Remove country prefix because teavituskalender does not support
-			// ID codes beginning with country prefix
-			String fixedUserCode = "";
-			if (userCode != null) {
-				for (int i = 0; i < userCode.length(); i++) {
-					if ("0123456789".contains(String.valueOf(userCode.charAt(i)))) {
-						fixedUserCode = userCode.substring(i);
-						break;
-					}
-				}
-			}
-			keha.setIsikukood(fixedUserCode);
+			// Remove country prefix because "riigiportaal" database
+			// does not support ID codes beginning with country prefix
+			keha.setIsikukood(Util.getPersonalIdCodeWithoutCountryPrefix(userCode));
 			
 			ClassPathXmlApplicationContext ctx = null;
 			try {
@@ -111,7 +124,11 @@ public class StatePortalClient {
 		return result;
 	}
 	
-	public static ClassPathXmlApplicationContext startContext() {
+	/**
+	 * Helper method to start application context.
+	 * @return	Application context.
+	 */
+	private static ClassPathXmlApplicationContext startContext() {
 		ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("xtee.xml");
 		ctx.start();
 		return ctx;

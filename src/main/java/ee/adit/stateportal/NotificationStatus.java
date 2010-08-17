@@ -4,6 +4,9 @@ import java.util.List;
 
 import ee.adit.pojo.EmailAddress;
 
+/**
+ * State portal notification ordering status data. 
+ */
 public class NotificationStatus {
 	private String notificationTypeName;
 	private boolean notificationEmailStatus;
