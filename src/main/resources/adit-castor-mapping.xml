@@ -179,8 +179,13 @@
 	</class>
 	
  	<class name="ee.adit.pojo.Notification">
-		<field name="type" type="java.lang.String"/>
-		<field name="active" type="boolean"/>
+ 		<map-to xml="notification" ns-prefix="amet" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<field name="type" type="java.lang.String">
+			<bind-xml name="type" type="string" />
+		</field>
+		<field name="active" type="boolean">
+			<bind-xml name="active" type="boolean" />
+		</field>
 	</class>
 
 	<class name="ee.adit.pojo.ArrayOfEmailAddress">

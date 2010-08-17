@@ -22,6 +22,7 @@ import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.soap.AttachmentPart;
 import javax.xml.soap.SOAPElement;
+import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPMessage;
@@ -77,10 +78,9 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 		if(metaService) {
 			responseMessage.getSOAPHeader().detachNode();
 		}
-		
+
 		CustomXTeeHeader pais = metaService ? null : parseXteeHeader(paringMessage);
 		Document paring = metaService ? null : parseQuery(paringMessage);
-		
 		
 		Node operationNode = null;
 		
@@ -94,7 +94,26 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 		
 		Document operationDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
 		operationNode = operationDocument.importNode(operationNode, true);
-		operationDocument.appendChild(operationNode);	
+		operationDocument.appendChild(operationNode);
+		
+		// Copy namespace declarations from SOAP message to
+		// body XML document.
+		// This is useful for example if  request body contains SOAP
+		// arrays (in which case the necessary namespace declarations
+		// are likely to be found in SOAP envelope header.
+		SOAPEnvelope env = paringMessage.getSOAPPart().getEnvelope();
+		Iterator it = env.getNamespacePrefixes();
+		while (it.hasNext()) {
+			String prefix = (String)it.next();
+			String uri = env.getNamespaceURI(prefix); 
+			LOG.debug("Attempting to add namespace declaration xmlns:" + prefix + "=\""+ uri +"\"");
+			try {
+				operationDocument.getDocumentElement().setAttribute("xmlns:"+prefix, uri);
+				LOG.debug("Namespace declaration xmlns:" + prefix + "=\""+ uri +"\" was copied from SOAP envelope to request document.");
+			} catch (Exception ex) {
+				LOG.warn("Failed to copy namespace declaration xmlns:" + prefix + "=\""+ uri +"\" from SOAP envelope to request document.", ex);
+			}
+		}
 		
 		getResponse(pais, paring, responseMessage, paringMessage, operationDocument);
 		} catch (Exception e) {
@@ -127,7 +146,8 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 		
 		Document query = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
 		bodyNode = query.importNode(bodyNode, true);
-		query.appendChild(bodyNode);		
+		query.appendChild(bodyNode);
+		
 		return query;
 	}
 	
