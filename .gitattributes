@@ -74,6 +74,7 @@ doc/testMessages/setNotifications.v1/error_activate_incorrect_notification_types
 doc/testMessages/setNotifications.v1/error_activate_incorrect_notification_types_result.xml -text
 doc/testMessages/shareDocument.v1/shareDocument.v1.xml -text
 doc/testMessages/unJoin.v1.xml -text
+doc/weblogic-readme.txt -text
 doc/xtee_generate_objects_readme.txt -text
 lib/JDigiDoc.jar -text
 lib/NagiosAppender-1.5.1.jar -text
