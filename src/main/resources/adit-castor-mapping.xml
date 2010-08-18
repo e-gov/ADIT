@@ -21,7 +21,7 @@
 	</class>
 
 	<class name="ee.adit.pojo.JoinResponse">
-		<map-to xml="keha" />
+		<map-to xml="keha" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"/>
 		<field name="success" type="ee.adit.pojo.Success" >
 		</field>
 		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
@@ -941,13 +941,13 @@
  	
  	<!-- Common -->
  	<class name="ee.adit.pojo.Success">
-		<map-to xml="success" ns-prefix="adit" />
+		<map-to xml="success" ns-prefix="adit" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
 		<field name="success" type="java.lang.Boolean" container="true">
 		</field>
 	</class>
 
 	<class name="ee.adit.pojo.ArrayOfMessage">
-		<map-to xml="messages" ns-prefix="adit" />
+		<map-to xml="messages" ns-prefix="adit" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
 		<field name="message" type="ee.adit.pojo.Message" collection="arraylist">
 			<bind-xml name="message" />
 		</field>
