@@ -409,7 +409,6 @@
 	<complexType name="ConfirmSignatureRequest">
 		<sequence>
 			<element name="document_id" type="integer"></element>
-			<element name="signature_id" type="string"></element>
 			<element name="signature">
 				<complexType>
 					<attribute name="href" type="string"/>
