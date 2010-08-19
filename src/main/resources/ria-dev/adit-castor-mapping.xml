@@ -2,10 +2,14 @@
 <!DOCTYPE mapping PUBLIC "-//EXOLAB/Castor Mapping DTD Version 1.0//EN" "http://castor.org/mapping.dtd">
 <mapping>
 	<!-- listMethods -->
+	<class name="ee.adit.pojo.ListMethodsRequest">
+		<map-to xml="listMethods" ns-uri="http://x-tee.riik.ee/xsd/xtee.xsd"/>
+	</class>
+	
 	<class name="ee.adit.pojo.ListMethodsResponse">
-		<map-to xml="keha" />
+		<map-to xml="keha" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"/>
 		<field name="item" type="java.lang.String" collection="arraylist">
-			<bind-xml name="item" location="keha" />
+			<bind-xml name="item"/>
 		</field>		
 	</class>
 	
@@ -21,7 +25,7 @@
 	</class>
 
 	<class name="ee.adit.pojo.JoinResponse">
-		<map-to xml="keha" />
+		<map-to xml="keha" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"/>
 		<field name="success" type="ee.adit.pojo.Success" >
 		</field>
 		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
@@ -38,7 +42,7 @@
 	</class>
 
 	<class name="ee.adit.pojo.UnJoinResponse">
-		<map-to xml="keha" />
+		<map-to xml="keha" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"/>
 		<field name="success" type="ee.adit.pojo.Success" >
 		</field>
 		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
@@ -58,7 +62,7 @@
 	</class>
 
 	<class name="ee.adit.pojo.GetJoinedResponse">
-		<map-to xml="keha"/>
+		<map-to xml="keha" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"/>
 		<field name="success" type="ee.adit.pojo.Success" >
 		</field>
 		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
@@ -108,7 +112,7 @@
 	</class>
 	
  	<class name="ee.adit.pojo.GetUserInfoResponse">
-		<map-to xml="keha"/>
+		<map-to xml="keha" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"/>
 		<field name="success" type="ee.adit.pojo.Success" >
 		</field>
 		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
@@ -157,7 +161,7 @@
 	</class>
 	
 	<class name="ee.adit.pojo.GetNotificationsResponse">
-		<map-to xml="keha" />
+		<map-to xml="keha" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"/>
 		<field name="success" type="boolean" >
 		</field>
 		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
@@ -179,8 +183,13 @@
 	</class>
 	
  	<class name="ee.adit.pojo.Notification">
-		<field name="type" type="java.lang.String"/>
-		<field name="active" type="boolean"/>
+ 		<map-to xml="notification" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<field name="type" type="java.lang.String">
+			<bind-xml name="type" type="string" />
+		</field>
+		<field name="active" type="boolean">
+			<bind-xml name="active" type="boolean" />
+		</field>
 	</class>
 
 	<class name="ee.adit.pojo.ArrayOfEmailAddress">
@@ -203,7 +212,7 @@
 	</class>
 	
 	<class name="ee.adit.pojo.SetNotificationsResponse">
-		<map-to xml="keha" />
+		<map-to xml="keha" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"/>
 		<field name="success" type="boolean" >
 		</field>
 		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
@@ -446,7 +455,7 @@
 	</class>
 	
 	<class name="ee.adit.pojo.GetDocumentListResponse">
-		<map-to xml="keha" />
+		<map-to xml="keha" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"/>
 		<field name="success" type="java.lang.Boolean" >
 		</field>
 		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
@@ -487,7 +496,7 @@
 	</class>
 	
 	<class name="ee.adit.pojo.GetDocumentResponse">
-		<map-to xml="keha" />
+		<map-to xml="keha" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"/>
 		<field name="success" type="java.lang.Boolean" >
 		</field>
 		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
@@ -517,7 +526,7 @@
 	</class>
 	
 	<class name="ee.adit.pojo.GetDocumentFileResponse">
-		<map-to xml="keha" />
+		<map-to xml="keha" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"/>
 		<field name="success" type="java.lang.Boolean" >
 		</field>
 		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
@@ -580,7 +589,7 @@
 	</class>
 	
 	<class name="ee.adit.pojo.SaveDocumentResponse">
-		<map-to xml="keha" />
+		<map-to xml="keha" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"/>
 		<field name="success" type="ee.adit.pojo.Success" >
 		</field>
 		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
@@ -613,7 +622,7 @@
 	</class>
 	
 	<class name="ee.adit.pojo.SaveDocumentFileResponse">
-		<map-to xml="keha" />
+		<map-to xml="keha" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"/>
 		<field name="success" type="boolean" >
 		</field>
 		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
@@ -639,7 +648,7 @@
 	</class>
 
 	<class name="ee.adit.pojo.DeleteDocumentFileResponse">
-		<map-to xml="keha" />
+		<map-to xml="keha" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"/>
 		<field name="success" type="ee.adit.pojo.Success" >
 		</field>
 		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
@@ -656,7 +665,7 @@
 	</class>
 
 	<class name="ee.adit.pojo.DeleteDocumentResponse">
-		<map-to xml="keha" />
+		<map-to xml="keha" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"/>
 		<field name="success" type="ee.adit.pojo.Success" >
 		</field>
 		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
@@ -673,7 +682,7 @@
 	</class>
 
 	<class name="ee.adit.pojo.DeflateDocumentResponse">
-		<map-to xml="keha" />
+		<map-to xml="keha" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"/>
 		<field name="success" type="ee.adit.pojo.Success" >
 		</field>
 		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
@@ -715,7 +724,7 @@
 	</class>
 
 	<class name="ee.adit.pojo.PrepareSignatureResponse">
-		<map-to xml="keha" />
+		<map-to xml="keha" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"/>
 		<field name="success" type="boolean" >
 		</field>
 		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
@@ -745,7 +754,7 @@
 	</class>
 
 	<class name="ee.adit.pojo.ConfirmSignatureResponse">
-		<map-to xml="keha" />
+		<map-to xml="keha" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"/>
 		<field name="success" type="boolean" >
 		</field>
 		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
@@ -772,7 +781,7 @@
 	</class>
 
 	<class name="ee.adit.pojo.ShareDocumentResponse">
-		<map-to xml="keha" />
+		<map-to xml="keha" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"/>
 		<field name="success" type="boolean" >
 		</field>
 		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
@@ -795,7 +804,7 @@
 	</class>
 
 	<class name="ee.adit.pojo.UnShareDocumentResponse">
-		<map-to xml="keha" />
+		<map-to xml="keha" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"/>
 		<field name="success" type="boolean" >
 		</field>
 		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
@@ -815,7 +824,7 @@
 	</class>
 
 	<class name="ee.adit.pojo.MarkDocumentViewedResponse">
-		<map-to xml="keha" />
+		<map-to xml="keha" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"/>
 		<field name="success" type="boolean" >
 		</field>
 		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
@@ -835,7 +844,7 @@
 	</class>
 
 	<class name="ee.adit.pojo.ModifyStatusResponse">
-		<map-to xml="keha" />
+		<map-to xml="keha" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"/>
 		<field name="success" type="boolean" >
 		</field>
 		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
@@ -852,7 +861,7 @@
 	</class>
 
 	<class name="ee.adit.pojo.GetDocumentHistoryResponse">
-		<map-to xml="keha" />
+		<map-to xml="keha" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"/>
 		<field name="success" type="boolean" >
 		</field>
 		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
@@ -923,7 +932,7 @@
 	</class>
 
 	<class name="ee.adit.pojo.SendDocumentResponse">
-		<map-to xml="keha" />
+		<map-to xml="keha" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"/>
 		<field name="success" type="boolean" >
 		</field>
 		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
@@ -936,20 +945,20 @@
  	
  	<!-- Common -->
  	<class name="ee.adit.pojo.Success">
-		<map-to xml="success" ns-prefix="adit" />
+		<map-to xml="success" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
 		<field name="success" type="java.lang.Boolean" container="true">
 		</field>
 	</class>
 
 	<class name="ee.adit.pojo.ArrayOfMessage">
-		<map-to xml="messages" ns-prefix="adit" />
+		<map-to xml="messages" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
 		<field name="message" type="ee.adit.pojo.Message" collection="arraylist">
 			<bind-xml name="message" />
 		</field>
 	</class>
 
  	<class name="ee.adit.pojo.Message">
-		<map-to xml="message" ns-prefix="adit" />
+		<map-to xml="message" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
 		<field name="value" type="java.lang.String" container="true">
 		</field>
 		<field name="lang" type="java.lang.String">
