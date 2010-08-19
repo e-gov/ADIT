@@ -2,6 +2,10 @@
 <!DOCTYPE mapping PUBLIC "-//EXOLAB/Castor Mapping DTD Version 1.0//EN" "http://castor.org/mapping.dtd">
 <mapping>
 	<!-- listMethods -->
+	<class name="ee.adit.pojo.ListMethodsRequest">
+		<map-to xml="listMethods" ns-uri="http://x-tee.riik.ee/xsd/xtee.xsd"/>
+	</class>
+	
 	<class name="ee.adit.pojo.ListMethodsResponse">
 		<map-to xml="keha" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"/>
 		<field name="item" type="java.lang.String" collection="arraylist">

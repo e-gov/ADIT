@@ -252,6 +252,7 @@ src/main/java/ee/adit/pojo/GetUserInfoResponseAttachment.java -text
 src/main/java/ee/adit/pojo/GetUserInfoResponseAttachmentUser.java -text
 src/main/java/ee/adit/pojo/JoinRequest.java -text
 src/main/java/ee/adit/pojo/JoinResponse.java -text
+src/main/java/ee/adit/pojo/ListMethodsRequest.java -text
 src/main/java/ee/adit/pojo/ListMethodsResponse.java -text
 src/main/java/ee/adit/pojo/MarkDocumentViewedRequest.java -text
 src/main/java/ee/adit/pojo/MarkDocumentViewedResponse.java -text
