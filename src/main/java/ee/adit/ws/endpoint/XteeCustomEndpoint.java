@@ -21,6 +21,7 @@ import java.util.Iterator;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.soap.AttachmentPart;
+import javax.xml.soap.Name;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
@@ -73,6 +74,16 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 		
 		this.setResponseMessage(new SaajSoapMessage(responseMessage));
 		this.setRequestMessage(new SaajSoapMessage(paringMessage));
+		
+		// Check if metaservice
+		try {
+			Iterator i = paringMessage.getSOAPBody().getChildElements(new QName("http://x-tee.riik.ee/xsd/xtee.xsd", "listMethods"));
+			if(i.hasNext()) {
+				metaService = true;
+			}
+		} catch (Exception e) {
+			LOG.error("Error while trying to determine if metaservice query: ", e);
+		}
 		
 		// meta-service does not need 'header' element
 		if(metaService) {
