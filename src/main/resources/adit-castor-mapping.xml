@@ -5,7 +5,7 @@
 	<class name="ee.adit.pojo.ListMethodsResponse">
 		<map-to xml="keha" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"/>
 		<field name="item" type="java.lang.String" collection="arraylist">
-			<bind-xml name="item" location="keha" />
+			<bind-xml name="item"/>
 		</field>		
 	</class>
 	
