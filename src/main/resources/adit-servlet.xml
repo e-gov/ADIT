@@ -322,7 +322,7 @@
 				<prop
 					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}UnShareDocument">UnShareDocumentEndpoint</prop>
 				<prop
-					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}listMethods">ListMethodsEndpoint</prop>
+					key="{http://x-tee.riik.ee/xsd/xtee.xsd}listMethods">ListMethodsEndpoint</prop>
 			</props>
 		</property>
 	</bean>
@@ -389,7 +389,7 @@
 	<bean id="aditDataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
-		<property name="url" value="jdbc:oracle:thin:@//localhost:1522/jaak" />
+		<property name="url" value="jdbc:oracle:thin:@//localhost:1521/XE" />
 		<property name="username" value="adit" />
 		<property name="password" value="adit" />
 	</bean>
