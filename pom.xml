@@ -9,7 +9,9 @@
 	<url>http://maven.apache.org</url>
 
 	<properties>
-		<baseDir>C:\projektid\adit\adit</baseDir>
+		<baseDir>C:\development\adit\trunk</baseDir>
+		<!-- The specific resources to bundle with the build (ie. "dev", "test", "production") -->
+		<resourceDir>ria-dev</resourceDir>
 	</properties>
 
 	<dependencies>
@@ -345,13 +347,17 @@
 				</excludes>
 				<targetPath>../adit/WEB-INF/lib</targetPath>
 			</resource>
+			<!--
 			<resource>
-				<directory>${baseDir}/src/main/resources</directory>
+				 
+				<directory>${baseDir}/src/main/resources/${resourceDir}</directory>
 				<includes>
 					<include>*</include>
 				</includes>
 				<targetPath>../adit/WEB-INF</targetPath>
+				 
 			</resource>
+			-->
 		</resources>
 		<plugins>
 
