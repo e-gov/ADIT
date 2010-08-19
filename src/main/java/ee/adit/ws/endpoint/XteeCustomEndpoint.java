@@ -22,13 +22,18 @@ import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.soap.AttachmentPart;
 import javax.xml.soap.Name;
+import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPMessage;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathException;
+import javax.xml.xpath.XPathFactory;
 
 import org.apache.log4j.Logger;
+import org.exolab.castor.xml.NodeType;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.MessageEndpoint;
 import org.springframework.ws.soap.SoapMessage;
@@ -38,6 +43,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import ee.adit.util.CustomXTeeHeader;
 import ee.webmedia.soap.SOAPUtil;
@@ -149,7 +155,8 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 	}
 	
 	private Document parseQuery(SOAPMessage queryMsg) throws Exception {
-		Node bodyNode = SOAPUtil.getNodeByXPath(queryMsg.getSOAPBody().getFirstChild(), "//keha");
+		//Node bodyNode = SOAPUtil.getNodeByXPath(queryMsg.getSOAPBody().getFirstChild(), "//keha");
+		Node bodyNode = findBodyNode(queryMsg.getSOAPBody());
 
 		if(bodyNode == null) {
 			throw new IllegalStateException("Service is not metaservice, but query is missing mandatory body ('//keha\')");
@@ -160,6 +167,34 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 		query.appendChild(bodyNode);
 		
 		return query;
+	}
+	
+	/**
+	 * Finds "keha" element from X-Road message in namespace-unaware fashion.<br>
+	 * This is useful if service consumer has placed "keha" element in some namespace.
+	 * In such case namespace-aware solutions are likely to fail.
+	 * 
+	 * @param soapBody	Body part of request SOAP envelope as {@link SOAPBody}
+	 * @return			{@link Node} representing "keha" element (or null if "keha" was not found).
+	 */
+	private Node findBodyNode(SOAPBody soapBody) {
+		Node result = null;
+		Node marker = soapBody.getFirstChild();
+		while ((marker != null) && (marker.getNodeType() != NodeType.ELEMENT)) {
+			LOG.debug(marker.getNodeName() + " is not the right place to look for \"keha\". Checking next sibling...");
+			marker = marker.getNextSibling();
+		}
+		if ((marker != null) && (marker.getNodeType() == NodeType.ELEMENT)) {
+			LOG.debug("Attempting to find \"keha\" from element " + marker.getNodeName());
+			marker = marker.getFirstChild();
+			while ((marker != null) && !((marker.getNodeType() == NodeType.ELEMENT) && "keha".equalsIgnoreCase(marker.getLocalName()))) {
+				marker = marker.getNextSibling();
+			}
+			if (marker != null) {
+				result = marker;
+			}
+		}
+		return result;
 	}
 	
 	@SuppressWarnings("unchecked")
