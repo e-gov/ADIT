@@ -7,6 +7,7 @@ import org.springframework.scheduling.quartz.QuartzJobBean;
 
 import ee.adit.service.DocumentService;
 import ee.adit.service.UserService;
+import ee.adit.util.DVKUserSyncResult;
 
 public class UserSyncJob extends QuartzJobBean {
 
@@ -21,9 +22,11 @@ public class UserSyncJob extends QuartzJobBean {
 			LOG.info("Executing scheduled job: DVK user synchronization");
 			
 			// Send documents to DVK Client database
-			int sentDocumentsCount = this.getUserService();
+			DVKUserSyncResult result = this.getUserService().synchroinzeDVKUsers();
 
-			LOG.debug("Users synchronized (" + sentDocumentsCount + ")");
+			LOG.info("Users added: " + result.getAdded());
+			LOG.info("Users modified: " + result.getModified());
+			LOG.info("Users deactivated: " + result.getDeactivated());
 			
 		} catch (Exception e) {
 			LOG.error("Error executing scheduled DVK user synchronization: ", e);
