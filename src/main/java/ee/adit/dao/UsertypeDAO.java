@@ -15,7 +15,7 @@ public class UsertypeDAO extends HibernateDaoSupport {
 	private static Logger LOG = Logger.getLogger(RemoteApplicationDAO.class);
 	
 	public Usertype getByShortName(String userTypeShortName) {
-		return (Usertype) this.getHibernateTemplate().get(Usertype.class, userTypeShortName);
+		return (Usertype) this.getHibernateTemplate().get(Usertype.class, userTypeShortName.toLowerCase());
 	}
 	
 	public Usertype getUsertype(AditUser user) {
