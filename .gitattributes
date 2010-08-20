@@ -141,6 +141,7 @@ sql/document_history_type.dml.sql -text
 sql/document_sharing_type.dml.sql -text
 sql/document_type.dml.sql -text
 sql/grant.sql -text
+sql/log_proc.sql -text
 sql/notification_type.dml.sql -text
 sql/run.sql -text
 sql/run_dml.sql -text

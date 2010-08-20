@@ -82,6 +82,7 @@ CREATE TABLE &&ADIT_SCHEMA..ADIT_LOG
 	old_value                      VARCHAR2(4000),    /* Vana väärtus */
 	new_value                      VARCHAR2(4000),    /* Uus väärtus */
 	log_date                       DATE,    /* Muudatuse aeg */
+	primary_key_value			   VARCHAR2(100), 	/* Primaarvõtme väärtus */
 	remote_application_short_name  VARCHAR2(50),    /* Infosüsteem, kes antud muudatuse välja kutsus. */
 	xtee_user_code                 VARCHAR2(50),    /* X-tee päringu isikukood */
 	xtee_institution_code          VARCHAR2(50),    /* X-tee päringu ettevõtte registrikood */
