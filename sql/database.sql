@@ -80,7 +80,7 @@ CREATE TABLE &&ADIT_SCHEMA..ADIT_LOG
 	table_name                     VARCHAR2(50),    /* Muutunud väärtuse tabeli nimi */
 	column_name                    VARCHAR2(50),    /* Muutunud väärtuse tabeli veeru nimi */
 	old_value                      VARCHAR2(4000),    /* Vana väärtus */
-	new_value                      VARCHAR2(50),    /* Uus väärtus */
+	new_value                      VARCHAR2(4000),    /* Uus väärtus */
 	log_date                       DATE,    /* Muudatuse aeg */
 	remote_application_short_name  VARCHAR2(50),    /* Infosüsteem, kes antud muudatuse välja kutsus. */
 	xtee_user_code                 VARCHAR2(50),    /* X-tee päringu isikukood */
