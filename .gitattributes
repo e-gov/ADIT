@@ -195,6 +195,7 @@ src/main/java/ee/adit/dvk/ReceiveJob.java -text
 src/main/java/ee/adit/dvk/SendJob.java -text
 src/main/java/ee/adit/dvk/UpdateStatusJob.java -text
 src/main/java/ee/adit/dvk/UpdateStatusToDVKJob.java -text
+src/main/java/ee/adit/dvk/UserSyncJob.java -text
 src/main/java/ee/adit/exception/AditCodedException.java -text
 src/main/java/ee/adit/exception/AditException.java -text
 src/main/java/ee/adit/exception/AditInternalException.java -text
