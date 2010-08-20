@@ -42,6 +42,8 @@ import org.castor.core.util.Base64Encoder;
 
 public class Util {
 
+	public static final String XTEE_NAMESPACE = "http://x-tee.riik.ee/xsd/xtee.xsd";
+	
 	private static Logger LOG = Logger.getLogger(Util.class);
 
 	public static String base64encode(String string) throws UnsupportedEncodingException {

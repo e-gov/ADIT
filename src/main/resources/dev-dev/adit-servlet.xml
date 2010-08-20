@@ -273,8 +273,8 @@
 
 	<!-- Endpoint Mappings -->
 	
-	<bean id="endpointMapping"
-		class="org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping">
+	<bean id="endpointMapping" 
+		class="ee.adit.ws.endpoint.AditEndpointMapping">
 		<property name="mappings">
 			<props>
 				<prop

@@ -9,9 +9,9 @@
 	<url>http://maven.apache.org</url>
 
 	<properties>
-		<baseDir>C:\development\adit\trunk</baseDir>
+		<baseDir>E:\dev\adit\adit</baseDir>
 		<!-- Specifies which configuration resources to bundle with the build (ie. "dev", "test", "production") -->
-		<resourceDir>ria-dev</resourceDir>
+		<resourceDir>dev-dev</resourceDir>
 	</properties>
 
 	<dependencies>
@@ -343,6 +343,18 @@
 			<resource>
 				<directory>src/main/resources/${resourceDir}</directory>
 				<targetPath>../adit/WEB-INF/classes</targetPath>
+				<excludes>
+					<exclude>adit-servlet.xml</exclude>
+					<exclude>adit.xsd</exclude>
+				</excludes>
+			</resource>
+			<resource>
+				<directory>src/main/resources/${resourceDir}</directory>
+				<targetPath>../adit/WEB-INF</targetPath>
+				<includes>
+					<include>adit-servlet.xml</include>
+					<include>adit.xsd</include>
+				</includes>
 			</resource>
 			<resource>
 				<directory>${baseDir}/sql</directory>

@@ -46,6 +46,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import ee.adit.util.CustomXTeeHeader;
+import ee.adit.util.Util;
 import ee.webmedia.soap.SOAPUtil;
 import ee.webmedia.xtee.XTeeHeader;
 import ee.webmedia.xtee.XTeeUtil;
@@ -83,7 +84,7 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 		
 		// Check if metaservice
 		try {
-			Iterator i = paringMessage.getSOAPBody().getChildElements(new QName("http://x-tee.riik.ee/xsd/xtee.xsd", "listMethods"));
+			Iterator i = paringMessage.getSOAPBody().getChildElements(new QName(Util.XTEE_NAMESPACE, "listMethods"));
 			if(i.hasNext()) {
 				metaService = true;
 			}

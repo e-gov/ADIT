@@ -307,6 +307,7 @@ src/main/java/ee/adit/util/TemporaryFolderCleanerJob.java -text
 src/main/java/ee/adit/util/Util.java -text
 src/main/java/ee/adit/util/XMLUtil.java -text
 src/main/java/ee/adit/ws/endpoint/AbstractAditBaseEndpoint.java -text
+src/main/java/ee/adit/ws/endpoint/AditEndpointMapping.java -text
 src/main/java/ee/adit/ws/endpoint/ListMethodsEndpoint.java -text
 src/main/java/ee/adit/ws/endpoint/XteeCustomEndpoint.java -text
 src/main/java/ee/adit/ws/endpoint/document/ConfirmSignatureEndpoint.java -text

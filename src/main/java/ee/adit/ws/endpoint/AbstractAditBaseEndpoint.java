@@ -65,8 +65,10 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 			
 			// Unmarshall the request object
 			Source requestObjectSource = new DOMSource(requestKeha);
-			LOG.debug(requestKeha.toString());
 			Object requestObject = null;
+			
+			// Check if the request name matches the query
+			String queryName = this.getHeader().getNimi();
 			
 			try {
 				requestObject = this.getUnmarshaller().unmarshal(requestObjectSource);
