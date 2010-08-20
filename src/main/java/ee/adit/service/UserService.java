@@ -28,6 +28,7 @@ import ee.adit.dao.pojo.RemoteApplication;
 import ee.adit.dao.pojo.UserNotification;
 import ee.adit.dao.pojo.UserNotificationId;
 import ee.adit.dao.pojo.Usertype;
+import ee.adit.dvk.DvkDAO;
 import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditException;
 import ee.adit.exception.AditInternalException;
@@ -53,6 +54,8 @@ public class UserService {
 	private AccessRestrictionDAO accessRestrictionDAO;
 	
 	private NotificationDAO notificationDAO;
+	
+	private DvkDAO dvkDAO;
 	
 	public static final String USERTYPE_PERSON = "PERSON";
 	public static final String USERTYPE_INSTITUTION = "INSTITUTION";
@@ -521,6 +524,19 @@ public class UserService {
 		}
 	}
 	
+	/**
+	 * Synchronize DVK users with ADIT user accounts:
+	 * DVK -> ADIT only
+	 * 1. Get DVK users
+	 * 2. Check if user exists in ADIT
+	 * 3. Check is user data changed
+	 */
+	public void synchroinzeDVKUsers() {
+		
+		
+		
+	}
+	
 	public RemoteApplicationDAO getRemoteApplicationDAO() {
 		return remoteApplicationDAO;
 	}
@@ -575,6 +591,14 @@ public class UserService {
 
 	public void setNotificationDAO(NotificationDAO notificationDAO) {
 		this.notificationDAO = notificationDAO;
+	}
+
+	public DvkDAO getDvkDAO() {
+		return dvkDAO;
+	}
+
+	public void setDvkDAO(DvkDAO dvkDAO) {
+		this.dvkDAO = dvkDAO;
 	}	
 	
 }
