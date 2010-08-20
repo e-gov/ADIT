@@ -80,21 +80,21 @@ public class DvkDAO {
 		}
 	}
 	
+	/**
+	 * Get only documents that have status 'sent' for all message recipients.
+	 * @return
+	 */
 	public List<PojoMessage> getSentDocuments() {
 		List<PojoMessage> result = new ArrayList<PojoMessage>();
-		
-		String SQL = "from PojoMessage m where m.isIncoming = false and m.dhlId is not null and (m.faultCode is null or m.faultCode != '" + DocumentService.DVKFaultCodeFor_Deleted + "') and m.dhlMessageId not in (select mr.dhlMessageId from PojoMessageRecipient mr where mr.dhlMessageId = m.dhlMessageId and (mr.sendingStatusId is null or mr.sendingStatusId = " + DocumentService.DVKStatus_Missing + " or mr.sendingStatusId = " + DocumentService.DVKStatus_Received + " or mr.sendingStatusId = " + DocumentService.DVKStatus_Sending + " or mr.sendingStatusId = " + DocumentService.DVKStatus_Waiting + "))";
-		
-		/*
-			DocumentService.DVKStatus_Sent;
-			DocumentService.DVKStatus_Aborted;
-			DocumentService.DVKStatus_Missing;
-			DocumentService.DVKStatus_Received;
-			DocumentService.DVKStatus_Sending;
-			DocumentService.DVKStatus_Waiting;
-		*/
+		String SQL = "from PojoMessage m where m.isIncoming = false and m.dhlId is not null and (m.faultCode is null or m.faultCode != '" + DocumentService.DVKFaultCodeFor_Deleted + "') and m.dhlMessageId not in (select mr.dhlMessageId from PojoMessageRecipient mr where mr.dhlMessageId = m.dhlMessageId and (mr.sendingStatusId is null or mr.sendingStatusId = " + DocumentService.DVKStatus_Missing + " or mr.sendingStatusId = " + DocumentService.DVKStatus_Received + " or mr.sendingStatusId = " + DocumentService.DVKStatus_Sending + " or mr.sendingStatusId = " + DocumentService.DVKStatus_Waiting + " or mr.sendingStatusId = " + DocumentService.DVKStatus_Aborted + "))";
 		result = this.getSessionFactory().openSession().createQuery(SQL).list();
-
+		return result;
+	}
+	
+	public List<PojoMessage> getReceivedDocuments() {
+		List<PojoMessage> result = new ArrayList<PojoMessage>();
+		String SQL = "from PojoMessage where isIncoming = true and dhlId is not null and (faultCode is null or faultCode != '" + DocumentService.DVKFaultCodeFor_Deleted + "') and (recipientStatusId = " + DocumentService.DVKStatus_Aborted + " or recipientStatusId = " + DocumentService.DVKStatus_Received + ")";
+		result = this.getSessionFactory().openSession().createQuery(SQL).list();
 		return result;
 	}
 	

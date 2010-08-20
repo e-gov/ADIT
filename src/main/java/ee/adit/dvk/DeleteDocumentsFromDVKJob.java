@@ -19,10 +19,14 @@ public class DeleteDocumentsFromDVKJob extends QuartzJobBean {
 		try {
 			LOG.info("Executing scheduled job: Delete sent / received / failed documents from DVK");
 			
-			// Send documents to DVK Client database
-			int deletedDocumentsCount = this.getDocumentService().deleteDocumentsFromDVK();
+			// Delete sent documents from DVK Client database
+			int deletedSentDocumentsCount = this.getDocumentService().deleteSentDocumentsFromDVK();
 
-			LOG.debug("Documents deleted from DVK (" + deletedDocumentsCount + ")");
+			// Delete failed / received documents from DVK Client database
+			int deletedReceivedDocumentsCount = this.getDocumentService().deleteReceivedDocumentsFromDVK();
+			
+			LOG.debug("Documents (sent) deleted from DVK (" + deletedSentDocumentsCount + ")");
+			LOG.debug("Documents (received / aborted) deleted from DVK (" + deletedReceivedDocumentsCount + ")");
 			
 		} catch (Exception e) {
 			LOG.error("Error executing scheduled DVK deleting: ", e);

@@ -1289,13 +1289,13 @@ public class DocumentService {
 	 * @return
 	 * @throws Exception
 	 */
-	public int deleteDocumentsFromDVK() throws Exception {
+	public int deleteSentDocumentsFromDVK() throws Exception {
 		int result = 0;
 		try {
 			List<PojoMessage> dvkDocuments = this.getDvkDAO()
 					.getSentDocuments();
 
-			LOG.info("Documents fetched: " + dvkDocuments.size());
+			LOG.info("Documents (sent) fetched: " + dvkDocuments.size());
 
 			Iterator<PojoMessage> dvkDocumentsIterator = dvkDocuments
 					.iterator();
@@ -1331,6 +1331,48 @@ public class DocumentService {
 		return result;
 	}
 
+	public int deleteReceivedDocumentsFromDVK() throws Exception {
+		int result = 0;
+		try {
+			List<PojoMessage> dvkDocuments = this.getDvkDAO()
+					.getReceivedDocuments();
+
+			LOG.info("Documents (received / aborted) fetched: " + dvkDocuments.size());
+
+			Iterator<PojoMessage> dvkDocumentsIterator = dvkDocuments
+					.iterator();
+
+			Session dvkSession = null;
+			Transaction transaction = null;
+			
+			try {
+				dvkSession = this.getDvkDAO().getSessionFactory().openSession();
+				transaction = dvkSession.beginTransaction();
+				while (dvkDocumentsIterator.hasNext()) {
+					PojoMessage dvkDocument = dvkDocumentsIterator.next();
+					deleteDVKDocument(dvkDocument, dvkSession);
+					LOG.info("Document deleted from DVK. DHL_ID: " + dvkDocument.getDhlId());
+				}
+				transaction.commit();
+				
+			} catch (Exception e) {
+				transaction.rollback();
+				throw e;
+			}
+			finally {
+				if (dvkSession != null) {
+					dvkSession.close();
+				}
+			}
+
+		} catch (Exception e) {
+			LOG.error("Error while deleting documents from DVK: ", e);
+			throw e;
+		}
+
+		return result;
+	}
+	
 	/**
 	 * Deletes the messages content (data) and updates 'faultCode' to 'NO_FAULT:
 	 * DELETED BY ADIT'
