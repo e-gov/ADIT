@@ -11,6 +11,7 @@ import dvk.api.DVKAPI;
 import dvk.api.ml.PojoMessage;
 import dvk.api.ml.PojoMessageRecipient;
 import dvk.api.ml.PojoSettings;
+import ee.adit.service.DocumentService;
 
 public class DvkDAO {
 
@@ -77,6 +78,24 @@ public class DvkDAO {
 		} finally {
 			session.close();
 		}
+	}
+	
+	public List<PojoMessage> getSentDocuments() {
+		List<PojoMessage> result = new ArrayList<PojoMessage>();
+		
+		String SQL = "select from PojoMessage m where m.dhlMessageId not in (select mr.dhlMessageId from PojoMessageRecipient mr where mr.dhlMessageId = m.dhlMessageId and (mr.sendingStatusId is null or mr.sendingStatusId = " + DocumentService.DVKStatus_Missing + " or mr.sendingStatusId = " + DocumentService.DVKStatus_Received + " or mr.sendingStatusId = " + DocumentService.DVKStatus_Sending + " or mr.sendingStatusId = " + DocumentService.DVKStatus_Waiting + "))";
+		
+		/*
+			DocumentService.DVKStatus_Sent;
+			DocumentService.DVKStatus_Aborted;
+			DocumentService.DVKStatus_Missing;
+			DocumentService.DVKStatus_Received;
+			DocumentService.DVKStatus_Sending;
+			DocumentService.DVKStatus_Waiting;
+		*/
+		result = this.getSessionFactory().openSession().createQuery(SQL).list();
+
+		return result;
 	}
 	
 	public SessionFactory getSessionFactory() {
