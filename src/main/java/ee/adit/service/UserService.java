@@ -608,7 +608,7 @@ public class UserService {
 			Iterator<PojoOrganization> dvkUserIterator = dvkUsers.iterator();
 
 			List<AditUser> aditUsers = this.getAditUserDAO().listDVKUsers();
-			Iterator<AditUser> aditUserIterator = aditUsers.iterator();
+			
 			
 			List<AditUser> aditUsersCopy = new ArrayList<AditUser>(aditUsers);
 			
@@ -618,13 +618,18 @@ public class UserService {
 				
 				PojoOrganization dvkUser = dvkUserIterator.next();
 				boolean found = false;
+				Iterator<AditUser> aditUserIterator = aditUsers.iterator();
 				
+				LOG.debug("Finding match for dvkUser: " + dvkUser.getOrgCode());
 				while(!found && aditUserIterator.hasNext()) {
 					AditUser aditUser = aditUserIterator.next();
 					
 					// Match
+					
+					LOG.debug("Matching: " + aditUser.getDvkOrgCode());
 					if(aditUser.getDvkOrgCode() != null && aditUser.getDvkOrgCode().trim().equalsIgnoreCase(dvkUser.getOrgCode())) {
 						found = true;
+						LOG.debug("Matched!");
 						
 						aditUsersCopy.remove(aditUser);
 						
