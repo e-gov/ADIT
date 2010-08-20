@@ -3,6 +3,7 @@ package ee.adit.service;
 import java.math.BigInteger;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -609,6 +610,8 @@ public class UserService {
 			List<AditUser> aditUsers = this.getAditUserDAO().listDVKUsers();
 			Iterator<AditUser> aditUserIterator = aditUsers.iterator();
 			
+			List<AditUser> aditUsersCopy = new ArrayList<AditUser>(aditUsers);
+			
 			Usertype institutionUsertype = this.getUsertypeDAO().getByShortName(UserService.USERTYPE_INSTITUTION);
 			
 			while (dvkUserIterator.hasNext()) {
@@ -623,7 +626,7 @@ public class UserService {
 					if(aditUser.getDvkOrgCode() != null && aditUser.getDvkOrgCode().trim().equalsIgnoreCase(dvkUser.getOrgCode())) {
 						found = true;
 						
-						aditUsers.remove(aditUser);
+						aditUsersCopy.remove(aditUser);
 						
 						// Check if user's name has changed in DVK
 						if(dvkUser.getName() != null && !dvkUser.getName().equalsIgnoreCase(aditUser.getFullName())) {
@@ -654,22 +657,20 @@ public class UserService {
 			
 			// For those users that remained in the list - delete (because they don't exist in DVK anymore)
 			
-			if(aditUsers != null && aditUsers.size() > 0) {
-				LOG.info("Users removed from DVK since last synchronization: " + aditUsers.size());
-				
-				Iterator<AditUser> deletedUserIterator = aditUsers.iterator();
+			if(aditUsersCopy != null && aditUsersCopy.size() > 0) {				
+				Iterator<AditUser> deletedUserIterator = aditUsersCopy.iterator();
 				
 				while(deletedUserIterator.hasNext()) {
 					AditUser deletedUser = deletedUserIterator.next();
-					LOG.info("Deactivating DVK user in ADIT: " + deletedUser.getUserCode());
-					deletedUser.setActive(new Boolean(false));
-					deletedUser.setDeactivationDate(new Date());
-					this.getAditUserDAO().saveOrUpdate(deletedUser);
-					deactivated++;
+					if(deletedUser.getActive()) {
+						LOG.info("Deactivating DVK user in ADIT: " + deletedUser.getUserCode());
+						deletedUser.setActive(new Boolean(false));
+						deletedUser.setDeactivationDate(new Date());
+						this.getAditUserDAO().saveOrUpdate(deletedUser);
+						deactivated++;
+					}
 				}
 				
-			} else {
-				LOG.info("Users removed from DVK since last synchronization: 0");
 			}
 			
 		} catch (Exception e) {
