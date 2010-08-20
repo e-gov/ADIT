@@ -3,6 +3,7 @@ package ee.adit.dao;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Property;
@@ -10,6 +11,8 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import ee.adit.dao.pojo.AccessRestriction;
 import ee.adit.dao.pojo.AditUser;
+import ee.adit.dao.pojo.Document;
+import ee.adit.exception.AditInternalException;
 
 public class AditUserDAO extends HibernateDaoSupport {
 
@@ -46,6 +49,24 @@ public class AditUserDAO extends HibernateDaoSupport {
 		dt.addOrder(Order.asc("aditUser.fullName"));
 		result = this.getHibernateTemplate().findByCriteria(dt, startIndex, maxResults);
 		
+		return result;
+	}
+	
+	public List<AditUser> listDVKUsers() throws Exception {
+		List<AditUser> result = null;
+		String SQL = "from AditUser where dvkOrgCode is not null";
+		Session session = null;
+		try {
+			session = this.getSessionFactory().openSession();
+			result = session.createQuery(SQL).list();
+		} catch (Exception e) {
+			throw new AditInternalException("Error while fetching DVK users from database: ", e);
+		} finally {
+			if(session != null) {
+				session.close();
+			}
+		}
+			
 		return result;
 	}
 	

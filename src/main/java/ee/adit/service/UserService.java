@@ -14,6 +14,8 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
+import dvk.api.ml.PojoOrganization;
+
 import ee.adit.dao.AccessRestrictionDAO;
 import ee.adit.dao.AditUserDAO;
 import ee.adit.dao.DocumentDAO;
@@ -36,152 +38,176 @@ import ee.adit.pojo.ArrayOfNotification;
 import ee.adit.pojo.GetUserInfoRequestAttachmentUserList;
 import ee.adit.pojo.GetUserInfoResponseAttachmentUser;
 import ee.adit.pojo.Notification;
+import ee.adit.util.DVKUserSyncResult;
 
 public class UserService {
 
 	private static Logger LOG = Logger.getLogger(UserService.class);
-	
+
 	private RemoteApplicationDAO remoteApplicationDAO;
-	
+
 	private UsertypeDAO usertypeDAO;
-	
+
 	private NotificationTypeDAO notificationTypeDAO;
-	
+
 	private AditUserDAO aditUserDAO;
-	
+
 	private DocumentDAO documentDAO;
-	
+
 	private AccessRestrictionDAO accessRestrictionDAO;
-	
+
 	private NotificationDAO notificationDAO;
-	
+
 	private DvkDAO dvkDAO;
-	
+
 	public static final String USERTYPE_PERSON = "PERSON";
 	public static final String USERTYPE_INSTITUTION = "INSTITUTION";
 	public static final String USERTYPE_COMPANY = "COMPANY";
-	
+
 	public static final String ACCESS_RESTRICTION_WRITE = "WRITE";
 	public static final String ACCESS_RESTRICTION_READ = "READ";
-	
+
 	public boolean isApplicationRegistered(String remoteApplicationShortName) {
 		boolean result = false;
-		LOG.debug("Checking if application '" + remoteApplicationShortName + "' is registered.");
-		
-		if(this.getRemoteApplicationDAO() == null) {
+		LOG.debug("Checking if application '" + remoteApplicationShortName
+				+ "' is registered.");
+
+		if (this.getRemoteApplicationDAO() == null) {
 			LOG.error("remoteApplicationDAO not initialized");
 		} else {
-			RemoteApplication remoteApplication = this.getRemoteApplicationDAO().getByShortName(remoteApplicationShortName);
-			
-			if(remoteApplication != null) {
+			RemoteApplication remoteApplication = this
+					.getRemoteApplicationDAO().getByShortName(
+							remoteApplicationShortName);
+
+			if (remoteApplication != null) {
 				result = true;
 			}
 		}
-		
-		LOG.debug("Application '" + remoteApplicationShortName + "' is registered?: " + result);
+
+		LOG.debug("Application '" + remoteApplicationShortName
+				+ "' is registered?: " + result);
 		return result;
 	}
 
 	/**
-	 * Determines the access level for this application:
-	 * 0 - no access
-	 * 1 - read access
-	 * 2 - write acces (full access) 
+	 * Determines the access level for this application: 0 - no access 1 - read
+	 * access 2 - write acces (full access)
 	 * 
 	 * @return
 	 */
 	public int getAccessLevel(String remoteApplicationShortName) {
 		int result = 0;
-		
-		RemoteApplication remoteApplication = this.getRemoteApplicationDAO().getByShortName(remoteApplicationShortName);
+
+		RemoteApplication remoteApplication = this.getRemoteApplicationDAO()
+				.getByShortName(remoteApplicationShortName);
 		if (remoteApplication != null) {
-			if ((remoteApplication.getCanWrite() != null) && remoteApplication.getCanWrite()) {
+			if ((remoteApplication.getCanWrite() != null)
+					&& remoteApplication.getCanWrite()) {
 				result = 2;
-			} else if ((remoteApplication.getCanRead() != null) && remoteApplication.getCanRead()) {
+			} else if ((remoteApplication.getCanRead() != null)
+					&& remoteApplication.getCanRead()) {
 				result = 1;
 			}
 		}
-		
+
 		return result;
 	}
-	
+
 	/**
-	 * Determines the level of access on user for this application:
-	 * 0 - no access
-	 * 1 - read access
-	 * 2 - write acces (full access) 
-	 *  
+	 * Determines the level of access on user for this application: 0 - no
+	 * access 1 - read access 2 - write acces (full access)
+	 * 
 	 * @param remoteApplicationShortName
 	 * @param aditUser
 	 * @return
 	 */
-	public int getAccessLevelForUser(String remoteApplicationShortName, AditUser aditUser) {
+	public int getAccessLevelForUser(String remoteApplicationShortName,
+			AditUser aditUser) {
 		int result = 2;
-		
-		RemoteApplication remoteApplication = this.getRemoteApplicationDAO().getByShortName(remoteApplicationShortName);
-		this.getAccessRestrictionDAO().setSessionFactory(this.getRemoteApplicationDAO().getSessionFactory());
-		List<AccessRestriction> accessRestrictons = this.getAccessRestrictionDAO().getAccessRestrictionsForUser(aditUser);
-		LOG.debug("Number of access restrictions for (" + aditUser.getUserCode() + "): " + accessRestrictons.size());
+
+		RemoteApplication remoteApplication = this.getRemoteApplicationDAO()
+				.getByShortName(remoteApplicationShortName);
+		this.getAccessRestrictionDAO().setSessionFactory(
+				this.getRemoteApplicationDAO().getSessionFactory());
+		List<AccessRestriction> accessRestrictons = this
+				.getAccessRestrictionDAO().getAccessRestrictionsForUser(
+						aditUser);
+		LOG.debug("Number of access restrictions for ("
+				+ aditUser.getUserCode() + "): " + accessRestrictons.size());
 		Iterator<AccessRestriction> i = accessRestrictons.iterator();
-		
-		while(i.hasNext()) {
+
+		while (i.hasNext()) {
 			AccessRestriction accessRestriction = i.next();
-			LOG.debug("Access restriction: " + accessRestriction.getRestriction());
-			if(accessRestriction.getRemoteApplication() != null && accessRestriction.getRemoteApplication().getShortName() != null && accessRestriction.getRemoteApplication().getShortName().equals(remoteApplication.getShortName())) {
-				// If the restriction restricts this application to read this user's data
-				if(ACCESS_RESTRICTION_READ.equalsIgnoreCase(accessRestriction.getRestriction())) {
-					LOG.debug("Found READ access restriction for user: " + aditUser.getUserCode());
+			LOG.debug("Access restriction: "
+					+ accessRestriction.getRestriction());
+			if (accessRestriction.getRemoteApplication() != null
+					&& accessRestriction.getRemoteApplication().getShortName() != null
+					&& accessRestriction.getRemoteApplication().getShortName()
+							.equals(remoteApplication.getShortName())) {
+				// If the restriction restricts this application to read this
+				// user's data
+				if (ACCESS_RESTRICTION_READ.equalsIgnoreCase(accessRestriction
+						.getRestriction())) {
+					LOG.debug("Found READ access restriction for user: "
+							+ aditUser.getUserCode());
 					result = 0;
-				} else if(ACCESS_RESTRICTION_WRITE.equalsIgnoreCase(accessRestriction.getRestriction())) {
-					LOG.debug("Found WRITE access restriction for user: " + aditUser.getUserCode());
+				} else if (ACCESS_RESTRICTION_WRITE
+						.equalsIgnoreCase(accessRestriction.getRestriction())) {
+					LOG.debug("Found WRITE access restriction for user: "
+							+ aditUser.getUserCode());
 					result = 1;
 				}
 			}
 		}
-		
+
 		return result;
 	}
-	
+
 	public Usertype getUsertypeByID(String usertypeShortName) {
 		Usertype result = null;
-		
+
 		try {
 			result = this.getUsertypeDAO().getByShortName(usertypeShortName);
 		} catch (Exception e) {
 			LOG.error("Error while fetching Usertype by sgort name: ", e);
 		}
-		
+
 		return result;
 	}
-	
+
 	public AditUser getUserByID(String userRegCode) {
 		LOG.debug("Getting user by ID: " + userRegCode);
 		AditUser result = null;
-		
+
 		try {
 			result = this.getAditUserDAO().getUserByID(userRegCode);
-			if(result != null) {
-				LOG.debug("Found user with ID: " + result.getUserCode() + ", name: " + result.getFullName());
+			if (result != null) {
+				LOG.debug("Found user with ID: " + result.getUserCode()
+						+ ", name: " + result.getFullName());
 			} else {
 				LOG.debug("Did not find user.");
 			}
 		} catch (Exception e) {
 			LOG.error("Error while fetching AditUser by ID: ", e);
 		}
-		
+
 		return result;
 	}
-	
-	public void addUser(String username, Usertype usertype, String institutionCode, String personalCode) throws AditInternalException {
-		if(USERTYPE_PERSON.equalsIgnoreCase(usertype.getShortName())) {
+
+	public void addUser(String username, Usertype usertype,
+			String institutionCode, String personalCode)
+			throws AditInternalException {
+		if (USERTYPE_PERSON.equalsIgnoreCase(usertype.getShortName())) {
 			addUser(username, personalCode, usertype);
-		} else if(USERTYPE_INSTITUTION.equalsIgnoreCase(usertype.getShortName()) || USERTYPE_COMPANY.equalsIgnoreCase(usertype.getShortName())) {
+		} else if (USERTYPE_INSTITUTION.equalsIgnoreCase(usertype
+				.getShortName())
+				|| USERTYPE_COMPANY.equalsIgnoreCase(usertype.getShortName())) {
 			addUser(username, institutionCode, usertype);
 		} else {
 			throw new AditInternalException("Unknown usertype");
 		}
 	}
-	
+
 	public void addUser(String username, String usercode, Usertype usertype) {
 		AditUser aditUser = new AditUser();
 		aditUser.setUserCode(usercode);
@@ -190,7 +216,7 @@ public class UserService {
 		aditUser.setActive(true);
 		this.getAditUserDAO().saveOrUpdate(aditUser);
 	}
-	
+
 	/**
 	 * 
 	 * @param aditUser
@@ -199,59 +225,65 @@ public class UserService {
 	 * @return true if the user was reactivated
 	 * @throws AditInternalException
 	 */
-	public boolean modifyUser(AditUser aditUser, String username, Usertype usertype) throws AditInternalException {
+	public boolean modifyUser(AditUser aditUser, String username,
+			Usertype usertype) throws AditInternalException {
 		boolean result = false;
 		// Activate the user account if needed
-		if(!aditUser.getActive()) {
+		if (!aditUser.getActive()) {
 			aditUser.setActive(true);
 			aditUser.setDeactivationDate(null);
 			result = true;
 		}
-		
-		if(USERTYPE_PERSON.equalsIgnoreCase(usertype.getShortName())) {
+
+		if (USERTYPE_PERSON.equalsIgnoreCase(usertype.getShortName())) {
 			modifyUser(aditUser, username);
-		} else if(USERTYPE_INSTITUTION.equalsIgnoreCase(usertype.getShortName()) || USERTYPE_COMPANY.equalsIgnoreCase(usertype.getShortName())) {
+		} else if (USERTYPE_INSTITUTION.equalsIgnoreCase(usertype
+				.getShortName())
+				|| USERTYPE_COMPANY.equalsIgnoreCase(usertype.getShortName())) {
 			modifyUser(aditUser, username);
 		} else {
 			throw new AditInternalException("Unknown usertype");
 		}
-		
+
 		return result;
 	}
-	
+
 	public void modifyUser(AditUser aditUser, String username) {
 		aditUser.setFullName(username);
 		this.getAditUserDAO().saveOrUpdate(aditUser);
 	}
-	
-	public List<AditUser> listUsers(BigInteger startIndex, BigInteger maxResults) throws Exception {
-		List <AditUser> result = null;
-		
-		result = this.getAditUserDAO().listUsers(startIndex.intValue(), maxResults.intValue());
-		
+
+	public List<AditUser> listUsers(BigInteger startIndex, BigInteger maxResults)
+			throws Exception {
+		List<AditUser> result = null;
+
+		result = this.getAditUserDAO().listUsers(startIndex.intValue(),
+				maxResults.intValue());
+
 		return result;
 	}
-	
-	public List<GetUserInfoResponseAttachmentUser> getUserInfo(GetUserInfoRequestAttachmentUserList userList) {
+
+	public List<GetUserInfoResponseAttachmentUser> getUserInfo(
+			GetUserInfoRequestAttachmentUserList userList) {
 		List<GetUserInfoResponseAttachmentUser> result = new ArrayList<GetUserInfoResponseAttachmentUser>();
-		
+
 		List<String> userCodes = userList.getCodes();
-		
-		for(String userCode : userCodes) {
-			
+
+		for (String userCode : userCodes) {
+
 			GetUserInfoResponseAttachmentUser userInfo = getUserInfo(userCode);
 			result.add(userInfo);
 		}
-		
+
 		return result;
 	}
-	
+
 	public GetUserInfoResponseAttachmentUser getUserInfo(String userCode) {
-		
+
 		GetUserInfoResponseAttachmentUser result = new GetUserInfoResponseAttachmentUser();
-		
+
 		AditUser user = this.getAditUserDAO().getUserByID(userCode);
-		
+
 		Long diskquota = null;
 		long usedSpace;
 		Long unusedSpace = null;
@@ -259,35 +291,38 @@ public class UserService {
 		boolean canRead = true;
 		boolean canWrite = true;
 		boolean hasJoined = false;
-		
-		if(user != null) {
+
+		if (user != null) {
 			// User has joined the service
 			LOG.debug("User has joined the service: " + userCode);
 			hasJoined = true;
-			
+
 			usedSpace = this.getDocumentDAO().getUsedSpaceForUser(userCode);
 			LOG.debug("Information for user (" + userCode + "): ");
 			LOG.debug("UsedSpace for user: " + usedSpace);
-			
-			if(user.getDiskQuota() != null && user.getDiskQuota() > 0) {
+
+			if (user.getDiskQuota() != null && user.getDiskQuota() > 0) {
 				// Disk quota defined in user table
-				user.getDiskQuota();				
+				user.getDiskQuota();
 			} else {
-				// User disk quota not defined in user table - check usertype for quota
+				// User disk quota not defined in user table - check usertype
+				// for quota
 				Usertype usertype = this.getUsertypeDAO().getUsertype(user);
-				if(usertype != null && usertype.getDiskQuota() != null) {
+				if (usertype != null && usertype.getDiskQuota() != null) {
 					diskquota = usertype.getDiskQuota();
 				}
 			}
-			
-			if(diskquota != null) {
+
+			if (diskquota != null) {
 				// Calculate the unused space for this user
-				unusedSpace = diskquota.longValue() - usedSpace;				
+				unusedSpace = diskquota.longValue() - usedSpace;
 			} else {
-				throw new AditInternalException("User disk quota not defined by user/usertype data.");
+				throw new AditInternalException(
+						"User disk quota not defined by user/usertype data.");
 			}
-			
-			if(user.getDvkOrgCode() != null && !"".equalsIgnoreCase(user.getDvkOrgCode().trim())) {
+
+			if (user.getDvkOrgCode() != null
+					&& !"".equalsIgnoreCase(user.getDvkOrgCode().trim())) {
 				usesDVK = true;
 				canWrite = false;
 			}
@@ -300,34 +335,37 @@ public class UserService {
 			result.setCanRead(canRead);
 			result.setCanWrite(canWrite);
 			result.setUsesDVK(usesDVK);
-			
+
 		} else {
 			// User has not joined the service
 			LOG.debug("User has not joined the service: " + userCode);
-		}		
+		}
 
 		return result;
-		
+
 	}
-	
-	public void deactivateUser(AditUser user) {		
+
+	public void deactivateUser(AditUser user) {
 		user.setActive(false);
 		user.setDeactivationDate(new Date());
-		this.getAditUserDAO().saveOrUpdate(user);		
+		this.getAditUserDAO().saveOrUpdate(user);
 	}
-	
+
 	public long getRemainingDiskQuota(AditUser user, long globalDiskQuota) {
 		long totalDiskQuota = getTotalDiskQuota(user, globalDiskQuota);
-		long usedDiskSpace = getDocumentDAO().getUsedSpaceForUser(user.getUserCode());
+		long usedDiskSpace = getDocumentDAO().getUsedSpaceForUser(
+				user.getUserCode());
 		long result = totalDiskQuota - usedDiskSpace;
-		LOG.debug("Remaining disk quota for user \""+ user.getUserCode() +"\" is " + result + " (total: "+ totalDiskQuota +", used: "+ usedDiskSpace +")");
+		LOG.debug("Remaining disk quota for user \"" + user.getUserCode()
+				+ "\" is " + result + " (total: " + totalDiskQuota + ", used: "
+				+ usedDiskSpace + ")");
 		return result;
 	}
-	
+
 	public long getTotalDiskQuota(AditUser user, long globalDiskQuota) {
 		long result = 0;
-		
-		if(user.getDiskQuota() != null) {
+
+		if (user.getDiskQuota() != null) {
 			result = user.getDiskQuota();
 		} else {
 			Usertype usertype = this.getUsertypeDAO().getUsertype(user);
@@ -338,100 +376,122 @@ public class UserService {
 					result = globalDiskQuota;
 				}
 			} else {
-				throw new AditInternalException("Error getting total disk quota for user: " + user.getUserCode());
+				throw new AditInternalException(
+						"Error getting total disk quota for user: "
+								+ user.getUserCode());
 			}
 		}
-		
+
 		return result;
 	}
-	
-	public void setNotifications(final String userCode, final List<Notification> notifications) {
-		this.getAditUserDAO().getHibernateTemplate().execute(new HibernateCallback() {
-			public Object doInHibernate(Session session) throws HibernateException, SQLException {
-				AditUser user = (AditUser)session.get(AditUser.class, userCode);
-				
-				for (Notification item : notifications) {
-					if (item.isActive() && (findNotification(user.getUserNotifications(), item.getType()) == null)) {
-						NotificationType type = (NotificationType)session.get(NotificationType.class, item.getType());
-						
-						UserNotification notification = new UserNotification();
-						UserNotificationId notificationId = new UserNotificationId();
-						notificationId.setUserCode(userCode);
-						notificationId.setNotificationType(item.getType());
-						notification.setId(notificationId);
-						notification.setNotificationType(type);
-						
-						user.getUserNotifications().add(notification);
-						LOG.debug("Adding notification \""+ item.getType() +"\" to user " + userCode);
-					} else if (!item.isActive()) {
-						UserNotification notification = findNotification(user.getUserNotifications(), item.getType());
-						if (notification != null) {
-							session.delete(notification);
-							user.getUserNotifications().remove(notification);
-							//notification.getId().setUserCode(null);
-							LOG.debug("Removing notification \""+ item.getType() +"\" from user " + userCode);
+
+	public void setNotifications(final String userCode,
+			final List<Notification> notifications) {
+		this.getAditUserDAO().getHibernateTemplate().execute(
+				new HibernateCallback() {
+					public Object doInHibernate(Session session)
+							throws HibernateException, SQLException {
+						AditUser user = (AditUser) session.get(AditUser.class,
+								userCode);
+
+						for (Notification item : notifications) {
+							if (item.isActive()
+									&& (findNotification(user
+											.getUserNotifications(), item
+											.getType()) == null)) {
+								NotificationType type = (NotificationType) session
+										.get(NotificationType.class, item
+												.getType());
+
+								UserNotification notification = new UserNotification();
+								UserNotificationId notificationId = new UserNotificationId();
+								notificationId.setUserCode(userCode);
+								notificationId.setNotificationType(item
+										.getType());
+								notification.setId(notificationId);
+								notification.setNotificationType(type);
+
+								user.getUserNotifications().add(notification);
+								LOG.debug("Adding notification \""
+										+ item.getType() + "\" to user "
+										+ userCode);
+							} else if (!item.isActive()) {
+								UserNotification notification = findNotification(
+										user.getUserNotifications(), item
+												.getType());
+								if (notification != null) {
+									session.delete(notification);
+									user.getUserNotifications().remove(
+											notification);
+									// notification.getId().setUserCode(null);
+									LOG.debug("Removing notification \""
+											+ item.getType() + "\" from user "
+											+ userCode);
+								}
+							}
 						}
+
+						session.saveOrUpdate(user);
+						return null;
 					}
-				}
-				
-				session.saveOrUpdate(user);
-				return null;
-			}
-		});
+				});
 	}
-	
+
 	public ArrayOfNotification getNotifications(final String userCode) {
 		final NotificationTypeDAO notTypeDao = this.getNotificationTypeDAO();
-		
-		return (ArrayOfNotification)this.getAditUserDAO().getHibernateTemplate().execute(new HibernateCallback() {
-			public Object doInHibernate(Session session) throws HibernateException, SQLException {
-				ArrayOfNotification innerResult = new ArrayOfNotification();
-				innerResult.setNotification(new ArrayList<Notification>());
-				
-				AditUser user = (AditUser)session.get(AditUser.class, userCode);
-				List<NotificationType> types = notTypeDao.getNotificationTypeList();
-				
-				for (NotificationType type : types) {
-					boolean notificationActive = false;
-					if (findNotification(user.getUserNotifications(), type.getShortName()) != null) {
-						notificationActive = true;
-					}
-					Notification item = new Notification();
-					item.setActive(notificationActive);
-					item.setType(type.getShortName());
-					innerResult.getNotification().add(item);
-				}
 
-				return innerResult;
-			}
-		});
+		return (ArrayOfNotification) this.getAditUserDAO()
+				.getHibernateTemplate().execute(new HibernateCallback() {
+					public Object doInHibernate(Session session)
+							throws HibernateException, SQLException {
+						ArrayOfNotification innerResult = new ArrayOfNotification();
+						innerResult
+								.setNotification(new ArrayList<Notification>());
+
+						AditUser user = (AditUser) session.get(AditUser.class,
+								userCode);
+						List<NotificationType> types = notTypeDao
+								.getNotificationTypeList();
+
+						for (NotificationType type : types) {
+							boolean notificationActive = false;
+							if (findNotification(user.getUserNotifications(),
+									type.getShortName()) != null) {
+								notificationActive = true;
+							}
+							Notification item = new Notification();
+							item.setActive(notificationActive);
+							item.setType(type.getShortName());
+							innerResult.getNotification().add(item);
+						}
+
+						return innerResult;
+					}
+				});
 	}
-	
-	public UserNotification findNotification(final Set notifications, final String notificationType) {
+
+	public UserNotification findNotification(final Set notifications,
+			final String notificationType) {
 		UserNotification result = null;
-		
+
 		Iterator it = notifications.iterator();
 		while (it.hasNext()) {
-			UserNotification item = (UserNotification)it.next();
-			if (item.getId().getNotificationType().equalsIgnoreCase(notificationType)) {
+			UserNotification item = (UserNotification) it.next();
+			if (item.getId().getNotificationType().equalsIgnoreCase(
+					notificationType)) {
 				result = item;
 				break;
 			}
 		}
-		
+
 		return result;
 	}
-	
-	public long addNotification(
-		long id,
-		long documentId,
-		String notificationType,
-		String userCode,
-		Date eventDate,
-		String notificationText,
-		Long notificationId,
-		Date notificationSendingDate) {
-		
+
+	public long addNotification(long id, long documentId,
+			String notificationType, String userCode, Date eventDate,
+			String notificationText, Long notificationId,
+			Date notificationSendingDate) {
+
 		if (this.notificationDAO != null) {
 			ee.adit.dao.pojo.Notification notification = new ee.adit.dao.pojo.Notification();
 			notification.setId(id);
@@ -442,14 +502,15 @@ public class UserService {
 			notification.setNotificationText(notificationText);
 			notification.setNotificationId(notificationId);
 			notification.setNotificationSendingDate(notificationSendingDate);
-			
+
 			return this.notificationDAO.save(notification);
 		} else {
-			LOG.debug("Cannot save snotification, notificationDAO object is NULL!");
+			LOG
+					.debug("Cannot save snotification, notificationDAO object is NULL!");
 			return 0;
 		}
 	}
-	
+
 	public List<Usertype> listUsertypes() {
 		try {
 			return this.getUsertypeDAO().listUsertypes();
@@ -458,90 +519,179 @@ public class UserService {
 			return null;
 		}
 	}
-	
+
 	public String getUsertypesString() {
 		List<Usertype> usertypes = this.listUsertypes();
 		StringBuffer result = new StringBuffer();
-		
-		if(usertypes == null || usertypes.size() == 0) {
+
+		if (usertypes == null || usertypes.size() == 0) {
 			return null;
 		} else {
-			for(int i = 0; i < usertypes.size(); i++) {
+			for (int i = 0; i < usertypes.size(); i++) {
 				Usertype usertype = usertypes.get(i);
-				if(i > 0) {
+				if (i > 0) {
 					result.append(" / ");
 				}
 				result.append(usertype.getShortName());
 			}
 		}
-		
+
 		return result.toString();
 	}
-	
+
 	public String getNotificationTypesString() {
-		List<NotificationType> notificationTypes = this.getNotificationTypeDAO().getNotificationTypeList();
+		List<NotificationType> notificationTypes = this
+				.getNotificationTypeDAO().getNotificationTypeList();
 		StringBuffer result = new StringBuffer();
-		
-		if(notificationTypes == null || notificationTypes.size() == 0) {
+
+		if (notificationTypes == null || notificationTypes.size() == 0) {
 			return null;
 		} else {
-			for(int i = 0; i < notificationTypes.size(); i++) {
+			for (int i = 0; i < notificationTypes.size(); i++) {
 				NotificationType notificationType = notificationTypes.get(i);
-				if(i > 0) {
+				if (i > 0) {
 					result.append(" / ");
 				}
 				result.append(notificationType.getShortName());
 			}
 		}
-		
+
 		return result.toString();
 	}
-	
-	public void checkApplicationRegistered(String applicationName) throws AditCodedException {
+
+	public void checkApplicationRegistered(String applicationName)
+			throws AditCodedException {
 		boolean applicationRegistered = isApplicationRegistered(applicationName);
 		if (!applicationRegistered) {
-			AditCodedException aditCodedException = new AditCodedException("application.notRegistered");
+			AditCodedException aditCodedException = new AditCodedException(
+					"application.notRegistered");
 			aditCodedException.setParameters(new Object[] { applicationName });
 			throw aditCodedException;
 		}
 	}
-	
+
 	public void checkApplicationWritePrivilege(String applicationName) {
 		int accessLevel = getAccessLevel(applicationName);
-		if(accessLevel != 2) {
-			AditCodedException aditCodedException = new AditCodedException("application.insufficientPrivileges.write");
+		if (accessLevel != 2) {
+			AditCodedException aditCodedException = new AditCodedException(
+					"application.insufficientPrivileges.write");
 			aditCodedException.setParameters(new Object[] { applicationName });
 			throw aditCodedException;
 		}
 	}
-	
+
 	public void checkApplicationReadPrivilege(String applicationName) {
 		int accessLevel = getAccessLevel(applicationName);
-		if(accessLevel < 1) {
-			AditCodedException aditCodedException = new AditCodedException("application.insufficientPrivileges.read");
+		if (accessLevel < 1) {
+			AditCodedException aditCodedException = new AditCodedException(
+					"application.insufficientPrivileges.read");
 			aditCodedException.setParameters(new Object[] { applicationName });
 			throw aditCodedException;
 		}
 	}
-	
+
 	/**
-	 * Synchronize DVK users with ADIT user accounts:
-	 * DVK -> ADIT only
-	 * 1. Get DVK users
-	 * 2. Check if user exists in ADIT
-	 * 3. Check is user data changed
+	 * Synchronize DVK users with ADIT user accounts: DVK -> ADIT only 1. Get
+	 * DVK users 2. Check if user exists in ADIT 3. Check is user data changed
 	 */
-	public void synchroinzeDVKUsers() {
+	public DVKUserSyncResult synchroinzeDVKUsers() {
+
+		DVKUserSyncResult result = new DVKUserSyncResult();
 		
-		this.getDvkDAO().getUsers();
+		int deactivated = 0;
+		int added = 0;
+		int modified = 0;
 		
+		try {
+			List<PojoOrganization> dvkUsers = this.getDvkDAO().getUsers();
+			Iterator<PojoOrganization> dvkUserIterator = dvkUsers.iterator();
+
+			List<AditUser> aditUsers = this.getAditUserDAO().listDVKUsers();
+			Iterator<AditUser> aditUserIterator = aditUsers.iterator();
+			
+			Usertype institutionUsertype = this.getUsertypeDAO().getByShortName(UserService.USERTYPE_INSTITUTION);
+			
+			while (dvkUserIterator.hasNext()) {
+				
+				PojoOrganization dvkUser = dvkUserIterator.next();
+				boolean found = false;
+				
+				while(!found && aditUserIterator.hasNext()) {
+					AditUser aditUser = aditUserIterator.next();
+					
+					// Match
+					if(aditUser.getDvkOrgCode() != null && aditUser.getDvkOrgCode().trim().equalsIgnoreCase(dvkUser.getOrgCode())) {
+						found = true;
+						
+						aditUsers.remove(aditUser);
+						
+						// Check if user's name has changed in DVK
+						if(dvkUser.getName() != null && !dvkUser.getName().equalsIgnoreCase(aditUser.getFullName())) {
+							aditUser.setFullName(dvkUser.getName());
+							this.getAditUserDAO().saveOrUpdate(aditUser);
+							LOG.info("User '" + aditUser.getUserCode() + "' has modified name. Updated in ADIT.");
+							modified++;
+						}
+						
+					} 
+					
+				}
+				
+				// Add new user to ADIT
+				if(!found) {
+					LOG.info("Adding new user to ADIT (DVK user): " + dvkUser.getOrgCode() + ", " + dvkUser.getName());
+					AditUser newAditUser = new AditUser();
+					newAditUser.setDvkOrgCode(dvkUser.getOrgCode());
+					newAditUser.setActive(new Boolean(true));
+					newAditUser.setFullName(dvkUser.getName());
+					newAditUser.setUserCode("EE" + dvkUser.getOrgCode());
+					newAditUser.setUsertype(institutionUsertype);
+					this.getAditUserDAO().saveOrUpdate(newAditUser);
+					added++;
+				}
+				
+			}
+			
+			// For those users that remained in the list - delete (because they don't exist in DVK anymore)
+			
+			if(aditUsers != null && aditUsers.size() > 0) {
+				LOG.info("Users removed from DVK since last synchronization: " + aditUsers.size());
+				
+				Iterator<AditUser> deletedUserIterator = aditUsers.iterator();
+				
+				while(deletedUserIterator.hasNext()) {
+					AditUser deletedUser = deletedUserIterator.next();
+					LOG.info("Deactivating DVK user in ADIT: " + deletedUser.getUserCode());
+					deletedUser.setActive(new Boolean(false));
+					deletedUser.setDeactivationDate(new Date());
+					this.getAditUserDAO().saveOrUpdate(deletedUser);
+					deactivated++;
+				}
+				
+			} else {
+				LOG.info("Users removed from DVK since last synchronization: 0");
+			}
+			
+		} catch (Exception e) {
+			LOG.error("Error while synchronizing DVK users: ", e);
+			result.setAdded(added);
+			result.setDeactivated(deactivated);
+			result.setModified(modified);
+		}
+		
+		result.setAdded(added);
+		result.setDeactivated(deactivated);
+		result.setModified(modified);
+		
+		return result;
 	}
-	
+
 	public RemoteApplicationDAO getRemoteApplicationDAO() {
 		return remoteApplicationDAO;
 	}
 
-	public void setRemoteApplicationDAO(RemoteApplicationDAO remoteApplicationDAO) {
+	public void setRemoteApplicationDAO(
+			RemoteApplicationDAO remoteApplicationDAO) {
 		this.remoteApplicationDAO = remoteApplicationDAO;
 	}
 
@@ -581,7 +731,8 @@ public class UserService {
 		return accessRestrictionDAO;
 	}
 
-	public void setAccessRestrictionDAO(AccessRestrictionDAO accessRestrictionDAO) {
+	public void setAccessRestrictionDAO(
+			AccessRestrictionDAO accessRestrictionDAO) {
 		this.accessRestrictionDAO = accessRestrictionDAO;
 	}
 
@@ -599,6 +750,6 @@ public class UserService {
 
 	public void setDvkDAO(DvkDAO dvkDAO) {
 		this.dvkDAO = dvkDAO;
-	}	
-	
+	}
+
 }

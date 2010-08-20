@@ -10,6 +10,7 @@ import org.hibernate.Transaction;
 import dvk.api.DVKAPI;
 import dvk.api.ml.PojoMessage;
 import dvk.api.ml.PojoMessageRecipient;
+import dvk.api.ml.PojoOrganization;
 import dvk.api.ml.PojoSettings;
 import ee.adit.service.DocumentService;
 
@@ -94,6 +95,13 @@ public class DvkDAO {
 	public List<PojoMessage> getReceivedDocuments() {
 		List<PojoMessage> result = new ArrayList<PojoMessage>();
 		String SQL = "from PojoMessage where isIncoming = true and dhlId is not null and (faultCode is null or faultCode != '" + DocumentService.DVKFaultCodeFor_Deleted + "') and (recipientStatusId = " + DocumentService.DVKStatus_Aborted + " or recipientStatusId = " + DocumentService.DVKStatus_Received + ")";
+		result = this.getSessionFactory().openSession().createQuery(SQL).list();
+		return result;
+	}
+	
+	public List<PojoOrganization> getUsers() {
+		List<PojoOrganization> result = new ArrayList<PojoOrganization>();
+		String SQL = "from PojoOrganization where dhlCapable = true";
 		result = this.getSessionFactory().openSession().createQuery(SQL).list();
 		return result;
 	}
