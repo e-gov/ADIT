@@ -1051,7 +1051,6 @@ public class DocumentService {
 	 */
 	public void composeErrorResponse(Integer reasonCode, ContainerVer2 dvkContainer, String recipientCode, Date receivedDate, String recipientName) throws AditInternalException {
 
-		// TODO:
 		try {
 			// 1. Gather data required for response message
 			String xml = this.createErrorResponseDataXML(dvkContainer, recipientCode, receivedDate, recipientName);
@@ -1257,7 +1256,19 @@ public class DocumentService {
 			responseFile.setJrkNr((short) 1);
 			responseFile.setKrypteering(false);
 			responseFile.setPohiDokument(true);
+			
+			// Add the response document
 			files.add(responseFile);
+			
+			// Add the original files
+			FailideKonteiner originalFileContainer = originalContainer.getFailideKonteiner();
+			List<Fail> originalFiles = originalFileContainer.getFailid();
+			
+			for(int i = 0; i < originalFiles.size(); i++) {
+				Fail originalFile = originalFiles.get(i);
+				files.add(originalFile);
+			}
+			
 			failideKonteiner.setFailid(files);
 
 			container.setFailideKonteiner(failideKonteiner);
