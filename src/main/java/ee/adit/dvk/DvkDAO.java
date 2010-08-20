@@ -83,7 +83,7 @@ public class DvkDAO {
 	public List<PojoMessage> getSentDocuments() {
 		List<PojoMessage> result = new ArrayList<PojoMessage>();
 		
-		String SQL = "select from PojoMessage m where m.dhlMessageId not in (select mr.dhlMessageId from PojoMessageRecipient mr where mr.dhlMessageId = m.dhlMessageId and (mr.sendingStatusId is null or mr.sendingStatusId = " + DocumentService.DVKStatus_Missing + " or mr.sendingStatusId = " + DocumentService.DVKStatus_Received + " or mr.sendingStatusId = " + DocumentService.DVKStatus_Sending + " or mr.sendingStatusId = " + DocumentService.DVKStatus_Waiting + "))";
+		String SQL = "from PojoMessage m where m.isIncoming = false and m.dhlId is not null and (m.faultCode is null or m.faultCode != '" + DocumentService.DVKFaultCodeFor_Deleted + "') and m.dhlMessageId not in (select mr.dhlMessageId from PojoMessageRecipient mr where mr.dhlMessageId = m.dhlMessageId and (mr.sendingStatusId is null or mr.sendingStatusId = " + DocumentService.DVKStatus_Missing + " or mr.sendingStatusId = " + DocumentService.DVKStatus_Received + " or mr.sendingStatusId = " + DocumentService.DVKStatus_Sending + " or mr.sendingStatusId = " + DocumentService.DVKStatus_Waiting + "))";
 		
 		/*
 			DocumentService.DVKStatus_Sent;

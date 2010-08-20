@@ -97,7 +97,8 @@ public class DocumentService {
 	public static final Long DVKStatus_Received = new Long(105);
 
 	public static final String DVKFaultCodeFor_Deleted = "NO_FAULT: DELETED BY ADIT";
-
+	public static final String DVKBlobMessage_Deleted = "DELETED BY ADIT";
+	
 	// Dokumendi ajaloosündmuste koodid
 	public static final String HistoryType_Create = "create";
 	public static final String HistoryType_Modify = "modify";
@@ -1293,22 +1294,54 @@ public class DocumentService {
 		try {
 			List<PojoMessage> dvkDocuments = this.getDvkDAO()
 					.getSentDocuments();
-			
+
 			LOG.info("Documents fetched: " + dvkDocuments.size());
-			
+
 			Iterator<PojoMessage> dvkDocumentsIterator = dvkDocuments
 					.iterator();
 
-			while (dvkDocumentsIterator.hasNext()) {
-				PojoMessage dvkDocument = dvkDocumentsIterator.next();
-				LOG.debug("Deleting document. DHL_ID: " + dvkDocument.getDhlId());
+			Session dvkSession = null;
+			Transaction transaction = null;
+			
+			try {
+				dvkSession = this.getDvkDAO().getSessionFactory().openSession();
+				transaction = dvkSession.beginTransaction();
+				while (dvkDocumentsIterator.hasNext()) {
+					PojoMessage dvkDocument = dvkDocumentsIterator.next();
+					deleteDVKDocument(dvkDocument, dvkSession);
+					LOG.info("Document deleted from DVK. DHL_ID: " + dvkDocument.getDhlId());
+				}
+				transaction.commit();
+				
+			} catch (Exception e) {
+				transaction.rollback();
+				throw e;
 			}
+			finally {
+				if (dvkSession != null) {
+					dvkSession.close();
+				}
+			}
+
 		} catch (Exception e) {
-			LOG.error("Error deleting documents from DVK: ", e);
+			LOG.error("Error while deleting documents from DVK: ", e);
 			throw e;
 		}
 
 		return result;
+	}
+
+	/**
+	 * Deletes the messages content (data) and updates 'faultCode' to 'NO_FAULT:
+	 * DELETED BY ADIT'
+	 * 
+	 * @param dhlId
+	 */
+	public void deleteDVKDocument(PojoMessage message, Session session) {
+		LOG.debug("Deleting document. DHL_ID: " + message.getDhlId());
+		message.setData(Hibernate.createClob(DocumentService.DVKBlobMessage_Deleted, session));
+		message.setFaultCode(DocumentService.DVKFaultCodeFor_Deleted);
+		session.update(message);
 	}
 
 	/**
