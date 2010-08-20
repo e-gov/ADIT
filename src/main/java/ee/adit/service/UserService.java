@@ -533,7 +533,7 @@ public class UserService {
 	 */
 	public void synchroinzeDVKUsers() {
 		
-		
+		this.getDvkDAO().getUsers();
 		
 	}
 	
