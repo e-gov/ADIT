@@ -6,12 +6,13 @@ import org.quartz.JobExecutionException;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
 import ee.adit.service.DocumentService;
+import ee.adit.service.UserService;
 
 public class UserSyncJob extends QuartzJobBean {
 
 	private static Logger LOG = Logger.getLogger(UserSyncJob.class);
 	
-	private DocumentService documentService;
+	private UserService userService;
 	
 	protected void executeInternal(JobExecutionContext ctx)
 			throws JobExecutionException {
@@ -20,7 +21,7 @@ public class UserSyncJob extends QuartzJobBean {
 			LOG.info("Executing scheduled job: DVK user synchronization");
 			
 			// Send documents to DVK Client database
-			int sentDocumentsCount = this.getDocumentService().sendDocumentsToDVK();
+			int sentDocumentsCount = this.getUserService();
 
 			LOG.debug("Users synchronized (" + sentDocumentsCount + ")");
 			
@@ -30,12 +31,12 @@ public class UserSyncJob extends QuartzJobBean {
 
 	}
 
-	public DocumentService getDocumentService() {
-		return documentService;
+	public UserService getUserService() {
+		return userService;
 	}
 
-	public void setDocumentService(DocumentService documentService) {
-		this.documentService = documentService;
+	public void setUserService(UserService userService) {
+		this.userService = userService;
 	}
 	
 }
