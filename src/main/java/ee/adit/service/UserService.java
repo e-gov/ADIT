@@ -614,6 +614,10 @@ public class UserService {
 			
 			Usertype institutionUsertype = this.getUsertypeDAO().getByShortName(UserService.USERTYPE_INSTITUTION);
 			
+			if(institutionUsertype == null) {
+				throw new AditInternalException("Could not find user type '" + UserService.USERTYPE_INSTITUTION + "' in ADIT database.");
+			}
+			
 			while (dvkUserIterator.hasNext()) {
 				
 				PojoOrganization dvkUser = dvkUserIterator.next();
