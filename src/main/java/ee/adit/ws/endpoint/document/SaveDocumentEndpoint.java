@@ -40,9 +40,18 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 	
 	private DocumentService documentService;
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	protected Object invokeInternal(Object requestObject, int version) throws Exception {
+		LOG.debug("JoinEndpoint invoked. Version: " + version);
+
+		if (version == 1) {
+			return v1(requestObject);
+		} else {
+			throw new AditInternalException("This method does not support version specified: " + version);
+		}
+	}
+	
+	protected Object v1(Object requestObject) {
 		SaveDocumentResponse response = new SaveDocumentResponse();
 		ArrayOfMessage messages = new ArrayOfMessage();
 		Calendar requestDate = Calendar.getInstance();

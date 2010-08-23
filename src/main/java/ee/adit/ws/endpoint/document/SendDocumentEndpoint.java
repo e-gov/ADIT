@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
 import ee.adit.exception.AditException;
+import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.ArrayOfRecipientStatus;
 import ee.adit.pojo.ArrayOfUserCode;
@@ -37,6 +38,16 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 	
 	@Override
 	protected Object invokeInternal(Object requestObject, int version) throws Exception {
+		LOG.debug("JoinEndpoint invoked. Version: " + version);
+
+		if (version == 1) {
+			return v1(requestObject);
+		} else {
+			throw new AditInternalException("This method does not support version specified: " + version);
+		}
+	}
+	
+	protected Object v1(Object requestObject) {
 		SendDocumentResponse response = new SendDocumentResponse();
 		Calendar requestDate = Calendar.getInstance();
 		String additionalInformationForLog = null;

@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.DocumentHistory;
 import ee.adit.exception.AditCodedException;
+import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.DeleteDocumentRequest;
 import ee.adit.pojo.DeleteDocumentResponse;
@@ -47,8 +48,17 @@ public class DeleteDocumentEndpoint extends AbstractAditBaseEndpoint {
 	}
 	
 	@Override
-	@Transactional
 	protected Object invokeInternal(Object requestObject, int version) throws Exception {
+		LOG.debug("JoinEndpoint invoked. Version: " + version);
+
+		if (version == 1) {
+			return v1(requestObject);
+		} else {
+			throw new AditInternalException("This method does not support version specified: " + version);
+		}
+	}
+	
+	protected Object v1(Object requestObject) {
 		DeleteDocumentResponse response = new DeleteDocumentResponse();
 		ArrayOfMessage messages = new ArrayOfMessage();
 		Calendar requestDate = Calendar.getInstance();

@@ -14,6 +14,7 @@ import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.DocumentHistory;
 import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.exception.AditException;
+import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.Activity;
 import ee.adit.pojo.ActivityActor;
 import ee.adit.pojo.ActivitySubject;
@@ -55,9 +56,18 @@ public class GetDocumentHistoryEndpoint extends AbstractAditBaseEndpoint {
 		this.documentService = documentService;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	protected Object invokeInternal(Object requestObject, int version) throws Exception {
+		LOG.debug("JoinEndpoint invoked. Version: " + version);
+
+		if (version == 1) {
+			return v1(requestObject);
+		} else {
+			throw new AditInternalException("This method does not support version specified: " + version);
+		}
+	}
+	
+	protected Object v1(Object requestObject) {
 		GetDocumentHistoryResponse response = new GetDocumentHistoryResponse();
 		ArrayOfMessage messages = new ArrayOfMessage();
 		Calendar requestDate = Calendar.getInstance();

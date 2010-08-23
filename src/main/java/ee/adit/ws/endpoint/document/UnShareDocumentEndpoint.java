@@ -14,6 +14,7 @@ import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.DocumentHistory;
 import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.exception.AditException;
+import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.ArrayOfRecipientStatus;
 import ee.adit.pojo.Message;
@@ -53,10 +54,7 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 		this.documentService = documentService;
 	}
 	
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	protected Object invokeInternal(Object requestObject, int version) throws Exception {
+	protected Object v1(Object requestObject) {
 		UnShareDocumentResponse response = new UnShareDocumentResponse();
 		ArrayOfMessage messages = new ArrayOfMessage();
 		ArrayOfRecipientStatus statusArray = new ArrayOfRecipientStatus();
@@ -294,6 +292,17 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 
 		super.logCurrentRequest(documentId, requestDate.getTime(), additionalInformationForLog);
 		return response;
+	}
+	
+	@Override
+	protected Object invokeInternal(Object requestObject, int version) throws Exception {
+		LOG.debug("JoinEndpoint invoked. Version: " + version);
+
+		if (version == 1) {
+			return v1(requestObject);
+		} else {
+			throw new AditInternalException("This method does not support version specified: " + version);
+		}
 	}
 
 	@Override
