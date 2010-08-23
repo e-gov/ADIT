@@ -167,6 +167,7 @@ src/main/java/ee/adit/dao/NotificationTypeDAO.java -text
 src/main/java/ee/adit/dao/RemoteApplicationDAO.java -text
 src/main/java/ee/adit/dao/RequestLogDAO.java -text
 src/main/java/ee/adit/dao/UsertypeDAO.java -text
+src/main/java/ee/adit/dao/dvk/DvkDAO.java -text
 src/main/java/ee/adit/dao/pojo/AccessRestriction.java -text
 src/main/java/ee/adit/dao/pojo/AditLog.java -text
 src/main/java/ee/adit/dao/pojo/AditUser.java -text
@@ -193,7 +194,6 @@ src/main/java/ee/adit/dao/pojo/UserNotificationId.java -text
 src/main/java/ee/adit/dao/pojo/Usertype.java -text
 src/main/java/ee/adit/dao/test/TestDocumentDAO.java -text
 src/main/java/ee/adit/dvk/DeleteDocumentsFromDVKJob.java -text
-src/main/java/ee/adit/dvk/DvkDAO.java -text
 src/main/java/ee/adit/dvk/ReceiveJob.java -text
 src/main/java/ee/adit/dvk/SendJob.java -text
 src/main/java/ee/adit/dvk/UpdateStatusJob.java -text

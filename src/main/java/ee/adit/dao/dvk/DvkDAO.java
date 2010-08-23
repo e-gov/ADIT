@@ -1,4 +1,4 @@
-package ee.adit.dvk;
+package ee.adit.dao.dvk;
 
 import java.util.ArrayList;
 import java.util.List;
