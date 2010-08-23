@@ -5,16 +5,12 @@ import java.util.Iterator;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.soap.AttachmentPart;
-import javax.xml.soap.Name;
 import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPMessage;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathException;
-import javax.xml.xpath.XPathFactory;
 
 import org.apache.log4j.Logger;
 import org.exolab.castor.xml.NodeType;
@@ -27,12 +23,10 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import ee.adit.util.CustomXTeeHeader;
 import ee.adit.util.Util;
 import ee.webmedia.soap.SOAPUtil;
-import ee.webmedia.xtee.XTeeHeader;
 import ee.webmedia.xtee.XTeeUtil;
 
 /**
