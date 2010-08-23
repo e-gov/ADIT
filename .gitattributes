@@ -406,11 +406,13 @@ src/main/resources/ria-dev-tomcat/adit-servlet.xml -text
 src/main/resources/ria-dev-tomcat/adit.xsd -text
 src/main/resources/ria-dev-tomcat/jdigidoc.cfg -text
 src/main/resources/ria-dev-tomcat/log4j.xml -text
+src/main/resources/ria-dev-tomcat/nsca_send_clear.cfg -text
 src/main/resources/ria-dev-tomcat/xtee.properties -text
 src/main/resources/ria-dev/adit-servlet.xml -text
 src/main/resources/ria-dev/adit.xsd -text
 src/main/resources/ria-dev/jdigidoc.cfg -text
 src/main/resources/ria-dev/log4j.xml -text
+src/main/resources/ria-dev/nsca_send_clear.cfg -text
 src/main/resources/ria-dev/xtee.properties -text
 src/main/resources/xtee.properties -text
 src/main/webapp/META-INF/MANIFEST.MF -text
