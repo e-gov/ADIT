@@ -228,6 +228,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 	
 	/**
 	 * 
+	 * 
 	 * @param documentId
 	 * @param requestDate
 	 * @param additionalInformation
