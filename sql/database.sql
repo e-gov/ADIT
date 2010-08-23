@@ -697,29 +697,29 @@ NOORDER;
 
 /* Create indexes */
 /* All primary key indexes were created with primary key constraints */
-CREATE INDEX access_restriction_app_idx ON access_restriction (remote_application);
-CREATE INDEX access_restriction_user_idx ON access_restriction (user_code);
-CREATE INDEX adit_user_active_idx ON adit_user (active);
-CREATE INDEX adit_user_usertype_idx ON adit_user (usertype);
-CREATE INDEX document_dvkstatus_idx ON document (document_dvk_status_id);
-CREATE INDEX document_documenttype_idx ON document (type);
-CREATE INDEX document_wfstatus_idx ON document (document_wf_status_id);
-CREATE INDEX document_parent_idx ON document (parent_id);
-CREATE INDEX document_app_idx ON document (remote_application);
-CREATE INDEX document_file_docid_idx ON document_file (document_id);
-CREATE INDEX document_history_type_idx ON document_history (document_history_type);
-CREATE INDEX document_history_app_idx ON document_history (remote_application);
-CREATE INDEX document_history_docid_idx ON document_history (document_id);
-CREATE INDEX document_history_user_idx ON document_history (user_code);
-CREATE INDEX document_sharing_docid_idx ON document_sharing (document_id);
-CREATE INDEX document_sharing_dvkstatus_idx ON document_sharing (dvk_status_id);
-CREATE INDEX document_sharing_type_idx ON document_sharing (sharing_type);
-CREATE INDEX document_sharing_user_idx ON document_sharing (user_code);
-CREATE INDEX document_sharing_wfstatus_idx ON document_sharing (wf_status_id);
-CREATE INDEX signature_docid_idx ON signature (document_id);
-CREATE INDEX signature_user_idx ON signature (user_code);
-CREATE INDEX user_notification_type_idx ON user_notification (notification_type);
-CREATE INDEX user_notification_user_idx ON user_notification (user_code);
+CREATE INDEX &&ADIT_SCHEMA..access_restriction_app_idx ON &&ADIT_SCHEMA..access_restriction (remote_application) TABLESPACE &&ADIT_INDEX_TABLESPACE.;
+CREATE INDEX &&ADIT_SCHEMA..access_restriction_user_idx ON &&ADIT_SCHEMA..access_restriction (user_code) TABLESPACE &&ADIT_INDEX_TABLESPACE.;
+CREATE INDEX &&ADIT_SCHEMA..adit_user_active_idx ON &&ADIT_SCHEMA..adit_user (active) TABLESPACE &&ADIT_INDEX_TABLESPACE.;
+CREATE INDEX &&ADIT_SCHEMA..adit_user_usertype_idx ON &&ADIT_SCHEMA..adit_user (usertype) TABLESPACE &&ADIT_INDEX_TABLESPACE.;
+CREATE INDEX &&ADIT_SCHEMA..document_dvkstatus_idx ON &&ADIT_SCHEMA..document (document_dvk_status_id) TABLESPACE &&ADIT_INDEX_TABLESPACE.;
+CREATE INDEX &&ADIT_SCHEMA..document_documenttype_idx ON &&ADIT_SCHEMA..document (type) TABLESPACE &&ADIT_INDEX_TABLESPACE.;
+CREATE INDEX &&ADIT_SCHEMA..document_wfstatus_idx ON &&ADIT_SCHEMA..document (document_wf_status_id) TABLESPACE &&ADIT_INDEX_TABLESPACE.;
+CREATE INDEX &&ADIT_SCHEMA..document_parent_idx ON &&ADIT_SCHEMA..document (parent_id) TABLESPACE &&ADIT_INDEX_TABLESPACE.;
+CREATE INDEX &&ADIT_SCHEMA..document_app_idx ON &&ADIT_SCHEMA..document (remote_application) TABLESPACE &&ADIT_INDEX_TABLESPACE.;
+CREATE INDEX &&ADIT_SCHEMA..document_file_docid_idx ON &&ADIT_SCHEMA..document_file (document_id) TABLESPACE &&ADIT_INDEX_TABLESPACE.;
+CREATE INDEX &&ADIT_SCHEMA..document_history_type_idx ON &&ADIT_SCHEMA..document_history (document_history_type); TABLESPACE &&ADIT_INDEX_TABLESPACE.;
+CREATE INDEX &&ADIT_SCHEMA..document_history_app_idx ON &&ADIT_SCHEMA..document_history (remote_application) TABLESPACE &&ADIT_INDEX_TABLESPACE.;
+CREATE INDEX &&ADIT_SCHEMA..document_history_docid_idx ON &&ADIT_SCHEMA..document_history (document_id) TABLESPACE &&ADIT_INDEX_TABLESPACE.;
+CREATE INDEX &&ADIT_SCHEMA..document_history_user_idx ON &&ADIT_SCHEMA..document_history (user_code) TABLESPACE &&ADIT_INDEX_TABLESPACE.;
+CREATE INDEX &&ADIT_SCHEMA..document_sharing_docid_idx ON &&ADIT_SCHEMA..document_sharing (document_id) TABLESPACE &&ADIT_INDEX_TABLESPACE.;
+CREATE INDEX &&ADIT_SCHEMA..document_sharing_dvkstatus_idx ON &&ADIT_SCHEMA..document_sharing (dvk_status_id) TABLESPACE &&ADIT_INDEX_TABLESPACE.;
+CREATE INDEX &&ADIT_SCHEMA..document_sharing_type_idx ON &&ADIT_SCHEMA..document_sharing (sharing_type) TABLESPACE &&ADIT_INDEX_TABLESPACE.;
+CREATE INDEX &&ADIT_SCHEMA..document_sharing_user_idx ON &&ADIT_SCHEMA..document_sharing (user_code) TABLESPACE &&ADIT_INDEX_TABLESPACE.;
+CREATE INDEX &&ADIT_SCHEMA..document_sharing_wfstatus_idx ON &&ADIT_SCHEMA..document_sharing (wf_status_id) TABLESPACE &&ADIT_INDEX_TABLESPACE.;
+CREATE INDEX &&ADIT_SCHEMA..signature_docid_idx ON &&ADIT_SCHEMA..signature (document_id) TABLESPACE &&ADIT_INDEX_TABLESPACE.;
+CREATE INDEX &&ADIT_SCHEMA..signature_user_idx ON &&ADIT_SCHEMA..signature (user_code) TABLESPACE &&ADIT_INDEX_TABLESPACE.;
+CREATE INDEX &&ADIT_SCHEMA..user_notification_type_idx ON &&ADIT_SCHEMA..user_notification (notification_type) TABLESPACE &&ADIT_INDEX_TABLESPACE.;
+CREATE INDEX &&ADIT_SCHEMA..user_notification_user_idx ON &&ADIT_SCHEMA..user_notification (user_code) TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 /* End of indexes */
 
 -- ADIT user must have execute rights for dbms_crypto package
