@@ -31,65 +31,22 @@ public class AditEndpointMapping extends AbstractQNameEndpointMapping {
 		transformerFactory = TransformerFactory.newInstance();
 	}
 
-	/*
-	 * @Override protected Object getEndpointInternal(MessageContext
-	 * messageContext) throws AditInternalException { boolean
-	 * requestNameHeaderFound = false;
-	 * 
-	 * try { QName requestQName = PayloadRootUtils.getPayloadRootQName(
-	 * messageContext.getRequest().getPayloadSource(), transformerFactory);
-	 * 
-	 * LOG.debug("Resolved request payload qualified name: " + requestQName);
-	 * 
-	 * 
-	 * 
-	 * SaajSoapMessage request = (SaajSoapMessage) messageContext .getRequest();
-	 * Iterator<SoapHeaderElement> soapHeaderIterator = request
-	 * .getSoapHeader().examineAllHeaderElements();
-	 * 
-	 * QName xteeRequestNameHeaderQName = new QName(Util.XTEE_NAMESPACE,
-	 * XTEE_REQUEST_NAME_HEADER);
-	 * 
-	 * while (soapHeaderIterator.hasNext()) { SoapHeaderElement header =
-	 * soapHeaderIterator.next();
-	 * 
-	 * if (xteeRequestNameHeaderQName.equals(header.getName())) { String
-	 * requestNameHeaderValue = header.getText();
-	 * LOG.debug("Found X-Road request name header: " + requestNameHeaderValue);
-	 * requestNameHeaderFound = true; String localName =
-	 * requestQName.getLocalPart();
-	 * 
-	 * // Comapre the 'requestNameHeaderValue' with 'localName' String queryName
-	 * = extractQueryName(requestNameHeaderValue);
-	 * 
-	 * if(queryName.equalsIgnoreCase(localName)) {
-	 * 
-	 * }
-	 * 
-	 * }
-	 * 
-	 * }
-	 * 
-	 * if(!requestNameHeaderFound) { throw new
-	 * AditInternalException("X-Road header 'nimi' not found."); }
-	 * 
-	 * } catch (Exception e) {
-	 * LOG.error("Error while determining endpoint for request: ", e);
-	 * 
-	 * if(e instanceof AditInternalException) { throw (AditInternalException) e;
-	 * } }
-	 * 
-	 * return null; }
-	 */
-
-	private static String extractQueryName(String fullQueryName) {
-		String result = fullQueryName;
-
+	private static ExtractQueryNameResult extractQueryName(String fullQueryName) {
+		ExtractQueryNameResult result = new ExtractQueryNameResult();
+		result.setName(fullQueryName);
+		result.setVersion(1);
+		
 		StringTokenizer st = new StringTokenizer(fullQueryName, ".");
 
 		for (int i = 0; st.hasMoreTokens(); i++) {
 			if (i == 1) {
-				result = st.nextToken();
+				result.setName(st.nextToken());
+			} else if(i == 2) {
+				try {
+					result.setVersion(Integer.parseInt(st.nextToken()));
+				} catch (Exception e) {
+					LOG.error("Error while trying to parse X-Road request name version part: ", e);
+				}
 			} else {
 				st.nextToken();
 			}
@@ -129,10 +86,14 @@ public class AditEndpointMapping extends AbstractQNameEndpointMapping {
 							+ requestNameHeaderValue);
 					requestNameHeaderFound = true;
 					String localName = requestQName.getLocalPart();
-					String queryName = extractQueryName(requestNameHeaderValue);
+					ExtractQueryNameResult queryName = extractQueryName(requestNameHeaderValue);
 
-					if (!queryName.equalsIgnoreCase(localName)) {
-						throw new AditInternalException("X-Road query header name does not match SOAP body payload. Query name: '" + queryName + "', payload name: '" + localName + "'.");
+					if(queryName == null || queryName.getName() == null) {
+						throw new AditInternalException("X-Road query header name does not match the required format 'ametlikud-dokumendid.[methodName].v[versionNumber]': " + requestNameHeaderValue);
+					}
+					
+					if (!queryName.getName().equalsIgnoreCase(localName)) {
+						throw new AditInternalException("X-Road query header name does not match SOAP body payload. Query name: '" + queryName.getName() + "', payload name: '" + localName + "'.");
 					}
 
 				}
@@ -156,5 +117,29 @@ public class AditEndpointMapping extends AbstractQNameEndpointMapping {
 
 		return result;
 	}
+	
+}
 
+class ExtractQueryNameResult {
+	
+	private String name;
+	
+	private int version;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
+	}
+	
 }

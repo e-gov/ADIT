@@ -4,7 +4,6 @@ import java.util.Calendar;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
-import org.springframework.stereotype.Component;
 
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Usertype;
@@ -19,9 +18,10 @@ import ee.adit.service.UserService;
 import ee.adit.util.CustomXTeeHeader;
 import ee.adit.util.Util;
 import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
-import ee.webmedia.xtee.annotation.XTeeService;
 
 /**
+ * 
+ * Web-service endpoint class for "join" service
  * 
  * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
  *
