@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Usertype;
 import ee.adit.exception.AditCodedException;
+import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.JoinRequest;
 import ee.adit.pojo.JoinResponse;
@@ -35,6 +36,17 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 	@Override
 	protected Object invokeInternal(Object requestObject, int version) throws Exception {
 
+		LOG.debug("JoinEndpoint invoked. Version: " + version);
+		
+		if(version == 1) {
+			return v1(requestObject);
+		} else {
+			throw new AditInternalException("This method does not support version specified: " + version);
+		}
+		
+	}
+
+	protected Object v1(Object requestObject) throws Exception {
 		JoinResponse response = new JoinResponse();
 		ArrayOfMessage messages = new ArrayOfMessage();
 		Calendar requestDate = Calendar.getInstance();
@@ -43,7 +55,7 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 		
 		try {
 
-			LOG.debug("JoinEndpoint invoked. Version: " + version);
+			
 			JoinRequest request = (JoinRequest) requestObject;
 			CustomXTeeHeader header = this.getHeader();
 			String applicationName = header.getInfosysteem();
@@ -160,7 +172,7 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 		super.logCurrentRequest(documentId, requestDate.getTime(), additionalInformationForLog);
 		return response;
 	}
-
+	
 	@Override
 	protected Object getResultForGenericException(Exception ex) {
 		super.logError(null, Calendar.getInstance().getTime(), LogService.ErrorLogLevel_Fatal, ex.getMessage());
