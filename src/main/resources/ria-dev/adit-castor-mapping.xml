@@ -15,7 +15,7 @@
 	
 	<!-- Join -->
 	<class name="ee.adit.pojo.JoinRequest">
-		<map-to xml="Join" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="join" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
 		<field name="userType" type="java.lang.String">
 			<bind-xml name="userType" location="keha" />
 		</field>
@@ -35,7 +35,7 @@
 
 	<!-- UnJoin -->
 	<class name="ee.adit.pojo.UnJoinRequest">
-		<map-to xml="UnJoin" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="unJoin" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
 		<field name="keha" type="java.lang.String">
 			<bind-xml name="keha" />
 		</field>
@@ -52,7 +52,7 @@
 
 	<!-- GetJoined -->
 	<class name="ee.adit.pojo.GetJoinedRequest">
-		<map-to xml="GetJoined" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="getJoined" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
 		<field name="maxResults" type="java.math.BigInteger">
 			<bind-xml name="maxResults" location="keha" />
 		</field>
@@ -98,7 +98,7 @@
  	
  	<!-- GetUserInfo -->
  	<class name="ee.adit.pojo.GetUserInfoRequest">
-		<map-to xml="GetUserInfo" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="getUserInfo" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
 		<field name="userList" type="bytes">
 			<bind-xml name="userList" location="keha" />
 		</field>
@@ -157,7 +157,7 @@
  	
  	<!-- GetNotifications -->
 	<class name="ee.adit.pojo.GetNotificationsRequest">
-		<map-to xml="GetNotifications" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="getNotifications" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
 	</class>
 	
 	<class name="ee.adit.pojo.GetNotificationsResponse">
@@ -205,7 +205,7 @@
  	
  	 <!-- SetNotifications -->
 	<class name="ee.adit.pojo.SetNotificationsRequest">
-		<map-to xml="SetNotifications" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="setNotifications" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
 		<field name="notifications" type="ee.adit.pojo.ArrayOfNotification">
 			<bind-xml name="notifications" location="keha" />
 		</field>
@@ -421,7 +421,7 @@
 	
  	<!-- GetDocumentList -->
  	<class name="ee.adit.pojo.GetDocumentListRequest">
-		<map-to xml="GetDocumentList" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="getDocumentList" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
 		<field name="folder" type="java.lang.String">
 			<bind-xml name="folder" location="keha" />
 		</field>
@@ -486,7 +486,7 @@
 	
  	<!-- GetDocument -->
  	<class name="ee.adit.pojo.GetDocumentRequest">
-		<map-to xml="GetDocument" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="getDocument" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
 		<field name="documentId" type="long">
 			<bind-xml name="document_id" location="keha" />
 		</field>
@@ -516,7 +516,7 @@
  	
  	<!-- GetDocumentFile -->
  	<class name="ee.adit.pojo.GetDocumentFileRequest">
-		<map-to xml="GetDocumentFile" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="getDocumentFile" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
 		<field name="documentId" type="long">
 			<bind-xml name="document_id" location="keha" />
 		</field>
@@ -553,7 +553,7 @@
  	
  	<!-- SaveDocument -->
  	<class name="ee.adit.pojo.SaveDocumentRequest">
-		<map-to xml="SaveDocument" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="saveDocument" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
 		<field name="document" type="ee.adit.pojo.SaveDocumentRequestDocument">
 			<bind-xml name="document" location="keha" />
 		</field>
@@ -605,7 +605,7 @@
 	
  	<!-- SaveDocumentFile -->
  	<class name="ee.adit.pojo.SaveDocumentFileRequest">
-		<map-to xml="SaveDocumentFile" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="saveDocumentFile" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
 		<field name="documentId" type="java.lang.Long">
 			<bind-xml name="document_id" location="keha" />
 		</field>
@@ -638,7 +638,7 @@
  	
 	<!-- DeleteDocumentFile -->
 	<class name="ee.adit.pojo.DeleteDocumentFileRequest">
-		<map-to xml="DeleteDocumentFile" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="seleteDocumentFile" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
 		<field name="documentId" type="long">
 			<bind-xml name="document_id" location="keha" />
 		</field>
@@ -658,7 +658,7 @@
  	
 	<!-- DeleteDocument -->
 	<class name="ee.adit.pojo.DeleteDocumentRequest">
-		<map-to xml="DeleteDocument" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="deleteDocument" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
 		<field name="documentId" type="long">
 			<bind-xml name="document_id" location="keha" />
 		</field>
@@ -675,7 +675,7 @@
 	
 	<!-- DeflateDocument -->
 	<class name="ee.adit.pojo.DeflateDocumentRequest">
-		<map-to xml="DeflateDocument" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="deflateDocument" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
 		<field name="documentId" type="long">
 			<bind-xml name="document_id" location="keha" />
 		</field>
@@ -692,7 +692,7 @@
 	
 	<!-- PrepareSignature -->
 	<class name="ee.adit.pojo.PrepareSignatureRequest">
-		<map-to xml="PrepareSignature" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="prepareSignature" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
 		<field name="documentId" type="java.lang.Long">
 			<bind-xml name="document_id" location="keha" />
 		</field>
@@ -737,7 +737,7 @@
 	
 	<!-- ConfirmSignature -->
 	<class name="ee.adit.pojo.ConfirmSignatureRequest">
-		<map-to xml="ConfirmSignature" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="confirmSignature" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
 		<field name="documentId" type="java.lang.Long">
 			<bind-xml name="document_id" location="keha" />
 		</field>
@@ -765,7 +765,7 @@
  	
  	<!-- ShareDocument -->
 	<class name="ee.adit.pojo.ShareDocumentRequest">
-		<map-to xml="ShareDocument" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="shareDocument" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
 		<field name="documentId" type="java.lang.Long">
 			<bind-xml name="document_id" location="keha" />
 		</field>
@@ -794,7 +794,7 @@
  	
  	<!-- UnShareDocument -->
 	<class name="ee.adit.pojo.UnShareDocumentRequest">
-		<map-to xml="UnShareDocument" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="unShareDocument" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
 		<field name="documentId" type="java.lang.Long">
 			<bind-xml name="document_id" location="keha" />
 		</field>
@@ -817,7 +817,7 @@
  	
  	<!-- MarkDocumentViewed -->
 	<class name="ee.adit.pojo.MarkDocumentViewedRequest">
-		<map-to xml="MarkDocumentViewed" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="markDocumentViewed" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
 		<field name="documentId" type="java.lang.Long">
 			<bind-xml name="document_id" location="keha" />
 		</field>
@@ -834,7 +834,7 @@
  	
  	<!-- ModifyStatus -->
 	<class name="ee.adit.pojo.ModifyStatusRequest">
-		<map-to xml="ModifyStatus" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="modifyStatus" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
 		<field name="documentId" type="java.lang.Long">
 			<bind-xml name="document_id" location="keha" />
 		</field>
@@ -854,7 +854,7 @@
  	
  	<!-- GetDocumentHistory -->
 	<class name="ee.adit.pojo.GetDocumentHistoryRequest">
-		<map-to xml="GetDocumentHistory" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="getDocumentHistory" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
 		<field name="documentId" type="java.lang.Long">
 			<bind-xml name="document_id" location="keha" />
 		</field>
@@ -922,7 +922,7 @@
  	
  	<!-- SendDocument -->
  	<class name="ee.adit.pojo.SendDocumentRequest">
-		<map-to xml="SendDocument" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="sendDocument" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
 		<field name="documentId" type="java.lang.Long">
 			<bind-xml name="document_id" location="keha" />
 		</field>
