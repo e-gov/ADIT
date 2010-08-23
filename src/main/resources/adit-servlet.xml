@@ -510,7 +510,7 @@
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
-	<bean id="dvkDAO" class="ee.adit.dvk.DvkDAO">
+	<bean id="dvkDAO" class="ee.adit.dao.dvk.DvkDAO">
 	</bean>
 
 	<!-- Scheduled jobs -->
