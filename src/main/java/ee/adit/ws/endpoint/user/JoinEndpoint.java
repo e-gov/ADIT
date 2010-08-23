@@ -21,8 +21,11 @@ import ee.adit.util.Util;
 import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
 import ee.webmedia.xtee.annotation.XTeeService;
 
-@XTeeService(name = "join", version = "v1")
-@Component
+/**
+ * 
+ * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
+ *
+ */
 public class JoinEndpoint extends AbstractAditBaseEndpoint {
 
 	private static Logger LOG = Logger.getLogger(JoinEndpoint.class);
