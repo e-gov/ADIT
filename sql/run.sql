@@ -18,6 +18,9 @@ WHENEVER SQLERROR EXIT ROLLBACK SQL.SQLCODE
 -- Create database
 @@database.sql
 
+-- Grant rights to ADIT application user
+@@grant.sql
+
 -- Insert classificators
 @@run_dml.sql
 
