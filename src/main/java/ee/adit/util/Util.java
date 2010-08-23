@@ -41,6 +41,7 @@ import org.apache.fop.apps.MimeConstants;
 import org.apache.log4j.Logger;
 import org.castor.core.util.Base64Encoder;
 
+import ee.adit.exception.AditInternalException;
 import ee.adit.ws.endpoint.ExtractQueryNameResult;
 
 public class Util {
@@ -921,7 +922,7 @@ public class Util {
 					result.setVersion(Integer.parseInt(tmpVersion));
 				} catch (Exception e) {
 					LOG.error("Error while trying to parse X-Road request name version part: ", e);
-					//throw new AditInternalException("Error while trying to parse X-Road request name version part: " + fullQueryName);
+					throw new AditInternalException("Error while trying to parse X-Road request name version part: " + fullQueryName);
 				}
 			} else {
 				st.nextToken();
