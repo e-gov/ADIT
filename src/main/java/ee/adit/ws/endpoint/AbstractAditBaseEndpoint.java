@@ -83,7 +83,13 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 	private MessageService messageService;
 
 	/**
+	 * Unmarshals the request element and calls the endpoint implementation class.
+	 * The response object returned by the implementing class is marshalled back to XML.
 	 * 
+	 * @param requestKeha request body element 
+	 * @param responseElement response body element
+	 * @param xteeHeader X-Tee header
+	 * @throws Exception
 	 */
 	protected void invokeInternal(Document requestKeha, Element responseElement,
 			CustomXTeeHeader xteeHeader) throws Exception {
@@ -139,6 +145,13 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 		}
 	}
 
+	/**
+	 * Adds a SOAP attachment to the response message.
+	 * 
+	 * @param fileName the temporary file to add as an attachment.
+	 * @return attachment ID
+	 * @throws Exception
+	 */
 	public String addAttachment(String fileName) throws Exception {	
 		String result = null;
 		try {
