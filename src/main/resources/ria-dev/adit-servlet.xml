@@ -635,7 +635,7 @@
 	<!-- Configuration -->
 	<bean id="configuration" class="ee.adit.util.Configuration">
 		<property name="getJoinedMaxResults" value="2"/>
-		<property name="tempDir" value="/bea/user_projects/domains/arendus/tmp"/>
+		<property name="tempDir" value="/opt/apache-tomcat-6.0.29-adit/temp"/>
 		<property name="deleteTemporaryFiles" value="true"/>
 		<property name="schedulerEventTypeName" value="Minu dokumentide teavitus"/>
 		<property name="dvkResponseMessageStylesheet" value="/bea/user_projects/domains/arendus/tmp/adit/WEB-INF/DVKresponseMessage.xsl"/>
