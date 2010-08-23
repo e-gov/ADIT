@@ -9,7 +9,7 @@
 	<url>http://maven.apache.org</url>
 
 	<properties>
-		<baseDir>E:\dev\adit\adit</baseDir>
+		<baseDir>C:\development\adit\trunk</baseDir>
 		<!-- Specifies which configuration resources to bundle with the build (ie. "dev", "test", "production") -->
 		<resourceDir>dev-dev</resourceDir>
 	</properties>
