@@ -322,7 +322,7 @@
 				<prop
 					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}unShareDocument">UnShareDocumentEndpoint</prop>
 				<prop
-					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}listMethods">ListMethodsEndpoint</prop>
+					key="{http://x-tee.riik.ee/xsd/xtee.xsd}listMethods">ListMethodsEndpoint</prop>
 			</props>
 		</property>
 	</bean>
