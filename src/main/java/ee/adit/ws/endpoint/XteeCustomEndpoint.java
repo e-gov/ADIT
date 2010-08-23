@@ -56,14 +56,29 @@ import ee.webmedia.xtee.XTeeUtil;
  */
 public abstract class XteeCustomEndpoint implements MessageEndpoint {
 
+	/**
+	 * Log4J logger.
+	 */
 	private static Logger LOG = Logger.getLogger(XteeCustomEndpoint.class);
 
+	/**
+	 * Response element's suffix.
+	 */
 	public final static String RESPONSE_SUFFIX = "Response";
 
+	/**
+	 * Indicates if this is a metaservice call.
+	 */
 	private boolean metaService = false;
 
+	/**
+	 * Response message.
+	 */
 	private SaajSoapMessage responseMessage;
 
+	/**
+	 * Request message.
+	 */
 	private SaajSoapMessage requestMessage;
 
 	/**
