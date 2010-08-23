@@ -42,7 +42,6 @@ import org.apache.log4j.Logger;
 import org.castor.core.util.Base64Encoder;
 
 import ee.adit.exception.AditInternalException;
-import ee.adit.ws.endpoint.ExtractQueryNameResult;
 
 public class Util {
 
