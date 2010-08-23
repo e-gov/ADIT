@@ -366,6 +366,12 @@
 					<include>DVKresponseMessage.xsl</include>
 					<include>messages_en.properties</include>
 					<include>messages_et.properties</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<targetPath>../adit/WEB-INF</targetPath>
+				<includes>
 					<include>adit.xsd</include>
 				</includes>
 			</resource>
