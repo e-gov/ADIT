@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.NotificationType;
 import ee.adit.exception.AditException;
+import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.Message;
 import ee.adit.pojo.Notification;
@@ -38,6 +39,16 @@ public class SetNotificationsEndpoint extends AbstractAditBaseEndpoint {
 
 	@Override
 	protected Object invokeInternal(Object requestObject, int version) throws Exception {
+		LOG.debug("JoinEndpoint invoked. Version: " + version);
+
+		if (version == 1) {
+			return v1(requestObject);
+		} else {
+			throw new AditInternalException("This method does not support version specified: " + version);
+		}
+	}
+	
+	protected Object v1(Object requestObject) {
 		SetNotificationsResponse response = new SetNotificationsResponse();
 		ArrayOfMessage messages = new ArrayOfMessage();
 		Calendar requestDate = Calendar.getInstance();
@@ -141,7 +152,7 @@ public class SetNotificationsEndpoint extends AbstractAditBaseEndpoint {
 		super.logCurrentRequest(null, requestDate.getTime(), additionalInformationForLog);
 		return response;
 	}
-
+	
 	@Override
 	protected Object getResultForGenericException(Exception ex) {
 		super.logError(null, Calendar.getInstance().getTime(), LogService.ErrorLogLevel_Fatal, ex.getMessage());

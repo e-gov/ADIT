@@ -43,8 +43,18 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 	
 	@Override
 	protected Object invokeInternal(Object requestObject, int version) throws Exception {
-		LOG.debug("GetJoinedEndpoint.v1 invoked.");
+
+		LOG.debug("JoinEndpoint invoked. Version: " + version);
 		
+		if(version == 1) {
+			return v1(requestObject);
+		} else {
+			throw new AditInternalException("This method does not support version specified: " + version);
+		}
+		
+	}
+	
+	protected Object v1(Object requestObject) {
 		GetJoinedResponse response = new GetJoinedResponse();
 		ArrayOfMessage messages = new ArrayOfMessage();
 		Calendar requestDate = Calendar.getInstance();

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.exception.AditException;
+import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.ArrayOfEmailAddress;
 import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.ArrayOfNotification;
@@ -39,22 +40,31 @@ public class GetNotificationsEndpoint extends AbstractAditBaseEndpoint {
 
 	@Override
 	protected Object invokeInternal(Object requestObject, int version) throws Exception {
+		LOG.debug("JoinEndpoint invoked. Version: " + version);
+
+		if (version == 1) {
+			return v1(requestObject);
+		} else {
+			throw new AditInternalException("This method does not support version specified: " + version);
+		}
+	}
+
+	protected Object v1(Object requestObject) {
 		GetNotificationsResponse response = new GetNotificationsResponse();
 		ArrayOfMessage messages = new ArrayOfMessage();
 		Calendar requestDate = Calendar.getInstance();
 		String additionalInformationForLog = null;
-		
+
 		try {
-			LOG.debug("GetNotificationsEndpoint.v1 invoked.");
 			CustomXTeeHeader header = this.getHeader();
 			String applicationName = header.getInfosysteem();
-			
+
 			// Log request
 			Util.printHeader(header);
 
 			// Check header for required fields
 			checkHeader(header);
-			
+
 			// Kontrollime, kas päringu käivitanud infosüsteem on ADITis
 			// registreeritud
 			boolean applicationRegistered = this.getUserService().isApplicationRegistered(applicationName);
@@ -75,28 +85,29 @@ public class GetNotificationsEndpoint extends AbstractAditBaseEndpoint {
 			String userCode = ((this.getHeader().getAllasutus() != null) && (this.getHeader().getAllasutus().length() > 0)) ? this.getHeader().getAllasutus() : this.getHeader().getIsikukood();
 			AditUser user = this.getUserService().getUserByID(userCode);
 			if (user == null) {
-				String errorMessage = this.getMessageSource().getMessage("user.nonExistent", new Object[] { userCode },	Locale.ENGLISH);
+				String errorMessage = this.getMessageSource().getMessage("user.nonExistent", new Object[] { userCode }, Locale.ENGLISH);
 				throw new AditException(errorMessage);
 			}
 
-			// Kontrollime, et kasutajakonto ligipääs poleks peatatud (kasutaja lahkunud)
+			// Kontrollime, et kasutajakonto ligipääs poleks peatatud (kasutaja
+			// lahkunud)
 			if ((user.getActive() == null) || !user.getActive()) {
 				String errorMessage = this.getMessageSource().getMessage("user.inactive", new Object[] { userCode }, Locale.ENGLISH);
 				throw new AditException(errorMessage);
 			}
-			
+
 			// Check whether or not the application has rights to
 			// read current user's data.
 			int applicationAccessLevelForUser = userService.getAccessLevelForUser(applicationName, user);
-			if(applicationAccessLevelForUser < 1) {
+			if (applicationAccessLevelForUser < 1) {
 				String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.forUser.read", new Object[] { applicationName, user.getUserCode() }, Locale.ENGLISH);
 				throw new AditException(errorMessage);
 			}
-			
+
 			// Set notification data
 			ArrayOfNotification notificationList = this.getUserService().getNotifications(user.getUserCode());
 			response.setNotifications(notificationList);
-			
+
 			// Get notification overall status and e-mail list
 			// from 'riigiportaal' database
 			NotificationStatus notificationStatus = StatePortalClient.getNotificationStatus(user.getUserCode(), this.getConfiguration().getSchedulerEventTypeName());
@@ -110,9 +121,9 @@ public class GetNotificationsEndpoint extends AbstractAditBaseEndpoint {
 					response.setAddressList(addressList);
 				}
 			}
-			
-			messages.addMessage(new Message("en", this.getMessageSource().getMessage("request.getNotifications.success", new Object[] { }, Locale.ENGLISH)));
-			
+
+			messages.addMessage(new Message("en", this.getMessageSource().getMessage("request.getNotifications.success", new Object[] {}, Locale.ENGLISH)));
+
 			// Set response messages
 			response.setMessages(messages);
 			response.setSuccess(true);
@@ -120,21 +131,21 @@ public class GetNotificationsEndpoint extends AbstractAditBaseEndpoint {
 			LOG.error("Exception: ", e);
 			additionalInformationForLog = "Request failed: " + e.getMessage();
 			super.logError(null, requestDate.getTime(), LogService.ErrorLogLevel_Error, e.getMessage());
-			
+
 			response.setSuccess(false);
 			ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
-			
-			if(e instanceof AditException) {
+
+			if (e instanceof AditException) {
 				LOG.debug("Adding exception message to response object.");
 				arrayOfMessage.getMessage().add(new Message("en", e.getMessage()));
 			} else {
 				arrayOfMessage.getMessage().add(new Message("en", "Service error"));
 			}
-			
+
 			LOG.debug("Adding exception messages to response object.");
 			response.setMessages(arrayOfMessage);
 		}
-		
+
 		super.logCurrentRequest(null, requestDate.getTime(), additionalInformationForLog);
 		return response;
 	}
@@ -149,17 +160,17 @@ public class GetNotificationsEndpoint extends AbstractAditBaseEndpoint {
 		response.setMessages(arrayOfMessage);
 		return response;
 	}
-	
+
 	private void checkHeader(CustomXTeeHeader header) throws Exception {
 		String errorMessage = null;
-		if(header != null) {
-			if(header.getIsikukood() == null) {
+		if (header != null) {
+			if (header.getIsikukood() == null) {
 				errorMessage = this.getMessageSource().getMessage("request.header.undefined.personalCode", new Object[] {}, Locale.ENGLISH);
 				throw new AditException(errorMessage);
-			} else if(header.getInfosysteem() == null) {
+			} else if (header.getInfosysteem() == null) {
 				errorMessage = this.getMessageSource().getMessage("request.header.undefined.systemName", new Object[] {}, Locale.ENGLISH);
 				throw new AditException(errorMessage);
-			} else if(header.getAsutus() == null) {
+			} else if (header.getAsutus() == null) {
 				errorMessage = this.getMessageSource().getMessage("request.header.undefined.institution", new Object[] {}, Locale.ENGLISH);
 				throw new AditException(errorMessage);
 			}
