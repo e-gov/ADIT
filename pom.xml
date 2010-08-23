@@ -361,6 +361,9 @@
 				<targetPath>../adit/WEB-INF/classes</targetPath>
 				<includes>
 					<include>adit-castor-mapping.xml</include>
+					<include>DVKresponseMessage.xsl</include>
+					<include>messages_en.properties</include>
+					<include>messages_et.properties</include>
 				</includes>
 			</resource>
 			<resource>
