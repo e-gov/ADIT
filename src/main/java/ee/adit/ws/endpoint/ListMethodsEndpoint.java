@@ -5,7 +5,7 @@ import ee.adit.pojo.ListMethodsResponse;
 public class ListMethodsEndpoint extends AbstractAditBaseEndpoint {
 	
 	@Override
-	protected Object invokeInternal(Object requestObject) throws Exception {
+	protected Object invokeInternal(Object requestObject, int version) throws Exception {
 		return getResponse();
 	}
 	
