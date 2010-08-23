@@ -707,7 +707,7 @@ CREATE INDEX &&ADIT_SCHEMA..document_wfstatus_idx ON &&ADIT_SCHEMA..document (do
 CREATE INDEX &&ADIT_SCHEMA..document_parent_idx ON &&ADIT_SCHEMA..document (parent_id) TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 CREATE INDEX &&ADIT_SCHEMA..document_app_idx ON &&ADIT_SCHEMA..document (remote_application) TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 CREATE INDEX &&ADIT_SCHEMA..document_file_docid_idx ON &&ADIT_SCHEMA..document_file (document_id) TABLESPACE &&ADIT_INDEX_TABLESPACE.;
-CREATE INDEX &&ADIT_SCHEMA..document_history_type_idx ON &&ADIT_SCHEMA..document_history (document_history_type); TABLESPACE &&ADIT_INDEX_TABLESPACE.;
+CREATE INDEX &&ADIT_SCHEMA..document_history_type_idx ON &&ADIT_SCHEMA..document_history (document_history_type) TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 CREATE INDEX &&ADIT_SCHEMA..document_history_app_idx ON &&ADIT_SCHEMA..document_history (remote_application) TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 CREATE INDEX &&ADIT_SCHEMA..document_history_docid_idx ON &&ADIT_SCHEMA..document_history (document_id) TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 CREATE INDEX &&ADIT_SCHEMA..document_history_user_idx ON &&ADIT_SCHEMA..document_history (user_code) TABLESPACE &&ADIT_INDEX_TABLESPACE.;
