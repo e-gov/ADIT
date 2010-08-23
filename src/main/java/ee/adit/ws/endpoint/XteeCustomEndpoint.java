@@ -77,7 +77,7 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 	@SuppressWarnings("unchecked")
 	/**
 	 * The entry point for web-service call. Extracts the X-Road operation node and passes it to the 
-	 * {@link #getResponse(CustomXTeeHeader, Document, SOAPMessage, SOAPMessage, Document)} method.
+	 * {@link #getResponse(CustomXTeeHeader, Document, SOAPMessage, SOAPMessage, Document)} method for futher processing.
 	 * 
 	 * @param messageContext the message context
 	 * @throws Exception if an exception occurs while processing the request. 
