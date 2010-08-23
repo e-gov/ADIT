@@ -27,3 +27,6 @@ WHENEVER SQLERROR EXIT ROLLBACK SQL.SQLCODE
 -- Insert classificators
 @@run_dml.sql
 
+commit;
+
+PROMPT 'ADIT database successfully created.'
