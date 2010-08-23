@@ -62,6 +62,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 	private Unmarshaller unmarshaller;
 
 	/**
+	 * TODO: remove - all messages should come from one place - MessageService.
 	 * Message source - provides locale based (error) messages.
 	 */
 	private MessageSource messageSource;
@@ -81,6 +82,9 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 	 */
 	private MessageService messageService;
 
+	/**
+	 * 
+	 */
 	protected void invokeInternal(Document requestKeha, Element responseElement,
 			CustomXTeeHeader xteeHeader) throws Exception {
 		
