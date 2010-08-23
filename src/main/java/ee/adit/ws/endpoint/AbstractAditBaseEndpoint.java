@@ -253,11 +253,11 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 	}
 	
 	/**
+	 * Log a downloading request - a request that downloads file data.
 	 * 
-	 * 
-	 * @param documentId
-	 * @param fileId
-	 * @param requestDate
+	 * @param documentId the ID of the document associated with the file.
+	 * @param fileId the ID of the file being downloaded.
+	 * @param requestDate time of the request
 	 */
 	public void logDownloadRequest(Long documentId, Long fileId, Date requestDate) {
 		try {
@@ -277,6 +277,12 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 		}
 	}
 	
+	/**
+	 * Log metadata request.
+	 * 
+	 * @param documentId the ID of the document queried
+	 * @param requestDate time of the request
+	 */
 	public void logMetadataRequest(Long documentId, Date requestDate) {
 		try {
 			if(this.header != null) {
@@ -294,6 +300,14 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 		}
 	}
 	
+	/**
+	 * Log an error.
+	 * 
+	 * @param documentId the document associated with the error.
+	 * @param errorDate the time of the error
+	 * @param level error severity (WARN, ERROR, FATAL)
+	 * @param errorMessage error message
+	 */
 	public void logError(Long documentId, Date errorDate, String level, String errorMessage) {
 		try {
 			if(this.header != null) {
@@ -313,64 +327,133 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 		}
 	}
 	
-	// Abstract method for implementing by subclasses
+	/**
+	 * Abstract method to be implemented by the subclasses. Invokes the endpoint logic.
+	 * 
+	 * @param requestObject request object
+	 * @param version version of the service method
+	 * @return response object
+	 * @throws Exception
+	 */
 	protected abstract Object invokeInternal(Object requestObject, int version)
 			throws Exception;
 	
+	/**
+	 * Generates error messages, creates a response object and adds error messages to it.
+	 * 
+	 * @param ex the exception for which error messages have to be created
+	 * @return response object
+	 */
 	protected abstract Object getResultForGenericException(Exception ex);
 	
+	/**
+	 * Retreives the marshaller.
+	 * @return
+	 */
 	public Marshaller getMarshaller() {
 		return marshaller;
 	}
 
+	/**
+	 * Sets the marshaller.
+	 * @return
+	 */
 	public void setMarshaller(Marshaller marshaller) {
 		this.marshaller = marshaller;
 	}
 
+	/**
+	 * Retreives the unmarshaller.
+	 * @return
+	 */
 	public Unmarshaller getUnmarshaller() {
 		return unmarshaller;
 	}
-
+	
+	/**
+	 * Sets the unmarshaller.
+	 * @return
+	 */
 	public void setUnmarshaller(Unmarshaller unmarshaller) {
 		this.unmarshaller = unmarshaller;
 	}
 
+	/**
+	 * Retreives the X-Tee header.
+	 * @return
+	 */
 	public CustomXTeeHeader getHeader() {
 		return header;
 	}
 
+	/**
+	 * Sets the X-Tee header.
+	 * @return
+	 */
 	public void setHeader(CustomXTeeHeader header) {
 		this.header = header;
 	}
 
+	/**
+	 * Retreives the message source.
+	 * @return
+	 */
 	public MessageSource getMessageSource() {
 		return messageSource;
 	}
 
+	/**
+	 * Sets the message source.
+	 * @return
+	 */
 	public void setMessageSource(MessageSource messageSource) {
 		this.messageSource = messageSource;
 	}
 
+	/**
+	 * Retreives the configuration.
+	 * @return
+	 */
 	public Configuration getConfiguration() {
 		return configuration;
 	}
 
+	/**
+	 * Sets the configuration.
+	 * @return
+	 */
 	public void setConfiguration(Configuration configuration) {
 		this.configuration = configuration;
 	}
 
+	/**
+	 * Retreives the log service.
+	 * @return
+	 */
 	public LogService getLogService() {
 		return logService;
 	}
 
+	/**
+	 * Sets the log service.
+	 * @return
+	 */
 	public void setLogService(LogService logService) {
 		this.logService = logService;
 	}
 	
+	/**
+	 * Retreives the message service.
+	 * @return
+	 */
 	public MessageService getMessageService() {
 		return messageService;
 	}
 
+	/**
+	 * Sets the message service.
+	 * @return
+	 */
 	public void setMessageService(MessageService messageService) {
 		this.messageService = messageService;
 	}
