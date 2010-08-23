@@ -405,6 +405,16 @@ src/main/resources/log4j.xml -text
 src/main/resources/messages_en.properties -text
 src/main/resources/messages_et.properties -text
 src/main/resources/nsca_send_clear.cfg -text
+src/main/resources/ria-dev-tomcat/DVKresponseMessage.xsl -text
+src/main/resources/ria-dev-tomcat/adit-castor-mapping.xml -text
+src/main/resources/ria-dev-tomcat/adit-servlet.xml -text
+src/main/resources/ria-dev-tomcat/adit.xsd -text
+src/main/resources/ria-dev-tomcat/jdigidoc.cfg -text
+src/main/resources/ria-dev-tomcat/log4j.xml -text
+src/main/resources/ria-dev-tomcat/messages_en.properties -text
+src/main/resources/ria-dev-tomcat/messages_et.properties -text
+src/main/resources/ria-dev-tomcat/web.xml -text
+src/main/resources/ria-dev-tomcat/xtee.properties -text
 src/main/resources/ria-dev/DVKresponseMessage.xsl -text
 src/main/resources/ria-dev/adit-castor-mapping.xml -text
 src/main/resources/ria-dev/adit-servlet.xml -text
