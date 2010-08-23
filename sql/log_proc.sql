@@ -23,6 +23,7 @@ CREATE OR REPLACE PACKAGE ADITLOG AS
     operation IN VARCHAR2
   );
   
+  /*
   PROCEDURE LOG_DOCUMENT_DVK_STATUS (
     document_dvk_status_new IN document_dvk_status%ROWTYPE,
     document_dvk_status_old IN document_dvk_status%ROWTYPE,
@@ -106,6 +107,7 @@ CREATE OR REPLACE PACKAGE ADITLOG AS
     usertype_old IN usertype%ROWTYPE,
     operation IN VARCHAR2
   );
+  */
 
 END ADITLOG;
 /
