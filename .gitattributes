@@ -2,10 +2,6 @@
 doc/dvk_test/data.xml -text
 doc/dvk_test/insert_dhl_message.sql -text
 doc/environmentSetup.txt -text
-doc/javadoc/allclasses-frame.html -text
-doc/javadoc/allclasses-noframe.html -text
-doc/javadoc/constant-values.html -text
-doc/javadoc/deprecated-list.html -text
 doc/javadoc/ee/adit/dao/AccessRestrictionDAO.html -text
 doc/javadoc/ee/adit/dao/AditUserDAO.html -text
 doc/javadoc/ee/adit/dao/DocumentDAO.html -text
@@ -438,7 +434,6 @@ doc/javadoc/ee/adit/ws/endpoint/user/package-frame.html -text
 doc/javadoc/ee/adit/ws/endpoint/user/package-summary.html -text
 doc/javadoc/ee/adit/ws/endpoint/user/package-tree.html -text
 doc/javadoc/ee/adit/ws/endpoint/user/package-use.html -text
-doc/javadoc/help-doc.html -text
 doc/javadoc/index-files/index-1.html -text
 doc/javadoc/index-files/index-10.html -text
 doc/javadoc/index-files/index-11.html -text
@@ -464,14 +459,7 @@ doc/javadoc/index-files/index-6.html -text
 doc/javadoc/index-files/index-7.html -text
 doc/javadoc/index-files/index-8.html -text
 doc/javadoc/index-files/index-9.html -text
-doc/javadoc/index.html -text
-doc/javadoc/overview-frame.html -text
-doc/javadoc/overview-summary.html -text
-doc/javadoc/overview-tree.html -text
-doc/javadoc/package-list -text
 doc/javadoc/resources/inherit.gif -text
-doc/javadoc/serialized-form.html -text
-doc/javadoc/stylesheet.css -text
 doc/redeploy_adit.cmd -text
 doc/testMessages/getDocument.v1.xml -text
 doc/testMessages/getDocumentFile.v1/error_deleted_user.xml -text
