@@ -52,7 +52,8 @@ import ee.webmedia.xtee.XTeeHeader;
 import ee.webmedia.xtee.XTeeUtil;
 
 /**
- * Base class for web-service endpoints. Provides basic 
+ * Base class for web-service endpoints. Wraps the X-Road specific operations and data manipulation.
+ * Web-service endpoints extending this class will not have to be aware of the X-Road specific SOAP envelope.
  * 
  * The class is a modified version of the XRoad java library class 
  * {@code ee.webmedia.xtee.endpoint.AbstractXTeeBaseEndpoint}. 
@@ -151,6 +152,13 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 	}
 	
 	
+	/**
+	 * Parses the X-Road headers.
+	 * 
+	 * @param paringMessage the request message
+	 * @return X-Road header object
+	 * @throws SOAPException
+	 */
 	@SuppressWarnings("unchecked")
 	private CustomXTeeHeader parseXteeHeader(SOAPMessage paringMessage) throws SOAPException {
 		CustomXTeeHeader pais = new CustomXTeeHeader();
@@ -165,8 +173,14 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 		return pais;
 	}
 	
+	/**
+	 * Parses the query - constructs a new {@link} Document} from the X-Road request body element.
+	 * 
+	 * @param queryMsg query message
+	 * @return document representing X-Road specific query data
+	 * @throws Exception
+	 */
 	private Document parseQuery(SOAPMessage queryMsg) throws Exception {
-		//Node bodyNode = SOAPUtil.getNodeByXPath(queryMsg.getSOAPBody().getFirstChild(), "//keha");
 		Node bodyNode = findBodyNode(queryMsg.getSOAPBody());
 
 		if(bodyNode == null) {
@@ -208,6 +222,18 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 		return result;
 	}
 	
+	/**
+	 * Copies the request query and headers to the response message, invokes the underlying web-service endpoint in 
+	 * {@link AbstractAditBaseEndpoint}. If the query is a metaservice (listMethods) query, then the query and 
+	 * headers are not copied.
+	 * 
+	 * @param header X-Road header
+	 * @param query query document
+	 * @param responseMessage response message
+	 * @param requestMessage request message
+	 * @param operationNode X-Road specific operation node
+	 * @throws Exception
+	 */
 	@SuppressWarnings("unchecked")
 	private void getResponse(CustomXTeeHeader header, Document query, SOAPMessage responseMessage, SOAPMessage requestMessage, Document operationNode) throws Exception {
 		SOAPElement teenusElement = createXteeMessageStructure(requestMessage, responseMessage);
@@ -227,6 +253,13 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param requestMessage
+	 * @param responseMessage
+	 * @return
+	 * @throws Exception
+	 */
 	private SOAPElement createXteeMessageStructure(SOAPMessage requestMessage, SOAPMessage responseMessage) throws Exception {
 		SOAPUtil.addBaseMimeHeaders(responseMessage);
 		SOAPUtil.addBaseNamespaces(responseMessage);
