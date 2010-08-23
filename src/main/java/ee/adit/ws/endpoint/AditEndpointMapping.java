@@ -97,7 +97,6 @@ public class AditEndpointMapping extends AbstractQNameEndpointMapping {
 					if (!queryName.getName().equalsIgnoreCase(localName)) {
 						throw new AditInternalException("X-Road query header name does not match SOAP body payload. Query name: '" + queryName.getName() + "', payload name: '" + localName + "'.");
 					}
-
 				}
 			}
 
