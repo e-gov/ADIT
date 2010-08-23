@@ -678,8 +678,8 @@
 	      		<ref bean="notificationTrigger"/>
 	      		<ref bean="temporaryFolderCleanerTrigger"/>
 	      		<ref bean="DeleteDocumentsFromDVKJobTrigger"/>
-	      		-->
 	      		<ref bean="UserSyncJobTrigger"/>
+	      		-->
 	    	</list>
 	  	</property>
 	</bean>
