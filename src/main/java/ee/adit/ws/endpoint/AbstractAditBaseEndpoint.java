@@ -67,9 +67,6 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 			Source requestObjectSource = new DOMSource(requestKeha);
 			Object requestObject = null;
 			
-			// Check if the request name matches the query
-			String queryName = this.getHeader().getNimi();
-			
 			try {
 				requestObject = this.getUnmarshaller().unmarshal(requestObjectSource);
 			} catch (Exception e) {
