@@ -43,7 +43,7 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 		
 		try {
 
-			LOG.debug("JoinEndpoint.v1 invoked.");
+			LOG.debug("JoinEndpoint invoked. Version: " + version);
 			JoinRequest request = (JoinRequest) requestObject;
 			CustomXTeeHeader header = this.getHeader();
 			String applicationName = header.getInfosysteem();
