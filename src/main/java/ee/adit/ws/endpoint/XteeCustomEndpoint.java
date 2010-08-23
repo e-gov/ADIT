@@ -267,6 +267,14 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 		return responseMessage.getSOAPBody().addChildElement(teenusElement.getLocalName() + RESPONSE_SUFFIX, teenusElement.getPrefix(), teenusElement.getNamespaceURI());
 	}
 	
+	/**
+	 * Copies the request data to the response message - the request message's <keha> element contents is copied to 
+	 * the response message's <paring> element.
+	 * 
+	 * @param paring request data
+	 * @param response response 
+	 * @throws Exception
+	 */
 	private void copyParing(Document paring, Node response) throws Exception {
 		Node paringElement = response.appendChild(response.getOwnerDocument().createElement("paring"));
 		Node kehaNode = response.getOwnerDocument().importNode(paring.getDocumentElement(), true);
@@ -281,6 +289,12 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 	    }
 	}
 	
+	/**
+	 * 
+	 * @param pais
+	 * @param message
+	 * @throws SOAPException
+	 */
 	private void addHeader(CustomXTeeHeader pais, SOAPMessage message) throws SOAPException {
 		XTeeUtil.addXteeNamespace(message);
 		for (QName qname : pais.getElemendid().keySet()) {
@@ -303,15 +317,14 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 	}
 
 	/**
-	 * Method which must implement the service logic, receives <code>requestKeha</code>, <code>responseKeha<code>
-	 * and <code>CustomXTeeHeader</code>
-	 * @param requestKeha query body
-	 * @param responseKeha response body
-	 * @param xteeHeader
+	 * If true then SOAP attachment headers will not be corrected before
+	 * sending query response. This is useful when returning original
+	 * attachments within an error message.
 	 */
-	protected abstract void invokeInternal(Document requestKeha, Element responseElement, CustomXTeeHeader xTeeHeader) throws Exception;
-
-
+	public void setIgnoreAttachmentHeaders(boolean ignoreAttachmentHeaders) {
+		this.ignoreAttachmentHeaders = ignoreAttachmentHeaders;
+	}
+	
 	public SoapMessage getResponseMessage() {
 		return responseMessage;
 	}
@@ -320,11 +333,9 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 		return requestMessage;
 	}
 
-
 	public void setResponseMessage(SaajSoapMessage responseMessage) {
 		this.responseMessage = responseMessage;
 	}
-
 
 	public void setRequestMessage(SaajSoapMessage requestMessage) {
 		this.requestMessage = requestMessage;
@@ -333,14 +344,15 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 	public boolean isIgnoreAttachmentHeaders() {
 		return ignoreAttachmentHeaders;
 	}
-
+	
 	/**
-	 * If true then SOAP attachment headers will not be corrected before
-	 * sending query response. This is useful when returning original
-	 * attachments within an error message.
+	 * Method which must implement the service logic, receives <code>requestKeha</code>, <code>responseKeha<code>
+	 * and <code>CustomXTeeHeader</code>
+	 * 
+	 * @param requestKeha query body
+	 * @param responseKeha response body
+	 * @param xteeHeader query header
 	 */
-	public void setIgnoreAttachmentHeaders(boolean ignoreAttachmentHeaders) {
-		this.ignoreAttachmentHeaders = ignoreAttachmentHeaders;
-	}
-
+	protected abstract void invokeInternal(Document requestKeha, Element responseElement, CustomXTeeHeader xTeeHeader) throws Exception;
+	
 }
