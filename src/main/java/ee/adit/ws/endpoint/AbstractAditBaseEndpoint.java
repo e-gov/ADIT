@@ -32,6 +32,13 @@ import ee.adit.util.CustomXTeeHeader;
 import ee.adit.util.XRoadQueryName;
 import ee.adit.util.Util;
 
+/**
+ * Base class for web-service endpoints. Wraps XML marshalling / unmarshalling. 
+ * Provides methods for request logging and SOAP attacments.
+ * 
+ * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
+ * @author Jaak Lember, OÜ Interinx, jaak@interinx.com
+ */
 public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 
 	private static Logger LOG = Logger.getLogger(AbstractAditBaseEndpoint.class);
@@ -102,7 +109,6 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 		} else {
 			LOG.error("Response object not initialized.");
 		}
-
 	}
 
 	public String addAttachment(String fileName) throws Exception {	
