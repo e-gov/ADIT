@@ -105,10 +105,10 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 								
 								String message =  null;
 								if(userReactivated) {
-									message = this.getMessageSource().getMessage("request.join.success.userReactivated", new Object[] { request.getUserType() }, Locale.ENGLISH);
+									message = this.getMessageService().getMessage("request.join.success.userReactivated", new Object[] { request.getUserType() }, Locale.ENGLISH);
 									messages.setMessage(this.getMessageService().getMessages("request.join.success.userReactivated", new Object[] { request.getUserType() }));
 								} else {
-									message = this.getMessageSource().getMessage("request.join.success.userModified", new Object[] { request.getUserType() }, Locale.ENGLISH);
+									message = this.getMessageService().getMessage("request.join.success.userModified", new Object[] { request.getUserType() }, Locale.ENGLISH);
 									messages.setMessage(this.getMessageService().getMessages("request.join.success.userModified", new Object[] { request.getUserType() }));
 								}
 								
@@ -124,7 +124,7 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 							LOG.info("Adding new user.");
 							userService.addUser(request.getUserName(), usertype, header.getAllasutus(), header.getIsikukood());
 							response.setSuccess(new Success(true));
-							String message = this.getMessageSource().getMessage("request.join.success.userAdded", new Object[] { request.getUserType() }, Locale.ENGLISH);
+							String message = this.getMessageService().getMessage("request.join.success.userAdded", new Object[] { request.getUserType() }, Locale.ENGLISH);
 							additionalInformationForLog = "SUCCESS: " + message;
 							messages.setMessage(this.getMessageService().getMessages("request.join.success.userAdded", new Object[] { request.getUserType() }));
 						}

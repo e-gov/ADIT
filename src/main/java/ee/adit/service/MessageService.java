@@ -49,6 +49,10 @@ public class MessageService {
 		return result;
 	}
 	
+	public String getMessage(String code, Object[] parameters, Locale locale) {
+		return this.getMessageSource().getMessage(code, new Object[] { parameters }, locale);
+	}
+	
 	public List<Message> getMessages(AditCodedException e) {
 		return getMessages(e.getMessage(), e.getParameters());
 	}

@@ -41,20 +41,44 @@ import ee.adit.util.Util;
  */
 public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 
+	/**
+	 * Log4J logger.
+	 */
 	private static Logger LOG = Logger.getLogger(AbstractAditBaseEndpoint.class);
 	
+	/**
+	 * X-Tee header.
+	 */
 	private CustomXTeeHeader header;
 
+	/**
+	 * Marshaller - required to convert Java objects to XML.
+	 */
 	private Marshaller marshaller;
 
+	/**
+	 * Unmarshaller - required to convert XML to Java objects.
+	 */
 	private Unmarshaller unmarshaller;
 
+	/**
+	 * Message source - provides locale based (error) messages.
+	 */
 	private MessageSource messageSource;
 
+	/**
+	 * Configuration.
+	 */
 	private Configuration configuration;
 	
+	/**
+	 * Logging service.
+	 */
 	private LogService logService;
 	
+	/**
+	 * MessageService.
+	 */
 	private MessageService messageService;
 
 	protected void invokeInternal(Document requestKeha, Element responseElement,
