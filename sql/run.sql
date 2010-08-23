@@ -29,4 +29,4 @@ WHENEVER SQLERROR EXIT ROLLBACK SQL.SQLCODE
 
 commit;
 
-PROMPT 'ADIT database successfully created.'
+PROMPT ADIT database successfully created.
