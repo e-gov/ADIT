@@ -357,6 +357,13 @@
 				</includes>
 			</resource>
 			<resource>
+				<directory>src/main/resources</directory>
+				<targetPath>../adit/WEB-INF/classes</targetPath>
+				<includes>
+					<include>adit-castor-mapping.xml</include>
+				</includes>
+			</resource>
+			<resource>
 				<directory>${baseDir}/sql</directory>
 				<filtering>false</filtering>
 				<targetPath>../adit/sql</targetPath>
