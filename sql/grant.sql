@@ -20,4 +20,4 @@ GRANT select, insert, update ON &&ADIT_SCHEMA..REQUEST_LOG TO &&ADIT_APP.;
 GRANT select, insert, update ON &&ADIT_SCHEMA..SIGNATURE TO &&ADIT_APP.;
 GRANT select, insert, update ON &&ADIT_SCHEMA..USER_NOTIFICATION TO &&ADIT_APP.;
 GRANT select, insert, update ON &&ADIT_SCHEMA..USERTYPE TO &&ADIT_APP.;
-GRANT execute ON  TO &&ADIT_SCHEMA..deflate_file TO &&ADIT_APP.;
+GRANT execute ON &&ADIT_SCHEMA..deflate_file TO &&ADIT_APP.;
