@@ -17,7 +17,7 @@ import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 
 import ee.adit.exception.AditInternalException;
-import ee.adit.util.ExtractQueryNameResult;
+import ee.adit.util.XRoadQueryName;
 import ee.adit.util.Util;
 
 public class AditEndpointMapping extends AbstractQNameEndpointMapping {
@@ -63,7 +63,7 @@ public class AditEndpointMapping extends AbstractQNameEndpointMapping {
 							+ requestNameHeaderValue);
 					requestNameHeaderFound = true;
 					String localName = requestQName.getLocalPart();
-					ExtractQueryNameResult queryName = Util.extractQueryName(requestNameHeaderValue);
+					XRoadQueryName queryName = Util.extractQueryName(requestNameHeaderValue);
 
 					if(queryName == null || queryName.getName() == null) {
 						throw new AditInternalException("X-Road query header name does not match the required format 'ametlikud-dokumendid.[methodName].v[versionNumber]': " + requestNameHeaderValue);

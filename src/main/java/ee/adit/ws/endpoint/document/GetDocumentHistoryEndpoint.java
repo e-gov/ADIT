@@ -57,7 +57,7 @@ public class GetDocumentHistoryEndpoint extends AbstractAditBaseEndpoint {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	protected Object invokeInternal(Object requestObject) throws Exception {
+	protected Object invokeInternal(Object requestObject, int version) throws Exception {
 		GetDocumentHistoryResponse response = new GetDocumentHistoryResponse();
 		ArrayOfMessage messages = new ArrayOfMessage();
 		Calendar requestDate = Calendar.getInstance();

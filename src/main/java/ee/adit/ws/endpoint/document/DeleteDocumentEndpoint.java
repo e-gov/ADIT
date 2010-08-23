@@ -48,7 +48,7 @@ public class DeleteDocumentEndpoint extends AbstractAditBaseEndpoint {
 	
 	@Override
 	@Transactional
-	protected Object invokeInternal(Object requestObject) throws Exception {
+	protected Object invokeInternal(Object requestObject, int version) throws Exception {
 		DeleteDocumentResponse response = new DeleteDocumentResponse();
 		ArrayOfMessage messages = new ArrayOfMessage();
 		Calendar requestDate = Calendar.getInstance();

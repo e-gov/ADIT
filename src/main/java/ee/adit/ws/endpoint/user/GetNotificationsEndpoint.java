@@ -38,7 +38,7 @@ public class GetNotificationsEndpoint extends AbstractAditBaseEndpoint {
 	}
 
 	@Override
-	protected Object invokeInternal(Object requestObject) throws Exception {
+	protected Object invokeInternal(Object requestObject, int version) throws Exception {
 		GetNotificationsResponse response = new GetNotificationsResponse();
 		ArrayOfMessage messages = new ArrayOfMessage();
 		Calendar requestDate = Calendar.getInstance();

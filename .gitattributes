@@ -306,13 +306,13 @@ src/main/java/ee/adit/stateportal/StatePortalClient.java -text
 src/main/java/ee/adit/util/Configuration.java -text
 src/main/java/ee/adit/util/CustomXTeeHeader.java -text
 src/main/java/ee/adit/util/DVKUserSyncResult.java -text
-src/main/java/ee/adit/util/ExtractQueryNameResult.java -text
 src/main/java/ee/adit/util/FileSplitResult.java -text
 src/main/java/ee/adit/util/HibernateUtil.java -text
 src/main/java/ee/adit/util/SaveDocumentAttachmentHandler.java -text
 src/main/java/ee/adit/util/TemporaryFolderCleanerJob.java -text
 src/main/java/ee/adit/util/Util.java -text
 src/main/java/ee/adit/util/XMLUtil.java -text
+src/main/java/ee/adit/util/XRoadQueryName.java -text
 src/main/java/ee/adit/ws/endpoint/AbstractAditBaseEndpoint.java -text
 src/main/java/ee/adit/ws/endpoint/AditEndpointMapping.java -text
 src/main/java/ee/adit/ws/endpoint/ListMethodsEndpoint.java -text

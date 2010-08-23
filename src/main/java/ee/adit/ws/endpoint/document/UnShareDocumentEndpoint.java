@@ -56,7 +56,7 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	protected Object invokeInternal(Object requestObject) throws Exception {
+	protected Object invokeInternal(Object requestObject, int version) throws Exception {
 		UnShareDocumentResponse response = new UnShareDocumentResponse();
 		ArrayOfMessage messages = new ArrayOfMessage();
 		ArrayOfRecipientStatus statusArray = new ArrayOfRecipientStatus();

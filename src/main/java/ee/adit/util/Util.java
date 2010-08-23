@@ -905,8 +905,8 @@ public class Util {
 		return fixedUserCode;
     }
     
-    public static ExtractQueryNameResult extractQueryName(String fullQueryName) {
-		ExtractQueryNameResult result = new ExtractQueryNameResult();
+    public static XRoadQueryName extractQueryName(String fullQueryName) {
+		XRoadQueryName result = new XRoadQueryName();
 		result.setName(fullQueryName);
 		result.setVersion(1);
 		
@@ -922,7 +922,7 @@ public class Util {
 					result.setVersion(Integer.parseInt(tmpVersion));
 				} catch (Exception e) {
 					LOG.error("Error while trying to parse X-Road request name version part: ", e);
-					//throw new AditInternalException("Error while trying to parse X-Road request name version part: " + fullQueryName);
+					throw new AditInternalException("Error while trying to parse X-Road request name version part: " + fullQueryName);
 				}
 			} else {
 				st.nextToken();

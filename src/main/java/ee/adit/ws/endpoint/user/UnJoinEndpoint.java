@@ -26,7 +26,7 @@ public class UnJoinEndpoint extends AbstractAditBaseEndpoint {
 	private UserService userService;
 
 	@Override
-	protected Object invokeInternal(Object requestObject) throws Exception {
+	protected Object invokeInternal(Object requestObject, int version) throws Exception {
 		
 		UnJoinResponse response = new UnJoinResponse();
 		ArrayOfMessage messages = new ArrayOfMessage();

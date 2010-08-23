@@ -1,6 +1,6 @@
 package ee.adit.util;
 
-public class ExtractQueryNameResult {
+public class XRoadQueryName {
 
 	private String name;
 

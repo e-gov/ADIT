@@ -47,7 +47,7 @@ public class DeleteDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 	}
 	
 	@Override
-	protected Object invokeInternal(Object requestObject) throws Exception {
+	protected Object invokeInternal(Object requestObject, int version) throws Exception {
 		DeleteDocumentFileResponse response = new DeleteDocumentFileResponse();
 		ArrayOfMessage messages = new ArrayOfMessage();
 		Calendar requestDate = Calendar.getInstance();

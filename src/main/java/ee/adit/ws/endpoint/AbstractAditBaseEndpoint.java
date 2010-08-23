@@ -29,6 +29,7 @@ import ee.adit.service.LogService;
 import ee.adit.service.MessageService;
 import ee.adit.util.Configuration;
 import ee.adit.util.CustomXTeeHeader;
+import ee.adit.util.XRoadQueryName;
 import ee.adit.util.Util;
 
 public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
@@ -63,6 +64,13 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 			// Set the header as a property
 			this.setHeader(xteeHeader);
 			
+			// Check request version
+			if(xteeHeader.getNimi() == null) {
+				throw new AditInternalException("X-Road header 'nimi' not defined: cannot check query version.");
+			}
+			
+			XRoadQueryName queryName = Util.extractQueryName(xteeHeader.getNimi());
+			
 			// Unmarshall the request object
 			Source requestObjectSource = new DOMSource(requestKeha);
 			Object requestObject = null;
@@ -75,7 +83,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 			}
 			
 			// Excecute business logic
-			responseObject = invokeInternal(requestObject);
+			responseObject = invokeInternal(requestObject, queryName.getVersion());
 		} catch (Exception e) {
 			LOG.error("Exception while marshalling response object: ", e);
 			responseObject = getResultForGenericException(e);
@@ -220,7 +228,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 	}
 	
 	// Abstract method for implementing by subclasses
-	protected abstract Object invokeInternal(Object requestObject)
+	protected abstract Object invokeInternal(Object requestObject, int version)
 			throws Exception;
 	
 	protected abstract Object getResultForGenericException(Exception ex);

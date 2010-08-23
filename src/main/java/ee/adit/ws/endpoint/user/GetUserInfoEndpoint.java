@@ -44,7 +44,7 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 	}
 
 	@Override
-	protected Object invokeInternal(Object requestObject) throws Exception {
+	protected Object invokeInternal(Object requestObject, int version) throws Exception {
 		LOG.debug("GetUserInfoEndpoint.v1 invoked.");
 
 		GetUserInfoResponse response = new GetUserInfoResponse();

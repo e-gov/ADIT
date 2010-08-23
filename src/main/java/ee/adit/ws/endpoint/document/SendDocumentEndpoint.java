@@ -36,7 +36,7 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 	private DocumentService documentService;
 	
 	@Override
-	protected Object invokeInternal(Object requestObject) throws Exception {
+	protected Object invokeInternal(Object requestObject, int version) throws Exception {
 		SendDocumentResponse response = new SendDocumentResponse();
 		Calendar requestDate = Calendar.getInstance();
 		String additionalInformationForLog = null;

@@ -54,7 +54,7 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	protected Object invokeInternal(Object requestObject) throws Exception {
+	protected Object invokeInternal(Object requestObject, int version) throws Exception {
 		ShareDocumentResponse response = new ShareDocumentResponse();
 		ArrayOfMessage messages = new ArrayOfMessage();
 		ArrayOfRecipientStatus statusArray = new ArrayOfRecipientStatus();

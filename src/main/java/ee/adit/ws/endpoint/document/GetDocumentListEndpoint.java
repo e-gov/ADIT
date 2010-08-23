@@ -50,7 +50,7 @@ public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
 	}
 	
 	@Override
-	protected Object invokeInternal(Object requestObject) throws Exception {
+	protected Object invokeInternal(Object requestObject, int version) throws Exception {
 		GetDocumentListResponse response = new GetDocumentListResponse();
 		ArrayOfMessage messages = new ArrayOfMessage();
 		Calendar requestDate = Calendar.getInstance();
