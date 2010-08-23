@@ -340,6 +340,8 @@
 				<filtering>false</filtering>
 				<targetPath>../adit/WEB-INF/classes/hbm</targetPath>
 			</resource>
+			
+			<!-- Include all the environment specific configuration files -->
 			<resource>
 				<directory>src/main/resources/${resourceDir}</directory>
 				<targetPath>../adit/WEB-INF/classes</targetPath>
@@ -348,6 +350,8 @@
 					<exclude>adit.xsd</exclude>
 				</excludes>
 			</resource>
+			
+			<!-- Include all the environment specific configuration files -->
 			<resource>
 				<directory>src/main/resources/${resourceDir}</directory>
 				<targetPath>../adit/WEB-INF</targetPath>

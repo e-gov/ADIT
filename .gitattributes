@@ -361,7 +361,6 @@ src/main/resources/castor-mapping/xsd.v2/dhl-meta-automatic.xsd -text
 src/main/resources/castor-mapping/xsd.v2/dhl-meta-manual.xsd -text
 src/main/resources/castor-mapping/xsd.v2/dhl.xsd -text
 src/main/resources/dev-dev/adit-servlet.xml -text
-src/main/resources/dev-dev/adit.xsd -text
 src/main/resources/dev-dev/jdigidoc.cfg -text
 src/main/resources/dev-dev/log4j.xml -text
 src/main/resources/dev-dev/nsca_send_clear.cfg -text
@@ -403,13 +402,11 @@ src/main/resources/messages_en.properties -text
 src/main/resources/messages_et.properties -text
 src/main/resources/nsca_send_clear.cfg -text
 src/main/resources/ria-dev-tomcat/adit-servlet.xml -text
-src/main/resources/ria-dev-tomcat/adit.xsd -text
 src/main/resources/ria-dev-tomcat/jdigidoc.cfg -text
 src/main/resources/ria-dev-tomcat/log4j.xml -text
 src/main/resources/ria-dev-tomcat/nsca_send_clear.cfg -text
 src/main/resources/ria-dev-tomcat/xtee.properties -text
 src/main/resources/ria-dev-weblogic/adit-servlet.xml -text
-src/main/resources/ria-dev-weblogic/adit.xsd -text
 src/main/resources/ria-dev-weblogic/jdigidoc.cfg -text
 src/main/resources/ria-dev-weblogic/log4j.xml -text
 src/main/resources/ria-dev-weblogic/nsca_send_clear.cfg -text
