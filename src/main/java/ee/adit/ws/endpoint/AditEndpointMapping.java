@@ -17,6 +17,7 @@ import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 
 import ee.adit.exception.AditInternalException;
+import ee.adit.util.ExtractQueryNameResult;
 import ee.adit.util.Util;
 
 public class AditEndpointMapping extends AbstractQNameEndpointMapping {
@@ -29,33 +30,6 @@ public class AditEndpointMapping extends AbstractQNameEndpointMapping {
 
 	static {
 		transformerFactory = TransformerFactory.newInstance();
-	}
-
-	private static ExtractQueryNameResult extractQueryName(String fullQueryName) {
-		ExtractQueryNameResult result = new ExtractQueryNameResult();
-		result.setName(fullQueryName);
-		result.setVersion(1);
-		
-		StringTokenizer st = new StringTokenizer(fullQueryName, ".");
-
-		for (int i = 0; st.hasMoreTokens(); i++) {
-			if (i == 1) {
-				result.setName(st.nextToken());
-			} else if(i == 2) {
-				try {
-					String tmpVersion = st.nextToken();
-					tmpVersion = tmpVersion.substring(1);
-					result.setVersion(Integer.parseInt(tmpVersion));
-				} catch (Exception e) {
-					LOG.error("Error while trying to parse X-Road request name version part: ", e);
-					throw new AditInternalException("Error while trying to parse X-Road request name version part: " + fullQueryName);
-				}
-			} else {
-				st.nextToken();
-			}
-		}
-
-		return result;
 	}
 
 	@Override
@@ -89,7 +63,7 @@ public class AditEndpointMapping extends AbstractQNameEndpointMapping {
 							+ requestNameHeaderValue);
 					requestNameHeaderFound = true;
 					String localName = requestQName.getLocalPart();
-					ExtractQueryNameResult queryName = extractQueryName(requestNameHeaderValue);
+					ExtractQueryNameResult queryName = Util.extractQueryName(requestNameHeaderValue);
 
 					if(queryName == null || queryName.getName() == null) {
 						throw new AditInternalException("X-Road query header name does not match the required format 'ametlikud-dokumendid.[methodName].v[versionNumber]': " + requestNameHeaderValue);
@@ -122,26 +96,3 @@ public class AditEndpointMapping extends AbstractQNameEndpointMapping {
 	
 }
 
-class ExtractQueryNameResult {
-	
-	private String name;
-	
-	private int version;
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
-	
-}

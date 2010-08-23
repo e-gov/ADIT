@@ -16,6 +16,7 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.Date;
+import java.util.StringTokenizer;
 import java.text.SimpleDateFormat;
 import java.util.Random;
 import java.util.regex.Matcher;
@@ -39,6 +40,8 @@ import org.apache.fop.apps.FopFactory;
 import org.apache.fop.apps.MimeConstants;
 import org.apache.log4j.Logger;
 import org.castor.core.util.Base64Encoder;
+
+import ee.adit.ws.endpoint.ExtractQueryNameResult;
 
 public class Util {
 
@@ -900,4 +903,31 @@ public class Util {
 		}
 		return fixedUserCode;
     }
+    
+    public static ExtractQueryNameResult extractQueryName(String fullQueryName) {
+		ExtractQueryNameResult result = new ExtractQueryNameResult();
+		result.setName(fullQueryName);
+		result.setVersion(1);
+		
+		StringTokenizer st = new StringTokenizer(fullQueryName, ".");
+
+		for (int i = 0; st.hasMoreTokens(); i++) {
+			if (i == 1) {
+				result.setName(st.nextToken());
+			} else if(i == 2) {
+				try {
+					String tmpVersion = st.nextToken();
+					tmpVersion = tmpVersion.substring(1);
+					result.setVersion(Integer.parseInt(tmpVersion));
+				} catch (Exception e) {
+					LOG.error("Error while trying to parse X-Road request name version part: ", e);
+					//throw new AditInternalException("Error while trying to parse X-Road request name version part: " + fullQueryName);
+				}
+			} else {
+				st.nextToken();
+			}
+		}
+
+		return result;
+	}
 }
