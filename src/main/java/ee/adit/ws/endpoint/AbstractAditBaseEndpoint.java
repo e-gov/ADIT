@@ -37,7 +37,7 @@ import ee.adit.util.Util;
  * Provides methods for request logging and SOAP attacments.
  * 
  * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
- * @author Jaak Lember, OÜ Interinx, jaak@interinx.com
+ * @author Jaak Lember, Interinx, jaak@interinx.com
  */
 public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 
