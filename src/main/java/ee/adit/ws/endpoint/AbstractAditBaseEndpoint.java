@@ -168,6 +168,13 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 		return result;
 	}
 	
+	/**
+	 * Marshals the object to XML and stores the result in a temporary file.
+	 * The location of the temporary file is specified by {@link Configuration}}
+	 * 
+	 * @param object the object to be marshalled.
+	 * @return the absolute path to the temporary file created.
+	 */
 	public String marshal(Object object) {
 		String result = null;
 		FileOutputStream fos = null;
