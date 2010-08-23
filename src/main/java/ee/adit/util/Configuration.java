@@ -3,6 +3,13 @@ package ee.adit.util;
 import java.math.BigInteger;
 import java.util.List;
 
+/**
+ * Application configuration holder class. The configuring takes place during startup and the parameters are
+ * specified in servlet configuration.
+ * 
+ * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
+ * @author Jaak Lember, Interinx, jaak@interinx.com
+ */
 public class Configuration {
 	
 	private BigInteger getJoinedMaxResults;
