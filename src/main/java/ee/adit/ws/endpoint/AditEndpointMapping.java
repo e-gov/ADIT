@@ -47,7 +47,7 @@ public class AditEndpointMapping extends AbstractQNameEndpointMapping {
 					tmpVersion = tmpVersion.substring(1);
 					result.setVersion(Integer.parseInt(tmpVersion));
 				} catch (Exception e) {
-					LOG.error("Error while trying to parse X-Road request name version part: ", e);
+					throw new AditInternalException("Error while trying to parse X-Road request name version part: ", e);
 				}
 			} else {
 				st.nextToken();
