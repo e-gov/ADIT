@@ -64,12 +64,15 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 			// Set the header as a property
 			this.setHeader(xteeHeader);
 			
-			// Check request version
-			if(xteeHeader.getNimi() == null) {
-				throw new AditInternalException("X-Road header 'nimi' not defined: cannot check query version.");
-			}
-			
-			XRoadQueryName queryName = Util.extractQueryName(xteeHeader.getNimi());
+			int version = 1;
+			if(!this.isMetaService()) {
+				// Check request version
+				if(xteeHeader.getNimi() == null) {
+					throw new AditInternalException("X-Road header 'nimi' not defined: cannot check query version.");
+				}
+				XRoadQueryName queryName = Util.extractQueryName(xteeHeader.getNimi());
+				version = queryName.getVersion();
+			}			
 			
 			// Unmarshall the request object
 			Source requestObjectSource = new DOMSource(requestKeha);
@@ -83,7 +86,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 			}
 			
 			// Excecute business logic
-			responseObject = invokeInternal(requestObject, queryName.getVersion());
+			responseObject = invokeInternal(requestObject, version);
 		} catch (Exception e) {
 			LOG.error("Exception while marshalling response object: ", e);
 			responseObject = getResultForGenericException(e);
