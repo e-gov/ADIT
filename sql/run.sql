@@ -1,3 +1,4 @@
+WHENEVER SQLERROR CONTINUE
 -- Creates database and inserts classificator data --
 
 prompt 'Enter ADIT database schema name: ';
