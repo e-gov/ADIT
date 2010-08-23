@@ -19,16 +19,12 @@ import java.util.Iterator;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.soap.AttachmentPart;
-import javax.xml.soap.Name;
 import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPMessage;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathException;
-import javax.xml.xpath.XPathFactory;
 
 import org.apache.log4j.Logger;
 import org.exolab.castor.xml.NodeType;
@@ -41,17 +37,15 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import ee.adit.util.CustomXTeeHeader;
 import ee.adit.util.Util;
 import ee.webmedia.soap.SOAPUtil;
-import ee.webmedia.xtee.XTeeHeader;
 import ee.webmedia.xtee.XTeeUtil;
 
 /**
- * Base class for web-service endpoints. Wraps the X-Road specific operations and data manipulation.
- * Web-service endpoints extending this class will not have to be aware of the X-Road specific SOAP envelope.
+ * Base class for web-service endpoints. Wraps the X-Tee specific operations and data manipulation.
+ * Web-service endpoints extending this class will not have to be aware of the X-Tee specific SOAP envelope.
  * 
  * The class is a modified version of the XRoad java library class 
  * {@code ee.webmedia.xtee.endpoint.AbstractXTeeBaseEndpoint}. 
@@ -74,7 +68,7 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 	private boolean ignoreAttachmentHeaders;
 	
 	/**
-	 * The entry point for web-service call. Extracts the X-Road operation node and passes it to the 
+	 * The entry point for web-service call. Extracts the X-Tee operation node and passes it to the 
 	 * {@link #getResponse(CustomXTeeHeader, Document, SOAPMessage, SOAPMessage, Document)} method for futher processing.
 	 * 
 	 * @param messageContext the message context
@@ -151,10 +145,10 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 	
 	
 	/**
-	 * Parses the X-Road headers.
+	 * Parses the X-Tee headers.
 	 * 
 	 * @param paringMessage the request message
-	 * @return X-Road header object
+	 * @return X-Tee header object
 	 * @throws SOAPException
 	 */
 	@SuppressWarnings("unchecked")
@@ -172,10 +166,10 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 	}
 	
 	/**
-	 * Parses the query - constructs a new {@link} Document} from the X-Road request body element.
+	 * Parses the query - constructs a new {@link} Document} from the X-Tee request body element.
 	 * 
 	 * @param queryMsg query message
-	 * @return document representing X-Road specific query data
+	 * @return document representing X-Tee specific query data
 	 * @throws Exception
 	 */
 	private Document parseQuery(SOAPMessage queryMsg) throws Exception {
@@ -193,7 +187,7 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 	}
 	
 	/**
-	 * Finds "keha" element from X-Road message in namespace-unaware fashion.<br>
+	 * Finds "keha" element from X-Tee message in namespace-unaware fashion.<br>
 	 * This is useful if service consumer has placed "keha" element in some namespace.
 	 * In such case namespace-aware solutions are likely to fail.
 	 * 
@@ -225,11 +219,11 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 	 * {@link AbstractAditBaseEndpoint}. If the query is a metaservice (listMethods) query, then the query and 
 	 * headers are not copied.
 	 * 
-	 * @param header X-Road header
+	 * @param header X-Tee header
 	 * @param query query document
 	 * @param responseMessage response message
 	 * @param requestMessage request message
-	 * @param operationNode X-Road specific operation node
+	 * @param operationNode X-Tee specific operation node
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
@@ -252,10 +246,11 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 	}
 	
 	/**
+	 * Creates X-Tee specific structure for SOAP message: adds MIME headers, base namespaces.
 	 * 
-	 * @param requestMessage
-	 * @param responseMessage
-	 * @return
+	 * @param requestMessage request SOAP message
+	 * @param responseMessage response SOAP message
+	 * @return the service element of the SOAP response message
 	 * @throws Exception
 	 */
 	private SOAPElement createXteeMessageStructure(SOAPMessage requestMessage, SOAPMessage responseMessage) throws Exception {
