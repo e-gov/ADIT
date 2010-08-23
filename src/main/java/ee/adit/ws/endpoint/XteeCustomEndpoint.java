@@ -76,7 +76,8 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 	
 	@SuppressWarnings("unchecked")
 	/**
-	 * The entry point for web-service call. 
+	 * The entry point for web-service call. Extracts the X-Road operation node and passes it to the 
+	 * {@link #getResponse(CustomXTeeHeader, Document, SOAPMessage, SOAPMessage, Document)} method.
 	 * 
 	 * @param messageContext the message context
 	 * @throws Exception if an exception occurs while processing the request. 
@@ -84,9 +85,10 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 	public final void invoke(MessageContext messageContext) throws Exception {	
 		
 		try {
+			
+			// Extract request / response
 			SOAPMessage paringMessage = SOAPUtil.extractSoapMessage(messageContext.getRequest());
 			SOAPMessage responseMessage = SOAPUtil.extractSoapMessage(messageContext.getResponse());
-
 			this.setResponseMessage(new SaajSoapMessage(responseMessage));
 			this.setRequestMessage(new SaajSoapMessage(paringMessage));
 
@@ -108,8 +110,8 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 			CustomXTeeHeader pais = metaService ? null : parseXteeHeader(paringMessage);
 			Document paring = metaService ? null : parseQuery(paringMessage);
 
+			// Extract the operation node (copy namespaces for it to remain valid)
 			Node operationNode = null;
-
 			Iterator i = paringMessage.getSOAPBody().getChildElements();
 			while (i.hasNext()) {
 				Node n = (Node) i.next();
