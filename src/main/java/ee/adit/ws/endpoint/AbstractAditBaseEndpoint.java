@@ -199,18 +199,39 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 		return result;
 	}
 	
+	/**
+	 * Unmarshals the contents of the file.
+	 * 
+	 * @param fileName absolute path to the file that holds the XML content.
+	 * @return object representing the XML content.
+	 * @throws XmlMappingException
+	 * @throws IOException
+	 */
 	public Object unMarshal(String fileName) throws XmlMappingException, IOException {
 		FileInputStream fileInputStream = new FileInputStream(fileName);
 		StreamSource streamSource = new StreamSource(fileInputStream);
 		return this.getUnmarshaller().unmarshal(streamSource);
 	}
 	
+	/**
+	 * Extracts SOAP attachment to a temporary file.
+	 * 
+	 * @param attachment the attachment to be extracted.
+	 * @return absolute path to the temporary file holding the attachment content.
+	 * @throws IOException
+	 */
 	public String extractXML(Attachment attachment) throws IOException {
 		String result = Util.createTemporaryFile(attachment.getInputStream(), this.getConfiguration().getTempDir());
 		LOG.debug("Attachment extracted to temporary file: " + result);
 		return result;
 	}
 	
+	/**
+	 * 
+	 * @param documentId
+	 * @param requestDate
+	 * @param additionalInformation
+	 */
 	public void logCurrentRequest(Long documentId, Date requestDate, String additionalInformation) {
 		try {
 			if(this.header != null) {
