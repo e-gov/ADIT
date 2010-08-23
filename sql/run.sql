@@ -10,8 +10,10 @@ accept ADIT_TABLE_TABLESPACE default 'ADIT_DATA';
 prompt 'Enter ADIT tablespace to use for indexes: ';
 accept ADIT_INDEX_TABLESPACE default 'ADIT_INDX';
 
--- Drop existing database objects
+-- Drop existing database
 @@drop_database.sql
+
+WHENEVER SQLERROR EXIT ROLLBACK SQL.SQLCODE
 
 -- Create database
 @@database.sql
