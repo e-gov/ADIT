@@ -52,11 +52,13 @@ import ee.webmedia.xtee.XTeeHeader;
 import ee.webmedia.xtee.XTeeUtil;
 
 /**
- * Base class for X-Tee Spring web-service endpoints, extension classes must implement
- * {@link AbstractXTeeBaseEndpoint#invokeInternal(Document, Element, XTeeHeader)}.
+ * Base class for web-service endpoints. Provides basic 
+ * 
+ * The class is a modified version of the XRoad java library class 
+ * {@code ee.webmedia.xtee.endpoint.AbstractXTeeBaseEndpoint}. 
  *  
- * @author Roman Tekhov
- * @author Dmitri Danilkin
+ * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
+ * 
  */
 public abstract class XteeCustomEndpoint implements MessageEndpoint {
 	
@@ -73,60 +75,66 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 	private boolean ignoreAttachmentHeaders;
 	
 	@SuppressWarnings("unchecked")
+	/**
+	 * The entry point for web-service call. 
+	 * 
+	 * @param messageContext the message context
+	 * @throws Exception if an exception occurs while processing the request. 
+	 */
 	public final void invoke(MessageContext messageContext) throws Exception {	
 		
 		try {
-		SOAPMessage paringMessage = SOAPUtil.extractSoapMessage(messageContext.getRequest());
-		SOAPMessage responseMessage = SOAPUtil.extractSoapMessage(messageContext.getResponse());
-		
-		this.setResponseMessage(new SaajSoapMessage(responseMessage));
-		this.setRequestMessage(new SaajSoapMessage(paringMessage));
-		
-		// Check if metaservice
-		try {
-			Iterator i = paringMessage.getSOAPBody().getChildElements(new QName(Util.XTEE_NAMESPACE, "listMethods"));
-			if(i.hasNext()) {
-				metaService = true;
-			}
-		} catch (Exception e) {
-			LOG.error("Error while trying to determine if metaservice query: ", e);
-		}
-		
-		// meta-service does not need 'header' element
-		if(metaService) {
-			responseMessage.getSOAPHeader().detachNode();
-		}
+			SOAPMessage paringMessage = SOAPUtil.extractSoapMessage(messageContext.getRequest());
+			SOAPMessage responseMessage = SOAPUtil.extractSoapMessage(messageContext.getResponse());
 
-		CustomXTeeHeader pais = metaService ? null : parseXteeHeader(paringMessage);
-		Document paring = metaService ? null : parseQuery(paringMessage);
-		
-		Node operationNode = null;
-		
-		Iterator i = paringMessage.getSOAPBody().getChildElements();
-		while(i.hasNext()) {
-			Node n = (Node) i.next();
-			if(Node.ELEMENT_NODE == n.getNodeType()) {
-				operationNode = n;
-			}
-		}
-		
-		Document operationDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-		operationNode = operationDocument.importNode(operationNode, true);
-		operationDocument.appendChild(operationNode);
-		
-		// Copy namespace declarations from SOAP message to
-		// body XML document.
-		// This is useful for example if  request body contains SOAP
-		// arrays (in which case the necessary namespace declarations
-		// are likely to be found in SOAP envelope header.
-		SOAPEnvelope env = paringMessage.getSOAPPart().getEnvelope();
-		Iterator it = env.getNamespacePrefixes();
-		while (it.hasNext()) {
-			String prefix = (String)it.next();
-			String uri = env.getNamespaceURI(prefix); 
-			LOG.debug("Attempting to add namespace declaration xmlns:" + prefix + "=\""+ uri +"\"");
+			this.setResponseMessage(new SaajSoapMessage(responseMessage));
+			this.setRequestMessage(new SaajSoapMessage(paringMessage));
+
+			// Check if metaservice
 			try {
-				operationDocument.getDocumentElement().setAttribute("xmlns:"+prefix, uri);
+				Iterator i = paringMessage.getSOAPBody().getChildElements(new QName(Util.XTEE_NAMESPACE, "listMethods"));
+				if (i.hasNext()) {
+					metaService = true;
+				}
+			} catch (Exception e) {
+				LOG.error("Error while trying to determine if metaservice query: ", e);
+			}
+
+			// meta-service does not need 'header' element
+			if (metaService) {
+				responseMessage.getSOAPHeader().detachNode();
+			}
+
+			CustomXTeeHeader pais = metaService ? null : parseXteeHeader(paringMessage);
+			Document paring = metaService ? null : parseQuery(paringMessage);
+
+			Node operationNode = null;
+
+			Iterator i = paringMessage.getSOAPBody().getChildElements();
+			while (i.hasNext()) {
+				Node n = (Node) i.next();
+				if (Node.ELEMENT_NODE == n.getNodeType()) {
+					operationNode = n;
+				}
+			}
+
+			Document operationDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+			operationNode = operationDocument.importNode(operationNode, true);
+			operationDocument.appendChild(operationNode);
+
+			// Copy namespace declarations from SOAP message to
+			// body XML document.
+			// This is useful for example if request body contains SOAP
+			// arrays (in which case the necessary namespace declarations
+			// are likely to be found in SOAP envelope header.
+			SOAPEnvelope env = paringMessage.getSOAPPart().getEnvelope();
+			Iterator it = env.getNamespacePrefixes();
+			while (it.hasNext()) {
+				String prefix = (String) it.next();
+				String uri = env.getNamespaceURI(prefix);
+				LOG.debug("Attempting to add namespace declaration xmlns:" + prefix + "=\"" + uri + "\"");
+				try {
+					operationDocument.getDocumentElement().setAttribute("xmlns:"+prefix, uri);
 				LOG.debug("Namespace declaration xmlns:" + prefix + "=\""+ uri +"\" was copied from SOAP envelope to request document.");
 			} catch (Exception ex) {
 				LOG.warn("Failed to copy namespace declaration xmlns:" + prefix + "=\""+ uri +"\" from SOAP envelope to request document.", ex);
