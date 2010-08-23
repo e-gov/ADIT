@@ -227,11 +227,11 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 	}
 	
 	/**
+	 * Logs the current request.
 	 * 
-	 * 
-	 * @param documentId
-	 * @param requestDate
-	 * @param additionalInformation
+	 * @param documentId ID of the document (if it is a document request)
+	 * @param requestDate time of the request
+	 * @param additionalInformation additional information about the request
 	 */
 	public void logCurrentRequest(Long documentId, Date requestDate, String additionalInformation) {
 		try {
@@ -252,6 +252,13 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 		}
 	}
 	
+	/**
+	 * 
+	 * 
+	 * @param documentId
+	 * @param fileId
+	 * @param requestDate
+	 */
 	public void logDownloadRequest(Long documentId, Long fileId, Date requestDate) {
 		try {
 			if(this.header != null) {
