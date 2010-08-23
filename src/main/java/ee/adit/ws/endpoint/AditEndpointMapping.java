@@ -52,6 +52,7 @@ public class AditEndpointMapping extends AbstractQNameEndpointMapping {
 	 * @return the qualified name of the SOAP body payload element. 
 	 * @throws Exception
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	protected QName resolveQName(MessageContext messageContext)
 			throws Exception {
