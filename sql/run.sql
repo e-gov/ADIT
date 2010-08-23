@@ -1,13 +1,16 @@
 WHENEVER SQLERROR CONTINUE
 -- Creates database and inserts classificator data --
 
-prompt 'Enter ADIT database schema name: ';
+prompt 'Enter ADIT database schema name - tables owner (using ADIT by default): ';
 accept ADIT_SCHEMA default 'ADIT';
 
-prompt 'Enter ADIT tablespace to use for tables: ';
+prompt 'Enter ADIT_APP database schema name - application user (using ADIT_APP by default): ';
+accept ADIT_INDEX_TABLESPACE default 'ADIT_APP';
+
+prompt 'Enter ADIT tablespace to use for tables (using ADIT_DATA by default): ';
 accept ADIT_TABLE_TABLESPACE default 'ADIT_DATA';
 
-prompt 'Enter ADIT tablespace to use for indexes: ';
+prompt 'Enter ADIT tablespace to use for indexes (using ADIT_INDX by default): ';
 accept ADIT_INDEX_TABLESPACE default 'ADIT_INDX';
 
 -- Drop existing database
