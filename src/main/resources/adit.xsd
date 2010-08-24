@@ -695,6 +695,27 @@
 		</sequence>
 	</complexType>
 	
+	<!-- saveDocument attachments -->
+	<element name="saveDocumentRequestAttachmentV1" type="tns:saveDocumentRequestAttachmentV1Type"/>
+	<complexType name="saveDocumentRequestAttachmentV1Type">
+		<sequence>
+			<element name="document" type="tns:saveDocumentRequestAttachmentV1DocumentType"/>
+		</sequence>
+	</complexType>
+	<complexType name="saveDocumentRequestAttachmentV1DocumentType">
+		<sequence>
+			<element name="id" type="integer"/>
+			<element name="guid" type="string"/>
+			<element name="title" type="string"/>
+			<element name="document_type" type="string"/>
+			<element name="previous_document_id" type="integer"/>
+			<element name="files" type="tns:subDocumentFilesType"/>
+		</sequence>
+	</complexType>
+	
+	<!-- saveDocumentFile attachments -->
+	<element name="saveDocumentFileAttachmentV1" type="tns:fileType"></element>
+	
 	<!-- Attachments common types -->
 	<complexType name="documentFilesType">
 		<sequence>
