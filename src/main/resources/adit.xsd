@@ -48,7 +48,7 @@
 	<element name="sendDocumentRequest" type="tns:sendDocumentRequest"/>
 	<element name="sendDocumentResponse" type="tns:sendDocumentResponse"/>
 	
-	<complexType name="Message">
+	<complexType name="message">
 		<simpleContent>
 			<extension base="string">
 				<attribute name="lang" type="string" />
@@ -56,85 +56,85 @@
 		</simpleContent>
 	</complexType>
 
-	<complexType name="ArrayOfMessage">
+	<complexType name="arrayOfMessage">
 		<sequence>
-			<element name="message" type="tns:Message" maxOccurs="unbounded" minOccurs="0"></element>
+			<element name="message" type="tns:message" maxOccurs="unbounded" minOccurs="0"></element>
 		</sequence>
 	</complexType>
 	
-	<complexType name="ArrayOfFileId">
+	<complexType name="arrayOfFileId">
 		<sequence>
 			<element name="file_id" type="integer" maxOccurs="unbounded" minOccurs="0"></element>
 		</sequence>
 	</complexType>
 	
-	<complexType name="ArrayOfDocumentType">
+	<complexType name="arrayOfDocumentType">
 		<sequence>
 			<element name="document_type" type="string" maxOccurs="unbounded" minOccurs="0"></element>
 		</sequence>
 	</complexType>
 	
-	<complexType name="ArrayOfDocumentDvkStatus">
+	<complexType name="arrayOfDocumentDvkStatus">
 		<sequence>
 			<element name="status_id" type="integer" maxOccurs="unbounded" minOccurs="0"></element>
 		</sequence>
 	</complexType>
 	
-	<complexType name="ArrayOfDocumentWorkflowStatus">
+	<complexType name="arrayOfDocumentWorkflowStatus">
 		<sequence>
 			<element name="status_id" type="integer" maxOccurs="unbounded" minOccurs="0"></element>
 		</sequence>
 	</complexType>
 	
-	<complexType name="ArrayOfCreatorApplication">
+	<complexType name="arrayOfCreatorApplication">
 		<sequence>
 			<element name="creator_application" type="string" maxOccurs="unbounded" minOccurs="0"></element>
 		</sequence>
 	</complexType>
 	
-	<complexType name="ArrayOfUserCode">
+	<complexType name="arrayOfUserCode">
 		<sequence>
 			<element name="code" type="string" maxOccurs="unbounded" minOccurs="0"></element>
 		</sequence>
 	</complexType>
 
-	<complexType name="RecipientStatus">
+	<complexType name="recipientStatus">
 		<sequence>
 			<element name="code" type="string"></element>
 			<element name="success" type="boolean"></element>
-			<element name="messages" type="tns:ArrayOfMessage"></element>
+			<element name="messages" type="tns:arrayOfMessage"></element>
 		</sequence>
 	</complexType>
 	
-	<complexType name="ArrayOfRecipientStatus">
+	<complexType name="arrayOfRecipientStatus">
 		<sequence>
-			<element name="recipient" type="tns:RecipientStatus" maxOccurs="unbounded" minOccurs="0"></element>
+			<element name="recipient" type="tns:recipientStatus" maxOccurs="unbounded" minOccurs="0"></element>
 		</sequence>
 	</complexType>
 	
-	<complexType name="Notification">
+	<complexType name="notification">
 		<sequence>
 			<element name="type" type="string"></element>
 			<element name="active" type="boolean"></element>
 		</sequence>
 	</complexType>
 	
-	<complexType name="ArrayOfNotification">
+	<complexType name="arrayOfNotification">
 		<sequence>
-			<element name="notification" type="tns:Notification" maxOccurs="unbounded" minOccurs="0"></element>
+			<element name="notification" type="tns:notification" maxOccurs="unbounded" minOccurs="0"></element>
 		</sequence>
 	</complexType>
 	
-	<complexType name="EmailAddress">
+	<complexType name="emailAddress">
 		<sequence>
 			<element name="address" type="string"></element>
 			<element name="redirected_to" type="string"></element>
 		</sequence>
 	</complexType>
 	
-	<complexType name="ArrayOfEmailAddress">
+	<complexType name="arrayOfEmailAddress">
 		<sequence>
-			<element name="email_address" type="tns:EmailAddress" maxOccurs="unbounded" minOccurs="0"></element>
+			<element name="email_address" type="tns:emailAddress" maxOccurs="unbounded" minOccurs="0"></element>
 		</sequence>
 	</complexType>
 
@@ -148,7 +148,7 @@
 	<complexType name="joinResponse">
 		<sequence>
 			<element name="success" type="boolean"></element>
-			<element name="messages" type="tns:ArrayOfMessage"></element>
+			<element name="messages" type="tns:arrayOfMessage"></element>
 		</sequence>
 	</complexType>
 	
@@ -159,7 +159,7 @@
 	<complexType name="unJoinResponse">
 		<sequence>
 			<element name="success" type="boolean"></element>
-			<element name="messages" type="tns:ArrayOfMessage"></element>
+			<element name="messages" type="tns:arrayOfMessage"></element>
 		</sequence>
 	</complexType>
 	
@@ -172,7 +172,7 @@
 	<complexType name="getUserInfoResponse">
 		<sequence>
 			<element name="success" type="boolean"></element>
-			<element name="messages" type="tns:ArrayOfMessage"></element>
+			<element name="messages" type="tns:arrayOfMessage"></element>
 			<element name="userList" type="base64Binary"></element>
 		</sequence>
 	</complexType>
@@ -187,7 +187,7 @@
 	<complexType name="getJoinedResponse">
 		<sequence>
 			<element name="success" type="boolean"></element>
-			<element name="messages" type="tns:ArrayOfMessage"></element>
+			<element name="messages" type="tns:arrayOfMessage"></element>
 			<element name="userList" type="base64Binary"></element>
 		</sequence>
 	</complexType>
@@ -199,23 +199,23 @@
 	<complexType name="getNotificationsResponse">
 		<sequence>
 			<element name="success" type="boolean"></element>
-			<element name="messages" type="tns:ArrayOfMessage"></element>
-			<element name="notifications" type="tns:ArrayOfNotification" nillable="false"></element>
+			<element name="messages" type="tns:arrayOfMessage"></element>
+			<element name="notifications" type="tns:arrayOfNotification" nillable="false"></element>
 			<element name="notifications_active" type="boolean"></element>
-			<element name="address_list" type="tns:ArrayOfEmailAddress"></element>
+			<element name="address_list" type="tns:arrayOfEmailAddress"></element>
 		</sequence>
 	</complexType>
 	
 	<!-- setNotifications päringu tüübid -->
 	<complexType name="setNotificationsRequest">
 		<sequence>
-			<element name="notifications" type="tns:ArrayOfNotification" nillable="false"></element>
+			<element name="notifications" type="tns:arrayOfNotification" nillable="false"></element>
 		</sequence>
 	</complexType>
 	<complexType name="setNotificationsResponse">
 		<sequence>
 			<element name="success" type="boolean"></element>
-			<element name="messages" type="tns:ArrayOfMessage"></element>
+			<element name="messages" type="tns:arrayOfMessage"></element>
 		</sequence>
 	</complexType>
 	
@@ -225,12 +225,12 @@
 	<complexType name="getDocumentListRequest">
 		<sequence>
 			<element name="folder" type="string"></element>
-			<element name="document_types" type="tns:ArrayOfDocumentType"></element>
-			<element name="document_dvk_statuses" type="tns:ArrayOfDocumentDvkStatus"></element>
-			<element name="document_workflow_statuses" type="tns:ArrayOfDocumentWorkflowStatus"></element>
+			<element name="document_types" type="tns:arrayOfDocumentType"></element>
+			<element name="document_dvk_statuses" type="tns:arrayOfDocumentDvkStatus"></element>
+			<element name="document_workflow_statuses" type="tns:arrayOfDocumentWorkflowStatus"></element>
 			<element name="has_been_viewed" type="boolean"></element>
 			<element name="is_deflated" type="boolean"></element>
-			<element name="creator_applications" type="tns:ArrayOfCreatorApplication"></element>
+			<element name="creator_applications" type="tns:arrayOfCreatorApplication"></element>
 			<element name="search_phrase" type="string"></element>
 			<element name="max_results" type="integer"></element>
 			<element name="start_index" type="integer"></element>
@@ -239,7 +239,7 @@
 	<complexType name="getDocumentListResponse">
 		<sequence>
 			<element name="success" type="boolean"></element>
-			<element name="messages" type="tns:ArrayOfMessage"></element>
+			<element name="messages" type="tns:arrayOfMessage"></element>
 			<element name="document_list">
 				<complexType>
 					<attribute name="href" type="string"/>
@@ -258,7 +258,7 @@
 	<complexType name="getDocumentResponse">
 		<sequence>
 			<element name="success" type="boolean"></element>
-			<element name="messages" type="tns:ArrayOfMessage"></element>
+			<element name="messages" type="tns:arrayOfMessage"></element>
 			<element name="document">
 				<complexType>
 					<attribute name="href" type="string"/>
@@ -271,13 +271,13 @@
 	<complexType name="getDocumentFileRequest">
 		<sequence>
 			<element name="document_id" type="integer"></element>
-			<element name="file_id_list" type="tns:ArrayOfFileId"></element>
+			<element name="file_id_list" type="tns:arrayOfFileId"></element>
 		</sequence>
 	</complexType>
 	<complexType name="getDocumentFileResponse">
 		<sequence>
 			<element name="success" type="boolean"></element>
-			<element name="messages" type="tns:ArrayOfMessage"></element>
+			<element name="messages" type="tns:arrayOfMessage"></element>
 			<element name="files">
 				<complexType>
 					<attribute name="href" type="string"/>
@@ -299,7 +299,7 @@
 	<complexType name="saveDocumentResponse">
 		<sequence>
 			<element name="success" type="boolean"></element>
-			<element name="messages" type="tns:ArrayOfMessage"></element>
+			<element name="messages" type="tns:arrayOfMessage"></element>
 			<element name="document_id" type="integer"></element>
 			<element name="document">
 				<complexType>
@@ -323,7 +323,7 @@
 	<complexType name="saveDocumentFileResponse">
 		<sequence>
 			<element name="success" type="boolean"></element>
-			<element name="messages" type="tns:ArrayOfMessage"></element>
+			<element name="messages" type="tns:arrayOfMessage"></element>
 			<element name="file_id" type="integer"></element>
 			<element name="file">
 				<complexType>
@@ -343,7 +343,7 @@
 	<complexType name="deleteDocumentFileResponse">
 		<sequence>
 			<element name="success" type="boolean"></element>
-			<element name="messages" type="tns:ArrayOfMessage"></element>
+			<element name="messages" type="tns:arrayOfMessage"></element>
 		</sequence>
 	</complexType>
 	
@@ -356,7 +356,7 @@
 	<complexType name="deleteDocumentResponse">
 		<sequence>
 			<element name="success" type="boolean"></element>
-			<element name="messages" type="tns:ArrayOfMessage"></element>
+			<element name="messages" type="tns:arrayOfMessage"></element>
 		</sequence>
 	</complexType>
 	
@@ -369,7 +369,7 @@
 	<complexType name="deflateDocumentResponse">
 		<sequence>
 			<element name="success" type="boolean"></element>
-			<element name="messages" type="tns:ArrayOfMessage"></element>
+			<element name="messages" type="tns:arrayOfMessage"></element>
 		</sequence>
 	</complexType>
 	
@@ -392,7 +392,7 @@
 	<complexType name="prepareSignatureResponse">
 		<sequence>
 			<element name="success" type="boolean"></element>
-			<element name="messages" type="tns:ArrayOfMessage"></element>
+			<element name="messages" type="tns:arrayOfMessage"></element>
 			<element name="signature_hash" type="string"></element>
 		</sequence>
 	</complexType>
@@ -411,7 +411,7 @@
 	<complexType name="confirmSignatureResponse">
 		<sequence>
 			<element name="success" type="boolean"></element>
-			<element name="messages" type="tns:ArrayOfMessage"></element>
+			<element name="messages" type="tns:arrayOfMessage"></element>
 		</sequence>
 	</complexType>
 	
@@ -419,7 +419,7 @@
 	<complexType name="shareDocumentRequest">
 		<sequence>
 			<element name="document_id" type="integer"/>
-			<element name="recipient_list" type="tns:ArrayOfUserCode"/>
+			<element name="recipient_list" type="tns:arrayOfUserCode"/>
 			<element name="reason_for_sharing" type="string"/>
 			<element name="shared_for_signing" type="boolean"/>
 		</sequence>
@@ -427,8 +427,8 @@
 	<complexType name="shareDocumentResponse">
 		<sequence>
 			<element name="success" type="boolean"/>
-			<element name="messages" type="tns:ArrayOfMessage"/>
-			<element name="recipient_list" type="tns:ArrayOfRecipientStatus"/>
+			<element name="messages" type="tns:arrayOfMessage"/>
+			<element name="recipient_list" type="tns:arrayOfRecipientStatus"/>
 		</sequence>
 	</complexType>
 	
@@ -436,14 +436,14 @@
 	<complexType name="unShareDocumentRequest">
 		<sequence>
 			<element name="document_id" type="integer"/>
-			<element name="recipient_list" type="tns:ArrayOfUserCode"/>
+			<element name="recipient_list" type="tns:arrayOfUserCode"/>
 		</sequence>
 	</complexType>
 	<complexType name="unShareDocumentResponse">
 		<sequence>
 			<element name="success" type="boolean"/>
-			<element name="messages" type="tns:ArrayOfMessage"/>
-			<element name="recipient_list" type="tns:ArrayOfRecipientStatus"/>
+			<element name="messages" type="tns:arrayOfMessage"/>
+			<element name="recipient_list" type="tns:arrayOfRecipientStatus"/>
 		</sequence>
 	</complexType>
 	
@@ -456,7 +456,7 @@
 	<complexType name="markDocumentViewedResponse">
 		<sequence>
 			<element name="success" type="boolean"></element>
-			<element name="messages" type="tns:ArrayOfMessage"></element>
+			<element name="messages" type="tns:arrayOfMessage"></element>
 		</sequence>
 	</complexType>
 	
@@ -470,7 +470,7 @@
 	<complexType name="modifyStatusResponse">
 		<sequence>
 			<element name="success" type="boolean"></element>
-			<element name="messages" type="tns:ArrayOfMessage"></element>
+			<element name="messages" type="tns:arrayOfMessage"></element>
 		</sequence>
 	</complexType>
 	
@@ -483,7 +483,7 @@
 	<complexType name="getDocumentHistoryResponse">
 		<sequence>
 			<element name="success" type="boolean"></element>
-			<element name="messages" type="tns:ArrayOfMessage"></element>
+			<element name="messages" type="tns:arrayOfMessage"></element>
 			<element name="document_history_list">
 				<complexType>
 					<attribute name="href" type="string"/>
@@ -496,14 +496,14 @@
 	<complexType name="sendDocumentRequest">
 		<sequence>
 			<element name="document_id" type="integer" nillable="false"></element>
-			<element name="recipient_list" type="tns:ArrayOfUserCode"/>
+			<element name="recipient_list" type="tns:arrayOfUserCode"/>
 		</sequence>
 	</complexType>
 	<complexType name="sendDocumentResponse">
 		<sequence>
 			<element name="success" type="boolean"></element>
-			<element name="messages" type="tns:ArrayOfMessage"/>
-			<element name="recipient_list" type="tns:ArrayOfRecipientStatus"/>
+			<element name="messages" type="tns:arrayOfMessage"/>
+			<element name="recipient_list" type="tns:arrayOfRecipientStatus"/>
 		</sequence>
 	</complexType>
 	
