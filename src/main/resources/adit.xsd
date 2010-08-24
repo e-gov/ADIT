@@ -507,4 +507,216 @@
 		</sequence>
 	</complexType>
 	
+	<!-- SOAP Attachment types -->
+	
+	<!-- getJoined attachments -->
+	<element name="user_list" type="tns:getJoinedResponseAttachmentType"/>
+	<complexType name="getJoinedResponseAttachmentType">
+		<sequence>
+			<element name="user_list" type="tns:getJoinedResponseAttachmentUserListType"/>
+		</sequence>
+	</complexType>
+	<complexType name="getJoinedResponseAttachmentUserListType">
+		<sequence>
+			<element name="total" type="integer"/>
+			<element name="user" type="tns:getJoinedResponseAttachmentUserType" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	<complexType name="getJoinedResponseAttachmentUserType">
+		<sequence>
+			<element name="code" type="string"/>
+			<element name="name" type="string"/>
+			<element name="type" type="string"/>
+		</sequence>
+	</complexType>
+	
+	<!-- getUserInfo attachments -->
+	<!-- request -->
+	<element name="getUserInfoRequestAttachmentV1" type="tns:getUserInfoRequestAttachmentV1Type"/>
+	<complexType name="getUserInfoRequestAttachmentV1Type">
+		<sequence>
+			<element name="user_list" type="tns:getUserInfoRequestAttachmentV1UserListType"/>
+		</sequence>
+	</complexType>
+	<complexType name="getUserInfoRequestAttachmentV1UserListType">
+		<sequence>
+			<element name="code" type="string"/>
+		</sequence>
+	</complexType>
+	<!-- response -->
+	<element name="getUserInfoResponseAttachmentV1" type="tns:getUserInfoResponseAttachmentV1Type"/>
+	<complexType name="getUserInfoResponseAttachmentV1Type">
+		<sequence>
+			<element name="user_list" type="tns:getUserInfoResponseAttachmentV1UserListType"/>
+		</sequence>
+	</complexType>
+	<complexType name="getUserInfoResponseAttachmentV1UserListType">
+		<sequence>
+			<element name="code" type="string"/>
+			<element name="has_joined" type="boolean"/>
+			<element name="free_space_bytes" type="integer"/>
+			<element name="used_space_bytes" type="integer"/>
+			<element name="can_read" type="boolean"/>
+			<element name="can_write" type="boolean"/>
+			<element name="uses_dvk" type="boolean"/>
+		</sequence>
+	</complexType>
+	
+	<!-- getDocument attachment -->
+	<element name="getDocumentResponseAttachmentV1" type="tns:getDocumentResponseAttachmentV1Type"/>
+	<complexType name="getDocumentResponseAttachmentV1Type">
+		<sequence>
+			<element name="id" type="integer"/>
+			<element name="guid" type="string"/>
+			<element name="title" type="string"/>
+			<element name="document_type" type="string"/>
+			<element name="creator_code" type="string"/>
+			<element name="created" type="date"/>
+			<element name="creator_application" type="string"/>
+			<element name="last_modified" type="date"/>
+			<element name="signable" type="boolean"/>
+			<element name="document_files" type="tns:documentFilesType"/>
+		</sequence>
+	</complexType>
+	
+	<!-- getDocumentFile -->
+	<element name="getDocumentFileResponseAttachmentV1" type="tns:getDocumentFileResponseAttachmentV1Type"/>
+	<complexType name="getDocumentFileResponseAttachmentV1Type">
+		<sequence>
+			<element name="files" type="tns:getDocumentFileResponseAttachmentV1FilesType"/>
+		</sequence>
+	</complexType>
+	<complexType name="getDocumentFileResponseAttachmentV1FilesType">
+		<sequence>
+			<element name="file" type="tns:getDocumentFileResponseAttachmentV1FileType" maxOccurs="unbounded"></element>
+		</sequence>
+	</complexType>
+	<complexType name="getDocumentFileResponseAttachmentV1FileType">
+		<sequence>
+			<element name="id" type="integer"/>
+			<element name="name" type="string"/>
+			<element name="ontent_type" type="string"/>
+			<element name="description" type="string"/>
+			<element name="size_bytes" type="integer"/>
+			<element name="data" type="string"/>
+		</sequence>
+	</complexType>
+	
+	<!-- getDocumentHistory attachments -->
+	<element name="getDocumentHistoryResponseAttachmentV1" type="tns:getDocumentHistoryResponseAttachmentV1Type"/>
+	<complexType name="getDocumentHistoryResponseAttachmentV1Type">
+		<sequence>
+			<element name="id" type="integer"/>
+			<element name="guid" type="string"/>
+			<element name="activity_list" type="tns:getDocumentHistoryResponseAttachmentV1ActivityListType"/>
+		</sequence>
+	</complexType>
+	<complexType name="getDocumentHistoryResponseAttachmentV1ActivityListType">
+		<sequence>
+			<element name="activity" type="tns:getDocumentHistoryResponseAttachmentV1ActivityType" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	<complexType name="getDocumentHistoryResponseAttachmentV1ActivityType">
+		<sequence>
+			<element name="time" type="date"/>
+			<element name="type" type="string"/>
+			<element name="actors" type="tns:getDocumentHistoryResponseAttachmentV1ActorsType"/>
+			<element name="subjects" type="tns:getDocumentHistoryResponseAttachmentV1SubjectsType"/>
+		</sequence>
+	</complexType>
+	<complexType name="getDocumentHistoryResponseAttachmentV1ActorsType">
+		<sequence>
+			<element name="actor" type="tns:getDocumentHistoryResponseAttachmentV1ActorType" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	<complexType name="getDocumentHistoryResponseAttachmentV1SubjectsType">
+		<sequence>
+			<element name="subject" type="tns:getDocumentHistoryResponseAttachmentV1ActorType" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	<complexType name="getDocumentHistoryResponseAttachmentV1ActorType">
+		<sequence>
+			<element name="code" type="string"/>
+			<element name="name" type="string"/>
+		</sequence>
+	</complexType>
+	
+	<!-- getDocumentList attachments -->
+	<element name="document_list" type="tns:getDocumentListResponseAttachmentV1Type"/>
+	<complexType name="getDocumentListResponseAttachmentV1Type">
+		<sequence>
+			<element name="total" type="integer"/>
+			<element name="document" type="tns:getDocumentListResponseAttachmentV1DocumentType" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	<complexType name="getDocumentListResponseAttachmentV1DocumentType">
+		<sequence>
+			<element name="id" type="integer"/>
+			<element name="guid" type="string"/>
+			<element name="title" type="string"/>
+			<element name="document_type" type="string"/>
+			<element name="creator_code" type="string"/>
+			<element name="created" type="date"/>
+			<element name="creator_application" type="string"/>
+			<element name="last_modified" type="date"/>
+			<element name="signable" type="boolean"/>
+			<element name="sent_to" type="tns:getDocumentListResponseAttachmentV1SentToType"/>
+			<element name="shared_to" type="tns:getDocumentListResponseAttachmentV1SharedToType"/>
+			<element name="document_files" type="tns:documentFilesType"/>
+		</sequence>
+	</complexType>
+	<complexType name="getDocumentListResponseAttachmentV1SentToType">
+		<sequence>
+			<element name="user" type="tns:getDocumentListResponseAttachmentV1SentToUserType" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	<complexType name="getDocumentListResponseAttachmentV1SentToUserType">
+		<sequence>
+			<element name="code" type="string"/>
+			<element name="name" type="string"/>
+			<element name="hasBeenViewed" type="boolean"/>
+			<element name="openedTime" type="date"/>
+			<element name="workflowStatusId" type="integer"/>
+			<element name="dvkStatusId" type="integer"/>
+		</sequence>
+	</complexType>
+	<complexType name="getDocumentListResponseAttachmentV1SharedToType">
+		<sequence>
+			<element name="user" type="tns:getDocumentListResponseAttachmentV1SharedToUserType" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	<complexType name="getDocumentListResponseAttachmentV1SharedToUserType">
+		<sequence>
+			<element name="code" type="string"/>
+			<element name="name" type="string"/>
+			<element name="hasBeenViewed" type="boolean"/>
+			<element name="openedTime" type="date"/>
+			<element name="workflowStatusId" type="integer"/>
+		</sequence>
+	</complexType>
+	
+	<!-- Attachments common types -->
+	<complexType name="documentFilesType">
+		<sequence>
+			<element name="total_files" type="integer"/>
+			<element name="total_bytes" type="integer"/>
+			<element name="document_files" type="tns:subDocumentFilesType"/>
+		</sequence>
+	</complexType>
+	<complexType name="subDocumentFilesType">
+		<sequence>
+			<element name="file" type="tns:fileType" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	<complexType name="fileType">
+		<sequence>
+			<element name="id" type="integer"/>
+			<element name="name" type="string"/>
+			<element name="content_type" type="string"/>
+			<element name="description" type="string"/>
+			<element name="size_bytes" type="integer"/>
+			<element name="data" type="string"/>
+		</sequence>
+	</complexType>
+	
 </schema>
