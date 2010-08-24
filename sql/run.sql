@@ -21,6 +21,13 @@ WHENEVER SQLERROR EXIT ROLLBACK SQL.SQLCODE
 -- Create database
 @@database.sql
 
+-- Create logging procedures
+@@log_proc.sql
+@@log_proc_body.sql
+
+-- Create logging triggers
+@@log_triggers.sql
+
 -- Grant rights to ADIT application user
 @@grant.sql
 
