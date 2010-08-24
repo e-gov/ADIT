@@ -160,3 +160,578 @@ END;
 /
 
 
+CREATE OR REPLACE TRIGGER TR_DOC_DVK_STATUS_LOG
+  after insert or update or delete
+  on DOCUMENT_DVK_STATUS referencing old as old new as new
+  for each row
+DECLARE
+  operation varchar2(100);
+  DOCUMENT_DVK_STATUS_new DOCUMENT_DVK_STATUS%ROWTYPE;
+  DOCUMENT_DVK_STATUS_old DOCUMENT_DVK_STATUS%ROWTYPE;
+BEGIN
+
+  if inserting then
+    operation := 'INSERT';
+  else
+    if updating then
+      operation := 'UPDATE';
+    else
+      operation := 'DELETE';
+    end if;
+  end if;
+
+  DOCUMENT_DVK_STATUS_new.ID := :new.ID;
+  DOCUMENT_DVK_STATUS_new.DESCRIPTION := :new.DESCRIPTION;
+  
+  DOCUMENT_DVK_STATUS_old.ID := :old.ID;
+  DOCUMENT_DVK_STATUS_old.DESCRIPTION := :old.DESCRIPTION;
+
+  ADITLOG.LOG_DOCUMENT_DVK_STATUS(
+    DOCUMENT_DVK_STATUS_new,
+    DOCUMENT_DVK_STATUS_old,
+    operation
+  );
+
+END;
+/
+
+CREATE OR REPLACE TRIGGER TR_DOCUMENT_FILE_LOG
+  after insert or update or delete
+  on DOCUMENT_FILE referencing old as old new as new
+  for each row
+DECLARE
+  operation varchar2(100);
+  DOCUMENT_FILE_new DOCUMENT_FILE%ROWTYPE;
+  DOCUMENT_FILE_old DOCUMENT_FILE%ROWTYPE;
+BEGIN
+
+  if inserting then
+    operation := 'INSERT';
+  else
+    if updating then
+      operation := 'UPDATE';
+    else
+      operation := 'DELETE';
+    end if;
+  end if;
+  
+  DOCUMENT_FILE_new.ID := :new.ID;
+  DOCUMENT_FILE_new.DOCUMENT_ID := :new.DOCUMENT_ID;
+  DOCUMENT_FILE_new.FILE_NAME := :new.FILE_NAME;
+  DOCUMENT_FILE_new.CONTENT_TYPE := :new.CONTENT_TYPE;
+  DOCUMENT_FILE_new.DESCRIPTION := :new.DESCRIPTION;
+  DOCUMENT_FILE_new.FILE_SIZE_BYTES := :new.FILE_SIZE_BYTES;
+  DOCUMENT_FILE_new.DELETED := :new.DELETED;
+  
+  DOCUMENT_FILE_old.ID := :old.ID;
+  DOCUMENT_FILE_old.DOCUMENT_ID := :old.DOCUMENT_ID;
+  DOCUMENT_FILE_old.FILE_NAME := :old.FILE_NAME;
+  DOCUMENT_FILE_old.CONTENT_TYPE := :old.CONTENT_TYPE;
+  DOCUMENT_FILE_old.DESCRIPTION := :old.DESCRIPTION;
+  DOCUMENT_FILE_old.FILE_SIZE_BYTES := :old.FILE_SIZE_BYTES;
+  DOCUMENT_FILE_old.DELETED := :old.DELETED;
+
+  ADITLOG.LOG_DOCUMENT_FILE(
+    DOCUMENT_FILE_new,
+    DOCUMENT_FILE_old,
+    operation
+  );
+
+END;
+/
+
+CREATE OR REPLACE TRIGGER TR_DOCUMENT_HISTORY_LOG
+  after insert or update or delete
+  on DOCUMENT_HISTORY referencing old as old new as new
+  for each row
+DECLARE
+  operation varchar2(100);
+  DOCUMENT_HISTORY_new DOCUMENT_HISTORY%ROWTYPE;
+  DOCUMENT_HISTORY_old DOCUMENT_HISTORY%ROWTYPE;
+BEGIN
+
+  if inserting then
+    operation := 'INSERT';
+  else
+    if updating then
+      operation := 'UPDATE';
+    else
+      operation := 'DELETE';
+    end if;
+  end if;
+  
+  DOCUMENT_HISTORY_new.ID := :new.ID;
+  DOCUMENT_HISTORY_new.DOCUMENT_ID := :new.DOCUMENT_ID;
+  DOCUMENT_HISTORY_new.DOCUMENT_HISTORY_TYPE := :new.DOCUMENT_HISTORY_TYPE;
+  DOCUMENT_HISTORY_new.DESCRIPTION := :new.DESCRIPTION;
+  DOCUMENT_HISTORY_new.EVENT_DATE := :new.EVENT_DATE;
+  DOCUMENT_HISTORY_new.USER_CODE := :new.USER_CODE;
+  DOCUMENT_HISTORY_new.USER_NAME := :new.USER_NAME;
+  DOCUMENT_HISTORY_new.REMOTE_APPLICATION := :new.REMOTE_APPLICATION;
+  DOCUMENT_HISTORY_new.NOTIFICATION_STATUS := :new.NOTIFICATION_STATUS;
+  DOCUMENT_HISTORY_new.XTEE_NOTIFICATION_ID := :new.XTEE_NOTIFICATION_ID;
+  DOCUMENT_HISTORY_new.XTEE_USER_CODE := :new.XTEE_USER_CODE;
+  DOCUMENT_HISTORY_new.XTEE_USER_NAME := :new.XTEE_USER_NAME;
+  
+  DOCUMENT_HISTORY_old.ID := :old.ID;
+  DOCUMENT_HISTORY_old.DOCUMENT_ID := :old.DOCUMENT_ID;
+  DOCUMENT_HISTORY_old.DOCUMENT_HISTORY_TYPE := :old.DOCUMENT_HISTORY_TYPE;
+  DOCUMENT_HISTORY_old.DESCRIPTION := :old.DESCRIPTION;
+  DOCUMENT_HISTORY_old.EVENT_DATE := :old.EVENT_DATE;
+  DOCUMENT_HISTORY_old.USER_CODE := :old.USER_CODE;
+  DOCUMENT_HISTORY_old.USER_NAME := :old.USER_NAME;
+  DOCUMENT_HISTORY_old.REMOTE_APPLICATION := :old.REMOTE_APPLICATION;
+  DOCUMENT_HISTORY_old.NOTIFICATION_STATUS := :old.NOTIFICATION_STATUS;
+  DOCUMENT_HISTORY_old.XTEE_NOTIFICATION_ID := :old.XTEE_NOTIFICATION_ID;
+  DOCUMENT_HISTORY_old.XTEE_USER_CODE := :old.XTEE_USER_CODE;
+  DOCUMENT_HISTORY_old.XTEE_USER_NAME := :old.XTEE_USER_NAME;
+
+  ADITLOG.LOG_DOCUMENT_HISTORY(
+    DOCUMENT_HISTORY_new,
+    DOCUMENT_HISTORY_old,
+    operation
+  );
+
+END;
+/
+
+CREATE OR REPLACE TRIGGER TR_DOCUMENT_HISTORY_TYPE_LOG
+  after insert or update or delete
+  on DOCUMENT_HISTORY_TYPE referencing old as old new as new
+  for each row
+DECLARE
+  operation varchar2(100);
+  DOCUMENT_HISTORY_TYPE_new DOCUMENT_HISTORY_TYPE%ROWTYPE;
+  DOCUMENT_HISTORY_TYPE_old DOCUMENT_HISTORY_TYPE%ROWTYPE;
+BEGIN
+
+  if inserting then
+    operation := 'INSERT';
+  else
+    if updating then
+      operation := 'UPDATE';
+    else
+      operation := 'DELETE';
+    end if;
+  end if;
+  
+  DOCUMENT_HISTORY_TYPE_new.SHORT_NAME := :new.SHORT_NAME;
+  DOCUMENT_HISTORY_TYPE_new.DESCRIPTION := :new.SHORT_NAME;
+  
+  DOCUMENT_HISTORY_TYPE_old.SHORT_NAME := :old.SHORT_NAME;
+  DOCUMENT_HISTORY_TYPE_old.DESCRIPTION := :old.SHORT_NAME;
+
+  ADITLOG.LOG_DOCUMENT_HISTORY_TYPE(
+    DOCUMENT_HISTORY_TYPE_new,
+    DOCUMENT_HISTORY_TYPE_old,
+    operation
+  );
+
+END;
+/
+
+CREATE OR REPLACE TRIGGER TR_DOCUMENT_SHARING_LOG
+  after insert or update or delete
+  on DOCUMENT_SHARING referencing old as old new as new
+  for each row
+DECLARE
+  operation varchar2(100);
+  DOCUMENT_SHARING_new DOCUMENT_SHARING%ROWTYPE;
+  DOCUMENT_SHARING_old DOCUMENT_SHARING%ROWTYPE;
+BEGIN
+
+  if inserting then
+    operation := 'INSERT';
+  else
+    if updating then
+      operation := 'UPDATE';
+    else
+      operation := 'DELETE';
+    end if;
+  end if;
+
+  DOCUMENT_SHARING_new.ID := :new.ID;
+  DOCUMENT_SHARING_new.DOCUMENT_ID := :new.DOCUMENT_ID;
+  DOCUMENT_SHARING_new.USER_CODE := :new.USER_CODE;
+  DOCUMENT_SHARING_new.USER_NAME := :new.USER_NAME;
+  DOCUMENT_SHARING_new.SHARING_TYPE := :new.SHARING_TYPE;
+  DOCUMENT_SHARING_new.TASK_DESCRIPTION := :new.TASK_DESCRIPTION;
+  DOCUMENT_SHARING_new.CREATION_DATE := :new.CREATION_DATE;
+  DOCUMENT_SHARING_new.DVK_STATUS_ID := :new.DVK_STATUS_ID;
+  DOCUMENT_SHARING_new.WF_STATUS_ID := :new.WF_STATUS_ID;
+  DOCUMENT_SHARING_new.LAST_ACCESS_DATE := :new.LAST_ACCESS_DATE;
+  
+  DOCUMENT_SHARING_old.ID := :old.ID;
+  DOCUMENT_SHARING_old.DOCUMENT_ID := :old.DOCUMENT_ID;
+  DOCUMENT_SHARING_old.USER_CODE := :old.USER_CODE;
+  DOCUMENT_SHARING_old.USER_NAME := :old.USER_NAME;
+  DOCUMENT_SHARING_old.SHARING_TYPE := :old.SHARING_TYPE;
+  DOCUMENT_SHARING_old.TASK_DESCRIPTION := :old.TASK_DESCRIPTION;
+  DOCUMENT_SHARING_old.CREATION_DATE := :old.CREATION_DATE;
+  DOCUMENT_SHARING_old.DVK_STATUS_ID := :old.DVK_STATUS_ID;
+  DOCUMENT_SHARING_old.WF_STATUS_ID := :old.WF_STATUS_ID;
+  DOCUMENT_SHARING_old.LAST_ACCESS_DATE := :old.LAST_ACCESS_DATE;
+
+  ADITLOG.LOG_DOCUMENT_SHARING(
+    DOCUMENT_SHARING_new,
+    DOCUMENT_SHARING_old,
+    operation
+  );
+
+END;
+/
+
+CREATE OR REPLACE TRIGGER TR_DOCUMENT_SHARING_TYPE_LOG
+  after insert or update or delete
+  on DOCUMENT_SHARING_TYPE referencing old as old new as new
+  for each row
+DECLARE
+  operation varchar2(100);
+  DOCUMENT_SHARING_TYPE_new DOCUMENT_SHARING_TYPE%ROWTYPE;
+  DOCUMENT_SHARING_TYPE_old DOCUMENT_SHARING_TYPE%ROWTYPE;
+BEGIN
+
+  if inserting then
+    operation := 'INSERT';
+  else
+    if updating then
+      operation := 'UPDATE';
+    else
+      operation := 'DELETE';
+    end if;
+  end if;
+
+  DOCUMENT_SHARING_TYPE_new.SHORT_NAME := :new.SHORT_NAME;
+  DOCUMENT_SHARING_TYPE_new.DESCRIPTION := :new.DESCRIPTION;
+  
+  DOCUMENT_SHARING_TYPE_old.SHORT_NAME := :old.SHORT_NAME;
+  DOCUMENT_SHARING_TYPE_old.DESCRIPTION := :old.DESCRIPTION;
+
+  ADITLOG.LOG_DOCUMENT_SHARING_TYPE(
+    DOCUMENT_SHARING_TYPE_new,
+    DOCUMENT_SHARING_TYPE_old,
+    operation
+  );
+
+END;
+/
+
+CREATE OR REPLACE TRIGGER TR_DOCUMENT_TYPE_LOG
+  after insert or update or delete
+  on DOCUMENT_TYPE referencing old as old new as new
+  for each row
+DECLARE
+  operation varchar2(100);
+  DOCUMENT_TYPE_new DOCUMENT_TYPE%ROWTYPE;
+  DOCUMENT_TYPE_old DOCUMENT_TYPE%ROWTYPE;
+BEGIN
+
+  if inserting then
+    operation := 'INSERT';
+  else
+    if updating then
+      operation := 'UPDATE';
+    else
+      operation := 'DELETE';
+    end if;
+  end if;
+
+  DOCUMENT_TYPE_new.SHORT_NAME := :new.SHORT_NAME;
+  DOCUMENT_TYPE_new.DESCRIPTION := :new.DESCRIPTION;
+  
+  DOCUMENT_TYPE_old.SHORT_NAME := :old.SHORT_NAME;
+  DOCUMENT_TYPE_old.DESCRIPTION := :old.DESCRIPTION;
+
+  ADITLOG.LOG_DOCUMENT_TYPE(
+    DOCUMENT_TYPE_new,
+    DOCUMENT_TYPE_old,
+    operation
+  );
+
+END;
+/
+
+CREATE OR REPLACE TRIGGER TR_DOCUMENT_WF_STATUS_LOG
+  after insert or update or delete
+  on DOCUMENT_WF_STATUS referencing old as old new as new
+  for each row
+DECLARE
+  operation varchar2(100);
+  DOCUMENT_WF_STATUS_new DOCUMENT_WF_STATUS%ROWTYPE;
+  DOCUMENT_WF_STATUS_old DOCUMENT_WF_STATUS%ROWTYPE;
+BEGIN
+
+  if inserting then
+    operation := 'INSERT';
+  else
+    if updating then
+      operation := 'UPDATE';
+    else
+      operation := 'DELETE';
+    end if;
+  end if;
+  
+  DOCUMENT_WF_STATUS_new.ID := :new.ID;
+  DOCUMENT_WF_STATUS_new.DESCRIPTION := :new.DESCRIPTION;
+  DOCUMENT_WF_STATUS_new.NAME := :new.NAME;
+  
+  DOCUMENT_WF_STATUS_old.ID := :old.ID;
+  DOCUMENT_WF_STATUS_old.DESCRIPTION := :old.DESCRIPTION;
+  DOCUMENT_WF_STATUS_old.NAME := :old.NAME;
+
+  ADITLOG.LOG_DOCUMENT_WF_STATUS(
+    DOCUMENT_WF_STATUS_new,
+    DOCUMENT_WF_STATUS_old,
+    operation
+  );
+
+END;
+/
+
+CREATE OR REPLACE TRIGGER TR_NOTIFICATION_LOG
+  after insert or update or delete
+  on NOTIFICATION referencing old as old new as new
+  for each row
+DECLARE
+  operation varchar2(100);
+  NOTIFICATION_new NOTIFICATION%ROWTYPE;
+  NOTIFICATION_old NOTIFICATION%ROWTYPE;
+BEGIN
+
+  if inserting then
+    operation := 'INSERT';
+  else
+    if updating then
+      operation := 'UPDATE';
+    else
+      operation := 'DELETE';
+    end if;
+  end if;
+  
+  NOTIFICATION_new.ID := :new.ID;
+  NOTIFICATION_new.USER_CODE := :new.USER_CODE;
+  NOTIFICATION_new.DOCUMENT_ID := :new.DOCUMENT_ID;
+  NOTIFICATION_new.EVENT_DATE := :new.EVENT_DATE;
+  NOTIFICATION_new.NOTIFICATION_TYPE := :new.NOTIFICATION_TYPE;
+  NOTIFICATION_new.NOTIFICATION_TEXT := :new.NOTIFICATION_TEXT;
+  NOTIFICATION_new.NOTIFICATION_ID := :new.NOTIFICATION_ID;
+  NOTIFICATION_new.NOTIFICATION_SENDING_DATE := :new.NOTIFICATION_SENDING_DATE;
+  
+  NOTIFICATION_old.ID := :old.ID;
+  NOTIFICATION_old.USER_CODE := :old.USER_CODE;
+  NOTIFICATION_old.DOCUMENT_ID := :old.DOCUMENT_ID;
+  NOTIFICATION_old.EVENT_DATE := :old.EVENT_DATE;
+  NOTIFICATION_old.NOTIFICATION_TYPE := :old.NOTIFICATION_TYPE;
+  NOTIFICATION_old.NOTIFICATION_TEXT := :old.NOTIFICATION_TEXT;
+  NOTIFICATION_old.NOTIFICATION_ID := :old.NOTIFICATION_ID;
+  NOTIFICATION_old.NOTIFICATION_SENDING_DATE := :old.NOTIFICATION_SENDING_DATE;
+
+  ADITLOG.LOG_NOTIFICATION(
+    NOTIFICATION_new,
+    NOTIFICATION_old,
+    operation
+  );
+
+END;
+/
+
+CREATE OR REPLACE TRIGGER TR_NOTIFICATION_TYPE_LOG
+  after insert or update or delete
+  on NOTIFICATION_TYPE referencing old as old new as new
+  for each row
+DECLARE
+  operation varchar2(100);
+  NOTIFICATION_TYPE_new NOTIFICATION_TYPE%ROWTYPE;
+  NOTIFICATION_TYPE_old NOTIFICATION_TYPE%ROWTYPE;
+BEGIN
+
+  if inserting then
+    operation := 'INSERT';
+  else
+    if updating then
+      operation := 'UPDATE';
+    else
+      operation := 'DELETE';
+    end if;
+  end if;
+
+  NOTIFICATION_TYPE_new.SHORT_NAME := :new.SHORT_NAME;
+  NOTIFICATION_TYPE_new.DESCRIPTION := :new.DESCRIPTION;
+  
+  NOTIFICATION_TYPE_old.SHORT_NAME := :old.SHORT_NAME;
+  NOTIFICATION_TYPE_old.DESCRIPTION := :old.DESCRIPTION;
+
+  ADITLOG.LOG_NOTIFICATION_TYPE(
+    NOTIFICATION_TYPE_new,
+    NOTIFICATION_TYPE_old,
+    operation
+  );
+
+END;
+/
+
+CREATE OR REPLACE TRIGGER TR_REMOTE_APPLICATION_LOG
+  after insert or update or delete
+  on REMOTE_APPLICATION referencing old as old new as new
+  for each row
+DECLARE
+  operation varchar2(100);
+  REMOTE_APPLICATION_new REMOTE_APPLICATION%ROWTYPE;
+  REMOTE_APPLICATION_old REMOTE_APPLICATION%ROWTYPE;
+BEGIN
+
+  if inserting then
+    operation := 'INSERT';
+  else
+    if updating then
+      operation := 'UPDATE';
+    else
+      operation := 'DELETE';
+    end if;
+  end if;
+
+  REMOTE_APPLICATION_new.SHORT_NAME := :new.SHORT_NAME;
+  REMOTE_APPLICATION_new.NAME := :new.NAME;
+  REMOTE_APPLICATION_new.ORGANIZATION_CODE := :new.ORGANIZATION_CODE;
+  REMOTE_APPLICATION_new.CAN_READ := :new.CAN_READ;
+  REMOTE_APPLICATION_new.CAN_WRITE := :new.CAN_WRITE;
+  
+  REMOTE_APPLICATION_old.SHORT_NAME := :old.SHORT_NAME;
+  REMOTE_APPLICATION_old.NAME := :old.NAME;
+  REMOTE_APPLICATION_old.ORGANIZATION_CODE := :old.ORGANIZATION_CODE;
+  REMOTE_APPLICATION_old.CAN_READ := :old.CAN_READ;
+  REMOTE_APPLICATION_old.CAN_WRITE := :old.CAN_WRITE;
+
+  ADITLOG.LOG_REMOTE_APPLICATION(
+    REMOTE_APPLICATION_new,
+    REMOTE_APPLICATION_old,
+    operation
+  );
+
+END;
+/
+
+CREATE OR REPLACE TRIGGER TR_SIGNATURE_LOG
+  after insert or update or delete
+  on SIGNATURE referencing old as old new as new
+  for each row
+DECLARE
+  operation varchar2(100);
+  SIGNATURE_new SIGNATURE%ROWTYPE;
+  SIGNATURE_old SIGNATURE%ROWTYPE;
+BEGIN
+
+  if inserting then
+    operation := 'INSERT';
+  else
+    if updating then
+      operation := 'UPDATE';
+    else
+      operation := 'DELETE';
+    end if;
+  end if;
+
+  SIGNATURE_new.ID := :new.ID;
+  SIGNATURE_new.USER_CODE := :new.USER_CODE;
+  SIGNATURE_new.DOCUMENT_ID := :new.DOCUMENT_ID;
+  SIGNATURE_new.SIGNER_ROLE := :new.SIGNER_ROLE;
+  SIGNATURE_new.RESOLUTION := :new.RESOLUTION;
+  SIGNATURE_new.COUNTRY := :new.COUNTRY;
+  SIGNATURE_new.COUNTY := :new.COUNTY;
+  SIGNATURE_new.CITY := :new.CITY;
+  SIGNATURE_new.POST_INDEX := :new.POST_INDEX;
+  SIGNATURE_new.SIGNER_CODE := :new.SIGNER_CODE;
+  SIGNATURE_new.SIGNER_NAME := :new.SIGNER_NAME;
+  
+  SIGNATURE_old.ID := :old.ID;
+  SIGNATURE_old.USER_CODE := :old.USER_CODE;
+  SIGNATURE_old.DOCUMENT_ID := :old.DOCUMENT_ID;
+  SIGNATURE_old.SIGNER_ROLE := :old.SIGNER_ROLE;
+  SIGNATURE_old.RESOLUTION := :old.RESOLUTION;
+  SIGNATURE_old.COUNTRY := :old.COUNTRY;
+  SIGNATURE_old.COUNTY := :old.COUNTY;
+  SIGNATURE_old.CITY := :old.CITY;
+  SIGNATURE_old.POST_INDEX := :old.POST_INDEX;
+  SIGNATURE_old.SIGNER_CODE := :old.SIGNER_CODE;
+  SIGNATURE_old.SIGNER_NAME := :old.SIGNER_NAME;
+
+  ADITLOG.LOG_SIGNATURE(
+    SIGNATURE_new,
+    SIGNATURE_old,
+    operation
+  );
+
+END;
+/
+
+CREATE OR REPLACE TRIGGER TR_USER_NOTIFICATION_LOG
+  after insert or update or delete
+  on USER_NOTIFICATION referencing old as old new as new
+  for each row
+DECLARE
+  operation varchar2(100);
+  USER_NOTIFICATION_new USER_NOTIFICATION%ROWTYPE;
+  USER_NOTIFICATION_old USER_NOTIFICATION%ROWTYPE;
+BEGIN
+
+  if inserting then
+    operation := 'INSERT';
+  else
+    if updating then
+      operation := 'UPDATE';
+    else
+      operation := 'DELETE';
+    end if;
+  end if;
+
+  USER_NOTIFICATION_new.USER_CODE := :new.USER_CODE;
+  USER_NOTIFICATION_new.NOTIFICATION_TYPE := :new.NOTIFICATION_TYPE;
+  
+  USER_NOTIFICATION_old.USER_CODE := :old.USER_CODE;
+  USER_NOTIFICATION_old.NOTIFICATION_TYPE := :old.NOTIFICATION_TYPE;
+
+  ADITLOG.LOG_USER_NOTIFICATION(
+    USER_NOTIFICATION_new,
+    USER_NOTIFICATION_old,
+    operation
+  );
+
+END;
+/
+
+CREATE OR REPLACE TRIGGER TR_USERTYPE_LOG
+  after insert or update or delete
+  on USERTYPE referencing old as old new as new
+  for each row
+DECLARE
+  operation varchar2(100);
+  USERTYPE_new USERTYPE%ROWTYPE;
+  USERTYPE_old USERTYPE%ROWTYPE;
+BEGIN
+
+  if inserting then
+    operation := 'INSERT';
+  else
+    if updating then
+      operation := 'UPDATE';
+    else
+      operation := 'DELETE';
+    end if;
+  end if;
+
+  USERTYPE_new.SHORT_NAME := :new.SHORT_NAME;
+  USERTYPE_new.DESCRIPTION := :new.DESCRIPTION;
+  USERTYPE_new.DISK_QUOTA := :new.DISK_QUOTA;
+
+  USERTYPE_old.SHORT_NAME := :old.SHORT_NAME;
+  USERTYPE_old.DESCRIPTION := :old.DESCRIPTION;
+  USERTYPE_old.DISK_QUOTA := :old.DISK_QUOTA;
+
+  ADITLOG.LOG_USERTYPE(
+    USERTYPE_new,
+    USERTYPE_old,
+    operation
+  );
+
+END;
+/
