@@ -562,7 +562,7 @@
 		</sequence>
 	</complexType>
 	
-	<!-- getDocument attachment -->
+	<!-- getDocument attachments -->
 	<element name="getDocumentResponseAttachmentV1" type="tns:getDocumentResponseAttachmentV1Type"/>
 	<complexType name="getDocumentResponseAttachmentV1Type">
 		<sequence>
@@ -579,7 +579,7 @@
 		</sequence>
 	</complexType>
 	
-	<!-- getDocumentFile -->
+	<!-- getDocumentFile attachments -->
 	<element name="getDocumentFileResponseAttachmentV1" type="tns:getDocumentFileResponseAttachmentV1Type"/>
 	<complexType name="getDocumentFileResponseAttachmentV1Type">
 		<sequence>
