@@ -3,58 +3,50 @@
 	xmlns:tns="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" elementFormDefault="qualified"
 	xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/">
 	
-	<!-- 
-	<import namespace="http://schemas.xmlsoap.org/soap/encoding/"
-		schemaLocation="http://schemas.xmlsoap.org/soap/encoding/" />
-	 -->
-	
-	<element name="JoinRequest" type="tns:JoinRequest"/>
-	<element name="JoinResponse" type="tns:JoinResponse"/>
-	<element name="UnJoinRequest" type="tns:UnJoinRequest"/>
-	<element name="UnJoinResponse" type="tns:UnJoinResponse"/>
-	<element name="GetUserInfoRequest" type="tns:GetUserInfoRequest"/>
-	<element name="GetUserInfoResponse" type="tns:GetUserInfoResponse"/>
-	<element name="GetJoinedRequest" type="tns:GetJoinedRequest"/>
-	<element name="GetJoinedResponse" type="tns:GetJoinedResponse"/>
-	<element name="GetNotificationsRequest" type="tns:GetNotificationsRequest"/>
-	<element name="GetNotificationsResponse" type="tns:GetNotificationsResponse"/>
-	<element name="SetNotificationsRequest" type="tns:SetNotificationsRequest"/>
-	<element name="SetNotificationsResponse" type="tns:SetNotificationsResponse"/>
-	
-	<element name="GetDocumentListRequest" type="tns:GetDocumentListRequest"/>
-	<element name="GetDocumentListResponse" type="tns:GetDocumentListResponse"/>
-	<element name="GetDocumentRequest" type="tns:GetDocumentRequest"/>
-	<element name="GetDocumentResponse" type="tns:GetDocumentResponse"/>
-	<element name="GetDocumentFileRequest" type="tns:GetDocumentFileRequest"/>
-	<element name="GetDocumentFileResponse" type="tns:GetDocumentFileResponse"/>
-	<element name="SaveDocumentRequest" type="tns:SaveDocumentRequest"/>
-	<element name="SaveDocumentResponse" type="tns:SaveDocumentResponse"/>
-	<element name="SaveDocumentFileRequest" type="tns:SaveDocumentFileRequest"/>
-	<element name="SaveDocumentFileResponse" type="tns:SaveDocumentFileResponse"/>
-	<element name="DeleteDocumentFileRequest" type="tns:DeleteDocumentFileRequest"/>
-	<element name="DeleteDocumentFileResponse" type="tns:DeleteDocumentFileResponse"/>
-	<element name="DeflateDocumentRequest" type="tns:DeflateDocumentRequest"/>
-	<element name="DeflateDocumentResponse" type="tns:DeflateDocumentResponse"/>
-	<element name="DeleteDocumentRequest" type="tns:DeleteDocumentRequest"/>
-	<element name="DeleteDocumentResponse" type="tns:DeleteDocumentResponse"/>
-	<element name="PrepareSignatureRequest" type="tns:PrepareSignatureRequest"/>
-	<element name="PrepareSignatureResponse" type="tns:PrepareSignatureResponse"/>
-	<element name="ConfirmSignatureRequest" type="tns:ConfirmSignatureRequest"/>
-	<element name="ConfirmSignatureResponse" type="tns:ConfirmSignatureResponse"/>
-	
-	<element name="ShareDocumentRequest" type="tns:ShareDocumentRequest"/>
-	<element name="ShareDocumentResponse" type="tns:ShareDocumentResponse"/>
-	<element name="UnShareDocumentRequest" type="tns:UnShareDocumentRequest"/>
-	<element name="UnShareDocumentResponse" type="tns:UnShareDocumentResponse"/>
-	<element name="MarkDocumentViewedRequest" type="tns:MarkDocumentViewedRequest"/>
-	<element name="MarkDocumentViewedResponse" type="tns:MarkDocumentViewedResponse"/>
-	<element name="ModifyStatusRequest" type="tns:ModifyStatusRequest"/>
-	<element name="ModifyStatusResponse" type="tns:ModifyStatusResponse"/>
-	<element name="GetDocumentHistoryRequest" type="tns:GetDocumentHistoryRequest"/>
-	<element name="GetDocumentHistoryResponse" type="tns:GetDocumentHistoryResponse"/>
-	
-	<element name="SendDocumentRequest" type="tns:SendDocumentRequest"/>
-	<element name="SendDocumentResponse" type="tns:SendDocumentResponse"/>
+	<element name="joinRequest" type="tns:joinRequest"/>
+	<element name="joinResponse" type="tns:joinResponse"/>
+	<element name="unJoinRequest" type="tns:unJoinRequest"/>
+	<element name="unJoinResponse" type="tns:unJoinResponse"/>
+	<element name="getUserInfoRequest" type="tns:getUserInfoRequest"/>
+	<element name="getUserInfoResponse" type="tns:getUserInfoResponse"/>
+	<element name="getJoinedRequest" type="tns:getJoinedRequest"/>
+	<element name="getJoinedResponse" type="tns:getJoinedResponse"/>
+	<element name="getNotificationsRequest" type="tns:getNotificationsRequest"/>
+	<element name="getNotificationsResponse" type="tns:getNotificationsResponse"/>
+	<element name="setNotificationsRequest" type="tns:setNotificationsRequest"/>
+	<element name="setNotificationsResponse" type="tns:setNotificationsResponse"/>
+	<element name="getDocumentListRequest" type="tns:getDocumentListRequest"/>
+	<element name="getDocumentListResponse" type="tns:getDocumentListResponse"/>
+	<element name="getDocumentRequest" type="tns:getDocumentRequest"/>
+	<element name="getDocumentResponse" type="tns:getDocumentResponse"/>
+	<element name="getDocumentFileRequest" type="tns:getDocumentFileRequest"/>
+	<element name="getDocumentFileResponse" type="tns:getDocumentFileResponse"/>
+	<element name="saveDocumentRequest" type="tns:saveDocumentRequest"/>
+	<element name="saveDocumentResponse" type="tns:saveDocumentResponse"/>
+	<element name="saveDocumentFileRequest" type="tns:saveDocumentFileRequest"/>
+	<element name="saveDocumentFileResponse" type="tns:saveDocumentFileResponse"/>
+	<element name="deleteDocumentFileRequest" type="tns:deleteDocumentFileRequest"/>
+	<element name="deleteDocumentFileResponse" type="tns:deleteDocumentFileResponse"/>
+	<element name="deflateDocumentRequest" type="tns:deflateDocumentRequest"/>
+	<element name="deflateDocumentResponse" type="tns:deflateDocumentResponse"/>
+	<element name="deleteDocumentRequest" type="tns:deleteDocumentRequest"/>
+	<element name="deleteDocumentResponse" type="tns:deleteDocumentResponse"/>
+	<element name="prepareSignatureRequest" type="tns:prepareSignatureRequest"/>
+	<element name="prepareSignatureResponse" type="tns:prepareSignatureResponse"/>
+	<element name="confirmSignatureRequest" type="tns:confirmSignatureRequest"/>
+	<element name="confirmSignatureResponse" type="tns:confirmSignatureResponse"/>
+	<element name="shareDocumentRequest" type="tns:shareDocumentRequest"/>
+	<element name="shareDocumentResponse" type="tns:shareDocumentResponse"/>
+	<element name="unShareDocumentRequest" type="tns:unShareDocumentRequest"/>
+	<element name="unShareDocumentResponse" type="tns:unShareDocumentResponse"/>
+	<element name="markDocumentViewedRequest" type="tns:markDocumentViewedRequest"/>
+	<element name="markDocumentViewedResponse" type="tns:markDocumentViewedResponse"/>
+	<element name="modifyStatusRequest" type="tns:modifyStatusRequest"/>
+	<element name="modifyStatusResponse" type="tns:modifyStatusResponse"/>
+	<element name="getDocumentHistoryRequest" type="tns:getDocumentHistoryRequest"/>
+	<element name="getDocumentHistoryResponse" type="tns:getDocumentHistoryResponse"/>
+	<element name="sendDocumentRequest" type="tns:sendDocumentRequest"/>
+	<element name="sendDocumentResponse" type="tns:sendDocumentResponse"/>
 	
 	<complexType name="Message">
 		<simpleContent>
@@ -147,13 +139,13 @@
 	</complexType>
 
 	<!-- join päringu tüübid -->
-	<complexType name="JoinRequest">
+	<complexType name="joinRequest">
 		<sequence>
 			<element name="userType" type="string"></element>
 			<element name="userName" type="string"></element>
 		</sequence>
 	</complexType>
-	<complexType name="JoinResponse">
+	<complexType name="joinResponse">
 		<sequence>
 			<element name="success" type="boolean"></element>
 			<element name="messages" type="tns:ArrayOfMessage"></element>
@@ -161,10 +153,10 @@
 	</complexType>
 	
 	<!-- unJoin päringu tüübid -->
-	<complexType name="UnJoinRequest">
+	<complexType name="unJoinRequest">
 		<sequence/>
 	</complexType>
-	<complexType name="UnJoinResponse">
+	<complexType name="unJoinResponse">
 		<sequence>
 			<element name="success" type="boolean"></element>
 			<element name="messages" type="tns:ArrayOfMessage"></element>
@@ -172,12 +164,12 @@
 	</complexType>
 	
 	<!-- getUserInfo päringu tüübid -->
-	<complexType name="GetUserInfoRequest">
+	<complexType name="getUserInfoRequest">
 		<sequence>
 			<element name="userList" type="base64Binary"></element>
 		</sequence>
 	</complexType>
-	<complexType name="GetUserInfoResponse">
+	<complexType name="getUserInfoResponse">
 		<sequence>
 			<element name="success" type="boolean"></element>
 			<element name="messages" type="tns:ArrayOfMessage"></element>
@@ -186,13 +178,13 @@
 	</complexType>
 	
 	<!-- getJoined päringu tüübid -->
-	<complexType name="GetJoinedRequest">
+	<complexType name="getJoinedRequest">
 		<sequence>
 			<element name="maxResults" type="integer" minOccurs="0" maxOccurs="1"></element>
 			<element name="startIndex" type="integer" minOccurs="0" maxOccurs="1"></element>
 		</sequence>
 	</complexType>
-	<complexType name="GetJoinedResponse">
+	<complexType name="getJoinedResponse">
 		<sequence>
 			<element name="success" type="boolean"></element>
 			<element name="messages" type="tns:ArrayOfMessage"></element>
@@ -201,10 +193,10 @@
 	</complexType>
 	
 	<!-- getNotifications päringu tüübid -->
-	<complexType name="GetNotificationsRequest">
+	<complexType name="getNotificationsRequest">
 		<sequence/>
 	</complexType>
-	<complexType name="GetNotificationsResponse">
+	<complexType name="getNotificationsResponse">
 		<sequence>
 			<element name="success" type="boolean"></element>
 			<element name="messages" type="tns:ArrayOfMessage"></element>
@@ -215,12 +207,12 @@
 	</complexType>
 	
 	<!-- setNotifications päringu tüübid -->
-	<complexType name="SetNotificationsRequest">
+	<complexType name="setNotificationsRequest">
 		<sequence>
 			<element name="notifications" type="tns:ArrayOfNotification" nillable="false"></element>
 		</sequence>
 	</complexType>
-	<complexType name="SetNotificationsResponse">
+	<complexType name="setNotificationsResponse">
 		<sequence>
 			<element name="success" type="boolean"></element>
 			<element name="messages" type="tns:ArrayOfMessage"></element>
@@ -230,7 +222,7 @@
 	
 	
 	<!-- getDocumentList päringu tüübid -->
-	<complexType name="GetDocumentListRequest">
+	<complexType name="getDocumentListRequest">
 		<sequence>
 			<element name="folder" type="string"></element>
 			<element name="document_types" type="tns:ArrayOfDocumentType"></element>
@@ -244,7 +236,7 @@
 			<element name="start_index" type="integer"></element>
 		</sequence>
 	</complexType>
-	<complexType name="GetDocumentListResponse">
+	<complexType name="getDocumentListResponse">
 		<sequence>
 			<element name="success" type="boolean"></element>
 			<element name="messages" type="tns:ArrayOfMessage"></element>
@@ -257,13 +249,13 @@
 	</complexType>
 	
 	<!-- getDocument päringu tüübid -->
-	<complexType name="GetDocumentRequest">
+	<complexType name="getDocumentRequest">
 		<sequence>
 			<element name="document_id" type="integer"></element>
 			<element name="include_file_contents" type="boolean"></element>
 		</sequence>
 	</complexType>
-	<complexType name="GetDocumentResponse">
+	<complexType name="getDocumentResponse">
 		<sequence>
 			<element name="success" type="boolean"></element>
 			<element name="messages" type="tns:ArrayOfMessage"></element>
@@ -276,13 +268,13 @@
 	</complexType>
 	
 	<!-- getDocumentFile päringu tüübid -->
-	<complexType name="GetDocumentFileRequest">
+	<complexType name="getDocumentFileRequest">
 		<sequence>
 			<element name="document_id" type="integer"></element>
 			<element name="file_id_list" type="tns:ArrayOfFileId"></element>
 		</sequence>
 	</complexType>
-	<complexType name="GetDocumentFileResponse">
+	<complexType name="getDocumentFileResponse">
 		<sequence>
 			<element name="success" type="boolean"></element>
 			<element name="messages" type="tns:ArrayOfMessage"></element>
@@ -295,7 +287,7 @@
 	</complexType>
 	
 	<!-- saveDocument päringu tüübid -->
-	<complexType name="SaveDocumentRequest">
+	<complexType name="saveDocumentRequest">
 		<sequence>
 			<element name="document">
 				<complexType>
@@ -304,7 +296,7 @@
 			</element>
 		</sequence>
 	</complexType>
-	<complexType name="SaveDocumentResponse">
+	<complexType name="saveDocumentResponse">
 		<sequence>
 			<element name="success" type="boolean"></element>
 			<element name="messages" type="tns:ArrayOfMessage"></element>
@@ -318,7 +310,7 @@
 	</complexType>
 	
 	<!-- saveDocumentFile päringu tüübid -->
-	<complexType name="SaveDocumentFileRequest">
+	<complexType name="saveDocumentFileRequest">
 		<sequence>
 			<element name="document_id" type="integer"></element>
 			<element name="file">
@@ -328,7 +320,7 @@
 			</element>
 		</sequence>
 	</complexType>
-	<complexType name="SaveDocumentFileResponse">
+	<complexType name="saveDocumentFileResponse">
 		<sequence>
 			<element name="success" type="boolean"></element>
 			<element name="messages" type="tns:ArrayOfMessage"></element>
@@ -342,13 +334,13 @@
 	</complexType>
 	
 	<!-- deleteDocumentFile päringu tüübid -->
-	<complexType name="DeleteDocumentFileRequest">
+	<complexType name="deleteDocumentFileRequest">
 		<sequence>
 			<element name="document_id" type="integer"></element>
 			<element name="file_id" type="integer"></element>
 		</sequence>
 	</complexType>
-	<complexType name="DeleteDocumentFileResponse">
+	<complexType name="deleteDocumentFileResponse">
 		<sequence>
 			<element name="success" type="boolean"></element>
 			<element name="messages" type="tns:ArrayOfMessage"></element>
@@ -356,12 +348,12 @@
 	</complexType>
 	
 	<!-- deleteDocument päringu tüübid -->
-	<complexType name="DeleteDocumentRequest">
+	<complexType name="deleteDocumentRequest">
 		<sequence>
 			<element name="document_id" type="integer"></element>
 		</sequence>
 	</complexType>
-	<complexType name="DeleteDocumentResponse">
+	<complexType name="deleteDocumentResponse">
 		<sequence>
 			<element name="success" type="boolean"></element>
 			<element name="messages" type="tns:ArrayOfMessage"></element>
@@ -369,12 +361,12 @@
 	</complexType>
 	
 	<!-- deflateDocument päringu tüübid -->
-	<complexType name="DeflateDocumentRequest">
+	<complexType name="deflateDocumentRequest">
 		<sequence>
 			<element name="document_id" type="integer"></element>
 		</sequence>
 	</complexType>
-	<complexType name="DeflateDocumentResponse">
+	<complexType name="deflateDocumentResponse">
 		<sequence>
 			<element name="success" type="boolean"></element>
 			<element name="messages" type="tns:ArrayOfMessage"></element>
@@ -382,7 +374,7 @@
 	</complexType>
 	
 	<!-- prepareSignature päringu tüübid -->
-	<complexType name="PrepareSignatureRequest">
+	<complexType name="prepareSignatureRequest">
 		<sequence>
 			<element name="document_id" type="integer"></element>
 			<element name="manifest" type="string"></element>
@@ -397,7 +389,7 @@
 			</element>
 		</sequence>
 	</complexType>
-	<complexType name="PrepareSignatureResponse">
+	<complexType name="prepareSignatureResponse">
 		<sequence>
 			<element name="success" type="boolean"></element>
 			<element name="messages" type="tns:ArrayOfMessage"></element>
@@ -406,7 +398,7 @@
 	</complexType>
 	
 	<!-- confirmSignature päringu tüübid -->
-	<complexType name="ConfirmSignatureRequest">
+	<complexType name="confirmSignatureRequest">
 		<sequence>
 			<element name="document_id" type="integer"></element>
 			<element name="signature">
@@ -416,7 +408,7 @@
 			</element>
 		</sequence>
 	</complexType>
-	<complexType name="ConfirmSignatureResponse">
+	<complexType name="confirmSignatureResponse">
 		<sequence>
 			<element name="success" type="boolean"></element>
 			<element name="messages" type="tns:ArrayOfMessage"></element>
@@ -424,7 +416,7 @@
 	</complexType>
 	
 	<!-- shareDocument päringu tüübid -->
-	<complexType name="ShareDocumentRequest">
+	<complexType name="shareDocumentRequest">
 		<sequence>
 			<element name="document_id" type="integer"/>
 			<element name="recipient_list" type="tns:ArrayOfUserCode"/>
@@ -432,7 +424,7 @@
 			<element name="shared_for_signing" type="boolean"/>
 		</sequence>
 	</complexType>
-	<complexType name="ShareDocumentResponse">
+	<complexType name="shareDocumentResponse">
 		<sequence>
 			<element name="success" type="boolean"/>
 			<element name="messages" type="tns:ArrayOfMessage"/>
@@ -441,13 +433,13 @@
 	</complexType>
 	
 	<!-- unShareDocument päringu tüübid -->
-	<complexType name="UnShareDocumentRequest">
+	<complexType name="unShareDocumentRequest">
 		<sequence>
 			<element name="document_id" type="integer"/>
 			<element name="recipient_list" type="tns:ArrayOfUserCode"/>
 		</sequence>
 	</complexType>
-	<complexType name="UnShareDocumentResponse">
+	<complexType name="unShareDocumentResponse">
 		<sequence>
 			<element name="success" type="boolean"/>
 			<element name="messages" type="tns:ArrayOfMessage"/>
@@ -456,12 +448,12 @@
 	</complexType>
 	
 	<!-- markDocumentViewed päringu tüübid -->
-	<complexType name="MarkDocumentViewedRequest">
+	<complexType name="markDocumentViewedRequest">
 		<sequence>
 			<element name="document_id" type="integer"></element>
 		</sequence>
 	</complexType>
-	<complexType name="MarkDocumentViewedResponse">
+	<complexType name="markDocumentViewedResponse">
 		<sequence>
 			<element name="success" type="boolean"></element>
 			<element name="messages" type="tns:ArrayOfMessage"></element>
@@ -469,13 +461,13 @@
 	</complexType>
 	
 	<!-- modifyStatus päringu tüübid -->
-	<complexType name="ModifyStatusRequest">
+	<complexType name="modifyStatusRequest">
 		<sequence>
 			<element name="document_id" type="integer"></element>
 			<element name="document_status_id" type="integer"></element>
 		</sequence>
 	</complexType>
-	<complexType name="ModifyStatusResponse">
+	<complexType name="modifyStatusResponse">
 		<sequence>
 			<element name="success" type="boolean"></element>
 			<element name="messages" type="tns:ArrayOfMessage"></element>
@@ -483,12 +475,12 @@
 	</complexType>
 	
 	<!-- getDocumentHistory päringu tüübid -->
-	<complexType name="GetDocumentHistoryRequest">
+	<complexType name="getDocumentHistoryRequest">
 		<sequence>
 			<element name="document_id" type="integer" nillable="false"></element>
 		</sequence>
 	</complexType>
-	<complexType name="GetDocumentHistoryResponse">
+	<complexType name="getDocumentHistoryResponse">
 		<sequence>
 			<element name="success" type="boolean"></element>
 			<element name="messages" type="tns:ArrayOfMessage"></element>
@@ -501,13 +493,13 @@
 	</complexType>
 	
 	<!-- sendDocument päringu tüübid -->
-	<complexType name="SendDocumentRequest">
+	<complexType name="sendDocumentRequest">
 		<sequence>
 			<element name="document_id" type="integer" nillable="false"></element>
 			<element name="recipient_list" type="tns:ArrayOfUserCode"/>
 		</sequence>
 	</complexType>
-	<complexType name="SendDocumentResponse">
+	<complexType name="sendDocumentResponse">
 		<sequence>
 			<element name="success" type="boolean"></element>
 			<element name="messages" type="tns:ArrayOfMessage"/>
