@@ -10,7 +10,7 @@
 		<map-to xml="keha" ns-uri="http://x-tee.riik.ee/xsd/xtee.xsd"/>
 		<field name="item" type="java.lang.String" collection="arraylist">
 			<bind-xml name="item"/>
-		</field>		
+		</field>
 	</class>
 	
 	<!-- Join -->
