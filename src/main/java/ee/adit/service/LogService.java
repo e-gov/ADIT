@@ -13,18 +13,66 @@ import ee.adit.dao.pojo.ErrorLog;
 import ee.adit.dao.pojo.MetadataRequestLog;
 import ee.adit.dao.pojo.RequestLog;
 
+/**
+ * Logging service. Provides methods for inserting log records to database.
+ * 
+ * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
+ * @author Jaak Lember, Interinx, jaak@interinx.com
+ */
 public class LogService {
+	
+	/**
+	 * Log4J logger
+	 */
 	private static Logger LOG = Logger.getLogger(LogService.class);
 	
+	/**
+	 * Error log level WARN
+	 */
 	public static final String ErrorLogLevel_Warn = "WARN";
+	
+	/**
+	 * Error log level ERROR
+	 */
 	public static final String ErrorLogLevel_Error = "ERROR";
+	
+	/**
+	 * Error log level FATAL
+	 */
 	public static final String ErrorLogLevel_Fatal = "FATAL";
 	
+	/**
+	 * Request log Data Access Object
+	 */
 	private RequestLogDAO requestLogDAO;
+	
+	/**
+	 * Error log Data Access Object
+	 */
 	private ErrorLogDAO errorLogDAO;
+	
+	/**
+	 * Download log Data Access Object
+	 */
 	private DownloadRequestLogDAO downloadRequestLogDAO;
+	
+	/**
+	 * Metadata log Data Access Object
+	 */
 	private MetadataRequestLogDAO metadataRequestLogDAO;
 	
+	/**
+	 * Adds a record to request log.
+	 * 
+	 * @param requestName request name
+	 * @param documentId document ID of the document associated with the request
+	 * @param requestDate request invocation date
+	 * @param remoteApplicationShortName name of the remote application that sent the request
+	 * @param userCode code of the user who sent the request
+	 * @param organizationCode the organization that sent the request
+	 * @param additionalInformation additional information
+	 * @return
+	 */
 	public Long addRequestLogEntry(
 			String requestName,
 			Long documentId,
@@ -46,6 +94,19 @@ public class LogService {
 		return this.requestLogDAO.save(logEntry);
 	}
 	
+	/**
+	 * Adds a record to the error log.
+	 * 
+	 * @param actionName the name of the action that caused the error 
+	 * @param documentId document ID associated with the error
+	 * @param errorDate the time when the error occurred
+	 * @param remoteApplicationShortName remote application
+	 * @param userCode code of the user who sent the request
+	 * @param errorLevel error level
+	 * @param errorMessage error message
+	 * 
+	 * @return log entry ID
+	 */
 	public Long addErrorLogEntry(
 			String actionName,
 			Long documentId,
@@ -67,6 +128,17 @@ public class LogService {
 		return this.errorLogDAO.save(logEntry);
 	}
 
+	/**
+	 * Adds a record to the download log.
+	 * 
+	 * @param documentId document ID associated with the request
+	 * @param documentFileId document file ID associated with the request
+	 * @param requestDate request invocation date
+	 * @param appName remote application name
+	 * @param userCode code of the user who sent the request
+	 * @param orgCode the code of the organization that sent the request
+	 * @return log entry ID
+	 */
 	public Long addDownloadRequestLogEntry(
 			Long documentId,
 			Long documentFileId,
@@ -92,6 +164,16 @@ public class LogService {
 		return result;
 	}
 	
+	/**
+	 * Adds a record to the metadata log.
+	 * 
+	 * @param documentId document ID associated with the request
+	 * @param requestDate request invocation date
+	 * @param appName remote application name
+	 * @param userCode code of the user who sent the request
+	 * @param orgCode the code of the organization that sent the request
+	 * @return log entry ID
+	 */
 	public Long addMetadataRequestLogEntry(
 			Long documentId,
 			Date requestDate,
@@ -115,38 +197,76 @@ public class LogService {
 		return result;
 	}
 
+	/**
+	 * Retrieves the request log DAO
+	 * @return
+	 */
 	public RequestLogDAO getRequestLogDAO() {
 		return requestLogDAO;
 	}
 
+	/**
+	 * Sets the request log DAO
+	 * @return
+	 */
 	public void setRequestLogDAO(RequestLogDAO requestLogDAO) {
 		this.requestLogDAO = requestLogDAO;
 	}
 	
+	/**
+	 * Adds a request log entry,
+	 * 
+	 * @param requestLogEntry
+	 * @return
+	 */
 	public Long addRequestLogEntry(RequestLog requestLogEntry) {
 		return this.requestLogDAO.save(requestLogEntry);
 	}
 	
+	/**
+	 * Retrieves the error log DAO
+	 * @return
+	 */
 	public ErrorLogDAO getErrorLogDAO() {
 		return errorLogDAO;
 	}
 
+	/**
+	 * Sets the error log DAO
+	 * @return
+	 */
 	public void setErrorLogDAO(ErrorLogDAO errorLogDAO) {
 		this.errorLogDAO = errorLogDAO;
 	}
 
+	/**
+	 * Retrieves the download log DAO
+	 * @return
+	 */
 	public DownloadRequestLogDAO getDownloadRequestLogDAO() {
 		return downloadRequestLogDAO;
 	}
-
+	
+	/**
+	 * Sets the download log DAO
+	 * @return
+	 */
 	public void setDownloadRequestLogDAO(DownloadRequestLogDAO downloadRequestLogDAO) {
 		this.downloadRequestLogDAO = downloadRequestLogDAO;
 	}
 
+	/**
+	 * Retrieves the metadata log DAO
+	 * @return
+	 */
 	public MetadataRequestLogDAO getMetadataRequestLogDAO() {
 		return metadataRequestLogDAO;
 	}
 
+	/**
+	 * Sets the metadata log DAO
+	 * @return
+	 */
 	public void setMetadataRequestLogDAO(MetadataRequestLogDAO metadataRequestLogDAO) {
 		this.metadataRequestLogDAO = metadataRequestLogDAO;
 	}
