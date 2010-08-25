@@ -43,35 +43,84 @@ import org.castor.core.util.Base64Encoder;
 
 import ee.adit.exception.AditInternalException;
 
+/**
+ * Class providing static utility / helper methods.
+ * 
+ * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
+ * @author Jaak Lember, Interinx, jaak@interinx.com
+ */
 public class Util {
 
+	/**
+	 * X-Tee namespace URI
+	 */
 	public static final String XTEE_NAMESPACE = "http://x-tee.riik.ee/xsd/xtee.xsd";
 	
+	/**
+	 * Log4J logger
+	 */
 	private static Logger LOG = Logger.getLogger(Util.class);
 
+	/**
+	 * Default file extension for temporary files
+	 */
+	public static final String ADIT_FILE_EXTENSION = ".adit";
+	
+	/**
+	 * The length of the generated random ID.
+	 */
+	public static final int RANDOM_ID_LENGTH = 30;
+	
+	/**
+	 * Base64 encodes the specified string.
+	 * 
+	 * @param string the string to be encoded
+	 * @return the base64 encoded string
+	 * @throws UnsupportedEncodingException
+	 */
 	public static String base64encode(String string) throws UnsupportedEncodingException {
 		return new String(Base64Encoder.encode(string.getBytes("UTF-8")));
 	}
 
+	/**
+	 * Generates a random GUID / UUID.
+	 * 
+	 * @return GUID
+	 */
 	public static String generateGUID() {
 		return java.util.UUID.randomUUID().toString();
 	}
 
+	/**
+	 * Generates a random file name with an extension.
+	 * 
+	 * @return file name
+	 */
 	public static String generateRandomFileName() {
 		StringBuffer result = new StringBuffer();
 		result.append(generateRandomFileNameWithoutExtension());
-		result.append(".adit");
+		result.append(ADIT_FILE_EXTENSION);
 		return result.toString();
 	}
 
+	/**
+	 * Generate a random file name without an extension.
+	 * 
+	 * @return file name
+	 */
 	public static String generateRandomFileNameWithoutExtension() {
 		return generateRandomID();
 	}
 
+	/**
+	 * Generates a random ID of length {@code RANDOM_ID_LENGTH}.
+	 * 
+	 * @return the random ID as a string
+	 */
 	public static String generateRandomID() {
 		StringBuffer result = new StringBuffer();
 		Random r = new Random();
-		for (int i = 0; i < 30; i++) {
+		for (int i = 0; i < RANDOM_ID_LENGTH; i++) {
 			result.append(r.nextInt(10));
 		}
 		return result.toString();
@@ -117,6 +166,15 @@ public class Util {
         }
     }
 	
+    /**
+     * GZip-s and then Base64 encodes the specified file.
+     * 
+     * @param inputFile absolute path to the file to be processed
+     * @param tempDir directory where to put the result and any temporary files
+     * @param deleteTemporaryFiles parameter specifying if temporary files are to be deleted immediately after work is complete 
+     * @return absolute path to the result file
+     * @throws IOException
+     */
 	public static String gzipAndBase64Encode(String inputFile, String tempDir, boolean deleteTemporaryFiles) throws IOException {
 		String resultFileName = null;
 
@@ -165,6 +223,14 @@ public class Util {
 		return resultFileName;
 	}
 
+	/**
+	 * GZip-s the specified input file. 
+	 * 
+	 * @param inputFile absolute path to the file to be processed
+	 * @param tempDir directory where to put the result and any temporary files
+	 * @return absolute path to the result file
+	 * @throws IOException
+	 */
 	public static String gzipFile(String inputFile, String tempDir) throws IOException {
 		FileInputStream in = null;
 		FileOutputStream zipOutFile = null;
@@ -197,6 +263,14 @@ public class Util {
 		return zipOutFileName;
 	}
 	
+	/**
+	 * Encodes file contents to Base64.
+	 * 
+	 * @param inputFile absolute path to the file to be processed
+	 * @param tempDir directory where to put the result and any temporary files
+	 * @return absolute path to the result file
+	 * @throws IOException
+	 */
 	public static String base64EncodeFile(String inputFile, String tempDir) throws IOException {
 		String resultFileName = null;
 
@@ -218,6 +292,15 @@ public class Util {
 		return resultFileName;
 	}
 
+	/**
+	 * Base64 decodes and Unzip-s the specified file.
+	 * 
+     * @param inputFile absolute path to the file to be processed
+     * @param tempDir directory where to put the result and any temporary files
+     * @param deleteTemporaryFiles parameter specifying if temporary files are to be deleted immediately after work is complete 
+     * @return absolute path to the result file
+	 * @throws IOException
+	 */
 	public static String base64DecodeAndUnzip(String inputFile, String tempDir, boolean deleteTemporaryFiles) throws IOException {
 
 		// Base64 decode
@@ -264,6 +347,14 @@ public class Util {
 		return unzipOutFileName;
 	}
 
+	/**
+	 * Base64 decodes a file.
+	 * 
+     * @param inputFile absolute path to the file to be processed
+     * @param tempDir directory where to put the result and any temporary files 
+     * @return absolute path to the result file
+	 * @throws IOException
+	 */
 	public static String base64DecodeFile(String inputFile, String tempDir) throws IOException {
 
 		// Base64 decode
@@ -284,6 +375,14 @@ public class Util {
 		return base64DecodedFile;
 	}
 
+	/**
+	 * Creates a temporary file from input stream.
+	 * 
+	 * @param inputStream the data stream
+	 * @param tempDir directory where to put the result and any temporary files 
+	 * @return the absolute path to the result file
+	 * @throws IOException
+	 */
 	public static String createTemporaryFile(InputStream inputStream, String tempDir) throws IOException {
 
 		String temporaryFile = tempDir + File.separator + generateRandomFileName();
@@ -301,6 +400,13 @@ public class Util {
 		return temporaryFile;
 	}
 
+	/**
+	 * Deletes the file.
+	 * 
+	 * @param fileName the absolute path to the file to be deleted
+	 * @param deleteTemporaryFiles the parameter specifying if actual deleting is to take place.
+	 * @return true if file was deleted
+	 */
 	public static boolean deleteFile(String fileName, boolean deleteTemporaryFiles) {
 		if (deleteTemporaryFiles) {
 			boolean fileDeleted = (new File(fileName)).delete();
@@ -315,6 +421,11 @@ public class Util {
 		}
 	}
 
+	/**
+	 * Prints the X-Tee header to log
+	 * 
+	 * @param header X-Tee header
+	 */
 	public static void printHeader(CustomXTeeHeader header) {
 
 		LOG.debug("-------- XTeeHeader --------");
@@ -331,6 +442,12 @@ public class Util {
 		LOG.debug("----------------------------");
 	}
 
+	/**
+	 * Converts a byte array to a HEX string.
+	 * 
+	 * @param byteArray 
+	 * @return HEX string
+	 */
 	public static String convertToHexString(final byte[] byteArray) {
 		final byte[] HEXES = "0123456789ABCDEF".getBytes();
 		if (byteArray == null) {
@@ -343,6 +460,12 @@ public class Util {
 		return hex.toString();
 	}
 
+	/**
+	 * Delete a directory and it's contents.
+	 * 
+	 * @param dir directory to be deleted
+	 * @return
+	 */
 	public static boolean deleteDir(File dir) {
 		if (dir == null) {
 			return true;
@@ -363,9 +486,11 @@ public class Util {
 	}
 
 	/**
+	 * Transforms XML using XSLT stylesheet and writes the result to the file specified.
 	 * 
-	 * @param inputFileName
-	 * @param outputFileName
+	 * @param inputXMLFileName absolute path to XML data file
+	 * @param inputXSLTFileName absolute path to XSLT file
+	 * @param outputFileName absolute path to output file
 	 * @throws FileNotFoundException 
 	 * @throws TransformerException 
 	 */
@@ -380,6 +505,13 @@ public class Util {
 		transformer.transform(dataSource, fileOutputStream);
 	}
 	
+	/**
+	 * Generates a PDF using FOP.
+	 * 
+	 * @param outputFileName absolute path to the resulting PDF file (including the file name)
+	 * @param inputFileName absolute path to the input XML file
+	 * @throws FileNotFoundException
+	 */
 	public static void generatePDF(String outputFileName, String inputFileName) throws FileNotFoundException {
 		FopFactory fopFactory = FopFactory.newInstance();
 		OutputStream out = new BufferedOutputStream(new FileOutputStream(new File(outputFileName)));
@@ -412,11 +544,23 @@ public class Util {
 
 	}
 	
+	/**
+	 * Converts a date to XML format.
+	 * 
+	 * @param date
+	 * @return date in XML format
+	 */
 	public static String dateToXMLDate(Date date) {
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-d'T'HH:mm:ss");
 		return df.format(date);
 	}
 	
+	/**
+	 * Converts a date to the estonian format (dd.MM.yyyy HH:mm)
+	 * 
+	 * @param date
+	 * @return string representation of the date in "dd.MM.yyyy HH:mm" format
+	 */
 	public static String dateToEstonianDateString(Date date) {
 		if (date == null) {
 			return "";
@@ -425,6 +569,17 @@ public class Util {
 		}
 	}
     
+	/**
+	 * Splits out file data from the main XML file. Used for reducing the XML size to be marshalled / unmarshalled.
+	 * 
+	 * @param xmlFileName the XML file to be split
+	 * @param tagLocalName the local name of the tags to be split out
+	 * @param noMainFile specifies if a main file is used
+	 * @param noSubFiles specifies if subfiles are created
+	 * @param replaceMain specifies if the main file is replaced
+	 * @param removeSubFileRootTags specifies if subfile root tags are removed after work is done
+	 * @return the splitting result
+	 */
     public static FileSplitResult splitOutTags(String xmlFileName, String tagLocalName, boolean noMainFile, boolean noSubFiles, boolean replaceMain, boolean removeSubFileRootTags) {
         FileSplitResult result = new FileSplitResult();
         
@@ -649,6 +804,12 @@ public class Util {
         return result;
     }
     
+    /**
+     * Joins a split XML.
+     * 
+     * @param xmlFileName the main file
+     * @param appendTags specifies the tags where to append
+     */
     public static void joinSplitXML(String xmlFileName, String appendTags) {
     	LOG.debug("Starting XML file merge joinSplitXML()");
     	
@@ -851,6 +1012,14 @@ public class Util {
         }
     }
     
+    /**
+     * Tries to delete file until success or timeout.
+     * 
+     * @param fileName the file to delete
+     * @param timeoutSeconds timeout in seconds
+     * @return true, if file deleted
+     * @throws InterruptedException
+     */
     public static boolean deleteUntilSucceed(String fileName, int timeoutSeconds) throws InterruptedException {
     	File f = new File(fileName);
     	
@@ -867,6 +1036,15 @@ public class Util {
     	return (elapsedTime == timeoutSeconds);
     }
     
+    /**
+     * Tries to rename file until success or timeout.
+     * 
+     * @param originalFileName current file name
+     * @param destinationFileName new file name
+     * @param timeoutSeconds timeout in seconds
+     * @return true, if file renamed
+     * @throws InterruptedException
+     */
     public static boolean renameUntilSucceed(String originalFileName, String destinationFileName, int timeoutSeconds) throws InterruptedException {
     	File of = new File(originalFileName);
     	File df = new File(destinationFileName);
@@ -904,6 +1082,13 @@ public class Util {
 		return fixedUserCode;
     }
     
+    /**
+     * Extracts the query name from the X-Tee header.
+     * The query name must be in the format "[prefix].[queryName].v[versionNumber]"
+     * 
+     * @param fullQueryName the full query name
+     * @return the resulting holder object
+     */
     public static XRoadQueryName extractQueryName(String fullQueryName) {
 		XRoadQueryName result = new XRoadQueryName();
 		result.setName(fullQueryName);
