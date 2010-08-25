@@ -88,68 +88,237 @@ import ee.sk.utils.ConfigManager;
  */
 public class DocumentService {
 
-	// Dokumendi jagamise tüüpide koodid
+	/**
+	 * Document sharing type code - sign
+	 */
 	public static final String SharingType_Sign = "sign";
+	
+	/**
+	 * Document sharing type code - share
+	 */
 	public static final String SharingType_Share = "share";
+	
+	/**
+	 * Document sharing type code - send using DVK
+	 */
 	public static final String SharingType_SendDvk = "send_dvk";
+	
+	/**
+	 * Document sharing type code - send using ADIT
+	 */
 	public static final String SharingType_SendAdit = "send_adit";
 
-	// Document DVK statuses
+	/**
+	 * Document DVK status - missing
+	 */
 	public static final Long DVKStatus_Missing = new Long(100);
+	
+	/**
+	 * Document DVK status - waiting
+	 */
 	public static final Long DVKStatus_Waiting = new Long(101);
+	
+	/**
+	 * Document DVK status - sending
+	 */
 	public static final Long DVKStatus_Sending = new Long(102);
+	
+	/**
+	 * Document DVK status - sent
+	 */
 	public static final Long DVKStatus_Sent = new Long(103);
+	
+	/**
+	 * Document DVK status - aborted
+	 */
 	public static final Long DVKStatus_Aborted = new Long(104);
+	
+	/**
+	 * Document DVK status - received
+	 */
 	public static final Long DVKStatus_Received = new Long(105);
 
+	/**
+	 * DVK fault code used for deleted documents. Inserted to DVK when document deleted.
+	 */
 	public static final String DVKFaultCodeFor_Deleted = "NO_FAULT: DELETED BY ADIT";
+	
+	/**
+	 * DVK message string for deleted documents. Inserted to DVK when document deleted.
+	 */
 	public static final String DVKBlobMessage_Deleted = "DELETED BY ADIT";
 	
-	// Dokumendi ajaloosündmuste koodid
+	/**
+	 * Document history type code - create
+	 */
 	public static final String HistoryType_Create = "create";
+	
+	/**
+	 * Document history type code - modify
+	 */
 	public static final String HistoryType_Modify = "modify";
+	
+	/**
+	 * Document history type code - add file
+	 */
 	public static final String HistoryType_AddFile = "add_file";
+	
+	/**
+	 * Document history type code - modify file
+	 */
 	public static final String HistoryType_ModifyFile = "modify_file";
+	
+	/**
+	 * Document history type code - delete file
+	 */
 	public static final String HistoryType_DeleteFile = "delete_file";
+	
+	/**
+	 * Document history type code - modify status
+	 */
 	public static final String HistoryType_ModifyStatus = "modify_status";
+	
+	/**
+	 * Document history type code - send
+	 */
 	public static final String HistoryType_Send = "send";
+	
+	/**
+	 * Document history type code - share
+	 */
 	public static final String HistoryType_Share = "share";
+	
+	/**
+	 * Document history type code - unshare
+	 */
 	public static final String HistoryType_UnShare = "unshare";
+	
+	/**
+	 * Document history type code - lock
+	 */
 	public static final String HistoryType_Lock = "lock";
+	
+	/**
+	 * Document history type code - unlock
+	 */
 	public static final String HistoryType_UnLock = "unlock";
+	
+	/**
+	 * Document history type code - deflate
+	 */
 	public static final String HistoryType_Deflate = "deflate";
+	
+	/**
+	 * Document history type code - sign
+	 */
 	public static final String HistoryType_Sign = "sign";
+	
+	/**
+	 * Document history type code - delete
+	 */
 	public static final String HistoryType_Delete = "delete";
+	
+	/**
+	 * Document history type code - mark viewed
+	 */
 	public static final String HistoryType_MarkViewed = "markViewed";
 
-	// Kasutatava DVK konteineri versioon
+	/**
+	 * DVK container version used when sending documents using DVK
+	 */
 	public static final int DVK_CONTAINER_VERSION = 2;
 
-	// DVK vastuskirja dokumendi pealkiri
+	/**
+	 * DVK response message title
+	 */
 	public static final String DvkErrorResponseMessage_Title = "ADIT vastuskiri";
 
-	// DVK vastuskirja faili nimi
+	/**
+	 * DVK response message file name
+	 */
 	public static final String DvkErrorResponseMessage_FileName = "ADIT_vastuskiri.pdf";
 
-	// Document types
+	/**
+	 * Document type - letter
+	 */
 	public static final String DocType_Letter = "letter";
+	
+	/**
+	 * Document type - application
+	 */
 	public static final String DocType_Application = "application";
 
+	/**
+	 * DVK receive fail reason - user does not exist
+	 */
 	public static final Integer DvkReceiveFailReason_UserDoesNotExist = 1;
+	
+	/**
+	 * DVK receive fail reason - user uses DVK to exchange documents
+	 */
 	public static final Integer DvkReceiveFailReason_UserUsesDvk = 2;
 
+	/**
+	 * Log4J logger
+	 */
 	private static Logger LOG = Logger.getLogger(UserService.class);
+	
+	/**
+	 * Message source
+	 */
 	private MessageSource messageSource;
+	
+	/**
+	 * Document type DAO
+	 */
 	private DocumentTypeDAO documentTypeDAO;
+	
+	/**
+	 * Document DAO
+	 */
 	private DocumentDAO documentDAO;
+	
+	/**
+	 * Document file DAO
+	 */
 	private DocumentFileDAO documentFileDAO;
+	
+	/**
+	 * Document workflow status DAO
+	 */
 	private DocumentWfStatusDAO documentWfStatusDAO;
+	
+	/**
+	 * Document sharing DAO
+	 */
 	private DocumentSharingDAO documentSharingDAO;
+	
+	/**
+	 * Document history DAO
+	 */
 	private DocumentHistoryDAO documentHistoryDAO;
+	
+	/**
+	 * ADIT user DAO
+	 */
 	private AditUserDAO aditUserDAO;
+	
+	/**
+	 * Configuration
+	 */
 	private Configuration configuration;
+	
+	/**
+	 * DVK DAO
+	 */
 	private DvkDAO dvkDAO;
 
+	/**
+	 * Checks if document metadata is sufficient and correct for creating a new document.
+	 * 
+	 * @param document document metadata
+	 * @throws AditCodedException if metadata is insuffidient or incorrect
+	 */
 	public void checkAttachedDocumentMetadataForNewDocument(
 			SaveDocumentRequestAttachment document) throws AditCodedException {
 		LOG.debug("Checking attached document metadata for new document...");
@@ -230,6 +399,11 @@ public class DocumentService {
 		}
 	}
 
+	/**
+	 * Retrieves a list of valid document types.
+	 * 
+	 * @return
+	 */
 	public String getValidDocumentTypes() {
 		StringBuffer result = new StringBuffer();
 		List<DocumentType> documentTypes = this.getDocumentTypeDAO()
@@ -248,12 +422,30 @@ public class DocumentService {
 		return result.toString();
 	}
 
+	/**
+	 * Defaltes document file. Replaces the data with MD5 hash.
+	 * 
+	 * @param documentId document ID
+	 * @param fileId file ID
+	 * @param markDeleted
+	 * @return
+	 */
 	public String deflateDocumentFile(long documentId, long fileId,
 			boolean markDeleted) {
 		return this.getDocumentFileDAO().deflateDocumentFile(documentId,
 				fileId, markDeleted);
 	}
 
+	/**
+	 * Saves a document using the request attachment.
+	 * 
+	 * @param attachmentDocument document as an attachment
+	 * @param creatorCode document creator code
+	 * @param remoteApplication remote application name
+	 * @param remainingDiskQuota disk quota remaining for this user
+	 * @return save result
+	 * @throws FileNotFoundException
+	 */
 	@Transactional
 	public SaveItemInternalResult save(
 			final SaveDocumentRequestAttachment attachmentDocument,
@@ -306,6 +498,15 @@ public class DocumentService {
 				});
 	}
 
+	/**
+	 * 
+	 * @param documentId
+	 * @param file
+	 * @param attachmentXmlFile
+	 * @param remainingDiskQuota
+	 * @param temporaryFilesDir
+	 * @return
+	 */
 	public SaveItemInternalResult saveDocumentFile(final long documentId,
 			final OutputDocumentFile file, final String attachmentXmlFile,
 			final long remainingDiskQuota, final String temporaryFilesDir) {
