@@ -10,6 +10,14 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+/**
+ * NB! Not used at the moment!
+ * 
+ * A custom implementation of the SAX {@code DataHandler} class.
+ * Used for splitting out file data from the XML.
+ * 
+ * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
+ */
 public class SaveDocumentAttachmentHandler extends DefaultHandler {
 
 	private String tempDir;
