@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.spi.LocaleServiceProvider;
 
 import org.apache.log4j.Logger;
 import org.springframework.context.MessageSource;
@@ -13,14 +12,37 @@ import ee.adit.exception.AditCodedException;
 import ee.adit.pojo.Message;
 import ee.adit.util.Configuration;
 
+/**
+ * Provides methods for retrieving messages from Spring {@code MessageSource}. 
+ * 
+ * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
+ * @author Jaak Lember, Interinx, jaak@interinx.com
+ *
+ */
 public class MessageService {
 
+	/**
+	 * Log4J logger
+	 */
 	private static Logger LOG = Logger.getLogger(MessageService.class);
 	
+	/**
+	 * Configuration
+	 */
 	private Configuration configuration;
 	
+	/**
+	 * Message source
+	 */
 	private MessageSource messageSource;
 
+	/**
+	 * Retrieves messages for the specified code.
+	 * 
+	 * @param messageCode message code
+	 * @param parameters parameters for creating the messages
+	 * @return
+	 */
 	public List<Message> getMessages(String messageCode, Object[] parameters) {
 		List<Message> result = new ArrayList<Message>();
 		
@@ -49,26 +71,56 @@ public class MessageService {
 		return result;
 	}
 	
+	/**
+	 * Retrieves messages for the specified locale.
+	 * 
+	 * @param code message code
+	 * @param parameters message parameters
+	 * @param locale message locale
+	 * @return
+	 */
 	public String getMessage(String code, Object[] parameters, Locale locale) {
 		return this.getMessageSource().getMessage(code, new Object[] { parameters }, locale);
 	}
 	
+	/**
+	 * Retrieves messages for the specified {@code AditCodedException}.
+	 * 
+	 * @param e exception
+	 * @return
+	 */
 	public List<Message> getMessages(AditCodedException e) {
 		return getMessages(e.getMessage(), e.getParameters());
 	}
 	
+	/**
+	 * Retrieves the configuration
+	 * @return
+	 */
 	public Configuration getConfiguration() {
 		return configuration;
 	}
 
+	/**
+	 * Sets the configuration
+	 * @param configuration
+	 */
 	public void setConfiguration(Configuration configuration) {
 		this.configuration = configuration;
 	}
 	
+	/**
+	 * Retrieves the message source
+	 * @return
+	 */
 	public MessageSource getMessageSource() {
 		return messageSource;
 	}
 
+	/**
+	 * Sets the message source
+	 * @param configuration
+	 */
 	public void setMessageSource(MessageSource messageSource) {
 		this.messageSource = messageSource;
 	}
