@@ -2,18 +2,40 @@ package ee.adit.ws.endpoint;
 
 import ee.adit.pojo.ListMethodsResponse;
 
+/**
+ * Web-service endpoint for "listMethods" service. Returns the list of services provided by ADIT.
+ * 
+ * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
+ * @author Jaak Lember, Interinx, jaak@interinx.com
+ *
+ */
 public class ListMethodsEndpoint extends AbstractAditBaseEndpoint {
 	
+	/**
+	 * Invocation method (entry point)
+	 * 
+	 * @param requestObject request object (not used)
+	 * @param version query version (not used)
+	 * @return response object
+	 */
 	@Override
 	protected Object invokeInternal(Object requestObject, int version) throws Exception {
 		return getResponse();
 	}
 	
+	/**
+	 * Gets the response object if an exception occurs.
+	 */
 	@Override
 	protected Object getResultForGenericException(Exception ex) {
 		return getResponse();
 	}
 	
+	/**
+	 * Constructs a response object containing all the query names that ADIT publishes.
+	 * 
+	 * @return
+	 */
 	private ListMethodsResponse getResponse() {
 		ListMethodsResponse result = new ListMethodsResponse();
 		
