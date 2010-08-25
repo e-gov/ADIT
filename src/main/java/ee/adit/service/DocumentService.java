@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 
@@ -73,13 +72,19 @@ import ee.adit.pojo.SaveItemInternalResult;
 import ee.adit.util.Configuration;
 import ee.adit.util.Util;
 import ee.sk.digidoc.DataFile;
-import ee.sk.digidoc.DigiDocException;
 import ee.sk.digidoc.Signature;
 import ee.sk.digidoc.SignatureProductionPlace;
 import ee.sk.digidoc.SignedDoc;
 import ee.sk.digidoc.factory.SAXDigiDocFactory;
 import ee.sk.utils.ConfigManager;
 
+/**
+ * Provides methods for processing documents (saving, retrieving, performing checks, etc.)
+ * Where possible, the actual data queries are forwarded to DAO classes.
+ * 
+ * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
+ * @author Jaak Lember, Interinx, jaak@interinx.com
+ */
 public class DocumentService {
 
 	// Dokumendi jagamise tüüpide koodid
