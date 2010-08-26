@@ -638,7 +638,7 @@
  	
 	<!-- DeleteDocumentFile -->
 	<class name="ee.adit.pojo.DeleteDocumentFileRequest">
-		<map-to xml="seleteDocumentFile" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="deleteDocumentFile" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
 		<field name="documentId" type="long">
 			<bind-xml name="document_id" location="keha" />
 		</field>
