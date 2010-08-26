@@ -60,7 +60,7 @@ public class ListMethodsEndpoint extends AbstractAditBaseEndpoint {
 		result.addItem("ametlikud-dokumendid.setNotifications.v1");
 		result.addItem("ametlikud-dokumendid.shareDocument.v1");
 		result.addItem("ametlikud-dokumendid.unJoin.v1");
-		result.addItem("ametlikud-dokumendid.unShare.v1");
+		result.addItem("ametlikud-dokumendid.unShareDocument.v1");
 		result.addItem("ametlikud-dokumendid.listMethods");
 		
 		return result;
