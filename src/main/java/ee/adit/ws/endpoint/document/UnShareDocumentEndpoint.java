@@ -293,6 +293,7 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 				arrayOfMessage.getMessage().add(new Message("en", e.getMessage()));
 			} else {
 				arrayOfMessage.getMessage().add(new Message("en", "Service error"));
+				response.setRecipientList(null);
 			}
 
 			LOG.debug("Adding exception messages to response object.");
