@@ -247,13 +247,13 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 					doc.setLockingDate(null);
 					
 					// Lisame lukustamise ajaloosündmuse
-					/*doc.getDocumentHistories().add(new DocumentHistory(
+					doc.getDocumentHistories().add(new DocumentHistory(
 							DocumentService.HistoryType_UnLock,
 							doc.getId(),
 							requestDate.getTime(),
 							user,
 							xroadRequestUser,
-							header));*/
+							header));
 				}
 				
 				this.documentService.getDocumentDAO().save(doc, null, Long.MAX_VALUE, null);

@@ -100,7 +100,7 @@ INSERT INTO &&ADIT_SCHEMA..document_history_type(
 	short_name,
 	description
 ) VALUES (
-	'markViewed',
+	'mark_viewed',
 	'Dokumendi vaadatuks märkimine'
 );
 
@@ -110,5 +110,13 @@ INSERT INTO &&ADIT_SCHEMA..document_history_type(
 ) VALUES (
 	'unshare',
 	'Dokumendi jagamise lõpetamine'
+);
+
+INSERT INTO &&ADIT_SCHEMA..document_history_type(
+	short_name,
+	description
+) VALUES (
+	'unlock',
+	'Dokumendi lukust vabastamine'
 );
 

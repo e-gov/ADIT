@@ -221,7 +221,7 @@ public class DocumentService {
 	/**
 	 * Document history type code - mark viewed
 	 */
-	public static final String HistoryType_MarkViewed = "markViewed";
+	public static final String HistoryType_MarkViewed = "mark_viewed";
 
 	/**
 	 * DVK container version used when sending documents using DVK
