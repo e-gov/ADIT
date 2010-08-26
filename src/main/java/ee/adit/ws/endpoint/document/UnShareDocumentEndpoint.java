@@ -250,6 +250,9 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 				// Send notification to every user who was removed from
 				// sharing recipients list (assuming they have requested such notifications)
 				for (RecipientStatus status : statusArray.getRecipient()) {
+					if(status != null) {
+						summarySuccess = summarySuccess && status.isSuccess();
+					}
 					if ((status != null) && status.isSuccess()) {
 						AditUser recipient = this.getUserService().getUserByID(status.getCode());
 						if ((recipient != null) && (userService.findNotification(recipient.getUserNotifications(), ScheduleClient.NotificationType_Share) != null)) {
