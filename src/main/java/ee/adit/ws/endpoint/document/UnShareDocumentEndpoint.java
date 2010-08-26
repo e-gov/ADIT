@@ -61,7 +61,7 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 		Calendar requestDate = Calendar.getInstance();
 		String additionalInformationForLog = null;
 		Long documentId = null;
-		boolean summarySuccess = false;
+		boolean summarySuccess = true;
 
 		try {
 			LOG.debug("unShareDocument.v1 invoked.");
@@ -87,6 +87,7 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 			boolean applicationRegistered = this.getUserService().isApplicationRegistered(applicationName);
 			if (!applicationRegistered) {
 				String errorMessage = this.getMessageSource().getMessage("application.notRegistered", new Object[] { applicationName }, Locale.ENGLISH);
+				summarySuccess = false;
 				throw new AditException(errorMessage);
 			}
 
@@ -95,6 +96,7 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 			int accessLevel = this.getUserService().getAccessLevel(applicationName);
 			if (accessLevel < 1) {
 				String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.read", new Object[] { applicationName }, Locale.ENGLISH);
+				summarySuccess = false;
 				throw new AditException(errorMessage);
 			}
 
@@ -103,6 +105,7 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 			AditUser user = this.getUserService().getUserByID(userCode);
 			if (user == null) {
 				String errorMessage = this.getMessageSource().getMessage("user.nonExistent", new Object[] { userCode },	Locale.ENGLISH);
+				summarySuccess = false;
 				throw new AditException(errorMessage);
 			}
 			AditUser xroadRequestUser = null;
@@ -119,6 +122,7 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 			// Kontrollime, et kasutajakonto ligipääs poleks peatatud (kasutaja lahkunud)
 			if ((user.getActive() == null) || !user.getActive()) {
 				String errorMessage = this.getMessageSource().getMessage("user.inactive", new Object[] { userCode }, Locale.ENGLISH);
+				summarySuccess = false;
 				throw new AditException(errorMessage);
 			}
 			
@@ -127,6 +131,7 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 			int applicationAccessLevelForUser = userService.getAccessLevelForUser(applicationName, user);
 			if(applicationAccessLevelForUser < 1) {
 				String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.forUser.read", new Object[] { applicationName, user.getUserCode() }, Locale.ENGLISH);
+				summarySuccess = false;
 				throw new AditException(errorMessage);
 			}
 
@@ -138,6 +143,7 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 			if (doc == null) {
 				LOG.debug("Requested document does not exist. Document ID: " + request.getDocumentId());
 				String errorMessage = this.getMessageSource().getMessage("document.nonExistent", new Object[] { request.getDocumentId() },	Locale.ENGLISH);
+				summarySuccess = false;
 				throw new AditException(errorMessage);
 			}
 			
@@ -145,6 +151,7 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 			if ((doc.getDeleted() != null) && doc.getDeleted()) {
 				LOG.debug("Requested document is deleted. Document ID: " + request.getDocumentId());
 				String errorMessage = this.getMessageSource().getMessage("document.deleted", new Object[] { request.getDocumentId() }, Locale.ENGLISH);
+				summarySuccess = false;
 				throw new AditException(errorMessage);
 			}
 			
@@ -152,6 +159,7 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 			if ((doc.getDeflated() != null) && doc.getDeflated()) {
 				LOG.debug("Requested document is deflated. Document ID: " + request.getDocumentId());
 				String errorMessage = this.getMessageSource().getMessage("document.deflated", new Object[] { Util.dateToEstonianDateString(doc.getDeflateDate()) }, Locale.ENGLISH);
+				summarySuccess = false;
 				throw new AditException(errorMessage);
 			}
 
@@ -159,6 +167,7 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 			if (!doc.getCreatorCode().equalsIgnoreCase(userCode)) {
 				LOG.debug("Requested document does not belong to user. Document ID: " + request.getDocumentId() + ", User ID: " + userCode);
 				String errorMessage = this.getMessageSource().getMessage("document.doesNotBelongToUser", new Object[] { request.getDocumentId(), userCode }, Locale.ENGLISH);
+				summarySuccess = false;
 				throw new AditException(errorMessage);
 			}
 			
@@ -236,13 +245,13 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 					doc.setLockingDate(null);
 					
 					// Lisame lukustamise ajaloosündmuse
-					doc.getDocumentHistories().add(new DocumentHistory(
+					/*doc.getDocumentHistories().add(new DocumentHistory(
 							DocumentService.HistoryType_UnLock,
 							doc.getId(),
 							requestDate.getTime(),
 							user,
 							xroadRequestUser,
-							header));
+							header));*/
 				}
 				
 				this.documentService.getDocumentDAO().save(doc, null, Long.MAX_VALUE, null);
