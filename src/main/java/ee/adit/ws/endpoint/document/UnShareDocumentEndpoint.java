@@ -212,12 +212,14 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 				}
 			} else {
 				String errorMessage = this.getMessageSource().getMessage("request.unShareDocument.document.notShared", new Object[] { request.getDocumentId() }, Locale.ENGLISH);
+				summarySuccess = false;
 				throw new AditException(errorMessage);
 			}
 		
 			// If the document was not shared to some users in request's
 			// user list then compose corresponding error messages
 			if (!userCodes.isEmpty()) {
+				summarySuccess = false;
 				for (String code : userCodes) {
 					RecipientStatus status = new RecipientStatus();
 					status.setSuccess(false);
