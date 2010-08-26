@@ -61,6 +61,7 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 		Calendar requestDate = Calendar.getInstance();
 		String additionalInformationForLog = null;
 		Long documentId = null;
+		boolean summarySuccess = false;
 
 		try {
 			LOG.debug("unShareDocument.v1 invoked.");
@@ -266,10 +267,15 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 			}
 
 			// Set response messages
-			response.setSuccess(true);
-			messages.addMessage(new Message("en", this.getMessageSource().getMessage("request.unShareDocument.success",	new Object[] { request.getDocumentId() }, Locale.ENGLISH)));
+			if(summarySuccess) {
+				messages.addMessage(new Message("en", this.getMessageSource().getMessage("request.unShareDocument.success",	new Object[] { request.getDocumentId() }, Locale.ENGLISH)));
+			} else {
+				messages.addMessage(new Message("en", this.getMessageSource().getMessage("request.unShareDocument.fail",	new Object[] { request.getDocumentId() }, Locale.ENGLISH)));
+			}
+			response.setSuccess(summarySuccess);
 			response.setMessages(messages);
 			response.setRecipientList(statusArray);
+			
 		} catch (Exception e) {
 			additionalInformationForLog = "Request failed: " + e.getMessage();
 			LOG.error("Exception: ", e);

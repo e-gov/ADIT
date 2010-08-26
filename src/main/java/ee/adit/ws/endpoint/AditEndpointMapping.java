@@ -17,8 +17,8 @@ import ee.adit.util.Util;
 import ee.adit.util.XRoadQueryName;
 
 /**
- * Custom web-service endpoint mapping implementation. Maps the incoming SOAP message to one of the 
- * endpoints registered in the configuration.
+ * Custom web-service endpoint mapping implementation. Maps the incoming SOAP
+ * message to one of the endpoints registered in the configuration.
  * 
  * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
  * @author Jaak Lember, Interinx, jaak@interinx.com
@@ -45,65 +45,64 @@ public class AditEndpointMapping extends AbstractQNameEndpointMapping {
 	}
 
 	/**
-	 * Resolves the qualified name of the SOAP body payload element for this message.
-	 * The SOAP body payload element is compared to the X-Tee specific SOAP header {@code XTEE_REQUEST_NAME_HEADER}
-	 * and if the names do not match, an {@code AditInternalException} is thrown.
+	 * Resolves the qualified name of the SOAP body payload element for this
+	 * message. The SOAP body payload element is compared to the X-Tee specific
+	 * SOAP header {@code XTEE_REQUEST_NAME_HEADER} and if the names do not
+	 * match, an {@code AditInternalException} is thrown.
 	 * 
-	 * @param messageContext message context
-	 * @return the qualified name of the SOAP body payload element. 
+	 * @param messageContext
+	 *            message context
+	 * @return the qualified name of the SOAP body payload element.
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	protected QName resolveQName(MessageContext messageContext)
-			throws Exception {
+	protected QName resolveQName(MessageContext messageContext) throws Exception {
 		QName result = null;
 		boolean requestNameHeaderFound = false;
 
 		try {
-			QName requestQName = PayloadRootUtils.getPayloadRootQName(
-					messageContext.getRequest().getPayloadSource(),
-					transformerFactory);
+			QName requestQName = PayloadRootUtils.getPayloadRootQName(messageContext.getRequest().getPayloadSource(), transformerFactory);
 
-			LOG.debug("Resolved request payload qualified name: "
-					+ requestQName);
+			LOG.debug("Resolved request payload qualified name: " + requestQName);
 
-			SaajSoapMessage request = (SaajSoapMessage) messageContext
-					.getRequest();
-			Iterator<SoapHeaderElement> soapHeaderIterator = request
-					.getSoapHeader().examineAllHeaderElements();
+			SaajSoapMessage request = (SaajSoapMessage) messageContext.getRequest();
 
-			QName xteeRequestNameHeaderQName = new QName(Util.XTEE_NAMESPACE,
-					XTEE_REQUEST_NAME_HEADER);
+			// If listMethods method, don't expext SOAP headers
+			if (requestQName != null && "listMethods".equalsIgnoreCase(requestQName.getLocalPart())) {
+				LOG.debug("Mapping to listMethods method. Ignoring SOAP headers.");
+			} else {
+				Iterator<SoapHeaderElement> soapHeaderIterator = request.getSoapHeader().examineAllHeaderElements();
 
-			while (soapHeaderIterator.hasNext()) {
-				SoapHeaderElement header = soapHeaderIterator.next();
+				QName xteeRequestNameHeaderQName = new QName(Util.XTEE_NAMESPACE, XTEE_REQUEST_NAME_HEADER);
 
-				if (xteeRequestNameHeaderQName.equals(header.getName())) {
-					String requestNameHeaderValue = header.getText();
-					LOG.debug("Found X-Road request name header: "
-							+ requestNameHeaderValue);
-					requestNameHeaderFound = true;
-					String localName = requestQName.getLocalPart();
-					XRoadQueryName queryName = Util.extractQueryName(requestNameHeaderValue);
+				while (soapHeaderIterator.hasNext()) {
+					SoapHeaderElement header = soapHeaderIterator.next();
 
-					if(queryName == null || queryName.getName() == null) {
-						throw new AditInternalException("X-Road query header name does not match the required format 'ametlikud-dokumendid.[methodName].v[versionNumber]': " + requestNameHeaderValue);
+					if (xteeRequestNameHeaderQName.equals(header.getName())) {
+						String requestNameHeaderValue = header.getText();
+						LOG.debug("Found X-Road request name header: " + requestNameHeaderValue);
+						requestNameHeaderFound = true;
+						String localName = requestQName.getLocalPart();
+						XRoadQueryName queryName = Util.extractQueryName(requestNameHeaderValue);
+
+						if (queryName == null || queryName.getName() == null) {
+							throw new AditInternalException("X-Road query header name does not match the required format 'ametlikud-dokumendid.[methodName].v[versionNumber]': "
+									+ requestNameHeaderValue);
+						}
+
+						if (!queryName.getName().equalsIgnoreCase(localName)) {
+							throw new AditInternalException("X-Road query header name does not match SOAP body payload. Query name: '" + queryName.getName() + "', payload name: '" + localName + "'.");
+						}
 					}
-					
-					if (!queryName.getName().equalsIgnoreCase(localName)) {
-						throw new AditInternalException("X-Road query header name does not match SOAP body payload. Query name: '" + queryName.getName() + "', payload name: '" + localName + "'.");
-					}
+				}
+
+				if (!requestNameHeaderFound) {
+					throw new AditInternalException("X-Road header 'nimi' not found.");
 				}
 			}
 
-			if (!requestNameHeaderFound) {
-				throw new AditInternalException(
-						"X-Road header 'nimi' not found.");
-			}
-
-			result = PayloadRootUtils.getPayloadRootQName(messageContext
-					.getRequest().getPayloadSource(), transformerFactory);
+			result = PayloadRootUtils.getPayloadRootQName(messageContext.getRequest().getPayloadSource(), transformerFactory);
 
 		} catch (Exception e) {
 			LOG.error("Error while determining endpoint for request: ", e);
@@ -115,6 +114,4 @@ public class AditEndpointMapping extends AbstractQNameEndpointMapping {
 
 		return result;
 	}
-	
 }
-

@@ -988,7 +988,7 @@
 	</class>
 	
 	<class name="ee.adit.pojo.RecipientStatus">
-		<map-to xml="recipient" />
+		<map-to xml="recipient" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"/>
 		<field name="code" type="java.lang.String" />
 		<field name="success" type="boolean" />
 		<field name="messages" type="ee.adit.pojo.ArrayOfMessage" />
