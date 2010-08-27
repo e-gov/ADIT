@@ -35,7 +35,6 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 	
 	@Override
 	protected Object invokeInternal(Object requestObject, int version) throws Exception {
-
 		LOG.debug("JoinEndpoint invoked. Version: " + version);
 		
 		if(version == 1) {
@@ -43,9 +42,14 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 		} else {
 			throw new AditInternalException("This method does not support version specified: " + version);
 		}
-		
 	}
 
+	/**
+	 * Executes "V1" version of "join" request.
+	 * 
+	 * @param requestObject		Request body object
+	 * @return					Response body object
+	 */
 	protected Object v1(Object requestObject) throws Exception {
 		JoinResponse response = new JoinResponse();
 		ArrayOfMessage messages = new ArrayOfMessage();
@@ -184,7 +188,16 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 		return response;
 	}
 	
-	private void checkRequest(JoinRequest request) {
+	/**
+	 * Validates request body and makes sure that all
+	 * required fields exist and are not empty.
+	 * <br><br>
+	 * Throws {@link AditCodedException} if any errors in request data are found.
+	 * 
+	 * @param request				Request body as {@link JoinRequest} object.
+	 * @throws AditCodedException	Exception describing error found in requet body.
+	 */
+	private void checkRequest(JoinRequest request) throws AditCodedException {
 		if(request != null) {
 			if(request.getUserType() == null || "".equalsIgnoreCase(request.getUserType().trim())) {
 				throw new AditCodedException("request.body.undefined.usertype");
@@ -196,13 +209,16 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 		}
 	}
 	
-	private static void printRequest(JoinRequest request) {
-
+	/**
+	 * Writes request parameters to application DEBUG log.
+	 * 
+	 * @param request	Request body as {@link JoinRequest} object.
+	 */
+	private void printRequest(JoinRequest request) {
 		LOG.debug("-------- JoinRequest -------");
 		LOG.debug("UserName: " + request.getUserName());
 		LOG.debug("UserType: " + request.getUserType());
 		LOG.debug("----------------------------");
-
 	}
 
 	public UserService getUserService() {

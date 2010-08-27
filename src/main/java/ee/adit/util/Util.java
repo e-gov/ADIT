@@ -463,8 +463,8 @@ public class Util {
 	/**
 	 * Delete a directory and it's contents.
 	 * 
-	 * @param dir directory to be deleted
-	 * @return
+	 * @param dir	Directory to be deleted
+	 * @return		Success of deletion (true, if directory was successfully deleted)
 	 */
 	public static boolean deleteDir(File dir) {
 		if (dir == null) {

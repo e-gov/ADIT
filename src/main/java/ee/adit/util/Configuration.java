@@ -51,7 +51,7 @@ public class Configuration {
 	
 	/**
 	 * Retrieves the list of the locales
-	 * @return
+	 * @return	Locales list
 	 */
 	public List<String> getLocales() {
 		return locales;
@@ -59,7 +59,7 @@ public class Configuration {
 
 	/**
 	 * Sets the locales list
-	 * @param locales
+	 * @param locales	Locales list
 	 */
 	public void setLocales(List<String> locales) {
 		this.locales = locales;
@@ -67,7 +67,7 @@ public class Configuration {
 
 	/**
 	 * Retrieves the max result size for the getJoined query
-	 * @return
+	 * @return		Max result size for the getJoined query
 	 */
 	public BigInteger getGetJoinedMaxResults() {
 		return getJoinedMaxResults;
@@ -75,23 +75,23 @@ public class Configuration {
 
 	/**
 	 * Sets the max result size for the getJoined query
-	 * @param getJoinedMaxResults
+	 * @param getJoinedMaxResults	Max result size for the getJoined query
 	 */
 	public void setGetJoinedMaxResults(BigInteger getJoinedMaxResults) {
 		this.getJoinedMaxResults = getJoinedMaxResults;
 	}
 
 	/**
-	 * Retrieves the absolute path to the working directory
-	 * @return
+	 * Retrieves the absolute path to the temporary files directory
+	 * @return			Absolute path to temporary files directory
 	 */
 	public String getTempDir() {
 		return tempDir;
 	}
 
 	/**
-	 * Sets the absolute path to the working directory
-	 * @param tempDir
+	 * Sets the absolute path to the temporary files directory
+	 * @param tempDir	Absolute path to temporary files directory
 	 */
 	public void setTempDir(String tempDir) {
 		this.tempDir = tempDir;
@@ -99,7 +99,7 @@ public class Configuration {
 
 	/**
 	 * Retrieves the value for deleting temporary files
-	 * @return
+	 * @return		String value of temporary files deletaion setting 
 	 */
 	public String getDeleteTemporaryFiles() {
 		return deleteTemporaryFiles;
@@ -129,7 +129,7 @@ public class Configuration {
 
 	/**
 	 * Retrieves the scheduler event type name
-	 * @return
+	 * @return		Scheduler event type name
 	 */
 	public String getSchedulerEventTypeName() {
 		return schedulerEventTypeName;
@@ -144,7 +144,7 @@ public class Configuration {
 
 	/**
 	 * Retrieves the absolute path to the DVK response message stylesheet
-	 * @return
+	 * @return		Absolute path to the DVK response message stylesheet
 	 */
 	public String getDvkResponseMessageStylesheet() {
 		return dvkResponseMessageStylesheet;
@@ -159,7 +159,7 @@ public class Configuration {
 
 	/**
 	 * Retrieves the global disk quota
-	 * @return
+	 * @return		Global disk quota in bytes
 	 */
 	public Long getGlobalDiskQuota() {
 		return globalDiskQuota;
@@ -167,7 +167,7 @@ public class Configuration {
 
 	/**
 	 * Sets the global disk quota
-	 * @param globalDiskQuota
+	 * @param globalDiskQuota	Global disk quota in bytes
 	 */
 	public void setGlobalDiskQuota(Long globalDiskQuota) {
 		this.globalDiskQuota = globalDiskQuota;

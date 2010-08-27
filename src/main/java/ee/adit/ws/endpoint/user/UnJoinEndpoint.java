@@ -18,6 +18,14 @@ import ee.adit.util.Util;
 import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
 import ee.webmedia.xtee.annotation.XTeeService;
 
+/**
+ * Implementation of "unJoin" web method (web service request).
+ * Contains request input validation, request-specific workflow
+ * and response composition.  
+ * 
+ * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
+ * @author Jaak Lember, Interinx, jaak@interinx.com
+ */
 @XTeeService(name = "unJoin", version = "v1")
 @Component
 public class UnJoinEndpoint extends AbstractAditBaseEndpoint {
@@ -28,7 +36,7 @@ public class UnJoinEndpoint extends AbstractAditBaseEndpoint {
 
 	@Override
 	protected Object invokeInternal(Object requestObject, int version) throws Exception {
-		LOG.debug("JoinEndpoint invoked. Version: " + version);
+		LOG.debug("unJoin invoked. Version: " + version);
 
 		if (version == 1) {
 			return v1(requestObject);
@@ -37,6 +45,12 @@ public class UnJoinEndpoint extends AbstractAditBaseEndpoint {
 		}
 	}
 	
+	/**
+	 * Executes "V1" version of "unJoin" request.
+	 * 
+	 * @param requestObject		Request body object
+	 * @return					Response body object
+	 */
 	protected Object v1(Object requestObject) {
 		UnJoinResponse response = new UnJoinResponse();
 		ArrayOfMessage messages = new ArrayOfMessage();
@@ -135,7 +149,7 @@ public class UnJoinEndpoint extends AbstractAditBaseEndpoint {
 		super.logCurrentRequest(null, requestDate.getTime(), additionalInformationForLog);
 		return response;
 	}
-	
+
 	@Override
 	protected Object getResultForGenericException(Exception ex) {
 		super.logError(null, Calendar.getInstance().getTime(), LogService.ErrorLogLevel_Fatal, ex.getMessage());

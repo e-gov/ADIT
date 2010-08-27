@@ -6,7 +6,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.cert.X509Certificate;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -37,7 +36,6 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import dvk.api.container.v2.Saaja;
 import dvk.api.ml.PojoMessage;
 
-import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.DocumentFile;
 import ee.adit.dao.pojo.DocumentSharing;
@@ -53,17 +51,9 @@ import ee.adit.pojo.Message;
 import ee.adit.pojo.OutputDocument;
 import ee.adit.pojo.OutputDocumentFile;
 import ee.adit.pojo.OutputDocumentFilesList;
-import ee.adit.pojo.PrepareSignatureInternalResult;
 import ee.adit.pojo.SaveItemInternalResult;
 import ee.adit.service.DocumentService;
 import ee.adit.util.Util;
-import ee.sk.digidoc.DataFile;
-import ee.sk.digidoc.DigiDocException;
-import ee.sk.digidoc.Signature;
-import ee.sk.digidoc.SignatureProductionPlace;
-import ee.sk.digidoc.SignedDoc;
-import ee.sk.digidoc.factory.SAXDigiDocFactory;
-import ee.sk.utils.ConfigManager;
 
 public class DocumentDAO extends HibernateDaoSupport {
 	private static Logger LOG = Logger.getLogger(DocumentDAO.class);

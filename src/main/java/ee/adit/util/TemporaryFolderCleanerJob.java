@@ -12,6 +12,7 @@ public class TemporaryFolderCleanerJob extends QuartzJobBean {
 	private static Logger LOG = Logger.getLogger(TemporaryFolderCleanerJob.class);
 	private Configuration configuration;
 	
+	@Override
 	protected void executeInternal(JobExecutionContext ctx) throws JobExecutionException {
 		try {
 			// If temporary file deleting is allowed then delete all temporary

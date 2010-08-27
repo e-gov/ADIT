@@ -71,7 +71,7 @@ public class LogService {
 	 * @param userCode code of the user who sent the request
 	 * @param organizationCode the organization that sent the request
 	 * @param additionalInformation additional information
-	 * @return
+	 * @return	ID of added log entry
 	 */
 	public Long addRequestLogEntry(
 			String requestName,
@@ -199,7 +199,7 @@ public class LogService {
 
 	/**
 	 * Retrieves the request log DAO
-	 * @return
+	 * @return	{@link RequestLogDAO} object that is used for saving {@link RequestLog} entries to database
 	 */
 	public RequestLogDAO getRequestLogDAO() {
 		return requestLogDAO;
@@ -207,7 +207,7 @@ public class LogService {
 
 	/**
 	 * Sets the request log DAO
-	 * @return
+	 * @param requestLogDAO	{@link RequestLogDAO} object that will be used for saving {@link RequestLog} entries to database
 	 */
 	public void setRequestLogDAO(RequestLogDAO requestLogDAO) {
 		this.requestLogDAO = requestLogDAO;
@@ -216,8 +216,8 @@ public class LogService {
 	/**
 	 * Adds a request log entry,
 	 * 
-	 * @param requestLogEntry
-	 * @return
+	 * @param requestLogEntry	Log entry as {@link RequestLog} object.
+	 * @return	ID of added log entry
 	 */
 	public Long addRequestLogEntry(RequestLog requestLogEntry) {
 		return this.requestLogDAO.save(requestLogEntry);
@@ -225,7 +225,7 @@ public class LogService {
 	
 	/**
 	 * Retrieves the error log DAO
-	 * @return
+	 * @return	{@link ErrorLogDAO} object that is used for saving {@link ErrorLog} entries to database
 	 */
 	public ErrorLogDAO getErrorLogDAO() {
 		return errorLogDAO;
@@ -233,7 +233,7 @@ public class LogService {
 
 	/**
 	 * Sets the error log DAO
-	 * @return
+	 * @param errorLogDAO	{@link ErrorLogDAO} object that will be used for saving {@link ErrorLog} entries to database
 	 */
 	public void setErrorLogDAO(ErrorLogDAO errorLogDAO) {
 		this.errorLogDAO = errorLogDAO;
@@ -241,7 +241,8 @@ public class LogService {
 
 	/**
 	 * Retrieves the download log DAO
-	 * @return
+	 * @return	{@link DownloadRequestLogDAO} object that is used for saving
+	 * 			{@link DownloadRequestLog} entries to database
 	 */
 	public DownloadRequestLogDAO getDownloadRequestLogDAO() {
 		return downloadRequestLogDAO;
@@ -249,7 +250,8 @@ public class LogService {
 	
 	/**
 	 * Sets the download log DAO
-	 * @return
+	 * @param downloadRequestLogDAO	{@link DownloadRequestLogDAO} object that will be used for saving
+	 * 								{@link DownloadRequestLog} entries to database
 	 */
 	public void setDownloadRequestLogDAO(DownloadRequestLogDAO downloadRequestLogDAO) {
 		this.downloadRequestLogDAO = downloadRequestLogDAO;
@@ -257,7 +259,8 @@ public class LogService {
 
 	/**
 	 * Retrieves the metadata log DAO
-	 * @return
+	 * @return	{@link MetadataRequestLogDAO} object that is used for saving
+	 * 			{@link MetadataRequestLog} entries to database
 	 */
 	public MetadataRequestLogDAO getMetadataRequestLogDAO() {
 		return metadataRequestLogDAO;
@@ -265,7 +268,8 @@ public class LogService {
 
 	/**
 	 * Sets the metadata log DAO
-	 * @return
+	 * @param metadataRequestLogDAO	{@link MetadataRequestLogDAO} object that will be used for saving
+	 * 								{@link MetadataRequestLog} entries to database
 	 */
 	public void setMetadataRequestLogDAO(MetadataRequestLogDAO metadataRequestLogDAO) {
 		this.metadataRequestLogDAO = metadataRequestLogDAO;

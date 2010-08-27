@@ -10,7 +10,6 @@ package ee.adit.pojo;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
@@ -56,7 +55,7 @@ public class SaveDocumentRequest {
      * 
      * @return
      *     possible object is
-     *     {@link SaveDocumentRequest.Document }
+     *     {@link SaveDocumentRequestDocument }
      *     
      */
     public SaveDocumentRequestDocument getDocument() {
@@ -68,7 +67,7 @@ public class SaveDocumentRequest {
      * 
      * @param value
      *     allowed object is
-     *     {@link SaveDocumentRequest.Document }
+     *     {@link SaveDocumentRequestDocument }
      *     
      */
     public void setDocument(SaveDocumentRequestDocument value) {

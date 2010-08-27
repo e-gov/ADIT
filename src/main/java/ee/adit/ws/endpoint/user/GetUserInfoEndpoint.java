@@ -27,6 +27,14 @@ import ee.adit.util.Util;
 import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
 import ee.webmedia.xtee.annotation.XTeeService;
 
+/**
+ * Implementation of "getUserInfo" web method (web service request).
+ * Contains request input validation, request-specific workflow
+ * and response composition.  
+ * 
+ * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
+ * @author Jaak Lember, Interinx, jaak@interinx.com
+ */
 @XTeeService(name = "getUserInfo", version = "v1")
 @Component
 public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
@@ -45,7 +53,7 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 
 	@Override
 	protected Object invokeInternal(Object requestObject, int version) throws Exception {
-		LOG.debug("JoinEndpoint invoked. Version: " + version);
+		LOG.debug("getUserInfo invoked. Version: " + version);
 
 		if (version == 1) {
 			return v1(requestObject);
@@ -54,6 +62,12 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 		}
 	}
 
+	/**
+	 * Executes "V1" version of "getUserInfo" request.
+	 * 
+	 * @param requestObject		Request body object
+	 * @return					Response body object
+	 */
 	protected Object v1(Object requestObject) {
 		GetUserInfoResponse response = new GetUserInfoResponse();
 		ArrayOfMessage messages = new ArrayOfMessage();

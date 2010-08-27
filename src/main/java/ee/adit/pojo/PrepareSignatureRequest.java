@@ -224,7 +224,7 @@ public class PrepareSignatureRequest {
     /**
      * Sets the value of the signerCertificate property.
      * 
-     * @param value
+     * @param signerCertificate
      *     allowed object is
      *     {@link PrepareSignatureRequestCert }
      *     

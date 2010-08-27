@@ -4,7 +4,6 @@ package ee.adit.dao.pojo;
 
 import java.util.Date;
 
-import ee.adit.service.DocumentService;
 import ee.adit.util.CustomXTeeHeader;
 
 /**

@@ -20,7 +20,7 @@ public class XRoadQueryName {
 
 	/**
 	 * Retrieves the query name
-	 * @return
+	 * @return			Query name
 	 */
 	public String getName() {
 		return name;
@@ -28,7 +28,7 @@ public class XRoadQueryName {
 
 	/**
 	 * Sets the query name
-	 * @param name
+	 * @param name		Query name
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -36,7 +36,7 @@ public class XRoadQueryName {
 
 	/**
 	 * Retrieves the query version
-	 * @return
+	 * @return			Query version
 	 */
 	public int getVersion() {
 		return version;
@@ -44,7 +44,7 @@ public class XRoadQueryName {
 
 	/**
 	 * Sets the query version
-	 * @param name
+	 * @param version	Query version
 	 */
 	public void setVersion(int version) {
 		this.version = version;

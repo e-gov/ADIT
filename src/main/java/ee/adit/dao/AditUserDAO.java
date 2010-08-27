@@ -9,9 +9,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Property;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
-import ee.adit.dao.pojo.AccessRestriction;
 import ee.adit.dao.pojo.AditUser;
-import ee.adit.dao.pojo.Document;
 import ee.adit.exception.AditInternalException;
 
 public class AditUserDAO extends HibernateDaoSupport {

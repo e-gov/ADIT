@@ -9,8 +9,6 @@ import org.hibernate.Session;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
-import ee.adit.dao.pojo.AccessRestriction;
-import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Notification;
 
 public class NotificationDAO extends HibernateDaoSupport {

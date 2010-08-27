@@ -21,6 +21,8 @@ import ee.webmedia.xtee.client.service.StandardXTeeConsumer;
 /**
  * Client class for state portal (riigiportaal) X-Road database.
  * Enables execution of state portal web service requests. 
+ * 
+ * @author Jaak Lember, Interinx, jaak@interinx.com
   */
 public class StatePortalClient {
 	private static Logger LOG = Logger.getLogger(StatePortalClient.class);
@@ -28,20 +30,21 @@ public class StatePortalClient {
 	
 	/**
 	 * Executes X-Road request "riigiportaal.tellimusteStaatus.v1" and
-	 * returns data about given person's ordering status of specified notification.
+	 * returns data about given persons ordering status of specified notification.
 	 * <br><br>
 	 * This method throws no exceptions even if failing.
 	 * This is necessary to avoid breaking current applications main
 	 * functionality, even if interfaces with other systems are
 	 * temporarily unavailable. 
 	 * 
-	 * @param userCode			Personal ID code of person, whose
-	 * 							notification ordering status will be checked.
-	 * 
-	 * @param eventTypeName		Full name of notification type. Only this type's
-	 * 							ordering status will be checked.
-	 * 
-	 * @return					Data about notification status as {@link NotificationStatus} object.
+	 * @param userCode
+	 * 		Personal ID code of person, whose notification ordering status
+	 * 		will be checked.
+	 * @param eventTypeName
+	 * 		Full name of notification type. Only this type's
+	 * 		ordering status will be checked.
+	 * @return
+	 * 		Data about notification status as {@link NotificationStatus} object.
 	 */
 	public static NotificationStatus getNotificationStatus(String userCode, String eventTypeName) {
 		NotificationStatus result = null;
@@ -126,7 +129,9 @@ public class StatePortalClient {
 	
 	/**
 	 * Helper method to start application context.
-	 * @return	Application context.
+	 * 
+	 * @return
+	 * 		Application context.
 	 */
 	private static ClassPathXmlApplicationContext startContext() {
 		ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("xtee.xml");

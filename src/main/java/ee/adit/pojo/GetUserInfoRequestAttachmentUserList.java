@@ -1,7 +1,6 @@
 package ee.adit.pojo;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class GetUserInfoRequestAttachmentUserList {
 

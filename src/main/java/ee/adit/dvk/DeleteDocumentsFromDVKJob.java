@@ -13,6 +13,7 @@ public class DeleteDocumentsFromDVKJob extends QuartzJobBean {
 	
 	private DocumentService documentService;
 	
+	@Override
 	protected void executeInternal(JobExecutionContext ctx)
 			throws JobExecutionException {
 		

@@ -16,6 +16,7 @@ public class SendNotificationsJob extends QuartzJobBean {
 	private UserService userService;
 	private Configuration configuration;
 	
+	@Override
 	protected void executeInternal(JobExecutionContext ctx) throws JobExecutionException {
 		try {
 			LOG.info("Executing scheduled job: Send unsent notifications.");

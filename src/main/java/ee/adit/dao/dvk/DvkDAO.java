@@ -83,7 +83,7 @@ public class DvkDAO {
 	
 	/**
 	 * Get only documents that have status 'sent' for all message recipients.
-	 * @return
+	 * @return	List of documents that have status 'sent' for all message recipients
 	 */
 	public List<PojoMessage> getSentDocuments() {
 		List<PojoMessage> result = new ArrayList<PojoMessage>();

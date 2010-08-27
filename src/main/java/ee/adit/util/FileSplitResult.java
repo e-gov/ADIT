@@ -31,16 +31,22 @@ public class FileSplitResult {
     }
 
     /**
-     * Retrieves the main file
-     * @return
+     * Retrieves the main file.<br>
+     * Main file is the file what is left of original file after requested
+     * parts of it were removed and saved as separate files ().
+     * 
+     * @return			Absolute path of main file
      */
 	public String getMainFile() {
 		return mainFile;
 	}
 
 	/**
-	 * Sets the main file
-	 * @param mainFile
+	 * Sets the main file.<br>
+     * Main file is the file what is left of original file after requested
+     * parts of it were removed and saved as separate files.
+     * 
+	 * @param mainFile	Absolute path of main file
 	 */
 	public void setMainFile(String mainFile) {
 		this.mainFile = mainFile;
@@ -48,7 +54,7 @@ public class FileSplitResult {
 
 	/**
 	 * Retrieves the subfiles list
-	 * @return
+	 * @return			List of files created as a result of file splitting
 	 */
 	public List<String> getSubFiles() {
 		return subFiles;
@@ -56,7 +62,7 @@ public class FileSplitResult {
 
 	/**
 	 * Sets the subfiles list
-	 * @param subFiles
+	 * @param subFiles	List of files created as a result of file splitting
 	 */
 	public void setSubFiles(List<String> subFiles) {
 		this.subFiles = subFiles;

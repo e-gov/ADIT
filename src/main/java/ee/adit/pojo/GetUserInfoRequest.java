@@ -61,7 +61,7 @@ public class GetUserInfoRequest {
      *     byte[]
      */
     public void setUserList(byte[] value) {
-        this.userList = ((byte[]) value);
+        this.userList = (value);
     }
 
 }

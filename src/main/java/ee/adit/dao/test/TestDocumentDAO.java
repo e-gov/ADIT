@@ -1,6 +1,5 @@
 package ee.adit.dao.test;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 

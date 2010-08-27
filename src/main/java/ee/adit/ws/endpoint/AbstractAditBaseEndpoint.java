@@ -92,6 +92,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 	 * @param xteeHeader X-Tee header
 	 * @throws Exception
 	 */
+	@Override
 	protected void invokeInternal(Document requestKeha, Element responseElement,
 			CustomXTeeHeader xteeHeader) throws Exception {
 		
@@ -369,7 +370,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 	
 	/**
 	 * Retreives the marshaller.
-	 * @return
+	 * @return	{@link Marshaller} object used for current request
 	 */
 	public Marshaller getMarshaller() {
 		return marshaller;
@@ -377,7 +378,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 
 	/**
 	 * Sets the marshaller.
-	 * @return
+	 * @param marshaller	{@link Marshaller} object to be used for current request
 	 */
 	public void setMarshaller(Marshaller marshaller) {
 		this.marshaller = marshaller;
@@ -385,7 +386,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 
 	/**
 	 * Retreives the unmarshaller.
-	 * @return
+	 * @return	{@link Unmarshaller} object used for current request
 	 */
 	public Unmarshaller getUnmarshaller() {
 		return unmarshaller;
@@ -393,7 +394,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 	
 	/**
 	 * Sets the unmarshaller.
-	 * @return
+	 * @param unmarshaller	{@link Unmarshaller} object to be used for current request
 	 */
 	public void setUnmarshaller(Unmarshaller unmarshaller) {
 		this.unmarshaller = unmarshaller;
@@ -401,7 +402,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 
 	/**
 	 * Retreives the X-Tee header.
-	 * @return
+	 * @return		X-Tee header of current request
 	 */
 	public CustomXTeeHeader getHeader() {
 		return header;
@@ -409,7 +410,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 
 	/**
 	 * Sets the X-Tee header.
-	 * @return
+	 * @param header	X-Tee header of current request
 	 */
 	public void setHeader(CustomXTeeHeader header) {
 		this.header = header;
@@ -417,7 +418,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 
 	/**
 	 * Retreives the message source.
-	 * @return
+	 * @return		Currently used message source as {@link MessageSource} object
 	 */
 	public MessageSource getMessageSource() {
 		return messageSource;
@@ -425,7 +426,8 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 
 	/**
 	 * Sets the message source.
-	 * @return
+	 * @param messageSource		{@link MessageSource} object that will be
+	 * 							used for application success and error messages.
 	 */
 	public void setMessageSource(MessageSource messageSource) {
 		this.messageSource = messageSource;
@@ -433,7 +435,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 
 	/**
 	 * Retreives the configuration.
-	 * @return
+	 * @return	Application configuration as {@link Configuration} object.
 	 */
 	public Configuration getConfiguration() {
 		return configuration;
@@ -441,7 +443,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 
 	/**
 	 * Sets the configuration.
-	 * @return
+	 * @param configuration		Application configuration as {@link Configuration} object.
 	 */
 	public void setConfiguration(Configuration configuration) {
 		this.configuration = configuration;
@@ -449,7 +451,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 
 	/**
 	 * Retreives the log service.
-	 * @return
+	 * @return		Log service
 	 */
 	public LogService getLogService() {
 		return logService;
@@ -457,7 +459,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 
 	/**
 	 * Sets the log service.
-	 * @return
+	 * @param logService	Log service
 	 */
 	public void setLogService(LogService logService) {
 		this.logService = logService;
@@ -465,7 +467,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 	
 	/**
 	 * Retreives the message service.
-	 * @return
+	 * @return	Message service
 	 */
 	public MessageService getMessageService() {
 		return messageService;
@@ -473,7 +475,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 
 	/**
 	 * Sets the message service.
-	 * @return
+	 * @param messageService	Message service
 	 */
 	public void setMessageService(MessageService messageService) {
 		this.messageService = messageService;

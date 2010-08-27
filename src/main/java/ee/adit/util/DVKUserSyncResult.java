@@ -34,7 +34,7 @@ public class DVKUserSyncResult {
 	
 	/**
 	 * Retrieves the number of users added
-	 * @return
+	 * @return			Number of users added
 	 */
 	public int getAdded() {
 		return added;
@@ -42,7 +42,7 @@ public class DVKUserSyncResult {
 
 	/**
 	 * Sets the number of users added
-	 * @param added
+	 * @param added		Number of users added
 	 */
 	public void setAdded(int added) {
 		this.added = added;
@@ -50,7 +50,7 @@ public class DVKUserSyncResult {
 
 	/**
 	 * Retrieves the number of users modified
-	 * @return
+	 * @return			Number of users modified
 	 */
 	public int getModified() {
 		return modified;
@@ -58,7 +58,7 @@ public class DVKUserSyncResult {
 
 	/**
 	 * Sets the number of users modified
-	 * @param added
+	 * @param modified		Number of users modified
 	 */
 	public void setModified(int modified) {
 		this.modified = modified;
@@ -66,7 +66,7 @@ public class DVKUserSyncResult {
 	
 	/**
 	 * Retrieves the number of users deactivated
-	 * @return
+	 * @return			Number of users deleted/deactivated
 	 */
 	public int getDeactivated() {
 		return deactivated;
@@ -74,7 +74,7 @@ public class DVKUserSyncResult {
 
 	/**
 	 * Sets the number of users deleted / deactivated
-	 * @param added
+	 * @param deactivated	Number of users deleted/deactivated
 	 */
 	public void setDeactivated(int deactivated) {
 		this.deactivated = deactivated;

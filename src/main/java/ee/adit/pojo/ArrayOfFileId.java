@@ -62,7 +62,7 @@ public class ArrayOfFileId {
      * 
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link long }
+     * {@link Long }
      * 
      * 
      */

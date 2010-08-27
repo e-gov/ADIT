@@ -31,6 +31,14 @@ import ee.adit.util.Util;
 import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
 import ee.webmedia.xtee.annotation.XTeeService;
 
+/**
+ * Implementation of "unShareDocument" web method (web service request).
+ * Contains request input validation, request-specific workflow
+ * and response composition.  
+ * 
+ * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
+ * @author Jaak Lember, Interinx, jaak@interinx.com
+ */
 @XTeeService(name = "unShareDocument", version = "v1")
 @Component
 public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
@@ -55,6 +63,13 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 		this.documentService = documentService;
 	}
 	
+	/**
+	 * Executes "V1" version of "unShareDocument" request.
+	 * 
+	 * @param requestObject		Request body object
+	 * @return					Response body object
+	 */
+	@SuppressWarnings("unchecked")
 	protected Object v1(Object requestObject) {
 		UnShareDocumentResponse response = new UnShareDocumentResponse();
 		ArrayOfMessage messages = new ArrayOfMessage();
@@ -321,7 +336,7 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 	
 	@Override
 	protected Object invokeInternal(Object requestObject, int version) throws Exception {
-		LOG.debug("JoinEndpoint invoked. Version: " + version);
+		LOG.debug("unShareDocument invoked. Version: " + version);
 
 		if (version == 1) {
 			return v1(requestObject);
@@ -341,20 +356,31 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 		return response;
 	}
 	
-	private void checkRequest(UnShareDocumentRequest request) {
-		String errorMessage = null;
+	/**
+	 * Validates request body and makes sure that all
+	 * required fields exist and are not empty.
+	 * <br><br>
+	 * Throws {@link AditCodedException} if any errors in request data are found.
+	 * 
+	 * @param request				Request body as {@link UnShareDocumentRequest} object.
+	 * @throws AditCodedException	Exception describing error found in requet body.
+	 */
+	private void checkRequest(UnShareDocumentRequest request) throws AditCodedException {
 		if (request != null) {
 			if (request.getDocumentId() <= 0) {
-				errorMessage = this.getMessageSource().getMessage("request.body.undefined.documentId", new Object[] {},	Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				throw new AditCodedException("request.body.undefined.documentId");
 			}
 		} else {
-			errorMessage = this.getMessageSource().getMessage("request.body.empty", new Object[] {}, Locale.ENGLISH);
-			throw new AditException(errorMessage);
+			throw new AditCodedException("request.body.empty");
 		}
 	}
 
-	private static void printRequest(UnShareDocumentRequest request) {
+	/**
+	 * Writes request parameters to application DEBUG log.
+	 * 
+	 * @param request	Request body as {@link UnShareDocumentRequest} object.
+	 */
+	private void printRequest(UnShareDocumentRequest request) {
 		LOG.debug("-------- UnShareDocumentRequest -------");
 		LOG.debug("Document ID: " + String.valueOf(request.getDocumentId()));
 		if ((request.getRecipientList() != null) && (request.getRecipientList().getCode() != null)) {

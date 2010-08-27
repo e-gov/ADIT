@@ -42,7 +42,7 @@ public class UsertypeDAO extends HibernateDaoSupport {
 		String SQL = "from Usertype";
 		try {
 			session = this.getSessionFactory().openSession();
-			return (List<Usertype>) session.createQuery(SQL).list();
+			return session.createQuery(SQL).list();
 		} finally {
 			if(session != null) {
 				session.clear();

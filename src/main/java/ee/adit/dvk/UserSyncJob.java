@@ -5,7 +5,6 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
-import ee.adit.service.DocumentService;
 import ee.adit.service.UserService;
 import ee.adit.util.DVKUserSyncResult;
 
@@ -15,6 +14,7 @@ public class UserSyncJob extends QuartzJobBean {
 	
 	private UserService userService;
 	
+	@Override
 	protected void executeInternal(JobExecutionContext ctx)
 			throws JobExecutionException {
 		

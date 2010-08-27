@@ -326,7 +326,7 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 
 		NamedNodeMap attrs = kehaNode.getAttributes();
 		for (int i = 0; i < attrs.getLength(); i++) {
-			paringElement.getAttributes().setNamedItem((Attr) attrs.item(i));
+			paringElement.getAttributes().setNamedItem(attrs.item(i));
 		}
 
 		while (kehaNode.hasChildNodes()) {
@@ -375,7 +375,7 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 	/**
 	 * Retrieves the response message.
 	 * 
-	 * @return
+	 * @return	Response message as {@link SoapMessage} object.
 	 */
 	public SoapMessage getResponseMessage() {
 		return responseMessage;
@@ -384,7 +384,7 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 	/**
 	 * Retrieves the request message.
 	 * 
-	 * @return
+	 * @return	Request message as {@link SoapMessage} object.
 	 */
 	public SoapMessage getRequestMessage() {
 		return requestMessage;
@@ -393,7 +393,7 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 	/**
 	 * Sets the response message.
 	 * 
-	 * @param responseMessage
+	 * @param responseMessage	Response message as {@link SaajSoapMessage} object.
 	 */
 	public void setResponseMessage(SaajSoapMessage responseMessage) {
 		this.responseMessage = responseMessage;
@@ -402,16 +402,16 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 	/**
 	 * Sets the request message.
 	 * 
-	 * @param responseMessage
+	 * @param requestMessage	Request message as {@link SaajSoapMessage} object.
 	 */
 	public void setRequestMessage(SaajSoapMessage requestMessage) {
 		this.requestMessage = requestMessage;
 	}
 
 	/**
-	 * Indicates weather SOAP attachment's headers are to be corrected.
+	 * Indicates whether SOAP attachments headers are to be corrected.
 	 * 
-	 * @return
+	 * @return	<code>true</code> if this request should not attempt to correct response attachment headers.  
 	 */
 	public boolean isIgnoreAttachmentHeaders() {
 		return ignoreAttachmentHeaders;

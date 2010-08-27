@@ -33,6 +33,14 @@ import ee.adit.util.Util;
 import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
 import ee.webmedia.xtee.annotation.XTeeService;
 
+/**
+ * Implementation of "getJoined" web method (web service request).
+ * Contains request input validation, request-specific workflow
+ * and response composition.  
+ * 
+ * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
+ * @author Jaak Lember, Interinx, jaak@interinx.com
+ */
 @XTeeService(name = "getJoined", version = "v1")
 @Component
 public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
@@ -43,8 +51,7 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 	
 	@Override
 	protected Object invokeInternal(Object requestObject, int version) throws Exception {
-
-		LOG.debug("JoinEndpoint invoked. Version: " + version);
+		LOG.debug("getJoined invoked. Version: " + version);
 		
 		if(version == 1) {
 			return v1(requestObject);
@@ -54,6 +61,12 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 		
 	}
 	
+	/**
+	 * Executes "V1" version of "getJoined" request.
+	 * 
+	 * @param requestObject		Request body object
+	 * @return					Response body object
+	 */
 	protected Object v1(Object requestObject) {
 		GetJoinedResponse response = new GetJoinedResponse();
 		ArrayOfMessage messages = new ArrayOfMessage();
@@ -198,7 +211,16 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 		return marshal(getJoinedResponseAttachment);
 	}
 	
-	private void checkRequest(GetJoinedRequest request) {
+	/**
+	 * Validates request body and makes sure that all
+	 * required fields exist and are not empty.
+	 * <br><br>
+	 * Throws {@link AditCodedException} if any errors in request data are found.
+	 * 
+	 * @param request				Request body as {@link GetJoinedRequest} object.
+	 * @throws AditCodedException	Exception describing error found in requet body.
+	 */
+	private void checkRequest(GetJoinedRequest request) throws AditCodedException {
 		if(request != null) {
 			if(request.getMaxResults() != null && request.getMaxResults().longValue() <= 0) {
 				throw new AditCodedException("request.getJoined.body.invalid.maxResults");

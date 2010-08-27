@@ -402,7 +402,7 @@ public class DocumentService {
 	/**
 	 * Retrieves a list of valid document types.
 	 * 
-	 * @return
+	 * @return	List of valid document types as a comma separated list
 	 */
 	public String getValidDocumentTypes() {
 		StringBuffer result = new StringBuffer();
@@ -424,11 +424,17 @@ public class DocumentService {
 
 	/**
 	 * Defaltes document file. Replaces the data with MD5 hash.
+	 * <br><br>
+	 * Returns one of the following result codes:<br>
+	 * "ok" - deflation succeeded<br>
+	 * "already_deleted" - specified file is already deleted<br>
+	 * "file_does_not_belong_to_document" - specified file does not belong to specified document<br>
+	 * "file_does_not_exist" - specified file does not exist
 	 * 
 	 * @param documentId document ID
 	 * @param fileId file ID
 	 * @param markDeleted
-	 * @return
+	 * @return	Deflation result code.
 	 */
 	public String deflateDocumentFile(long documentId, long fileId,
 			boolean markDeleted) {
@@ -499,16 +505,16 @@ public class DocumentService {
 	}
 
 	/**
+	 * Saves document file to database.
 	 * 
-	 * @param documentId
-	 * @param file
-	 * @param attachmentXmlFile
-	 * @param remainingDiskQuota
-	 * @param temporaryFilesDir
-	 * @return
+	 * @param documentId			Document ID
+	 * @param file					File as {@link OutputDocumentFile} object	
+	 * @param remainingDiskQuota	Remaining disk quota of current user (in bytes)
+	 * @param temporaryFilesDir		Absolute path to temporary files directory
+	 * @return						Result of save as {@link SaveItemInternalResult} object.
 	 */
 	public SaveItemInternalResult saveDocumentFile(final long documentId,
-			final OutputDocumentFile file, final String attachmentXmlFile,
+			final OutputDocumentFile file,
 			final long remainingDiskQuota, final String temporaryFilesDir) {
 		final DocumentDAO docDao = this.getDocumentDAO();
 
@@ -1493,7 +1499,7 @@ public class DocumentService {
 	/**
 	 * Deletes documents from DVK, that have the status 'sent'
 	 * 
-	 * @return
+	 * @return				Number of documents deleted
 	 * @throws Exception
 	 */
 	public int deleteSentDocumentsFromDVK() throws Exception {
@@ -1517,11 +1523,13 @@ public class DocumentService {
 					PojoMessage dvkDocument = dvkDocumentsIterator.next();
 					deleteDVKDocument(dvkDocument, dvkSession);
 					LOG.info("Document deleted from DVK. DHL_ID: " + dvkDocument.getDhlId());
+					result++;
 				}
 				transaction.commit();
 				
 			} catch (Exception e) {
 				transaction.rollback();
+				result = 0;
 				throw e;
 			}
 			finally {
@@ -1584,7 +1592,8 @@ public class DocumentService {
 	 * Deletes the messages content (data) and updates 'faultCode' to 'NO_FAULT:
 	 * DELETED BY ADIT'
 	 * 
-	 * @param dhlId
+	 * @param message	DVK document to be deleted.
+	 * @param session	Current hibernate session.
 	 */
 	public void deleteDVKDocument(PojoMessage message, Session session) {
 		LOG.debug("Deleting document. DHL_ID: " + message.getDhlId());

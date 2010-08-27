@@ -25,6 +25,14 @@ import ee.adit.util.Util;
 import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
 import ee.webmedia.xtee.annotation.XTeeService;
 
+/**
+ * Implementation of "getNotifications" web method (web service request).
+ * Contains request input validation, request-specific workflow
+ * and response composition.  
+ * 
+ * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
+ * @author Jaak Lember, Interinx, jaak@interinx.com
+ */
 @XTeeService(name = "getNotifications", version = "v1")
 @Component
 public class GetNotificationsEndpoint extends AbstractAditBaseEndpoint {
@@ -41,7 +49,7 @@ public class GetNotificationsEndpoint extends AbstractAditBaseEndpoint {
 
 	@Override
 	protected Object invokeInternal(Object requestObject, int version) throws Exception {
-		LOG.debug("JoinEndpoint invoked. Version: " + version);
+		LOG.debug("getNotifications invoked. Version: " + version);
 
 		if (version == 1) {
 			return v1(requestObject);
@@ -50,6 +58,12 @@ public class GetNotificationsEndpoint extends AbstractAditBaseEndpoint {
 		}
 	}
 
+	/**
+	 * Executes "V1" version of "getNotifications" request.
+	 * 
+	 * @param requestObject		Request body object
+	 * @return					Response body object
+	 */
 	protected Object v1(Object requestObject) {
 		GetNotificationsResponse response = new GetNotificationsResponse();
 		ArrayOfMessage messages = new ArrayOfMessage();

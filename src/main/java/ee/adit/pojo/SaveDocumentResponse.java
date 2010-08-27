@@ -115,7 +115,7 @@ public class SaveDocumentResponse {
      * 
      * @return
      *     possible object is
-     *     {@link SaveDocumentRequest.Document }
+     *     {@link SaveDocumentRequestDocument }
      *     
      */
     public SaveDocumentRequestDocument getDocument() {
@@ -127,7 +127,7 @@ public class SaveDocumentResponse {
      * 
      * @param value
      *     allowed object is
-     *     {@link SaveDocumentRequest.Document }
+     *     {@link SaveDocumentRequestDocument }
      *     
      */
     public void setDocument(SaveDocumentRequestDocument value) {

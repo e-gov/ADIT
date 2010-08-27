@@ -31,6 +31,14 @@ import ee.adit.util.Util;
 import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
 import ee.webmedia.xtee.annotation.XTeeService;
 
+/**
+ * Implementation of "saveDocument" web method (web service request).
+ * Contains request input validation, request-specific workflow
+ * and response composition.  
+ * 
+ * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
+ * @author Jaak Lember, Interinx, jaak@interinx.com
+ */
 @XTeeService(name = "saveDocument", version = "v1")
 @Component
 public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
@@ -43,7 +51,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 	
 	@Override
 	protected Object invokeInternal(Object requestObject, int version) throws Exception {
-		LOG.debug("JoinEndpoint invoked. Version: " + version);
+		LOG.debug("saveDocument invoked. Version: " + version);
 
 		if (version == 1) {
 			return v1(requestObject);
@@ -52,6 +60,12 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 		}
 	}
 	
+	/**
+	 * Executes "V1" version of "saveDocument" request.
+	 * 
+	 * @param requestObject		Request body object
+	 * @return					Response body object
+	 */
 	protected Object v1(Object requestObject) {
 		SaveDocumentResponse response = new SaveDocumentResponse();
 		ArrayOfMessage messages = new ArrayOfMessage();

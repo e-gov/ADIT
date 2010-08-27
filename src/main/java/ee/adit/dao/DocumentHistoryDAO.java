@@ -6,8 +6,6 @@ import org.apache.log4j.Logger;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import ee.adit.dao.pojo.DocumentHistory;
-import ee.adit.dao.pojo.DocumentSharing;
-import ee.adit.service.DocumentService;
 
 public class DocumentHistoryDAO extends HibernateDaoSupport {
 

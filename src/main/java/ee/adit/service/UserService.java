@@ -3,11 +3,9 @@ package ee.adit.service;
 import java.math.BigInteger;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -33,7 +31,6 @@ import ee.adit.dao.pojo.UserNotification;
 import ee.adit.dao.pojo.UserNotificationId;
 import ee.adit.dao.pojo.Usertype;
 import ee.adit.exception.AditCodedException;
-import ee.adit.exception.AditException;
 import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.ArrayOfNotification;
 import ee.adit.pojo.GetUserInfoRequestAttachmentUserList;
@@ -91,10 +88,13 @@ public class UserService {
 	}
 
 	/**
-	 * Determines the access level for this application: 0 - no access 1 - read
-	 * access 2 - write acces (full access)
+	 * Determines the access level for this application:<br>
+	 * 0 - no access<br>
+	 * 1 - read access<br>
+	 * 2 - write acces (full access)
 	 * 
-	 * @return
+	 * @param remoteApplicationShortName	Short name of application that executed curent request
+	 * @return								Access level for specified application
 	 */
 	public int getAccessLevel(String remoteApplicationShortName) {
 		int result = 0;
@@ -115,12 +115,14 @@ public class UserService {
 	}
 
 	/**
-	 * Determines the level of access on user for this application: 0 - no
-	 * access 1 - read access 2 - write acces (full access)
+	 * Determines the level of access on user for this application:<br>
+	 * 0 - no access<br>
+	 * 1 - read access<br>
+	 * 2 - write acces (full access)
 	 * 
-	 * @param remoteApplicationShortName
-	 * @param aditUser
-	 * @return
+	 * @param remoteApplicationShortName	Short name of application that executed current request.
+	 * @param aditUser						User as {@link AditUser} object.
+	 * @return								Access level for specified user and application								
 	 */
 	public int getAccessLevelForUser(String remoteApplicationShortName,
 			AditUser aditUser) {

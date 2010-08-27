@@ -31,7 +31,7 @@ public class CustomXTeeHeader extends XTeeHeader {
 	
 	/**
 	 * Retieves the value of the {@code INFOSYSTEEM} SOAP header
-	 * @return
+	 * @return		Value of {@code INFOSYSTEEM} SOAP header
 	 */
 	public String getInfosysteem() {
 		if(this.getElemendid() != null) {

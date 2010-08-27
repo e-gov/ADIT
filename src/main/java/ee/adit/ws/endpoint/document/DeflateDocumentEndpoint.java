@@ -22,6 +22,14 @@ import ee.adit.util.Util;
 import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
 import ee.webmedia.xtee.annotation.XTeeService;
 
+/**
+ * Implementation of "deflateDocument" web method (web service request).
+ * Contains request input validation, request-specific workflow
+ * and response composition.  
+ * 
+ * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
+ * @author Jaak Lember, Interinx, jaak@interinx.com
+ */
 @XTeeService(name = "deflateDocument", version = "v1")
 @Component
 public class DeflateDocumentEndpoint extends AbstractAditBaseEndpoint {
@@ -48,7 +56,7 @@ public class DeflateDocumentEndpoint extends AbstractAditBaseEndpoint {
 	
 	@Override
 	protected Object invokeInternal(Object requestObject, int version) throws Exception {
-		LOG.debug("JoinEndpoint invoked. Version: " + version);
+		LOG.debug("deflateDocument invoked. Version: " + version);
 
 		if (version == 1) {
 			return v1(requestObject);
@@ -57,6 +65,12 @@ public class DeflateDocumentEndpoint extends AbstractAditBaseEndpoint {
 		}
 	}
 	
+	/**
+	 * Executes "V1" version of "deflateDocument" request.
+	 * 
+	 * @param requestObject		Request body object
+	 * @return					Response body object
+	 */
 	protected Object v1(Object requestObject) {
 		DeflateDocumentResponse response = new DeflateDocumentResponse();
 		ArrayOfMessage messages = new ArrayOfMessage();
@@ -196,7 +210,16 @@ public class DeflateDocumentEndpoint extends AbstractAditBaseEndpoint {
 		return response;
 	}
 	
-	private void checkRequest(DeflateDocumentRequest request) {
+	/**
+	 * Validates request body and makes sure that all
+	 * required fields exist and are not empty.
+	 * <br><br>
+	 * Throws {@link AditCodedException} if any errors in request data are found.
+	 * 
+	 * @param request				Request body as {@link DeflateDocumentRequest} object.
+	 * @throws AditCodedException	Exception describing error found in requet body.
+	 */
+	private void checkRequest(DeflateDocumentRequest request) throws AditCodedException {
 		if(request != null) {
 			if(request.getDocumentId() <= 0) {
 				throw new AditCodedException("request.body.undefined.documentId");
@@ -206,7 +229,12 @@ public class DeflateDocumentEndpoint extends AbstractAditBaseEndpoint {
 		}
 	}
 	
-	private static void printRequest(DeflateDocumentRequest request) {
+	/**
+	 * Writes request parameters to application DEBUG log.
+	 * 
+	 * @param request	Request body as {@link DeflateDocumentRequest} object.
+	 */
+	private void printRequest(DeflateDocumentRequest request) {
 		LOG.debug("-------- DeflateDocumentRequest -------");
 		LOG.debug("Document ID: " + String.valueOf(request.getDocumentId()));
 		LOG.debug("--------------------------------------");

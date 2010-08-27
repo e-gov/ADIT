@@ -1,6 +1,5 @@
 package ee.adit.dao;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.apache.log4j.Logger;

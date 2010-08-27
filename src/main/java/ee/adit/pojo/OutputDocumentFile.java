@@ -1,9 +1,5 @@
 package ee.adit.pojo;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-
 public class OutputDocumentFile {
 	private Long id;
 	private String name;
