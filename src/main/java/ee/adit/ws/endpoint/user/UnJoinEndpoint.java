@@ -51,6 +51,9 @@ public class UnJoinEndpoint extends AbstractAditBaseEndpoint {
 			// Log request
 			Util.printHeader(header);
 			
+			// Check header for required fields
+			checkHeader(header);
+			
 			// Kontrollime, kas päringu käivitanud infosüsteem on ADITis registreeritud
 			boolean applicationRegistered = this.getUserService().isApplicationRegistered(applicationName);
 						

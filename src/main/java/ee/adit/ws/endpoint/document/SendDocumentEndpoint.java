@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
+import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditException;
 import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.ArrayOfMessage;
@@ -63,6 +64,16 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 			SendDocumentRequest request = (SendDocumentRequest) requestObject;
 			CustomXTeeHeader header = this.getHeader();
 			String applicationName = header.getInfosysteem();
+			
+			// Log request
+			Util.printHeader(header);
+			// TODO: printRequest(request);
+
+			// Check header for required fields
+			checkHeader(header);
+
+			// Check request body
+			// TODO: checkRequest(request);
 			
 			super.logCurrentRequest(documentId, requestDate.getTime(), additionalInformationForLog);
 			
@@ -213,7 +224,10 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 			response.setSuccess(success);
 			ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
 			
-			if(e instanceof AditException) {
+			if(e instanceof AditCodedException) {
+				LOG.debug("Adding exception messages to response object.");
+				arrayOfMessage.setMessage(this.getMessageService().getMessages((AditCodedException) e));
+			} else if(e instanceof AditException) {
 				LOG.debug("Adding exception message to response object.");
 				arrayOfMessage.getMessage().add(new Message("en", e.getMessage()));
 			} else {

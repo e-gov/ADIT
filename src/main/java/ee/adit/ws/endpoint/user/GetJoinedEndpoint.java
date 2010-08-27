@@ -69,6 +69,9 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 			CustomXTeeHeader header = this.getHeader();
 			String applicationName = header.getInfosysteem();
 			
+			// Check header for required fields
+			checkHeader(header);
+			
 			// Check request
 			checkRequest(request);
 			

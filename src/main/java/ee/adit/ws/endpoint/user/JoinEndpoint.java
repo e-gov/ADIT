@@ -184,18 +184,6 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 		return response;
 	}
 	
-	private void checkHeader(CustomXTeeHeader header) throws Exception {
-		if(header != null) {
-			if(header.getIsikukood() == null) {
-				throw new AditCodedException("request.header.undefined.personalCode");
-			} else if(header.getInfosysteem() == null) {
-				throw new AditCodedException("request.header.undefined.systemName");
-			} else if(header.getAsutus() == null) {
-				throw new AditCodedException("request.header.undefined.institution");
-			}
-		}
-	}
-	
 	private void checkRequest(JoinRequest request) {
 		if(request != null) {
 			if(request.getUserType() == null || "".equalsIgnoreCase(request.getUserType().trim())) {

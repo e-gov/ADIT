@@ -290,22 +290,6 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
 		return response;
 	}
 	
-	private void checkHeader(CustomXTeeHeader header) throws Exception {
-		String errorMessage = null;
-		if(header != null) {
-			if ((header.getIsikukood() == null) || (header.getIsikukood().length() < 1)) {
-				errorMessage = this.getMessageSource().getMessage("request.header.undefined.personalCode", new Object[] {}, Locale.ENGLISH);
-				throw new AditException(errorMessage);
-			} else if ((header.getInfosysteem() == null) || (header.getInfosysteem().length() < 1)) {
-				errorMessage = this.getMessageSource().getMessage("request.header.undefined.systemName", new Object[] {}, Locale.ENGLISH);
-				throw new AditException(errorMessage);
-			} else if ((header.getAsutus() == null) || (header.getAsutus().length() < 1)) {
-				errorMessage = this.getMessageSource().getMessage("request.header.undefined.institution", new Object[] {}, Locale.ENGLISH);
-				throw new AditException(errorMessage);
-			}
-		}
-	}
-	
 	private void checkRequest(PrepareSignatureRequest request) {
 		String errorMessage = null; 
 		if(request != null) {

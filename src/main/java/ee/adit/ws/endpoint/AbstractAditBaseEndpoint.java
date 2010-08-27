@@ -24,6 +24,7 @@ import org.springframework.ws.soap.SoapMessage;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditInternalException;
 import ee.adit.service.LogService;
 import ee.adit.service.MessageService;
@@ -324,6 +325,26 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 			}			
 		} catch (Exception ex) {
 			LOG.debug("Failed logging request!", ex);
+		}
+	}
+	
+	/**
+	 * Checks whether or not the request header contains all
+	 * required fields. Throws a {@link AditCodedException} if
+	 * any of required fields are missing or empty.
+	 * 
+	 * @param header				SOAP message header part as {@link CustomXTeeHeader}
+	 * @throws AditCodedException	Exception describing which required field is missing or empty
+	 */
+	public void checkHeader(CustomXTeeHeader header) throws AditCodedException {
+		if(header != null) {
+			if ((header.getIsikukood() == null) || (header.getIsikukood().length() < 1)) {
+				throw new AditCodedException("request.header.undefined.personalCode");
+			} else if ((header.getInfosysteem() == null) || (header.getInfosysteem().length() < 1)) {
+				throw new AditCodedException("request.header.undefined.systemName");
+			} else if ((header.getAsutus() == null) || (header.getAsutus().length() < 1)) {
+				throw new AditCodedException("request.header.undefined.institution");
+			}
 		}
 	}
 	

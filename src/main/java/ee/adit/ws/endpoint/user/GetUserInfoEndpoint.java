@@ -65,6 +65,9 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 			GetUserInfoRequest request = (GetUserInfoRequest) requestObject;
 			CustomXTeeHeader header = this.getHeader();
 			String applicationName = header.getInfosysteem();
+			
+			// Check header for required fields
+			checkHeader(header);
 
 			// Kontrollime, kas päringu käivitanud infosüsteem on ADITis
 			// registreeritud

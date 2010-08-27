@@ -12,6 +12,7 @@ import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.DocumentHistory;
 import ee.adit.dao.pojo.DocumentSharing;
+import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditException;
 import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.ArrayOfMessage;
@@ -295,7 +296,10 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 			//response.setRecipientList(statusArray);
 			ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
 
-			if (e instanceof AditException) {
+			if(e instanceof AditCodedException) {
+				LOG.debug("Adding exception messages to response object.");
+				arrayOfMessage.setMessage(this.getMessageService().getMessages((AditCodedException) e));
+			} else if (e instanceof AditException) {
 				LOG.debug("Adding exception message to response object.");
 				arrayOfMessage.getMessage().add(new Message("en", e.getMessage()));
 			} else {
@@ -338,22 +342,6 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 		}
 		
 		return result;
-	}
-
-	private void checkHeader(CustomXTeeHeader header) throws Exception {
-		String errorMessage = null;
-		if (header != null) {
-			if ((header.getIsikukood() == null)	|| (header.getIsikukood().length() < 1)) {
-				errorMessage = this.getMessageSource().getMessage("request.header.undefined.personalCode", new Object[] {}, Locale.ENGLISH);
-				throw new AditException(errorMessage);
-			} else if ((header.getInfosysteem() == null) || (header.getInfosysteem().length() < 1)) {
-				errorMessage = this.getMessageSource().getMessage("request.header.undefined.systemName", new Object[] {}, Locale.ENGLISH);
-				throw new AditException(errorMessage);
-			} else if ((header.getAsutus() == null) || (header.getAsutus().length() < 1)) {
-				errorMessage = this.getMessageSource().getMessage("request.header.undefined.institution", new Object[] {}, Locale.ENGLISH);
-				throw new AditException(errorMessage);
-			}
-		}
 	}
 
 	private void checkRequest(ShareDocumentRequest request) {

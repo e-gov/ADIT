@@ -176,18 +176,6 @@ public class DeleteDocumentEndpoint extends AbstractAditBaseEndpoint {
 		return response;
 	}
 	
-	private void checkHeader(CustomXTeeHeader header) throws Exception {
-		if(header != null) {
-			if ((header.getIsikukood() == null) || (header.getIsikukood().length() < 1)) {
-				throw new AditCodedException("request.header.undefined.personalCode");
-			} else if ((header.getInfosysteem() == null) || (header.getInfosysteem().length() < 1)) {
-				throw new AditCodedException("request.header.undefined.systemName");
-			} else if ((header.getAsutus() == null) || (header.getAsutus().length() < 1)) {
-				throw new AditCodedException("request.header.undefined.institution");
-			}
-		}
-	}
-	
 	private void checkRequest(DeleteDocumentRequest request) {
 		if(request != null) {
 			if(request.getDocumentId() <= 0) {

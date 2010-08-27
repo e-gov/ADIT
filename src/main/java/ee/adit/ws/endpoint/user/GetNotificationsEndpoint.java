@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 
 import ee.adit.dao.pojo.AditUser;
+import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditException;
 import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.ArrayOfEmailAddress;
@@ -135,7 +136,10 @@ public class GetNotificationsEndpoint extends AbstractAditBaseEndpoint {
 			response.setSuccess(false);
 			ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
 
-			if (e instanceof AditException) {
+			if(e instanceof AditCodedException) {
+				LOG.debug("Adding exception messages to response object.");
+				arrayOfMessage.setMessage(this.getMessageService().getMessages((AditCodedException) e));
+			} else if (e instanceof AditException) {
 				LOG.debug("Adding exception message to response object.");
 				arrayOfMessage.getMessage().add(new Message("en", e.getMessage()));
 			} else {
@@ -159,21 +163,5 @@ public class GetNotificationsEndpoint extends AbstractAditBaseEndpoint {
 		arrayOfMessage.getMessage().add(new Message("en", ex.getMessage()));
 		response.setMessages(arrayOfMessage);
 		return response;
-	}
-
-	private void checkHeader(CustomXTeeHeader header) throws Exception {
-		String errorMessage = null;
-		if (header != null) {
-			if (header.getIsikukood() == null) {
-				errorMessage = this.getMessageSource().getMessage("request.header.undefined.personalCode", new Object[] {}, Locale.ENGLISH);
-				throw new AditException(errorMessage);
-			} else if (header.getInfosysteem() == null) {
-				errorMessage = this.getMessageSource().getMessage("request.header.undefined.systemName", new Object[] {}, Locale.ENGLISH);
-				throw new AditException(errorMessage);
-			} else if (header.getAsutus() == null) {
-				errorMessage = this.getMessageSource().getMessage("request.header.undefined.institution", new Object[] {}, Locale.ENGLISH);
-				throw new AditException(errorMessage);
-			}
-		}
 	}
 }
