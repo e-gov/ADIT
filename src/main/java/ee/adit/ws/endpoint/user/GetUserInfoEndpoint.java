@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.ws.mime.Attachment;
 
-import ee.adit.exception.AditException;
+import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.GetUserInfoRequest;
@@ -85,8 +85,7 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 
 					// If there are no attachments
 					if (!i.hasNext()) {
-						String errorMessage = this.getMessageSource().getMessage("request.attachments.missing", new Object[] {}, Locale.ENGLISH);
-						throw new AditException(errorMessage);
+						throw new AditCodedException("request.attachments.missing");
 					}
 
 					int attachmentCount = 0;
@@ -108,8 +107,7 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 								unmarshalledObject = unMarshal(xmlFile);
 							} catch (Exception e) {
 								LOG.error("Error while unmarshalling SOAP attachment: ", e);
-								String errorMessage = this.getMessageSource().getMessage("request.attachments.invalidFormat", new Object[] {}, Locale.ENGLISH);
-								throw new AditException(errorMessage);
+								throw new AditCodedException("request.attachments.invalidFormat");
 							}
 
 							// Check if the marshalling result is what we
@@ -148,22 +146,26 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 							}
 
 						} else {
-							String errorMessage = this.getMessageSource().getMessage("request.attachments.tooMany", new Object[] { applicationName }, Locale.ENGLISH);
-							throw new AditException(errorMessage);
+							AditCodedException aditCodedException = new AditCodedException("request.attachments.tooMany");
+							aditCodedException.setParameters(new Object[] { applicationName });
+							throw aditCodedException;
 						}
 					}
-				} else {
-					String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.read", new Object[] { applicationName }, Locale.ENGLISH);
-					throw new AditException(errorMessage);
+				} else {					
+					AditCodedException aditCodedException = new AditCodedException("application.insufficientPrivileges.read");
+					aditCodedException.setParameters(new Object[] { applicationName });
+					throw aditCodedException;
 				}
 
 			} else {
-				String errorMessage = this.getMessageSource().getMessage("application.notRegistered", new Object[] { applicationName }, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				AditCodedException aditCodedException = new AditCodedException("application.notRegistered");
+				aditCodedException.setParameters(new Object[] { applicationName });
+				throw aditCodedException;
 			}
 
 			response.setSuccess(new Success(true));
-			// TODO: Add success message
+			response.setMessages(messages);
+			
 		} catch (Exception e) {
 			LOG.error("Exception: ", e);
 			additionalInformationForLog = "Request failed: " + e.getMessage();
@@ -172,7 +174,7 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 			response.setSuccess(new Success(false));
 			ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
 
-			if (e instanceof AditException) {
+			if (e instanceof AditCodedException) {
 				LOG.debug("Adding exception message to response object.");
 				arrayOfMessage.getMessage().add(new Message("en", e.getMessage()));
 			} else {
