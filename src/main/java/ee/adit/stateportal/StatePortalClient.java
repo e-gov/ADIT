@@ -19,7 +19,7 @@ import ee.webmedia.xtee.client.service.SimpleXTeeServiceConfiguration;
 import ee.webmedia.xtee.client.service.StandardXTeeConsumer;
 
 /**
- * Client class for state portal (riigiportaal) X-Road database.
+ * Web service client class for State Portal (Riigiportaal) X-Road database.
  * Enables execution of state portal web service requests. 
  * 
  * @author Jaak Lember, Interinx, jaak@interinx.com

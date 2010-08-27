@@ -25,6 +25,12 @@ import ee.riik.xtee.teavituskalender.producers.producer.teavituskalender.OtsiKas
 import ee.webmedia.xtee.client.service.SimpleXTeeServiceConfiguration;
 import ee.webmedia.xtee.client.service.StandardXTeeConsumer;
 
+/**
+ * Web service client class for notification calendar (teavituskalender)
+ * X-Road database. Enables execution of notification calendar web service requests. 
+ * 
+ * @author Jaak Lember, Interinx, jaak@interinx.com
+ */
 public class ScheduleClient {
 	private static Logger LOG = Logger.getLogger(ScheduleClient.class);
 	private static int RESULT_OK = 0;
@@ -35,6 +41,23 @@ public class ScheduleClient {
 	public static String NotificationType_Modify = "modify";
 	public static String NotificationType_Sign = "sign";
 	
+	/**
+	 * Adds a notification to "teavituskalender" X-Road database.
+	 * <br><br>
+	 * This method intentionally throws no exception when failing.
+	 * Periodic attempts will be made to send notifications notifications
+	 * that could not be sent in previous attempts.
+	 * 
+	 * @param notification
+	 * 		Local {@link Notification} object that needs to be sent to
+	 * 		"teavituskalender" database.
+	 * @param eventType
+	 * 		Name of notifications type in "teavituskalender" database
+	 * @param userService
+	 * 		Current {@link UserService} instance
+	 * @return
+	 * 		Notification ID in "teavituskalender" database
+	 */
 	public static long addEvent(Notification notification, final String eventType, final UserService userService) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(notification.getEventDate());
@@ -50,6 +73,32 @@ public class ScheduleClient {
 				userService);
 	}
 
+	/**
+	 * Adds a notification to "teavituskalender" X-Road database.
+	 * <br><br>
+	 * This method intentionally throws no exception when failing.
+	 * Periodic attempts will be made to send notifications notifications
+	 * that could not be sent in previous attempts.
+	 * 
+	 * @param eventOwner
+	 * 		{@link AditUser} to whom this notification will be sent
+	 * @param eventText
+	 * 		Notification text
+	 * @param eventType
+	 * 		Name of notifications type in "teavituskalender" database
+	 * @param eventDate
+	 * 		Date and time describibg when the notified event occured
+	 * 		(for example, when a document was signed)
+	 * @param notificationType
+	 * 		Code of notification type in local database. This type is
+	 * 		more fine grained than the type in "teavituskalender" database
+	 * @param relatedDocumentId
+	 * 		ID of the document this notification is about 
+	 * @param userService
+	 * 		Current {@link UserService} instance
+	 * @return
+	 * 		Notification ID in "teavituskalender" database
+	 */
 	public static long addEvent(
 		final AditUser eventOwner,
 		final String eventText,
@@ -62,6 +111,34 @@ public class ScheduleClient {
 		return addEvent(0, eventOwner, eventText, eventType, eventDate, notificationType, relatedDocumentId, userService);
 	}
 	
+	/**
+	 * Adds a notification to "teavituskalender" X-Road database.
+	 * <br><br>
+	 * This method intentionally throws no exception when failing.
+	 * Periodic attempts will be made to send notifications notifications
+	 * that could not be sent in previous attempts.
+	 * 
+	 * @param notificationId
+	 * 		Notification ID in local database
+	 * @param eventOwner
+	 * 		{@link AditUser} to whom this notification will be sent
+	 * @param eventText
+	 * 		Notification text
+	 * @param eventType
+	 * 		Name of notifications type in "teavituskalender" database
+	 * @param eventDate
+	 * 		Date and time describibg when the notified event occured
+	 * 		(for example, when a document was signed)
+	 * @param notificationType
+	 * 		Code of notification type in local database. This type is
+	 * 		more fine grained than the type in "teavituskalender" database
+	 * @param relatedDocumentId
+	 * 		ID of the document this notification is about 
+	 * @param userService
+	 * 		Current {@link UserService} instance
+	 * @return
+	 * 		Notification ID in "teavituskalender" database
+	 */
 	public static long addEvent(
 			final long notificationId,
 			final AditUser eventOwner,
@@ -184,12 +261,14 @@ public class ScheduleClient {
 	}
 	
 	/**
-	 * Queries 'teavituskalender' database to find out whether it contains
-	 * a matching user in it's user database. 
+	 * Queries "teavituskalender" database to find out whether or not
+	 * it contains specified user in its user database. 
 	 * 
-	 * @param userCode		User (person or organization) code.
-	 * @return				Whether or not 'teavituskalender' database contains
-	 * 						a user with given code.
+	 * @param userCode
+	 * 		User (person or organization) code.
+	 * @return
+	 * 		Whether or not 'teavituskalender' database contains	a user
+	 * 		matching the given code.
 	 */
 	public static boolean userExists(String userCode) {
 		boolean result = false;
@@ -251,6 +330,12 @@ public class ScheduleClient {
 		return result;
 	}
 	
+	/**
+	 * Helper method to start application context.
+	 * 
+	 * @return
+	 * 		Application context as {@link ClassPathXmlApplicationContext} object
+	 */
 	public static ClassPathXmlApplicationContext startContext() {
 		ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("xtee.xml");
 		ctx.start();
