@@ -149,7 +149,14 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 					}
 					
 					// Unmarshal the XML from the temporary file
-					Object unmarshalledObject = unMarshal(xmlFile);
+					Object unmarshalledObject = null;
+					try {
+						unmarshalledObject = unMarshal(xmlFile);
+					} catch (Exception e) {
+						LOG.error("Error while unmarshalling SOAP attachment: ", e);
+						AditCodedException aditCodedException = new AditCodedException("request.attachments.invalidFormat");
+						throw aditCodedException;
+					}
 					
 					// Check if the marshalling result is what we expected
 					if(unmarshalledObject != null) {
