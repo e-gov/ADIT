@@ -35,6 +35,7 @@ public class ListMethodsEndpoint extends AbstractAditBaseEndpoint {
 	 * Constructs a response object containing all the query names that ADIT publishes.
 	 * 
 	 * @return
+	 * 		"listMethods" web method tesult as {@link ListMethodsResponse} object
 	 */
 	private ListMethodsResponse getResponse() {
 		ListMethodsResponse result = new ListMethodsResponse();

@@ -8,10 +8,31 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
+/**
+ * Quartz job for cleaning up applications temporary files folder.<br>
+ * Enables periodic deletion of old and unnecessary files. This job is
+ * required because some temporary files cannot be deleted in real time
+ * (for example attachment files of outgoing SOAP messages).
+ * <br><br>
+ * Quartz library: http://www.quartz-scheduler.org 
+ * 
+ * @author Jaak Lember, Interinx, jaak@interinx.com
+ */
 public class TemporaryFolderCleanerJob extends QuartzJobBean {
+	/**
+	 * Log4j logger
+	 */
 	private static Logger LOG = Logger.getLogger(TemporaryFolderCleanerJob.class);
+	
+	/**
+	 * Application configuration as {@link Configuration} object.
+	 * Wraps configuration values defined in servlet context file.
+	 */
 	private Configuration configuration;
 	
+	/**
+	 * Deletes old files from applications temporary folder.
+	 */
 	@Override
 	protected void executeInternal(JobExecutionContext ctx) throws JobExecutionException {
 		try {
@@ -45,10 +66,22 @@ public class TemporaryFolderCleanerJob extends QuartzJobBean {
 		}
 	}
 
+	/**
+	 * Gets current configuration.
+	 * 
+	 * @return
+	 * 		Current configuration
+	 */
 	public Configuration getConfiguration() {
 		return configuration;
 	}
 
+	/**
+	 * Sets configuration.
+	 * 
+	 * @param configuration
+	 * 		{@link Configuration} object to be used in current objects methods 
+	 */
 	public void setConfiguration(Configuration configuration) {
 		this.configuration = configuration;
 	}
