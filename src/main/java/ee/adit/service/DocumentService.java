@@ -1772,8 +1772,7 @@ public class DocumentService {
 			Saaja recipient = new Saaja();
 			Saatja originalSender = null;
 
-			originalSender = originalContainer.getTransport().getSaatjad().get(
-					0);
+			originalSender = originalContainer.getTransport().getSaatjad().get(0);
 
 			if (originalSender != null) {
 				recipient.setRegNr(originalSender.getRegNr());
@@ -1863,9 +1862,7 @@ public class DocumentService {
 					+ File.separator + Util.generateRandomFileName();
 			container.save2File(temporaryFile);
 
-			LOG
-					.info("DVK error response message DVK container saved to temporary file: "
-							+ temporaryFile);
+			LOG.info("DVK error response message DVK container saved to temporary file: " + temporaryFile);
 
 			// 2. Construct a DVK PojoMessage
 			PojoMessage message = new PojoMessage();
@@ -1878,8 +1875,7 @@ public class DocumentService {
 			Session dvkSession = null;
 			Transaction dvkTransaction = null;
 			try {
-				dvkSession = this.getDocumentDAO().getSessionFactory()
-						.openSession();
+				dvkSession = this.getDocumentDAO().getSessionFactory().openSession();
 				dvkTransaction = dvkSession.beginTransaction();
 
 				Clob clob = Hibernate.createClob(" ", dvkSession);
@@ -1889,13 +1885,10 @@ public class DocumentService {
 				message.setData(null);
 
 				if (dvkMessageID == null || dvkMessageID.longValue() == 0) {
-					LOG
-							.error("Error while saving outgoing message to DVK database - no ID returned by save method.");
-					throw new DataRetrievalFailureException(
-							"Error while saving outgoing message to DVK database - no ID returned by save method.");
+					LOG.error("Error while saving outgoing message to DVK database - no ID returned by save method.");
+					throw new DataRetrievalFailureException("Error while saving outgoing message to DVK database - no ID returned by save method.");
 				} else {
-					LOG.info("Outgoing message saved to DVK database. ID: "
-							+ dvkMessageID);
+					LOG.info("Outgoing message saved to DVK database. ID: "	+ dvkMessageID);
 				}
 			} catch (Exception e) {
 				if (dvkTransaction != null) {
@@ -1983,16 +1976,27 @@ public class DocumentService {
 		}
 	}
 
+	/**
+	 * Marks document matching the given ID as deleted. Document
+	 * file contents will be replaced with their MD5 hash codes. Document and
+	 * individual files will be marked as "deleted".
+	 * 
+	 * @param documentId
+	 *            ID of document to be deleted
+	 * @param userCode
+	 *            Code of the user who executed current request
+	 * @param applicationName
+	 *            Short name of application that executed current request
+	 * @throws Exception
+	 */
 	@SuppressWarnings("unchecked")
 	@Transactional
-	public void DeleteDocument(long documentId, String userCode,
-			String applicationName) throws Exception {
+	public void DeleteDocument(long documentId, String userCode, String applicationName) throws Exception {
 		Document doc = this.getDocumentDAO().getDocument(documentId);
 
 		// Check whether or not the document exists
 		if (doc == null) {
-			AditCodedException aditCodedException = new AditCodedException(
-					"document.nonExistent");
+			AditCodedException aditCodedException = new AditCodedException("document.nonExistent");
 			aditCodedException.setParameters(new Object[] { documentId });
 			throw aditCodedException;
 		}
@@ -2000,71 +2004,57 @@ public class DocumentService {
 		// Make sure that the document is not already deleted
 		// NB! doc.getDeleted() can be NULL
 		if ((doc.getDeleted() != null) && doc.getDeleted()) {
-			AditCodedException aditCodedException = new AditCodedException(
-					"request.deleteDocument.document.deleted");
+			AditCodedException aditCodedException = new AditCodedException("request.deleteDocument.document.deleted");
 			aditCodedException.setParameters(new Object[] { documentId });
 			throw aditCodedException;
 		}
 
 		boolean saveDocument = false;
 
-		// Kontrollime, kas dokument kuulub päringu käivitanud kasutajale
+		// Check whether or not given document belongs to current user
 		if (doc.getCreatorCode().equalsIgnoreCase(userCode)) {
-			// Kontrollime, ega dokument ei ole lukustatud.
+
+			// Make sure the document is not locked.
 			if ((doc.getLocked() == null) || !doc.getLocked()) {
-				// Failide sisu asendamine failide MD5 räsikoodiga
-				if ((doc.getDocumentSharings() == null)
-						|| (doc.getDocumentSharings().size() < 1)) {
+
+				// Replace file contents with MD5 hash of original contents
+				if ((doc.getDocumentSharings() == null) || (doc.getDocumentSharings().size() < 1)) {
 					Iterator it = doc.getDocumentFiles().iterator();
 					while (it.hasNext()) {
 						DocumentFile docFile = (DocumentFile) it.next();
-						String resultCode = this.deflateDocumentFile(doc
-								.getId(), docFile.getId(), true);
+						String resultCode = this.deflateDocumentFile(doc.getId(), docFile.getId(), true);
 
-						// Kontrollime üle võimalikud veaolukorrad
+						// Make sure no known error code was returned
 						if (resultCode.equalsIgnoreCase("already_deleted")) {
-							AditCodedException aditCodedException = new AditCodedException(
-									"file.isDeleted");
-							aditCodedException
-									.setParameters(new Object[] { docFile
-											.getId() });
+							AditCodedException aditCodedException = new AditCodedException("file.isDeleted");
+							aditCodedException.setParameters(new Object[] { docFile.getId() });
 							throw aditCodedException;
-						} else if (resultCode
-								.equalsIgnoreCase("file_does_not_exist")) {
-							AditCodedException aditCodedException = new AditCodedException(
-									"file.nonExistent");
-							aditCodedException
-									.setParameters(new Object[] { docFile
-											.getId() });
+						} else if (resultCode.equalsIgnoreCase("file_does_not_exist")) {
+							AditCodedException aditCodedException = new AditCodedException("file.nonExistent");
+							aditCodedException.setParameters(new Object[] { docFile.getId() });
 							throw aditCodedException;
-						} else if (resultCode
-								.equalsIgnoreCase("file_does_not_belong_to_document")) {
-							AditCodedException aditCodedException = new AditCodedException(
-									"file.doesNotBelongToDocument");
-							aditCodedException.setParameters(new Object[] {
-									docFile.getId(), doc.getId() });
+						} else if (resultCode.equalsIgnoreCase("file_does_not_belong_to_document")) {
+							AditCodedException aditCodedException = new AditCodedException("file.doesNotBelongToDocument");
+							aditCodedException.setParameters(new Object[] { docFile.getId(), doc.getId() });
 							throw aditCodedException;
 						}
 					}
 				}
 
-				// Märgime dokumendi kustutatuks
+				// Mark document as deleted
 				doc.setDeleted(true);
 				saveDocument = true;
 			} else {
-				AditCodedException aditCodedException = new AditCodedException(
-						"request.deleteDocument.document.locked");
+				AditCodedException aditCodedException = new AditCodedException("request.deleteDocument.document.locked");
 				aditCodedException.setParameters(new Object[] { documentId });
 				throw aditCodedException;
 			}
 		} else if (doc.getDocumentSharings() != null) {
-			// Kontrollime, kas dokument on kasutajale jagatud.
+			// Check whether or not the document has been shared to current user
 			boolean changesMade = false;
 			Iterator it = doc.getDocumentSharings().iterator();
 			while (it.hasNext()) {
 				DocumentSharing sharing = (DocumentSharing) it.next();
-				// TODO: Kas siin ikka peaks saama kustutada DVK kaudu saatmise
-				// andmeid?
 				if (sharing.getUserCode().equalsIgnoreCase(userCode)) {
 					doc.getDocumentSharings().remove(sharing);
 					sharing.setDocumentId(0);
@@ -2074,23 +2064,21 @@ public class DocumentService {
 			if (changesMade) {
 				saveDocument = true;
 			} else {
-				AditCodedException aditCodedException = new AditCodedException(
-						"document.doesNotBelongToUser");
-				aditCodedException.setParameters(new Object[] { documentId,
-						userCode });
+				AditCodedException aditCodedException = new AditCodedException("document.doesNotBelongToUser");
+				aditCodedException.setParameters(new Object[] { documentId,	userCode });
 				throw aditCodedException;
 			}
 		} else {
-			AditCodedException aditCodedException = new AditCodedException(
-					"document.doesNotBelongToUser");
-			aditCodedException.setParameters(new Object[] { documentId,
-					userCode });
+			AditCodedException aditCodedException = new AditCodedException("document.doesNotBelongToUser");
+			aditCodedException.setParameters(new Object[] { documentId, userCode });
 			throw aditCodedException;
 		}
 
-		// Salvestame dokumendi
+		// Save changes to database
 		if (saveDocument) {
-			// Salvestame tehtud muudatused
+			// Using Long.MAX_VALUE for disk quota because it is not possible to
+			// exceed disk quota by deleting files. Therefore it does not make much
+			// sense to calculate the actual disk quota here. 
 			this.getDocumentDAO().save(doc, null, Long.MAX_VALUE, null);
 		}
 	}
@@ -2105,19 +2093,17 @@ public class DocumentService {
 	 * @param userCode
 	 *            Code of the user who executed current request
 	 * @param applicationName
-	 *            Short name pf application that executed current request
+	 *            Short name of application that executed current request
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
 	@Transactional
-	public void DeflateDocument(long documentId, String userCode,
-			String applicationName) throws Exception {
+	public void DeflateDocument(long documentId, String userCode, String applicationName) throws Exception {
 		Document doc = this.getDocumentDAO().getDocument(documentId);
 
 		// Check whether or not the document exists
 		if (doc == null) {
-			AditCodedException aditCodedException = new AditCodedException(
-					"document.nonExistent");
+			AditCodedException aditCodedException = new AditCodedException("document.nonExistent");
 			aditCodedException.setParameters(new Object[] { documentId });
 			throw aditCodedException;
 		}
@@ -2125,8 +2111,7 @@ public class DocumentService {
 		// Make sure that the document is not deleted
 		// NB! doc.getDeleted() can be NULL
 		if ((doc.getDeleted() != null) && doc.getDeleted()) {
-			AditCodedException aditCodedException = new AditCodedException(
-					"document.deleted");
+			AditCodedException aditCodedException = new AditCodedException("document.deleted");
 			aditCodedException.setParameters(new Object[] { documentId });
 			throw aditCodedException;
 		}
@@ -2134,19 +2119,15 @@ public class DocumentService {
 		// Make sure that the document is not already deflated
 		// NB! doc.getDeflated() can be NULL
 		if ((doc.getDeflated() != null) && doc.getDeflated()) {
-			AditCodedException aditCodedException = new AditCodedException(
-					"document.deflated");
-			aditCodedException.setParameters(new Object[] { Util
-					.dateToEstonianDateString(doc.getDeflateDate()) });
+			AditCodedException aditCodedException = new AditCodedException("document.deflated");
+			aditCodedException.setParameters(new Object[] { Util.dateToEstonianDateString(doc.getDeflateDate()) });
 			throw aditCodedException;
 		}
 
 		// Check whether or not the document belongs to user
 		if (!doc.getCreatorCode().equalsIgnoreCase(userCode)) {
-			AditCodedException aditCodedException = new AditCodedException(
-					"document.doesNotBelongToUser");
-			aditCodedException.setParameters(new Object[] { documentId,
-					userCode });
+			AditCodedException aditCodedException = new AditCodedException("document.doesNotBelongToUser");
+			aditCodedException.setParameters(new Object[] { documentId, userCode });
 			throw aditCodedException;
 
 		}
@@ -2155,39 +2136,71 @@ public class DocumentService {
 		Iterator it = doc.getDocumentFiles().iterator();
 		while (it.hasNext()) {
 			DocumentFile docFile = (DocumentFile) it.next();
-			String resultCode = deflateDocumentFile(doc.getId(), docFile
-					.getId(), false);
+			String resultCode = deflateDocumentFile(doc.getId(), docFile.getId(), false);
 
 			// Handle possible exceptions
 			if (!resultCode.equalsIgnoreCase("already_deleted")) {
 				// Ignore files that are already deleted
 
 				if (resultCode.equalsIgnoreCase("file_does_not_exist")) {
-					AditCodedException aditCodedException = new AditCodedException(
-							"file.nonExistent");
-					aditCodedException.setParameters(new Object[] { docFile
-							.getId() });
+					AditCodedException aditCodedException = new AditCodedException("file.nonExistent");
+					aditCodedException.setParameters(new Object[] { docFile.getId() });
 					throw aditCodedException;
-				} else if (resultCode
-						.equalsIgnoreCase("file_does_not_belong_to_document")) {
-					AditCodedException aditCodedException = new AditCodedException(
-							"file.doesNotBelongToDocument");
-					aditCodedException.setParameters(new Object[] {
-							docFile.getId(), doc.getId() });
+				} else if (resultCode.equalsIgnoreCase("file_does_not_belong_to_document")) {
+					AditCodedException aditCodedException = new AditCodedException("file.doesNotBelongToDocument");
+					aditCodedException.setParameters(new Object[] {	docFile.getId(), doc.getId() });
 					throw aditCodedException;
 				}
 			}
 		}
 
-		// Märgime dokumendi tühjendatuks ja lukustatuks
+		// Mark document as deflated, locked and unsignable
 		doc.setDeflated(true);
 		doc.setDeflateDate(new Date());
 		doc.setLocked(true);
 		doc.setLockingDate(new Date());
 		doc.setSignable(false);
+		
+		// Save changes to database
+		//
+		// Using Long.MAX_VALUE for disk quota because it is not possible to
+		// exceed disk quota by deleting files. Therefore it does not make much
+		// sense to calculate the actual disk quota here. 
 		this.getDocumentDAO().save(doc, null, Long.MAX_VALUE, null);
 	}
 
+	/**
+	 * Initializes signing of specified document.<br>
+	 * Adds a pending signature to documents signature container and returns
+	 * hash code of added signature. Returned hash code can be signed using
+	 * ID-card in any user interface.
+	 * 
+	 * @param documentId
+	 * 		Document ID specifying which document should be signed
+	 * @param manifest
+	 * 		Role or resolution of signer
+	 * @param country
+	 * 		Country part of signers address
+	 * @param state
+	 * 		County/state part of signers address
+	 * @param city
+	 * 		City/town/village part of signers address 
+	 * @param zip
+	 * 		Postal code of signers address
+	 * @param certFile
+	 * 		Absolute path to signers signing certificate file
+	 * @param digidocConfigFile
+	 * 		Absolute path tod digidoc configuration file
+	 * @param temporaryFilesDir
+	 * 		Absolute path to applications temporary files directory 
+	 * @param xroadUser
+	 * 		{@link AditUser} who executed current request 
+	 * @return
+	 * 		{@link PrepareSignatureInternalResult} that contains hash code
+	 * 		of added signature and indication whether or not adding new
+	 * 		signature succeeded. 
+	 * @throws Exception
+	 */
 	public PrepareSignatureInternalResult prepareSignature(
 			final long documentId, final String manifest, final String country,
 			final String state, final String city, final String zip,
@@ -2213,9 +2226,7 @@ public class DocumentService {
 
 				// Remove country prefix from request user code, so it can be
 				// compared to cert personal id code more reliably
-				String fixedUserCode = Util
-						.getPersonalIdCodeWithoutCountryPrefix(xroadUser
-								.getUserCode());
+				String fixedUserCode = Util.getPersonalIdCodeWithoutCountryPrefix(xroadUser.getUserCode());
 
 				// Determine if certificate belongs to same person
 				// who executed current query
@@ -2299,8 +2310,7 @@ public class DocumentService {
 				}
 				uniqueDir.mkdir();
 
-				List<DocumentFile> filesList = new ArrayList<DocumentFile>(doc
-						.getDocumentFiles());
+				List<DocumentFile> filesList = new ArrayList<DocumentFile>(doc.getDocumentFiles());
 				for (DocumentFile docFile : filesList) {
 					if (!docFile.getDeleted()) {
 						String outputFileName = uniqueDir.getAbsolutePath()
@@ -2320,9 +2330,7 @@ public class DocumentService {
 							}
 
 							// Add file to signature container
-							sdoc.addDataFile(new File(outputFileName), docFile
-									.getContentType(),
-									DataFile.CONTENT_EMBEDDED_BASE64);
+							sdoc.addDataFile(new File(outputFileName), docFile.getContentType(), DataFile.CONTENT_EMBEDDED_BASE64);
 						} catch (IOException ex) {
 							throw new HibernateException(ex);
 						} finally {
@@ -2377,8 +2385,7 @@ public class DocumentService {
 				long length = (new File(containerFileName)).length();
 				// Blob containerData = Hibernate.createBlob(fileInputStream,
 				// length, session);
-				Blob containerData = Hibernate.createBlob(fileInputStream,
-						length);
+				Blob containerData = Hibernate.createBlob(fileInputStream, length);
 				doc.setSignatureContainer(containerData);
 
 				// Update document
@@ -2407,6 +2414,23 @@ public class DocumentService {
 		return result;
 	}
 
+	/**
+	 * Adds user signature data to pending signature in specified documents
+	 * signature container. After adding signature to container, gets a
+	 * confirmation for signature from OCSP service. 
+	 * 
+	 * @param documentId
+	 * 		Document ID specifying which document the users signature belongs to
+	 * @param signatureFileName
+	 * 		Absolute path to file containing users signature
+	 * @param requestPersonalCode
+	 * 		Personal ID code of the person who executed current request
+	 * @param digidocConfigFile
+	 * 		Absolute path tod digidoc configuration file
+	 * @param temporaryFilesDir
+	 * 		Absolute path to applications temporary files directory 
+	 * @throws Exception
+	 */
 	public void confirmSignature(final long documentId,
 			final String signatureFileName, final String requestPersonalCode,
 			final String digidocConfigFile, final String temporaryFilesDir)
@@ -2462,10 +2486,8 @@ public class DocumentService {
 				sig.getConfirmation();
 
 				// Save container to file.
-				String containerFileName = Util
-						.generateRandomFileNameWithoutExtension();
-				containerFileName = temporaryFilesDir + File.separator
-						+ containerFileName + "_CSv1.adit";
+				String containerFileName = Util.generateRandomFileNameWithoutExtension();
+				containerFileName = temporaryFilesDir + File.separator + containerFileName + "_CSv1.adit";
 				sdoc.writeToFile(new File(containerFileName));
 
 				// Add signature container to document table
@@ -2478,8 +2500,7 @@ public class DocumentService {
 				long length = (new File(containerFileName)).length();
 				// Blob containerData = Hibernate.createBlob(fileInputStream,
 				// length, session);
-				Blob containerData = Hibernate.createBlob(fileInputStream,
-						length);
+				Blob containerData = Hibernate.createBlob(fileInputStream, length);
 				doc.setSignatureContainer(containerData);
 
 				// Update document
@@ -2489,34 +2510,27 @@ public class DocumentService {
 				ee.adit.dao.pojo.Signature aditSig = new ee.adit.dao.pojo.Signature();
 				if (sig.getSignedProperties() != null) {
 					if (sig.getSignedProperties().getSignatureProductionPlace() != null) {
-						ee.sk.digidoc.SignatureProductionPlace location = sig
-								.getSignedProperties()
-								.getSignatureProductionPlace();
+						ee.sk.digidoc.SignatureProductionPlace location = sig.getSignedProperties().getSignatureProductionPlace();
 						aditSig.setCity(location.getCity());
 						aditSig.setCountry(location.getCountryName());
 						aditSig.setCounty(location.getStateOrProvince());
 						aditSig.setPostIndex(location.getPostalCode());
 					}
 					if (sig.getSignedProperties().getClaimedRole(0) != null) {
-						aditSig.setSignerRole(sig.getSignedProperties()
-								.getClaimedRole(0));
+						aditSig.setSignerRole(sig.getSignedProperties().getClaimedRole(0));
 					}
 				}
 				aditSig.setDocument(doc);
 				if ((sig.getLastCertValue() != null)
-						&& (sig.getLastCertValue().getCert() != null)) {
+					&& (sig.getLastCertValue().getCert() != null)) {
 					X509Certificate cert = sig.getLastCertValue().getCert();
-					aditSig.setSignerCode(SignedDoc
-							.getSubjectPersonalCode(cert));
-					aditSig.setSignerName(SignedDoc.getSubjectLastName(cert)
-							+ ", " + SignedDoc.getSubjectFirstName(cert));
+					aditSig.setSignerCode(SignedDoc.getSubjectPersonalCode(cert));
+					aditSig.setSignerName(SignedDoc.getSubjectLastName(cert) + ", " + SignedDoc.getSubjectFirstName(cert));
 				}
 				aditSig.setUserCode(requestPersonalCode);
 				session.save(aditSig);
 			} else {
-				throw new Exception(
-						"Could not find pending signature given by user: "
-								+ requestPersonalCode);
+				throw new Exception("Could not find pending signature given by user: " + requestPersonalCode);
 			}
 			tx.commit();
 		} catch (Exception ex) {
