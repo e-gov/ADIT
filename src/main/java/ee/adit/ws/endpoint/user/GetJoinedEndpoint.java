@@ -45,10 +45,23 @@ import ee.webmedia.xtee.annotation.XTeeService;
 @Component
 public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 
+	/**
+	 * Log4J logger
+	 */
 	private static Logger LOG = Logger.getLogger(GetJoinedEndpoint.class);
 
+	/**
+	 * User service
+	 */
 	private UserService userService;
 	
+	/**
+	 * Entry point. Checks query version and forwards the invocation to the appropriate method.
+	 * 
+	 * @param requestObject request payload object
+	 * @param version query version
+	 * @throws Exception
+	 */
 	@Override
 	protected Object invokeInternal(Object requestObject, int version) throws Exception {
 		LOG.debug("getJoined invoked. Version: " + version);
@@ -193,6 +206,16 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 		return response;
 	}
 
+	/**
+	 * Outputs the user list to a temporary file. 
+	 * 
+	 * @param userList users list
+	 * @return absolute path to temporary file created
+	 * @throws XmlMappingException
+	 * @throws IOException
+	 * @throws ParserConfigurationException
+	 * @throws TransformerException
+	 */
 	private String outputToFile(List<AditUser> userList) throws XmlMappingException, IOException, ParserConfigurationException, TransformerException {
 		List<GetJoinedResponseAttachmentUser> getJoinedResponseAttachmentUserList = new ArrayList<GetJoinedResponseAttachmentUser>();
 		
@@ -232,6 +255,11 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 		}
 	}
 	
+	/**
+	 * Checks servlet configuration parameters and validates them.
+	 * 
+	 * @throws AditInternalException thrown if errors exist in configuration parameters
+	 */
 	private void checkConfiguration() throws AditInternalException {
 		if(this.getConfiguration() == null) {
 			throw new AditInternalException("Configuration not initialized - check servlet configuration.");
@@ -258,10 +286,18 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 		}
 	}
 	
+	/**
+	 * Gets user service.
+	 * @return
+	 */
 	public UserService getUserService() {
 		return userService;
 	}
 
+	/**
+	 * Sets user service
+	 * @param userService
+	 */
 	public void setUserService(UserService userService) {
 		this.userService = userService;
 	}
