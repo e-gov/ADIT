@@ -188,8 +188,8 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 			ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
 
 			if (e instanceof AditCodedException) {
-				LOG.debug("Adding exception message to response object.");
-				arrayOfMessage.getMessage().add(new Message("en", e.getMessage()));
+				LOG.debug("Adding exception messages to response object.");
+				arrayOfMessage.setMessage(this.getMessageService().getMessages((AditCodedException) e));
 			} else {
 				arrayOfMessage.getMessage().add(new Message("en", "Service error"));
 			}
