@@ -189,6 +189,14 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 							// Kas kasutajal on piisavalt vaba kettaruumi
 							long remainingDiskQuota = this.getUserService().getRemainingDiskQuota(user, this.getConfiguration().getGlobalDiskQuota());
 							
+							String creatorUserCode = null;
+							String creatorUserName = null;
+							// Set the person who made the query (necessary for 
+							if(xroadRequestUser != null && xroadRequestUser.getUserCode() != null) {
+								creatorUserCode = xroadRequestUser.getUserCode();
+								creatorUserName = xroadRequestUser.getFullName();
+							}
+							
 							if(document.getId() != null && document.getId() != 0) {
 								updatedExistingDocument = false;
 								
@@ -199,7 +207,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 								LOG.debug("Modifying document. ID: " + document.getId());
 								
 								// Document to database
-								SaveItemInternalResult saveResult = this.getDocumentService().save(document, user.getUserCode(), applicationName, remainingDiskQuota);
+								SaveItemInternalResult saveResult = this.getDocumentService().save(document, user.getUserCode(), applicationName, remainingDiskQuota, creatorUserCode, creatorUserName);
 								if (saveResult.isSuccess()) {
 									documentId = saveResult.getItemId();
 									LOG.debug("Document saved with ID: " + documentId.toString());
@@ -215,7 +223,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 								LOG.debug("Adding new document. GUID: " + document.getGuid());
 								
 								// Document to database
-								SaveItemInternalResult saveResult = this.getDocumentService().save(document, user.getUserCode(), applicationName, remainingDiskQuota);
+								SaveItemInternalResult saveResult = this.getDocumentService().save(document, user.getUserCode(), applicationName, remainingDiskQuota, creatorUserCode, creatorUserName);
 								if (saveResult.isSuccess()) {
 									documentId = saveResult.getItemId();
 									LOG.debug("Document saved with ID: " + documentId.toString());
