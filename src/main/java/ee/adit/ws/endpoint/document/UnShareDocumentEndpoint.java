@@ -216,7 +216,7 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 							status.setSuccess(true);
 							status.setCode(sharing.getUserCode());
 							ArrayOfMessage statusMessages = new ArrayOfMessage();
-							statusMessages.addMessage(new Message("en", this.getMessageSource().getMessage("request.unShareDocument.recipientStatus.success", new Object[] { }, Locale.ENGLISH)));
+							statusMessages.setMessage(this.getMessageService().getMessages("request.unShareDocument.recipientStatus.success", new Object[] { }));
 							status.setMessages(statusMessages);
 							statusArray.addRecipient(status);
 							
@@ -227,9 +227,10 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 					}
 				}
 			} else {
-				String errorMessage = this.getMessageSource().getMessage("request.unShareDocument.document.notShared", new Object[] { request.getDocumentId() }, Locale.ENGLISH);
 				summarySuccess = false;
-				throw new AditException(errorMessage);
+				AditCodedException aditCodedException = new AditCodedException("request.unShareDocument.document.notShared");
+				aditCodedException.setParameters(new Object[] { request.getDocumentId() });
+				throw aditCodedException;
 			}
 		
 			// If the document was not shared to some users in request's
@@ -241,7 +242,7 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 					status.setSuccess(false);
 					status.setCode(code);
 					ArrayOfMessage statusMessages = new ArrayOfMessage();
-					statusMessages.addMessage(new Message("en", this.getMessageSource().getMessage("request.unShareDocument.recipientStatus.notShared", new Object[] { }, Locale.ENGLISH)));
+					statusMessages.setMessage(this.getMessageService().getMessages("request.unShareDocument.recipientStatus.notShared", new Object[] { }));
 					status.setMessages(statusMessages);
 					statusArray.addRecipient(status);
 				}
