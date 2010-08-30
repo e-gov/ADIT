@@ -170,7 +170,7 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 					if(recipient == null) {
 						LOG.error("User is not registered.");
 						recipientStatus.setSuccess(false);
-						String errorMessage = this.getMessageSource().getMessage("user.nonExistent", new Object[] { userCode },	Locale.ENGLISH);
+						String errorMessage = this.getMessageSource().getMessage("user.nonExistent", new Object[] { recipientCode },	Locale.ENGLISH);
 						ArrayOfMessage recipientMessages = new ArrayOfMessage();
 						recipientMessages.addMessage(new Message("en", errorMessage));
 						recipientStatus.setMessages(recipientMessages);
