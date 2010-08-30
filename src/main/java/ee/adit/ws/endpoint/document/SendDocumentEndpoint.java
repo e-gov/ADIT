@@ -2,6 +2,7 @@ package ee.adit.ws.endpoint.document;
 
 import java.util.Calendar;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
@@ -72,6 +73,7 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 		String description = "Recipients: ";
 		int successCount = 0;
 		ArrayOfMessage messages = new ArrayOfMessage();
+		
 		
 		try {
 		
@@ -171,9 +173,9 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 					if(recipient == null) {
 						LOG.error("User is not registered.");
 						recipientStatus.setSuccess(false);
-						String errorMessage = this.getMessageSource().getMessage("user.nonExistent", new Object[] { recipientCode },	Locale.ENGLISH);
+						List<Message> errorMessages = this.getMessageService().getMessages("user.nonExistent", new Object[] { recipientCode });
 						ArrayOfMessage recipientMessages = new ArrayOfMessage();
-						recipientMessages.addMessage(new Message("en", errorMessage));
+						recipientMessages.setMessage(errorMessages);
 						recipientStatus.setMessages(recipientMessages);
 						success = false;
 					} else {
@@ -211,9 +213,9 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 						} catch (Exception e) {
 							LOG.error("Exception while sharing document: ", e);
 							recipientStatus.setSuccess(false);
-							String errorMessage = this.getMessageSource().getMessage("service.error", new Object[] {},	Locale.ENGLISH);
+							List<Message> errorMessages = this.getMessageService().getMessages("service.error", new Object[] {});
 							ArrayOfMessage recipientMessages = new ArrayOfMessage();
-							recipientMessages.addMessage(new Message("en", errorMessage));
+							recipientMessages.setMessage(errorMessages);
 							recipientStatus.setMessages(recipientMessages);
 							success = false;
 						}
@@ -227,18 +229,27 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 			
 			response.setSuccess(success);
 			response.setRecipientList(reponseStatuses);
-			messages.setMessage(this.getMessageService().getMessages("request.sendDocument.success", new Object[] {  }));
+			
+			if(success) {
+				messages.setMessage(this.getMessageService().getMessages("request.sendDocument.success", new Object[] {  }));
+			} else {
+				messages.setMessage(this.getMessageService().getMessages("request.sendDocument.fail", new Object[] {  }));
+			}
+			
+			
 			response.setMessages(messages);
 			
-			this.getDocumentService().addHistoryEvent(
-				applicationName, 
-				doc, 
-				userCode, 
-				DocumentService.HistoryType_Send,
-				header.getIsikukood(),
-				null,
-				description
-			);
+			if(successCount > 0) {
+				this.getDocumentService().addHistoryEvent(
+						applicationName, 
+						doc, 
+						userCode, 
+						DocumentService.HistoryType_Send,
+						header.getIsikukood(),
+						null,
+						description
+					);
+			}			
 			
 		} catch(Exception e) {
 			success = false;
