@@ -88,16 +88,18 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 			// current query is registered.
 			boolean applicationRegistered = this.getUserService().isApplicationRegistered(applicationName);
 			if (!applicationRegistered) {
-				String errorMessage = this.getMessageSource().getMessage("application.notRegistered", new Object[] { applicationName }, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				AditCodedException aditCodedException = new AditCodedException("application.notRegistered");
+				aditCodedException.setParameters(new Object[] { applicationName });
+				throw aditCodedException;
 			}
 
 			// Check whether or not the application is allowed
 			// to view or modify data.
 			int accessLevel = this.getUserService().getAccessLevel(applicationName);
 			if (accessLevel != 2) {
-				String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.write", new Object[] { applicationName }, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				AditCodedException aditCodedException = new AditCodedException("application.insufficientPrivileges.write");
+				aditCodedException.setParameters(new Object[] { applicationName });
+				throw aditCodedException;
 			}
 
 			// Check whether or not the user who executed
@@ -105,8 +107,9 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 			String userCode = ((this.getHeader().getAllasutus() != null) && (this.getHeader().getAllasutus().length() > 0)) ? this.getHeader().getAllasutus() : this.getHeader().getIsikukood();
 			AditUser user = this.getUserService().getUserByID(userCode);
 			if (user == null) {
-				String errorMessage = this.getMessageSource().getMessage("user.nonExistent", new Object[] { userCode },	Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				AditCodedException aditCodedException = new AditCodedException("user.nonExistent");
+				aditCodedException.setParameters(new Object[] { userCode });
+				throw aditCodedException;
 			}
 			AditUser xroadRequestUser = null;
 			if (user.getUsertype().getShortName().equalsIgnoreCase("person")) {
@@ -121,16 +124,18 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 
 			// Check whether or not the user is active (account not deleted)
 			if ((user.getActive() == null) || !user.getActive()) {
-				String errorMessage = this.getMessageSource().getMessage("user.inactive", new Object[] { userCode }, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				AditCodedException aditCodedException = new AditCodedException("user.inactive");
+				aditCodedException.setParameters(new Object[] { userCode });
+				throw aditCodedException;
 			}
 			
 			// Check whether or not the application has rights to
 			// modify current user's data.
 			int applicationAccessLevelForUser = userService.getAccessLevelForUser(applicationName, user);
 			if(applicationAccessLevelForUser != 2) {
-				String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.forUser.write", new Object[] { applicationName, user.getUserCode() }, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				AditCodedException aditCodedException = new AditCodedException("application.insufficientPrivileges.forUser.write");
+				aditCodedException.setParameters(new Object[] { applicationName, user.getUserCode() });
+				throw aditCodedException;
 			}
 
 			// All primary checks passed.
@@ -231,16 +236,18 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 						throw new AditInternalException("Unmarshalling failed for XML in file: " + xmlFile);
 					}
 				} else {
-					String errorMessage = this.getMessageSource().getMessage("request.attachments.tooMany", new Object[] { applicationName }, Locale.ENGLISH);
-					throw new AditException(errorMessage);
+					AditCodedException aditCodedException = new AditCodedException("request.attachments.tooMany");
+					aditCodedException.setParameters(new Object[] { applicationName });
+					throw aditCodedException;					
 				}
 				attachmentCount++;
 			}
 			
 			// If no attachments were found then throw exception
 			if (attachmentCount < 1) {
-				String errorMessage = this.getMessageSource().getMessage("request.saveDocument.document.noDocumentsSupplied", new Object[] { }, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				AditCodedException aditCodedException = new AditCodedException("request.saveDocument.document.noDocumentsSupplied");
+				aditCodedException.setParameters(new Object[] {});
+				throw aditCodedException;
 			}
 			
 			// If saving was successful then add history event
@@ -343,25 +350,27 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 	 * @param userCode
 	 * @throws AditException
 	 */
-	protected void runExistingDocumentChecks(Document existingDoc, String userCode) throws AditException {
+	protected void runExistingDocumentChecks(Document existingDoc, String userCode) throws AditCodedException {
 		if (!userCode.equalsIgnoreCase(existingDoc.getCreatorCode())) {
-			String errorMessage = this.getMessageSource().getMessage("document.doesNotBelongToUser", new Object[] { existingDoc.getId(), userCode }, Locale.ENGLISH);
-			throw new AditException(errorMessage);
+			AditCodedException aditCodedException = new AditCodedException("document.doesNotBelongToUser");
+			aditCodedException.setParameters(new Object[] { existingDoc.getId(), userCode });
+			throw aditCodedException;
 		}
 		
 		// Null checks in following statements need to be there
 		// (i.e. don't remove them).
 		if ((existingDoc.getLocked() != null) && existingDoc.getLocked()) {
-			String errorMessage = this.getMessageSource().getMessage("request.saveDocument.document.locked", new Object[] { existingDoc.getId(), userCode }, Locale.ENGLISH);
-			throw new AditException(errorMessage);
+			AditCodedException aditCodedException = new AditCodedException("request.saveDocument.document.locked");
+			aditCodedException.setParameters(new Object[] { existingDoc.getId(), userCode });
+			throw aditCodedException;
 		}
 		if ((existingDoc.getDeflated() != null) && existingDoc.getDeflated()) {
-			String errorMessage = this.getMessageSource().getMessage("request.saveDocument.document.deflated", new Object[] { Util.dateToEstonianDateString(existingDoc.getDeflateDate()) }, Locale.ENGLISH);
-			throw new AditException(errorMessage);
+			AditCodedException aditCodedException = new AditCodedException("request.saveDocument.document.deflated");
+			aditCodedException.setParameters(new Object[] { Util.dateToEstonianDateString(existingDoc.getDeflateDate()) });
+			throw aditCodedException;
 		}
 		if ((existingDoc.getDeleted() != null) && existingDoc.getDeleted()) {
-			String errorMessage = this.getMessageSource().getMessage("request.saveDocument.document.deleted", new Object[] { }, Locale.ENGLISH);
-			throw new AditException(errorMessage);
+			throw new AditCodedException("request.saveDocument.document.deleted");
 		}
 	}
 	

@@ -89,38 +89,43 @@ public class SetNotificationsEndpoint extends AbstractAditBaseEndpoint {
 			// registreeritud
 			boolean applicationRegistered = this.getUserService().isApplicationRegistered(applicationName);
 			if (!applicationRegistered) {
-				String errorMessage = this.getMessageSource().getMessage("application.notRegistered", new Object[] { applicationName }, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				AditCodedException aditCodedException = new AditCodedException("application.notRegistered");
+				aditCodedException.setParameters(new Object[] { applicationName });
+				throw aditCodedException;
 			}
 
 			// Kontrollime, kas päringu käivitanud infosüsteem tohib
 			// andmeid muuta
 			int accessLevel = this.getUserService().getAccessLevel(applicationName);
 			if (accessLevel != 2) {
-				String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.write", new Object[] { applicationName }, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				AditCodedException aditCodedException = new AditCodedException("application.insufficientPrivileges.write");
+				aditCodedException.setParameters(new Object[] { applicationName });
+				throw aditCodedException;
 			}
 
 			// Kontrollime, kas päringus märgitud isik on teenuse kasutaja
 			String userCode = ((this.getHeader().getAllasutus() != null) && (this.getHeader().getAllasutus().length() > 0)) ? this.getHeader().getAllasutus() : this.getHeader().getIsikukood();
 			AditUser user = this.getUserService().getUserByID(userCode);
 			if (user == null) {
-				String errorMessage = this.getMessageSource().getMessage("user.nonExistent", new Object[] { userCode },	Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				AditCodedException aditCodedException = new AditCodedException("user.nonExistent");
+				aditCodedException.setParameters(new Object[] { userCode });
+				throw aditCodedException;
 			}
 
 			// Kontrollime, et kasutajakonto ligipääs poleks peatatud (kasutaja lahkunud)
 			if ((user.getActive() == null) || !user.getActive()) {
-				String errorMessage = this.getMessageSource().getMessage("user.inactive", new Object[] { userCode }, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				AditCodedException aditCodedException = new AditCodedException("user.inactive");
+				aditCodedException.setParameters(new Object[] { userCode });
+				throw aditCodedException;
 			}
 			
 			// Check whether or not the application has rights to
 			// modify current user's data.
 			int applicationAccessLevelForUser = userService.getAccessLevelForUser(applicationName, user);
 			if(applicationAccessLevelForUser != 2) {
-				String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.forUser.write", new Object[] { applicationName, user.getUserCode() }, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				AditCodedException aditCodedException = new AditCodedException("application.insufficientPrivileges.forUser.write");
+				aditCodedException.setParameters(new Object[] { applicationName, user.getUserCode() });
+				throw aditCodedException;
 			}
 			
 			// Check whether or not all given notification types really exist
@@ -134,8 +139,9 @@ public class SetNotificationsEndpoint extends AbstractAditBaseEndpoint {
 			if (incorrectNotificationTypes.length() > 0) {	
 				String correctTypes = this.getUserService().getNotificationTypesString();
 				incorrectNotificationTypes = incorrectNotificationTypes.trim().replace("  ", ", ");
-				String errorMessage = this.getMessageSource().getMessage("request.setNotifications.incorrectNotificationTypesProvided", new Object[] { incorrectNotificationTypes, correctTypes }, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				AditCodedException aditCodedException = new AditCodedException("request.setNotifications.incorrectNotificationTypesProvided");
+				aditCodedException.setParameters(new Object[] { incorrectNotificationTypes, correctTypes });
+				throw aditCodedException;
 			}
 			
 			// Set notification data
