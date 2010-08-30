@@ -103,38 +103,43 @@ public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
 			// registreeritud
 			boolean applicationRegistered = this.getUserService().isApplicationRegistered(applicationName);
 			if (!applicationRegistered) {
-				String errorMessage = this.getMessageSource().getMessage("application.notRegistered", new Object[] { applicationName }, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				AditCodedException aditCodedException = new AditCodedException("application.notRegistered");
+				aditCodedException.setParameters(new Object[] { applicationName });
+				throw aditCodedException;
 			}
 
 			// Kontrollime, kas päringu käivitanud infosüsteem tohib
 			// andmeid näha
 			int accessLevel = this.getUserService().getAccessLevel(applicationName);
 			if (accessLevel < 1) {
-				String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.read", new Object[] { applicationName }, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				AditCodedException aditCodedException = new AditCodedException("application.insufficientPrivileges.read");
+				aditCodedException.setParameters(new Object[] { applicationName });
+				throw aditCodedException;
 			}
 
 			// Kontrollime, kas päringus märgitud isik on teenuse kasutaja
 			String userCode = ((this.getHeader().getAllasutus() != null) && (this.getHeader().getAllasutus().length() > 0)) ? this.getHeader().getAllasutus() : this.getHeader().getIsikukood();
 			AditUser user = this.getUserService().getUserByID(userCode);
 			if (user == null) {
-				String errorMessage = this.getMessageSource().getMessage("user.nonExistent", new Object[] { userCode },	Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				AditCodedException aditCodedException = new AditCodedException("user.nonExistent");
+				aditCodedException.setParameters(new Object[] { userCode });
+				throw aditCodedException;				
 			}
 
 			// Kontrollime, et kasutajakonto ligipääs poleks peatatud (kasutaja lahkunud)
 			if ((user.getActive() == null) || !user.getActive()) {
-				String errorMessage = this.getMessageSource().getMessage("user.inactive", new Object[] { userCode }, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				AditCodedException aditCodedException = new AditCodedException("user.inactive");
+				aditCodedException.setParameters(new Object[] { userCode });
+				throw aditCodedException;
 			}
 			
 			// Check whether or not the application has rights to
 			// read current user's data.
 			int applicationAccessLevelForUser = userService.getAccessLevelForUser(applicationName, user);
 			if(applicationAccessLevelForUser < 1) {
-				String errorMessage = this.getMessageSource().getMessage("application.insufficientPrivileges.forUser.read", new Object[] { applicationName, user.getUserCode() }, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				AditCodedException aditCodedException = new AditCodedException("application.insufficientPrivileges.forUser.read");
+				aditCodedException.setParameters(new Object[] { applicationName, user.getUserCode() });
+				throw aditCodedException;
 			}
 
 			GetDocumentListResponseAttachment att = this.documentService.getDocumentDAO().getDocumentSearchResult(
@@ -163,8 +168,9 @@ public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
 				responseList.setHref("cid:" + contentID);
 				response.setDocumentList(responseList);				
 			} else {
-				String errorMessage = this.getMessageSource().getMessage("request.getDocumentList.noDocumentsFound", new Object[] { userCode }, Locale.ENGLISH);
-				throw new AditException(errorMessage);
+				AditCodedException aditCodedException = new AditCodedException("request.getDocumentList.noDocumentsFound");
+				aditCodedException.setParameters(new Object[] { userCode });
+				throw aditCodedException;
 			}
 			
 			
