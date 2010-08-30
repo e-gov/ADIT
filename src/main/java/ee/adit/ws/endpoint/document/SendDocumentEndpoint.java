@@ -113,6 +113,17 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 				throw aditCodedException;
 			}
 			
+			AditUser xroadRequestUser = null;
+			if (user.getUsertype().getShortName().equalsIgnoreCase("person")) {
+				xroadRequestUser = user;
+			} else {
+				try {
+					xroadRequestUser = this.getUserService().getUserByID(header.getIsikukood());
+				} catch (Exception ex) {
+					LOG.debug("Error when attempting to find local user matchinig the person that executed a company request.");
+				}
+			}
+			
 			// Check application access level for user
 			int applicationAccessLevelForUser = userService.getAccessLevelForUser(applicationName, user);
 			if (applicationAccessLevelForUser < 2) {
@@ -190,9 +201,10 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 									doc, 
 									userCode, 
 									DocumentService.HistoryType_Lock,
-									header.getIsikukood(),
+									xroadRequestUser.getUserCode(),
+									xroadRequestUser.getFullName(),
 									null,
-									null
+									user.getFullName()
 							);
 							
 							// Add sharing information to database
@@ -245,9 +257,10 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 						doc, 
 						userCode, 
 						DocumentService.HistoryType_Send,
-						header.getIsikukood(),
-						null,
-						description
+						xroadRequestUser.getUserCode(),
+						xroadRequestUser.getFullName(),
+						description,
+						user.getFullName()
 					);
 			}			
 			
