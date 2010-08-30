@@ -197,9 +197,9 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
 				isOwner = true;
 			} else {
 				if ((doc.getDocumentSharings() != null) && (!doc.getDocumentSharings().isEmpty())) {
-					Iterator it = doc.getDocumentSharings().iterator();
+					Iterator<DocumentSharing> it = doc.getDocumentSharings().iterator();
 					while (it.hasNext()) {
-						DocumentSharing sharing = (DocumentSharing)it.next();
+						DocumentSharing sharing = it.next();
 						if (sharing.getUserCode().equalsIgnoreCase(userCode)) {
 							isOwner = true;
 							break;
