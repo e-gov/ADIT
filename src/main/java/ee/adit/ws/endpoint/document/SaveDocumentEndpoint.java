@@ -336,6 +336,13 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 		return response;
 	}
 	
+	/**
+	 * Checks the specified document data and throws an error if data not correct.
+	 * 
+	 * @param existingDoc
+	 * @param userCode
+	 * @throws AditException
+	 */
 	protected void runExistingDocumentChecks(Document existingDoc, String userCode) throws AditException {
 		if (!userCode.equalsIgnoreCase(existingDoc.getCreatorCode())) {
 			String errorMessage = this.getMessageSource().getMessage("document.doesNotBelongToUser", new Object[] { existingDoc.getId(), userCode }, Locale.ENGLISH);
