@@ -21,16 +21,24 @@ import ee.adit.util.Util;
 import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
 
 /**
- * 
- * Web-service endpoint class for "join" service
+ * Implementation of "join" web method (web service request).
+ * Contains request input validation, request-specific workflow
+ * and response composition.  
  * 
  * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
+ * @author Jaak Lember, Interinx, jaak@interinx.com
  *
  */
 public class JoinEndpoint extends AbstractAditBaseEndpoint {
 
+	/**
+	 * Log4J logger
+	 */
 	private static Logger LOG = Logger.getLogger(JoinEndpoint.class);
 
+	/**
+	 * User service
+	 */
 	private UserService userService;
 	
 	@Override
@@ -221,10 +229,18 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 		LOG.debug("----------------------------");
 	}
 
+	/**
+	 * Gets user service
+	 * @return
+	 */
 	public UserService getUserService() {
 		return userService;
 	}
 
+	/**
+	 * Sets user service
+	 * @param userService
+	 */
 	public void setUserService(UserService userService) {
 		this.userService = userService;
 	}

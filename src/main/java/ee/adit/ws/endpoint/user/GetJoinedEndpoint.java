@@ -55,13 +55,6 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 	 */
 	private UserService userService;
 	
-	/**
-	 * Entry point. Checks query version and forwards the invocation to the appropriate method.
-	 * 
-	 * @param requestObject request payload object
-	 * @param version query version
-	 * @throws Exception
-	 */
 	@Override
 	protected Object invokeInternal(Object requestObject, int version) throws Exception {
 		LOG.debug("getJoined invoked. Version: " + version);

@@ -161,10 +161,18 @@ public class UnJoinEndpoint extends AbstractAditBaseEndpoint {
 		return response;
 	}
 	
+	/**
+	 * Gets user service
+	 * @return
+	 */
 	public UserService getUserService() {
 		return userService;
 	}
 
+	/**
+	 * Sets user service
+	 * @param userService
+	 */
 	public void setUserService(UserService userService) {
 		this.userService = userService;
 	}
