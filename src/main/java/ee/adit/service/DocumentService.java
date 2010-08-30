@@ -584,6 +584,13 @@ public class DocumentService {
 				});
 	}
 
+	/**
+	 * Saves document considering the disk quota for the user.
+	 * 
+	 * @param doc document
+	 * @param remainingDiskQuota remaining disk quota for user
+	 * @throws Exception
+	 */
 	public void save(Document doc, long remainingDiskQuota) throws Exception {
 		this.getDocumentDAO().save(doc, null, remainingDiskQuota, null);
 	}
@@ -609,6 +616,13 @@ public class DocumentService {
 		}
 	}
 
+	/**
+	 * Sends document to the specified user.
+	 * 
+	 * @param document document
+	 * @param recipient user
+	 * @return true, if sending succeeded
+	 */
 	public boolean sendDocument(Document document, AditUser recipient) {
 		boolean result = false;
 
@@ -638,6 +652,16 @@ public class DocumentService {
 		return result;
 	}
 
+	/**
+	 * 
+	 * @param applicationName
+	 * @param doc
+	 * @param userCode
+	 * @param historyType
+	 * @param xteeUserCode
+	 * @param xteeUserName
+	 * @param description
+	 */
 	public void addHistoryEvent(String applicationName, Document doc,
 			String userCode, String historyType, String xteeUserCode,
 			String xteeUserName, String description) {
