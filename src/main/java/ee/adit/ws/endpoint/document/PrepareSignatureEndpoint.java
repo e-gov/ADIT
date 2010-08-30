@@ -277,7 +277,7 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
 
 			// Set response messages
 			response.setSuccess(true);
-			messages.addMessage(new Message("en", this.getMessageSource().getMessage("request.prepareSignature.success", new Object[] { }, Locale.ENGLISH)));
+			messages.setMessage(this.getMessageService().getMessages("request.prepareSignature.success", new Object[] {  }));
 			response.setMessages(messages);
 		} catch (Exception e) {
 			LOG.error("Exception: ", e);

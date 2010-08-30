@@ -146,7 +146,7 @@ public class SetNotificationsEndpoint extends AbstractAditBaseEndpoint {
 			
 			// Set notification data
 			this.getUserService().setNotifications(user.getUserCode(), request.getNotifications().getNotification());
-			messages.addMessage(new Message("en", this.getMessageSource().getMessage("request.setNotifications.success", new Object[] { }, Locale.ENGLISH)));
+			messages.setMessage(this.getMessageService().getMessages("request.setNotifications.success", new Object[] {}));
 			
 			// Set response messages
 			response.setMessages(messages);

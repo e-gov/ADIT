@@ -71,6 +71,7 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 		ArrayOfRecipientStatus reponseStatuses = new ArrayOfRecipientStatus();
 		String description = "Recipients: ";
 		int successCount = 0;
+		ArrayOfMessage messages = new ArrayOfMessage();
 		
 		try {
 		
@@ -226,6 +227,8 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 			
 			response.setSuccess(success);
 			response.setRecipientList(reponseStatuses);
+			messages.setMessage(this.getMessageService().getMessages("request.sendDocument.success", new Object[] {  }));
+			response.setMessages(messages);
 			
 			this.getDocumentService().addHistoryEvent(
 				applicationName, 

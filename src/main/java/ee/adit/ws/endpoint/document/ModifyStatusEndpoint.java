@@ -256,7 +256,7 @@ public class ModifyStatusEndpoint extends AbstractAditBaseEndpoint {
 			
 			// Set response messages
 			response.setSuccess(true);
-			messages.addMessage(new Message("en", this.getMessageSource().getMessage("request.modifyStatus.success", new Object[] { }, Locale.ENGLISH)));
+			messages.setMessage(this.getMessageService().getMessages("request.modifyStatus.success", new Object[] {  }));
 			response.setMessages(messages);
 		} catch (Exception e) {
 			additionalInformationForLog = "Request failed: " + e.getMessage();

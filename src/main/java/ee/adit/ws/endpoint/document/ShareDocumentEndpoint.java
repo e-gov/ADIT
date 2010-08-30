@@ -294,9 +294,11 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 			response.setSuccess(completeSuccess);
 			
 			if(completeSuccess) {
-				messages.addMessage(new Message("en", this.getMessageSource().getMessage("request.shareDocument.success",	new Object[] { request.getDocumentId() }, Locale.ENGLISH)));
+				//messages.addMessage(new Message("en", this.getMessageSource().getMessage("request.shareDocument.success",	new Object[] { request.getDocumentId() }, Locale.ENGLISH)));
+				messages.setMessage(this.getMessageService().getMessages("request.shareDocument.success", new Object[] { request.getDocumentId() }));
 			} else {
-				messages.addMessage(new Message("en", this.getMessageSource().getMessage("request.shareDocument.fail",	new Object[] { request.getDocumentId() }, Locale.ENGLISH)));
+				//messages.addMessage(new Message("en", this.getMessageSource().getMessage("request.shareDocument.fail",	new Object[] { request.getDocumentId() }, Locale.ENGLISH)));
+				messages.setMessage(this.getMessageService().getMessages("request.shareDocument.fail", new Object[] { request.getDocumentId() }));
 			}
 			
 			response.setMessages(messages);

@@ -303,7 +303,7 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 
 			// Set response messages
 			response.setSuccess(true);
-			messages.addMessage(new Message("en", this.getMessageSource().getMessage("request.getDocumentFile.success",	new Object[] {}, Locale.ENGLISH)));
+			messages.setMessage(this.getMessageService().getMessages("request.getDocumentFile.success", new Object[] { }));
 			response.setMessages(messages);
 		} catch (Exception e) {
 			additionalInformationForLog = "Request failed: " + e.getMessage();

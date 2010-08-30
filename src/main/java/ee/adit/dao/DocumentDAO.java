@@ -39,6 +39,7 @@ import dvk.api.ml.PojoMessage;
 import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.DocumentFile;
 import ee.adit.dao.pojo.DocumentSharing;
+import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditException;
 import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.DocumentSendingData;
@@ -468,7 +469,10 @@ public class DocumentDAO extends HibernateDaoSupport {
     				idListString += " " + id;
     			}
     			idListString = idListString.trim().replaceAll(" ", ",");
-    			throw new SQLException(new AditException(filesNotFoundMessageBase + " " + idListString));
+    			//throw new SQLException(new AditException(filesNotFoundMessageBase + " " + idListString));
+    			AditCodedException aditCodedException = new AditCodedException("files.nonExistentOrDeleted");
+    			aditCodedException.setParameters(new Object[] { idListString });
+    			throw aditCodedException;
     		}
     	}
     	

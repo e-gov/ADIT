@@ -267,7 +267,7 @@ public class MarkDocumentViewedEndpoint extends AbstractAditBaseEndpoint {
 
 			// Set response messages
 			response.setSuccess(true);
-			messages.addMessage(new Message("en", this.getMessageSource().getMessage("request.markDocumentViewed.success",	new Object[] { request.getDocumentId(), user.getUserCode() }, Locale.ENGLISH)));
+			messages.setMessage(this.getMessageService().getMessages("request.markDocumentViewed.success", new Object[] { request.getDocumentId(), user.getUserCode() }));
 			response.setMessages(messages);
 		} catch (Exception e) {
 			additionalInformationForLog = "Request failed: " + e.getMessage();

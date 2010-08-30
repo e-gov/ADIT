@@ -148,6 +148,7 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 									getUserInfoResponseUserList.setHref("cid:" + contentID);
 									response.setUserList(getUserInfoResponseUserList);
 									response.setSuccess(new Success(true));
+									messages.setMessage(this.getMessageService().getMessages("request.getUserInfo.success", new Object[] {}));
 
 								} else {
 									throw new AditInternalException("Unmarshalling returned wrong type. Expected " + GetUserInfoRequestAttachmentUserList.class + ", got "
@@ -176,6 +177,7 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 				throw aditCodedException;
 			}
 
+			
 			response.setSuccess(new Success(true));
 			response.setMessages(messages);
 			

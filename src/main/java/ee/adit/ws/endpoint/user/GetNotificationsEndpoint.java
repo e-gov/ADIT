@@ -142,7 +142,7 @@ public class GetNotificationsEndpoint extends AbstractAditBaseEndpoint {
 				}
 			}
 
-			messages.addMessage(new Message("en", this.getMessageSource().getMessage("request.getNotifications.success", new Object[] {}, Locale.ENGLISH)));
+			messages.setMessage(this.getMessageService().getMessages("request.getNotifications.success", new Object[] {}));
 
 			// Set response messages
 			response.setMessages(messages);
