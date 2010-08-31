@@ -195,6 +195,8 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 							if(xroadRequestUser != null && xroadRequestUser.getUserCode() != null) {
 								creatorUserCode = xroadRequestUser.getUserCode();
 								creatorUserName = xroadRequestUser.getFullName();
+							} else {
+								creatorUserCode = header.getIsikukood();
 							}
 							
 							if(document.getId() != null && document.getId() != 0) {
