@@ -456,7 +456,7 @@ public class DocumentService {
 	public SaveItemInternalResult save(
 			final SaveDocumentRequestAttachment attachmentDocument,
 			final String creatorCode, final String remoteApplication,
-			final long remainingDiskQuota, final String creatorUserCode, final String creatorUserName) throws FileNotFoundException {
+			final long remainingDiskQuota, final String creatorUserCode, final String creatorUserName, final String creatorName) throws FileNotFoundException {
 		final DocumentDAO docDao = this.getDocumentDAO();
 
 		return (SaveItemInternalResult) this.getDocumentDAO()
@@ -491,6 +491,7 @@ public class DocumentService {
 							document.setGuid(Util.generateGUID());
 						}
 
+						document.setCreatorName(creatorName);
 						document.setLastModifiedDate(creationDate);
 						document.setTitle(attachmentDocument.getTitle());
 						document.setCreatorUserCode(creatorUserCode);

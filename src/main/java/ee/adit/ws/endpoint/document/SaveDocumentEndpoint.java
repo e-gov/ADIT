@@ -207,7 +207,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 								LOG.debug("Modifying document. ID: " + document.getId());
 								
 								// Document to database
-								SaveItemInternalResult saveResult = this.getDocumentService().save(document, user.getUserCode(), applicationName, remainingDiskQuota, creatorUserCode, creatorUserName);
+								SaveItemInternalResult saveResult = this.getDocumentService().save(document, user.getUserCode(), applicationName, remainingDiskQuota, creatorUserCode, creatorUserName, user.getFullName());
 								if (saveResult.isSuccess()) {
 									documentId = saveResult.getItemId();
 									LOG.debug("Document saved with ID: " + documentId.toString());
@@ -223,7 +223,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 								LOG.debug("Adding new document. GUID: " + document.getGuid());
 								
 								// Document to database
-								SaveItemInternalResult saveResult = this.getDocumentService().save(document, user.getUserCode(), applicationName, remainingDiskQuota, creatorUserCode, creatorUserName);
+								SaveItemInternalResult saveResult = this.getDocumentService().save(document, user.getUserCode(), applicationName, remainingDiskQuota, creatorUserCode, creatorUserName, user.getFullName());
 								if (saveResult.isSuccess()) {
 									documentId = saveResult.getItemId();
 									LOG.debug("Document saved with ID: " + documentId.toString());
