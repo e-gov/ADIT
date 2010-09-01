@@ -72,6 +72,12 @@ public class UserService {
 	public static final String ACCESS_RESTRICTION_WRITE = "WRITE";
 	public static final String ACCESS_RESTRICTION_READ = "READ";
 
+	/**
+	 * Checks if the application is registered.
+	 * 
+	 * @param remoteApplicationShortName remote application short name
+	 * @return true, if the application is registered
+	 */
 	public boolean isApplicationRegistered(String remoteApplicationShortName) {
 		boolean result = false;
 		LOG.debug("Checking if application '" + remoteApplicationShortName
@@ -173,6 +179,12 @@ public class UserService {
 		return result;
 	}
 
+	/**
+	 * Retrieves the usertype object specified by the usertype short name.
+	 * 
+	 * @param usertypeShortName usertype short name
+	 * @return usertype object
+	 */
 	public Usertype getUsertypeByID(String usertypeShortName) {
 		Usertype result = null;
 
@@ -184,7 +196,13 @@ public class UserService {
 
 		return result;
 	}
-
+	
+	/**
+	 * Retrieves user.
+	 * 
+	 * @param userRegCode user code
+	 * @return user object, null if not found
+	 */
 	public AditUser getUserByID(String userRegCode) {
 		LOG.debug("Getting user by ID: " + userRegCode);
 		AditUser result = null;
@@ -204,6 +222,15 @@ public class UserService {
 		return result;
 	}
 
+	/**
+	 * Adds a user.
+	 * 
+	 * @param username user full name
+	 * @param usertype usertype
+	 * @param institutionCode institution code - used if usertype is {@code USERTYPE_INSTITUTION} or {@code USERTYPE_COMPANY}
+	 * @param personalCode personal code - used if usertype is {@code USERTYPE_PERSON}
+	 * @throws AditInternalException
+	 */
 	public void addUser(String username, Usertype usertype,
 			String institutionCode, String personalCode)
 			throws AditInternalException {
@@ -218,6 +245,13 @@ public class UserService {
 		}
 	}
 
+	/**
+	 * Adds a user.
+	 * 
+	 * @param username user full name
+	 * @param usercode user code
+	 * @param usertype usertype
+	 */
 	public void addUser(String username, String usercode, Usertype usertype) {
 		AditUser aditUser = new AditUser();
 		aditUser.setUserCode(usercode);
@@ -228,10 +262,11 @@ public class UserService {
 	}
 
 	/**
+	 * Updates / modifies a user. User reactivated if not presently active.
 	 * 
-	 * @param aditUser
-	 * @param username
-	 * @param usertype
+	 * @param aditUser user
+	 * @param username new username
+	 * @param usertype new usertype
 	 * @return true if the user was reactivated
 	 * @throws AditInternalException
 	 */
@@ -258,11 +293,25 @@ public class UserService {
 		return result;
 	}
 
+	/**
+	 * Updates user name.
+	 * 
+	 * @param aditUser user
+	 * @param username new user full name
+	 */
 	public void modifyUser(AditUser aditUser, String username) {
 		aditUser.setFullName(username);
 		this.getAditUserDAO().saveOrUpdate(aditUser);
 	}
 
+	/**
+	 * Retrieves the userlist.
+	 * 
+	 * @param startIndex start index (offset)
+	 * @param maxResults number of maximum results
+	 * @return userlist
+	 * @throws Exception
+	 */
 	public List<AditUser> listUsers(BigInteger startIndex, BigInteger maxResults)
 			throws Exception {
 		List<AditUser> result = null;
@@ -273,6 +322,12 @@ public class UserService {
 		return result;
 	}
 
+	/**
+	 * Retrieves user information.
+	 * 
+	 * @param userList userlist
+	 * @return list of users information
+	 */
 	public List<GetUserInfoResponseAttachmentUser> getUserInfo(
 			GetUserInfoRequestAttachmentUserList userList) {
 		List<GetUserInfoResponseAttachmentUser> result = new ArrayList<GetUserInfoResponseAttachmentUser>();
@@ -288,6 +343,12 @@ public class UserService {
 		return result;
 	}
 
+	/**
+	 * Gets user info for a single user.
+	 * 
+	 * @param userCode user code
+	 * @return user information
+	 */
 	public GetUserInfoResponseAttachmentUser getUserInfo(String userCode) {
 
 		GetUserInfoResponseAttachmentUser result = new GetUserInfoResponseAttachmentUser();
@@ -355,12 +416,24 @@ public class UserService {
 
 	}
 
+	/**
+	 * Deactivates user.
+	 * 
+	 * @param user
+	 */
 	public void deactivateUser(AditUser user) {
 		user.setActive(false);
 		user.setDeactivationDate(new Date());
 		this.getAditUserDAO().saveOrUpdate(user);
 	}
 
+	/**
+	 * Retrieves the remaining disk quota for the specified user.
+	 * 
+	 * @param user
+	 * @param globalDiskQuota global disk quota
+	 * @return
+	 */
 	public long getRemainingDiskQuota(AditUser user, long globalDiskQuota) {
 		long totalDiskQuota = getTotalDiskQuota(user, globalDiskQuota);
 		long usedDiskSpace = getDocumentDAO().getUsedSpaceForUser(
@@ -372,6 +445,13 @@ public class UserService {
 		return result;
 	}
 
+	/**
+	 * Determines the disk quota for the user specified.
+	 * 
+	 * @param user
+	 * @param globalDiskQuota global disk quota
+	 * @return
+	 */
 	public long getTotalDiskQuota(AditUser user, long globalDiskQuota) {
 		long result = 0;
 
@@ -395,6 +475,12 @@ public class UserService {
 		return result;
 	}
 
+	/**
+	 * Sets notifications settings for the specified user.
+	 * 
+	 * @param userCode user code
+	 * @param notifications notifications list
+	 */
 	public void setNotifications(final String userCode,
 			final List<Notification> notifications) {
 		this.getAditUserDAO().getHibernateTemplate().execute(
@@ -447,6 +533,12 @@ public class UserService {
 				});
 	}
 
+	/**
+	 * Retrieves the notifications settings for the user specified.
+	 * 
+	 * @param userCode user code
+	 * @return notifications settings list
+	 */
 	public ArrayOfNotification getNotifications(final String userCode) {
 		final NotificationTypeDAO notTypeDao = this.getNotificationTypeDAO();
 
@@ -480,6 +572,13 @@ public class UserService {
 				});
 	}
 
+	/**
+	 * Finds notification by type.
+	 * 
+	 * @param notifications notifications settings list
+	 * @param notificationType notification type
+	 * @return notification, null if not found
+	 */
 	public UserNotification findNotification(final Set notifications,
 			final String notificationType) {
 		UserNotification result = null;
@@ -497,6 +596,19 @@ public class UserService {
 		return result;
 	}
 
+	/**
+	 * Adds a notification for the specified user.
+	 * 
+	 * @param id notification ID
+	 * @param documentId document ID
+	 * @param notificationType notification type 
+	 * @param userCode user code
+	 * @param eventDate event date
+	 * @param notificationText notification text
+	 * @param notificationId notification ID (X-tee notification calendar)
+	 * @param notificationSendingDate sending date for this notification
+	 * @return
+	 */
 	public long addNotification(long id, long documentId,
 			String notificationType, String userCode, Date eventDate,
 			String notificationText, Long notificationId,
@@ -521,6 +633,11 @@ public class UserService {
 		}
 	}
 
+	/**
+	 * Retrieves usertypes list.
+	 * 
+	 * @return
+	 */
 	public List<Usertype> listUsertypes() {
 		try {
 			return this.getUsertypeDAO().listUsertypes();
@@ -530,6 +647,11 @@ public class UserService {
 		}
 	}
 
+	/**
+	 * Retrieves the usertypes list and converts it to a string.
+	 * 
+	 * @return
+	 */
 	public String getUsertypesString() {
 		List<Usertype> usertypes = this.listUsertypes();
 		StringBuffer result = new StringBuffer();
@@ -549,6 +671,11 @@ public class UserService {
 		return result.toString();
 	}
 
+	/**
+	 * Retrieves notification types and returns them as a string.
+	 * 
+	 * @return
+	 */
 	public String getNotificationTypesString() {
 		List<NotificationType> notificationTypes = this
 				.getNotificationTypeDAO().getNotificationTypeList();
@@ -569,6 +696,12 @@ public class UserService {
 		return result.toString();
 	}
 
+	/**
+	 * Checks if application is registered.
+	 * 
+	 * @param applicationName application short name
+	 * @throws AditCodedException
+	 */
 	public void checkApplicationRegistered(String applicationName)
 			throws AditCodedException {
 		boolean applicationRegistered = isApplicationRegistered(applicationName);
@@ -580,7 +713,13 @@ public class UserService {
 		}
 	}
 
-	public void checkApplicationWritePrivilege(String applicationName) {
+	/**
+	 * Checks if application has the overall 'write' privilege.
+	 * 
+	 * @param applicationName
+	 * @throws if application does not have the 'write' privilege.
+	 */
+	public void checkApplicationWritePrivilege(String applicationName) throws AditCodedException {
 		int accessLevel = getAccessLevel(applicationName);
 		if (accessLevel != 2) {
 			AditCodedException aditCodedException = new AditCodedException(
@@ -590,7 +729,13 @@ public class UserService {
 		}
 	}
 
-	public void checkApplicationReadPrivilege(String applicationName) {
+	/**
+	 * Checks if application has the overall 'read' privilege.
+	 * 
+	 * @param applicationName
+	 * @throws if application does not have the 'read' privilege.
+	 */
+	public void checkApplicationReadPrivilege(String applicationName) throws AditCodedException {
 		int accessLevel = getAccessLevel(applicationName);
 		if (accessLevel < 1) {
 			AditCodedException aditCodedException = new AditCodedException(
@@ -601,8 +746,10 @@ public class UserService {
 	}
 
 	/**
-	 * Synchronize DVK users with ADIT user accounts: DVK -> ADIT only 1. Get
-	 * DVK users 2. Check if user exists in ADIT 3. Check is user data changed
+	 * Synchronize DVK users with ADIT user accounts: DVK -> ADIT only 
+	 * 1. Get DVK users 
+	 * 2. Check if user exists in ADIT 
+	 * 3. Check is user data changed
 	 */
 	public DVKUserSyncResult synchroinzeDVKUsers() {
 
