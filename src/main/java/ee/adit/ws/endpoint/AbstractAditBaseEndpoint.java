@@ -138,7 +138,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 			responseObject = getResultForGenericException(e);
 			
 			// Add request log entry
-			this.getLogService().addRequestLogEntry(requestName + ".v" + version, null, new Date(), xteeHeader.getInfosysteem(), xteeHeader.getIsikukood(), xteeHeader.getAndmekogu(), "Exception while marshalling response object: " + e.getMessage());
+			this.getLogService().addRequestLogEntry(requestName + ".v" + version, null, new Date(), xteeHeader.getInfosysteem(), xteeHeader.getIsikukood(), xteeHeader.getAsutus(), "Exception while marshalling response object: " + e.getMessage());
 			
 		}
 		
