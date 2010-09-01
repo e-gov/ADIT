@@ -15,7 +15,7 @@ public class RequestLogDAO extends HibernateDaoSupport {
 	private static Logger LOG = Logger.getLogger(RequestLogDAO.class);
 	
 	public Long save(final RequestLog requestLogEntry) {
-		LOG.debug("Attemptyng to save request log entry...");
+		LOG.debug("Attempting to save request log entry...");
 		Long result = null;
 		
 		result = (Long) this.getHibernateTemplate().execute(new HibernateCallback() {

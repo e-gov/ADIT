@@ -15,7 +15,7 @@ public class ErrorLogDAO extends HibernateDaoSupport {
 	private static Logger LOG = Logger.getLogger(ErrorLogDAO.class);
 
 	public Long save(final ErrorLog errorLogEntry) {
-		LOG.debug("Attemptyng to save error log entry...");
+		LOG.debug("Attemptyng to save error log entry... ID: " + errorLogEntry.getId());
 		Long result = null;
 
 		result = (Long) this.getHibernateTemplate().execute(new HibernateCallback() {

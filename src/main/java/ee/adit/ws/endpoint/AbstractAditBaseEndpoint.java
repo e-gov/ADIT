@@ -98,6 +98,8 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 		
 		LOG.debug("AbstractAditBaseEndpoint invoked");
 		Object responseObject = null;
+		String requestName = null;
+		int version = 1;
 		
 		if (requestKeha == null) {
 			throw new Exception("Failed unmarshalling request because request body is null!");
@@ -107,7 +109,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 			// Set the header as a property
 			this.setHeader(xteeHeader);
 			
-			int version = 1;
+			
 			if(!this.isMetaService()) {
 				// Check request version
 				if(xteeHeader.getNimi() == null) {
@@ -115,6 +117,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 				}
 				XRoadQueryName queryName = Util.extractQueryName(xteeHeader.getNimi());
 				version = queryName.getVersion();
+				requestName = queryName.getName();
 			}			
 			
 			// Unmarshall the request object
@@ -133,6 +136,10 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 		} catch (Exception e) {
 			LOG.error("Exception while marshalling response object: ", e);
 			responseObject = getResultForGenericException(e);
+			
+			// Add request log entry
+			this.getLogService().addRequestLogEntry(requestName + ".v" + version, null, new Date(), xteeHeader.getInfosysteem(), xteeHeader.getIsikukood(), xteeHeader.getAndmekogu(), "Exception while marshalling response object: " + e.getMessage());
+			
 		}
 		
 		if(responseObject != null) {
