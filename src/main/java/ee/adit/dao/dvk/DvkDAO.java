@@ -14,14 +14,30 @@ import dvk.api.ml.PojoOrganization;
 import dvk.api.ml.PojoSettings;
 import ee.adit.service.DocumentService;
 
+/**
+ * DVK data access class. Provides methods for manipulating data in DVK client database.
+ * 
+ * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
+ */
 public class DvkDAO {
 
+	/**
+	 * Session factory
+	 */
 	private SessionFactory sessionFactory;
 
+	/**
+	 * Default constructor. Configures the DVK API and sets the session factory.
+	 */
 	public DvkDAO() {
 		this.setSessionFactory(DVKAPI.createSessionFactory("hibernate_ora_dvk.cfg.xml"));
 	}
 
+	/**
+	 * Retrieves incoming documents list.
+	 * 
+	 * @return
+	 */
 	public List<PojoMessage> getIncomingDocuments() {
 		List<PojoMessage> result = new ArrayList<PojoMessage>();
 
@@ -31,6 +47,12 @@ public class DvkDAO {
 		return result;
 	}
 
+	/**
+	 * Retrieves incoming documents list containing documents that do not have any status assigned.
+	 * 
+	 * @param statusID
+	 * @return
+	 */
 	public List<PojoMessage> getIncomingDocumentsWithoutStatus(Long statusID) {
 		List<PojoMessage> result = new ArrayList<PojoMessage>();
 
@@ -40,6 +62,12 @@ public class DvkDAO {
 		return result;
 	}
 	
+	/**
+	 * Updates document.
+	 * 
+	 * @param document
+	 * @throws Exception
+	 */
 	public void updateDocument(PojoMessage document) throws Exception {
 		
 		Session session = this.getSessionFactory().openSession();
@@ -60,6 +88,13 @@ public class DvkDAO {
 		
 	}
 
+	/**
+	 * Retrieves recipients for the specified DVK message. 
+	 * 
+	 * @param dvkMessageID
+	 * @param incoming specifies, if the message should be incoming / outgoing
+	 * @return list of message recipients
+	 */
 	public List<PojoMessageRecipient> getMessageRecipients(Long dvkMessageID, boolean incoming) {
 		// TODO: pojomesage.ID - invalid identifier
 		int incomingInt = 0;
@@ -71,6 +106,11 @@ public class DvkDAO {
 		return this.getSessionFactory().openSession().createQuery(SQL).list();
 	}
 	
+	/**
+	 * Retrieves DVK client settings.
+	 * 
+	 * @return settings
+	 */
 	public PojoSettings getDVKSettings() {
 		Session session = this.getSessionFactory().openSession();
 		String SQL = "from PojoSettings where id = (select max(id) from PojoSettings)";
@@ -92,6 +132,11 @@ public class DvkDAO {
 		return result;
 	}
 	
+	/**
+	 * Retrieve all received documents.
+	 * 
+	 * @return list of documents.
+	 */
 	public List<PojoMessage> getReceivedDocuments() {
 		List<PojoMessage> result = new ArrayList<PojoMessage>();
 		String SQL = "from PojoMessage where isIncoming = true and dhlId is not null and (faultCode is null or faultCode != '" + DocumentService.DVKFaultCodeFor_Deleted + "') and (recipientStatusId = " + DocumentService.DVKStatus_Aborted + " or recipientStatusId = " + DocumentService.DVKStatus_Received + ")";
@@ -99,6 +144,11 @@ public class DvkDAO {
 		return result;
 	}
 	
+	/**
+	 * Retrieves DVK users list.
+	 * 
+	 * @return list of users.
+	 */
 	public List<PojoOrganization> getUsers() {
 		List<PojoOrganization> result = new ArrayList<PojoOrganization>();
 		String SQL = "from PojoOrganization where dhlCapable = true";
@@ -106,10 +156,18 @@ public class DvkDAO {
 		return result;
 	}
 	
+	/**
+	 * Retrieves session factory
+	 * @return
+	 */
 	public SessionFactory getSessionFactory() {
 		return sessionFactory;
 	}
 
+	/**
+	 * Sets session factory
+	 * @param sessionFactory
+	 */
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
