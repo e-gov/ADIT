@@ -141,6 +141,10 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 							response.setSuccess(new Success(true));							
 							messages.setMessage(this.getMessageService().getMessages("request.getJoined.success", new Object[] { userList.size() }));
 							
+							// Additional information for request log
+							additionalInformationForLog = "SUCCESS: Userlist retrieved for " + userList.size() + " users.";							
+							
+							
 						} else {
 							LOG.warn("No users were found.");
 							throw new AditCodedException("request.getJoined.noUsersFound");
