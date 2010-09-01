@@ -12,10 +12,24 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.exception.AditInternalException;
 
+/**
+ * AditUser data access class. Provides methods for retrieving and manipulating user data.
+ * 
+ * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
+ */
 public class AditUserDAO extends HibernateDaoSupport {
 
+	/**
+	 * Log4J logger
+	 */
 	private static Logger LOG = Logger.getLogger(AditUserDAO.class);
 
+	/**
+	 * Retrieves user by ID.
+	 * 
+	 * @param userCode
+	 * @return
+	 */
 	public AditUser getUserByID(String userCode) {
 		AditUser result = null;
 		
@@ -29,6 +43,10 @@ public class AditUserDAO extends HibernateDaoSupport {
 		return result;
 	}
 
+	/**
+	 * 
+	 * @param aditUser
+	 */
 	public void saveOrUpdate(AditUser aditUser) {
 		try {
 			this.getHibernateTemplate().saveOrUpdate(aditUser);
