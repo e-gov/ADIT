@@ -38,6 +38,13 @@ import ee.adit.pojo.GetUserInfoResponseAttachmentUser;
 import ee.adit.pojo.Notification;
 import ee.adit.util.DVKUserSyncResult;
 
+/**
+ * Provides services for manipulating and retrieving user data.
+ * 
+ * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
+ * @author Jaak Lember, Interinx, jaak@interinx.com
+ * 
+ */
 public class UserService {
 
 	private static Logger LOG = Logger.getLogger(UserService.class);
