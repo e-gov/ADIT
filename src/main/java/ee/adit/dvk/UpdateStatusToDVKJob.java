@@ -7,6 +7,11 @@ import org.springframework.scheduling.quartz.QuartzJobBean;
 
 import ee.adit.service.DocumentService;
 
+/**
+ * Updates document statuses to DVK client.
+ * 
+ * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
+ */
 public class UpdateStatusToDVKJob extends QuartzJobBean {
 
 	private static Logger LOG = Logger.getLogger(UpdateStatusToDVKJob.class);

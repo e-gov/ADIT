@@ -7,6 +7,12 @@ import org.springframework.scheduling.quartz.QuartzJobBean;
 
 import ee.adit.service.DocumentService;
 
+/**
+ * Scheduled job that deletes unnecessary (sent / aborted / received) documents
+ * from DVK client database.
+ * 
+ * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
+ */
 public class DeleteDocumentsFromDVKJob extends QuartzJobBean {
 
 	private static Logger LOG = Logger.getLogger(DeleteDocumentsFromDVKJob.class);

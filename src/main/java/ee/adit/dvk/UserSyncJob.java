@@ -8,6 +8,11 @@ import org.springframework.scheduling.quartz.QuartzJobBean;
 import ee.adit.service.UserService;
 import ee.adit.util.DVKUserSyncResult;
 
+/**
+ * Synchronizes users from DVK to ADIT.
+ * 
+ * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
+ */
 public class UserSyncJob extends QuartzJobBean {
 
 	private static Logger LOG = Logger.getLogger(UserSyncJob.class);
