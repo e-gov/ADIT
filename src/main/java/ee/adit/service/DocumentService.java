@@ -656,14 +656,15 @@ public class DocumentService {
 	}
 
 	/**
+	 * Adds a document history event.
 	 * 
-	 * @param applicationName
-	 * @param doc
-	 * @param userCode
-	 * @param historyType
-	 * @param xteeUserCode
-	 * @param xteeUserName
-	 * @param description
+	 * @param applicationName remote application short name
+	 * @param doc document
+	 * @param userCode user code - the user that caused this event 
+	 * @param historyType history event type name
+	 * @param xteeUserCode X-Tee user code
+	 * @param xteeUserName X-Tee user name
+	 * @param description event description
 	 */
 	public void addHistoryEvent(String applicationName, Document doc,
 			String userCode, String historyType, String xteeUserCode,
@@ -683,10 +684,10 @@ public class DocumentService {
 
 	/**
 	 * Fetches all the documents that are to be sent to DVK. The DVK documents
-	 * are recognized by the following: 1. The document has at least one
-	 * DocumentSharing associated with it 2. That DocumentSharing must have the
-	 * "documentSharingType" equal to "send_dvk" 3. That DocumentSharing must
-	 * have the "documentDvkStatus" not initialized or set to "100"
+	 * are recognized by the following: <br /> 
+	 * 1. The document has at least one DocumentSharing associated with it <br />
+	 * 2. That DocumentSharing must have the "documentSharingType" equal to "send_dvk" <br />
+	 * 3. That DocumentSharing must have the "documentDvkStatus" not initialized or set to "100"
 	 */
 	@SuppressWarnings("unchecked")
 	@Transactional
@@ -1226,6 +1227,13 @@ public class DocumentService {
 		return result;
 	}
 
+	/**
+	 * Converts the document object to {@code ContainerVer2} object.
+	 * 
+	 * @param document
+	 * @return DVK container object
+	 * @throws AditInternalException
+	 */
 	public ContainerVer2 getDVKContainer(PojoMessage document)
 			throws AditInternalException {
 		ContainerVer2 result = null;
@@ -1284,6 +1292,12 @@ public class DocumentService {
 		return result;
 	}
 
+	/**
+	 * Extracts files from DVK container.
+	 * 
+	 * @param dvkContainer DVK container
+	 * @return list of files extracted
+	 */
 	public List<OutputDocumentFile> getDocumentOutputFiles(
 			ContainerVer2 dvkContainer) {
 		List<OutputDocumentFile> result = new ArrayList<OutputDocumentFile>();
@@ -1572,6 +1586,13 @@ public class DocumentService {
 		return result;
 	}
 
+	/**
+	 * Deletes received documents from DVK client database. 
+	 * Deleting means the DVK container XML is deleted (not the document metadata).
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
 	public int deleteReceivedDocumentsFromDVK() throws Exception {
 		int result = 0;
 		try {
@@ -1672,6 +1693,15 @@ public class DocumentService {
 		}
 	}
 
+	/**
+	 * Creates DVK response message data XML string.
+	 * 
+	 * @param dvkContainer DVK container
+	 * @param recipientCode recipient code
+	 * @param receivedDate receiving date
+	 * @param recipientName recipient name
+	 * @return XML string
+	 */
 	public String createErrorResponseDataXML(ContainerVer2 dvkContainer,
 			String recipientCode, Date receivedDate, String recipientName) {
 		StringBuffer result = new StringBuffer();
@@ -1774,6 +1804,13 @@ public class DocumentService {
 		return result.toString();
 	}
 
+	/**
+	 * Saves error response message to DVK client database.
+	 * 
+	 * @param fileName absolute path to the data file.
+	 * @param originalContainer original (request) DVK container
+	 * @throws Exception
+	 */
 	public void saveErrorResponseMessageToDVK(String fileName,
 			ContainerVer2 originalContainer) throws Exception {
 
