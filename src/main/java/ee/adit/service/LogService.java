@@ -42,6 +42,11 @@ public class LogService {
 	public static final String ErrorLogLevel_Fatal = "FATAL";
 	
 	/**
+	 * Request log success message
+	 */
+	public static final String RequestLog_Success = "Success";
+	
+	/**
 	 * Request log Data Access Object
 	 */
 	private RequestLogDAO requestLogDAO;

@@ -262,6 +262,7 @@ public class GetDocumentHistoryEndpoint extends AbstractAditBaseEndpoint {
 			
 			// Set response messages
 			response.setSuccess(true);
+			additionalInformationForLog = LogService.RequestLog_Success;
 			messages.setMessage(this.getMessageService().getMessages("request.getDocumentHistory.success", new Object[] { }));
 			response.setMessages(messages);
 		} catch (Exception e) {

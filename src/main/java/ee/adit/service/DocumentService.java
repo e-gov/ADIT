@@ -237,7 +237,7 @@ public class DocumentService {
 	 * DVK response message file name
 	 */
 	public static final String DvkErrorResponseMessage_FileName = "ADIT_vastuskiri.pdf";
-
+	
 	/**
 	 * Document type - letter
 	 */
