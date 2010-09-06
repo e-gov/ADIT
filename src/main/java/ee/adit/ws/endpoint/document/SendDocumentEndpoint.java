@@ -73,12 +73,12 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 		String description = "Recipients: ";
 		int successCount = 0;
 		ArrayOfMessage messages = new ArrayOfMessage();
-		
+		SendDocumentRequest request = null;
 		
 		try {
 		
 			LOG.debug("SendDocumentEndpoint.v1 invoked.");
-			SendDocumentRequest request = (SendDocumentRequest) requestObject;
+			request = (SendDocumentRequest) requestObject;
 			CustomXTeeHeader header = this.getHeader();
 			String applicationName = header.getInfosysteem();
 			
@@ -189,7 +189,7 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 						recipientMessages.setMessage(errorMessages);
 						recipientStatus.setMessages(recipientMessages);
 						success = false;
-						super.logError(documentId, requestDate.getTime(), LogService.ErrorLogLevel_Error, "User not registered: " + recipientCode);
+						super.logError(request.getDocumentId(), requestDate.getTime(), LogService.ErrorLogLevel_Error, "User not registered: " + recipientCode);
 						additionalInformationForLog = "User not registered: " + recipientCode + " ";
 					} else {
 						
@@ -273,7 +273,7 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 			success = false;
 			LOG.error("Exception: ", e);
 			additionalInformationForLog = "Failed: " + e.getMessage();
-			super.logError(documentId, requestDate.getTime(), LogService.ErrorLogLevel_Error, e.getMessage());
+			super.logError(request.getDocumentId(), requestDate.getTime(), LogService.ErrorLogLevel_Error, e.getMessage());
 
 			response.setSuccess(success);
 			ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
