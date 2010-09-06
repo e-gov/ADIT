@@ -47,6 +47,11 @@ public class LogService {
 	public static final String RequestLog_Success = "Success";
 	
 	/**
+	 * Request log success message
+	 */
+	public static final String RequestLog_Fail = "Fail";
+	
+	/**
 	 * Request log Data Access Object
 	 */
 	private RequestLogDAO requestLogDAO;

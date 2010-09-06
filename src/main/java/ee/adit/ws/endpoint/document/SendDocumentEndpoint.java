@@ -92,7 +92,7 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 			// Check request body
 			// TODO: checkRequest(request);
 			
-			super.logCurrentRequest(documentId, requestDate.getTime(), additionalInformationForLog);
+			
 			
 			// Check if the application is registered
 			boolean applicationRegistered = this.getUserService().isApplicationRegistered(applicationName);
@@ -190,6 +190,7 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 						recipientStatus.setMessages(recipientMessages);
 						success = false;
 						super.logError(documentId, requestDate.getTime(), LogService.ErrorLogLevel_Error, "User not registered: " + recipientCode);
+						additionalInformationForLog = "User not registered: " + recipientCode + " ";
 					} else {
 						
 						try {
@@ -231,6 +232,7 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 							recipientMessages.setMessage(errorMessages);
 							recipientStatus.setMessages(recipientMessages);
 							success = false;
+							additionalInformationForLog = "Exception while sharing document: " + e.getMessage() + " ";
 						}
 					}
 					reponseStatuses.addRecipient(recipientStatus);
@@ -244,8 +246,10 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 			response.setRecipientList(reponseStatuses);
 			
 			if(success) {
+				additionalInformationForLog = LogService.RequestLog_Success;
 				messages.setMessage(this.getMessageService().getMessages("request.sendDocument.success", new Object[] {  }));
 			} else {
+				additionalInformationForLog = LogService.RequestLog_Fail + ": " + additionalInformationForLog;
 				messages.setMessage(this.getMessageService().getMessages("request.sendDocument.fail", new Object[] {  }));
 			}
 			
@@ -268,6 +272,7 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 		} catch(Exception e) {
 			success = false;
 			LOG.error("Exception: ", e);
+			additionalInformationForLog = "Failed: " + e.getMessage();
 			super.logError(documentId, requestDate.getTime(), LogService.ErrorLogLevel_Error, e.getMessage());
 
 			response.setSuccess(success);
@@ -287,6 +292,8 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 			response.setMessages(arrayOfMessage);
 		}
 
+		super.logCurrentRequest(documentId, requestDate.getTime(), additionalInformationForLog);
+		
 		return response;
 	}
 
