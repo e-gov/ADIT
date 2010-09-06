@@ -43,7 +43,7 @@ import javax.xml.bind.annotation.XmlType;
 public class GetDocumentFileRequest {
 
     @XmlElement(name = "document_id", required = true)
-    protected long documentId;
+    protected Long documentId;
     @XmlElement(name = "file_id_list", required = true)
     protected ArrayOfFileId fileIdList;
 
@@ -55,7 +55,7 @@ public class GetDocumentFileRequest {
      *     {@link BigInteger }
      *     
      */
-    public long getDocumentId() {
+    public Long getDocumentId() {
         return documentId;
     }
 
@@ -67,7 +67,7 @@ public class GetDocumentFileRequest {
      *     {@link BigInteger }
      *     
      */
-    public void setDocumentId(long value) {
+    public void setDocumentId(Long value) {
         this.documentId = value;
     }
 
