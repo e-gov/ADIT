@@ -385,9 +385,8 @@
 		<property name="configuration" ref="configuration"/>
 	</bean>
 
-	<bean id="aditDataSource"
-		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="connection.datasource" value="java:jdbc/adit"/>
+	<bean id="aditDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+	  <property name="jndiName" value="java:comp/env/jdbc/adit"/>
 	</bean>
 
 	<bean id="sessionFactory"
