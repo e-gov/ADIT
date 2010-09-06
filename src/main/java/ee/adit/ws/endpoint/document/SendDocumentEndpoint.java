@@ -189,6 +189,7 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 						recipientMessages.setMessage(errorMessages);
 						recipientStatus.setMessages(recipientMessages);
 						success = false;
+						super.logError(documentId, requestDate.getTime(), LogService.ErrorLogLevel_Error, "User not registered: " + recipientCode);
 					} else {
 						
 						try {
