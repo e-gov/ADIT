@@ -124,6 +124,13 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 				}
 			}
 			
+			// Kontrollime, et kasutajakonto ligipääs poleks peatatud (kasutaja lahkunud)
+			if ((user.getActive() == null) || !user.getActive()) {
+				AditCodedException aditCodedException = new AditCodedException("user.inactive");
+				aditCodedException.setParameters(new Object[] { userCode });
+				throw aditCodedException;
+			}
+			
 			// Check application access level for user
 			int applicationAccessLevelForUser = userService.getAccessLevelForUser(applicationName, user);
 			if (applicationAccessLevelForUser < 2) {
@@ -181,10 +188,16 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 					// Check if the user is registered
 					AditUser recipient = this.getUserService().getUserByID(recipientCode);
 					
-					if(recipient == null) {
-						LOG.error("User is not registered.");
+					if(recipient == null || !recipient.getActive()) {
+						LOG.error("User is not registered or inactive.");
+						String messageCode = "user.nonExistent";
+						
+						if(recipient != null) {
+							messageCode = "user.inactive";
+						}
+						
 						recipientStatus.setSuccess(false);
-						List<Message> errorMessages = this.getMessageService().getMessages("user.nonExistent", new Object[] { recipientCode });
+						List<Message> errorMessages = this.getMessageService().getMessages(messageCode, new Object[] { recipientCode });
 						ArrayOfMessage recipientMessages = new ArrayOfMessage();
 						recipientMessages.setMessage(errorMessages);
 						recipientStatus.setMessages(recipientMessages);

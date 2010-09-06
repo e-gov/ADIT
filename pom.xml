@@ -11,7 +11,7 @@
 	<properties>
 		<baseDir>C:\development\adit\trunk</baseDir>
 		<!-- Specifies which configuration resources to bundle with the build (ie. "dev", "test", "production") -->
-		<resourceDir>dev-dev</resourceDir>
+		<resourceDir>ria-dev-tomcat</resourceDir>
 	</properties>
 
 	<dependencies>
