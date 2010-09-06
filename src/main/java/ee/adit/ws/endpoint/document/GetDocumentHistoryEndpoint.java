@@ -253,6 +253,9 @@ public class GetDocumentHistoryEndpoint extends AbstractAditBaseEndpoint {
 				GetDocumentHistoryResponseDocument responseDoc = new GetDocumentHistoryResponseDocument();
 				responseDoc.setHref("cid:" + contentID);
 				response.setDocumentHistoryList(responseDoc);
+				
+				
+				
 			} else {
 				LOG.debug("Requested document does not belong to user. Document ID: " + request.getDocumentId() + ", User ID: " + userCode);
 				AditCodedException exception = new AditCodedException("document.doesNotBelongToUser");
@@ -262,9 +265,12 @@ public class GetDocumentHistoryEndpoint extends AbstractAditBaseEndpoint {
 			
 			// Set response messages
 			response.setSuccess(true);
-			additionalInformationForLog = LogService.RequestLog_Success;
 			messages.setMessage(this.getMessageService().getMessages("request.getDocumentHistory.success", new Object[] { }));
 			response.setMessages(messages);
+			
+			String additionalMessage = this.getMessageService().getMessage("request.getDocumentHistory.success", new Object[] {}, Locale.ENGLISH);
+			additionalInformationForLog = LogService.RequestLog_Success + ": " + additionalMessage;
+			
 		} catch (Exception e) {
 			String errorMessage = null;
 			additionalInformationForLog = "Request failed: " + e.getMessage();

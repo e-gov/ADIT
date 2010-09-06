@@ -272,7 +272,11 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
 			// Set response messages
 			response.setSuccess(true);
 			messages.setMessage(this.getMessageService().getMessages("request.confirmSignature.success", new Object[] { }));
-			response.setMessages(messages);			
+			response.setMessages(messages);
+			
+			String additionalMessage = this.getMessageService().getMessage("request.confirmSignature.success", new Object[] {}, Locale.ENGLISH);
+			additionalInformationForLog = LogService.RequestLog_Success + ": " + additionalMessage;
+			
 		} catch (Exception e) {
 			LOG.error("Exception: ", e);
 			String errorMessage = null;

@@ -313,6 +313,10 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 			response.setSuccess(true);
 			messages.setMessage(this.getMessageService().getMessages("request.saveDocumentFile.success", new Object[] {  }));
 			response.setMessages(messages);
+			
+			String additionalMessage = this.getMessageService().getMessage("request.saveDocumentFile.success", new Object[] { }, Locale.ENGLISH);
+			additionalInformationForLog = LogService.RequestLog_Success + ": " + additionalMessage;
+			
 		} catch (Exception e) {
 			String errorMessage = null;
 			LOG.error("Exception: ", e);

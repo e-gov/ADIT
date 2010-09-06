@@ -202,6 +202,10 @@ public class DeleteDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 			response.setSuccess(new Success(true));
 			messages.setMessage(this.getMessageService().getMessages("request.deleteDocumentFile.success", new Object[] { }));
 			response.setMessages(messages);
+			
+			String additionalMessage = this.getMessageService().getMessage("request.deleteDocumentFile.success", new Object[] {}, Locale.ENGLISH);
+			additionalInformationForLog = LogService.RequestLog_Success + ": " + additionalMessage;
+			
 		} catch (Exception e) {
 			LOG.error("Exception: ", e);
 			String errorMessage = null;

@@ -178,6 +178,10 @@ public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
 			response.setSuccess(true);
 			messages.setMessage(this.getMessageService().getMessages("request.getDocumentList.success", new Object[] { }));
 			response.setMessages(messages);
+			
+			String additionalMessage = this.getMessageService().getMessage("request.getDocumentList.success", new Object[] {}, Locale.ENGLISH);
+			additionalInformationForLog = LogService.RequestLog_Success + ": " + additionalMessage;
+			
 		} catch (Exception e) {
 			String errorMessage = null;
 			additionalInformationForLog = "Request failed: " + e.getMessage();

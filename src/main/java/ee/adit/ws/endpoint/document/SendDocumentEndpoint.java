@@ -203,7 +203,7 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 						recipientStatus.setMessages(recipientMessages);
 						success = false;
 						super.logError(request.getDocumentId(), requestDate.getTime(), LogService.ErrorLogLevel_Error, "User not registered: " + recipientCode);
-						additionalInformationForLog = "User not registered: " + recipientCode + " ";
+						additionalInformationForLog = additionalInformationForLog + ", User not registered: " + recipientCode + " ";
 					} else {
 						
 						try {
@@ -235,6 +235,8 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 							description = description + recipient.getUserCode();							
 							successCount++;
 							
+							additionalInformationForLog = additionalInformationForLog + ", sent to: " + recipientCode;
+							
 							// TODO: Send a notification to the XTee teavituskalender
 							
 						} catch (Exception e) {
@@ -259,13 +261,16 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 			response.setRecipientList(reponseStatuses);
 			
 			if(success) {
-				additionalInformationForLog = LogService.RequestLog_Success;
+				String additionalMessage = this.getMessageService().getMessage("request.sendDocument.success", new Object[] { }, Locale.ENGLISH);
+				additionalMessage = additionalInformationForLog;
+				additionalInformationForLog = LogService.RequestLog_Success + ": " + additionalMessage;
 				messages.setMessage(this.getMessageService().getMessages("request.sendDocument.success", new Object[] {  }));
 			} else {
-				additionalInformationForLog = LogService.RequestLog_Fail + ": " + additionalInformationForLog;
+				String additionalMessage = this.getMessageService().getMessage("request.sendDocument.fail", new Object[] { }, Locale.ENGLISH);
+				additionalMessage = additionalInformationForLog;
+				additionalInformationForLog = LogService.RequestLog_Fail + ": " + additionalMessage;
 				messages.setMessage(this.getMessageService().getMessages("request.sendDocument.fail", new Object[] {  }));
 			}
-			
 			
 			response.setMessages(messages);
 			

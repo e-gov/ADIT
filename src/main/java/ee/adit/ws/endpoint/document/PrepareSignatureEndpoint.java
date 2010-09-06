@@ -279,6 +279,10 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
 			response.setSuccess(true);
 			messages.setMessage(this.getMessageService().getMessages("request.prepareSignature.success", new Object[] {  }));
 			response.setMessages(messages);
+			
+			String additionalMessage = this.getMessageService().getMessage("request.prepareSignature.success", new Object[] { }, Locale.ENGLISH);
+			additionalInformationForLog = LogService.RequestLog_Success + ": " + additionalMessage;
+			
 		} catch (Exception e) {
 			String errorMessage = null;
 			LOG.error("Exception: ", e);
