@@ -228,7 +228,7 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 							statusMessages.setMessage(this.getMessageService().getMessages("request.unShareDocument.recipientStatus.success", new Object[] { }));
 							status.setMessages(statusMessages);
 							statusArray.addRecipient(status);
-							
+							additionalInformationForLog = additionalInformationForLog + ", unshared to: " + sharing.getUserCode();
 							if (userCodes.contains(sharing.getUserCode())) {
 								userCodes.remove(sharing.getUserCode());
 							}
