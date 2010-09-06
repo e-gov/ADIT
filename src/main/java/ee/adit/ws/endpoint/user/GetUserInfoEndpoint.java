@@ -151,8 +151,7 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 									response.setSuccess(new Success(true));
 									messages.setMessage(this.getMessageService().getMessages("request.getUserInfo.success", new Object[] {}));
 									
-									String additionalMessage = this.getMessageService().getMessage("request.getUserInfo.success", new Object[] {}, Locale.ENGLISH);
-									
+									String additionalMessage = this.getMessageService().getMessage("request.getUserInfo.success", new Object[] { }, Locale.ENGLISH);
 									additionalInformationForLog = LogService.RequestLog_Success + ": " + additionalMessage;
 
 								} else {

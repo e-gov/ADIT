@@ -99,6 +99,9 @@ public class UnJoinEndpoint extends AbstractAditBaseEndpoint {
 								response.setSuccess(new Success(true));
 								messages.setMessage(this.getMessageService().getMessages("request.unJoin.success", new Object[] { aditUser.getUserCode() }));
 								
+								String additionalMessage = this.getMessageService().getMessage("request.unJoin.success", new Object[] { aditUser.getUserCode() }, Locale.ENGLISH);
+								additionalInformationForLog = LogService.RequestLog_Success + ": " + additionalMessage;
+								
 							} else {
 								AditCodedException aditCodedException = new AditCodedException("request.unJoin.alreadyUnJoined");
 								aditCodedException.setParameters(new Object[] { aditUser.getUserCode() });

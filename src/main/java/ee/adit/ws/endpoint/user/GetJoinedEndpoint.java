@@ -143,7 +143,8 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 							messages.setMessage(this.getMessageService().getMessages("request.getJoined.success", new Object[] { userList.size() }));
 							
 							// Additional information for request log
-							additionalInformationForLog = "SUCCESS: Userlist retrieved for " + userList.size() + " users.";							
+							String additionalMessage = this.getMessageService().getMessage("request.getJoined.success", new Object[] { userList.size() }, Locale.ENGLISH);
+							additionalInformationForLog = LogService.RequestLog_Success + ": " + additionalMessage;
 							
 							
 						} else {

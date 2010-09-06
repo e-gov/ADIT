@@ -116,17 +116,17 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 								LOG.info("Modifying existing user.");
 								boolean userReactivated = userService.modifyUser(aditUser, request.getUserName(), usertype);
 								
-								String message =  null;
+								String additionalMessage =  null;
 								if(userReactivated) {
-									message = this.getMessageService().getMessage("request.join.success.userReactivated", new Object[] { request.getUserType() }, Locale.ENGLISH);
+									additionalMessage = this.getMessageService().getMessage("request.join.success.userReactivated", new Object[] { request.getUserType() }, Locale.ENGLISH);
 									messages.setMessage(this.getMessageService().getMessages("request.join.success.userReactivated", new Object[] { request.getUserType() }));
 								} else {
-									message = this.getMessageService().getMessage("request.join.success.userModified", new Object[] { request.getUserType() }, Locale.ENGLISH);
+									additionalMessage = this.getMessageService().getMessage("request.join.success.userModified", new Object[] { request.getUserType() }, Locale.ENGLISH);
 									messages.setMessage(this.getMessageService().getMessages("request.join.success.userModified", new Object[] { request.getUserType() }));
 								}
 								
 								response.setSuccess(new Success(true));
-								additionalInformationForLog = "SUCCESS: " + message;
+								additionalInformationForLog = LogService.RequestLog_Success + ": " + additionalMessage;
 								
 							} else {								
 								AditCodedException aditCodedException = new AditCodedException("application.insufficientPrivileges.forUser.write");
