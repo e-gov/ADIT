@@ -13,7 +13,7 @@
         <property name="documentId" type="java.lang.Long">
             <column name="DOCUMENT_ID" precision="12" scale="0" />
         </property>
-        <property name="errorDate" type="date">
+        <property name="errorDate" type="timestamp">
             <column name="ERROR_DATE" length="7" />
         </property>
         <property name="remoteApplicationShortName" type="string">
