@@ -1,6 +1,7 @@
 package ee.adit.ws.endpoint.user;
 
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
@@ -164,18 +165,22 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
 			
 		} catch (Exception e) {
 			LOG.error("Exception: ", e);
-			additionalInformationForLog = "ERROR: " + e.getMessage();
-			super.logError(documentId, requestDate.getTime(), LogService.ErrorLogLevel_Error, e.getMessage());
-			
+			String errorMessage = null;
 			response.setSuccess(new Success(false));
 			ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
 			
 			if(e instanceof AditCodedException) {
 				LOG.debug("Adding exception messages to response object.");
 				arrayOfMessage.setMessage(this.getMessageService().getMessages((AditCodedException) e));
+				
+				errorMessage = this.getMessageService().getMessage(e.getMessage(), ((AditCodedException) e).getParameters(), Locale.ENGLISH);
+				errorMessage = "ERROR: " + errorMessage;
 			} else {
 				arrayOfMessage.getMessage().add(new Message("en", "Service error"));
+				errorMessage = "ERROR: " + e.getMessage();
 			}
+			
+			super.logError(documentId, requestDate.getTime(), LogService.ErrorLogLevel_Error, errorMessage);
 			
 			LOG.debug("Adding exception messages to response object.");
 			response.setMessages(arrayOfMessage);

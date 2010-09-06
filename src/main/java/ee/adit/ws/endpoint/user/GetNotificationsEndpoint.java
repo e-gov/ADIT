@@ -149,8 +149,8 @@ public class GetNotificationsEndpoint extends AbstractAditBaseEndpoint {
 			response.setSuccess(true);
 		} catch (Exception e) {
 			LOG.error("Exception: ", e);
+			String errorMessage = null;
 			additionalInformationForLog = "Request failed: " + e.getMessage();
-			super.logError(null, requestDate.getTime(), LogService.ErrorLogLevel_Error, e.getMessage());
 
 			response.setSuccess(false);
 			ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
@@ -158,13 +158,21 @@ public class GetNotificationsEndpoint extends AbstractAditBaseEndpoint {
 			if(e instanceof AditCodedException) {
 				LOG.debug("Adding exception messages to response object.");
 				arrayOfMessage.setMessage(this.getMessageService().getMessages((AditCodedException) e));
+				
+				errorMessage = this.getMessageService().getMessage(e.getMessage(), ((AditCodedException) e).getParameters(), Locale.ENGLISH);
+				errorMessage = "ERROR: " + errorMessage;
+				
 			} else if (e instanceof AditException) {
 				LOG.debug("Adding exception message to response object.");
 				arrayOfMessage.getMessage().add(new Message("en", e.getMessage()));
+				errorMessage = "ERROR: " + e.getMessage();
 			} else {
 				arrayOfMessage.getMessage().add(new Message("en", "Service error"));
+				errorMessage = "ERROR: " + e.getMessage();
 			}
 
+			super.logError(null, requestDate.getTime(), LogService.ErrorLogLevel_Error, errorMessage);
+			
 			LOG.debug("Adding exception messages to response object.");
 			response.setMessages(arrayOfMessage);
 		}
