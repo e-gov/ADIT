@@ -478,8 +478,9 @@
 	</bean>
 	
 	<bean id="documentDAO" class="ee.adit.dao.DocumentDAO">
-		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="sessionFactory" ref="sessionFactory"/>
 		<property name="messageSource" ref="messageSource"/>
+		<property name="messageService" ref="messageService"/>
 	</bean>	
 
 	<bean id="documentFileDAO" class="ee.adit.dao.DocumentFileDAO">

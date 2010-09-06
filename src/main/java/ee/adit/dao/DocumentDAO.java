@@ -54,11 +54,14 @@ import ee.adit.pojo.OutputDocumentFile;
 import ee.adit.pojo.OutputDocumentFilesList;
 import ee.adit.pojo.SaveItemInternalResult;
 import ee.adit.service.DocumentService;
+import ee.adit.service.MessageService;
 import ee.adit.util.Util;
 
 public class DocumentDAO extends HibernateDaoSupport {
 	private static Logger LOG = Logger.getLogger(DocumentDAO.class);
 	private MessageSource messageSource;
+	
+	private MessageService messageService;
 	
 	public MessageSource getMessageSource() {
 		return messageSource;
@@ -713,8 +716,9 @@ public class DocumentDAO extends HibernateDaoSupport {
 			// a result indicating failure
 			if (requiredDiskSpace > remainingDiskQuota) {
 				result.setSuccess(false);
-				Message msg = new Message("en", this.getMessageSource().getMessage("request.saveDocument.document.files.quotaExceeded", new Object[] { remainingDiskQuota, requiredDiskSpace }, Locale.ENGLISH));
-				result.getMessages().add(msg);
+				//Message msg = new Message("en", this.getMessageSource().getMessage("request.saveDocument.document.files.quotaExceeded", new Object[] { remainingDiskQuota, requiredDiskSpace }, Locale.ENGLISH));
+				//result.getMessages().add(msg);
+				result.getMessages().addAll((this.getMessageService().getMessages("request.saveDocument.document.files.quotaExceeded", new Object[] { remainingDiskQuota, requiredDiskSpace })));
 				return result;
 			}
 			
@@ -855,5 +859,13 @@ public class DocumentDAO extends HibernateDaoSupport {
 		}
 			
 		return result;
+	}
+
+	public MessageService getMessageService() {
+		return messageService;
+	}
+
+	public void setMessageService(MessageService messageService) {
+		this.messageService = messageService;
 	}
 }
