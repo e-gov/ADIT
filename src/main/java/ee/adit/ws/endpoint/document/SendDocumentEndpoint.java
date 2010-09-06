@@ -292,7 +292,7 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 			response.setMessages(arrayOfMessage);
 		}
 
-		super.logCurrentRequest(documentId, requestDate.getTime(), additionalInformationForLog);
+		super.logCurrentRequest(request.getDocumentId(), requestDate.getTime(), additionalInformationForLog);
 		
 		return response;
 	}
