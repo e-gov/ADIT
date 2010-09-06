@@ -389,10 +389,7 @@
 
 	<bean id="aditDataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
-		<property name="url" value="jdbc:oracle:thin:@//localhost:1521/XE" />
-		<property name="username" value="adit" />
-		<property name="password" value="adit" />
+		<property name="connection.datasource" value="java:jdbc/adit"/>
 	</bean>
 
 	<bean id="sessionFactory"
