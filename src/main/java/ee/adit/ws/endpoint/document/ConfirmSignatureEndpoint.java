@@ -1,6 +1,7 @@
 package ee.adit.ws.endpoint.document;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Locale;
 
@@ -274,19 +275,23 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
 			response.setMessages(messages);			
 		} catch (Exception e) {
 			LOG.error("Exception: ", e);
-			additionalInformationForLog = "Request failed: " + e.getMessage();
-			super.logError(documentId, requestDate.getTime(), LogService.ErrorLogLevel_Error, e.getMessage());
-			
+			String errorMessage = null;
+			additionalInformationForLog = "Request failed: " + e.getMessage();			
 			response.setSuccess(false);
 			ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
 
 			if(e instanceof AditCodedException) {
 				LOG.debug("Adding exception messages to response object.");
 				arrayOfMessage.setMessage(this.getMessageService().getMessages((AditCodedException) e));
+				errorMessage = this.getMessageService().getMessage(e.getMessage(), ((AditCodedException) e).getParameters(), Locale.ENGLISH);
+				errorMessage = "ERROR: " + errorMessage;
 			} else {
 				arrayOfMessage.getMessage().add(new Message("en", "Service error"));
+				errorMessage = "ERROR: " + e.getMessage();
 			}
 
+			super.logError(documentId, requestDate.getTime(), LogService.ErrorLogLevel_Error, errorMessage);
+			
 			LOG.debug("Adding exception messages to response object.");
 			response.setMessages(arrayOfMessage);
 		}

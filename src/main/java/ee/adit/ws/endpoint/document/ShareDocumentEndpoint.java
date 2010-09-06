@@ -304,10 +304,9 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 			response.setMessages(messages);
 			response.setRecipientList(statusArray);
 		} catch (Exception e) {
+			String errorMessage = null;
 			additionalInformationForLog = "Request failed: " + e.getMessage();
-			LOG.error("Exception: ", e);
-			super.logError(documentId, requestDate.getTime(), LogService.ErrorLogLevel_Error, e.getMessage());
-			
+			LOG.error("Exception: ", e);			
 			response.setSuccess(false);
 			//response.setRecipientList(statusArray);
 			ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
@@ -315,12 +314,18 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 			if(e instanceof AditCodedException) {
 				LOG.debug("Adding exception messages to response object.");
 				arrayOfMessage.setMessage(this.getMessageService().getMessages((AditCodedException) e));
+				errorMessage = this.getMessageService().getMessage(e.getMessage(), ((AditCodedException) e).getParameters(), Locale.ENGLISH);
+				errorMessage = "ERROR: " + errorMessage;
 			} else if (e instanceof AditException) {
 				LOG.debug("Adding exception message to response object.");
 				arrayOfMessage.getMessage().add(new Message("en", e.getMessage()));
+				errorMessage = "ERROR: " + e.getMessage();
 			} else {
 				arrayOfMessage.getMessage().add(new Message("en", "Service error"));
+				errorMessage = "ERROR: " + e.getMessage();
 			}
+			
+			super.logError(documentId, requestDate.getTime(), LogService.ErrorLogLevel_Error, errorMessage);
 
 			LOG.debug("Adding exception messages to response object.");
 			response.setMessages(arrayOfMessage);

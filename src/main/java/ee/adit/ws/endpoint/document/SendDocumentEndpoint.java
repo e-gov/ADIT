@@ -270,23 +270,28 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 			}			
 			
 		} catch(Exception e) {
+			String errorMessage = null;
 			success = false;
 			LOG.error("Exception: ", e);
 			additionalInformationForLog = "Failed: " + e.getMessage();
-			super.logError(request.getDocumentId(), requestDate.getTime(), LogService.ErrorLogLevel_Error, e.getMessage());
-
 			response.setSuccess(success);
 			ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
 			
 			if(e instanceof AditCodedException) {
 				LOG.debug("Adding exception messages to response object.");
 				arrayOfMessage.setMessage(this.getMessageService().getMessages((AditCodedException) e));
+				errorMessage = this.getMessageService().getMessage(e.getMessage(), ((AditCodedException) e).getParameters(), Locale.ENGLISH);
+				errorMessage = "ERROR: " + errorMessage;
 			} else if(e instanceof AditException) {
 				LOG.debug("Adding exception message to response object.");
 				arrayOfMessage.getMessage().add(new Message("en", e.getMessage()));
+				errorMessage = "ERROR: " + e.getMessage();
 			} else {
 				arrayOfMessage.getMessage().add(new Message("en", "Service error"));
+				errorMessage = "ERROR: " + e.getMessage();
 			}
+			
+			super.logError(request.getDocumentId(), requestDate.getTime(), LogService.ErrorLogLevel_Error, errorMessage);
 			
 			LOG.debug("Adding exception messages to response object.");
 			response.setMessages(arrayOfMessage);
