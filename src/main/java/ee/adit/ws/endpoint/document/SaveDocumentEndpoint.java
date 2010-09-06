@@ -200,7 +200,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 							}
 							
 							if(document.getId() != null && document.getId() != 0) {
-								updatedExistingDocument = false;
+								updatedExistingDocument = true;
 								
 								// Determine whether or not this document can be modified
 								Document doc = this.documentService.getDocumentDAO().getDocument(document.getId());
