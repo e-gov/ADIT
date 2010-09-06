@@ -150,6 +150,10 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 									response.setUserList(getUserInfoResponseUserList);
 									response.setSuccess(new Success(true));
 									messages.setMessage(this.getMessageService().getMessages("request.getUserInfo.success", new Object[] {}));
+									
+									String additionalMessage = this.getMessageService().getMessage("request.getUserInfo.success", new Object[] {}, Locale.ENGLISH);
+									
+									additionalInformationForLog = LogService.RequestLog_Success + ": " + additionalMessage;
 
 								} else {
 									throw new AditInternalException("Unmarshalling returned wrong type. Expected " + GetUserInfoRequestAttachmentUserList.class + ", got "

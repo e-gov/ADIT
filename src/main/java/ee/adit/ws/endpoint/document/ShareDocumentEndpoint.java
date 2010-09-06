@@ -171,7 +171,7 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 			if (doc == null) {
 				LOG.debug("Requested document does not exist. Document ID: " + request.getDocumentId());
 				AditCodedException aditCodedException = new AditCodedException("document.nonExistent");
-				aditCodedException.setParameters(new Object[] { request.getDocumentId() });
+				aditCodedException.setParameters(new Object[] { request.getDocumentId().toString() });
 				throw aditCodedException;
 			}
 			
@@ -179,7 +179,7 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 			if ((doc.getDeleted() != null) && doc.getDeleted()) {
 				LOG.debug("Requested document is deleted. Document ID: " + request.getDocumentId());
 				AditCodedException aditCodedException = new AditCodedException("document.deleted");
-				aditCodedException.setParameters(new Object[] { request.getDocumentId() });
+				aditCodedException.setParameters(new Object[] { request.getDocumentId().toString() });
 				throw aditCodedException;
 			}
 			
@@ -195,7 +195,7 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 			if (!doc.getCreatorCode().equalsIgnoreCase(userCode)) {
 				LOG.debug("Requested document does not belong to user. Document ID: " + request.getDocumentId() + ", User ID: " + userCode);
 				AditCodedException aditCodedException = new AditCodedException("document.doesNotBelongToUser");
-				aditCodedException.setParameters(new Object[] { request.getDocumentId(), userCode });
+				aditCodedException.setParameters(new Object[] { request.getDocumentId().toString(), userCode });
 				throw aditCodedException;
 			}
 			
@@ -297,7 +297,7 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 				response.setRecipientList(statusArray);
 				
 				AditCodedException aditCodedException = new AditCodedException("request.shareDocument.recipients.noneSucceeded");
-				aditCodedException.setParameters(new Object[] { request.getDocumentId(), userCode });
+				aditCodedException.setParameters(new Object[] { request.getDocumentId().toString(), userCode });
 				throw aditCodedException;
 			}
 
@@ -306,10 +306,10 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 			
 			if(completeSuccess) {
 				//messages.addMessage(new Message("en", this.getMessageSource().getMessage("request.shareDocument.success",	new Object[] { request.getDocumentId() }, Locale.ENGLISH)));
-				messages.setMessage(this.getMessageService().getMessages("request.shareDocument.success", new Object[] { request.getDocumentId() }));
+				messages.setMessage(this.getMessageService().getMessages("request.shareDocument.success", new Object[] { request.getDocumentId().toString() }));
 			} else {
 				//messages.addMessage(new Message("en", this.getMessageSource().getMessage("request.shareDocument.fail",	new Object[] { request.getDocumentId() }, Locale.ENGLISH)));
-				messages.setMessage(this.getMessageService().getMessages("request.shareDocument.fail", new Object[] { request.getDocumentId() }));
+				messages.setMessage(this.getMessageService().getMessages("request.shareDocument.fail", new Object[] { request.getDocumentId().toString() }));
 			}
 			
 			response.setMessages(messages);
