@@ -311,7 +311,9 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 				//messages.addMessage(new Message("en", this.getMessageSource().getMessage("request.unShareDocument.success",	new Object[] { request.getDocumentId() }, Locale.ENGLISH)));
 				messages.setMessage(this.getMessageService().getMessages("request.unShareDocument.success", new Object[] { request.getDocumentId() }));
 			} else {
-				//messages.addMessage(new Message("en", this.getMessageSource().getMessage("request.unShareDocument.fail",	new Object[] { request.getDocumentId() }, Locale.ENGLISH)));
+				String errorMessage = this.getMessageService().getMessage("request.unShareDocument.fail", new Object[] { request.getDocumentId() }, Locale.ENGLISH);
+				// Add error log
+				super.logError(request.getDocumentId(), requestDate.getTime(), LogService.ErrorLogLevel_Warn, errorMessage);
 				messages.setMessage(this.getMessageService().getMessages("request.unShareDocument.fail", new Object[] { request.getDocumentId() }));
 			}
 			response.setSuccess(summarySuccess);
