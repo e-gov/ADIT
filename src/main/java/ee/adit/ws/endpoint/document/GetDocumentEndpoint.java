@@ -262,7 +262,7 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
 						} else {
 							LOG.debug("Requested document does not belong to user. Document ID: " + request.getDocumentId() + ", User ID: " + userCode);							
 							AditCodedException aditCodedException = new AditCodedException("document.doesNotBelongToUser");
-							aditCodedException.setParameters(new Object[] { new Long(request.getDocumentId()).toString(), userCode });
+							aditCodedException.setParameters(new Object[] { request.getDocumentId().toString(), userCode });
 							throw aditCodedException;
 						}
 					} else {
@@ -274,13 +274,13 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
 				} else {
 					LOG.debug("Requested document is deleted. Document ID: " + request.getDocumentId());
 					AditCodedException aditCodedException = new AditCodedException("document.deleted");
-					aditCodedException.setParameters(new Object[] { new Long(request.getDocumentId()).toString() });
+					aditCodedException.setParameters(new Object[] { request.getDocumentId().toString() });
 					throw aditCodedException;
 				}
 			} else {
 				LOG.debug("Requested document does not exist. Document ID: " + request.getDocumentId());
 				AditCodedException aditCodedException = new AditCodedException("document.nonExistent");
-				aditCodedException.setParameters(new Object[] { request.getDocumentId() });
+				aditCodedException.setParameters(new Object[] { request.getDocumentId().toString() });
 				throw aditCodedException;
 			}
 
