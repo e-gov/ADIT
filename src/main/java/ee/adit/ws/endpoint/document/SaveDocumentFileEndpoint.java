@@ -342,6 +342,8 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 					String contentId = attachment.getContentId();
 					if ((contentId == null) || (contentId.length() < 1)) {
 						contentId = Util.generateRandomID();
+					} else {
+						contentId = Util.stripContentID(contentId);
 					}
 					this.getResponseMessage().addAttachment(contentId, attachment.getDataHandler());
 					if (!cidAdded) {
