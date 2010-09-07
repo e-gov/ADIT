@@ -321,16 +321,16 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 				arrayOfMessage.setMessage(this.getMessageService().getMessages((AditCodedException) e));
 				errorMessage = this.getMessageService().getMessage(e.getMessage(), ((AditCodedException) e).getParameters(), Locale.ENGLISH);
 				errorMessage = "ERROR: " + errorMessage;
-			} else if (e instanceof AditException) {
-				LOG.debug("Adding exception message to response object.");
-				arrayOfMessage.getMessage().add(new Message("en", e.getMessage()));
-				errorMessage = "ERROR: " + e.getMessage();
 			} else if(e instanceof AditMultipleException) {
 				AditMultipleException aditMultipleException = (AditMultipleException) e;
 				arrayOfMessage.setMessage(aditMultipleException.getMessages());
 				if(aditMultipleException.getMessages() != null && aditMultipleException.getMessages().size() > 0) {
 					errorMessage = "ERROR: " + aditMultipleException.getMessages().get(0);
 				}				
+			} else if (e instanceof AditException) {
+				LOG.debug("Adding exception message to response object.");
+				arrayOfMessage.getMessage().add(new Message("en", e.getMessage()));
+				errorMessage = "ERROR: " + e.getMessage();
 			}else {
 				arrayOfMessage.getMessage().add(new Message("en", "Service error"));
 				errorMessage = "ERROR: " + e.getMessage();
