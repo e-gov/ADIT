@@ -251,24 +251,6 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 				throw new AditInternalException("Unmarshalling failed for XML in file: " + xmlFile);
 			}
 			
-			/*while(i.hasNext()) {
-				if(attachmentCount == 0) {
-					
-				} else {
-					AditCodedException aditCodedException = new AditCodedException("request.attachments.tooMany");
-					aditCodedException.setParameters(new Object[] { applicationName });
-					throw aditCodedException;					
-				}
-				attachmentCount++;
-			}
-			
-			// If no attachments were found then throw exception
-			if (attachmentCount < 1) {
-				AditCodedException aditCodedException = new AditCodedException("request.saveDocument.document.noDocumentsSupplied");
-				aditCodedException.setParameters(new Object[] {});
-				throw aditCodedException;
-			}*/
-			
 			// If saving was successful then add history event
 			DocumentHistory historyEvent = new DocumentHistory(
 				(updatedExistingDocument ? DocumentService.HistoryType_Modify : DocumentService.HistoryType_Create),
