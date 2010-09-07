@@ -698,8 +698,7 @@ public class DocumentDAO extends HibernateDaoSupport {
 				
 				if (documentFile == null) {
 					result.setSuccess(false);
-					Message msg = new Message("en", this.getMessageSource().getMessage("request.saveDocument.document.noFileToUpdate", new Object[] { attachmentFile.getId(), document.getId() }, Locale.ENGLISH));
-					result.getMessages().add(msg);
+					result.getMessages().addAll(this.getMessageService().getMessages("request.saveDocument.document.noFileToUpdate", new Object[] { attachmentFile.getId(), document.getId() }));
 					return result;
 				}
 				
