@@ -400,7 +400,7 @@ public class DocumentService {
 					AditCodedException aditCodedException = new AditCodedException(
 							"request.saveDocument.document.previousDocument.nonExistent");
 					aditCodedException.setParameters(new Object[] { document
-							.getPreviousDocumentID() });
+							.getPreviousDocumentID().toString() });
 					throw aditCodedException;
 				}
 			}
@@ -2070,7 +2070,7 @@ public class DocumentService {
 		// Check whether or not the document exists
 		if (doc == null) {
 			AditCodedException aditCodedException = new AditCodedException("document.nonExistent");
-			aditCodedException.setParameters(new Object[] { documentId });
+			aditCodedException.setParameters(new Object[] { new Long(documentId).toString() });
 			throw aditCodedException;
 		}
 
@@ -2078,7 +2078,7 @@ public class DocumentService {
 		// NB! doc.getDeleted() can be NULL
 		if ((doc.getDeleted() != null) && doc.getDeleted()) {
 			AditCodedException aditCodedException = new AditCodedException("request.deleteDocument.document.deleted");
-			aditCodedException.setParameters(new Object[] { documentId });
+			aditCodedException.setParameters(new Object[] { new Long(documentId).toString() });
 			throw aditCodedException;
 		}
 
@@ -2100,15 +2100,15 @@ public class DocumentService {
 						// Make sure no known error code was returned
 						if (resultCode.equalsIgnoreCase("already_deleted")) {
 							AditCodedException aditCodedException = new AditCodedException("file.isDeleted");
-							aditCodedException.setParameters(new Object[] { docFile.getId() });
+							aditCodedException.setParameters(new Object[] { new Long(docFile.getId()).toString() });
 							throw aditCodedException;
 						} else if (resultCode.equalsIgnoreCase("file_does_not_exist")) {
 							AditCodedException aditCodedException = new AditCodedException("file.nonExistent");
-							aditCodedException.setParameters(new Object[] { docFile.getId() });
+							aditCodedException.setParameters(new Object[] { new Long(docFile.getId()).toString() });
 							throw aditCodedException;
 						} else if (resultCode.equalsIgnoreCase("file_does_not_belong_to_document")) {
 							AditCodedException aditCodedException = new AditCodedException("file.doesNotBelongToDocument");
-							aditCodedException.setParameters(new Object[] { docFile.getId(), doc.getId() });
+							aditCodedException.setParameters(new Object[] { new Long(docFile.getId()).toString(), new Long(doc.getId()).toString() });
 							throw aditCodedException;
 						}
 					}
@@ -2119,7 +2119,7 @@ public class DocumentService {
 				saveDocument = true;
 			} else {
 				AditCodedException aditCodedException = new AditCodedException("request.deleteDocument.document.locked");
-				aditCodedException.setParameters(new Object[] { documentId });
+				aditCodedException.setParameters(new Object[] { new Long(documentId).toString() });
 				throw aditCodedException;
 			}
 		} else if (doc.getDocumentSharings() != null) {
@@ -2138,12 +2138,12 @@ public class DocumentService {
 				saveDocument = true;
 			} else {
 				AditCodedException aditCodedException = new AditCodedException("document.doesNotBelongToUser");
-				aditCodedException.setParameters(new Object[] { documentId,	userCode });
+				aditCodedException.setParameters(new Object[] { new Long(documentId).toString(), userCode });
 				throw aditCodedException;
 			}
 		} else {
 			AditCodedException aditCodedException = new AditCodedException("document.doesNotBelongToUser");
-			aditCodedException.setParameters(new Object[] { documentId, userCode });
+			aditCodedException.setParameters(new Object[] { new Long(documentId).toString(), userCode });
 			throw aditCodedException;
 		}
 
@@ -2177,7 +2177,7 @@ public class DocumentService {
 		// Check whether or not the document exists
 		if (doc == null) {
 			AditCodedException aditCodedException = new AditCodedException("document.nonExistent");
-			aditCodedException.setParameters(new Object[] { documentId });
+			aditCodedException.setParameters(new Object[] { new Long(documentId).toString() });
 			throw aditCodedException;
 		}
 
@@ -2185,7 +2185,7 @@ public class DocumentService {
 		// NB! doc.getDeleted() can be NULL
 		if ((doc.getDeleted() != null) && doc.getDeleted()) {
 			AditCodedException aditCodedException = new AditCodedException("document.deleted");
-			aditCodedException.setParameters(new Object[] { documentId });
+			aditCodedException.setParameters(new Object[] { new Long(documentId).toString() });
 			throw aditCodedException;
 		}
 
@@ -2200,7 +2200,7 @@ public class DocumentService {
 		// Check whether or not the document belongs to user
 		if (!doc.getCreatorCode().equalsIgnoreCase(userCode)) {
 			AditCodedException aditCodedException = new AditCodedException("document.doesNotBelongToUser");
-			aditCodedException.setParameters(new Object[] { documentId, userCode });
+			aditCodedException.setParameters(new Object[] { new Long(documentId).toString(), userCode });
 			throw aditCodedException;
 
 		}
@@ -2217,11 +2217,11 @@ public class DocumentService {
 
 				if (resultCode.equalsIgnoreCase("file_does_not_exist")) {
 					AditCodedException aditCodedException = new AditCodedException("file.nonExistent");
-					aditCodedException.setParameters(new Object[] { docFile.getId() });
+					aditCodedException.setParameters(new Object[] { new Long(docFile.getId()).toString() });
 					throw aditCodedException;
 				} else if (resultCode.equalsIgnoreCase("file_does_not_belong_to_document")) {
 					AditCodedException aditCodedException = new AditCodedException("file.doesNotBelongToDocument");
-					aditCodedException.setParameters(new Object[] {	docFile.getId(), doc.getId() });
+					aditCodedException.setParameters(new Object[] {	new Long(docFile.getId()).toString(), new Long(doc.getId()).toString() });
 					throw aditCodedException;
 				}
 			}
