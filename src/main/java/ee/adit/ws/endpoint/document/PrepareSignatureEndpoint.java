@@ -223,26 +223,23 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
 			if (isOwner) {
 				// Get user certificate from attachment
 				String certFile = null;
-				Iterator<Attachment> i = this.getRequestMessage().getAttachments();
-				int attachmentCount = 0;
-				while(i.hasNext()) {
-					if(attachmentCount == 0) {
-						Attachment attachment = i.next();
-						LOG.debug("Attachment: " + attachment.getContentId());
-						
-						// Extract the SOAP message to a temporary file
-						String base64EncodedFile = extractXML(attachment);
-						
-						// Base64 decode and unzip the temporary file
-						certFile = Util.base64DecodeAndUnzip(base64EncodedFile, this.getConfiguration().getTempDir(), this.getConfiguration().getDeleteTemporaryFilesAsBoolean());
-						LOG.debug("Attachment unzipped to temporary file: " + certFile);
-					} else {
-						AditCodedException aditCodedException = new AditCodedException("request.attachments.tooMany");
-						aditCodedException.setParameters(new Object[] { applicationName });
-						throw aditCodedException;
-					}
-					attachmentCount++;
+				
+				String attachmentID = null;
+				// Check if the attachment ID is specified
+				if(request.getSignerCertificate() != null && request.getSignerCertificate().getHref() != null && !request.getSignerCertificate().getHref().trim().equals("")) {
+					attachmentID = Util.extractContentID(request.getSignerCertificate().getHref());
+				} else {
+					throw new AditCodedException("request.saveDocument.attachment.id.notSpecified");
 				}
+				
+				// All primary checks passed.
+				LOG.debug("Processing attachment with id: '" + attachmentID + "'");
+				// Extract the SOAP message to a temporary file
+				String base64EncodedFile = extractAttachmentXML(this.getRequestMessage(), attachmentID);
+				
+				// Base64 decode and unzip the temporary file
+				certFile = Util.base64DecodeAndUnzip(base64EncodedFile, this.getConfiguration().getTempDir(), this.getConfiguration().getDeleteTemporaryFilesAsBoolean());
+				LOG.debug("Attachment unzipped to temporary file: " + certFile);
 				
 				if (certFile == null) {
 					AditCodedException aditCodedException = new AditCodedException("request.prepareSignature.missingCertificate");
