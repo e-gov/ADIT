@@ -308,7 +308,6 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
 				LOG.debug("Adding exception messages to response object.");
 				arrayOfMessage.setMessage(this.getMessageService().getMessages((AditCodedException) e));
 				errorMessage = this.getMessageService().getMessage(e.getMessage(), ((AditCodedException) e).getParameters(), Locale.ENGLISH);
-				LOG.debug("Error message: " + errorMessage);
 				errorMessage = "ERROR: " + errorMessage;
 			} else {
 				arrayOfMessage.getMessage().add(new Message("en", "Service error"));
