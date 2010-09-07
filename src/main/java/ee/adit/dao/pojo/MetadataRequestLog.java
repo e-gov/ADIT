@@ -9,6 +9,8 @@ import java.util.Date;
  */
 public class MetadataRequestLog implements java.io.Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
 	private long id;
 	private long documentId;
 	private Date requestDate;
