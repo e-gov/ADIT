@@ -166,7 +166,11 @@
 	<!-- getUserInfo päringu tüübid -->
 	<complexType name="getUserInfoRequest">
 		<sequence>
-			<element name="userList" type="base64Binary"></element>
+			<element name="userList">
+				<complexType>
+					<attribute name="href" type="string"/>
+				</complexType>
+			</element>
 		</sequence>
 	</complexType>
 	<complexType name="getUserInfoResponse">

@@ -99,8 +99,15 @@
  	<!-- GetUserInfo -->
  	<class name="ee.adit.pojo.GetUserInfoRequest">
 		<map-to xml="getUserInfo" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
-		<field name="userList" type="bytes">
+		<field name="userList" type="ee.adit.pojo.GetUserInfoRequestUserList">
 			<bind-xml name="userList" location="keha" />
+		</field>
+	</class>
+ 	
+ 	<class name="ee.adit.pojo.GetUserInfoRequestUserList">
+		<map-to xml="userList" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<field name="href" type="java.lang.String">
+			<bind-xml name="href" node="attribute" />
 		</field>
 	</class>
  	

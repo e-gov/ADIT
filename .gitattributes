@@ -253,6 +253,7 @@ src/main/java/ee/adit/pojo/GetNotificationsRequest.java -text
 src/main/java/ee/adit/pojo/GetNotificationsResponse.java -text
 src/main/java/ee/adit/pojo/GetUserInfoRequest.java -text
 src/main/java/ee/adit/pojo/GetUserInfoRequestAttachmentUserList.java -text
+src/main/java/ee/adit/pojo/GetUserInfoRequestUserList.java -text
 src/main/java/ee/adit/pojo/GetUserInfoResponse.java -text
 src/main/java/ee/adit/pojo/GetUserInfoResponseAttachment.java -text
 src/main/java/ee/adit/pojo/GetUserInfoResponseAttachmentUser.java -text

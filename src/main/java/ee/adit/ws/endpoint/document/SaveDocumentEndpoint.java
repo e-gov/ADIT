@@ -153,7 +153,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 			// All primary checks passed.
 			LOG.debug("Processing attachment with id: '" + attachmentID + "'");
 			// Extract the SOAP message to a temporary file
-			String base64EncodedFile = extractAttachmentXML(this.getRequestMessage(), attachmentID);		
+			String base64EncodedFile = extractAttachmentXML(this.getRequestMessage(), attachmentID);
 			
 			// Base64 decode and unzip the temporary file
 			String xmlFile = Util.base64DecodeAndUnzip(base64EncodedFile, this.getConfiguration().getTempDir(), this.getConfiguration().getDeleteTemporaryFilesAsBoolean());

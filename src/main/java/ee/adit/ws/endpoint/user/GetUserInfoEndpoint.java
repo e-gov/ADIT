@@ -95,80 +95,73 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 
 				if (accessLevel >= 1) {
 
-					Iterator<Attachment> i = this.getRequestMessage().getAttachments();
+					
+					String attachmentID = null;
+					// Check if the attachment ID is specified
+					if(request.getUserList() != null && request.getUserList().getHref() != null && !request.getUserList().getHref().trim().equals("")) {
+						attachmentID = Util.extractContentID(request.getUserList().getHref());
+					} else {
+						throw new AditCodedException("request.saveDocument.attachment.id.notSpecified");
+					}
+					
+					// All primary checks passed.
+					LOG.debug("Processing attachment with id: '" + attachmentID + "'");
+					// Extract the SOAP message to a temporary file
+					String base64EncodedFile = extractAttachmentXML(this.getRequestMessage(), attachmentID);
 
-					// If there are no attachments
-					if (!i.hasNext()) {
-						throw new AditCodedException("request.attachments.missing");
+					// Base64 decode and unzip the temporary file
+					String xmlFile = Util.base64DecodeAndUnzip(base64EncodedFile, this.getConfiguration().getTempDir(), this.getConfiguration().getDeleteTemporaryFilesAsBoolean());
+					LOG.debug("Attachment unzipped to temporary file: " + xmlFile);
+
+					// Unmarshal the XML from the temporary file
+					Object unmarshalledObject = null;
+					try {
+						unmarshalledObject = unMarshal(xmlFile);
+					} catch (Exception e) {
+						LOG.error("Error while unmarshalling SOAP attachment: ", e);
+						throw new AditCodedException("request.attachments.invalidFormat");
 					}
 
-					int attachmentCount = 0;
-					while (i.hasNext()) {
-						if (attachmentCount == 0) {
-							Attachment attachment = i.next();
-							LOG.debug("Attachment: " + attachment.getContentId());
+					// Check if the marshalling result is what we
+					// expected
+					if (unmarshalledObject != null) {
+						LOG.debug("XML unmarshalled to type: " + unmarshalledObject.getClass());
+						if (unmarshalledObject instanceof GetUserInfoRequestAttachmentUserList) {
 
-							// Extract the SOAP message to a temporary file
-							String base64EncodedFile = extractXML(attachment);
+							GetUserInfoRequestAttachmentUserList userList = (GetUserInfoRequestAttachmentUserList) unmarshalledObject;
 
-							// Base64 decode and unzip the temporary file
-							String xmlFile = Util.base64DecodeAndUnzip(base64EncodedFile, this.getConfiguration().getTempDir(), this.getConfiguration().getDeleteTemporaryFilesAsBoolean());
-							LOG.debug("Attachment unzipped to temporary file: " + xmlFile);
+							List<GetUserInfoResponseAttachmentUser> userInfoList = this.getUserService().getUserInfo(userList);
+							GetUserInfoResponseAttachment responseAttachment = new GetUserInfoResponseAttachment();
+							responseAttachment.setUserList(userInfoList);
 
-							// Unmarshal the XML from the temporary file
-							Object unmarshalledObject = null;
-							try {
-								unmarshalledObject = unMarshal(xmlFile);
-							} catch (Exception e) {
-								LOG.error("Error while unmarshalling SOAP attachment: ", e);
-								throw new AditCodedException("request.attachments.invalidFormat");
-							}
+							String responseAttachmentXMLFile = this.marshal(responseAttachment);
 
-							// Check if the marshalling result is what we
-							// expected
-							if (unmarshalledObject != null) {
-								LOG.debug("XML unmarshalled to type: " + unmarshalledObject.getClass());
-								if (unmarshalledObject instanceof GetUserInfoRequestAttachmentUserList) {
+							// Compress response attachment
+							// Base64 encoding will be done at SOAP
+							// envelope level
+							String attachmentFile = Util.gzipFile(responseAttachmentXMLFile, this.getConfiguration().getTempDir());
 
-									GetUserInfoRequestAttachmentUserList userList = (GetUserInfoRequestAttachmentUserList) unmarshalledObject;
-
-									List<GetUserInfoResponseAttachmentUser> userInfoList = this.getUserService().getUserInfo(userList);
-									GetUserInfoResponseAttachment responseAttachment = new GetUserInfoResponseAttachment();
-									responseAttachment.setUserList(userInfoList);
-
-									String responseAttachmentXMLFile = this.marshal(responseAttachment);
-
-									// Compress response attachment
-									// Base64 encoding will be done at SOAP
-									// envelope level
-									String attachmentFile = Util.gzipFile(responseAttachmentXMLFile, this.getConfiguration().getTempDir());
-
-									// Add as an attachment
-									String contentID = addAttachment(attachmentFile);
-									UserList getUserInfoResponseUserList = new UserList();
-									getUserInfoResponseUserList.setHref("cid:" + contentID);
-									response.setUserList(getUserInfoResponseUserList);
-									response.setSuccess(new Success(true));
-									messages.setMessage(this.getMessageService().getMessages("request.getUserInfo.success", new Object[] {}));
-									
-									String additionalMessage = this.getMessageService().getMessage("request.getUserInfo.success", new Object[] { }, Locale.ENGLISH);
-									additionalInformationForLog = LogService.RequestLog_Success + ": " + additionalMessage;
-
-								} else {
-									throw new AditInternalException("Unmarshalling returned wrong type. Expected " + GetUserInfoRequestAttachmentUserList.class + ", got "
-											+ unmarshalledObject.getClass());
-								}
-
-							} else {
-								throw new AditInternalException("Unmarshalling failed for XML in file: " + xmlFile);
-							}
+							// Add as an attachment
+							String contentID = addAttachment(attachmentFile);
+							UserList getUserInfoResponseUserList = new UserList();							
+							getUserInfoResponseUserList.setHref("cid:" + contentID);
+							response.setUserList(getUserInfoResponseUserList);
+							response.setSuccess(new Success(true));
+							messages.setMessage(this.getMessageService().getMessages("request.getUserInfo.success", new Object[] {}));
+							
+							String additionalMessage = this.getMessageService().getMessage("request.getUserInfo.success", new Object[] { }, Locale.ENGLISH);
+							additionalInformationForLog = LogService.RequestLog_Success + ": " + additionalMessage;
 
 						} else {
-							AditCodedException aditCodedException = new AditCodedException("request.attachments.tooMany");
-							aditCodedException.setParameters(new Object[] { applicationName });
-							throw aditCodedException;
+							throw new AditInternalException("Unmarshalling returned wrong type. Expected " + GetUserInfoRequestAttachmentUserList.class + ", got "
+									+ unmarshalledObject.getClass());
 						}
+
+					} else {
+						throw new AditInternalException("Unmarshalling failed for XML in file: " + xmlFile);
 					}
+
+					
 				} else {					
 					AditCodedException aditCodedException = new AditCodedException("application.insufficientPrivileges.read");
 					aditCodedException.setParameters(new Object[] { applicationName });
