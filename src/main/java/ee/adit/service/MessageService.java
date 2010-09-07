@@ -80,7 +80,7 @@ public class MessageService {
 	 * @return	Message as text
 	 */
 	public String getMessage(String code, Object[] parameters, Locale locale) {
-		return this.getMessageSource().getMessage(code, new Object[] { parameters }, locale);
+		return this.getMessageSource().getMessage(code, parameters, locale);
 	}
 	
 	/**
