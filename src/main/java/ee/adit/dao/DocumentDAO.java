@@ -698,7 +698,7 @@ public class DocumentDAO extends HibernateDaoSupport {
 				
 				if (documentFile == null) {
 					result.setSuccess(false);
-					result.getMessages().addAll(this.getMessageService().getMessages("request.saveDocument.document.noFileToUpdate", new Object[] { attachmentFile.getId(), document.getId() }));
+					result.getMessages().addAll(this.getMessageService().getMessages("request.saveDocument.document.noFileToUpdate", new Object[] { attachmentFile.getId().toString(), new Long(document.getId()).toString() }));
 					return result;
 				}
 				
@@ -717,7 +717,7 @@ public class DocumentDAO extends HibernateDaoSupport {
 				result.setSuccess(false);
 				//Message msg = new Message("en", this.getMessageSource().getMessage("request.saveDocument.document.files.quotaExceeded", new Object[] { remainingDiskQuota, requiredDiskSpace }, Locale.ENGLISH));
 				//result.getMessages().add(msg);
-				result.getMessages().addAll((this.getMessageService().getMessages("request.saveDocument.document.files.quotaExceeded", new Object[] { remainingDiskQuota, requiredDiskSpace })));
+				result.getMessages().addAll((this.getMessageService().getMessages("request.saveDocument.document.files.quotaExceeded", new Object[] { new Long(remainingDiskQuota).toString(), new Long(requiredDiskSpace).toString() })));
 				return result;
 			}
 			
