@@ -203,6 +203,7 @@ src/main/java/ee/adit/dvk/UserSyncJob.java -text
 src/main/java/ee/adit/exception/AditCodedException.java -text
 src/main/java/ee/adit/exception/AditException.java -text
 src/main/java/ee/adit/exception/AditInternalException.java -text
+src/main/java/ee/adit/exception/AditMultipleException.java -text
 src/main/java/ee/adit/pojo/Activity.java -text
 src/main/java/ee/adit/pojo/ActivityActor.java -text
 src/main/java/ee/adit/pojo/ActivitySubject.java -text

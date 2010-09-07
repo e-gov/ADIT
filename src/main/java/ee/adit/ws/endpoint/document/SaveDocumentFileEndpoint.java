@@ -16,6 +16,7 @@ import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditException;
 import ee.adit.exception.AditInternalException;
+import ee.adit.exception.AditMultipleException;
 import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.Message;
 import ee.adit.pojo.SaveDocumentFileRequest;
@@ -276,7 +277,9 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 						response.setFileId(fileId);
 					} else {
 						if ((saveResult.getMessages() != null) && (saveResult.getMessages().size() > 0)) {
-							throw new AditException(saveResult.getMessages().get(0).getValue());
+							AditMultipleException aditMultipleException = new AditMultipleException("MultiException");
+							aditMultipleException.setMessages(saveResult.getMessages());
+							throw aditMultipleException;
 						} else {
 							throw new AditInternalException("File saving failed!");
 						}
@@ -322,7 +325,13 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 				LOG.debug("Adding exception message to response object.");
 				arrayOfMessage.getMessage().add(new Message("en", e.getMessage()));
 				errorMessage = "ERROR: " + e.getMessage();
-			} else {
+			} else if(e instanceof AditMultipleException) {
+				AditMultipleException aditMultipleException = (AditMultipleException) e;
+				arrayOfMessage.setMessage(aditMultipleException.getMessages());
+				if(aditMultipleException.getMessages() != null && aditMultipleException.getMessages().size() > 0) {
+					errorMessage = "ERROR: " + aditMultipleException.getMessages().get(0);
+				}				
+			}else {
 				arrayOfMessage.getMessage().add(new Message("en", "Service error"));
 				errorMessage = "ERROR: " + e.getMessage();
 			}
