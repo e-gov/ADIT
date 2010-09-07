@@ -259,7 +259,12 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 				user,
 				xroadRequestUser,
 				header);
-			historyEvent.setDescription(DocumentService.DocumentHistoryDescription_Modify);
+			if(updatedExistingDocument) {
+				historyEvent.setDescription(DocumentService.DocumentHistoryDescription_Modify);
+			} else {
+				historyEvent.setDescription(DocumentService.DocumentHistoryDescription_Create);
+			}
+			
 			this.getDocumentService().getDocumentHistoryDAO().save(historyEvent);
 			
 			// Set response messages
