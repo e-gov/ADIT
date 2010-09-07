@@ -222,6 +222,29 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 		return this.getUnmarshaller().unmarshal(streamSource);
 	}
 	
+	public String extractAttachmentXML(SoapMessage message, String attachmentID) throws IOException, AditInternalException, AditCodedException {
+		LOG.info("Extracting attachment with ID: " + attachmentID);
+		
+		if(message == null) {
+			LOG.error("SoapMessage is null.");
+			throw new AditInternalException("SoapMessage is null. Could not extract attachment from it.");
+		}
+		
+		if(attachmentID == null || attachmentID.trim().equals("")) {
+			LOG.error("Attachment ID not specified or empty.");
+			throw new AditCodedException("request.attachments.invalidID");
+		}
+		
+		Attachment attachment = this.getRequestMessage().getAttachment(attachmentID);
+		
+		if(attachment == null) {
+			throw new AditCodedException("request.attachments.invalidID");
+		}
+		
+		return extractXML(attachment);
+		
+	}
+	
 	/**
 	 * Extracts SOAP attachment to a temporary file.
 	 * 

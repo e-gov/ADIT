@@ -1115,4 +1115,21 @@ public class Util {
 
 		return result;
 	}
+    
+    public static String extractContentID(String conentIDString) {
+    	String result = conentIDString;
+    	
+    	try {
+    		if(conentIDString.indexOf("cid:") != -1) {
+    			result = "<" + conentIDString.replaceAll("cid:", "") + ">";
+    		} else {
+    			LOG.warn("Error extracting attachment content ID from string - prefic 'cid' not found: " + conentIDString);
+    		}
+    	} catch (Exception e) {
+    		LOG.warn("Error extracting attachment content ID from string: " + conentIDString);
+    	}
+    	
+    	return result;
+    }
+    
 }

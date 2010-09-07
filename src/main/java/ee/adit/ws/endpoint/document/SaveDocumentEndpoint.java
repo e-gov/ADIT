@@ -16,7 +16,9 @@ import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditException;
 import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.ArrayOfMessage;
+import ee.adit.pojo.GetDocumentFileRequest;
 import ee.adit.pojo.Message;
+import ee.adit.pojo.SaveDocumentRequest;
 import ee.adit.pojo.SaveDocumentRequestAttachment;
 import ee.adit.pojo.SaveDocumentRequestDocument;
 import ee.adit.pojo.SaveDocumentResponse;
@@ -72,11 +74,13 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 		Calendar requestDate = Calendar.getInstance();
 		String additionalInformationForLog = null;
 		Long documentId = null;
+		boolean updatedExistingDocument = false;
 		
 		try {
 			LOG.debug("SaveDocumentEndpoint.v1 invoked.");
 			CustomXTeeHeader header = this.getHeader();
 			String applicationName = header.getInfosysteem();
+			SaveDocumentRequest request = (SaveDocumentRequest) requestObject;
 			
 			// Log request
 			Util.printHeader(header);
@@ -138,113 +142,118 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 				throw aditCodedException;
 			}
 
+			String attachmentID = null;
+			// Check if the attachment ID is specified
+			if(request.getDocument() != null && request.getDocument().getHref() != null && !request.getDocument().getHref().trim().equals("")) {
+				attachmentID = Util.extractContentID(request.getDocument().getHref());
+			} else {
+				throw new AditCodedException("request.saveDocument.attachment.id.notSpecified");
+			}
+			
 			// All primary checks passed.
-			Iterator<Attachment> i = this.getRequestMessage().getAttachments();
-			int attachmentCount = 0;
-			boolean updatedExistingDocument = false;
-			while(i.hasNext()) {
-				if(attachmentCount == 0) {
-					Attachment attachment = i.next();
-					LOG.debug("Attachment: " + attachment.getContentId());
+			LOG.debug("Processing attachment with id: '" + attachmentID + "'");
+			// Extract the SOAP message to a temporary file
+			String base64EncodedFile = extractAttachmentXML(this.getRequestMessage(), attachmentID);		
+			
+			// Base64 decode and unzip the temporary file
+			String xmlFile = Util.base64DecodeAndUnzip(base64EncodedFile, this.getConfiguration().getTempDir(), this.getConfiguration().getDeleteTemporaryFilesAsBoolean());
+			LOG.debug("Attachment unzipped to temporary file: " + xmlFile);
+			
+			// Extract large files from main document
+			FileSplitResult splitResult = Util.splitOutTags(xmlFile, "data", false, false, true, true);
+			
+			// Decode base64-encoded files
+			if ((splitResult.getSubFiles() != null) && (splitResult.getSubFiles().size() > 0)) {
+				for (String fileName : splitResult.getSubFiles()) {
+					String resultFile = Util.base64DecodeFile(fileName, this.getConfiguration().getTempDir());
+					// Replace encoded file with decoded file
+					(new File(fileName)).delete();
+					(new File(resultFile)).renameTo(new File(fileName));
+				}
+			}
+			
+			// Unmarshal the XML from the temporary file
+			Object unmarshalledObject = null;
+			try {
+				unmarshalledObject = unMarshal(xmlFile);
+			} catch (Exception e) {
+				LOG.error("Error while unmarshalling SOAP attachment: ", e);
+				AditCodedException aditCodedException = new AditCodedException("request.attachments.invalidFormat");
+				throw aditCodedException;
+			}
+			
+			// Check if the marshalling result is what we expected
+			if(unmarshalledObject != null) {
+				LOG.debug("XML unmarshalled to type: " + unmarshalledObject.getClass());
+				if(unmarshalledObject instanceof SaveDocumentRequestAttachment) {
+					SaveDocumentRequestAttachment document = (SaveDocumentRequestAttachment) unmarshalledObject;
 					
-					// Extract the SOAP message to a temporary file
-					String base64EncodedFile = extractXML(attachment);
+					// Check document metadata
+					this.getDocumentService().checkAttachedDocumentMetadataForNewDocument(document);
 					
-					// Base64 decode and unzip the temporary file
-					String xmlFile = Util.base64DecodeAndUnzip(base64EncodedFile, this.getConfiguration().getTempDir(), this.getConfiguration().getDeleteTemporaryFilesAsBoolean());
-					LOG.debug("Attachment unzipped to temporary file: " + xmlFile);
+					// Kas kasutajal on piisavalt vaba kettaruumi
+					long remainingDiskQuota = this.getUserService().getRemainingDiskQuota(user, this.getConfiguration().getGlobalDiskQuota());
 					
-					// Extract large files from main document
-					FileSplitResult splitResult = Util.splitOutTags(xmlFile, "data", false, false, true, true);
-					
-					// Decode base64-encoded files
-					if ((splitResult.getSubFiles() != null) && (splitResult.getSubFiles().size() > 0)) {
-						for (String fileName : splitResult.getSubFiles()) {
-							String resultFile = Util.base64DecodeFile(fileName, this.getConfiguration().getTempDir());
-							// Replace encoded file with decoded file
-							(new File(fileName)).delete();
-							(new File(resultFile)).renameTo(new File(fileName));
-						}
+					String creatorUserCode = null;
+					String creatorUserName = null;
+					// Set the person who made the query (necessary for 
+					if(xroadRequestUser != null && xroadRequestUser.getUserCode() != null) {
+						creatorUserCode = xroadRequestUser.getUserCode();
+						creatorUserName = xroadRequestUser.getFullName();
+					} else {
+						creatorUserCode = header.getIsikukood();
 					}
 					
-					// Unmarshal the XML from the temporary file
-					Object unmarshalledObject = null;
-					try {
-						unmarshalledObject = unMarshal(xmlFile);
-					} catch (Exception e) {
-						LOG.error("Error while unmarshalling SOAP attachment: ", e);
-						AditCodedException aditCodedException = new AditCodedException("request.attachments.invalidFormat");
-						throw aditCodedException;
-					}
-					
-					// Check if the marshalling result is what we expected
-					if(unmarshalledObject != null) {
-						LOG.debug("XML unmarshalled to type: " + unmarshalledObject.getClass());
-						if(unmarshalledObject instanceof SaveDocumentRequestAttachment) {
-							SaveDocumentRequestAttachment document = (SaveDocumentRequestAttachment) unmarshalledObject;
-							
-							// Check document metadata
-							this.getDocumentService().checkAttachedDocumentMetadataForNewDocument(document);
-							
-							// Kas kasutajal on piisavalt vaba kettaruumi
-							long remainingDiskQuota = this.getUserService().getRemainingDiskQuota(user, this.getConfiguration().getGlobalDiskQuota());
-							
-							String creatorUserCode = null;
-							String creatorUserName = null;
-							// Set the person who made the query (necessary for 
-							if(xroadRequestUser != null && xroadRequestUser.getUserCode() != null) {
-								creatorUserCode = xroadRequestUser.getUserCode();
-								creatorUserName = xroadRequestUser.getFullName();
-							} else {
-								creatorUserCode = header.getIsikukood();
-							}
-							
-							if(document.getId() != null && document.getId() != 0) {
-								updatedExistingDocument = true;
-								
-								// Determine whether or not this document can be modified
-								Document doc = this.documentService.getDocumentDAO().getDocument(document.getId());
-								runExistingDocumentChecks(doc, user.getUserCode());
-								
-								LOG.debug("Modifying document. ID: " + document.getId());
-								
-								// Document to database
-								SaveItemInternalResult saveResult = this.getDocumentService().save(document, user.getUserCode(), applicationName, remainingDiskQuota, creatorUserCode, creatorUserName, user.getFullName());
-								if (saveResult.isSuccess()) {
-									documentId = saveResult.getItemId();
-									LOG.debug("Document saved with ID: " + documentId.toString());
-									response.setDocumentId(documentId);
-								} else {
-									if ((saveResult.getMessages() != null) && (saveResult.getMessages().size() > 0)) {
-										throw new AditException(saveResult.getMessages().get(0).getValue());
-									} else {
-										throw new AditException("Document saving failed!");
-									}
-								}
-							} else {
-								LOG.debug("Adding new document. GUID: " + document.getGuid());
-								
-								// Document to database
-								SaveItemInternalResult saveResult = this.getDocumentService().save(document, user.getUserCode(), applicationName, remainingDiskQuota, creatorUserCode, creatorUserName, user.getFullName());
-								if (saveResult.isSuccess()) {
-									documentId = saveResult.getItemId();
-									LOG.debug("Document saved with ID: " + documentId.toString());
-									response.setDocumentId(documentId);
-								} else {
-									if ((saveResult.getMessages() != null) && (saveResult.getMessages().size() > 0)) {
-										throw new AditException(saveResult.getMessages().get(0).getValue());
-									} else {
-										throw new AditException("Document saving failed!");
-									}
-								}
-							}
-							
+					if(document.getId() != null && document.getId() != 0) {
+						updatedExistingDocument = true;
+						
+						// Determine whether or not this document can be modified
+						Document doc = this.documentService.getDocumentDAO().getDocument(document.getId());
+						runExistingDocumentChecks(doc, user.getUserCode());
+						
+						LOG.debug("Modifying document. ID: " + document.getId());
+						
+						// Document to database
+						SaveItemInternalResult saveResult = this.getDocumentService().save(document, user.getUserCode(), applicationName, remainingDiskQuota, creatorUserCode, creatorUserName, user.getFullName());
+						if (saveResult.isSuccess()) {
+							documentId = saveResult.getItemId();
+							LOG.debug("Document saved with ID: " + documentId.toString());
+							response.setDocumentId(documentId);
 						} else {
-							throw new AditInternalException("Unmarshalling returned wrong type. Expected " + SaveDocumentRequestAttachment.class + ", got " + unmarshalledObject.getClass());
+							if ((saveResult.getMessages() != null) && (saveResult.getMessages().size() > 0)) {
+								throw new AditException(saveResult.getMessages().get(0).getValue());
+							} else {
+								throw new AditException("Document saving failed!");
+							}
 						}
 					} else {
-						throw new AditInternalException("Unmarshalling failed for XML in file: " + xmlFile);
+						LOG.debug("Adding new document. GUID: " + document.getGuid());
+						
+						// Document to database
+						SaveItemInternalResult saveResult = this.getDocumentService().save(document, user.getUserCode(), applicationName, remainingDiskQuota, creatorUserCode, creatorUserName, user.getFullName());
+						if (saveResult.isSuccess()) {
+							documentId = saveResult.getItemId();
+							LOG.debug("Document saved with ID: " + documentId.toString());
+							response.setDocumentId(documentId);
+						} else {
+							if ((saveResult.getMessages() != null) && (saveResult.getMessages().size() > 0)) {
+								throw new AditException(saveResult.getMessages().get(0).getValue());
+							} else {
+								throw new AditException("Document saving failed!");
+							}
+						}
 					}
+					
+				} else {
+					throw new AditInternalException("Unmarshalling returned wrong type. Expected " + SaveDocumentRequestAttachment.class + ", got " + unmarshalledObject.getClass());
+				}
+			} else {
+				throw new AditInternalException("Unmarshalling failed for XML in file: " + xmlFile);
+			}
+			
+			/*while(i.hasNext()) {
+				if(attachmentCount == 0) {
+					
 				} else {
 					AditCodedException aditCodedException = new AditCodedException("request.attachments.tooMany");
 					aditCodedException.setParameters(new Object[] { applicationName });
@@ -258,7 +267,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 				AditCodedException aditCodedException = new AditCodedException("request.saveDocument.document.noDocumentsSupplied");
 				aditCodedException.setParameters(new Object[] {});
 				throw aditCodedException;
-			}
+			}*/
 			
 			// If saving was successful then add history event
 			DocumentHistory historyEvent = new DocumentHistory(
