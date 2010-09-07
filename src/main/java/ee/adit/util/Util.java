@@ -1132,4 +1132,14 @@ public class Util {
     	return result;
     }
     
+    public static String stripContentID(String contentID) {
+    	String result = contentID;
+    	
+    	if(contentID != null) {
+    		result = contentID.trim().replaceAll("<", "").replaceAll(">", "");
+    	}
+    	
+    	return result;
+    }
+    
 }
