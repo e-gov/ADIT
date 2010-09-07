@@ -672,116 +672,121 @@ public class DocumentDAO extends HibernateDaoSupport {
 	private SaveItemInternalResult saveImpl(Document document, List<OutputDocumentFile> files, long remainingDiskQuota, Session session) throws IOException {
 		SaveItemInternalResult result = new SaveItemInternalResult();
 		
-		if (document.getDocumentFiles() == null) {
-			document.setDocumentFiles(new HashSet<DocumentFile>());
-		}
-		
-		boolean newFilesAddedToExistingDocument = false;
-		if (files != null) {
-			// Before actually saving files check data and disk quota
-			long requiredDiskSpace = 0;
-			for(int i = 0; i < files.size(); i++) {
-				OutputDocumentFile attachmentFile = files.get(i);
-
-				DocumentFile documentFile = new DocumentFile();
-				if ((attachmentFile.getId() != null) && (attachmentFile.getId() > 0)) {
-					documentFile = null;
-					Iterator it = document.getDocumentFiles().iterator();
-					while (it.hasNext()) {
-						DocumentFile f = (DocumentFile)it.next();
-						if (f.getId() == attachmentFile.getId()) {
-							documentFile = f;
-							break;
+		try {
+			if (document.getDocumentFiles() == null) {
+				document.setDocumentFiles(new HashSet<DocumentFile>());
+			}
+			
+			boolean newFilesAddedToExistingDocument = false;
+			if (files != null) {
+				// Before actually saving files check data and disk quota
+				long requiredDiskSpace = 0;
+				for(int i = 0; i < files.size(); i++) {
+					OutputDocumentFile attachmentFile = files.get(i);
+	
+					DocumentFile documentFile = new DocumentFile();
+					if ((attachmentFile.getId() != null) && (attachmentFile.getId() > 0)) {
+						documentFile = null;
+						Iterator it = document.getDocumentFiles().iterator();
+						while (it.hasNext()) {
+							DocumentFile f = (DocumentFile)it.next();
+							if (f.getId() == attachmentFile.getId()) {
+								documentFile = f;
+								break;
+							}
 						}
+					}
+					
+					if (documentFile == null) {
+						result.setSuccess(false);
+						result.getMessages().addAll(this.getMessageService().getMessages("request.saveDocument.document.noFileToUpdate", new Object[] { attachmentFile.getId().toString(), new Long(document.getId()).toString() }));
+						return result;
+					}
+					
+					long length = (new File(attachmentFile.getSysTempFile())).length();
+					if ((documentFile != null) && (documentFile.getId() > 0)) {
+						Long currentVersionLength = (documentFile.getFileSizeBytes() == null) ? 0 : documentFile.getFileSizeBytes();
+						requiredDiskSpace += (length - currentVersionLength);
+					} else {
+						requiredDiskSpace += length;
 					}
 				}
 				
-				if (documentFile == null) {
+				// If disk quota is exceeded then return
+				// a result indicating failure
+				if (requiredDiskSpace > remainingDiskQuota) {
 					result.setSuccess(false);
-					result.getMessages().addAll(this.getMessageService().getMessages("request.saveDocument.document.noFileToUpdate", new Object[] { attachmentFile.getId().toString(), new Long(document.getId()).toString() }));
+					//Message msg = new Message("en", this.getMessageSource().getMessage("request.saveDocument.document.files.quotaExceeded", new Object[] { remainingDiskQuota, requiredDiskSpace }, Locale.ENGLISH));
+					//result.getMessages().add(msg);
+					result.getMessages().addAll((this.getMessageService().getMessages("request.saveDocument.document.files.quotaExceeded", new Object[] { new Long(remainingDiskQuota).toString(), new Long(requiredDiskSpace).toString() })));
 					return result;
 				}
 				
-				long length = (new File(attachmentFile.getSysTempFile())).length();
-				if ((documentFile != null) && (documentFile.getId() > 0)) {
-					Long currentVersionLength = (documentFile.getFileSizeBytes() == null) ? 0 : documentFile.getFileSizeBytes();
-					requiredDiskSpace += (length - currentVersionLength);
-				} else {
-					requiredDiskSpace += length;
-				}
-			}
-			
-			// If disk quota is exceeded then return
-			// a result indicating failure
-			if (requiredDiskSpace > remainingDiskQuota) {
-				result.setSuccess(false);
-				//Message msg = new Message("en", this.getMessageSource().getMessage("request.saveDocument.document.files.quotaExceeded", new Object[] { remainingDiskQuota, requiredDiskSpace }, Locale.ENGLISH));
-				//result.getMessages().add(msg);
-				result.getMessages().addAll((this.getMessageService().getMessages("request.saveDocument.document.files.quotaExceeded", new Object[] { new Long(remainingDiskQuota).toString(), new Long(requiredDiskSpace).toString() })));
-				return result;
-			}
-			
-			// Save document and files
-			for(int i = 0; i < files.size(); i++) {
-				OutputDocumentFile attachmentFile = files.get(i);
-
-				DocumentFile documentFile = new DocumentFile();
-				if ((attachmentFile.getId() != null) && (attachmentFile.getId() > 0)) {
-					documentFile = null;
-					Iterator it = document.getDocumentFiles().iterator();
-					while (it.hasNext()) {
-						DocumentFile f = (DocumentFile)it.next();
-						if (f.getId() == attachmentFile.getId()) {
-							LOG.debug("Found existing file with ID " + attachmentFile.getId() + ". Updating existing file.");
-							documentFile = f;
-							break;
+				// Save document and files
+				for(int i = 0; i < files.size(); i++) {
+					OutputDocumentFile attachmentFile = files.get(i);
+	
+					DocumentFile documentFile = new DocumentFile();
+					if ((attachmentFile.getId() != null) && (attachmentFile.getId() > 0)) {
+						documentFile = null;
+						Iterator it = document.getDocumentFiles().iterator();
+						while (it.hasNext()) {
+							DocumentFile f = (DocumentFile)it.next();
+							if (f.getId() == attachmentFile.getId()) {
+								LOG.debug("Found existing file with ID " + attachmentFile.getId() + ". Updating existing file.");
+								documentFile = f;
+								break;
+							}
 						}
+					} else {
+						LOG.debug("Adding file as new file.");
 					}
-				} else {
-					LOG.debug("Adding file as new file.");
+					
+					if ((document.getId() > 0) && (documentFile != null) && (documentFile.getId() < 1)) {
+						newFilesAddedToExistingDocument = true;
+					}
+					
+					String fileName = attachmentFile.getSysTempFile();
+					FileInputStream fileInputStream = null;
+					try {
+						fileInputStream = new FileInputStream(fileName);
+					} catch (FileNotFoundException e) {
+						LOG.error("Error saving document file: ", e);
+					}
+					long length = (new File(fileName)).length();
+					
+					//Blob fileData = Hibernate.createBlob(fileInputStream, length, session);
+					Blob fileData = Hibernate.createBlob(fileInputStream, length);
+					documentFile.setFileData(fileData);
+					
+					documentFile.setContentType(attachmentFile.getContentType());
+					documentFile.setDeleted(false);
+					documentFile.setDescription(attachmentFile.getDescription());
+					documentFile.setFileName(attachmentFile.getName());
+					documentFile.setFileSizeBytes(length);
+					documentFile.setDocument(document);
+					document.getDocumentFiles().add(documentFile);
 				}
-				
-				if ((document.getId() > 0) && (documentFile != null) && (documentFile.getId() < 1)) {
-					newFilesAddedToExistingDocument = true;
-				}
-				
-				String fileName = attachmentFile.getSysTempFile();
-				FileInputStream fileInputStream = null;
-				try {
-					fileInputStream = new FileInputStream(fileName);
-				} catch (FileNotFoundException e) {
-					LOG.error("Error saving document file: ", e);
-				}
-				long length = (new File(fileName)).length();
-				
-				//Blob fileData = Hibernate.createBlob(fileInputStream, length, session);
-				Blob fileData = Hibernate.createBlob(fileInputStream, length);
-				documentFile.setFileData(fileData);
-				
-				documentFile.setContentType(attachmentFile.getContentType());
-				documentFile.setDeleted(false);
-				documentFile.setDescription(attachmentFile.getDescription());
-				documentFile.setFileName(attachmentFile.getName());
-				documentFile.setFileSizeBytes(length);
-				documentFile.setDocument(document);
-				document.getDocumentFiles().add(documentFile);
 			}
+			
+			session.saveOrUpdate(document);
+			
+			// If new files were added to an existing document then
+			// we have to forcibly flush the session at this point.
+			// Otherwise we will not be able to return IDs of added
+			// files in query result.
+			if (newFilesAddedToExistingDocument) {
+				session.flush();
+			}
+			
+			LOG.debug("Saved document ID: " + document.getId());
+			
+			result.setItemId(document.getId());
+			result.setSuccess(document.getId() > 0);
+		} catch (HibernateException e) {
+			LOG.error("HibernateException: ", e);
+			throw e;
 		}
-		
-		session.saveOrUpdate(document);
-		
-		// If new files were added to an existing document then
-		// we have to forcibly flush the session at this point.
-		// Otherwise we will not be able to return IDs of added
-		// files in query result.
-		if (newFilesAddedToExistingDocument) {
-			session.flush();
-		}
-		
-		LOG.debug("Saved document ID: " + document.getId());
-		
-		result.setItemId(document.getId());
-		result.setSuccess(document.getId() > 0);
 		
 		return result;
 	}
