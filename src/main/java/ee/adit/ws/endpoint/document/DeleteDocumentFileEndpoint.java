@@ -196,6 +196,7 @@ public class DeleteDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 				user,
 				xroadRequestUser,
 				header);
+			historyEvent.setDescription(DocumentService.DocumentHistoryDescription_DeleteFile + request.getFileId());
 			this.getDocumentService().getDocumentHistoryDAO().save(historyEvent);
 			
 			// Set response messages

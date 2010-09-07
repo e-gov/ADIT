@@ -89,6 +89,7 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 		String additionalInformationForLog = null;
 		Long documentId = null;
 		boolean updatedExistingFile = false;
+		long documentFileID = 0;
 		
 		try {
 			LOG.debug("saveDocumentFile.v1 invoked.");
@@ -270,9 +271,11 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 				if(unmarshalledObject instanceof OutputDocumentFile) {
 					OutputDocumentFile docFile = (OutputDocumentFile) unmarshalledObject;
 					updatedExistingFile = ((docFile.getId() != null) &&(docFile.getId() > 0)); 
+					documentFileID = docFile.getId();
 					SaveItemInternalResult saveResult = this.getDocumentService().saveDocumentFile(doc.getId(), docFile, remainingDiskQuota, this.getConfiguration().getTempDir());
 					if (saveResult.isSuccess()) {
 						long fileId = saveResult.getItemId();
+						documentFileID = fileId;
 						LOG.debug("File saved with ID: " + fileId);
 						response.setFileId(fileId);
 					} else {
@@ -299,6 +302,7 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 				user,
 				xroadRequestUser,
 				header);
+			historyEvent.setDescription(DocumentService.DocumentHistoryDescription_ModifyFile + documentFileID);
 			this.getDocumentService().getDocumentHistoryDAO().save(historyEvent);
 			
 			// Set response messages

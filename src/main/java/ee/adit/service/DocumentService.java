@@ -258,6 +258,16 @@ public class DocumentService {
 	 */
 	public static final Integer DvkReceiveFailReason_UserUsesDvk = 2;
 
+	// Document history description literals
+	public static final String DocumentHistoryDescription_Create = "Document created";	
+	public static final String DocumentHistoryDescription_Lock = "Document locked";
+	public static final String DocumentHistoryDescription_Delete = "Document deleted";
+	public static final String DocumentHistoryDescription_DeleteFile = "Document file deleted. ID: ";
+	public static final String DocumentHistoryDescription_ModifyStatus = "Document status modified to: ";
+	public static final String DocumentHistoryDescription_Modify = "Document modified";
+	public static final String DocumentHistoryDescription_ModifyFile = "Document file modified. ID: ";
+	
+	
 	/**
 	 * Log4J logger
 	 */

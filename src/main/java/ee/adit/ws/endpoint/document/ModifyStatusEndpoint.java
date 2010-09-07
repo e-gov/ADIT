@@ -251,6 +251,7 @@ public class ModifyStatusEndpoint extends AbstractAditBaseEndpoint {
 				user,
 				xroadRequestUser,
 				header);
+			historyEvent.setDescription(DocumentService.DocumentHistoryDescription_ModifyStatus + request.getDocumentStatusId());
 			this.getDocumentService().getDocumentHistoryDAO().save(historyEvent);
 
 			

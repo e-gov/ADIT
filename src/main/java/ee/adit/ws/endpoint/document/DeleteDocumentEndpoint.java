@@ -149,6 +149,7 @@ public class DeleteDocumentEndpoint extends AbstractAditBaseEndpoint {
 				user,
 				xroadRequestUser,
 				header);
+			historyEvent.setDescription(DocumentService.DocumentHistoryDescription_Delete);
 			this.getDocumentService().getDocumentHistoryDAO().save(historyEvent);
 			
 			// Set response messages

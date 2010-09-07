@@ -162,6 +162,8 @@ public class DeflateDocumentEndpoint extends AbstractAditBaseEndpoint {
 				user,
 				xroadRequestUser,
 				header);
+			deflateEvent.setDescription(DocumentService.DocumentHistoryDescription_Create);
+			
 			DocumentHistory lockEvent = new DocumentHistory(
 				DocumentService.HistoryType_Lock,
 				documentId,
@@ -169,6 +171,7 @@ public class DeflateDocumentEndpoint extends AbstractAditBaseEndpoint {
 				user,
 				xroadRequestUser,
 				header);
+			lockEvent.setDescription(DocumentService.DocumentHistoryDescription_Lock);
 			this.getDocumentService().getDocumentHistoryDAO().save(deflateEvent);
 			this.getDocumentService().getDocumentHistoryDAO().save(lockEvent);
 
