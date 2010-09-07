@@ -218,7 +218,7 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 									DocumentService.HistoryType_Lock,
 									xroadRequestUser.getUserCode(),
 									xroadRequestUser.getFullName(),
-									null,
+									DocumentService.DocumentHistoryDescription_Lock,
 									user.getFullName()
 							);
 							
