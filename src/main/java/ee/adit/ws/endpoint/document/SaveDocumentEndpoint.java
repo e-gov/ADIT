@@ -371,7 +371,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 	protected void runExistingDocumentChecks(Document existingDoc, String userCode) throws AditCodedException {
 		if (!userCode.equalsIgnoreCase(existingDoc.getCreatorCode())) {
 			AditCodedException aditCodedException = new AditCodedException("document.doesNotBelongToUser");
-			aditCodedException.setParameters(new Object[] { existingDoc.getId(), userCode });
+			aditCodedException.setParameters(new Object[] { new Long(existingDoc.getId()).toString(), userCode });
 			throw aditCodedException;
 		}
 		
@@ -379,7 +379,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 		// (i.e. don't remove them).
 		if ((existingDoc.getLocked() != null) && existingDoc.getLocked()) {
 			AditCodedException aditCodedException = new AditCodedException("request.saveDocument.document.locked");
-			aditCodedException.setParameters(new Object[] { existingDoc.getId(), userCode });
+			aditCodedException.setParameters(new Object[] { new Long(existingDoc.getId()).toString(), userCode });
 			throw aditCodedException;
 		}
 		if ((existingDoc.getDeflated() != null) && existingDoc.getDeflated()) {

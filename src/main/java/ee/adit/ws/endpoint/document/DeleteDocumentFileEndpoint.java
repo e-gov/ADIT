@@ -151,7 +151,7 @@ public class DeleteDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 					// NB! doc.getDeleted() can be NULL
 					if ((doc.getDeleted() != null) && doc.getDeleted()) {
 						AditCodedException aditCodedException = new AditCodedException("document.deleted");
-						aditCodedException.setParameters(new Object[] { documentId });
+						aditCodedException.setParameters(new Object[] { documentId.toString() });
 						throw aditCodedException;
 					}
 					
@@ -159,32 +159,32 @@ public class DeleteDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 					// NB! doc.getLocked() can be NULL
 					if ((doc.getLocked() != null) && doc.getLocked()) {
 						AditCodedException aditCodedException = new AditCodedException("request.deleteDocumentFile.document.locked");
-						aditCodedException.setParameters(new Object[] { documentId });
+						aditCodedException.setParameters(new Object[] { documentId.toString() });
 						throw aditCodedException;
 					}
 					
 					String resultCode = this.documentService.deflateDocumentFile(request.getDocumentId(), request.getFileId(), true);
 					if (resultCode.equalsIgnoreCase("already_deleted")) {
 						AditCodedException aditCodedException = new AditCodedException("file.isDeleted");
-						aditCodedException.setParameters(new Object[] { request.getFileId() });
+						aditCodedException.setParameters(new Object[] { new Long(request.getFileId()).toString() });
 						throw aditCodedException;
 					} else if (resultCode.equalsIgnoreCase("file_does_not_exist")) {						
 						AditCodedException aditCodedException = new AditCodedException("file.nonExistent");
-						aditCodedException.setParameters(new Object[] { request.getFileId() });
+						aditCodedException.setParameters(new Object[] { new Long(request.getFileId()).toString() });
 						throw aditCodedException;
 					} else if (resultCode.equalsIgnoreCase("file_does_not_belong_to_document")) {
 						AditCodedException aditCodedException = new AditCodedException("file.doesNotBelongToDocument");
-						aditCodedException.setParameters(new Object[] { request.getFileId(), request.getDocumentId() });
+						aditCodedException.setParameters(new Object[] { new Long(request.getFileId()).toString(), new Long(request.getDocumentId()).toString() });
 						throw aditCodedException;
 					}
 				} else {
 					AditCodedException aditCodedException = new AditCodedException("document.doesNotBelongToUser");
-					aditCodedException.setParameters(new Object[] { request.getDocumentId(), userCode });
+					aditCodedException.setParameters(new Object[] { new Long(request.getDocumentId()).toString(), userCode });
 					throw aditCodedException;
 				}
 			} else {				
 				AditCodedException aditCodedException = new AditCodedException("document.nonExistent");
-				aditCodedException.setParameters(new Object[] { request.getDocumentId() });
+				aditCodedException.setParameters(new Object[] { new Long(request.getDocumentId()).toString() });
 				throw aditCodedException;
 			}
 			

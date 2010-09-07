@@ -208,13 +208,13 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 				
 				AditUser recipient = this.getUserService().getUserByID(recipientCode);
 				if (recipient == null) {
-					statusMessages.addMessage(new Message("en", this.getMessageSource().getMessage("request.shareDocument.recipientStatus.recipient.nonExistant", new Object[] { }, Locale.ENGLISH)));
+					statusMessages.setMessage(this.getMessageService().getMessages("request.shareDocument.recipientStatus.recipient.nonExistant", new Object[] { }));
 				} else if (recipient.getActive() != true) {
-					statusMessages.addMessage(new Message("en", this.getMessageSource().getMessage("request.shareDocument.recipientStatus.recipient.inactive", new Object[] { }, Locale.ENGLISH)));
+					statusMessages.setMessage(this.getMessageService().getMessages("request.shareDocument.recipientStatus.recipient.inactive", new Object[] { }));
 				} else if (sharingExists(doc.getDocumentSharings(), recipientCode)) {
-					statusMessages.addMessage(new Message("en", this.getMessageSource().getMessage("request.shareDocument.recipientStatus.alreadySharedToUser", new Object[] { recipientCode }, Locale.ENGLISH)));
+					statusMessages.setMessage(this.getMessageService().getMessages("request.shareDocument.recipientStatus.alreadySharedToUser", new Object[] { recipientCode }));
 				} else if (recipient.getDvkOrgCode() != null && !"".equalsIgnoreCase(recipient.getDvkOrgCode().trim())) {
-					statusMessages.addMessage(new Message("en", this.getMessageSource().getMessage("request.shareDocument.recipient.usesDVK", new Object[] { recipientCode }, Locale.ENGLISH)));
+					statusMessages.setMessage(this.getMessageService().getMessages("request.shareDocument.recipient.usesDVK", new Object[] { recipientCode }));
 				} else {
 					DocumentSharing sharing = new DocumentSharing();
 					sharing.setCreationDate(requestDate.getTime());

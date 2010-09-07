@@ -165,7 +165,7 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 				LOG.debug("Requested document does not exist. Document ID: " + request.getDocumentId());
 				summarySuccess = false;
 				AditCodedException aditCodedException = new AditCodedException("document.nonExistent");
-				aditCodedException.setParameters(new Object[] { request.getDocumentId() });
+				aditCodedException.setParameters(new Object[] { request.getDocumentId().toString() });
 				throw aditCodedException;
 			}
 			
@@ -174,7 +174,7 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 				LOG.debug("Requested document is deleted. Document ID: " + request.getDocumentId());
 				summarySuccess = false;
 				AditCodedException aditCodedException = new AditCodedException("document.deleted");
-				aditCodedException.setParameters(new Object[] { request.getDocumentId() });
+				aditCodedException.setParameters(new Object[] { request.getDocumentId().toString() });
 				throw aditCodedException;
 			}
 			
@@ -192,7 +192,7 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 				LOG.debug("Requested document does not belong to user. Document ID: " + request.getDocumentId() + ", User ID: " + userCode);
 				summarySuccess = false;
 				AditCodedException aditCodedException = new AditCodedException("document.doesNotBelongToUser");
-				aditCodedException.setParameters(new Object[] { request.getDocumentId(), userCode });
+				aditCodedException.setParameters(new Object[] { request.getDocumentId().toString(), userCode });
 				throw aditCodedException;
 			}
 			
@@ -238,7 +238,7 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 			} else {
 				summarySuccess = false;
 				AditCodedException aditCodedException = new AditCodedException("request.unShareDocument.document.notShared");
-				aditCodedException.setParameters(new Object[] { request.getDocumentId() });
+				aditCodedException.setParameters(new Object[] { request.getDocumentId().toString() });
 				throw aditCodedException;
 			}
 		
@@ -312,15 +312,15 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 				String additionalMessage = this.getMessageService().getMessage("request.unShareDocument.success", new Object[] { request.getDocumentId().toString() }, Locale.ENGLISH);
 				additionalMessage = additionalInformationForLog;
 				additionalInformationForLog = LogService.RequestLog_Success + ": " + additionalMessage;
-				messages.setMessage(this.getMessageService().getMessages("request.unShareDocument.success", new Object[] { request.getDocumentId() }));
+				messages.setMessage(this.getMessageService().getMessages("request.unShareDocument.success", new Object[] { request.getDocumentId().toString() }));
 			} else {
 				String additionalMessage = this.getMessageService().getMessage("request.unShareDocument.fail", new Object[] { request.getDocumentId().toString() }, Locale.ENGLISH);
 				additionalMessage = additionalInformationForLog;
 				additionalInformationForLog = LogService.RequestLog_Success + ": " + additionalMessage;
-				String errorMessage = this.getMessageService().getMessage("request.unShareDocument.fail", new Object[] { request.getDocumentId() }, Locale.ENGLISH);
+				String errorMessage = this.getMessageService().getMessage("request.unShareDocument.fail", new Object[] { request.getDocumentId().toString() }, Locale.ENGLISH);
 				// Add error log
 				super.logError(request.getDocumentId(), requestDate.getTime(), LogService.ErrorLogLevel_Warn, errorMessage);
-				messages.setMessage(this.getMessageService().getMessages("request.unShareDocument.fail", new Object[] { request.getDocumentId() }));
+				messages.setMessage(this.getMessageService().getMessages("request.unShareDocument.fail", new Object[] { request.getDocumentId().toString() }));
 			}
 			response.setSuccess(summarySuccess);
 			response.setMessages(messages);
