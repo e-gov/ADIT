@@ -172,6 +172,7 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 			
 		} catch (Exception e) {
 			LOG.error("Exception: ", e);
+			additionalInformationForLog = e.getMessage();
 			String errorMessage = null;
 			response.setSuccess(new Success(false));
 			ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
