@@ -13,7 +13,7 @@
         <property name="documentId" type="long">
             <column name="DOCUMENT_ID" precision="12" scale="0" not-null="true" />
         </property>
-        <property name="requestDate" type="date">
+        <property name="requestDate" type="timestamp">
             <column name="REQUEST_DATE" length="7" />
         </property>
         <property name="remoteApplicationShortName" type="string">

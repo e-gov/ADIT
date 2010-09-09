@@ -16,7 +16,7 @@
         <property name="documentFileId" type="java.lang.Long">
             <column name="DOCUMENT_FILE_ID" precision="12" scale="0" />
         </property>
-        <property name="requestDate" type="date">
+        <property name="requestDate" type="timestamp">
             <column name="REQUEST_DATE" length="7" />
         </property>
         <property name="remoteApplicationShortName" type="string">
