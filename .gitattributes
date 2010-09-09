@@ -343,6 +343,7 @@ src/main/java/ee/adit/ws/endpoint/user/UnJoinEndpoint.java -text
 src/main/resources/DVKresponseMessage.xsl -text
 src/main/resources/adit-castor-mapping.xml -text
 src/main/resources/adit-servlet.xml -text
+src/main/resources/adit.wsdl -text
 src/main/resources/adit.xsd -text
 src/main/resources/castor-mapping/commons.xml -text
 src/main/resources/castor-mapping/dhl.v1.xml -text
