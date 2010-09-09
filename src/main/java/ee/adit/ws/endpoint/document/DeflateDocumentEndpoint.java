@@ -213,7 +213,7 @@ public class DeflateDocumentEndpoint extends AbstractAditBaseEndpoint {
 	
 	@Override
 	protected Object getResultForGenericException(Exception ex) {
-		super.logError(null, Calendar.getInstance().getTime(), LogService.ErrorLogLevel_Fatal, ex.getMessage());
+		super.logError(null, Calendar.getInstance().getTime(), LogService.ErrorLogLevel_Fatal, "ERROR: " + ex.getMessage());
 		DeflateDocumentResponse response = new DeflateDocumentResponse();
 		response.setSuccess(new Success(false));
 		ArrayOfMessage arrayOfMessage = new ArrayOfMessage();

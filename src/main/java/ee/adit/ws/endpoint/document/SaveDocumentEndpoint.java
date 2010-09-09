@@ -332,7 +332,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 	@SuppressWarnings("unchecked")
 	@Override
 	protected Object getResultForGenericException(Exception ex) {
-		super.logError(null, Calendar.getInstance().getTime(), LogService.ErrorLogLevel_Fatal, ex.getMessage());
+		super.logError(null, Calendar.getInstance().getTime(), LogService.ErrorLogLevel_Fatal, "ERROR: " + ex.getMessage());
 		SaveDocumentResponse response = new SaveDocumentResponse();
 		response.setSuccess(new Success(false));
 		ArrayOfMessage arrayOfMessage = new ArrayOfMessage();

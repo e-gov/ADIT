@@ -352,7 +352,7 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 
 	@Override
 	protected Object getResultForGenericException(Exception ex) {
-		super.logError(null, Calendar.getInstance().getTime(), LogService.ErrorLogLevel_Fatal, ex.getMessage());
+		super.logError(null, Calendar.getInstance().getTime(), LogService.ErrorLogLevel_Fatal, "ERROR: " + ex.getMessage());
 		GetDocumentFileResponse response = new GetDocumentFileResponse();
 		response.setSuccess(false);
 		ArrayOfMessage arrayOfMessage = new ArrayOfMessage();

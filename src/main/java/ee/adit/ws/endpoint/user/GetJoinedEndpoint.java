@@ -201,6 +201,7 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 	
 	@Override
 	protected Object getResultForGenericException(Exception ex) {
+		super.logError(null, Calendar.getInstance().getTime(), LogService.ErrorLogLevel_Fatal, "ERROR: " + ex.getMessage());
 		LOG.debug("Constructing result for generic exception...");
 		GetJoinedResponse response = new GetJoinedResponse();
 		response.setSuccess(new Success(false));
