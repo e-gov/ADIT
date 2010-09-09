@@ -181,7 +181,6 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 		} catch (Exception e) {
 			LOG.error("Exception: ", e);
 			String errorMessage = null;
-			additionalInformationForLog = "Request failed: " + e.getMessage();
 			response.setSuccess(new Success(false));
 			ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
 
@@ -195,6 +194,7 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 				errorMessage = "ERROR: " + e.getMessage();
 			}
 
+			additionalInformationForLog = errorMessage;
 			super.logError(null, requestDate.getTime(), LogService.ErrorLogLevel_Error, errorMessage);
 			
 			LOG.debug("Adding exception messages to response object.");

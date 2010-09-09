@@ -323,10 +323,8 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 			response.setRecipientList(statusArray);
 		} catch (Exception e) {
 			String errorMessage = null;
-			additionalInformationForLog = "Request failed: " + e.getMessage();
 			LOG.error("Exception: ", e);			
 			response.setSuccess(false);
-			//response.setRecipientList(statusArray);
 			ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
 
 			if(e instanceof AditCodedException) {
@@ -343,6 +341,7 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 				errorMessage = "ERROR: " + e.getMessage();
 			}
 			
+			additionalInformationForLog = errorMessage;
 			super.logError(documentId, requestDate.getTime(), LogService.ErrorLogLevel_Error, errorMessage);
 
 			LOG.debug("Adding exception messages to response object.");

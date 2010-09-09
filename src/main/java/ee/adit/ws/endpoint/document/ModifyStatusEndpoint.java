@@ -265,7 +265,6 @@ public class ModifyStatusEndpoint extends AbstractAditBaseEndpoint {
 			
 		} catch (Exception e) {
 			String errorMessage = null;
-			additionalInformationForLog = "Request failed: " + e.getMessage();
 			LOG.error("Exception: ", e);			
 			response.setSuccess(false);
 			ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
@@ -283,7 +282,8 @@ public class ModifyStatusEndpoint extends AbstractAditBaseEndpoint {
 				arrayOfMessage.getMessage().add(new Message("en", "Service error"));
 				errorMessage = "ERROR: " + e.getMessage();
 			}
-
+			
+			additionalInformationForLog = errorMessage;
 			super.logError(documentId, requestDate.getTime(), LogService.ErrorLogLevel_Error, errorMessage);
 			
 			LOG.debug("Adding exception messages to response object.");

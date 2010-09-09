@@ -291,7 +291,6 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 			String errorMessage = null;
 			success = false;
 			LOG.error("Exception: ", e);
-			additionalInformationForLog = "Failed: " + e.getMessage();
 			response.setSuccess(success);
 			ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
 			
@@ -309,6 +308,7 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 				errorMessage = "ERROR: " + e.getMessage();
 			}
 			
+			additionalInformationForLog = errorMessage;
 			super.logError(request.getDocumentId(), requestDate.getTime(), LogService.ErrorLogLevel_Error, errorMessage);
 			
 			LOG.debug("Adding exception messages to response object.");

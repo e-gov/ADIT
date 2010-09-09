@@ -162,8 +162,7 @@ public class DeleteDocumentEndpoint extends AbstractAditBaseEndpoint {
 			
 		} catch (Exception e) {
 			LOG.error("Exception: ", e);
-			String errorMessage = null;
-			additionalInformationForLog = "Request failed: " + e.getMessage();			
+			String errorMessage = null;		
 			response.setSuccess(new Success(false));
 			ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
 			
@@ -177,6 +176,7 @@ public class DeleteDocumentEndpoint extends AbstractAditBaseEndpoint {
 				errorMessage = "ERROR: " + e.getMessage();
 			}
 			
+			additionalInformationForLog = errorMessage;
 			super.logError(documentId, requestDate.getTime(), LogService.ErrorLogLevel_Error, errorMessage);
 			
 			LOG.debug("Adding exception messages to response object.");

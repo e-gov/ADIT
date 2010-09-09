@@ -275,7 +275,6 @@ public class MarkDocumentViewedEndpoint extends AbstractAditBaseEndpoint {
 			
 		} catch (Exception e) {
 			String errorMessage = null;
-			additionalInformationForLog = "Request failed: " + e.getMessage();
 			LOG.error("Exception: ", e);			
 			response.setSuccess(false);
 			ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
@@ -294,6 +293,7 @@ public class MarkDocumentViewedEndpoint extends AbstractAditBaseEndpoint {
 				errorMessage = "ERROR: " + e.getMessage();
 			}
 			
+			additionalInformationForLog = errorMessage;
 			super.logError(documentId, requestDate.getTime(), LogService.ErrorLogLevel_Error, errorMessage);
 
 			LOG.debug("Adding exception messages to response object.");

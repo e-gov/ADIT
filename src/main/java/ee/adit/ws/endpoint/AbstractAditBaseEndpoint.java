@@ -134,11 +134,13 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 			// Excecute business logic
 			responseObject = invokeInternal(requestObject, version);
 		} catch (Exception e) {
-			LOG.error("Exception while marshalling response object: ", e);
+			LOG.error("Exception while marshalling request/response object: ", e);
 			responseObject = getResultForGenericException(e);
 			
+			String additionalInformation = "ERROR: Exception while marshalling request/response object: " + e.getMessage();
+			
 			// Add request log entry
-			this.getLogService().addRequestLogEntry(requestName + ".v" + version, null, new Date(), xteeHeader.getInfosysteem(), xteeHeader.getIsikukood(), xteeHeader.getAsutus(), "Exception while marshalling response object: " + e.getMessage());
+			this.getLogService().addRequestLogEntry(requestName + ".v" + version, null, new Date(), xteeHeader.getInfosysteem(), xteeHeader.getIsikukood(), xteeHeader.getAsutus(), additionalInformation);
 			
 		}
 		
