@@ -68,7 +68,6 @@
 		</annotation>
 	</element>
 	
-	
 	<attribute name="href" type="string">
 		<annotation>
 			<documentation xml:lang="ee">Viide manusele</documentation>
@@ -200,12 +199,7 @@
 			      	<documentation xml:lang="en">Recipient code</documentation>
 		    	</annotation>
 			</element>
-			<element name="success" type="boolean">
-				<annotation>
-			      	<documentation xml:lang="ee">Vastuvõtja(adressaadi) vastuvõtmise õnnestumine</documentation>
-			      	<documentation xml:lang="en">Reception success</documentation>
-		    	</annotation>
-			</element>
+			<element ref="tns:success"/>
 			<element name="messages" type="tns:arrayOfMessage"/>
 		</sequence>
 	</complexType>
@@ -308,12 +302,7 @@
 	      	<documentation xml:lang="en">"join" request response</documentation>
     	</annotation>
 		<sequence>
-			<element name="success" type="boolean">
-				<annotation>
-			      	<documentation xml:lang="ee">Näitab, kas päring õnnestus</documentation>
-			      	<documentation xml:lang="en">Indicates if the request was successful</documentation>
-		    	</annotation>
-			</element>
+			<element ref="tns:success"/>
 			<element name="messages" type="tns:arrayOfMessage"></element>
 		</sequence>
 	</complexType>
@@ -332,12 +321,7 @@
 	      	<documentation xml:lang="en">"unJoin" request response</documentation>
     	</annotation>
 		<sequence>
-			<element name="success" type="boolean">
-				<annotation>
-			      	<documentation xml:lang="ee">Näitab, kas päring õnnestus</documentation>
-			      	<documentation xml:lang="en">Indicates if the request was successful</documentation>
-		    	</annotation>
-			</element>
+			<element ref="tns:success"/>
 			<element name="messages" type="tns:arrayOfMessage"></element>
 		</sequence>
 	</complexType>
@@ -355,12 +339,7 @@
 			      	<documentation xml:lang="en">Array of users</documentation>
 		    	</annotation>
 				<complexType>
-					<attribute name="href" type="string">
-						<annotation>
-					      	<documentation xml:lang="ee">Viide manusele</documentation>
-					      	<documentation xml:lang="en">Attachment reference</documentation>
-				    	</annotation>
-					</attribute>
+					<attribute ref="tns:href"/>
 				</complexType>
 			</element>
 		</sequence>
@@ -371,12 +350,7 @@
 	      	<documentation xml:lang="en">"getUserInfo" request response</documentation>
     	</annotation>
 		<sequence>
-			<element name="success" type="boolean">
-				<annotation>
-			      	<documentation xml:lang="ee">Näitab, kas päring õnnestus</documentation>
-			      	<documentation xml:lang="en">Indicates if the request was successful</documentation>
-		    	</annotation>
-			</element>
+			<element ref="tns:success"/>
 			<element name="messages" type="tns:arrayOfMessage" />
 			<element name="userList">
 				<annotation>
@@ -384,12 +358,7 @@
 			      	<documentation xml:lang="en">Array of user data</documentation>
 		    	</annotation>
 				<complexType>
-					<attribute name="href" type="string">
-						<annotation>
-					      	<documentation xml:lang="ee">Viide manusele</documentation>
-					      	<documentation xml:lang="en">Attachment reference</documentation>
-				    	</annotation>
-					</attribute>
+					<attribute ref="tns:href"/>
 				</complexType>
 			</element>
 		</sequence>
@@ -422,12 +391,7 @@
 	      	<documentation xml:lang="en">"getJoined" request response</documentation>
     	</annotation>
 		<sequence>
-			<element name="success" type="boolean">
-				<annotation>
-			      	<documentation xml:lang="ee">Näitab, kas päring õnnestus</documentation>
-			      	<documentation xml:lang="en">Indicates if the request was successful</documentation>
-		    	</annotation>
-			</element>
+			<element ref="tns:success"/>
 			<element name="messages" type="tns:arrayOfMessage" />
 			<element name="userList">
 				<annotation>
@@ -435,12 +399,7 @@
 			      	<documentation xml:lang="en">Array of user data</documentation>
 		    	</annotation>
 				<complexType>
-					<attribute name="href" type="string">
-						<annotation>
-					      	<documentation xml:lang="ee">Viide manusele</documentation>
-					      	<documentation xml:lang="en">Attachment reference</documentation>
-				    	</annotation>
-					</attribute>
+					<attribute ref="tns:href"/>
 				</complexType>
 			</element>
 		</sequence>
@@ -460,12 +419,7 @@
 	      	<documentation xml:lang="en">"getNotifications" request response</documentation>
     	</annotation>
 		<sequence>
-			<element name="success" type="boolean">
-				<annotation>
-			      	<documentation xml:lang="ee">Näitab, kas päring õnnestus</documentation>
-			      	<documentation xml:lang="en">Indicates if the request was successful</documentation>
-		    	</annotation>
-			</element>
+			<element ref="tns:success"/>
 			<element name="messages" type="tns:arrayOfMessage"/>
 			<element name="notifications" type="tns:arrayOfNotification" nillable="false"/>
 			<element name="notifications_active" type="boolean">
@@ -494,12 +448,7 @@
 	      	<documentation xml:lang="en">"setNotifications" request response</documentation>
     	</annotation>
 		<sequence>
-			<element name="success" type="boolean">
-				<annotation>
-			      	<documentation xml:lang="ee">Näitab, kas päring õnnestus</documentation>
-			      	<documentation xml:lang="en">Indicates if the request was successful</documentation>
-		    	</annotation>
-			</element>
+			<element ref="tns:success"/>
 			<element name="messages" type="tns:arrayOfMessage"></element>
 		</sequence>
 	</complexType>
@@ -558,12 +507,7 @@
 	      	<documentation xml:lang="en">"getDocumentList" request response</documentation>
     	</annotation>
 		<sequence>
-			<element name="success" type="boolean">
-				<annotation>
-			      	<documentation xml:lang="ee">Näitab, kas päring õnnestus</documentation>
-			      	<documentation xml:lang="en">Indicates if the request was successful</documentation>
-		    	</annotation>
-			</element>
+			<element ref="tns:success"/>
 			<element name="messages" type="tns:arrayOfMessage"></element>
 			<element name="documentList">
 				<annotation>
@@ -571,12 +515,7 @@
 			      	<documentation xml:lang="en">Array of documents</documentation>
 		    	</annotation>
 				<complexType>
-					<attribute name="href" type="string">
-						<annotation>
-					      	<documentation xml:lang="ee">Viide manusele</documentation>
-					      	<documentation xml:lang="en">Attachment reference</documentation>
-				    	</annotation>
-					</attribute>
+					<attribute ref="tns:href"/>
 				</complexType>
 			</element>
 		</sequence>
@@ -609,12 +548,7 @@
 	      	<documentation xml:lang="en">"getDocument" request response</documentation>
     	</annotation>
 		<sequence>
-			<element name="success" type="boolean">
-				<annotation>
-			      	<documentation xml:lang="ee">Näitab, kas päring õnnestus</documentation>
-			      	<documentation xml:lang="en">Indicates if the request was successful</documentation>
-		    	</annotation>
-			</element>
+			<element ref="tns:success"/>
 			<element name="messages" type="tns:arrayOfMessage"></element>
 			<element name="document">
 				<annotation>
@@ -622,12 +556,7 @@
 			      	<documentation xml:lang="en">Document data</documentation>
 		    	</annotation>
 				<complexType>
-					<attribute name="href" type="string">
-						<annotation>
-					      	<documentation xml:lang="ee">Viide manusele</documentation>
-					      	<documentation xml:lang="en">Attachment reference</documentation>
-				    	</annotation>
-					</attribute>
+					<attribute ref="tns:href"/>
 				</complexType>
 			</element>
 		</sequence>
@@ -655,12 +584,7 @@
 	      	<documentation xml:lang="en">"getDocumentFile" request response</documentation>
     	</annotation>
 		<sequence>
-			<element name="success" type="boolean">
-				<annotation>
-			      	<documentation xml:lang="ee">Näitab, kas päring õnnestus</documentation>
-			      	<documentation xml:lang="en">Indicates if the request was successful</documentation>
-		    	</annotation>
-			</element>
+			<element ref="tns:success"/>
 			<element name="messages" type="tns:arrayOfMessage"></element>
 			<element name="files">
 				<annotation>
@@ -668,12 +592,7 @@
 			      	<documentation xml:lang="en">Files</documentation>
 		    	</annotation>
 				<complexType>
-					<attribute name="href" type="string">
-						<annotation>
-					      	<documentation xml:lang="ee">Viide manusele</documentation>
-					      	<documentation xml:lang="en">Attachment reference</documentation>
-				    	</annotation>
-					</attribute>
+					<attribute ref="tns:href"/>
 				</complexType>
 			</element>
 		</sequence>
@@ -692,12 +611,7 @@
 					<documentation xml:lang="en">Document</documentation>
 				</annotation>
 				<complexType>
-					<attribute name="href" type="string">
-						<annotation>
-					      	<documentation xml:lang="ee">Viide manusele</documentation>
-					      	<documentation xml:lang="en">Attachment reference</documentation>
-				    	</annotation>
-					</attribute>
+					<attribute ref="tns:href"/>
 				</complexType>
 			</element>
 		</sequence>
@@ -717,12 +631,7 @@
 					<documentation xml:lang="en">Document</documentation>
 				</annotation>
 				<complexType>
-					<attribute name="href" type="string">
-						<annotation>
-					      	<documentation xml:lang="ee">Viide manusele</documentation>
-					      	<documentation xml:lang="en">Attachment reference</documentation>
-				    	</annotation>
-					</attribute>
+					<attribute ref="tns:href"/>
 				</complexType>
 			</element>
 		</sequence>
