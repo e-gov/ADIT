@@ -4,17 +4,17 @@
 	xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/">
 	
 	<annotation>
-  	<documentation xml:lang="ee">
-  		ADIT(Avalike Dokumentide Infrastruktuuri Teenus) päringutes kasutatavate andmete kirjeldus.
-  		Dokument sisaldab nii (SOAP) päringute keha elementide kui ka päringute manustes kasutatavate andmete kirjeldusi.
-  		Litsenseeritud [LITSENTS] alusel.
-  	</documentation>
-  	<documentation xml:lang="en">
-  		Describes datatypes used in ADIT(Infrastructure Service for Public Documents) requests.
-  		The Documents containts both the datatypes used in (SOAP) request body elements and attachments.
-  		Licensed under [LICENSE].
-  	</documentation>
-  </annotation>
+	  	<documentation xml:lang="ee">
+	  		ADIT(Avalike Dokumentide Infrastruktuuri Teenus) päringutes kasutatavate andmete kirjeldus.
+	  		Dokument sisaldab nii (SOAP) päringute keha elementide kui ka päringute manustes kasutatavate andmete kirjeldusi.
+	  		Litsenseeritud [LITSENTS] alusel.
+	  	</documentation>
+	  	<documentation xml:lang="en">
+	  		Describes datatypes used in ADIT(Infrastructure Service for Public Documents) requests.
+	  		The Documents containts both the datatypes used in (SOAP) request body elements and attachments.
+	  		Licensed under [LICENSE].
+	  	</documentation>
+  	</annotation>
 	
 	<element name="joinRequest" type="tns:joinRequest"/>
 	<element name="joinResponse" type="tns:joinResponse"/>
