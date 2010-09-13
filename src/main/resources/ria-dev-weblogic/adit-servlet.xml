@@ -336,10 +336,12 @@
 	<bean id="schema" class="org.springframework.xml.xsd.SimpleXsdSchema">
 		<property name="xsd" value="/WEB-INF/adit.xsd" />
 	</bean>
+	<!--
 	<bean id="adit" class="ee.webmedia.xtee.wsdl.XTeeWsdlDefinition">
 		<property name="schema" ref="schema" />
 		<property name="portTypeName" value="adit" />
 	</bean>
+	-->
 	<bean id="xteeDatabase" class="java.lang.String">
 		<constructor-arg value="ametlikud-dokumendid" />
 	</bean>
