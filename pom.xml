@@ -9,7 +9,7 @@
 	<url>http://maven.apache.org</url>
 
 	<properties>
-		<baseDir>C:\development\adit\trunk</baseDir>
+		<baseDir>E:\dev\adit\adit</baseDir>
 		<!-- Specifies which configuration resources to bundle with the build (ie. "dev", "test", "production") -->
 		<resourceDir>dev-dev</resourceDir>
 	</properties>
@@ -366,6 +366,7 @@
 					<include>DVKresponseMessage.xsl</include>
 					<include>messages_en.properties</include>
 					<include>messages_et.properties</include>
+					<include>adit.wsdl</include>
 				</includes>
 			</resource>
 			<resource>
