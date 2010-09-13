@@ -336,6 +336,11 @@
 	<bean id="schema" class="org.springframework.xml.xsd.SimpleXsdSchema">
 		<property name="xsd" value="/WEB-INF/adit.xsd" />
 	</bean>
+	
+	<bean id="adit"
+		class="org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition">
+		<constructor-arg value="classpath:adit.wsdl" />
+	</bean>
 	<!--
 	<bean id="adit" class="ee.webmedia.xtee.wsdl.XTeeWsdlDefinition">
 		<property name="schema" ref="schema" />
