@@ -295,7 +295,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 				AditMultipleException aditMultipleException = (AditMultipleException) e;
 				arrayOfMessage.setMessage(aditMultipleException.getMessages());
 				if(aditMultipleException.getMessages() != null && aditMultipleException.getMessages().size() > 0) {
-					errorMessage = "ERROR: " + aditMultipleException.getMessages().get(0);
+					errorMessage = "ERROR: " + aditMultipleException.getMessages().get(0).getValue();
 				}				
 			} else if(e instanceof AditException) {
 				LOG.debug("Adding exception message to response object.");

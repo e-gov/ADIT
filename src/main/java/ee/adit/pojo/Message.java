@@ -98,4 +98,13 @@ public class Message {
     public void setLang(String value) {
         this.lang = value;
     }
+
+	@Override
+	public String toString() {
+		String result = "";
+		if(this.getValue() != null)
+			result = this.getValue();
+		
+		return result;
+	}
 }
