@@ -408,6 +408,7 @@ public class UserService {
 			result.setUsesDVK(usesDVK);
 
 		} else {
+			result.setUserCode(userCode);
 			// User has not joined the service
 			LOG.debug("User has not joined the service: " + userCode);
 		}
