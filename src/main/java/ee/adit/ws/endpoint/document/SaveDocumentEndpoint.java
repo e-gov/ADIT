@@ -240,7 +240,9 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 							response.setDocumentId(documentId);
 						} else {
 							if ((saveResult.getMessages() != null) && (saveResult.getMessages().size() > 0)) {
-								throw new AditException(saveResult.getMessages().get(0).getValue());
+								AditMultipleException aditMultipleException = new AditMultipleException("MultiException");
+								aditMultipleException.setMessages(saveResult.getMessages());
+								throw aditMultipleException;
 							} else {
 								throw new AditException("Document saving failed!");
 							}
@@ -289,6 +291,12 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 				arrayOfMessage.setMessage(this.getMessageService().getMessages((AditCodedException) e));
 				errorMessage = this.getMessageService().getMessage(e.getMessage(), ((AditCodedException) e).getParameters(), Locale.ENGLISH);
 				errorMessage = "ERROR: " + errorMessage;
+			} else if(e instanceof AditMultipleException) {
+				AditMultipleException aditMultipleException = (AditMultipleException) e;
+				arrayOfMessage.setMessage(aditMultipleException.getMessages());
+				if(aditMultipleException.getMessages() != null && aditMultipleException.getMessages().size() > 0) {
+					errorMessage = "ERROR: " + aditMultipleException.getMessages().get(0);
+				}				
 			} else if(e instanceof AditException) {
 				LOG.debug("Adding exception message to response object.");
 				arrayOfMessage.getMessage().add(new Message("en", e.getMessage()));
