@@ -148,6 +148,7 @@ sql/log_triggers.sql -text
 sql/notification_type.dml.sql -text
 sql/run.sql -text
 sql/run_dml.sql -text
+sql/synonyms.sql -text
 sql/testdata/adit_user.dml.sql -text
 sql/testdata/create_tablespaces.sql -text
 sql/testdata/remote_application.dml.sql -text
