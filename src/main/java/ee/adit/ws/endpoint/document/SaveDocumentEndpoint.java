@@ -15,6 +15,7 @@ import ee.adit.dao.pojo.DocumentHistory;
 import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditException;
 import ee.adit.exception.AditInternalException;
+import ee.adit.exception.AditMultipleException;
 import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.GetDocumentFileRequest;
 import ee.adit.pojo.Message;
@@ -221,7 +222,9 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 							response.setDocumentId(documentId);
 						} else {
 							if ((saveResult.getMessages() != null) && (saveResult.getMessages().size() > 0)) {
-								throw new AditException(saveResult.getMessages().get(0).getValue());
+								AditMultipleException aditMultipleException = new AditMultipleException("MultiException");
+								aditMultipleException.setMessages(saveResult.getMessages());
+								throw aditMultipleException;
 							} else {
 								throw new AditException("Document saving failed!");
 							}
