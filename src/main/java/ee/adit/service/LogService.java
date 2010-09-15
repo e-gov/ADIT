@@ -49,7 +49,7 @@ public class LogService {
 	/**
 	 * Request log success message
 	 */
-	public static final String RequestLog_Fail = "Fail";
+	public static final String RequestLog_Fail = "ERROR: ";
 	
 	/**
 	 * Request log Data Access Object

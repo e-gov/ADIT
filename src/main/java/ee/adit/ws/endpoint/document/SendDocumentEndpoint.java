@@ -66,7 +66,7 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 	protected Object v1(Object requestObject) {
 		SendDocumentResponse response = new SendDocumentResponse();
 		Calendar requestDate = Calendar.getInstance();
-		String additionalInformationForLog = null;
+		String additionalInformationForLog = "";
 		Long documentId = null;
 		boolean success = true;		
 		ArrayOfRecipientStatus reponseStatuses = new ArrayOfRecipientStatus();
@@ -191,9 +191,11 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 					if(recipient == null || !recipient.getActive()) {
 						LOG.error("User is not registered or inactive.");
 						String messageCode = "user.nonExistent";
+						boolean inactive = false;
 						
 						if(recipient != null) {
 							messageCode = "user.inactive";
+							inactive = true;
 						}
 						
 						recipientStatus.setSuccess(false);
@@ -202,8 +204,18 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 						recipientMessages.setMessage(errorMessages);
 						recipientStatus.setMessages(recipientMessages);
 						success = false;
-						super.logError(request.getDocumentId(), requestDate.getTime(), LogService.ErrorLogLevel_Error, "ERROR: User not registered: " + recipientCode);
-						additionalInformationForLog = additionalInformationForLog + ", User not registered: " + recipientCode + " ";
+						
+						String localErrorMessage = "";
+						if(inactive) {
+							localErrorMessage = "ERROR: User account deleted (inactive) for user ";
+						} else {
+							localErrorMessage = "User does not exist: ";
+						}
+						super.logError(request.getDocumentId(), requestDate.getTime(), LogService.ErrorLogLevel_Error, localErrorMessage + recipientCode);
+						if(additionalInformationForLog != null && !additionalInformationForLog.trim().equals(""))
+							additionalInformationForLog = additionalInformationForLog + ", ";
+						additionalInformationForLog = additionalInformationForLog + localErrorMessage + recipientCode + " ";
+						
 					} else {
 						
 						try {
@@ -268,7 +280,7 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 			} else {
 				String additionalMessage = this.getMessageService().getMessage("request.sendDocument.fail", new Object[] { }, Locale.ENGLISH);
 				additionalMessage = additionalInformationForLog;
-				additionalInformationForLog = LogService.RequestLog_Fail + ": " + additionalMessage;
+				additionalInformationForLog = LogService.RequestLog_Fail + additionalMessage;
 				messages.setMessage(this.getMessageService().getMessages("request.sendDocument.fail", new Object[] {  }));
 			}
 			
