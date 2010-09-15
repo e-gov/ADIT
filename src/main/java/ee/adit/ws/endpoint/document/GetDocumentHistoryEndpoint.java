@@ -292,7 +292,7 @@ public class GetDocumentHistoryEndpoint extends AbstractAditBaseEndpoint {
 			}
 
 			additionalInformationForLog = errorMessage;
-			super.logError(documentId, requestDate.getTime(), LogService.ErrorLogLevel_Error, e.getMessage());
+			super.logError(documentId, requestDate.getTime(), LogService.ErrorLogLevel_Error, errorMessage);
 			
 			LOG.debug("Adding exception messages to response object.");
 			response.setMessages(arrayOfMessage);
