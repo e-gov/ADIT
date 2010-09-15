@@ -309,7 +309,7 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 			}
 			
 			additionalInformationForLog = errorMessage;
-			super.logError(request.getDocumentId(), requestDate.getTime(), LogService.ErrorLogLevel_Error, "ERROR: " + errorMessage);
+			super.logError(request.getDocumentId(), requestDate.getTime(), LogService.ErrorLogLevel_Error, errorMessage);
 			
 			LOG.debug("Adding exception messages to response object.");
 			response.setMessages(arrayOfMessage);
