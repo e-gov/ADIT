@@ -211,7 +211,7 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 						} else {
 							localErrorMessage = "User does not exist: ";
 						}
-						super.logError(request.getDocumentId(), requestDate.getTime(), LogService.ErrorLogLevel_Error, localErrorMessage + recipientCode);
+						super.logError(request.getDocumentId(), requestDate.getTime(), LogService.ErrorLogLevel_Error, LogService.RequestLog_Fail + localErrorMessage + recipientCode);
 						if(additionalInformationForLog != null && !additionalInformationForLog.trim().equals(""))
 							additionalInformationForLog = additionalInformationForLog + ", ";
 						additionalInformationForLog = additionalInformationForLog + localErrorMessage + recipientCode + " ";
