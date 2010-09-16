@@ -250,7 +250,6 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 			// If the document was not shared to some users in request's
 			// user list then compose corresponding error messages
 			int localErrorCount = 0;
-			additionalInformationForLog = "";
 			if (!userCodes.isEmpty()) {
 				summarySuccess = false;
 				for (String code : userCodes) {
@@ -321,7 +320,7 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 			if(summarySuccess) {
 				//messages.addMessage(new Message("en", this.getMessageSource().getMessage("request.unShareDocument.success",	new Object[] { request.getDocumentId() }, Locale.ENGLISH)));
 				String additionalMessage = this.getMessageService().getMessage("request.unShareDocument.success", new Object[] { request.getDocumentId().toString() }, Locale.ENGLISH);
-				additionalMessage = additionalInformationForLog;
+				//additionalMessage = additionalInformationForLog;
 				additionalInformationForLog = LogService.RequestLog_Success + ": " + additionalMessage;
 				messages.setMessage(this.getMessageService().getMessages("request.unShareDocument.success", new Object[] { request.getDocumentId().toString() }));
 			} else {
