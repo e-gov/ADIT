@@ -216,7 +216,8 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 							|| sharing.getDocumentSharingType().equalsIgnoreCase(DocumentService.SharingType_Sign)) {
 							
 							// Remove sharing
-							doc.getDocumentSharings().remove(sharing);
+							//doc.getDocumentSharings().remove(sharing);// DO NOT DO THAT - causes ConcurrentModificationException
+							it.remove();
 							sharing.setDocumentId(0);
 							saveDocument = true;
 							
