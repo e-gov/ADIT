@@ -2064,7 +2064,7 @@ public class DocumentService {
 	 */
 	@SuppressWarnings("unchecked")
 	@Transactional
-	public void DeleteDocument(long documentId, String userCode, String applicationName) throws Exception {
+	public void deleteDocument(long documentId, String userCode, String applicationName) throws Exception {
 		Document doc = this.getDocumentDAO().getDocument(documentId);
 
 		// Check whether or not the document exists
@@ -2129,7 +2129,8 @@ public class DocumentService {
 			while (it.hasNext()) {
 				DocumentSharing sharing = (DocumentSharing) it.next();
 				if (sharing.getUserCode().equalsIgnoreCase(userCode)) {
-					doc.getDocumentSharings().remove(sharing);
+					//doc.getDocumentSharings().remove(sharing); // NB! DO NOT DO THAT - can throw ConcurrentModificationException
+					it.remove();
 					sharing.setDocumentId(0);
 					changesMade = true;
 				}

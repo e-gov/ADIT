@@ -92,6 +92,32 @@ public class DocumentDAO extends HibernateDaoSupport {
 		return (Document) this.getHibernateTemplate().get(Document.class, id);
 	}
 	
+	/*public Document getDocument(long id) {
+		LOG.debug("Attempting to load document from database. Document id: " + String.valueOf(id));
+		Document result = null;
+		Session session = null;
+		Transaction transaction = null;
+		
+		
+		try {
+			session = this.getSessionFactory().openSession();
+			transaction = session.beginTransaction();
+			
+			result = (Document) session.load(Document.class, id);
+			
+			transaction.commit();
+		} catch(Exception e) {
+			if(transaction != null && transaction.isActive())
+				transaction.rollback();
+			LOG.error("Error while loading document: ", e);
+		} finally {
+			if(session != null)
+				session.close();
+		}
+		
+		return result;
+	}*/
+	
 	@SuppressWarnings("unchecked")
 	public GetDocumentListResponseAttachment getDocumentSearchResult(
 			final GetDocumentListRequest param,

@@ -207,7 +207,7 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 						
 						String localErrorMessage = "";
 						if(inactive) {
-							localErrorMessage = "ERROR: User account deleted (inactive) for user ";
+							localErrorMessage = "User account deleted (inactive) for user ";
 						} else {
 							localErrorMessage = "User does not exist: ";
 						}
@@ -247,7 +247,9 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 							description = description + recipient.getUserCode();							
 							successCount++;
 							
-							additionalInformationForLog = additionalInformationForLog + ", sent to: " + recipientCode;
+							if(additionalInformationForLog != null && additionalInformationForLog.trim() != "")
+								additionalInformationForLog = additionalInformationForLog + ",";
+							additionalInformationForLog = additionalInformationForLog + " sent to: " + recipientCode;
 							
 							// TODO: Send a notification to the XTee teavituskalender
 							

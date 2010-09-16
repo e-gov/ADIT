@@ -160,7 +160,7 @@ public class ModifyStatusEndpoint extends AbstractAditBaseEndpoint {
 			DocumentWfStatus status = this.documentService.getDocumentWfStatusDAO().getDocumentWfStatus(request.getDocumentStatusId());
 			if (status == null) {
 				AditCodedException aditCodedException = new AditCodedException("documentWorkflowStatus.nonExistent");
-				aditCodedException.setParameters(new Object[] { request.getDocumentStatusId() });
+				aditCodedException.setParameters(new Object[] { request.getDocumentStatusId().toString() });
 				throw aditCodedException;
 			}
 			

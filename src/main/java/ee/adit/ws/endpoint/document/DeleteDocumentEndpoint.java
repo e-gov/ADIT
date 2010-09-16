@@ -139,7 +139,7 @@ public class DeleteDocumentEndpoint extends AbstractAditBaseEndpoint {
 				throw aditCodedException;
 			}
 				
-			this.getDocumentService().DeleteDocument(request.getDocumentId(), userCode, applicationName);
+			this.getDocumentService().deleteDocument(request.getDocumentId(), userCode, applicationName);
 			
 			// If deletion was successful then add history event
 			DocumentHistory historyEvent = new DocumentHistory(

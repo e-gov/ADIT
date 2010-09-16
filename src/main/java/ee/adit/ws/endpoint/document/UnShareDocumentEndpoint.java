@@ -75,7 +75,7 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 		ArrayOfMessage messages = new ArrayOfMessage();
 		ArrayOfRecipientStatus statusArray = new ArrayOfRecipientStatus();
 		Calendar requestDate = Calendar.getInstance();
-		String additionalInformationForLog = null;
+		String additionalInformationForLog = "";
 		Long documentId = null;
 		boolean summarySuccess = true;
 
@@ -228,7 +228,11 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 							statusMessages.setMessage(this.getMessageService().getMessages("request.unShareDocument.recipientStatus.success", new Object[] { }));
 							status.setMessages(statusMessages);
 							statusArray.addRecipient(status);
-							additionalInformationForLog = additionalInformationForLog + ", unshared to: " + sharing.getUserCode();
+							
+							if(additionalInformationForLog != null && additionalInformationForLog.trim() != "")
+								additionalInformationForLog = additionalInformationForLog + ",";
+							additionalInformationForLog = additionalInformationForLog + " unshared to: " + sharing.getUserCode();
+							
 							if (userCodes.contains(sharing.getUserCode())) {
 								userCodes.remove(sharing.getUserCode());
 							}
@@ -244,6 +248,8 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 		
 			// If the document was not shared to some users in request's
 			// user list then compose corresponding error messages
+			int localErrorCount = 0;
+			additionalInformationForLog = "ERROR: ";
 			if (!userCodes.isEmpty()) {
 				summarySuccess = false;
 				for (String code : userCodes) {
@@ -254,6 +260,10 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 					statusMessages.setMessage(this.getMessageService().getMessages("request.unShareDocument.recipientStatus.notShared", new Object[] { }));
 					status.setMessages(statusMessages);
 					statusArray.addRecipient(status);
+					
+					if(localErrorCount > 0)
+						additionalInformationForLog = additionalInformationForLog + ", ";
+					additionalInformationForLog = additionalInformationForLog + this.getMessageService().getMessage("request.unShareDocument.recipientStatus.notShared", new Object[] {}, Locale.ENGLISH);					
 				}
 			}
 			
