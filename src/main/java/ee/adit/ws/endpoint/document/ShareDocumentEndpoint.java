@@ -83,7 +83,7 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 		ShareDocumentResponse response = new ShareDocumentResponse();
 		ArrayOfMessage messages = new ArrayOfMessage();
 		ArrayOfRecipientStatus statusArray = new ArrayOfRecipientStatus();
-		String additionalInformationForLog = null;
+		String additionalInformationForLog = "";
 		Long documentId = null;
 		
 		// Get a fixed request date
@@ -234,7 +234,9 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 					isSuccess = true;
 					saveDocument = true;
 					statusMessages.setMessage(this.getMessageService().getMessages("request.shareDocument.recipientStatus.success", new Object[] { }));
-					additionalInformationForLog = additionalInformationForLog + ", shared to: " + recipientCode;
+					if(additionalInformationForLog != null && additionalInformationForLog.trim() != "")
+						additionalInformationForLog = additionalInformationForLog + ",";
+					additionalInformationForLog = additionalInformationForLog + " shared to: " + recipientCode;
 				}
 				
 				// Create response object
@@ -315,7 +317,7 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 				//messages.addMessage(new Message("en", this.getMessageSource().getMessage("request.shareDocument.fail",	new Object[] { request.getDocumentId() }, Locale.ENGLISH)));
 				String additionalMessage = this.getMessageService().getMessage("request.shareDocument.fail", new Object[] { request.getDocumentId().toString() }, Locale.ENGLISH);
 				additionalMessage = additionalInformationForLog;
-				additionalInformationForLog = LogService.RequestLog_Success + ": " + additionalMessage;
+				additionalInformationForLog = LogService.RequestLog_Fail + additionalMessage;
 				messages.setMessage(this.getMessageService().getMessages("request.shareDocument.fail", new Object[] { request.getDocumentId().toString() }));
 			}
 			
