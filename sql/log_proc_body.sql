@@ -11,6 +11,10 @@ CREATE OR REPLACE PACKAGE BODY ADITLOG AS
     primary_key_v NUMBER(18,0) := access_restriction_old.id;
   BEGIN
   
+    IF(primary_key_v IS NULL) THEN
+      primary_key_v := access_restriction_new.id;
+    END IF;
+  
     -- Current user
     SELECT USER INTO usr FROM dual;
   
@@ -139,6 +143,10 @@ CREATE OR REPLACE PACKAGE BODY ADITLOG AS
     primary_key_v adit_user.user_code%TYPE := adit_user_old.user_code;
     test_date DATE := to_date('1900.01.01', 'yyyy.mm.dd');
   BEGIN
+  
+    IF(primary_key_v IS NULL) THEN
+      primary_key_v := adit_user_new.user_code;
+    END IF;
   
     -- Current user
     SELECT USER INTO usr FROM dual;
@@ -384,8 +392,8 @@ CREATE OR REPLACE PACKAGE BODY ADITLOG AS
       ) VALUES (
         tablename,
         'deactivation_date',
-        adit_user_old.deactivation_date,
-        adit_user_new.deactivation_date,
+        to_char(adit_user_old.deactivation_date, date_format),
+        to_char(adit_user_new.deactivation_date, date_format),
         sysdate,
         ADITLOG.remote_application_short_name,
         ADITLOG.xtee_isikukood,
@@ -409,6 +417,10 @@ CREATE OR REPLACE PACKAGE BODY ADITLOG AS
     primary_key_v NUMBER(18,0) := document_old.id;
     test_date DATE := to_date('1900.01.01', 'yyyy.mm.dd');
   BEGIN
+  
+    IF(primary_key_v IS NULL) THEN
+      primary_key_v := document_new.id;
+    END IF;
   
     -- Current user
     SELECT USER INTO usr FROM dual;
@@ -654,8 +666,8 @@ CREATE OR REPLACE PACKAGE BODY ADITLOG AS
       ) VALUES (
         tablename,
         'creation_date',
-        document_old.creation_date,
-        document_new.creation_date,
+        to_char(document_old.creation_date, date_format),
+        to_char(document_new.creation_date, date_format),
         sysdate,
         ADITLOG.remote_application_short_name,
         ADITLOG.xtee_isikukood,
@@ -710,8 +722,8 @@ CREATE OR REPLACE PACKAGE BODY ADITLOG AS
       ) VALUES (
         tablename,
         'last_modified_date',
-        document_old.last_modified_date,
-        document_new.last_modified_date,
+        to_char(document_old.last_modified_date, date_format),
+        to_char(document_new.last_modified_date, date_format),
         sysdate,
         ADITLOG.remote_application_short_name,
         ADITLOG.xtee_isikukood,
@@ -878,8 +890,8 @@ CREATE OR REPLACE PACKAGE BODY ADITLOG AS
       ) VALUES (
         tablename,
         'locking_date',
-        document_old.locking_date,
-        document_new.locking_date,
+        to_char(document_old.locking_date, date_format),
+        to_char(document_new.locking_date, date_format),
         sysdate,
         ADITLOG.remote_application_short_name,
         ADITLOG.xtee_isikukood,
@@ -962,8 +974,8 @@ CREATE OR REPLACE PACKAGE BODY ADITLOG AS
       ) VALUES (
         tablename,
         'deflate_date',
-        document_old.deflate_date,
-        document_new.deflate_date,
+        to_char(document_old.deflate_date, date_format),
+        to_char(document_new.deflate_date, date_format),
         sysdate,
         ADITLOG.remote_application_short_name,
         ADITLOG.xtee_isikukood,
@@ -1014,6 +1026,10 @@ CREATE OR REPLACE PACKAGE BODY ADITLOG AS
     primary_key_v NUMBER(18,0) := document_dvk_status_old.id;
     test_date DATE := to_date('1900.01.01', 'yyyy.mm.dd');
   BEGIN
+  
+    IF(primary_key_v IS NULL) THEN
+      primary_key_v := document_dvk_status_new.id;
+    END IF;
   
     -- Current user
     SELECT USER INTO usr FROM dual;
@@ -1087,6 +1103,10 @@ CREATE OR REPLACE PACKAGE BODY ADITLOG AS
     primary_key_v NUMBER(18,0) := document_file_old.id;
     test_date DATE := to_date('1900.01.01', 'yyyy.mm.dd');
   BEGIN
+  
+    IF(primary_key_v IS NULL) THEN
+      primary_key_v := document_file_new.id;
+    END IF;
   
     -- Current user
     SELECT USER INTO usr FROM dual;
@@ -1301,6 +1321,10 @@ CREATE OR REPLACE PACKAGE BODY ADITLOG AS
     test_date DATE := to_date('1900.01.01', 'yyyy.mm.dd');
   BEGIN
   
+    IF(primary_key_v IS NULL) THEN
+      primary_key_v := document_history_new.id;
+    END IF;
+  
     -- Current user
     SELECT USER INTO usr FROM dual;
     
@@ -1433,8 +1457,8 @@ CREATE OR REPLACE PACKAGE BODY ADITLOG AS
       ) VALUES (
         tablename,
         'event_date',
-        document_history_old.event_date,
-        document_history_new.event_date,
+        to_char(document_history_old.event_date, date_format),
+        to_char(document_history_new.event_date, date_format),
         sysdate,
         ADITLOG.remote_application_short_name,
         ADITLOG.xtee_isikukood,
@@ -1654,6 +1678,10 @@ CREATE OR REPLACE PACKAGE BODY ADITLOG AS
     test_date DATE := to_date('1900.01.01', 'yyyy.mm.dd');
   BEGIN
   
+    IF(primary_key_v IS NULL) THEN
+      primary_key_v := document_history_type_new.short_name;
+    END IF;
+  
     -- Current user
     SELECT USER INTO usr FROM dual;
     
@@ -1726,6 +1754,10 @@ CREATE OR REPLACE PACKAGE BODY ADITLOG AS
     primary_key_v document_sharing_old.id%TYPE := document_sharing_old.id;
     test_date DATE := to_date('1900.01.01', 'yyyy.mm.dd');
   BEGIN
+  
+    IF(primary_key_v IS NULL) THEN
+      primary_key_v := document_sharing_new.id;
+    END IF;
   
     -- Current user
     SELECT USER INTO usr FROM dual;
@@ -1915,8 +1947,8 @@ CREATE OR REPLACE PACKAGE BODY ADITLOG AS
       ) VALUES (
         tablename,
         'creation_date',
-        document_sharing_old.creation_date,
-        document_sharing_new.creation_date,
+        to_char(document_sharing_old.creation_date, date_format),
+        to_char(document_sharing_new.creation_date, date_format),
         sysdate,
         ADITLOG.remote_application_short_name,
         ADITLOG.xtee_isikukood,
@@ -1999,8 +2031,8 @@ CREATE OR REPLACE PACKAGE BODY ADITLOG AS
       ) VALUES (
         tablename,
         'last_access_date',
-        document_sharing_old.last_access_date,
-        document_sharing_new.last_access_date,
+        to_char(document_sharing_old.last_access_date, date_format),
+        to_char(document_sharing_new.last_access_date, date_format),
         sysdate,
         ADITLOG.remote_application_short_name,
         ADITLOG.xtee_isikukood,
@@ -2023,6 +2055,10 @@ CREATE OR REPLACE PACKAGE BODY ADITLOG AS
     primary_key_v document_sharing_type_old.short_name%TYPE := document_sharing_type_old.short_name;
     test_date DATE := to_date('1900.01.01', 'yyyy.mm.dd');
   BEGIN
+  
+    IF(primary_key_v IS NULL) THEN
+      primary_key_v := document_sharing_type_new.short_name;
+    END IF;
   
     -- Current user
     SELECT USER INTO usr FROM dual;
@@ -2097,6 +2133,10 @@ CREATE OR REPLACE PACKAGE BODY ADITLOG AS
     test_date DATE := to_date('1900.01.01', 'yyyy.mm.dd');
   BEGIN
   
+    IF(primary_key_v IS NULL) THEN
+      primary_key_v := document_type_new.short_name;
+    END IF;
+  
     -- Current user
     SELECT USER INTO usr FROM dual;
   
@@ -2169,6 +2209,10 @@ CREATE OR REPLACE PACKAGE BODY ADITLOG AS
     primary_key_v document_wf_status_old.id%TYPE := document_wf_status_old.id;
     test_date DATE := to_date('1900.01.01', 'yyyy.mm.dd');
   BEGIN
+  
+    IF(primary_key_v IS NULL) THEN
+      primary_key_v := document_wf_status_new.id;
+    END IF;
   
     -- Current user
     SELECT USER INTO usr FROM dual;
@@ -2270,6 +2314,10 @@ CREATE OR REPLACE PACKAGE BODY ADITLOG AS
     primary_key_v notification_old.id%TYPE := notification_old.id;
     test_date DATE := to_date('1900.01.01', 'yyyy.mm.dd');
   BEGIN
+  
+    IF(primary_key_v IS NULL) THEN
+      primary_key_v := notification_new.id;
+    END IF;
   
     -- Current user
     SELECT USER INTO usr FROM dual;
@@ -2375,8 +2423,8 @@ CREATE OR REPLACE PACKAGE BODY ADITLOG AS
       ) VALUES (
         tablename,
         'event_date',
-        notification_old.event_date,
-        notification_new.event_date,
+        to_char(notification_old.event_date, date_format),
+        to_char(notification_new.event_date, date_format),
         sysdate,
         ADITLOG.remote_application_short_name,
         ADITLOG.xtee_isikukood,
@@ -2487,8 +2535,8 @@ CREATE OR REPLACE PACKAGE BODY ADITLOG AS
       ) VALUES (
         tablename,
         'notification_sending_date',
-        notification_old.notification_sending_date,
-        notification_new.notification_sending_date,
+        to_char(notification_old.notification_sending_date, date_format), 
+        to_char(notification_new.notification_sending_date, date_format),
         sysdate,
         ADITLOG.remote_application_short_name,
         ADITLOG.xtee_isikukood,
@@ -2511,6 +2559,10 @@ CREATE OR REPLACE PACKAGE BODY ADITLOG AS
     primary_key_v notification_type_old.short_name%TYPE := notification_type_old.short_name;
     test_date DATE := to_date('1900.01.01', 'yyyy.mm.dd');
   BEGIN
+  
+    IF(primary_key_v IS NULL) THEN
+      primary_key_v := notification_type_new.short_name;
+    END IF;
   
     -- Current user
     SELECT USER INTO usr FROM dual;
@@ -2584,6 +2636,10 @@ CREATE OR REPLACE PACKAGE BODY ADITLOG AS
     primary_key_v remote_application_old.short_name%TYPE := remote_application_old.short_name;
     test_date DATE := to_date('1900.01.01', 'yyyy.mm.dd');
   BEGIN
+  
+    IF(primary_key_v IS NULL) THEN
+      primary_key_v := remote_application_new.short_name;
+    END IF;
   
     -- Current user
     SELECT USER INTO usr FROM dual;
@@ -2741,6 +2797,10 @@ CREATE OR REPLACE PACKAGE BODY ADITLOG AS
     primary_key_v signature_old.id%TYPE := signature_old.id;
     test_date DATE := to_date('1900.01.01', 'yyyy.mm.dd');
   BEGIN
+  
+    IF(primary_key_v IS NULL) THEN
+      primary_key_v := signature_new.id;
+    END IF;
   
     -- Current user
     SELECT USER INTO usr FROM dual;
@@ -3067,6 +3127,10 @@ CREATE OR REPLACE PACKAGE BODY ADITLOG AS
     test_date DATE := to_date('1900.01.01', 'yyyy.mm.dd');
   BEGIN
   
+    IF(primary_key_v IS NULL) THEN
+      primary_key_v := user_notification_new.user_code;
+    END IF;
+  
     -- Current user
     SELECT USER INTO usr FROM dual;
   
@@ -3139,6 +3203,10 @@ CREATE OR REPLACE PACKAGE BODY ADITLOG AS
     primary_key_v usertype_old.short_name%TYPE := usertype_old.short_name;
     test_date DATE := to_date('1900.01.01', 'yyyy.mm.dd');
   BEGIN
+  
+    IF(primary_key_v IS NULL) THEN
+      primary_key_v := usertype_new.short_name;
+    END IF;
   
     -- Current user
     SELECT USER INTO usr FROM dual;
@@ -3230,4 +3298,3 @@ CREATE OR REPLACE PACKAGE BODY ADITLOG AS
   END LOG_USERTYPE;
 
 END ADITLOG;
-/
