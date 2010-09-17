@@ -277,7 +277,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 						this.header.getInfosysteem(),
 						(((this.header.getAllasutus() != null) && (this.header.getAllasutus().length() > 0)) ? this.header.getAllasutus() : this.header.getIsikukood()),
 						this.header.getAsutus(),
-						additionalInformation);
+						additionalInformation.trim());
 			} else {
 				throw new NullPointerException("Request header not initialized.");
 			}			
@@ -352,7 +352,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 						this.header.getInfosysteem(),
 						(((this.header.getAllasutus() != null) && (this.header.getAllasutus().length() > 0)) ? this.header.getAllasutus() : this.header.getIsikukood()),
 						level,
-						errorMessage);
+						errorMessage.trim());
 			} else {
 				throw new NullPointerException("Request header not initialized.");
 			}			
