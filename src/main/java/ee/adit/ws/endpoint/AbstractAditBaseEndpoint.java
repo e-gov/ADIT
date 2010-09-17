@@ -41,11 +41,13 @@ import ee.adit.util.Util;
  * @author Jaak Lember, Interinx, jaak@interinx.com
  */
 public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
-
+	
 	/**
 	 * Log4J logger.
 	 */
 	private static Logger LOG = Logger.getLogger(AbstractAditBaseEndpoint.class);
+	
+	public static final String DEFAULT_NAMESPACE = "ametlikud-dokumendid";
 	
 	/**
 	 * X-Tee header.
@@ -140,7 +142,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 			String additionalInformation = "ERROR: Exception while marshalling request/response object: " + e.getMessage();
 			
 			// Add request log entry
-			this.getLogService().addRequestLogEntry(requestName + ".v" + version, null, new Date(), xteeHeader.getInfosysteem(), xteeHeader.getIsikukood(), xteeHeader.getAsutus(), additionalInformation);
+			this.getLogService().addRequestLogEntry(DEFAULT_NAMESPACE + "." + requestName + ".v" + version, null, new Date(), xteeHeader.getInfosysteem(), xteeHeader.getIsikukood(), xteeHeader.getAsutus(), additionalInformation);
 			
 		}
 		
