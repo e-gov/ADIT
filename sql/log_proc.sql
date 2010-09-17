@@ -5,7 +5,7 @@ CREATE OR REPLACE PACKAGE ADITLOG AS
   xtee_asutus VARCHAR2(100);
   remote_application_short_name VARCHAR2(50);
 
-  date_format VARCHAR2(100) := 'mm.dd.yyyy HH24:MI:SS';
+  date_format VARCHAR2(100) := 'dd.mm.yyyy HH24:MI:SS';
   
   PROCEDURE LOG_ACCESS_RESTRICTION (
     access_restriction_new IN access_restriction%ROWTYPE,
