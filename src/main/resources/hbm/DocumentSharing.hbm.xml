@@ -34,7 +34,7 @@
         <property name="creationDate" type="timestamp">
             <column name="CREATION_DATE" length="7" />
         </property>
-        <property name="lastAccessDate" type="date">
+        <property name="lastAccessDate" type="timestamp">
             <column name="LAST_ACCESS_DATE" length="7" />
         </property>
     </class>

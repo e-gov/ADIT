@@ -23,7 +23,7 @@
         <property name="diskQuota" type="java.lang.Long">
             <column name="DISK_QUOTA" precision="18" scale="0" />
         </property>
-        <property name="deactivationDate" type="date">
+        <property name="deactivationDate" type="timestamp">
             <column name="DEACTIVATION_DATE" length="7" />
         </property>
         <set name="accessRestrictions" inverse="true" lazy="true" table="ACCESS_RESTRICTION" fetch="select">

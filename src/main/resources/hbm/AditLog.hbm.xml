@@ -20,7 +20,7 @@
         <property name="newValue" type="string">
             <column name="NEW_VALUE" length="50" />
         </property>
-        <property name="logDate" type="date">
+        <property name="logDate" type="timestamp">
             <column name="LOG_DATE" length="7" />
         </property>
         <property name="remoteApplicationShortName" type="string">
