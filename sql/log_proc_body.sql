@@ -1083,7 +1083,7 @@ CREATE OR REPLACE PACKAGE BODY ADITLOG AS
   ) AS
     usr       varchar2(20);
     pkey_col  varchar2(50);
-    tablename varchar2(50) := 'DOCUMENT_DVK_STATUS';
+    tablename varchar2(50) := 'DOCUMENT_FILE';
     primary_key_v NUMBER(18,0) := document_file_old.id;
     test_date DATE := to_date('1900.01.01', 'yyyy.mm.dd');
   BEGIN
