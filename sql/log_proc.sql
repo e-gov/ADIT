@@ -1,12 +1,14 @@
-CREATE OR REPLACE PACKAGE ADITLOG AS 
+create or replace
+PACKAGE ADITLOG AS 
   
   -- Logimise muutujad
   xtee_isikukood VARCHAR2(100);
   xtee_asutus VARCHAR2(100);
   remote_application_short_name VARCHAR2(50);
 
+  TYPE result_ref_cursor IS REF CURSOR;
   date_format VARCHAR2(100) := 'dd.mm.yyyy HH24:MI:SS';
-  
+
   PROCEDURE LOG_ACCESS_RESTRICTION (
     access_restriction_new IN access_restriction%ROWTYPE,
     access_restriction_old IN access_restriction%ROWTYPE,
@@ -113,5 +115,3 @@ CREATE OR REPLACE PACKAGE ADITLOG AS
   );
 
 END ADITLOG;
-/
-
