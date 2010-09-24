@@ -415,6 +415,11 @@ src/main/resources/ria-dev-weblogic/jdigidoc.cfg -text
 src/main/resources/ria-dev-weblogic/log4j.xml -text
 src/main/resources/ria-dev-weblogic/nsca_send_clear.cfg -text
 src/main/resources/ria-dev-weblogic/xtee.properties -text
+src/main/resources/ria-test-weblogic/adit-servlet.xml -text
+src/main/resources/ria-test-weblogic/jdigidoc.cfg -text
+src/main/resources/ria-test-weblogic/log4j.xml -text
+src/main/resources/ria-test-weblogic/nsca_send_clear.cfg -text
+src/main/resources/ria-test-weblogic/xtee.properties -text
 src/main/resources/xtee.properties -text
 src/main/webapp/META-INF/MANIFEST.MF -text
 src/main/webapp/WEB-INF/web.xml -text
