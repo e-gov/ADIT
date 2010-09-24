@@ -395,7 +395,7 @@
 	</bean>
 
 	<bean id="aditDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
-	  <property name="jndiName" value="java:comp/env/jdbc/aditds"/>
+	  <property name="jndiName" value="java:comp/env/jdbc/ADIT_DS"/>
 	</bean>
 
 	<bean id="sessionFactory"
