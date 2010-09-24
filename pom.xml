@@ -9,9 +9,10 @@
 	<url>http://maven.apache.org</url>
 
 	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<baseDir>C:\development\adit\trunk</baseDir>
 		<!-- Specifies which configuration resources to bundle with the build (ie. "dev", "test", "production") -->
-		<resourceDir>ria-dev-tomcat</resourceDir>
+		<resourceDir>ria-dev-weblogic</resourceDir>
 	</properties>
 
 	<dependencies>
@@ -400,7 +401,6 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
-					<encoding>UTF-8</encoding>
 					<source>1.6</source>
 					<target>1.6</target>
 				</configuration>
