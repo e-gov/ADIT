@@ -393,7 +393,7 @@
 	</bean>
 
 	<bean id="aditDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
-	  <property name="jndiName" value="java:comp/env/jdbc/adit"/>
+	  <property name="jndiName" value="java:comp/env/jdbc/aditds"/>
 	</bean>
 
 	<bean id="sessionFactory"
@@ -637,10 +637,10 @@
 	<!-- Configuration -->
 	<bean id="configuration" class="ee.adit.util.Configuration">
 		<property name="getJoinedMaxResults" value="2"/>
-		<property name="tempDir" value="/opt/apache-tomcat-6.0.29-adit/temp"/>
+		<property name="tempDir" value="temp"/>
 		<property name="deleteTemporaryFiles" value="true"/>
 		<property name="schedulerEventTypeName" value="Minu dokumentide teavitus"/>
-		<property name="dvkResponseMessageStylesheet" value="/bea/user_projects/domains/arendus/tmp/adit/WEB-INF/DVKresponseMessage.xsl"/>
+		<property name="dvkResponseMessageStylesheet" value="DVKresponseMessage.xsl"/>
 		<!-- Üldine kettamahu piirang ühe kasutaja kohta baitides -->
 		<property name="globalDiskQuota" value="10240000"/>
 		<property name="locales">
