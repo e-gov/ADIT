@@ -32,12 +32,12 @@
 		<mapping resource="dvkapi/Subdivision.hbm.xml"/>
 		<mapping resource="dvkapi/Occupation.hbm.xml"/>
 		
-		<!-- 
+		
 		<mapping resource="dvkapi/Organization.hbm.xml"/>
 		<mapping resource="dvkapi/SettingsFolders.hbm.xml"/>
 		<mapping resource="dvkapi/Settings.hbm.xml"/>
 		<mapping resource="dvkapi/Message.hbm.xml"/>
 		<mapping resource="dvkapi/MessageRecipient.hbm.xml"/>
-		-->
+		
 	</session-factory>
 </hibernate-configuration>
