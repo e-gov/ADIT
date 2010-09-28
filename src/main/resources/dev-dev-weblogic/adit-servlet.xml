@@ -676,7 +676,6 @@
 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="triggers">
 	   		<list>
-	      		<!--
 	      		<ref bean="dvkSendTrigger"/>
 	      		<ref bean="dvkReceiveTrigger"/>
 	      		<ref bean="dvkUpdateStatusTrigger"/>
@@ -685,7 +684,6 @@
 	      		<ref bean="temporaryFolderCleanerTrigger"/>
 	      		<ref bean="DeleteDocumentsFromDVKJobTrigger"/>
 	      		<ref bean="UserSyncJobTrigger"/>
-	      		-->
 	    	</list>
 	  	</property>
 	</bean>
