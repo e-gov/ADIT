@@ -365,6 +365,7 @@ src/main/resources/castor-mapping/xsd.v2/dhl-meta-automatic.xsd -text
 src/main/resources/castor-mapping/xsd.v2/dhl-meta-manual.xsd -text
 src/main/resources/castor-mapping/xsd.v2/dhl.xsd -text
 src/main/resources/dev-dev/adit-servlet.xml -text
+src/main/resources/dev-dev/hibernate_ora_dvk.cfg.xml -text
 src/main/resources/dev-dev/jdigidoc.cfg -text
 src/main/resources/dev-dev/log4j.xml -text
 src/main/resources/dev-dev/nsca_send_clear.cfg -text
@@ -411,6 +412,7 @@ src/main/resources/ria-dev-tomcat/log4j.xml -text
 src/main/resources/ria-dev-tomcat/nsca_send_clear.cfg -text
 src/main/resources/ria-dev-tomcat/xtee.properties -text
 src/main/resources/ria-dev-weblogic/adit-servlet.xml -text
+src/main/resources/ria-dev-weblogic/hibernate_ora_dvk.cfg.xml -text
 src/main/resources/ria-dev-weblogic/jdigidoc.cfg -text
 src/main/resources/ria-dev-weblogic/log4j.xml -text
 src/main/resources/ria-dev-weblogic/nsca_send_clear.cfg -text
@@ -422,4 +424,6 @@ src/main/resources/ria-test-weblogic/nsca_send_clear.cfg -text
 src/main/resources/ria-test-weblogic/xtee.properties -text
 src/main/resources/xtee.properties -text
 src/main/webapp/META-INF/MANIFEST.MF -text
+src/main/webapp/META-INF/application.xml -text
+src/main/webapp/META-INF/weblogic-application.xml -text
 src/main/webapp/WEB-INF/web.xml -text

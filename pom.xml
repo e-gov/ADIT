@@ -11,7 +11,10 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<baseDir>C:\development\adit\trunk</baseDir>
-		<!-- Specifies which configuration resources to bundle with the build (ie. "dev", "test", "production") -->
+		<!--
+			Specifies which configuration resources to bundle with the build (ie.
+			"dev", "test", "production")
+		-->
 		<resourceDir>ria-dev-weblogic</resourceDir>
 	</properties>
 
@@ -101,7 +104,7 @@
 			<scope>system</scope>
 			<systemPath>${baseDir}\lib\wsdl4j-qname-1.6.1.jar</systemPath>
 		</dependency>
-		
+
 		<!-- Logging -->
 		<dependency>
 			<groupId>org.apache</groupId>
@@ -182,7 +185,7 @@
 			<scope>system</scope>
 			<systemPath>${baseDir}/lib/jta-1.1.jar</systemPath>
 		</dependency>
-		
+
 
 		<!-- Oracle -->
 		<dependency>
@@ -192,7 +195,7 @@
 			<scope>system</scope>
 			<systemPath>${baseDir}/lib/ojdbc6.jar</systemPath>
 		</dependency>
-		
+
 		<!-- Codec -->
 		<dependency>
 			<groupId>commons</groupId>
@@ -201,7 +204,7 @@
 			<scope>system</scope>
 			<systemPath>${baseDir}/lib/commons-codec-1.4.jar</systemPath>
 		</dependency>
-		
+
 		<!-- DigiDoc -->
 		<dependency>
 			<groupId>ee.sk.digidoc</groupId>
@@ -210,8 +213,8 @@
 			<scope>system</scope>
 			<systemPath>${baseDir}/lib/JDigiDoc.jar</systemPath>
 		</dependency>
-		
-		
+
+
 		<dependency>
 			<groupId>xerces</groupId>
 			<artifactId>impl</artifactId>
@@ -219,8 +222,8 @@
 			<scope>system</scope>
 			<systemPath>${baseDir}/lib/xercesImpl-2.9.1.jar</systemPath>
 		</dependency>
-		
-		
+
+
 		<dependency>
 			<groupId>xml</groupId>
 			<artifactId>apis</artifactId>
@@ -256,7 +259,7 @@
 			<scope>system</scope>
 			<systemPath>${baseDir}/lib/tinyxmlcanonicalizer-0.9.0.jar</systemPath>
 		</dependency>
-		
+
 		<!-- XmlBeans -->
 		<dependency>
 			<groupId>org.apache</groupId>
@@ -265,7 +268,7 @@
 			<scope>system</scope>
 			<systemPath>${baseDir}/lib/xbean.jar</systemPath>
 		</dependency>
-		
+
 		<!-- Quartz -->
 		<dependency>
 			<groupId>org.quartz</groupId>
@@ -274,8 +277,8 @@
 			<scope>system</scope>
 			<systemPath>${baseDir}/lib/quartz-1.8.3.jar</systemPath>
 		</dependency>
-		
-		<!-- DVKAPI -->		
+
+		<!-- DVKAPI -->
 		<dependency>
 			<groupId>ee.dvk</groupId>
 			<artifactId>api</artifactId>
@@ -283,7 +286,7 @@
 			<scope>system</scope>
 			<systemPath>${baseDir}/lib/dvkapi.jar</systemPath>
 		</dependency>
-		
+
 		<!-- FOP -->
 		<dependency>
 			<groupId>org.apache</groupId>
@@ -341,7 +344,7 @@
 				<filtering>false</filtering>
 				<targetPath>../adit/WEB-INF/classes/hbm</targetPath>
 			</resource>
-			
+
 			<!-- Include all the environment specific configuration files -->
 			<resource>
 				<directory>src/main/resources/${resourceDir}</directory>
@@ -367,7 +370,7 @@
 					<include>weblogic-application.xml</include>
 				</includes>
 			</resource>
-			
+
 			<!-- Include static resources -->
 			<resource>
 				<directory>src/main/resources</directory>
@@ -387,7 +390,7 @@
 					<include>adit.xsd</include>
 				</includes>
 			</resource>
-			
+
 			<resource>
 				<directory>${baseDir}/sql</directory>
 				<filtering>false</filtering>
@@ -423,6 +426,16 @@
 					<warFile>${baseDir}/target/adit.war</warFile>
 				</configuration>
 			</plugin>
+
+			<!-- EAR -->
+			<plugin>
+				<artifactId>maven-ear-plugin</artifactId>
+				<version>2.4.2</version>
+				<configuration>
+					<defaultJavaBundleDir>lib/</defaultJavaBundleDir>
+				</configuration>
+			</plugin>
+
 		</plugins>
 	</build>
 
