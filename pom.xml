@@ -15,7 +15,7 @@
 			Specifies which configuration resources to bundle with the build (ie.
 			"dev", "test", "production")
 		-->
-		<resourceDir>dev-dev-weblogic</resourceDir>
+		<resourceDir>ria-dev-weblogic</resourceDir>
 	</properties>
 
 	<dependencies>
