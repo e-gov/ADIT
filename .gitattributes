@@ -364,6 +364,12 @@ src/main/resources/castor-mapping/xsd.v1/rkel_letter.xsd -text
 src/main/resources/castor-mapping/xsd.v2/dhl-meta-automatic.xsd -text
 src/main/resources/castor-mapping/xsd.v2/dhl-meta-manual.xsd -text
 src/main/resources/castor-mapping/xsd.v2/dhl.xsd -text
+src/main/resources/dev-dev-weblogic/adit-servlet.xml -text
+src/main/resources/dev-dev-weblogic/hibernate_ora_dvk.cfg.xml -text
+src/main/resources/dev-dev-weblogic/jdigidoc.cfg -text
+src/main/resources/dev-dev-weblogic/log4j.xml -text
+src/main/resources/dev-dev-weblogic/nsca_send_clear.cfg -text
+src/main/resources/dev-dev-weblogic/xtee.properties -text
 src/main/resources/dev-dev/adit-servlet.xml -text
 src/main/resources/dev-dev/hibernate_ora_dvk.cfg.xml -text
 src/main/resources/dev-dev/jdigidoc.cfg -text
