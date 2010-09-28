@@ -609,6 +609,29 @@
 	  	<property name="repeatInterval" value="120000"/>
 	</bean>
 	 
+	<bean id="temporaryFolderCleanerTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+	  	<property name="jobDetail" ref="temporaryFolderCleanerJobDetails"/>
+	  	<!-- First execute 10 seconds after application start -->
+	  	<property name="startDelay" value="10000"/>
+	  	<!-- Repeat every 1 hour -->
+	  	<property name="repeatInterval" value="360000"/>
+	</bean>
+	 
+	<bean id="DeleteDocumentsFromDVKJobTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+	  	<property name="jobDetail" ref="DeleteDocumentsFromDVKJobDetails"/>
+		<!-- 10 seconds -->
+	  	<property name="startDelay" value="0"/>
+		<!-- repeat every 20 seconds -->
+	  	<property name="repeatInterval" value="3600000"/>
+	</bean>
+	 
+	<bean id="UserSyncJobTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+	  	<property name="jobDetail" ref="UserSyncJobDetails"/>
+		<!-- 10 seconds -->
+	  	<property name="startDelay" value="0"/>
+		<!-- repeat every 20 seconds -->
+	  	<property name="repeatInterval" value="30000"/>
+	</bean>
 	 
 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="triggers">
