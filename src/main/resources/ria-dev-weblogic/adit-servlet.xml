@@ -571,6 +571,39 @@
 	    </property>
 	</bean>
 	
+	<bean name="temporaryFolderCleanerJobDetails" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass" value="ee.adit.util.TemporaryFolderCleanerJob"/>
+		<property name="jobDataAsMap">
+		    <map>
+		    	<entry key="configuration">
+		      		<ref bean="configuration"/>
+		      	</entry>
+		    </map>
+	    </property>
+	</bean>
+	
+	<bean name="DeleteDocumentsFromDVKJobDetails" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass" value="ee.adit.dvk.DeleteDocumentsFromDVKJob"/>
+		<property name="jobDataAsMap">
+		    <map>
+		    	<entry key="documentService">
+		      		<ref bean="documentService"/>
+		      	</entry>
+		    </map>
+	    </property>
+	</bean>
+	
+	<bean name="UserSyncJobDetails" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass" value="ee.adit.dvk.UserSyncJob"/>
+		<property name="jobDataAsMap">
+		    <map>
+		    	<entry key="userService">
+		      		<ref bean="userService"/>
+		      	</entry>
+		    </map>
+	    </property>
+	</bean>
+	
 	<bean id="dvkSendTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
 	  	<property name="jobDetail" ref="sendJobDetails"/>
 		<!-- 10 seconds -->
