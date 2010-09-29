@@ -430,10 +430,12 @@
 			<props>
 				<prop key="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</prop>
 				<prop key="hibernate.cache.provider_class">org.hibernate.cache.NoCacheProvider</prop>
+				<prop key="hibernate.transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</prop>
 				<!-- 
 				This is not needed, because Spring manages the transactions itself, when transaction management is enabled.-->
+				<!-- 
 				<prop key="hibernate.current_session_context_class">thread</prop>
-
+				-->
 				<!--<prop key="hibernate.transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</prop>
 				-->
 				<prop key="hibernate.show_sql">false</prop>
@@ -656,7 +658,7 @@
 		<!-- 10 seconds -->
 	  	<property name="startDelay" value="0"/>
 		<!-- repeat every 20 seconds -->
-	  	<property name="repeatInterval" value="3600000"/>
+	  	<property name="repeatInterval" value="15000"/>
 	</bean>
 	 
 	<bean id="UserSyncJobTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
@@ -674,10 +676,13 @@
 	      		<ref bean="dvkReceiveTrigger"/>
 	      		<ref bean="dvkUpdateStatusTrigger"/>
 	      		<ref bean="dvkUpdateStatusToDVKTrigger"/>
-	      		<ref bean="notificationTrigger"/>
-	      		<ref bean="temporaryFolderCleanerTrigger"/>
 	      		<ref bean="DeleteDocumentsFromDVKJobTrigger"/>
+	      		
+	      		<!-- 
+	      		<ref bean="temporaryFolderCleanerTrigger"/>
+	      		<ref bean="notificationTrigger"/>
 	      		<ref bean="UserSyncJobTrigger"/>
+	      		-->
 	    	</list>
 	  	</property>
 	</bean>

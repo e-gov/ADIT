@@ -32,6 +32,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.springframework.transaction.annotation.Transactional;
 
 import dvk.api.container.v2.Saaja;
 import dvk.api.ml.PojoMessage;
@@ -837,14 +838,10 @@ public class DocumentDAO extends HibernateDaoSupport {
 		String SQL = "from Document where documentDvkStatusId is null or documentDvkStatusId != " + dvkStatusId;
 		Session session = null;
 		try {
-			session = this.getSessionFactory().openSession();
+			session = this.getSessionFactory().getCurrentSession();
 			result = session.createQuery(SQL).list();
 		} catch (Exception e) {
 			throw new AditInternalException("Error while updating Document: ", e);
-		} finally {
-			if(session != null) {
-				session.close();
-			}
 		}
 		
 		return result;
@@ -855,7 +852,7 @@ public class DocumentDAO extends HibernateDaoSupport {
 		Transaction transaction = null;
 		try {
 			
-			session = this.getSessionFactory().openSession();
+			session = this.getSessionFactory().getCurrentSession();
 			transaction = session.beginTransaction();
 			session.saveOrUpdate(document);
 			transaction.commit();
@@ -865,10 +862,6 @@ public class DocumentDAO extends HibernateDaoSupport {
 				transaction.rollback();
 			}
 			throw new AditInternalException("Error while updating Document: ", e);
-		} finally {
-			if(session != null) {
-				session.close();
-			}
 		}		
 	}
 	
@@ -878,14 +871,10 @@ public class DocumentDAO extends HibernateDaoSupport {
 		
 		Session session = null;
 		try {
-			session = this.getSessionFactory().openSession();
+			session = this.getSessionFactory().getCurrentSession();
 			result = (Document) session.createQuery(SQL).uniqueResult();
 		} catch (Exception e) {
 			throw new AditInternalException("Error while updating Document: ", e);
-		} finally {
-			if(session != null) {
-				session.close();
-			}
 		}
 			
 		return result;

@@ -710,7 +710,7 @@ public class DocumentService {
 
 		LOG.debug("Fetching documents for sending to DVK...");
 		Session session = this.getDocumentDAO().getSessionFactory()
-				.openSession();
+				.getCurrentSession();
 
 		Query query = session.createQuery(SQL_QUERY);
 		List<Document> documents = query.list();
@@ -823,7 +823,7 @@ public class DocumentService {
 				SessionFactory sessionFactory = DVKAPI
 						.createSessionFactory("hibernate_ora_dvk.cfg.xml");
 				Long dvkMessageID = null;
-				Session dvkSession = sessionFactory.openSession();
+				Session dvkSession = sessionFactory.getCurrentSession();
 				Transaction dvkTransaction = dvkSession.beginTransaction();
 
 				try {
@@ -869,14 +869,10 @@ public class DocumentService {
 					throw new DataRetrievalFailureException(
 							"Error while adding message to DVK Client database: ",
 							e);
-				} finally {
-					if (dvkSession != null) {
-						dvkSession.close();
-					}
 				}
 
 				// Update CLOB
-				Session dvkSession2 = sessionFactory.openSession();
+				Session dvkSession2 = sessionFactory.getCurrentSession();
 				Transaction dvkTransaction2 = dvkSession2.beginTransaction();
 
 				try {
@@ -933,7 +929,7 @@ public class DocumentService {
 					dvkTransaction2.rollback();
 
 					// Remove the document with empty clob from the database
-					Session dvkSession3 = sessionFactory.openSession();
+					Session dvkSession3 = sessionFactory.getCurrentSession();
 					Transaction dvkTransaction3 = dvkSession3
 							.beginTransaction();
 					try {
@@ -956,19 +952,11 @@ public class DocumentService {
 						LOG.error(
 								"Error deleting document from DVK database: ",
 								dvkException);
-					} finally {
-						if (dvkSession3 != null) {
-							dvkSession3.close();
-						}
 					}
 
 					throw new DataRetrievalFailureException(
 							"Error while adding message to DVK Client database (CLOB update): ",
 							e);
-				} finally {
-					if (dvkSession2 != null) {
-						dvkSession2.close();
-					}
 				}
 			} catch (Exception e) {
 
@@ -1388,6 +1376,7 @@ public class DocumentService {
 	 * 
 	 * @return number of messages updated.
 	 */
+	@Transactional
 	public int updateDocumentsFromDVK() {
 		int result = 0;
 
