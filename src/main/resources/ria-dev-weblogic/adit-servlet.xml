@@ -278,49 +278,49 @@
 		<property name="mappings">
 			<props>
 				<prop
-					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}join">JoinEndpoint</prop>
+					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}Join">JoinEndpoint</prop>
 				<prop
-					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}unJoin">UnJoinEndpoint</prop>
+					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}UnJoin">UnJoinEndpoint</prop>
 				<prop
-					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}getJoined">GetJoinedEndpoint</prop>
+					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}GetJoined">GetJoinedEndpoint</prop>
 				<prop
-					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}getUserInfo">GetUserInfoEndpoint</prop>
+					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}GetUserInfo">GetUserInfoEndpoint</prop>
 				<prop
-					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}setNotifications">SetNotificationsEndpoint</prop>
+					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}SetNotifications">SetNotificationsEndpoint</prop>
 				<prop
-					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}getNotifications">GetNotificationsEndpoint</prop>
+					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}GetNotifications">GetNotificationsEndpoint</prop>
 				<prop
-					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}confirmSignature">ConfirmSignatureEndpoint</prop>
+					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}ConfirmSignature">ConfirmSignatureEndpoint</prop>
 				<prop
-					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}deflateDocument">DeflateDocumentEndpoint</prop>
+					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}DeflateDocument">DeflateDocumentEndpoint</prop>
 				<prop
-					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}deleteDocument">DeleteDocumentEndpoint</prop>
+					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}DeleteDocument">DeleteDocumentEndpoint</prop>
 				<prop
-					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}deleteDocumentFile">DeleteDocumentFileEndpoint</prop>
+					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}DeleteDocumentFile">DeleteDocumentFileEndpoint</prop>
 				<prop
-					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}getDocument">GetDocumentEndpoint</prop>
+					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}GetDocument">GetDocumentEndpoint</prop>
 				<prop
-					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}getDocumentFile">GetDocumentFileEndpoint</prop>
+					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}GetDocumentFile">GetDocumentFileEndpoint</prop>
 				<prop
-					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}getDocumentHistory">GetDocumentHistoryEndpoint</prop>
+					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}GetDocumentHistory">GetDocumentHistoryEndpoint</prop>
 				<prop
-					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}getDocumentList">GetDocumentListEndpoint</prop>
+					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}GetDocumentList">GetDocumentListEndpoint</prop>
 				<prop
-					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}markDocumentViewed">MarkDocumentViewedEndpoint</prop>
+					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}MarkDocumentViewed">MarkDocumentViewedEndpoint</prop>
 				<prop
-					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}modifyStatus">ModifyStatusEndpoint</prop>
+					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}ModifyStatus">ModifyStatusEndpoint</prop>
 				<prop
-					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}prepareSignature">PrepareSignatureEndpoint</prop>
+					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}PrepareSignature">PrepareSignatureEndpoint</prop>
 				<prop
-					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}saveDocument">SaveDocumentEndpoint</prop>
+					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}SaveDocument">SaveDocumentEndpoint</prop>
 				<prop
-					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}saveDocumentFile">SaveDocumentFileEndpoint</prop>
+					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}SaveDocumentFile">SaveDocumentFileEndpoint</prop>
 				<prop
-					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}sendDocument">SendDocumentEndpoint</prop>
+					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}SendDocument">SendDocumentEndpoint</prop>
 				<prop
-					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}shareDocument">ShareDocumentEndpoint</prop>
+					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}ShareDocument">ShareDocumentEndpoint</prop>
 				<prop
-					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}unShareDocument">UnShareDocumentEndpoint</prop>
+					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}UnShareDocument">UnShareDocumentEndpoint</prop>
 				<prop
 					key="{http://x-tee.riik.ee/xsd/xtee.xsd}listMethods">ListMethodsEndpoint</prop>
 			</props>
