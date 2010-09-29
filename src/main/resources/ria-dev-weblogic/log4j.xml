@@ -110,6 +110,11 @@
     	<appender-ref ref="file" />
     </logger>
     
+    <logger name="org.springframework">
+    	<level value="info"/>
+    	<appender-ref ref="file" />
+    </logger>
+    
     <logger name="org.springframework.orm.hibernate3">
     	<level value="error"/>
     	<appender-ref ref="file" />
