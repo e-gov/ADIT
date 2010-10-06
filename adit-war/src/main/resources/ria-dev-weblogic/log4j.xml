@@ -35,6 +35,14 @@
 		</layout>
     </appender>
     
+    <appender name="nagios" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="file" value="log/adit/adit_nagios.log" />
+		<param name="datePattern" value="'.'yyyy-MM" />
+		<param name="append" value="true" /> 
+		<layout class="org.apache.log4j.PatternLayout">
+	    	<param name="ConversionPattern" value="%d{ABSOLUTE}%5p %C:%L - %m%n"/>
+		</layout>
+    </appender>
     
     <logger name="ee.adit.ws">
     	<level value="DEBUG"></level>
@@ -69,6 +77,12 @@
     <logger name="ee.adit.service.MonitorService">
     	<level value="debug"/>
     	<appender-ref ref="monitoring" />
+    </logger>
+    
+    <!-- Nagios output to file -->
+    <logger name="ee.adit.util.NagiosLogger">
+    	<level value="debug"/>
+    	<appender-ref ref="nagios"/>
     </logger>
     
     <logger name="org.hibernate">
