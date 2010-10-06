@@ -9,7 +9,7 @@
     </appender>
     
     <appender name="file" class="org.apache.log4j.DailyRollingFileAppender">
-		<param name="file" value="logs/adit.log" />
+		<param name="file" value="log/adit/adit.log" />
 		<param name="datePattern" value="'.'yyyy-MM" />
 		<param name="append" value="true" /> 
 		<layout class="org.apache.log4j.PatternLayout">
@@ -18,7 +18,7 @@
     </appender>
     
     <appender name="dvk" class="org.apache.log4j.DailyRollingFileAppender">
-		<param name="file" value="/bea/user_projects/domains/arendus/log/adit/adit_dvk.log" />
+		<param name="file" value="log/adit/adit_dvk.log" />
 		<param name="datePattern" value="'.'yyyy-MM" />
 		<param name="append" value="true" /> 
 		<layout class="org.apache.log4j.PatternLayout">
@@ -26,49 +26,23 @@
 		</layout>
     </appender>
     
-   <appender name="nagios" class="org.apache.log4j.nagios.NagiosAppender">
-      <param name="Host" value="localhost"/>
-      <param name="Port" value="5667"/>
-
-      <param name="ConfigFile" value="nsca_send_clear.cfg"/>
-
-
-      <param name="ServiceNameDefault" value="APPLICATION_FOOBAR"/>
-      <!--
-      <param name="useMDCServiceName" value="true"/>
-      <param name="MDCServiceNameKey" value="instance"/>
-      -->
-
-      <param name="useShortHostName" value="false"/>
-      <!--
-      <param name="useMDCHostName" value="true"/>
-      <param name="MDCHostNameKey" value="nagios_host_name"/>
-      <param name="InitializeMDCHostNameValue" value="virtual_backroom"/>
-      -->
-
-      <param name="MDCCanonicalHostNameKey" value="nagios_canonical_hostname"/>
-
-      <!--
-      <param name="Log4j_Level_DEBUG"    value="NAGIOS_UNKNOWN"/>
-      <param name="Log4j_Level_INFO"     value="NAGIOS_OK"/>
-      -->
-      <param name="Log4j_Level_WARN"     value="NAGIOS_WARN"/>
-      <param name="Log4j_Level_ERROR"    value="NAGIOS_CRITICAL"/>
-      <param name="Log4j_Level_FATAL"    value="NAGIOS_CRITICAL"/>
-
-      <!--
-      <param name="IncludeFilterEnabled"    value="false"/>
-      <param name="ExcludeFilterEnabled"    value="false"/>
-      <param name="PatternFilterFile"    value="../server/all/conf/NagiosIncludeExcludeFilters.properties"/>
-      -->
-
-      <param name="SendStartupMessageOK" value="Application Errors Cleared"/>
-
-      <layout class="org.apache.log4j.PatternLayout">
-         <!-- This layout will pre-pend the physical hostname at the beginning of the message -->
-         <param name="ConversionPattern" value="%X{nagios_canonical_hostname}: %m%n"/>
-      </layout>
-  </appender>
+    <appender name="monitoring" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="file" value="log/adit/adit_monitoring.log" />
+		<param name="datePattern" value="'.'yyyy-MM" />
+		<param name="append" value="true" /> 
+		<layout class="org.apache.log4j.PatternLayout">
+	    	<param name="ConversionPattern" value="%d{ABSOLUTE}%5p %C:%L - %m%n"/>
+		</layout>
+    </appender>
+    
+    <appender name="nagios" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="file" value="log/adit/adit_nagios.log" />
+		<param name="datePattern" value="'.'yyyy-MM" />
+		<param name="append" value="true" /> 
+		<layout class="org.apache.log4j.PatternLayout">
+	    	<param name="ConversionPattern" value="%d{ABSOLUTE}%5p %C:%L - %m%n"/>
+		</layout>
+    </appender>
     
     <logger name="ee.adit.ws">
     	<level value="DEBUG"></level>
@@ -98,6 +72,17 @@
     	<level value="DEBUG"/>
     	<appender-ref ref="dvk"/>
     	<appender-ref ref="stdout" />    	
+    </logger>
+    
+    <logger name="ee.adit.service.MonitorService">
+    	<level value="debug"/>
+    	<appender-ref ref="monitoring" />
+    </logger>
+    
+    <!-- Nagios output to file -->
+    <logger name="ee.adit.util.NagiosLogger">
+    	<level value="debug"/>
+    	<appender-ref ref="nagios"/>
     </logger>
     
     <logger name="org.hibernate">
@@ -154,6 +139,11 @@
     	<appender-ref ref="file" />
     </logger>
     
+    <logger name="org.springframework">
+    	<level value="info"/>
+    	<appender-ref ref="file" />
+    </logger>
+    
     <logger name="org.springframework.orm.hibernate3">
     	<level value="error"/>
     	<appender-ref ref="file" />
@@ -163,7 +153,6 @@
 		<level value="error" />
 		<appender-ref ref="stdout" />
 		<appender-ref ref="file" />
-		<appender-ref ref="nagios" />
 	</root>
 	
 </log4j:configuration>
