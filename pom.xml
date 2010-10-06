@@ -5,6 +5,7 @@
 	<artifactId>adit</artifactId>
 	<packaging>pom</packaging>
 	<version>1.0.0</version>
+	<name>ADIT Main Build</name>
 
 	<modules>
 		<module>adit-war</module>
