@@ -1394,6 +1394,7 @@ public class DocumentService {
 	 * 
 	 * @return number of messages updated.
 	 */
+	@Transactional
 	public int updateDocumentsFromDVK() {
 		int result = 0;
 
