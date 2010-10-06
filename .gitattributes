@@ -2,11 +2,6 @@
 adit-ear/pom.xml -text
 adit-ear/src/main/webapp/META-INF/application.xml -text
 adit-ear/src/main/webapp/META-INF/weblogic-application.xml -text
-adit-ear/target/adit.ear -text
-adit-ear/target/adit/META-INF/application.xml -text
-adit-ear/target/adit/adit.war -text
-adit-ear/target/application.xml -text
-adit-ear/target/maven-archiver/pom.properties -text
 adit-war/doc/adit.vsd -text
 adit-war/doc/dvk_test/data.xml -text
 adit-war/doc/dvk_test/insert_dhl_message.sql -text
