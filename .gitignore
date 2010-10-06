@@ -2,5 +2,8 @@
 /.project
 /.settings
 adit-ear/target
+adit-war/.classpath
+adit-war/.project
+adit-war/.settings
 adit-war/target
 /target

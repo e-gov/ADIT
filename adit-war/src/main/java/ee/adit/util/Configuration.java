@@ -57,6 +57,8 @@ public class Configuration {
 		return locales;
 	}
 
+	private Long testDocumentID;
+	
 	/**
 	 * Sets the locales list
 	 * @param locales	Locales list
@@ -171,5 +173,13 @@ public class Configuration {
 	 */
 	public void setGlobalDiskQuota(Long globalDiskQuota) {
 		this.globalDiskQuota = globalDiskQuota;
+	}
+
+	public Long getTestDocumentID() {
+		return testDocumentID;
+	}
+
+	public void setTestDocumentID(Long testDocumentID) {
+		this.testDocumentID = testDocumentID;
 	}
 }
