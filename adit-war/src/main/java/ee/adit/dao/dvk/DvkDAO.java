@@ -66,12 +66,24 @@ public class DvkDAO {
 	 * 
 	 * @param statusID
 	 * @return
+	 * @throws Exception 
 	 */
-	public List<PojoMessage> getIncomingDocumentsWithoutStatus(Long statusID) {
+	@SuppressWarnings("unchecked")
+	public List<PojoMessage> getIncomingDocumentsWithoutStatus(Long statusID) throws Exception {
 		List<PojoMessage> result = new ArrayList<PojoMessage>();
-
+		Session session = null;
 		final String SQL = "from PojoMessage where isIncoming = true and (recipientStatusId != " + statusID + " or recipientStatusId is null)";
-		result = this.getSessionFactory().openSession().createQuery(SQL).list();
+		
+		try {
+			session = this.getSessionFactory().openSession();
+			Transaction transaction = session.beginTransaction();
+			result = session.createQuery(SQL).list();
+		} catch(Exception e) {
+			throw e;
+		} finally {
+			if(session != null)
+				session.close();
+		}	
 
 		return result;
 	}

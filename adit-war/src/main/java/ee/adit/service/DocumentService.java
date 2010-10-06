@@ -1500,9 +1500,11 @@ public class DocumentService {
 	 * 
 	 * @return number of messages updated.
 	 */
+	@Transactional
 	public int updateDocumentsToDVK() {
 
 		int result = 0;
+		try {
 		List<PojoMessage> dvkDocuments = this.getDvkDAO()
 				.getIncomingDocumentsWithoutStatus(
 						DocumentService.DVKStatus_Sent);
@@ -1548,6 +1550,10 @@ public class DocumentService {
 								+ dvkDocument.getDhlMessageId());
 				LOG.error("Continue...");
 			}
+		}
+		
+		} catch(Exception e) {
+			LOG.error("Error while updating DVK statuses to DVK: ", e);
 		}
 
 		return result;
