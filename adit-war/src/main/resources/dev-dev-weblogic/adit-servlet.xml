@@ -710,18 +710,13 @@
 		<property name="triggers">
 	   		<list>
 	      		
-	      		<!-- 
-	      			<ref bean="dvkReceiveTrigger"/>
-	      			<ref bean="dvkSendTrigger"/>
-	      		 -->
-
-	      		
+	      		<ref bean="dvkReceiveTrigger"/>
+	      		<ref bean="dvkSendTrigger"/>
 	      		<ref bean="dvkUpdateStatusTrigger"/>
-	      		
-	      		<!-- 
-	      		
 	      		<ref bean="dvkUpdateStatusToDVKTrigger"/>
 	      		<ref bean="DeleteDocumentsFromDVKJobTrigger"/>
+	      		
+	      		<!-- 
 	      		<ref bean="temporaryFolderCleanerTrigger"/>
 	      		<ref bean="notificationTrigger"/>
 	      		<ref bean="UserSyncJobTrigger"/>
