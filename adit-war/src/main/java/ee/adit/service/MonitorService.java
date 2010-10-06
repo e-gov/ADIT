@@ -1,5 +1,6 @@
 package ee.adit.service;
 
+import java.text.DecimalFormat;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
@@ -60,7 +61,6 @@ public class MonitorService {
 		try {
 			
 			double duration = 0;
-			long duration_ms = 0;
 			
 			try {
 				Date start = new Date();
@@ -70,8 +70,8 @@ public class MonitorService {
 				
 				Date end = new Date();
 				long endTime = end.getTime();
-				duration_ms = endTime - startTime;
-				duration = (endTime - startTime) / 1000;
+				duration = (endTime - startTime) / 1000.0;
+				
 				
 			} catch (Exception e) {
 				LOG.info("Error occurred while accessing ADIT database READ function: ", e);
@@ -80,12 +80,15 @@ public class MonitorService {
 				return;
 			}
 			
-			this.getNagiosLogger().log(ADIT_DB_CONNECTION + " " + OK + " " + duration + " (" + duration_ms + " " + MS + ") " + SECONDS);
+			DecimalFormat df = new DecimalFormat("0.000");
+			
+			
+			
+			this.getNagiosLogger().log(ADIT_DB_CONNECTION + " " + OK + " " + df.format(duration) + SECONDS);
 			
 		} catch(Exception e) {
 			LOG.error("Error while checking database READ: ", e);
 		}
-		
 		
 	}
 	
@@ -141,5 +144,4 @@ public class MonitorService {
 	public void setNagiosLogger(NagiosLogger nagiosLogger) {
 		this.nagiosLogger = nagiosLogger;
 	}
-	
 }
