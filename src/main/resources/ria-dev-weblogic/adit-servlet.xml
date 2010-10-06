@@ -394,7 +394,11 @@
 	</bean>
 
 	<bean id="aditDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
-	  <property name="jndiName" value="jdbc/adit"/>
+	  	<property name="jndiName" value="jdbc/adit"/>
+	</bean>
+	
+	<bean id="aditDVKDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+		<property name="jndiName" value="jdbc/adit_dvk"/>
 	</bean>
 
 	<bean id="sessionFactory"
@@ -430,22 +434,39 @@
 			<props>
 				<prop key="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</prop>
 				<prop key="hibernate.cache.provider_class">org.hibernate.cache.NoCacheProvider</prop>
-				<prop key="hibernate.transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</prop>
-				<!-- 
-				This is not needed, because Spring manages the transactions itself, when transaction management is enabled.-->
-				<!-- 
-				<prop key="hibernate.current_session_context_class">thread</prop>
-				-->
-				<!--<prop key="hibernate.transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</prop>
-				-->
-				<prop key="hibernate.show_sql">false</prop>
+				<prop key="hibernate.current_session_context_class">org.hibernate.context.JTASessionContext</prop>
+				<prop key="hibernate.transaction.manager_lookup_class">org.hibernate.transaction.WeblogicTransactionManagerLookup</prop>
 			</props>
 		</property>
 	</bean>
-
-    <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
-        <property name="sessionFactory" ref="sessionFactory" />
-    </bean>
+	
+	<bean id="dvkSessionFactory"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource" ref="aditDVKDataSource" />
+		<property name="mappingLocations">
+			<list>
+				<value>classpath:dvkapi/Counter.hbm.xml</value>
+				<value>classpath:dvkapi/Subdivision.hbm.xml</value>
+				<value>classpath:dvkapi/Occupation.hbm.xml</value>
+				<value>classpath:dvkapi/Organization.hbm.xml</value>
+				<value>classpath:dvkapi/SettingsFolders.hbm.xml</value>
+				<value>classpath:dvkapi/Settings.hbm.xml</value>
+				<value>classpath:dvkapi/Message.hbm.xml</value>
+				<value>classpath:dvkapi/MessageRecipient.hbm.xml</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</prop>
+				<prop key="hibernate.cache.provider_class">org.hibernate.cache.NoCacheProvider</prop>
+				<prop key="hibernate.current_session_context_class">org.hibernate.context.JTASessionContext</prop>
+				<prop key="hibernate.transaction.manager_lookup_class">org.hibernate.transaction.WeblogicTransactionManagerLookup</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<!-- ADIT transaction manager -->
+    <bean id="transactionManager" class="org.springframework.transaction.jta.WebLogicJtaTransactionManager" />
 
 	<!-- Enable the configuration of transactional behavior based on annotations -->
   	<tx:annotation-driven transaction-manager="transactionManager"/>
@@ -513,6 +534,7 @@
 	</bean>
 
 	<bean id="dvkDAO" class="ee.adit.dao.dvk.DvkDAO">
+		<property name="sessionFactory" ref="dvkSessionFactory" />
 	</bean>
 
 	<!-- Scheduled jobs -->
@@ -618,9 +640,9 @@
 	<bean id="dvkReceiveTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
 	  	<property name="jobDetail" ref="receiveJobDetails"/>
 		<!-- 10 seconds -->
-	  	<property name="startDelay" value="30000"/>
+	  	<property name="startDelay" value="0"/>
 		<!-- repeat every 20 seconds -->
-	  	<property name="repeatInterval" value="60000"/>
+	  	<property name="repeatInterval" value="30000"/>
 	</bean>
 	
 	<bean id="dvkUpdateStatusTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
@@ -672,8 +694,8 @@
 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="triggers">
 	   		<list>
-	      		<ref bean="dvkSendTrigger"/>
 	      		<ref bean="dvkReceiveTrigger"/>
+	      		<ref bean="dvkSendTrigger"/>
 	      		<ref bean="dvkUpdateStatusTrigger"/>
 	      		<ref bean="dvkUpdateStatusToDVKTrigger"/>
 	      		<ref bean="DeleteDocumentsFromDVKJobTrigger"/>

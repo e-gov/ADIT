@@ -3,6 +3,7 @@ package ee.adit.dao.dvk;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -21,6 +22,8 @@ import ee.adit.service.DocumentService;
  */
 public class DvkDAO {
 
+	private static Logger LOG = Logger.getLogger(DvkDAO.class);
+	
 	/**
 	 * Session factory
 	 */
@@ -29,10 +32,13 @@ public class DvkDAO {
 	/**
 	 * Default constructor. Configures the DVK API and sets the session factory.
 	 */
+	/*
 	public DvkDAO() {
 		this.setSessionFactory(DVKAPI.createSessionFactory("hibernate_ora_dvk.cfg.xml"));
 	}
-
+	*/
+	
+	
 	/**
 	 * Retrieves incoming documents list.
 	 * 
@@ -40,13 +46,20 @@ public class DvkDAO {
 	 */
 	public List<PojoMessage> getIncomingDocuments() {
 		List<PojoMessage> result = new ArrayList<PojoMessage>();
-
-		final String SQL = "from PojoMessage where isIncoming = true and (recipientStatusId = null or recipientStatusId = 0 or recipientStatusId = 101 or recipientStatusId = 1)";
-		result = this.getSessionFactory().openSession().createQuery(SQL).list();
-
+		Session session = this.getSessionFactory().getCurrentSession();
+		Transaction transaction = session.beginTransaction();
+		
+		try {
+			final String SQL = "from PojoMessage where isIncoming = true and (recipientStatusId = null or recipientStatusId = 0 or recipientStatusId = 101 or recipientStatusId = 1)";
+			result = session.createQuery(SQL).list();
+		} catch (Exception e) {
+			LOG.error("Exception while fetching DVK incoming messages: ", e);
+		}
+		
 		return result;
 	}
-
+	
+	
 	/**
 	 * Retrieves incoming documents list containing documents that do not have any status assigned.
 	 * 

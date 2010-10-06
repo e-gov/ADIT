@@ -700,7 +700,6 @@ public class DocumentService {
 	 * 3. That DocumentSharing must have the "documentDvkStatus" not initialized or set to "100"
 	 */
 	@SuppressWarnings("unchecked")
-	@Transactional
 	public int sendDocumentsToDVK() {
 		int result = 0;
 
@@ -710,7 +709,7 @@ public class DocumentService {
 
 		LOG.debug("Fetching documents for sending to DVK...");
 		Session session = this.getDocumentDAO().getSessionFactory()
-				.getCurrentSession();
+				.openSession();
 
 		Query query = session.createQuery(SQL_QUERY);
 		List<Document> documents = query.list();
@@ -820,10 +819,9 @@ public class DocumentService {
 
 				// Save document to DVK Client database
 
-				SessionFactory sessionFactory = DVKAPI
-						.createSessionFactory("hibernate_ora_dvk.cfg.xml");
+				SessionFactory sessionFactory = this.getDvkDAO().getSessionFactory();
 				Long dvkMessageID = null;
-				Session dvkSession = sessionFactory.getCurrentSession();
+				Session dvkSession = sessionFactory.openSession();
 				Transaction dvkTransaction = dvkSession.beginTransaction();
 
 				try {
@@ -848,6 +846,7 @@ public class DocumentService {
 					Clob clob = Hibernate.createClob(" ", dvkSession);
 					dvkMessage.setData(clob);
 
+					LOG.debug("Saving document to DVK database");
 					dvkMessageID = (Long) dvkSession.save(dvkMessage);
 
 					if (dvkMessageID == null || dvkMessageID.longValue() == 0) {
@@ -869,10 +868,14 @@ public class DocumentService {
 					throw new DataRetrievalFailureException(
 							"Error while adding message to DVK Client database: ",
 							e);
+				} finally {
+					if (dvkSession != null) {
+						dvkSession.close();
+					}
 				}
 
 				// Update CLOB
-				Session dvkSession2 = sessionFactory.getCurrentSession();
+				Session dvkSession2 = sessionFactory.openSession();
 				Transaction dvkTransaction2 = dvkSession2.beginTransaction();
 
 				try {
@@ -906,6 +909,8 @@ public class DocumentService {
 					document.setDvkId(dvkMessageID);
 					session.saveOrUpdate(document);
 
+					LOG.debug("Starting to update document sharings");
+					Transaction aditTransaction = session.beginTransaction();
 					// Update document sharings status
 					Iterator<DocumentSharing> documentSharingUpdateIterator = document
 							.getDocumentSharings().iterator();
@@ -922,14 +927,16 @@ public class DocumentService {
 									+ DVKStatus_Sending + "'.");
 						}
 					}
-
+					
+					aditTransaction.commit();
+					
 					result++;
 
 				} catch (Exception e) {
 					dvkTransaction2.rollback();
 
 					// Remove the document with empty clob from the database
-					Session dvkSession3 = sessionFactory.getCurrentSession();
+					Session dvkSession3 = sessionFactory.openSession();
 					Transaction dvkTransaction3 = dvkSession3
 							.beginTransaction();
 					try {
@@ -952,11 +959,19 @@ public class DocumentService {
 						LOG.error(
 								"Error deleting document from DVK database: ",
 								dvkException);
+					} finally {
+						if (dvkSession3 != null) {
+							dvkSession3.close();
+						}
 					}
 
 					throw new DataRetrievalFailureException(
 							"Error while adding message to DVK Client database (CLOB update): ",
 							e);
+				} finally {
+					if (dvkSession2 != null) {
+						dvkSession2.close();
+					}
 				}
 			} catch (Exception e) {
 
@@ -969,6 +984,10 @@ public class DocumentService {
 						e);
 			}
 		}
+		
+		if(session != null)
+			session.close();
+		
 		return result;
 	}
 
@@ -992,8 +1011,7 @@ public class DocumentService {
 			// the required status - "sending" (recipient_status_id = "101" or
 			// "1");
 			LOG.info("Fetching documents from DVK Client database.");
-			List<PojoMessage> dvkDocuments = this.getDvkDAO()
-					.getIncomingDocuments();
+			List<PojoMessage> dvkDocuments = this.getDvkDAO().getIncomingDocuments();
 
 			if (dvkDocuments != null && dvkDocuments.size() > 0) {
 
@@ -1567,7 +1585,9 @@ public class DocumentService {
 				transaction.commit();
 				
 			} catch (Exception e) {
-				transaction.rollback();
+				LOG.error("Error while deleting documents from DVK database: ", e);
+				if(transaction != null)
+					transaction.rollback();
 				result = 0;
 				throw e;
 			}

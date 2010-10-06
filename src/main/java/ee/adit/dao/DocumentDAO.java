@@ -879,7 +879,7 @@ public class DocumentDAO extends HibernateDaoSupport {
 			
 		return result;
 	}
-
+	
 	public MessageService getMessageService() {
 		return messageService;
 	}
