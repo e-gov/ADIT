@@ -24,6 +24,7 @@ public class MonitorService {
 
 	private static final String OK = "OK";
 	private static final String FAIL = "FAIL";
+	private static final String MS = "ms";
 	private static final String SECONDS = "seconds";
 	
 	private static final String ADIT_DB_CONNECTION = "ADIT_DB_CONNECTION";
@@ -59,6 +60,7 @@ public class MonitorService {
 		try {
 			
 			double duration = 0;
+			long duration_ms = 0;
 			
 			try {
 				Date start = new Date();
@@ -68,6 +70,7 @@ public class MonitorService {
 				
 				Date end = new Date();
 				long endTime = end.getTime();
+				duration_ms = endTime - startTime;
 				duration = (endTime - startTime) / 1000;
 				
 			} catch (Exception e) {
@@ -77,7 +80,7 @@ public class MonitorService {
 				return;
 			}
 			
-			this.getNagiosLogger().log(ADIT_DB_CONNECTION + " " + OK + " " + duration + " " + SECONDS);
+			this.getNagiosLogger().log(ADIT_DB_CONNECTION + " " + OK + " " + duration + " (" + duration_ms + " " + MS + ") " + SECONDS);
 			
 		} catch(Exception e) {
 			LOG.error("Error while checking database READ: ", e);
