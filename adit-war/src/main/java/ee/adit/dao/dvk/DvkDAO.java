@@ -107,16 +107,31 @@ public class DvkDAO {
 	 * @param dvkMessageID
 	 * @param incoming specifies, if the message should be incoming / outgoing
 	 * @return list of message recipients
+	 * @throws Exception 
 	 */
-	public List<PojoMessageRecipient> getMessageRecipients(Long dvkMessageID, boolean incoming) {
-		// TODO: pojomesage.ID - invalid identifier
+	@SuppressWarnings("unchecked")
+	public List<PojoMessageRecipient> getMessageRecipients(Long dvkMessageID, boolean incoming) throws Exception {
+		List<PojoMessageRecipient> result = new ArrayList<PojoMessageRecipient>();
+		
 		int incomingInt = 0;
 		if(incoming) {
 			incomingInt = 1;
 		}
 		
+		Session session = null;
 		String SQL = "select mr from PojoMessageRecipient mr, PojoMessage m where mr.dhlMessageId = m.dhlMessageId and m.dhlMessageId = " + dvkMessageID + " and m.isIncoming = " + incomingInt;
-		return this.getSessionFactory().openSession().createQuery(SQL).list();
+		
+		try {
+			session = this.getSessionFactory().openSession();
+		    result = session.createQuery(SQL).list();
+		} catch (Exception e) {
+		    throw e;
+		} finally {
+			if(session != null)
+				session.close();
+		}
+		
+		return result;
 	}
 	
 	/**
