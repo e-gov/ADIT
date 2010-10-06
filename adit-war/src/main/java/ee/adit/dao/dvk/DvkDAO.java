@@ -14,6 +14,7 @@ import dvk.api.ml.PojoMessageRecipient;
 import dvk.api.ml.PojoOrganization;
 import dvk.api.ml.PojoSettings;
 import ee.adit.service.DocumentService;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * DVK data access class. Provides methods for manipulating data in DVK client database.
@@ -110,6 +111,7 @@ public class DvkDAO {
 	 * @throws Exception 
 	 */
 	@SuppressWarnings("unchecked")
+	@Transactional
 	public List<PojoMessageRecipient> getMessageRecipients(Long dvkMessageID, boolean incoming) throws Exception {
 		List<PojoMessageRecipient> result = new ArrayList<PojoMessageRecipient>();
 		
@@ -123,7 +125,6 @@ public class DvkDAO {
 		
 		try {			
 			session = this.getSessionFactory().openSession();
-			session.beginTransaction();
 		    result = session.createQuery(SQL).list();
 		} catch (Exception e) {
 		    throw e;
