@@ -660,72 +660,63 @@
 	
 	<bean id="dvkSendTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
 	  	<property name="jobDetail" ref="sendJobDetails"/>
-		<!-- 10 seconds -->
-	  	<property name="startDelay" value="60000"/>
-		<!-- repeat every 20 seconds -->
-	  	<property name="repeatInterval" value="60000"/>
+		<property name="startDelay" value="0"/>
+	  	<property name="repeatInterval" value="5000"/>
 	</bean>
 	
 	<bean id="dvkReceiveTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
 	  	<property name="jobDetail" ref="receiveJobDetails"/>
-		<!-- 10 seconds -->
 	  	<property name="startDelay" value="0"/>
-		<!-- repeat every 20 seconds -->
-	  	<property name="repeatInterval" value="1000"/>
+	  	<property name="repeatInterval" value="5000"/>
 	</bean>
 	
 	<bean id="dvkUpdateStatusTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
 	  	<property name="jobDetail" ref="updateStatusJobDetails"/>
-		<!-- 10 seconds -->
-	  	<property name="startDelay" value="90000"/>
-		<!-- repeat every 20 seconds -->
-	  	<property name="repeatInterval" value="60000"/>
+		<property name="startDelay" value="0"/>
+	  	<property name="repeatInterval" value="5000"/>
 	</bean>
 	
 	<bean id="dvkUpdateStatusToDVKTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
 	  	<property name="jobDetail" ref="UpdateStatusToDVKJobDetails"/>
-		<!-- 10 seconds -->
-	  	<property name="startDelay" value="120000"/>
-		<!-- repeat every 20 seconds -->
-	  	<property name="repeatInterval" value="60000"/>
+		<property name="startDelay" value="0"/>
+	  	<property name="repeatInterval" value="5000"/>
 	</bean>
 	
 	<bean id="notificationTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
 	  	<property name="jobDetail" ref="sendNotificationsJobDetails"/>
-	  	<property name="startDelay" value="150000"/>
-	  	<property name="repeatInterval" value="120000"/>
+	  	<property name="startDelay" value="0"/>
+	  	<property name="repeatInterval" value="5000"/>
 	</bean>
 	 
 	<bean id="temporaryFolderCleanerTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
 	  	<property name="jobDetail" ref="temporaryFolderCleanerJobDetails"/>
-	  	<!-- First execute 10 seconds after application start -->
-	  	<property name="startDelay" value="180000"/>
-	  	<!-- Repeat every 1 hour -->
-	  	<property name="repeatInterval" value="360000"/>
+	  	<property name="startDelay" value="0"/>
+	  	<property name="repeatInterval" value="5000"/>
 	</bean>
 	 
 	<bean id="DeleteDocumentsFromDVKJobTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
 	  	<property name="jobDetail" ref="DeleteDocumentsFromDVKJobDetails"/>
-		<!-- 10 seconds -->
-	  	<property name="startDelay" value="210000"/>
-		<!-- repeat every 20 seconds -->
-	  	<property name="repeatInterval" value="15000"/>
+		<property name="startDelay" value="0"/>
+	  	<property name="repeatInterval" value="5000"/>
 	</bean>
 	 
 	<bean id="UserSyncJobTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
 	  	<property name="jobDetail" ref="UserSyncJobDetails"/>
-		<!-- 10 seconds -->
-	  	<property name="startDelay" value="360000"/>
-		<!-- repeat every 20 seconds -->
-	  	<property name="repeatInterval" value="3600000"/>
+		<property name="startDelay" value="0"/>
+	  	<property name="repeatInterval" value="5000"/>
 	</bean>
 	 
 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="triggers">
 	   		<list>
-	      		<ref bean="dvkReceiveTrigger"/>
+	      		
 	      		<!-- 
+	      			<ref bean="dvkReceiveTrigger"/>
+	      		 -->
+
 	      		<ref bean="dvkSendTrigger"/>
+	      		<!-- 
+	      		
 	      		<ref bean="dvkUpdateStatusTrigger"/>
 	      		<ref bean="dvkUpdateStatusToDVKTrigger"/>
 	      		<ref bean="DeleteDocumentsFromDVKJobTrigger"/>
