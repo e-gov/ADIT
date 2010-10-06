@@ -58,7 +58,7 @@ public class MonitorService {
 		
 		try {
 			
-			long duration = 0;
+			double duration = 0;
 			
 			try {
 				Date start = new Date();
@@ -68,7 +68,7 @@ public class MonitorService {
 				
 				Date end = new Date();
 				long endTime = end.getTime();
-				duration = endTime - startTime / 1000;
+				duration = (endTime - startTime) / 1000;
 				
 			} catch (Exception e) {
 				LOG.info("Error occurred while accessing ADIT database READ function: ", e);
@@ -77,7 +77,7 @@ public class MonitorService {
 				return;
 			}
 			
-			this.getNagiosLogger().log(ADIT_DB_CONNECTION + " " + OK + duration + " " + SECONDS);
+			this.getNagiosLogger().log(ADIT_DB_CONNECTION + " " + OK + " " + duration + " " + SECONDS);
 			
 		} catch(Exception e) {
 			LOG.error("Error while checking database READ: ", e);
