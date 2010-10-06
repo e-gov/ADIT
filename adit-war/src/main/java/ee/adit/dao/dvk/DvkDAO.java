@@ -111,7 +111,6 @@ public class DvkDAO {
 	 * @throws Exception 
 	 */
 	@SuppressWarnings("unchecked")
-	@Transactional
 	public List<PojoMessageRecipient> getMessageRecipients(Long dvkMessageID, boolean incoming) throws Exception {
 		List<PojoMessageRecipient> result = new ArrayList<PojoMessageRecipient>();
 		
