@@ -26,6 +26,7 @@
 		<property name="logService" ref="logService"/>
 		<property name="messageSource" ref="messageSource"/>
 		<property name="messageService" ref="messageService"/>
+		<property name="monitorService" ref="monitorService"/>
 	</bean>
 	
 	<bean id="UnJoinEndpoint" class="ee.adit.ws.endpoint.user.UnJoinEndpoint">
@@ -35,6 +36,7 @@
 		<property name="logService" ref="logService"/>
 		<property name="messageSource" ref="messageSource"/>
 		<property name="messageService" ref="messageService"/>
+		<property name="monitorService" ref="monitorService"/>
 	</bean>
 	
 	<bean id="GetJoinedEndpoint" class="ee.adit.ws.endpoint.user.GetJoinedEndpoint">
@@ -45,6 +47,7 @@
 		<property name="messageSource" ref="messageSource"/>
 		<property name="configuration" ref="configuration"/>
 		<property name="messageService" ref="messageService"/>
+		<property name="monitorService" ref="monitorService"/>
 	</bean>
 	
 	<bean id="GetUserInfoEndpoint" class="ee.adit.ws.endpoint.user.GetUserInfoEndpoint">
@@ -55,6 +58,7 @@
 		<property name="messageSource" ref="messageSource"/>
 		<property name="configuration" ref="configuration"/>
 		<property name="messageService" ref="messageService"/>
+		<property name="monitorService" ref="monitorService"/>
 	</bean>
 	
 	<bean id="SetNotificationsEndpoint" class="ee.adit.ws.endpoint.user.SetNotificationsEndpoint">
@@ -65,6 +69,7 @@
 		<property name="messageSource" ref="messageSource"/>
 		<property name="configuration" ref="configuration"/>
 		<property name="messageService" ref="messageService"/>
+		<property name="monitorService" ref="monitorService"/>
 	</bean>
 	
 	<bean id="GetNotificationsEndpoint" class="ee.adit.ws.endpoint.user.GetNotificationsEndpoint">
@@ -75,6 +80,7 @@
 		<property name="messageSource" ref="messageSource"/>
 		<property name="configuration" ref="configuration"/>
 		<property name="messageService" ref="messageService"/>
+		<property name="monitorService" ref="monitorService"/>
 	</bean>
 	
 	
@@ -91,6 +97,7 @@
 		<property name="messageService" ref="messageService"/>
 		<!-- NB! Value is case sensitive -->
 		<property name="digidocConfigurationFile" value="classpath:jdigidoc.cfg" />
+		<property name="monitorService" ref="monitorService"/>
 	</bean>
 	
 	<bean id="DeflateDocumentEndpoint" class="ee.adit.ws.endpoint.document.DeflateDocumentEndpoint">
@@ -102,6 +109,7 @@
 		<property name="configuration" ref="configuration"/>
 		<property name="documentService" ref="documentService"/>
 		<property name="messageService" ref="messageService"/>
+		<property name="monitorService" ref="monitorService"/>
 	</bean>
 	
 	<bean id="DeleteDocumentEndpoint" class="ee.adit.ws.endpoint.document.DeleteDocumentEndpoint">
@@ -113,6 +121,7 @@
 		<property name="configuration" ref="configuration"/>
 		<property name="documentService" ref="documentService"/>
 		<property name="messageService" ref="messageService"/>
+		<property name="monitorService" ref="monitorService"/>
 	</bean>
 	
 	<bean id="DeleteDocumentFileEndpoint" class="ee.adit.ws.endpoint.document.DeleteDocumentFileEndpoint">
@@ -124,6 +133,7 @@
 		<property name="configuration" ref="configuration"/>
 		<property name="documentService" ref="documentService"/>
 		<property name="messageService" ref="messageService"/>
+		<property name="monitorService" ref="monitorService"/>
 	</bean>
 	
 	<bean id="GetDocumentEndpoint" class="ee.adit.ws.endpoint.document.GetDocumentEndpoint">
@@ -135,6 +145,7 @@
 		<property name="configuration" ref="configuration"/>
 		<property name="documentService" ref="documentService"/>
 		<property name="messageService" ref="messageService"/>
+		<property name="monitorService" ref="monitorService"/>
 	</bean>
 	
 	<bean id="GetDocumentFileEndpoint" class="ee.adit.ws.endpoint.document.GetDocumentFileEndpoint">
@@ -146,6 +157,7 @@
 		<property name="configuration" ref="configuration"/>
 		<property name="documentService" ref="documentService"/>
 		<property name="messageService" ref="messageService"/>
+		<property name="monitorService" ref="monitorService"/>
 	</bean>
 	
 	<bean id="GetDocumentHistoryEndpoint" class="ee.adit.ws.endpoint.document.GetDocumentHistoryEndpoint">
@@ -157,6 +169,7 @@
 		<property name="configuration" ref="configuration"/>
 		<property name="documentService" ref="documentService"/>
 		<property name="messageService" ref="messageService"/>
+		<property name="monitorService" ref="monitorService"/>
 	</bean>
 	
 	<bean id="GetDocumentListEndpoint" class="ee.adit.ws.endpoint.document.GetDocumentListEndpoint">
@@ -168,6 +181,7 @@
 		<property name="configuration" ref="configuration"/>
 		<property name="documentService" ref="documentService"/>
 		<property name="messageService" ref="messageService"/>
+		<property name="monitorService" ref="monitorService"/>
 	</bean>
 	
 	<bean id="MarkDocumentViewedEndpoint" class="ee.adit.ws.endpoint.document.MarkDocumentViewedEndpoint">
@@ -179,6 +193,7 @@
 		<property name="configuration" ref="configuration"/>
 		<property name="documentService" ref="documentService"/>
 		<property name="messageService" ref="messageService"/>
+		<property name="monitorService" ref="monitorService"/>
 	</bean>
 	
 	<bean id="ModifyStatusEndpoint" class="ee.adit.ws.endpoint.document.ModifyStatusEndpoint">
@@ -190,6 +205,7 @@
 		<property name="configuration" ref="configuration"/>
 		<property name="documentService" ref="documentService"/>
 		<property name="messageService" ref="messageService"/>
+		<property name="monitorService" ref="monitorService"/>
 	</bean>
 	
 	<bean id="PrepareSignatureEndpoint" class="ee.adit.ws.endpoint.document.PrepareSignatureEndpoint">
@@ -201,6 +217,7 @@
 		<property name="configuration" ref="configuration"/>
 		<property name="documentService" ref="documentService"/>
 		<property name="messageService" ref="messageService"/>
+		<property name="monitorService" ref="monitorService"/>
 		
 		<!-- NB! Value is case sensitive -->
 		<property name="digidocConfigurationFile" value="classpath:jdigidoc.cfg" />
@@ -215,6 +232,7 @@
 		<property name="configuration" ref="configuration"/>
 		<property name="documentService" ref="documentService"/>
 		<property name="messageService" ref="messageService"/>
+		<property name="monitorService" ref="monitorService"/>
 	</bean>
 	
 	<bean id="SaveDocumentFileEndpoint" class="ee.adit.ws.endpoint.document.SaveDocumentFileEndpoint">
@@ -226,6 +244,7 @@
 		<property name="configuration" ref="configuration"/>
 		<property name="documentService" ref="documentService"/>
 		<property name="messageService" ref="messageService"/>
+		<property name="monitorService" ref="monitorService"/>
 	</bean>
 	
 	<bean id="SendDocumentEndpoint" class="ee.adit.ws.endpoint.document.SendDocumentEndpoint">
@@ -237,6 +256,7 @@
 		<property name="configuration" ref="configuration"/>
 		<property name="documentService" ref="documentService"/>
 		<property name="messageService" ref="messageService"/>
+		<property name="monitorService" ref="monitorService"/>
 	</bean>
 	
 	<bean id="ShareDocumentEndpoint" class="ee.adit.ws.endpoint.document.ShareDocumentEndpoint">
@@ -248,6 +268,7 @@
 		<property name="configuration" ref="configuration"/>
 		<property name="documentService" ref="documentService"/>
 		<property name="messageService" ref="messageService"/>
+		<property name="monitorService" ref="monitorService"/>
 	</bean>
 	
 	<bean id="UnShareDocumentEndpoint" class="ee.adit.ws.endpoint.document.UnShareDocumentEndpoint">
@@ -259,6 +280,7 @@
 		<property name="configuration" ref="configuration"/>
 		<property name="documentService" ref="documentService"/>
 		<property name="messageService" ref="messageService"/>
+		<property name="monitorService" ref="monitorService"/>
 	</bean>
 	
 	<!-- Meta service endpoint -->
@@ -391,6 +413,13 @@
 	<bean id="messageService" class="ee.adit.service.MessageService">
 		<property name="messageSource" ref="messageSource"/>
 		<property name="configuration" ref="configuration"/>
+	</bean>
+
+	<bean id="monitorService" class="ee.adit.service.MonitorService">
+		<property name="documentDAO" ref="documentDAO" />
+		<property name="dvkDAO" ref="dvkDAO" />
+		<property name="configuration" ref="configuration" />
+		<property name="nagiosLogger" ref="nagiosLogger" />
 	</bean>
 
 	<bean id="aditDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
@@ -715,6 +744,9 @@
 			</list>
 		</property>
 	</bean>
+	
+	<!-- Nagios Logger -->
+	<bean id="nagiosLogger" class="ee.adit.util.NagiosLogger" />
 	
 	<!-- Configuration -->
 	<bean id="configuration" class="ee.adit.util.Configuration">

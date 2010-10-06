@@ -28,6 +28,7 @@ import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditInternalException;
 import ee.adit.service.LogService;
 import ee.adit.service.MessageService;
+import ee.adit.service.MonitorService;
 import ee.adit.util.Configuration;
 import ee.adit.util.CustomXTeeHeader;
 import ee.adit.util.XRoadQueryName;
@@ -86,6 +87,11 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 	private MessageService messageService;
 
 	/**
+	 * Monitoring service.
+	 */
+	private MonitorService monitorService;
+	
+	/**
 	 * Unmarshals the request element and calls the endpoint implementation class.
 	 * The response object returned by the implementing class is marshalled back to XML.
 	 * 
@@ -131,6 +137,13 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 			} catch (Exception e) {
 				LOG.error("Exception while unmarshalling request: ", e);
 				throw new AditInternalException("Error in request SOAP envelope: check parameters and XML syntax.");
+			}
+			
+			// Perform system check
+			try {
+				performSystemCheck();
+			} catch (Exception e) {
+				LOG.warn("System check failed: ", e);
 			}
 			
 			// Excecute business logic
@@ -383,6 +396,10 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 		}
 	}
 	
+	public void performSystemCheck() {
+		getMonitorService().check();
+	}
+	
 	/**
 	 * Abstract method to be implemented by the subclasses. Invokes the endpoint logic.
 	 * 
@@ -513,5 +530,13 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 	 */
 	public void setMessageService(MessageService messageService) {
 		this.messageService = messageService;
+	}
+
+	public MonitorService getMonitorService() {
+		return monitorService;
+	}
+
+	public void setMonitorService(MonitorService monitorService) {
+		this.monitorService = monitorService;
 	}
 }
