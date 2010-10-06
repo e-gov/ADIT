@@ -5,8 +5,7 @@
 	<artifactId>adit-war</artifactId>
 	<packaging>war</packaging>
 	<version>1.0.0</version>
-	<name>adit Maven Webapp</name>
-	<url>http://maven.apache.org</url>
+	<name>ADIT Web Application</name>
 
 	<parent>
 	    <groupId>ee</groupId>
@@ -15,12 +14,7 @@
 	</parent>
 
 	<properties>
-		<baseDir>C:\development\adit\trunk\adit-war</baseDir>
-		<!--
-			Specifies which configuration resources to bundle with the build (ie.
-			"dev", "test", "production")
-		-->
-		<resourceDir>ria-dev-weblogic</resourceDir>
+		<baseDir>${projectBaseDir}/adit-war</baseDir>
 	</properties>
 
 	<dependencies>
