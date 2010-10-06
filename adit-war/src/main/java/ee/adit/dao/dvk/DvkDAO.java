@@ -123,8 +123,9 @@ public class DvkDAO {
 		Session session = null;
 		String SQL = "select mr from PojoMessageRecipient mr, PojoMessage m where mr.dhlMessageId = m.dhlMessageId and m.dhlMessageId = " + dvkMessageID + " and m.isIncoming = " + incomingInt;
 		
-		try {			
+		try {		
 			session = this.getSessionFactory().openSession();
+			Transaction transaction = session.beginTransaction();
 		    result = session.createQuery(SQL).list();
 		} catch (Exception e) {
 		    throw e;
