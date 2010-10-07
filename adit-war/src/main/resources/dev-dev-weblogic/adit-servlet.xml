@@ -420,6 +420,7 @@
 		<property name="dvkDAO" ref="dvkDAO" />
 		<property name="configuration" ref="configuration" />
 		<property name="nagiosLogger" ref="nagiosLogger" />
+		<property name="documentService" ref="documentService"/>
 	</bean>
 
 	<bean id="aditDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">

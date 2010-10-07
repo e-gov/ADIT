@@ -53,6 +53,8 @@ public class MonitorService {
 	
 	private NagiosLogger nagiosLogger;
 	
+	private DocumentService documentService;
+	
 	public void check() {
 		LOG.info("ADIT monitor - Checking database and application.");
 		
@@ -161,7 +163,7 @@ public class MonitorService {
 				
 				if(document != null) {
 					document.setLastModifiedDate(new Date());
-					getDocumentDAO().update(document);
+					getDocumentService().save(document, getConfiguration().getGlobalDiskQuota());
 				}
 				
 				Date end = new Date();
@@ -294,5 +296,13 @@ public class MonitorService {
 
 	public void setNagiosLogger(NagiosLogger nagiosLogger) {
 		this.nagiosLogger = nagiosLogger;
+	}
+
+	public DocumentService getDocumentService() {
+		return documentService;
+	}
+
+	public void setDocumentService(DocumentService documentService) {
+		this.documentService = documentService;
 	}
 }
