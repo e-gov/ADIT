@@ -2,7 +2,9 @@ package ee.adit.service;
 
 import java.io.File;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
@@ -186,8 +188,7 @@ public class MonitorService {
 	 */
 	public void checkApplication() {
 		LOG.info("ADIT monitor - Checking application.");
-		
-		boolean success = true;
+		List<String> errorMessages = new ArrayList<String>();
 		
 		// 1. Check temporary folder
 		try {
@@ -200,6 +201,7 @@ public class MonitorService {
 			
 		} catch (Exception e) {
 			LOG.error("Error checking application - temporary directory not defined or not writable: ", e);
+			errorMessages.add("Error checking application - temporary directory not defined or not writable: " + e.getMessage());
 		}
 		
 		// 2. Check DVK response message stylesheet
@@ -213,6 +215,20 @@ public class MonitorService {
 			
 		} catch (Exception e) {
 			LOG.error("Error checking application - DVK response message stylesheet not defined or file does not exist: ", e);
+			errorMessages.add("Error checking application - DVK response message stylesheet not defined or file does not exist: " + e.getMessage());
+		}
+		
+		// 3. Check test document ID
+		try {
+			
+			Long testDocumentID = this.getConfiguration().getTestDocumentID();
+			if(testDocumentID == null) {
+				throw new Exception("Test document ID not defined.");
+			}
+			
+		} catch (Exception e) {
+			LOG.error("Error checking application - test document ID not defined.");
+			errorMessages.add("Error checking application - test document ID not defined.");
 		}
 		
 	}
