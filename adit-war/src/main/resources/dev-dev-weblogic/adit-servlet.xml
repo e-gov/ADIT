@@ -709,23 +709,13 @@
 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="triggers">
 	   		<list>
-	      		
 	      		<!-- Working -->
 	      		<!-- 
-	      		
-	      		
-	      		
-	      		-->
 	      		<ref bean="dvkReceiveTrigger"/>
 	      		<ref bean="dvkSendTrigger"/>
 	      		<ref bean="dvkUpdateStatusTrigger"/>
 	      		<ref bean="dvkUpdateStatusToDVKTrigger"/>
-	      		
-	      		<ref bean="DeleteDocumentsFromDVKJobTrigger"/>
-	      		<!-- 
-	      		
-	      		
-	      		
+	      		<ref bean="DeleteDocumentsFromDVKJobTrigger"/> 
 	      		-->
 	      		
 	      		<!-- 
