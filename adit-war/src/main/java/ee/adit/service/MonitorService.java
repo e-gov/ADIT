@@ -9,6 +9,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 import ee.adit.dao.DocumentDAO;
 import ee.adit.dao.dvk.DvkDAO;
@@ -87,7 +88,7 @@ public class MonitorService {
 				duration = (endTime - startTime) / 1000.0;
 				
 				DecimalFormat df = new DecimalFormat("0.000");
-				this.getNagiosLogger().log(ADIT_DB_CONNECTION + " " + OK + " " + df.format(duration) + SECONDS);
+				this.getNagiosLogger().log(ADIT_DB_CONNECTION + " " + OK + " " + df.format(duration) + " " + SECONDS);
 				
 			} catch(Exception e) {
 				LOG.info("Error occurred while accessing ADIT database: ", e);
@@ -128,13 +129,13 @@ public class MonitorService {
 				
 			} catch (Exception e) {
 				LOG.info("Error occurred while accessing ADIT database READ function: ", e);
-				String message = ADIT_DB_CONNECTION_READ + " " + FAIL;
+				String message = ADIT_DB_CONNECTION_READ + " " + FAIL + " ";
 				this.getNagiosLogger().log(message, e);
 				return;
 			}
 			
 			DecimalFormat df = new DecimalFormat("0.000");
-			this.getNagiosLogger().log(ADIT_DB_CONNECTION_READ + " " + OK + " " + df.format(duration) + SECONDS);
+			this.getNagiosLogger().log(ADIT_DB_CONNECTION_READ + " " + OK + " " + df.format(duration) + " " + SECONDS);
 			
 		} catch(Exception e) {
 			LOG.error("Error while checking database READ: ", e);
@@ -145,6 +146,7 @@ public class MonitorService {
 	/**
 	 * Check database write. 
 	 */
+	@Transactional
 	public void checkDBWrite(long documentID) {
 		LOG.info("ADIT monitor - Checking database WRITE.");
 		
@@ -170,13 +172,13 @@ public class MonitorService {
 				
 			} catch (Exception e) {
 				LOG.info("Error occurred while accessing ADIT database WRITE function: ", e);
-				String message = ADIT_DB_CONNECTION_WRITE + " " + FAIL;
+				String message = ADIT_DB_CONNECTION_WRITE + " " + FAIL + " ";
 				this.getNagiosLogger().log(message, e);
 				return;
 			}
 			
 			DecimalFormat df = new DecimalFormat("0.000");
-			this.getNagiosLogger().log(ADIT_DB_CONNECTION_WRITE + " " + OK + " " + df.format(duration) + SECONDS);
+			this.getNagiosLogger().log(ADIT_DB_CONNECTION_WRITE + " " + OK + " " + df.format(duration) + " " + SECONDS);
 			
 		} catch(Exception e) {
 			LOG.error("Error while checking database READ: ", e);
@@ -189,6 +191,11 @@ public class MonitorService {
 	public void checkApplication() {
 		LOG.info("ADIT monitor - Checking application.");
 		List<String> errorMessages = new ArrayList<String>();
+		double duration = 0;
+		DecimalFormat df = new DecimalFormat("0.000");
+		
+		Date start = new Date();
+		long startTime = start.getTime();
 		
 		// 1. Check temporary folder
 		try {
@@ -231,6 +238,10 @@ public class MonitorService {
 			errorMessages.add("Error checking application - test document ID not defined.");
 		}
 		
+		Date end = new Date();
+		long endTime = end.getTime();
+		duration = (endTime - startTime) / 1000.0;
+		
 		// Errors were detected
 		if(errorMessages.size() > 0) {
 			String combinedErrorMessage = "";
@@ -241,6 +252,8 @@ public class MonitorService {
 			}
 			
 			this.getNagiosLogger().log(ADIT_APP + " " + FAIL + " " + "Errors found: " + combinedErrorMessage);
+		} else {
+			this.getNagiosLogger().log(ADIT_APP + " " + OK + " " + df.format(duration) + " " + SECONDS);
 		}
 		
 	}
