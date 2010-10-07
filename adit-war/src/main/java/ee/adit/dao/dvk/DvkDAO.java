@@ -230,9 +230,9 @@ public class DvkDAO {
 	/**
 	 * Test document read.
 	 */
-	public PojoMessage testRead(long dhlMesageId) {
+	public PojoMessage testRead(long dhlMessageId) {
 		PojoMessage result = null;
-		String SQL = "from PojoMessage where dhlMesageId = " + dhlMesageId;
+		String SQL = "from PojoMessage where dhlMessageId = " + dhlMessageId;
 		Session session = null;
 		
 		try {
@@ -252,9 +252,9 @@ public class DvkDAO {
 	/**
 	 * Test document read.
 	 */
-	public PojoMessage getMessage(long dhlMesageId) {
+	public PojoMessage getMessage(long dhlMessageId) {
 		PojoMessage result = null;
-		String SQL = "from PojoMessage where dhlMesageId = " + dhlMesageId;
+		String SQL = "from PojoMessage where dhlMessageId = " + dhlMessageId;
 		Session session = null;
 		
 		try {

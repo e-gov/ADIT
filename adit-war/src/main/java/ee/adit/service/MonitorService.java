@@ -263,7 +263,7 @@ public class MonitorService {
 				combinedErrorMessage = combinedErrorMessage + errorMessages.get(i);
 			}
 			
-			this.getNagiosLogger().log(ADIT_APP + " " + FAIL + " " + "Errors found: " + combinedErrorMessage);
+			this.getNagiosLogger().log(ADIT_APP + " " + FAIL + " ", new Exception("Errors found: " + combinedErrorMessage));
 		} else {
 			this.getNagiosLogger().log(ADIT_APP + " " + OK + " " + df.format(duration) + " " + SECONDS);
 		}
