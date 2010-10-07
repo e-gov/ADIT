@@ -1,14 +1,19 @@
 package ee.adit.service;
 
+import java.io.File;
 import java.text.DecimalFormat;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 
 import ee.adit.dao.DocumentDAO;
 import ee.adit.dao.dvk.DvkDAO;
+import ee.adit.dao.pojo.Document;
 import ee.adit.util.Configuration;
 import ee.adit.util.NagiosLogger;
+import ee.adit.util.Util;
 
 /**
  * 
@@ -29,6 +34,9 @@ public class MonitorService {
 	private static final String SECONDS = "seconds";
 	
 	private static final String ADIT_DB_CONNECTION = "ADIT_DB_CONNECTION";
+	private static final String ADIT_DB_CONNECTION_READ = "ADIT_DB_CONNECTION_READ";
+	private static final String ADIT_DB_CONNECTION_WRITE = "ADIT_DB_CONNECTION_WRITE";
+	
 	private static final String ADIT_UK_CONNECTION = "ADIT_UK_CONNECTION";
 	private static final String ADIT_APP = "ADIT_APP";
 	
@@ -48,12 +56,55 @@ public class MonitorService {
 		checkApplication();
 		
 		checkDBRead(this.getConfiguration().getTestDocumentID());
-		checkDBWrite();
+		checkDBWrite(this.getConfiguration().getTestDocumentID());
 		
 	}
 	
 	/**
-	 * Check if ADIT database read is successful.
+	 * Check database connectivity.
+	 */
+	public void checkDBConnection() {
+		
+		Session session = null;
+		double duration = 0;
+		
+		try {
+			
+			SessionFactory sessionFactory = this.getDocumentDAO().getSessionFactory();
+			
+			try {
+				
+				Date start = new Date();
+				long startTime = start.getTime();
+				
+				session = sessionFactory.openSession();
+				session.close();
+				
+				Date end = new Date();
+				long endTime = end.getTime();
+				duration = (endTime - startTime) / 1000.0;
+				
+				DecimalFormat df = new DecimalFormat("0.000");
+				this.getNagiosLogger().log(ADIT_DB_CONNECTION + " " + OK + " " + df.format(duration) + SECONDS);
+				
+			} catch(Exception e) {
+				LOG.info("Error occurred while accessing ADIT database: ", e);
+				String message = ADIT_DB_CONNECTION + " " + FAIL;
+				this.getNagiosLogger().log(message, e);
+				return;
+			} finally {
+				if(session != null)
+					session.close();
+			}
+			
+		} catch(Exception e) {
+			LOG.error("Error while checking database connectivity: ", e);
+		}
+		
+	}
+	
+	/**
+	 * Check database read.
 	 */
 	public void checkDBRead(long documentID) {
 		LOG.info("ADIT monitor - Checking database READ.");
@@ -75,16 +126,13 @@ public class MonitorService {
 				
 			} catch (Exception e) {
 				LOG.info("Error occurred while accessing ADIT database READ function: ", e);
-				String message = ADIT_DB_CONNECTION + " " + FAIL;
+				String message = ADIT_DB_CONNECTION_READ + " " + FAIL;
 				this.getNagiosLogger().log(message, e);
 				return;
 			}
 			
 			DecimalFormat df = new DecimalFormat("0.000");
-			
-			
-			
-			this.getNagiosLogger().log(ADIT_DB_CONNECTION + " " + OK + " " + df.format(duration) + SECONDS);
+			this.getNagiosLogger().log(ADIT_DB_CONNECTION_READ + " " + OK + " " + df.format(duration) + SECONDS);
 			
 		} catch(Exception e) {
 			LOG.error("Error while checking database READ: ", e);
@@ -93,10 +141,44 @@ public class MonitorService {
 	}
 	
 	/**
-	 * Check if ADIT database write is successful. 
+	 * Check database write. 
 	 */
-	public void checkDBWrite() {
+	public void checkDBWrite(long documentID) {
 		LOG.info("ADIT monitor - Checking database WRITE.");
+		
+		try {
+			
+			double duration = 0;
+			
+			try {
+				Date start = new Date();
+				long startTime = start.getTime();
+				
+				Document document = getDocumentDAO().getDocument(documentID);
+				
+				if(document != null) {
+					document.setLastModifiedDate(new Date());
+					getDocumentDAO().update(document);
+				}
+				
+				Date end = new Date();
+				long endTime = end.getTime();
+				duration = (endTime - startTime) / 1000.0;
+				
+				
+			} catch (Exception e) {
+				LOG.info("Error occurred while accessing ADIT database WRITE function: ", e);
+				String message = ADIT_DB_CONNECTION_WRITE + " " + FAIL;
+				this.getNagiosLogger().log(message, e);
+				return;
+			}
+			
+			DecimalFormat df = new DecimalFormat("0.000");
+			this.getNagiosLogger().log(ADIT_DB_CONNECTION_WRITE + " " + OK + " " + df.format(duration) + SECONDS);
+			
+		} catch(Exception e) {
+			LOG.error("Error while checking database READ: ", e);
+		}
 	}
 	
 	/**
@@ -104,6 +186,35 @@ public class MonitorService {
 	 */
 	public void checkApplication() {
 		LOG.info("ADIT monitor - Checking application.");
+		
+		boolean success = true;
+		
+		// 1. Check temporary folder
+		try {
+			
+			String tempDir = this.getConfiguration().getTempDir();
+			File tempDirFile = new File(tempDir);
+			String randomFileName = Util.generateRandomFileName();
+			File temporaryFile = new File(tempDirFile.getAbsolutePath() + File.separator + randomFileName);
+			temporaryFile.createNewFile();		
+			
+		} catch (Exception e) {
+			LOG.error("Error checking application - temporary directory not defined or not writable: ", e);
+		}
+		
+		// 2. Check DVK response message stylesheet
+		try {
+			
+			String styleSheet = this.getConfiguration().getDvkResponseMessageStylesheet();
+			File styleSheetFile = new File(styleSheet);
+			if(!styleSheetFile.exists()) {
+				throw new Exception("File does not exist: " + styleSheet);
+			}
+			
+		} catch (Exception e) {
+			LOG.error("Error checking application - DVK response message stylesheet not defined or file does not exist: ", e);
+		}
+		
 	}
 
 	/**
