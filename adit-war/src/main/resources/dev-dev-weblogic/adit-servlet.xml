@@ -757,6 +757,7 @@
 			</list>
 		</property>
 		<property name="testDocumentID" value="999999999999" />
+		<property name="dvkTestDocumentID" value="9999999999"/>
 	</bean>
 
 </beans>

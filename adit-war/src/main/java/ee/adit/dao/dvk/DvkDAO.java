@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -41,9 +42,9 @@ public class DvkDAO {
 		List<PojoMessage> result = new ArrayList<PojoMessage>();
 		Session session = this.getSessionFactory().getCurrentSession();
 		Transaction transaction = session.beginTransaction();
-		
+		PojoMessage t = null;
 		try {
-			final String SQL = "from PojoMessage where isIncoming = true and (recipientStatusId = null or recipientStatusId = 0 or recipientStatusId = 101 or recipientStatusId = 1)";
+			final String SQL = "from PojoMessage where isIncoming = true and (recipientStatusId = null or recipientStatusId = 0 or recipientStatusId = 101 or recipientStatusId = 1) and dhlMessageId != 9999999999";
 			result = session.createQuery(SQL).list();
 		} catch (Exception e) {
 			LOG.error("Exception while fetching DVK incoming messages: ", e);
@@ -64,7 +65,7 @@ public class DvkDAO {
 	public List<PojoMessage> getIncomingDocumentsWithoutStatus(Long statusID) throws Exception {
 		List<PojoMessage> result = new ArrayList<PojoMessage>();
 		Session session = null;
-		final String SQL = "from PojoMessage where isIncoming = true and (recipientStatusId != " + statusID + " or recipientStatusId is null)";
+		final String SQL = "from PojoMessage where isIncoming = true and (recipientStatusId != " + statusID + " or recipientStatusId is null) and dhlMessageId != 9999999999";
 		
 		try {
 			session = this.getSessionFactory().openSession();
@@ -124,7 +125,7 @@ public class DvkDAO {
 		}
 		
 		Session session = null;
-		String SQL = "select mr from PojoMessageRecipient mr, PojoMessage m where mr.dhlMessageId = m.dhlMessageId and m.dhlMessageId = " + dvkMessageID + " and m.isIncoming = " + incomingInt;
+		String SQL = "select mr from PojoMessageRecipient mr, PojoMessage m where mr.dhlMessageId = m.dhlMessageId and m.dhlMessageId = " + dvkMessageID + " and m.isIncoming = " + incomingInt + "  and m.dhlMessageId != 9999999999";
 		
 		try {		
 			session = this.getSessionFactory().openSession();
@@ -165,7 +166,7 @@ public class DvkDAO {
 	@SuppressWarnings("unchecked")
 	public List<PojoMessage> getSentDocuments() throws Exception {
 		List<PojoMessage> result = new ArrayList<PojoMessage>();
-		String SQL = "from PojoMessage m where m.isIncoming = false and m.dhlId is not null and (m.faultCode is null or m.faultCode != '" + DocumentService.DVKFaultCodeFor_Deleted + "') and m.dhlMessageId not in (select mr.dhlMessageId from PojoMessageRecipient mr where mr.dhlMessageId = m.dhlMessageId and (mr.sendingStatusId is null or mr.sendingStatusId = " + DocumentService.DVKStatus_Missing + " or mr.sendingStatusId = " + DocumentService.DVKStatus_Received + " or mr.sendingStatusId = " + DocumentService.DVKStatus_Sending + " or mr.sendingStatusId = " + DocumentService.DVKStatus_Waiting + " or mr.sendingStatusId = " + DocumentService.DVKStatus_Aborted + "))";
+		String SQL = "from PojoMessage m where m.isIncoming = false and m.dhlId is not null and dhlMessageId != 9999999999 and (m.faultCode is null or m.faultCode != '" + DocumentService.DVKFaultCodeFor_Deleted + "') and m.dhlMessageId not in (select mr.dhlMessageId from PojoMessageRecipient mr where mr.dhlMessageId = m.dhlMessageId and (mr.sendingStatusId is null or mr.sendingStatusId = " + DocumentService.DVKStatus_Missing + " or mr.sendingStatusId = " + DocumentService.DVKStatus_Received + " or mr.sendingStatusId = " + DocumentService.DVKStatus_Sending + " or mr.sendingStatusId = " + DocumentService.DVKStatus_Waiting + " or mr.sendingStatusId = " + DocumentService.DVKStatus_Aborted + "))";
 		Session session = null;
 		
 		try {
@@ -189,7 +190,7 @@ public class DvkDAO {
 	 */
 	public List<PojoMessage> getReceivedDocuments() {
 		List<PojoMessage> result = new ArrayList<PojoMessage>();
-		String SQL = "from PojoMessage where isIncoming = true and dhlId is not null and (faultCode is null or faultCode != '" + DocumentService.DVKFaultCodeFor_Deleted + "') and (recipientStatusId = " + DocumentService.DVKStatus_Aborted + " or recipientStatusId = " + DocumentService.DVKStatus_Received + ")";
+		String SQL = "from PojoMessage where isIncoming = true and dhlId is not null and dhlMessageId != 9999999999 and (faultCode is null or faultCode != '" + DocumentService.DVKFaultCodeFor_Deleted + "') and (recipientStatusId = " + DocumentService.DVKStatus_Aborted + " or recipientStatusId = " + DocumentService.DVKStatus_Received + ")";
 		Session session = null;
 		
 		try {
@@ -227,11 +228,33 @@ public class DvkDAO {
 	}
 	
 	/**
-	 * Get message by DHL ID
+	 * Test document read.
 	 */
-	public PojoMessage getMessage(long id) {
+	public PojoMessage testRead(long dhlMesageId) {
 		PojoMessage result = null;
-		String SQL = "from PojoMessage where dhlMessageId = " + id;
+		String SQL = "from PojoMessage where dhlMesageId = " + dhlMesageId;
+		Session session = null;
+		
+		try {
+			session = this.getSessionFactory().openSession();
+			Transaction transaction = session.beginTransaction();
+			Query query = session.createQuery(SQL);
+			query.setMaxResults(1);
+			result = (PojoMessage) query.uniqueResult();
+		} finally {
+			if(session != null)
+				session.close();
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * Test document read.
+	 */
+	public PojoMessage getMessage(long dhlMesageId) {
+		PojoMessage result = null;
+		String SQL = "from PojoMessage where dhlMesageId = " + dhlMesageId;
 		Session session = null;
 		
 		try {

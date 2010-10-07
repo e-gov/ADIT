@@ -59,6 +59,8 @@ public class Configuration {
 
 	private Long testDocumentID;
 	
+	private Long dvkTestDocumentID;
+	
 	/**
 	 * Sets the locales list
 	 * @param locales	Locales list
@@ -181,5 +183,13 @@ public class Configuration {
 
 	public void setTestDocumentID(Long testDocumentID) {
 		this.testDocumentID = testDocumentID;
+	}
+
+	public Long getDvkTestDocumentID() {
+		return dvkTestDocumentID;
+	}
+
+	public void setDvkTestDocumentID(Long dvkTestDocumentID) {
+		this.dvkTestDocumentID = dvkTestDocumentID;
 	}
 }

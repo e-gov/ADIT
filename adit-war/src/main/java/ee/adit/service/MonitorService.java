@@ -65,9 +65,14 @@ public class MonitorService {
 		LOG.info("ADIT monitor - Checking database and application.");
 		
 		checkApplication();
+		
 		checkDBConnection();
 		checkDBRead(this.getConfiguration().getTestDocumentID());
 		checkDBWrite(this.getConfiguration().getTestDocumentID());
+		
+		checkDVKconnection();
+		checkDVKRead(this.getConfiguration().getDvkTestDocumentID());
+		checkDVKWrite(this.getConfiguration().getDvkTestDocumentID());
 		
 	}
 	
@@ -320,7 +325,7 @@ public class MonitorService {
 				Date start = new Date();
 				long startTime = start.getTime();
 				
-				this.getDvkDAO().getMessage(messageDhlId);
+				this.getDvkDAO().testRead(messageDhlId);
 				
 				Date end = new Date();
 				long endTime = end.getTime();
