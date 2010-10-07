@@ -168,11 +168,25 @@ public class DvkDAO {
 	/**
 	 * Get only documents that have status 'sent' for all message recipients.
 	 * @return	List of documents that have status 'sent' for all message recipients
+	 * @throws Exception 
 	 */
-	public List<PojoMessage> getSentDocuments() {
+	@SuppressWarnings("unchecked")
+	public List<PojoMessage> getSentDocuments() throws Exception {
 		List<PojoMessage> result = new ArrayList<PojoMessage>();
 		String SQL = "from PojoMessage m where m.isIncoming = false and m.dhlId is not null and (m.faultCode is null or m.faultCode != '" + DocumentService.DVKFaultCodeFor_Deleted + "') and m.dhlMessageId not in (select mr.dhlMessageId from PojoMessageRecipient mr where mr.dhlMessageId = m.dhlMessageId and (mr.sendingStatusId is null or mr.sendingStatusId = " + DocumentService.DVKStatus_Missing + " or mr.sendingStatusId = " + DocumentService.DVKStatus_Received + " or mr.sendingStatusId = " + DocumentService.DVKStatus_Sending + " or mr.sendingStatusId = " + DocumentService.DVKStatus_Waiting + " or mr.sendingStatusId = " + DocumentService.DVKStatus_Aborted + "))";
-		result = this.getSessionFactory().openSession().createQuery(SQL).list();
+		Session session = null;
+		
+		try {
+			session = this.getSessionFactory().openSession();
+			Transaction transaction = session.beginTransaction();
+			result = session.createQuery(SQL).list();
+		} catch(Exception e) {
+			throw e;
+		} finally {
+			if(session != null)
+				session.close();
+		}
+		
 		return result;
 	}
 	
