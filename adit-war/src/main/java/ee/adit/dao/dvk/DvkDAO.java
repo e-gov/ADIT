@@ -45,6 +45,8 @@ public class DvkDAO {
 	 * 
 	 * @return
 	 */
+	
+	// TODO: open a new session, don't use getCurrentSession()
 	public List<PojoMessage> getIncomingDocuments() {
 		List<PojoMessage> result = new ArrayList<PojoMessage>();
 		Session session = this.getSessionFactory().getCurrentSession();
