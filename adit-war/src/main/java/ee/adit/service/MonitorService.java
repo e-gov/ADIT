@@ -11,6 +11,9 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.transaction.annotation.Transactional;
 
+import dvk.api.ml.PojoMessage;
+import dvk.api.ml.PojoSettings;
+
 import ee.adit.dao.DocumentDAO;
 import ee.adit.dao.dvk.DvkDAO;
 import ee.adit.dao.pojo.Document;
@@ -41,6 +44,9 @@ public class MonitorService {
 	private static final String ADIT_DB_CONNECTION_WRITE = "ADIT_DB_CONNECTION_WRITE";
 	
 	private static final String ADIT_UK_CONNECTION = "ADIT_UK_CONNECTION";
+	private static final String ADIT_UK_CONNECTION_READ = "ADIT_UK_CONNECTION_READ";
+	private static final String ADIT_UK_CONNECTION_WRITE = "ADIT_UK_CONNECTION_WRITE";
+	
 	private static final String ADIT_APP = "ADIT_APP";
 	
 	private static Logger LOG = Logger.getLogger(MonitorService.class);
@@ -259,6 +265,125 @@ public class MonitorService {
 		
 	}
 
+	/**
+	 * Check DVK database connectivity.
+	 */
+	public void checkDVKconnection() {
+		Session session = null;
+		double duration = 0;
+		
+		try {
+			
+			SessionFactory sessionFactory = this.getDvkDAO().getSessionFactory();
+			
+			try {
+				
+				Date start = new Date();
+				long startTime = start.getTime();
+				
+				session = sessionFactory.openSession();
+				session.close();
+				
+				Date end = new Date();
+				long endTime = end.getTime();
+				duration = (endTime - startTime) / 1000.0;
+				
+				DecimalFormat df = new DecimalFormat("0.000");
+				this.getNagiosLogger().log(ADIT_UK_CONNECTION + " " + OK + " " + df.format(duration) + " " + SECONDS);
+				
+			} catch(Exception e) {
+				LOG.info("Error occurred while accessing DVK database: ", e);
+				String message = ADIT_UK_CONNECTION + " " + FAIL;
+				this.getNagiosLogger().log(message, e);
+				return;
+			} finally {
+				if(session != null)
+					session.close();
+			}
+			
+		} catch(Exception e) {
+			LOG.error("Error while checking DVK database connectivity: ", e);
+		}
+	}
+	
+	/**
+	 * Check DVK database read.
+	 */
+	public void checkDVKRead(long messageDhlId) {
+		LOG.info("ADIT monitor - Checking DVK database READ.");
+		
+		try {
+			
+			double duration = 0;
+			
+			try {
+				Date start = new Date();
+				long startTime = start.getTime();
+				
+				this.getDvkDAO().getMessage(messageDhlId);
+				
+				Date end = new Date();
+				long endTime = end.getTime();
+				duration = (endTime - startTime) / 1000.0;
+				
+				
+			} catch (Exception e) {
+				LOG.info("Error occurred while accessing DVK database READ function: ", e);
+				String message = ADIT_UK_CONNECTION_READ + " " + FAIL + " ";
+				this.getNagiosLogger().log(message, e);
+				return;
+			}
+			
+			DecimalFormat df = new DecimalFormat("0.000");
+			this.getNagiosLogger().log(ADIT_UK_CONNECTION_READ + " " + OK + " " + df.format(duration) + " " + SECONDS);
+			
+		} catch(Exception e) {
+			LOG.error("Error while checking DVK database READ: ", e);
+		}
+	}
+	
+	/**
+	 * Check DVK database read.
+	 */
+	public void checkDVKWrite(long messageDhlId) {
+		LOG.info("ADIT monitor - Checking DVK WRITE.");
+		
+		try {
+			
+			double duration = 0;
+			
+			try {
+				Date start = new Date();
+				long startTime = start.getTime();
+				
+				PojoMessage document = this.getDvkDAO().getMessage(messageDhlId);
+				
+				if(document != null) {
+					document.setTitle(Util.generateRandomID());
+					this.getDvkDAO().updateDocument(document);
+				}
+				
+				Date end = new Date();
+				long endTime = end.getTime();
+				duration = (endTime - startTime) / 1000.0;
+				
+				
+			} catch (Exception e) {
+				LOG.info("Error occurred while accessing DVK database WRITE function: ", e);
+				String message = ADIT_UK_CONNECTION_WRITE + " " + FAIL + " ";
+				this.getNagiosLogger().log(message, e);
+				return;
+			}
+			
+			DecimalFormat df = new DecimalFormat("0.000");
+			this.getNagiosLogger().log(ADIT_UK_CONNECTION_WRITE + " " + OK + " " + df.format(duration) + " " + SECONDS);
+			
+		} catch(Exception e) {
+			LOG.error("Error while checking DVK database READ: ", e);
+		}
+		
+	}
+	
 	/**
 	 * Handle application exception.
 	 */

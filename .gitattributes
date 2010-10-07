@@ -145,6 +145,7 @@ adit-war/sql/document_history_type.dml.sql -text
 adit-war/sql/document_sharing_type.dml.sql -text
 adit-war/sql/document_type.dml.sql -text
 adit-war/sql/drop_database.sql -text
+adit-war/sql/dvk/adit_monitor_classifier.dml.sql -text
 adit-war/sql/grant.sql -text
 adit-war/sql/log_proc.sql -text
 adit-war/sql/log_proc_body.sql -text

@@ -227,6 +227,26 @@ public class DvkDAO {
 	}
 	
 	/**
+	 * Get message by DHL ID
+	 */
+	public PojoMessage getMessage(long id) {
+		PojoMessage result = null;
+		String SQL = "from PojoMessage where dhlMessageId = " + id;
+		Session session = null;
+		
+		try {
+			session = this.getSessionFactory().openSession();
+			Transaction transaction = session.beginTransaction();
+			result = (PojoMessage) session.createQuery(SQL).uniqueResult();
+		} finally {
+			if(session != null)
+				session.close();
+		}
+		
+		return result;
+	}
+	
+	/**
 	 * Retrieves session factory
 	 * @return
 	 */
