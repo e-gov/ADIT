@@ -28,17 +28,7 @@ public class DvkDAO {
 	/**
 	 * Session factory
 	 */
-	private SessionFactory sessionFactory;
-
-	/**
-	 * Default constructor. Configures the DVK API and sets the session factory.
-	 */
-	/*
-	public DvkDAO() {
-		this.setSessionFactory(DVKAPI.createSessionFactory("hibernate_ora_dvk.cfg.xml"));
-	}
-	*/
-	
+	private SessionFactory sessionFactory;	
 	
 	/**
 	 * Retrieves incoming documents list.
@@ -156,12 +146,14 @@ public class DvkDAO {
 	 * @return settings
 	 */
 	public PojoSettings getDVKSettings() {
-		Session session = this.getSessionFactory().openSession();
+		Session session = null;
 		String SQL = "from PojoSettings where id = (select max(id) from PojoSettings)";
 		try {
+			session = this.getSessionFactory().openSession();
 		    return (PojoSettings) session.createQuery(SQL).uniqueResult();
 		} finally {
-			session.close();
+			if(session != null)
+				session.close();
 		}
 	}
 	
@@ -198,7 +190,17 @@ public class DvkDAO {
 	public List<PojoMessage> getReceivedDocuments() {
 		List<PojoMessage> result = new ArrayList<PojoMessage>();
 		String SQL = "from PojoMessage where isIncoming = true and dhlId is not null and (faultCode is null or faultCode != '" + DocumentService.DVKFaultCodeFor_Deleted + "') and (recipientStatusId = " + DocumentService.DVKStatus_Aborted + " or recipientStatusId = " + DocumentService.DVKStatus_Received + ")";
-		result = this.getSessionFactory().openSession().createQuery(SQL).list();
+		Session session = null;
+		
+		try {
+			session = this.getSessionFactory().openSession();
+			Transaction transaction = session.beginTransaction();
+			session.createQuery(SQL).list();
+		} finally {
+			if(session != null)
+				session.close();
+		}
+		
 		return result;
 	}
 	
@@ -210,7 +212,17 @@ public class DvkDAO {
 	public List<PojoOrganization> getUsers() {
 		List<PojoOrganization> result = new ArrayList<PojoOrganization>();
 		String SQL = "from PojoOrganization where dhlCapable = true";
-		result = this.getSessionFactory().openSession().createQuery(SQL).list();
+		Session session = null;
+		
+		try {
+			session = this.getSessionFactory().openSession();
+			Transaction transaction = session.beginTransaction();
+			session.createQuery(SQL).list();
+		} finally {
+			if(session != null)
+				session.close();
+		}
+		
 		return result;
 	}
 	
