@@ -109,7 +109,7 @@ public class MonitorService {
 				this.getNagiosLogger().log(message, e);
 				return;
 			} finally {
-				if(session != null)
+				if(session != null && session.isOpen())
 					session.close();
 			}
 			
@@ -302,7 +302,7 @@ public class MonitorService {
 				this.getNagiosLogger().log(message, e);
 				return;
 			} finally {
-				if(session != null)
+				if(session != null && session.isOpen())
 					session.close();
 			}
 			
