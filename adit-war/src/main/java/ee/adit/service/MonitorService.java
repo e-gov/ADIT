@@ -56,7 +56,7 @@ public class MonitorService {
 		LOG.info("ADIT monitor - Checking database and application.");
 		
 		checkApplication();
-		
+		checkDBConnection();
 		checkDBRead(this.getConfiguration().getTestDocumentID());
 		checkDBWrite(this.getConfiguration().getTestDocumentID());
 		
