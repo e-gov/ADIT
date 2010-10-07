@@ -146,7 +146,6 @@ public class MonitorService {
 	/**
 	 * Check database write. 
 	 */
-	@Transactional
 	public void checkDBWrite(long documentID) {
 		LOG.info("ADIT monitor - Checking database WRITE.");
 		
