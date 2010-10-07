@@ -231,6 +231,18 @@ public class MonitorService {
 			errorMessages.add("Error checking application - test document ID not defined.");
 		}
 		
+		// Errors were detected
+		if(errorMessages.size() > 0) {
+			String combinedErrorMessage = "";
+			for(int i = 0; i < errorMessages.size(); i++) {
+				if(i != 0)
+					combinedErrorMessage = combinedErrorMessage + ", ";
+				combinedErrorMessage = combinedErrorMessage + errorMessages.get(i);
+			}
+			
+			this.getNagiosLogger().log(ADIT_APP + " " + FAIL + " " + "Errors found: " + combinedErrorMessage);
+		}
+		
 	}
 
 	/**
