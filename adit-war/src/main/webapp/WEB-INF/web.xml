@@ -13,19 +13,19 @@
 	</servlet>
 
 	<servlet>
-		<servlet-name>monitor</servlet-name>
+		<servlet-name>adit-monitor</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 		<load-on-startup>2</load-on-startup>
 	</servlet>
 
 	<servlet-mapping>
 		<servlet-name>adit</servlet-name>
-		<url-pattern>/*</url-pattern>
+		<url-pattern>/adit</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
 		<servlet-name>monitor</servlet-name>
-		<url-pattern>/*</url-pattern>
+		<url-pattern>/adit-monitor</url-pattern>
 	</servlet-mapping>
 
 	<welcome-file-list>

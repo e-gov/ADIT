@@ -10,7 +10,7 @@ public class MonitorController {
 
 	private static Logger LOG = Logger.getLogger(MonitorController.class);
 	
-	@RequestMapping("/monitor")
+	@RequestMapping("/adit-monitor")
 	public ModelAndView aditMonitor() {
 		LOG.info("ADIT monitoring servlet invoked.");
 		ModelAndView mav = new ModelAndView();
