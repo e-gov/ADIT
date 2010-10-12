@@ -24,7 +24,7 @@
 	</servlet-mapping>
 
 	<servlet-mapping>
-		<servlet-name>monitor</servlet-name>
+		<servlet-name>adit-monitor</servlet-name>
 		<url-pattern>/adit-monitor</url-pattern>
 	</servlet-mapping>
 
