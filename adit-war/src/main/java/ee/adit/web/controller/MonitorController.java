@@ -14,6 +14,7 @@ public class MonitorController {
 	public ModelAndView aditMonitor() {
 		LOG.info("ADIT monitoring servlet invoked.");
 		ModelAndView mav = new ModelAndView();
+		mav.setViewName("index.jsp");
 		return mav;
 	}
 	
