@@ -373,11 +373,11 @@ adit-war/src/main/resources/castor-mapping/xsd.v1/rkel_letter.xsd -text
 adit-war/src/main/resources/castor-mapping/xsd.v2/dhl-meta-automatic.xsd -text
 adit-war/src/main/resources/castor-mapping/xsd.v2/dhl-meta-manual.xsd -text
 adit-war/src/main/resources/castor-mapping/xsd.v2/dhl.xsd -text
-adit-war/src/main/resources/dev-dev-weblogic/adit-monitor-servlet.xml -text
 adit-war/src/main/resources/dev-dev-weblogic/adit-servlet.xml -text
 adit-war/src/main/resources/dev-dev-weblogic/hibernate_ora_dvk.cfg.xml -text
 adit-war/src/main/resources/dev-dev-weblogic/jdigidoc.cfg -text
 adit-war/src/main/resources/dev-dev-weblogic/log4j.xml -text
+adit-war/src/main/resources/dev-dev-weblogic/monitor-servlet.xml -text
 adit-war/src/main/resources/dev-dev-weblogic/nsca_send_clear.cfg -text
 adit-war/src/main/resources/dev-dev-weblogic/xtee.properties -text
 adit-war/src/main/resources/dev-dev/adit-servlet.xml -text
