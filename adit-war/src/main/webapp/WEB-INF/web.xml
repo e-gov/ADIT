@@ -4,12 +4,17 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 
 	<display-name>Ametlikud Dokumendid</display-name>
-	 
+
 	<!-- take especial notice of the name of this servlet -->
 	<servlet>
 		<servlet-name>adit</servlet-name>
-		<servlet-class>
-			org.springframework.ws.transport.http.MessageDispatcherServlet</servlet-class>
+		<servlet-class>org.springframework.ws.transport.http.MessageDispatcherServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<servlet-name>adit-monitor</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 		<load-on-startup>2</load-on-startup>
 	</servlet>
 
@@ -17,5 +22,14 @@
 		<servlet-name>adit</servlet-name>
 		<url-pattern>/*</url-pattern>
 	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>adit-monitor</servlet-name>
+		<url-pattern>/adit-monitor</url-pattern>
+	</servlet-mapping>
+
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
 
 </web-app>

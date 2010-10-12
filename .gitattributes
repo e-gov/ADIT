@@ -323,6 +323,7 @@ adit-war/src/main/java/ee/adit/util/SaveDocumentAttachmentHandler.java -text
 adit-war/src/main/java/ee/adit/util/TemporaryFolderCleanerJob.java -text
 adit-war/src/main/java/ee/adit/util/Util.java -text
 adit-war/src/main/java/ee/adit/util/XRoadQueryName.java -text
+adit-war/src/main/java/ee/adit/web/controller/MonitorController.java -text
 adit-war/src/main/java/ee/adit/ws/endpoint/AbstractAditBaseEndpoint.java -text
 adit-war/src/main/java/ee/adit/ws/endpoint/AditEndpointMapping.java -text
 adit-war/src/main/java/ee/adit/ws/endpoint/ListMethodsEndpoint.java -text
@@ -441,6 +442,7 @@ adit-war/src/main/webapp/META-INF/MANIFEST.MF -text
 adit-war/src/main/webapp/META-INF/application.xml -text
 adit-war/src/main/webapp/META-INF/weblogic-application.xml -text
 adit-war/src/main/webapp/WEB-INF/web.xml -text
+adit-war/src/main/webapp/index.jsp -text
 /pom.xml -text
 src/main/webapp/META-INF/application.xml -text
 src/main/webapp/META-INF/weblogic-application.xml -text
