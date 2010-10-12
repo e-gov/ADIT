@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+	http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-2.5.xsd
+	http://www.springframework.org/schema/jee
+	http://www.springframework.org/schema/jee/spring-jee-2.5.xsd
+	http://www.springframework.org/schema/tx
+	http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+
+	<context:component-scan base-package="ee.adit.web"/>
+
+
+
+
+
+
+
+
+
+	<!-- Service Classes -->
+	<bean id="logService" class="ee.adit.service.LogService">
+		<property name="requestLogDAO" ref="requestLogDAO"/>
+		<property name="errorLogDAO" ref="errorLogDAO"/>
+		<property name="downloadRequestLogDAO" ref="downloadRequestLogDAO"/>
+	</bean>
+	
+	<bean id="userService" class="ee.adit.service.UserService">
+		<property name="remoteApplicationDAO" ref="remoteApplicationDAO"/>
+		<property name="usertypeDAO" ref="usertypeDAO"/>
+		<property name="notificationTypeDAO" ref="notificationTypeDAO"/>
+		<property name="aditUserDAO" ref="aditUserDAO"/>
+		<property name="documentDAO" ref="documentDAO"/>
+		<property name="accessRestrictionDAO" ref="accessRestrictionDAO"/>
+		<property name="notificationDAO" ref="notificationDAO"/>
+		<property name="dvkDAO" ref="dvkDAO"/>
+	</bean>
+
+	<bean id="documentService" class="ee.adit.service.DocumentService">
+		<property name="messageSource" ref="messageSource"/>
+		<property name="documentTypeDAO" ref="documentTypeDAO"/>
+		<property name="documentDAO" ref="documentDAO"/>
+		<property name="documentFileDAO" ref="documentFileDAO"/>
+		<property name="documentWfStatusDAO" ref="documentWfStatusDAO"/>
+		<property name="documentSharingDAO" ref="documentSharingDAO"/>
+		<property name="documentHistoryDAO" ref="documentHistoryDAO"/>
+		<property name="aditUserDAO" ref="aditUserDAO"/>
+		<property name="configuration" ref="configuration"/>
+		<property name="dvkDAO" ref="dvkDAO"/>
+	</bean>
+
+	<bean id="messageService" class="ee.adit.service.MessageService">
+		<property name="messageSource" ref="messageSource"/>
+		<property name="configuration" ref="configuration"/>
+	</bean>
+
+	<bean id="monitorService" class="ee.adit.service.MonitorService">
+		<property name="documentDAO" ref="documentDAO" />
+		<property name="dvkDAO" ref="dvkDAO" />
+		<property name="configuration" ref="configuration" />
+		<property name="nagiosLogger" ref="nagiosLogger" />
+		<property name="documentService" ref="documentService"/>
+	</bean>
+
+	<bean id="aditDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+	  	<property name="jndiName" value="jdbc/adit"/>
+	</bean>
+	
+	<bean id="aditDVKDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+		<property name="jndiName" value="jdbc/adit_dvk"/>
+	</bean>
+
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource" ref="aditDataSource" />
+		<property name="mappingLocations">
+			<list>
+				<value>classpath:hbm/AccessRestriction.hbm.xml</value>
+				<value>classpath:hbm/AditUser.hbm.xml</value>
+				<value>classpath:hbm/Document.hbm.xml</value>
+				<value>classpath:hbm/DocumentDvkStatus.hbm.xml</value>
+				<value>classpath:hbm/DocumentFile.hbm.xml</value>
+				<value>classpath:hbm/DocumentFileDeflateResult.hbm.xml</value>
+				<value>classpath:hbm/DocumentHistory.hbm.xml</value>
+				<value>classpath:hbm/DocumentHistoryType.hbm.xml</value>
+				<value>classpath:hbm/DocumentSharing.hbm.xml</value>
+				<value>classpath:hbm/DocumentSharingType.hbm.xml</value>
+				<value>classpath:hbm/DocumentType.hbm.xml</value>
+				<value>classpath:hbm/DocumentWfStatus.hbm.xml</value>
+				<value>classpath:hbm/Notification.hbm.xml</value>
+				<value>classpath:hbm/NotificationType.hbm.xml</value>
+				<value>classpath:hbm/RemoteApplication.hbm.xml</value>
+				<value>classpath:hbm/RequestLog.hbm.xml</value>
+				<value>classpath:hbm/Signature.hbm.xml</value>
+				<value>classpath:hbm/UserNotification.hbm.xml</value>
+				<value>classpath:hbm/Usertype.hbm.xml</value>
+				<value>classpath:hbm/ErrorLog.hbm.xml</value>
+				<value>classpath:hbm/DownloadRequestLog.hbm.xml</value>
+				<value>classpath:hbm/MetadataRequestLog.hbm.xml</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</prop>
+				<prop key="hibernate.cache.provider_class">org.hibernate.cache.NoCacheProvider</prop>
+				<prop key="hibernate.current_session_context_class">org.hibernate.context.JTASessionContext</prop>
+				<prop key="hibernate.transaction.manager_lookup_class">org.hibernate.transaction.WeblogicTransactionManagerLookup</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<bean id="dvkSessionFactory"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource" ref="aditDVKDataSource" />
+		<property name="mappingLocations">
+			<list>
+				<value>classpath:dvkapi/Counter.hbm.xml</value>
+				<value>classpath:dvkapi/Subdivision.hbm.xml</value>
+				<value>classpath:dvkapi/Occupation.hbm.xml</value>
+				<value>classpath:dvkapi/Organization.hbm.xml</value>
+				<value>classpath:dvkapi/SettingsFolders.hbm.xml</value>
+				<value>classpath:dvkapi/Settings.hbm.xml</value>
+				<value>classpath:dvkapi/Message.hbm.xml</value>
+				<value>classpath:dvkapi/MessageRecipient.hbm.xml</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</prop>
+				<prop key="hibernate.cache.provider_class">org.hibernate.cache.NoCacheProvider</prop>
+				<prop key="hibernate.current_session_context_class">org.hibernate.context.JTASessionContext</prop>
+				<prop key="hibernate.transaction.manager_lookup_class">org.hibernate.transaction.WeblogicTransactionManagerLookup</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<!-- ADIT transaction manager -->
+    <bean id="transactionManager" class="org.springframework.transaction.jta.WebLogicJtaTransactionManager" />
+
+	<!-- Enable the configuration of transactional behavior based on annotations -->
+  	<tx:annotation-driven transaction-manager="transactionManager"/>
+	
+	<bean id="requestLogDAO" class="ee.adit.dao.RequestLogDAO">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="errorLogDAO" class="ee.adit.dao.ErrorLogDAO">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="downloadRequestLogDAO" class="ee.adit.dao.DownloadRequestLogDAO">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="notificationDAO" class="ee.adit.dao.NotificationDAO">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="remoteApplicationDAO" class="ee.adit.dao.RemoteApplicationDAO">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="usertypeDAO" class="ee.adit.dao.UsertypeDAO">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="notificationTypeDAO" class="ee.adit.dao.NotificationTypeDAO">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="aditUserDAO" class="ee.adit.dao.AditUserDAO">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="documentDAO" class="ee.adit.dao.DocumentDAO">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="messageSource" ref="messageSource"/>
+		<property name="messageService" ref="messageService"/>
+	</bean>	
+
+	<bean id="documentFileDAO" class="ee.adit.dao.DocumentFileDAO">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="accessRestrictionDAO" class="ee.adit.dao.AccessRestrictionDAO">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>	
+
+	<bean id="documentTypeDAO" class="ee.adit.dao.DocumentTypeDAO">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="documentWfStatusDAO" class="ee.adit.dao.DocumentWfStatusDAO">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="documentSharingDAO" class="ee.adit.dao.DocumentSharingDAO">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+		
+	<bean id="documentHistoryDAO" class="ee.adit.dao.DocumentHistoryDAO">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="dvkDAO" class="ee.adit.dao.dvk.DvkDAO">
+		<property name="sessionFactory" ref="dvkSessionFactory" />
+	</bean>
+
+	<!-- MessageSource -->
+	<bean id="messageSource"
+		class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<value>messages</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- Configuration -->
+	<bean id="configuration" class="ee.adit.util.Configuration">
+		<property name="getJoinedMaxResults" value="2"/>
+		<property name="tempDir" value="C:\temp"/>
+		<property name="deleteTemporaryFiles" value="true"/>
+		<property name="schedulerEventTypeName" value="Minu dokumentide teavitus"/>
+		<property name="dvkResponseMessageStylesheet" value="C:\dev\microlink\adit\src\main\resources\DVKresponseMessage.xsl"/>
+		<!-- Üldine kettamahu piirang ühe kasutaja kohta baitides -->
+		<property name="globalDiskQuota" value="10240000"/>
+		<property name="locales">
+			<list>
+				<value>en_us</value>
+				<value>et_ee</value>
+			</list>
+		</property>
+		<property name="testDocumentID" value="999999999999" />
+		<property name="dvkTestDocumentID" value="9999999999"/>
+	</bean>
+
+</beans>
