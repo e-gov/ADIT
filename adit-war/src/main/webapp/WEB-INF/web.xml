@@ -20,12 +20,12 @@
 
 	<servlet-mapping>
 		<servlet-name>adit-monitor</servlet-name>
-		<url-pattern>/adit-monitor</url-pattern>
+		<url-pattern>/adit-monitor/*</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
 		<servlet-name>adit</servlet-name>
-		<url-pattern>/*</url-pattern>
+		<url-pattern>/adit/*</url-pattern>
 	</servlet-mapping>
 
 </web-app>
