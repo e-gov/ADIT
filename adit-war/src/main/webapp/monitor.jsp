@@ -7,6 +7,8 @@
 <title>Adit Monitoring Application</title>
 </head>
 
+<% String status = request.getParameter("test"); %>
+
 <body>
 	<h1>Adit Monitoring</h1>
 	
@@ -17,9 +19,9 @@
 			<td>Time / Error</td>
 		</tr>
 		<tr>
-			<td></td>
-			<td>Status</td>
-			<td>Time / Error</td>
+			<td>Komponent X</td>
+			<td><%=status%></td>
+			<td>0.002 s</td>
 		</tr>
 	</table>
 	
