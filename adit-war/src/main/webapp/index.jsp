@@ -13,20 +13,6 @@
 %>
 
 <body>
-	<h1>Adit Monitoring</h1>
-	
-	<table>
-		<tr>
-			<td>Component</td>
-			<td>Status</td>
-			<td>Time / Error</td>
-		</tr>
-		<tr>
-			<td>Komponent X</td>
-			<td><%=status%></td>
-			<td><%=status2%></td>
-		</tr>
-	</table>
-	
+	<h1>Adit Service</h1>
 </body>
 </html>
