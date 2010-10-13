@@ -15,6 +15,9 @@ public class MonitorController {
 		LOG.info("ADIT monitoring servlet invoked.");
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("monitor.jsp");
+		
+		mav.addObject("test", "testValue");
+		
 		return mav;
 	}
 	

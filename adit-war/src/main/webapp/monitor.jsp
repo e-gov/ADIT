@@ -6,7 +6,22 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Adit Monitoring Application</title>
 </head>
+
 <body>
 	<h1>Adit Monitoring</h1>
+	
+	<table>
+		<tr>
+			<td>Component</td>
+			<td>Status</td>
+			<td>Time / Error</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td>Status</td>
+			<td>Time / Error</td>
+		</tr>
+	</table>
+	
 </body>
 </html>
