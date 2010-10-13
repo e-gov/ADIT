@@ -7,8 +7,7 @@
 <title>Adit Monitoring Application</title>
 </head>
 
-<% 
-	String status = request.getParameter("test"); 
+<%  
 	String status2 = (String) request.getAttribute("test");
 %>
 
@@ -23,7 +22,7 @@
 		</tr>
 		<tr>
 			<td>Komponent X</td>
-			<td><%=status%></td>
+			<td></td>
 			<td><%=status2%></td>
 		</tr>
 	</table>

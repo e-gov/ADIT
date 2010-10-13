@@ -4,13 +4,8 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Adit Monitoring Application</title>
+<title>Adit Service</title>
 </head>
-
-<% 
-	String status = request.getParameter("test"); 
-	String status2 = (String) request.getAttribute("test");
-%>
 
 <body>
 	<h1>Adit Service</h1>
