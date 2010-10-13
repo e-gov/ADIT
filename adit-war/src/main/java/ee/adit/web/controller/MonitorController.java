@@ -15,8 +15,28 @@ public class MonitorController {
 		LOG.info("ADIT monitoring servlet invoked.");
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("monitor.jsp");
+
+		// 1. X-tee päringud
+		//    - saveDocument()
+		//    - getDocument()
+
 		
-		mav.addObject("test", "testValue");
+		
+		// 2. ADIT -> DVK
+		//    - ADIT -> DVK UK
+		//    - DVK UK -> DVK
+
+		// 3. DVK -> ADIT   
+		//    - DVK -> DVK UK
+		//    - DVK UK -> ADIT
+		
+		// 4. Kasutajad
+		//    - testkasutaja päring ADIT-ist üle X-tee
+		
+		// 5. Teavituskalendri liides
+		//    - kas on teavitusi, mille saatmine on ebaõnnestunud
+		
+		// 6. Rakenduse vead (tabelist ERROR_LOG, kus level = FATAL/ERROR)		
 		
 		return mav;
 	}
