@@ -31,7 +31,7 @@ public class MonitorController {
 			LOG.error("getMonitorService() == null");
 		if(getConfiguration() == null)
 			LOG.error("getConfiguration() == null");
-		MonitorResult saveDocumentCheckResult = getMonitorService().saveDocumentCheck(getConfiguration().getTestDocumentID());
+		MonitorResult saveDocumentCheckResult = this.getMonitorService().saveDocumentCheck(getConfiguration().getTestDocumentID());
 		
 		// 2. ADIT -> DVK
 		//    - ADIT -> DVK UK
@@ -57,10 +57,12 @@ public class MonitorController {
 	}
 
 	public void setMonitorService(MonitorService monitorService) {
+		LOG.info("Setting MONITORSERVICE on MONITORCONTROLLER");
 		this.monitorService = monitorService;
 	}
 
 	public Configuration getConfiguration() {
+		LOG.info("Setting CONFIGURATION on MONITORCONTROLLER");
 		return configuration;
 	}
 

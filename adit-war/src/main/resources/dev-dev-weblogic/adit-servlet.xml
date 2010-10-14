@@ -294,8 +294,8 @@
 	</bean>
 
 	<bean id="monitorController" class="ee.adit.web.controller.MonitorController">
-		<property name="monitorService23" ref="monitorService" />
-		<property name="configuration33" ref="configuration" />
+		<property name="monitorService" ref="monitorService" />
+		<property name="configuration" ref="configuration" />
 	</bean>
 
 	<!-- Endpoint Mappings -->
