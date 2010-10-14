@@ -766,6 +766,8 @@
 	</bean>
 
 	<bean id="monitorService" class="ee.adit.service.MonitorService">
+		<property name="marshaller" ref="castorMarshaller"/>
+		<property name="unmarshaller" ref="castorMarshaller"/>
 		<property name="documentDAO" ref="documentDAO" />
 		<property name="dvkDAO" ref="dvkDAO" />
 		<property name="configuration" ref="configuration" />
