@@ -536,6 +536,7 @@ public class MonitorService {
 			result = tempFileFullName;
 		} catch (Exception e) {
 			LOG.error("Error while marshalling object: " + object.getClass());
+			LOG.error("Cause: ", e);
 		} finally {
 			Util.safeCloseStream(fos);
 			fos = null;

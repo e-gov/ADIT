@@ -756,7 +756,6 @@
         <property name="mappings">
             <value>
             	/*=monitorController
-            	/*.jsp=monitorController
             </value>
         </property>
     </bean>
