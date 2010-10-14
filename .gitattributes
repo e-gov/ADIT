@@ -107,6 +107,7 @@ adit-war/lib/fop.jar -text
 adit-war/lib/hibernate3.jar -text
 adit-war/lib/hsqldb.jar -text
 adit-war/lib/iaik_jce.jar -text
+adit-war/lib/j2ee.jar -text
 adit-war/lib/javassist-3.9.0.GA.jar -text
 adit-war/lib/jce-jdk13-123.jar -text
 adit-war/lib/jdcerts.jar -text
