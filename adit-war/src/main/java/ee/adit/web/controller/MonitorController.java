@@ -21,6 +21,10 @@ public class MonitorController extends AbstractController {
 	
 	private Configuration configuration;
 	
+	public MonitorController() {
+		LOG.info("MONITORCONTROLLER created.");
+	}
+	
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest arg0, HttpServletResponse arg1) throws Exception {
 		LOG.info("ADIT monitoring servlet invoked.");

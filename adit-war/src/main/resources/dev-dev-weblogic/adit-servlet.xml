@@ -295,9 +295,7 @@
 
 	<bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
         <property name="mappings">
-            <value>
-                /monitor.do=monitorController
-            </value>
+            <value>/monitor.do=monitorController</value>
         </property>
     </bean>
 
