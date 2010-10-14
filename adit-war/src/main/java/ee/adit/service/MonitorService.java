@@ -471,9 +471,9 @@ public class MonitorService {
 			LOG.debug("Attachment added with id: 'document'");
 			String uri = "http://localhost:7001/adit/service";
 		
-			Object resultObject = webServiceTemplate.marshalSendAndReceive(uri, message);
+			//Object resultObject = webServiceTemplate.marshalSendAndReceive(uri, message);
 			
-			LOG.debug("resultObject.class: " + resultObject.getClass());
+			//LOG.debug("resultObject.class: " + resultObject.getClass());
 			
 			SimpleXTeeServiceConfiguration xTeeServiceConfiguration = new SimpleXTeeServiceConfiguration();
 			xTeeServiceConfiguration.setDatabase("ametlikud-dokumendid");
