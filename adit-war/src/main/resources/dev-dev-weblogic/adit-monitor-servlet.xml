@@ -15,14 +15,6 @@
 	http://www.springframework.org/schema/tx
 	http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
 
-	<bean id="monitorService" class="ee.adit.service.MonitorService">
-		<property name="documentDAO" ref="documentDAO" />
-		<property name="dvkDAO" ref="dvkDAO" />
-		<property name="configuration" ref="configuration" />
-		<property name="nagiosLogger" ref="nagiosLogger" />
-		<property name="documentService" ref="documentService"/>
-	</bean>
-
 	<bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
         <property name="mappings">
             <value>/monitor.do=monitorController</value>
@@ -32,6 +24,14 @@
 	<bean id="monitorController" class="ee.adit.web.controller.MonitorController">
 		<property name="monitorService" ref="monitorService" />
 		<property name="configuration" ref="configuration" />
+	</bean>
+
+	<bean id="monitorService" class="ee.adit.service.MonitorService">
+		<property name="documentDAO" ref="documentDAO" />
+		<property name="dvkDAO" ref="dvkDAO" />
+		<property name="configuration" ref="configuration" />
+		<property name="nagiosLogger" ref="nagiosLogger" />
+		<property name="documentService" ref="documentService"/>
 	</bean>
 
 </beans>
