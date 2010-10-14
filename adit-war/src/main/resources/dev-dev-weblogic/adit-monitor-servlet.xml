@@ -17,14 +17,6 @@
 
 	<context:component-scan base-package="ee.adit.web"/>
 
-
-
-
-
-
-
-
-
 	<!-- Service Classes -->
 	<bean id="logService" class="ee.adit.service.LogService">
 		<property name="requestLogDAO" ref="requestLogDAO"/>
@@ -67,6 +59,17 @@
 		<property name="configuration" ref="configuration" />
 		<property name="nagiosLogger" ref="nagiosLogger" />
 		<property name="documentService" ref="documentService"/>
+	</bean>
+
+	<bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+        <property name="mappings">
+            <value>/monitor.do=monitorController</value>
+        </property>
+    </bean>
+
+	<bean id="monitorController" class="ee.adit.web.controller.MonitorController">
+		<property name="monitorService" ref="monitorService" />
+		<property name="configuration" ref="configuration" />
 	</bean>
 
 	<bean id="aditDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
