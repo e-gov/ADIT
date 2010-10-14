@@ -444,8 +444,6 @@ public class MonitorService {
 			webServiceTemplate.setMarshaller(getMarshaller());
 			webServiceTemplate.setUnmarshaller(getUnmarshaller());
 			
-			
-			
 			SaveDocumentRequest request = new SaveDocumentRequest();
 			SaveDocumentRequestDocument document = new SaveDocumentRequestDocument();
 			document.setHref("cid:document");
