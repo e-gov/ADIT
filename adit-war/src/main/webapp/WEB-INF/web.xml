@@ -5,6 +5,14 @@
 
 	<display-name>Ametlikud Dokumendid</display-name>
 
+	<context-param>
+	  	<param-name>contextConfigLocation</param-name>
+	  	<param-value>
+		    /WEB-INF/adit-servlet.xml
+		    /WEB-INF/adit-monitor-servlet.xml
+	  	</param-value>
+	</context-param>
+
 	<!-- take especial notice of the name of this servlet -->
 	<servlet>
 		<servlet-name>adit-monitor</servlet-name>
