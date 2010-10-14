@@ -496,7 +496,7 @@ public class MonitorService {
 			XTeeAttachment xTeeAttachment = new XTeeAttachment("document", "text/xml", Util.getBytesFromFile(new File(base64zippedFile)));
 			attachments.add(xTeeAttachment);
 			
-			SaveDocumentResponse responseObject = (SaveDocumentResponse) standardXTeeConsumer.sendRequest(request, attachments);
+			Object responseObject = standardXTeeConsumer.sendRequest(request, attachments);
 			
 			Date end = new Date();
 			long endTime = end.getTime();
