@@ -27,6 +27,10 @@ public class MonitorController {
 		// 1. X-tee päringud
 		//    - saveDocument()
 		//    - getDocument()
+		if(getMonitorService() == null)
+			LOG.error("getMonitorService() == null");
+		if(getConfiguration() == null)
+			LOG.error("getConfiguration() == null");
 		MonitorResult saveDocumentCheckResult = getMonitorService().saveDocumentCheck(getConfiguration().getTestDocumentID());
 		
 		// 2. ADIT -> DVK
