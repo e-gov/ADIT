@@ -2,6 +2,7 @@ package ee.adit.service;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.StringReader;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import javax.activation.DataSource;
 import javax.activation.FileDataSource;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPConstants;
+import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
@@ -455,11 +457,13 @@ public class MonitorService {
 			message.addAttachment("document", dataHandler);
 			
 			LOG.debug("Attachment added with id: 'document'");
+			String uri = "http://localhost:8080/adit/service";
+		
+			Object resultObject = webServiceTemplate.marshalSendAndReceive(uri, message);
 			
-			/*StreamSource source = new StreamSource(new StringReader(null));
-		    StreamResult streamResult = new StreamResult(System.out);
-		    webServiceTemplate.sendSourceAndReceiveToResult("http://localhost:8080/AnotherWebService", source, streamResult);
-			*/
+			LOG.debug("resultObject.class: " + resultObject.getClass());
+			
+			
 		} catch(Exception e) {
 			LOG.error("Error while testing 'saveDocument' request: ", e);
 		}
