@@ -11,6 +11,8 @@ import java.util.List;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
+import javax.xml.soap.MessageFactory;
+import javax.xml.soap.SOAPConstants;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
@@ -440,7 +442,7 @@ public class MonitorService {
 			requestAttachment.setTitle(newTitle);
 			
 			// TODO: Add attachment
-			SaajSoapMessageFactory messageFactory = new SaajSoapMessageFactory();
+			SaajSoapMessageFactory messageFactory = new SaajSoapMessageFactory(MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL));
 			SaajSoapMessage message = (SaajSoapMessage) messageFactory.createWebServiceMessage();
 			
 			// Write to temporary file
