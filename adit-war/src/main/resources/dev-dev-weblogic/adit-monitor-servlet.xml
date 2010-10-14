@@ -17,7 +17,6 @@
 
 	<!-- X-Road client import (located in jar) -->
 	<import resource="classpath:xtee.xml" />
-	<import resource="adit-monitor-servlet.xml" />
 
 	<!-- User endpoints -->
 	<bean id="JoinEndpoint" class="ee.adit.ws.endpoint.user.JoinEndpoint">
