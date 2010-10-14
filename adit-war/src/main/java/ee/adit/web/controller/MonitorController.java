@@ -1,16 +1,19 @@
 package ee.adit.web.controller;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.AbstractController;
 
 import ee.adit.monitor.MonitorResult;
 import ee.adit.service.MonitorService;
 import ee.adit.util.Configuration;
 
-@Controller
-public class MonitorController {
+public class MonitorController extends AbstractController {
 
 	private static Logger LOG = Logger.getLogger(MonitorController.class);
 	
@@ -18,12 +21,8 @@ public class MonitorController {
 	
 	private Configuration configuration;
 	
-	public MonitorController() {
-		;
-	}
-	
-	@RequestMapping("/monitor")
-	public ModelAndView aditMonitor() {
+	@Override
+	protected ModelAndView handleRequestInternal(HttpServletRequest arg0, HttpServletResponse arg1) throws Exception {
 		LOG.info("ADIT monitoring servlet invoked.");
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("monitor.jsp");
@@ -36,8 +35,6 @@ public class MonitorController {
 		if(getConfiguration() == null)
 			LOG.error("getConfiguration() == null");
 		MonitorResult saveDocumentCheckResult = this.getMonitorService().saveDocumentCheck(getConfiguration().getTestDocumentID());
-		
-		
 		
 		// 2. ADIT -> DVK
 		//    - ADIT -> DVK UK
@@ -53,7 +50,7 @@ public class MonitorController {
 		// 5. Teavituskalendri liides
 		//    - kas on teavitusi, mille saatmine on ebaõnnestunud
 		
-		// 6. Rakenduse vead (tabelist ERROR_LOG, kus level = FATAL/ERROR)		
+		// 6. Rakenduse vead (tabelist ERROR_LOG, kus level = FATAL/ERROR)	
 		
 		return mav;
 	}
