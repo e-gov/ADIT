@@ -463,7 +463,7 @@ public class MonitorService {
 			message.addAttachment("document", dataHandler);
 			
 			LOG.debug("Attachment added with id: 'document'");
-			String uri = "http://localhost:8080/adit/service";
+			String uri = "http://localhost:7001/adit/service";
 		
 			Object resultObject = webServiceTemplate.marshalSendAndReceive(uri, message);
 			
