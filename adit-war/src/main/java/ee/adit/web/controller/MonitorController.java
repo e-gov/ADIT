@@ -18,6 +18,10 @@ public class MonitorController {
 	
 	private Configuration configuration;
 	
+	public MonitorController() {
+		;
+	}
+	
 	@RequestMapping("/monitor")
 	public ModelAndView aditMonitor() {
 		LOG.info("ADIT monitoring servlet invoked.");
@@ -32,6 +36,8 @@ public class MonitorController {
 		if(getConfiguration() == null)
 			LOG.error("getConfiguration() == null");
 		MonitorResult saveDocumentCheckResult = this.getMonitorService().saveDocumentCheck(getConfiguration().getTestDocumentID());
+		
+		
 		
 		// 2. ADIT -> DVK
 		//    - ADIT -> DVK UK
