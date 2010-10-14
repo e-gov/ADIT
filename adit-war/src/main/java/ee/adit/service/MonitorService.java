@@ -448,12 +448,13 @@ public class MonitorService {
 			// Write to temporary file
 			String fileName = this.marshal(requestAttachment);
 			LOG.debug("Request attachment marshalled to temporary file: '" + fileName + "'.");
+			String base64zippedFile = Util.gzipAndBase64Encode(fileName, getConfiguration().getTempDir(), true);
 			
-			
-			/*DataSource dataSource = new FileDataSource(base64zippedFile);
+			DataSource dataSource = new FileDataSource(base64zippedFile);
 			DataHandler dataHandler = new DataHandler(dataSource);
-			message.addAttachment("document", dataHandler);*/
+			message.addAttachment("document", dataHandler);
 			
+			LOG.debug("Attachment added with id: 'document'");
 			
 			/*StreamSource source = new StreamSource(new StringReader(null));
 		    StreamResult streamResult = new StreamResult(System.out);
