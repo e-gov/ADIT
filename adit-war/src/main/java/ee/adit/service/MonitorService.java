@@ -40,6 +40,7 @@ import ee.adit.pojo.SaveDocumentRequestAttachment;
 import ee.adit.pojo.SaveDocumentRequestDocument;
 import ee.adit.pojo.SaveDocumentResponse;
 import ee.adit.util.Configuration;
+import ee.adit.util.CustomMessageCallbackFactory;
 import ee.adit.util.NagiosLogger;
 import ee.adit.util.Util;
 import ee.webmedia.xtee.client.service.SimpleXTeeServiceConfiguration;
@@ -443,6 +444,8 @@ public class MonitorService {
 			webServiceTemplate.setMarshaller(getMarshaller());
 			webServiceTemplate.setUnmarshaller(getUnmarshaller());
 			
+			
+			
 			SaveDocumentRequest request = new SaveDocumentRequest();
 			SaveDocumentRequestDocument document = new SaveDocumentRequestDocument();
 			document.setHref("cid:document");
@@ -484,10 +487,10 @@ public class MonitorService {
 			xTeeServiceConfiguration.setVersion("v1");
 			xTeeServiceConfiguration.setSecurityServer(uri);
 			
-			
 			StandardXTeeConsumer standardXTeeConsumer = new StandardXTeeConsumer();
 			standardXTeeConsumer.setWebServiceTemplate(webServiceTemplate);
 			standardXTeeConsumer.setServiceConfiguration(xTeeServiceConfiguration);
+			standardXTeeConsumer.setMsgCallbackFactory(new CustomMessageCallbackFactory());
 			
 			List<XTeeAttachment> attachments = new ArrayList<XTeeAttachment>();
 			XTeeAttachment xTeeAttachment = new XTeeAttachment("document", "text/xml", Util.getBytesFromFile(new File(base64zippedFile)));
