@@ -20,283 +20,282 @@
 
 	<!-- User endpoints -->
 	<bean id="JoinEndpoint" class="ee.adit.ws.endpoint.user.JoinEndpoint">
-		<property name="marshaller" ref="castorMarshaller"/>
-		<property name="unmarshaller" ref="castorMarshaller"/>
-		<property name="userService" ref="userService"/>
-		<property name="logService" ref="logService"/>
-		<property name="messageSource" ref="messageSource"/>
-		<property name="messageService" ref="messageService"/>
-		<property name="monitorService" ref="monitorService"/>
+		<property name="marshaller" ref="castorMarshaller" />
+		<property name="unmarshaller" ref="castorMarshaller" />
+		<property name="userService" ref="userService" />
+		<property name="logService" ref="logService" />
+		<property name="messageSource" ref="messageSource" />
+		<property name="messageService" ref="messageService" />
+		<property name="monitorService" ref="monitorService" />
 	</bean>
-	
+
 	<bean id="UnJoinEndpoint" class="ee.adit.ws.endpoint.user.UnJoinEndpoint">
-		<property name="marshaller" ref="castorMarshaller"/>
-		<property name="unmarshaller" ref="castorMarshaller"/>
-		<property name="userService" ref="userService"/>
-		<property name="logService" ref="logService"/>
-		<property name="messageSource" ref="messageSource"/>
-		<property name="messageService" ref="messageService"/>
-		<property name="monitorService" ref="monitorService"/>
+		<property name="marshaller" ref="castorMarshaller" />
+		<property name="unmarshaller" ref="castorMarshaller" />
+		<property name="userService" ref="userService" />
+		<property name="logService" ref="logService" />
+		<property name="messageSource" ref="messageSource" />
+		<property name="messageService" ref="messageService" />
+		<property name="monitorService" ref="monitorService" />
 	</bean>
-	
+
 	<bean id="GetJoinedEndpoint" class="ee.adit.ws.endpoint.user.GetJoinedEndpoint">
-		<property name="marshaller" ref="castorMarshaller"/>
-		<property name="unmarshaller" ref="castorMarshaller"/>
-		<property name="userService" ref="userService"/>
-		<property name="logService" ref="logService"/>
-		<property name="messageSource" ref="messageSource"/>
-		<property name="configuration" ref="configuration"/>
-		<property name="messageService" ref="messageService"/>
-		<property name="monitorService" ref="monitorService"/>
+		<property name="marshaller" ref="castorMarshaller" />
+		<property name="unmarshaller" ref="castorMarshaller" />
+		<property name="userService" ref="userService" />
+		<property name="logService" ref="logService" />
+		<property name="messageSource" ref="messageSource" />
+		<property name="configuration" ref="configuration" />
+		<property name="messageService" ref="messageService" />
+		<property name="monitorService" ref="monitorService" />
 	</bean>
-	
+
 	<bean id="GetUserInfoEndpoint" class="ee.adit.ws.endpoint.user.GetUserInfoEndpoint">
-		<property name="marshaller" ref="castorMarshaller"/>
-		<property name="unmarshaller" ref="castorMarshaller"/>
-		<property name="userService" ref="userService"/>
-		<property name="logService" ref="logService"/>
-		<property name="messageSource" ref="messageSource"/>
-		<property name="configuration" ref="configuration"/>
-		<property name="messageService" ref="messageService"/>
-		<property name="monitorService" ref="monitorService"/>
+		<property name="marshaller" ref="castorMarshaller" />
+		<property name="unmarshaller" ref="castorMarshaller" />
+		<property name="userService" ref="userService" />
+		<property name="logService" ref="logService" />
+		<property name="messageSource" ref="messageSource" />
+		<property name="configuration" ref="configuration" />
+		<property name="messageService" ref="messageService" />
+		<property name="monitorService" ref="monitorService" />
 	</bean>
-	
+
 	<bean id="SetNotificationsEndpoint" class="ee.adit.ws.endpoint.user.SetNotificationsEndpoint">
-		<property name="marshaller" ref="castorMarshaller"/>
-		<property name="unmarshaller" ref="castorMarshaller"/>
-		<property name="userService" ref="userService"/>
-		<property name="logService" ref="logService"/>
-		<property name="messageSource" ref="messageSource"/>
-		<property name="configuration" ref="configuration"/>
-		<property name="messageService" ref="messageService"/>
-		<property name="monitorService" ref="monitorService"/>
+		<property name="marshaller" ref="castorMarshaller" />
+		<property name="unmarshaller" ref="castorMarshaller" />
+		<property name="userService" ref="userService" />
+		<property name="logService" ref="logService" />
+		<property name="messageSource" ref="messageSource" />
+		<property name="configuration" ref="configuration" />
+		<property name="messageService" ref="messageService" />
+		<property name="monitorService" ref="monitorService" />
 	</bean>
-	
+
 	<bean id="GetNotificationsEndpoint" class="ee.adit.ws.endpoint.user.GetNotificationsEndpoint">
-		<property name="marshaller" ref="castorMarshaller"/>
-		<property name="unmarshaller" ref="castorMarshaller"/>
-		<property name="userService" ref="userService"/>
-		<property name="logService" ref="logService"/>
-		<property name="messageSource" ref="messageSource"/>
-		<property name="configuration" ref="configuration"/>
-		<property name="messageService" ref="messageService"/>
-		<property name="monitorService" ref="monitorService"/>
+		<property name="marshaller" ref="castorMarshaller" />
+		<property name="unmarshaller" ref="castorMarshaller" />
+		<property name="userService" ref="userService" />
+		<property name="logService" ref="logService" />
+		<property name="messageSource" ref="messageSource" />
+		<property name="configuration" ref="configuration" />
+		<property name="messageService" ref="messageService" />
+		<property name="monitorService" ref="monitorService" />
 	</bean>
-	
-	
+
+
 	<!-- Document endpoints -->
-	
+
 	<bean id="ConfirmSignatureEndpoint" class="ee.adit.ws.endpoint.document.ConfirmSignatureEndpoint">
-		<property name="marshaller" ref="castorMarshaller"/>
-		<property name="unmarshaller" ref="castorMarshaller"/>
-		<property name="userService" ref="userService"/>
-		<property name="logService" ref="logService"/>
-		<property name="messageSource" ref="messageSource"/>
-		<property name="configuration" ref="configuration"/>
-		<property name="documentService" ref="documentService"/>
-		<property name="messageService" ref="messageService"/>
+		<property name="marshaller" ref="castorMarshaller" />
+		<property name="unmarshaller" ref="castorMarshaller" />
+		<property name="userService" ref="userService" />
+		<property name="logService" ref="logService" />
+		<property name="messageSource" ref="messageSource" />
+		<property name="configuration" ref="configuration" />
+		<property name="documentService" ref="documentService" />
+		<property name="messageService" ref="messageService" />
 		<!-- NB! Value is case sensitive -->
 		<property name="digidocConfigurationFile" value="classpath:jdigidoc.cfg" />
-		<property name="monitorService" ref="monitorService"/>
+		<property name="monitorService" ref="monitorService" />
 	</bean>
-	
+
 	<bean id="DeflateDocumentEndpoint" class="ee.adit.ws.endpoint.document.DeflateDocumentEndpoint">
-		<property name="marshaller" ref="castorMarshaller"/>
-		<property name="unmarshaller" ref="castorMarshaller"/>
-		<property name="userService" ref="userService"/>
-		<property name="logService" ref="logService"/>
-		<property name="messageSource" ref="messageSource"/>
-		<property name="configuration" ref="configuration"/>
-		<property name="documentService" ref="documentService"/>
-		<property name="messageService" ref="messageService"/>
-		<property name="monitorService" ref="monitorService"/>
+		<property name="marshaller" ref="castorMarshaller" />
+		<property name="unmarshaller" ref="castorMarshaller" />
+		<property name="userService" ref="userService" />
+		<property name="logService" ref="logService" />
+		<property name="messageSource" ref="messageSource" />
+		<property name="configuration" ref="configuration" />
+		<property name="documentService" ref="documentService" />
+		<property name="messageService" ref="messageService" />
+		<property name="monitorService" ref="monitorService" />
 	</bean>
-	
+
 	<bean id="DeleteDocumentEndpoint" class="ee.adit.ws.endpoint.document.DeleteDocumentEndpoint">
-		<property name="marshaller" ref="castorMarshaller"/>
-		<property name="unmarshaller" ref="castorMarshaller"/>
-		<property name="userService" ref="userService"/>
-		<property name="logService" ref="logService"/>
-		<property name="messageSource" ref="messageSource"/>
-		<property name="configuration" ref="configuration"/>
-		<property name="documentService" ref="documentService"/>
-		<property name="messageService" ref="messageService"/>
-		<property name="monitorService" ref="monitorService"/>
+		<property name="marshaller" ref="castorMarshaller" />
+		<property name="unmarshaller" ref="castorMarshaller" />
+		<property name="userService" ref="userService" />
+		<property name="logService" ref="logService" />
+		<property name="messageSource" ref="messageSource" />
+		<property name="configuration" ref="configuration" />
+		<property name="documentService" ref="documentService" />
+		<property name="messageService" ref="messageService" />
+		<property name="monitorService" ref="monitorService" />
 	</bean>
-	
+
 	<bean id="DeleteDocumentFileEndpoint" class="ee.adit.ws.endpoint.document.DeleteDocumentFileEndpoint">
-		<property name="marshaller" ref="castorMarshaller"/>
-		<property name="unmarshaller" ref="castorMarshaller"/>
-		<property name="userService" ref="userService"/>
-		<property name="logService" ref="logService"/>
-		<property name="messageSource" ref="messageSource"/>
-		<property name="configuration" ref="configuration"/>
-		<property name="documentService" ref="documentService"/>
-		<property name="messageService" ref="messageService"/>
-		<property name="monitorService" ref="monitorService"/>
+		<property name="marshaller" ref="castorMarshaller" />
+		<property name="unmarshaller" ref="castorMarshaller" />
+		<property name="userService" ref="userService" />
+		<property name="logService" ref="logService" />
+		<property name="messageSource" ref="messageSource" />
+		<property name="configuration" ref="configuration" />
+		<property name="documentService" ref="documentService" />
+		<property name="messageService" ref="messageService" />
+		<property name="monitorService" ref="monitorService" />
 	</bean>
-	
+
 	<bean id="GetDocumentEndpoint" class="ee.adit.ws.endpoint.document.GetDocumentEndpoint">
-		<property name="marshaller" ref="castorMarshaller"/>
-		<property name="unmarshaller" ref="castorMarshaller"/>
-		<property name="userService" ref="userService"/>
-		<property name="logService" ref="logService"/>
-		<property name="messageSource" ref="messageSource"/>
-		<property name="configuration" ref="configuration"/>
-		<property name="documentService" ref="documentService"/>
-		<property name="messageService" ref="messageService"/>
-		<property name="monitorService" ref="monitorService"/>
+		<property name="marshaller" ref="castorMarshaller" />
+		<property name="unmarshaller" ref="castorMarshaller" />
+		<property name="userService" ref="userService" />
+		<property name="logService" ref="logService" />
+		<property name="messageSource" ref="messageSource" />
+		<property name="configuration" ref="configuration" />
+		<property name="documentService" ref="documentService" />
+		<property name="messageService" ref="messageService" />
+		<property name="monitorService" ref="monitorService" />
 	</bean>
-	
+
 	<bean id="GetDocumentFileEndpoint" class="ee.adit.ws.endpoint.document.GetDocumentFileEndpoint">
-		<property name="marshaller" ref="castorMarshaller"/>
-		<property name="unmarshaller" ref="castorMarshaller"/>
-		<property name="userService" ref="userService"/>
-		<property name="logService" ref="logService"/>
-		<property name="messageSource" ref="messageSource"/>
-		<property name="configuration" ref="configuration"/>
-		<property name="documentService" ref="documentService"/>
-		<property name="messageService" ref="messageService"/>
-		<property name="monitorService" ref="monitorService"/>
+		<property name="marshaller" ref="castorMarshaller" />
+		<property name="unmarshaller" ref="castorMarshaller" />
+		<property name="userService" ref="userService" />
+		<property name="logService" ref="logService" />
+		<property name="messageSource" ref="messageSource" />
+		<property name="configuration" ref="configuration" />
+		<property name="documentService" ref="documentService" />
+		<property name="messageService" ref="messageService" />
+		<property name="monitorService" ref="monitorService" />
 	</bean>
-	
+
 	<bean id="GetDocumentHistoryEndpoint" class="ee.adit.ws.endpoint.document.GetDocumentHistoryEndpoint">
-		<property name="marshaller" ref="castorMarshaller"/>
-		<property name="unmarshaller" ref="castorMarshaller"/>
-		<property name="userService" ref="userService"/>
-		<property name="logService" ref="logService"/>
-		<property name="messageSource" ref="messageSource"/>
-		<property name="configuration" ref="configuration"/>
-		<property name="documentService" ref="documentService"/>
-		<property name="messageService" ref="messageService"/>
-		<property name="monitorService" ref="monitorService"/>
+		<property name="marshaller" ref="castorMarshaller" />
+		<property name="unmarshaller" ref="castorMarshaller" />
+		<property name="userService" ref="userService" />
+		<property name="logService" ref="logService" />
+		<property name="messageSource" ref="messageSource" />
+		<property name="configuration" ref="configuration" />
+		<property name="documentService" ref="documentService" />
+		<property name="messageService" ref="messageService" />
+		<property name="monitorService" ref="monitorService" />
 	</bean>
-	
+
 	<bean id="GetDocumentListEndpoint" class="ee.adit.ws.endpoint.document.GetDocumentListEndpoint">
-		<property name="marshaller" ref="castorMarshaller"/>
-		<property name="unmarshaller" ref="castorMarshaller"/>
-		<property name="userService" ref="userService"/>
-		<property name="logService" ref="logService"/>
-		<property name="messageSource" ref="messageSource"/>
-		<property name="configuration" ref="configuration"/>
-		<property name="documentService" ref="documentService"/>
-		<property name="messageService" ref="messageService"/>
-		<property name="monitorService" ref="monitorService"/>
+		<property name="marshaller" ref="castorMarshaller" />
+		<property name="unmarshaller" ref="castorMarshaller" />
+		<property name="userService" ref="userService" />
+		<property name="logService" ref="logService" />
+		<property name="messageSource" ref="messageSource" />
+		<property name="configuration" ref="configuration" />
+		<property name="documentService" ref="documentService" />
+		<property name="messageService" ref="messageService" />
+		<property name="monitorService" ref="monitorService" />
 	</bean>
-	
+
 	<bean id="MarkDocumentViewedEndpoint" class="ee.adit.ws.endpoint.document.MarkDocumentViewedEndpoint">
-		<property name="marshaller" ref="castorMarshaller"/>
-		<property name="unmarshaller" ref="castorMarshaller"/>
-		<property name="userService" ref="userService"/>
-		<property name="logService" ref="logService"/>
-		<property name="messageSource" ref="messageSource"/>
-		<property name="configuration" ref="configuration"/>
-		<property name="documentService" ref="documentService"/>
-		<property name="messageService" ref="messageService"/>
-		<property name="monitorService" ref="monitorService"/>
+		<property name="marshaller" ref="castorMarshaller" />
+		<property name="unmarshaller" ref="castorMarshaller" />
+		<property name="userService" ref="userService" />
+		<property name="logService" ref="logService" />
+		<property name="messageSource" ref="messageSource" />
+		<property name="configuration" ref="configuration" />
+		<property name="documentService" ref="documentService" />
+		<property name="messageService" ref="messageService" />
+		<property name="monitorService" ref="monitorService" />
 	</bean>
-	
+
 	<bean id="ModifyStatusEndpoint" class="ee.adit.ws.endpoint.document.ModifyStatusEndpoint">
-		<property name="marshaller" ref="castorMarshaller"/>
-		<property name="unmarshaller" ref="castorMarshaller"/>
-		<property name="userService" ref="userService"/>
-		<property name="logService" ref="logService"/>
-		<property name="messageSource" ref="messageSource"/>
-		<property name="configuration" ref="configuration"/>
-		<property name="documentService" ref="documentService"/>
-		<property name="messageService" ref="messageService"/>
-		<property name="monitorService" ref="monitorService"/>
+		<property name="marshaller" ref="castorMarshaller" />
+		<property name="unmarshaller" ref="castorMarshaller" />
+		<property name="userService" ref="userService" />
+		<property name="logService" ref="logService" />
+		<property name="messageSource" ref="messageSource" />
+		<property name="configuration" ref="configuration" />
+		<property name="documentService" ref="documentService" />
+		<property name="messageService" ref="messageService" />
+		<property name="monitorService" ref="monitorService" />
 	</bean>
-	
+
 	<bean id="PrepareSignatureEndpoint" class="ee.adit.ws.endpoint.document.PrepareSignatureEndpoint">
-		<property name="marshaller" ref="castorMarshaller"/>
-		<property name="unmarshaller" ref="castorMarshaller"/>
-		<property name="userService" ref="userService"/>
-		<property name="logService" ref="logService"/>
-		<property name="messageSource" ref="messageSource"/>
-		<property name="configuration" ref="configuration"/>
-		<property name="documentService" ref="documentService"/>
-		<property name="messageService" ref="messageService"/>
-		<property name="monitorService" ref="monitorService"/>
-		
+		<property name="marshaller" ref="castorMarshaller" />
+		<property name="unmarshaller" ref="castorMarshaller" />
+		<property name="userService" ref="userService" />
+		<property name="logService" ref="logService" />
+		<property name="messageSource" ref="messageSource" />
+		<property name="configuration" ref="configuration" />
+		<property name="documentService" ref="documentService" />
+		<property name="messageService" ref="messageService" />
+		<property name="monitorService" ref="monitorService" />
+
 		<!-- NB! Value is case sensitive -->
 		<property name="digidocConfigurationFile" value="classpath:jdigidoc.cfg" />
 	</bean>
-	
+
 	<bean id="SaveDocumentEndpoint" class="ee.adit.ws.endpoint.document.SaveDocumentEndpoint">
-		<property name="marshaller" ref="castorMarshaller"/>
-		<property name="unmarshaller" ref="castorMarshaller"/>
-		<property name="userService" ref="userService"/>
-		<property name="logService" ref="logService"/>
-		<property name="messageSource" ref="messageSource"/>
-		<property name="configuration" ref="configuration"/>
-		<property name="documentService" ref="documentService"/>
-		<property name="messageService" ref="messageService"/>
-		<property name="monitorService" ref="monitorService"/>
+		<property name="marshaller" ref="castorMarshaller" />
+		<property name="unmarshaller" ref="castorMarshaller" />
+		<property name="userService" ref="userService" />
+		<property name="logService" ref="logService" />
+		<property name="messageSource" ref="messageSource" />
+		<property name="configuration" ref="configuration" />
+		<property name="documentService" ref="documentService" />
+		<property name="messageService" ref="messageService" />
+		<property name="monitorService" ref="monitorService" />
 	</bean>
-	
+
 	<bean id="SaveDocumentFileEndpoint" class="ee.adit.ws.endpoint.document.SaveDocumentFileEndpoint">
-		<property name="marshaller" ref="castorMarshaller"/>
-		<property name="unmarshaller" ref="castorMarshaller"/>
-		<property name="userService" ref="userService"/>
-		<property name="logService" ref="logService"/>
-		<property name="messageSource" ref="messageSource"/>
-		<property name="configuration" ref="configuration"/>
-		<property name="documentService" ref="documentService"/>
-		<property name="messageService" ref="messageService"/>
-		<property name="monitorService" ref="monitorService"/>
+		<property name="marshaller" ref="castorMarshaller" />
+		<property name="unmarshaller" ref="castorMarshaller" />
+		<property name="userService" ref="userService" />
+		<property name="logService" ref="logService" />
+		<property name="messageSource" ref="messageSource" />
+		<property name="configuration" ref="configuration" />
+		<property name="documentService" ref="documentService" />
+		<property name="messageService" ref="messageService" />
+		<property name="monitorService" ref="monitorService" />
 	</bean>
-	
+
 	<bean id="SendDocumentEndpoint" class="ee.adit.ws.endpoint.document.SendDocumentEndpoint">
-		<property name="marshaller" ref="castorMarshaller"/>
-		<property name="unmarshaller" ref="castorMarshaller"/>
-		<property name="userService" ref="userService"/>
-		<property name="logService" ref="logService"/>
-		<property name="messageSource" ref="messageSource"/>
-		<property name="configuration" ref="configuration"/>
-		<property name="documentService" ref="documentService"/>
-		<property name="messageService" ref="messageService"/>
-		<property name="monitorService" ref="monitorService"/>
+		<property name="marshaller" ref="castorMarshaller" />
+		<property name="unmarshaller" ref="castorMarshaller" />
+		<property name="userService" ref="userService" />
+		<property name="logService" ref="logService" />
+		<property name="messageSource" ref="messageSource" />
+		<property name="configuration" ref="configuration" />
+		<property name="documentService" ref="documentService" />
+		<property name="messageService" ref="messageService" />
+		<property name="monitorService" ref="monitorService" />
 	</bean>
-	
+
 	<bean id="ShareDocumentEndpoint" class="ee.adit.ws.endpoint.document.ShareDocumentEndpoint">
-		<property name="marshaller" ref="castorMarshaller"/>
-		<property name="unmarshaller" ref="castorMarshaller"/>
-		<property name="userService" ref="userService"/>
-		<property name="logService" ref="logService"/>
-		<property name="messageSource" ref="messageSource"/>
-		<property name="configuration" ref="configuration"/>
-		<property name="documentService" ref="documentService"/>
-		<property name="messageService" ref="messageService"/>
-		<property name="monitorService" ref="monitorService"/>
+		<property name="marshaller" ref="castorMarshaller" />
+		<property name="unmarshaller" ref="castorMarshaller" />
+		<property name="userService" ref="userService" />
+		<property name="logService" ref="logService" />
+		<property name="messageSource" ref="messageSource" />
+		<property name="configuration" ref="configuration" />
+		<property name="documentService" ref="documentService" />
+		<property name="messageService" ref="messageService" />
+		<property name="monitorService" ref="monitorService" />
 	</bean>
-	
+
 	<bean id="UnShareDocumentEndpoint" class="ee.adit.ws.endpoint.document.UnShareDocumentEndpoint">
-		<property name="marshaller" ref="castorMarshaller"/>
-		<property name="unmarshaller" ref="castorMarshaller"/>
-		<property name="userService" ref="userService"/>
-		<property name="logService" ref="logService"/>
-		<property name="messageSource" ref="messageSource"/>
-		<property name="configuration" ref="configuration"/>
-		<property name="documentService" ref="documentService"/>
-		<property name="messageService" ref="messageService"/>
-		<property name="monitorService" ref="monitorService"/>
+		<property name="marshaller" ref="castorMarshaller" />
+		<property name="unmarshaller" ref="castorMarshaller" />
+		<property name="userService" ref="userService" />
+		<property name="logService" ref="logService" />
+		<property name="messageSource" ref="messageSource" />
+		<property name="configuration" ref="configuration" />
+		<property name="documentService" ref="documentService" />
+		<property name="messageService" ref="messageService" />
+		<property name="monitorService" ref="monitorService" />
 	</bean>
-	
+
 	<!-- Meta service endpoint -->
 	<!--
-	<bean id="ListMethodsEndpoint" class="ee.webmedia.xtee.endpoint.ListMethodsEndpoint">
-	</bean>
+		<bean id="ListMethodsEndpoint"
+		class="ee.webmedia.xtee.endpoint.ListMethodsEndpoint"> </bean>
 	-->
 	<bean id="ListMethodsEndpoint" class="ee.adit.ws.endpoint.ListMethodsEndpoint">
-		<property name="marshaller" ref="castorMarshaller"/>
-		<property name="unmarshaller" ref="castorMarshaller"/>
+		<property name="marshaller" ref="castorMarshaller" />
+		<property name="unmarshaller" ref="castorMarshaller" />
 	</bean>
 
 	<!-- Endpoint Mappings -->
-	
-	<bean id="endpointMapping"
-		class="ee.adit.ws.endpoint.AditEndpointMapping">
+
+	<bean id="endpointMapping" class="ee.adit.ws.endpoint.AditEndpointMapping">
 		<property name="mappings">
 			<props>
 				<prop
@@ -343,8 +342,7 @@
 					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}shareDocument">ShareDocumentEndpoint</prop>
 				<prop
 					key="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}unShareDocument">UnShareDocumentEndpoint</prop>
-				<prop
-					key="{http://x-tee.riik.ee/xsd/xtee.xsd}listMethods">ListMethodsEndpoint</prop>
+				<prop key="{http://x-tee.riik.ee/xsd/xtee.xsd}listMethods">ListMethodsEndpoint</prop>
 			</props>
 		</property>
 	</bean>
@@ -358,16 +356,15 @@
 	<bean id="schema" class="org.springframework.xml.xsd.SimpleXsdSchema">
 		<property name="xsd" value="/WEB-INF/adit.xsd" />
 	</bean>
-	
+
 	<bean id="adit"
 		class="org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition">
 		<constructor-arg value="classpath:adit.wsdl" />
 	</bean>
 	<!--
-	<bean id="adit" class="ee.webmedia.xtee.wsdl.XTeeWsdlDefinition">
-		<property name="schema" ref="schema" />
-		<property name="portTypeName" value="adit" />
-	</bean>
+		<bean id="adit" class="ee.webmedia.xtee.wsdl.XTeeWsdlDefinition">
+		<property name="schema" ref="schema" /> <property name="portTypeName"
+		value="adit" /> </bean>
 	-->
 	<bean id="xteeDatabase" class="java.lang.String">
 		<constructor-arg value="ametlikud-dokumendid" />
@@ -381,46 +378,46 @@
 
 	<!-- Service Classes -->
 	<bean id="logService" class="ee.adit.service.LogService">
-		<property name="requestLogDAO" ref="requestLogDAO"/>
-		<property name="errorLogDAO" ref="errorLogDAO"/>
-		<property name="downloadRequestLogDAO" ref="downloadRequestLogDAO"/>
+		<property name="requestLogDAO" ref="requestLogDAO" />
+		<property name="errorLogDAO" ref="errorLogDAO" />
+		<property name="downloadRequestLogDAO" ref="downloadRequestLogDAO" />
 	</bean>
-	
+
 	<bean id="userService" class="ee.adit.service.UserService">
-		<property name="remoteApplicationDAO" ref="remoteApplicationDAO"/>
-		<property name="usertypeDAO" ref="usertypeDAO"/>
-		<property name="notificationTypeDAO" ref="notificationTypeDAO"/>
-		<property name="aditUserDAO" ref="aditUserDAO"/>
-		<property name="documentDAO" ref="documentDAO"/>
-		<property name="accessRestrictionDAO" ref="accessRestrictionDAO"/>
-		<property name="notificationDAO" ref="notificationDAO"/>
-		<property name="dvkDAO" ref="dvkDAO"/>
+		<property name="remoteApplicationDAO" ref="remoteApplicationDAO" />
+		<property name="usertypeDAO" ref="usertypeDAO" />
+		<property name="notificationTypeDAO" ref="notificationTypeDAO" />
+		<property name="aditUserDAO" ref="aditUserDAO" />
+		<property name="documentDAO" ref="documentDAO" />
+		<property name="accessRestrictionDAO" ref="accessRestrictionDAO" />
+		<property name="notificationDAO" ref="notificationDAO" />
+		<property name="dvkDAO" ref="dvkDAO" />
 	</bean>
 
 	<bean id="documentService" class="ee.adit.service.DocumentService">
-		<property name="messageSource" ref="messageSource"/>
-		<property name="documentTypeDAO" ref="documentTypeDAO"/>
-		<property name="documentDAO" ref="documentDAO"/>
-		<property name="documentFileDAO" ref="documentFileDAO"/>
-		<property name="documentWfStatusDAO" ref="documentWfStatusDAO"/>
-		<property name="documentSharingDAO" ref="documentSharingDAO"/>
-		<property name="documentHistoryDAO" ref="documentHistoryDAO"/>
-		<property name="aditUserDAO" ref="aditUserDAO"/>
-		<property name="configuration" ref="configuration"/>
-		<property name="dvkDAO" ref="dvkDAO"/>
+		<property name="messageSource" ref="messageSource" />
+		<property name="documentTypeDAO" ref="documentTypeDAO" />
+		<property name="documentDAO" ref="documentDAO" />
+		<property name="documentFileDAO" ref="documentFileDAO" />
+		<property name="documentWfStatusDAO" ref="documentWfStatusDAO" />
+		<property name="documentSharingDAO" ref="documentSharingDAO" />
+		<property name="documentHistoryDAO" ref="documentHistoryDAO" />
+		<property name="aditUserDAO" ref="aditUserDAO" />
+		<property name="configuration" ref="configuration" />
+		<property name="dvkDAO" ref="dvkDAO" />
 	</bean>
 
 	<bean id="messageService" class="ee.adit.service.MessageService">
-		<property name="messageSource" ref="messageSource"/>
-		<property name="configuration" ref="configuration"/>
-	</bean>	
+		<property name="messageSource" ref="messageSource" />
+		<property name="configuration" ref="configuration" />
+	</bean>
 
 	<bean id="aditDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
-	  	<property name="jndiName" value="jdbc/adit"/>
+		<property name="jndiName" value="jdbc/adit" />
 	</bean>
-	
+
 	<bean id="aditDVKDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
-		<property name="jndiName" value="jdbc/adit_dvk"/>
+		<property name="jndiName" value="jdbc/adit_dvk" />
 	</bean>
 
 	<bean id="sessionFactory"
@@ -457,11 +454,12 @@
 				<prop key="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</prop>
 				<prop key="hibernate.cache.provider_class">org.hibernate.cache.NoCacheProvider</prop>
 				<prop key="hibernate.current_session_context_class">org.hibernate.context.JTASessionContext</prop>
-				<prop key="hibernate.transaction.manager_lookup_class">org.hibernate.transaction.WeblogicTransactionManagerLookup</prop>
+				<prop key="hibernate.transaction.manager_lookup_class">org.hibernate.transaction.WeblogicTransactionManagerLookup
+				</prop>
 			</props>
 		</property>
 	</bean>
-	
+
 	<bean id="dvkSessionFactory"
 		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
 		<property name="dataSource" ref="aditDVKDataSource" />
@@ -482,29 +480,34 @@
 				<prop key="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</prop>
 				<prop key="hibernate.cache.provider_class">org.hibernate.cache.NoCacheProvider</prop>
 				<prop key="hibernate.current_session_context_class">org.hibernate.context.JTASessionContext</prop>
-				<prop key="hibernate.transaction.manager_lookup_class">org.hibernate.transaction.WeblogicTransactionManagerLookup</prop>
+				<prop key="hibernate.transaction.manager_lookup_class">org.hibernate.transaction.WeblogicTransactionManagerLookup
+				</prop>
 			</props>
 		</property>
 	</bean>
-	
-	<!-- ADIT transaction manager -->
-    <bean id="transactionManager" class="org.springframework.transaction.jta.WebLogicJtaTransactionManager" />
 
-	<!-- Enable the configuration of transactional behavior based on annotations -->
-  	<tx:annotation-driven transaction-manager="transactionManager"/>
-	
+	<!-- ADIT transaction manager -->
+	<bean id="transactionManager"
+		class="org.springframework.transaction.jta.WebLogicJtaTransactionManager" />
+
+	<!--
+		Enable the configuration of transactional behavior based on
+		annotations
+	-->
+	<tx:annotation-driven transaction-manager="transactionManager" />
+
 	<bean id="requestLogDAO" class="ee.adit.dao.RequestLogDAO">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
-	
+
 	<bean id="errorLogDAO" class="ee.adit.dao.ErrorLogDAO">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
-	
+
 	<bean id="downloadRequestLogDAO" class="ee.adit.dao.DownloadRequestLogDAO">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
-	
+
 	<bean id="notificationDAO" class="ee.adit.dao.NotificationDAO">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
@@ -512,24 +515,24 @@
 	<bean id="remoteApplicationDAO" class="ee.adit.dao.RemoteApplicationDAO">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
-	
+
 	<bean id="usertypeDAO" class="ee.adit.dao.UsertypeDAO">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
-	
+
 	<bean id="notificationTypeDAO" class="ee.adit.dao.NotificationTypeDAO">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
-	
+
 	<bean id="aditUserDAO" class="ee.adit.dao.AditUserDAO">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
-	
+
 	<bean id="documentDAO" class="ee.adit.dao.DocumentDAO">
 		<property name="sessionFactory" ref="sessionFactory" />
-		<property name="messageSource" ref="messageSource"/>
-		<property name="messageService" ref="messageService"/>
-	</bean>	
+		<property name="messageSource" ref="messageSource" />
+		<property name="messageService" ref="messageService" />
+	</bean>
 
 	<bean id="documentFileDAO" class="ee.adit.dao.DocumentFileDAO">
 		<property name="sessionFactory" ref="sessionFactory" />
@@ -537,12 +540,12 @@
 
 	<bean id="accessRestrictionDAO" class="ee.adit.dao.AccessRestrictionDAO">
 		<property name="sessionFactory" ref="sessionFactory" />
-	</bean>	
+	</bean>
 
 	<bean id="documentTypeDAO" class="ee.adit.dao.DocumentTypeDAO">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
-	
+
 	<bean id="documentWfStatusDAO" class="ee.adit.dao.DocumentWfStatusDAO">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
@@ -550,7 +553,7 @@
 	<bean id="documentSharingDAO" class="ee.adit.dao.DocumentSharingDAO">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
-		
+
 	<bean id="documentHistoryDAO" class="ee.adit.dao.DocumentHistoryDAO">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
@@ -561,163 +564,161 @@
 
 	<!-- Scheduled jobs -->
 	<bean name="sendJobDetails" class="org.springframework.scheduling.quartz.JobDetailBean">
-		<property name="jobClass" value="ee.adit.dvk.SendJob"/>
+		<property name="jobClass" value="ee.adit.dvk.SendJob" />
 		<property name="jobDataAsMap">
-		    <map>
-		    	<entry key="documentService">
-		      		<ref bean="documentService"/>
-		      	</entry>
-		    </map>
-	    </property>
+			<map>
+				<entry key="documentService">
+					<ref bean="documentService" />
+				</entry>
+			</map>
+		</property>
 	</bean>
-	
+
 	<bean name="receiveJobDetails" class="org.springframework.scheduling.quartz.JobDetailBean">
-		<property name="jobClass" value="ee.adit.dvk.ReceiveJob"/>
+		<property name="jobClass" value="ee.adit.dvk.ReceiveJob" />
 		<property name="jobDataAsMap">
-		    <map>
-		    	<entry key="documentService">
-		      		<ref bean="documentService"/>
-		      	</entry>
-		    </map>
-	    </property>
+			<map>
+				<entry key="documentService">
+					<ref bean="documentService" />
+				</entry>
+			</map>
+		</property>
 	</bean>
-	
+
 	<bean name="updateStatusJobDetails" class="org.springframework.scheduling.quartz.JobDetailBean">
-		<property name="jobClass" value="ee.adit.dvk.UpdateStatusJob"/>
+		<property name="jobClass" value="ee.adit.dvk.UpdateStatusJob" />
 		<property name="jobDataAsMap">
-		    <map>
-		    	<entry key="documentService">
-		      		<ref bean="documentService"/>
-		      	</entry>
-		    </map>
-	    </property>
+			<map>
+				<entry key="documentService">
+					<ref bean="documentService" />
+				</entry>
+			</map>
+		</property>
 	</bean>
-	
+
 	<bean name="UpdateStatusToDVKJobDetails" class="org.springframework.scheduling.quartz.JobDetailBean">
-		<property name="jobClass" value="ee.adit.dvk.UpdateStatusToDVKJob"/>
+		<property name="jobClass" value="ee.adit.dvk.UpdateStatusToDVKJob" />
 		<property name="jobDataAsMap">
-		    <map>
-		    	<entry key="documentService">
-		      		<ref bean="documentService"/>
-		      	</entry>
-		    </map>
-	    </property>
+			<map>
+				<entry key="documentService">
+					<ref bean="documentService" />
+				</entry>
+			</map>
+		</property>
 	</bean>
-	
+
 	<bean name="sendNotificationsJobDetails" class="org.springframework.scheduling.quartz.JobDetailBean">
-		<property name="jobClass" value="ee.adit.schedule.SendNotificationsJob"/>
+		<property name="jobClass" value="ee.adit.schedule.SendNotificationsJob" />
 		<property name="jobDataAsMap">
-		    <map>
-		    	<entry key="userService">
-		      		<ref bean="userService"/>
-		      	</entry>
-		    	<entry key="configuration">
-		      		<ref bean="configuration"/>
-		      	</entry>
-		    </map>
-	    </property>
+			<map>
+				<entry key="userService">
+					<ref bean="userService" />
+				</entry>
+				<entry key="configuration">
+					<ref bean="configuration" />
+				</entry>
+			</map>
+		</property>
 	</bean>
-	
+
 	<bean name="temporaryFolderCleanerJobDetails" class="org.springframework.scheduling.quartz.JobDetailBean">
-		<property name="jobClass" value="ee.adit.util.TemporaryFolderCleanerJob"/>
+		<property name="jobClass" value="ee.adit.util.TemporaryFolderCleanerJob" />
 		<property name="jobDataAsMap">
-		    <map>
-		    	<entry key="configuration">
-		      		<ref bean="configuration"/>
-		      	</entry>
-		    </map>
-	    </property>
+			<map>
+				<entry key="configuration">
+					<ref bean="configuration" />
+				</entry>
+			</map>
+		</property>
 	</bean>
-	
+
 	<bean name="DeleteDocumentsFromDVKJobDetails" class="org.springframework.scheduling.quartz.JobDetailBean">
-		<property name="jobClass" value="ee.adit.dvk.DeleteDocumentsFromDVKJob"/>
+		<property name="jobClass" value="ee.adit.dvk.DeleteDocumentsFromDVKJob" />
 		<property name="jobDataAsMap">
-		    <map>
-		    	<entry key="documentService">
-		      		<ref bean="documentService"/>
-		      	</entry>
-		    </map>
-	    </property>
+			<map>
+				<entry key="documentService">
+					<ref bean="documentService" />
+				</entry>
+			</map>
+		</property>
 	</bean>
-	
+
 	<bean name="UserSyncJobDetails" class="org.springframework.scheduling.quartz.JobDetailBean">
-		<property name="jobClass" value="ee.adit.dvk.UserSyncJob"/>
+		<property name="jobClass" value="ee.adit.dvk.UserSyncJob" />
 		<property name="jobDataAsMap">
-		    <map>
-		    	<entry key="userService">
-		      		<ref bean="userService"/>
-		      	</entry>
-		    </map>
-	    </property>
+			<map>
+				<entry key="userService">
+					<ref bean="userService" />
+				</entry>
+			</map>
+		</property>
 	</bean>
-	
+
 	<bean id="dvkSendTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
-	  	<property name="jobDetail" ref="sendJobDetails"/>
-		<property name="startDelay" value="0"/>
-	  	<property name="repeatInterval" value="1000"/>
+		<property name="jobDetail" ref="sendJobDetails" />
+		<property name="startDelay" value="0" />
+		<property name="repeatInterval" value="1000" />
 	</bean>
-	
+
 	<bean id="dvkReceiveTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
-	  	<property name="jobDetail" ref="receiveJobDetails"/>
-	  	<property name="startDelay" value="0"/>
-	  	<property name="repeatInterval" value="1000"/>
+		<property name="jobDetail" ref="receiveJobDetails" />
+		<property name="startDelay" value="0" />
+		<property name="repeatInterval" value="1000" />
 	</bean>
-	
+
 	<bean id="dvkUpdateStatusTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
-	  	<property name="jobDetail" ref="updateStatusJobDetails"/>
-		<property name="startDelay" value="0"/>
-	  	<property name="repeatInterval" value="1000"/>
+		<property name="jobDetail" ref="updateStatusJobDetails" />
+		<property name="startDelay" value="0" />
+		<property name="repeatInterval" value="1000" />
 	</bean>
-	
+
 	<bean id="dvkUpdateStatusToDVKTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
-	  	<property name="jobDetail" ref="UpdateStatusToDVKJobDetails"/>
-		<property name="startDelay" value="0"/>
-	  	<property name="repeatInterval" value="1000"/>
+		<property name="jobDetail" ref="UpdateStatusToDVKJobDetails" />
+		<property name="startDelay" value="0" />
+		<property name="repeatInterval" value="1000" />
 	</bean>
-	
+
 	<bean id="notificationTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
-	  	<property name="jobDetail" ref="sendNotificationsJobDetails"/>
-	  	<property name="startDelay" value="0"/>
-	  	<property name="repeatInterval" value="1000"/>
+		<property name="jobDetail" ref="sendNotificationsJobDetails" />
+		<property name="startDelay" value="0" />
+		<property name="repeatInterval" value="1000" />
 	</bean>
-	 
+
 	<bean id="temporaryFolderCleanerTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
-	  	<property name="jobDetail" ref="temporaryFolderCleanerJobDetails"/>
-	  	<property name="startDelay" value="0"/>
-	  	<property name="repeatInterval" value="1000"/>
+		<property name="jobDetail" ref="temporaryFolderCleanerJobDetails" />
+		<property name="startDelay" value="0" />
+		<property name="repeatInterval" value="1000" />
 	</bean>
-	 
+
 	<bean id="DeleteDocumentsFromDVKJobTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
-	  	<property name="jobDetail" ref="DeleteDocumentsFromDVKJobDetails"/>
-		<property name="startDelay" value="0"/>
-	  	<property name="repeatInterval" value="1000"/>
+		<property name="jobDetail" ref="DeleteDocumentsFromDVKJobDetails" />
+		<property name="startDelay" value="0" />
+		<property name="repeatInterval" value="1000" />
 	</bean>
-	 
+
 	<bean id="UserSyncJobTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
-	  	<property name="jobDetail" ref="UserSyncJobDetails"/>
-		<property name="startDelay" value="0"/>
-	  	<property name="repeatInterval" value="1000"/>
+		<property name="jobDetail" ref="UserSyncJobDetails" />
+		<property name="startDelay" value="0" />
+		<property name="repeatInterval" value="1000" />
 	</bean>
-	 
+
 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="triggers">
-	   		<list>
-	      		<!-- Working -->
-	      		<!-- 
-	      		<ref bean="dvkReceiveTrigger"/>
-	      		<ref bean="dvkSendTrigger"/>
-	      		<ref bean="dvkUpdateStatusTrigger"/>
-	      		<ref bean="dvkUpdateStatusToDVKTrigger"/>
-	      		<ref bean="DeleteDocumentsFromDVKJobTrigger"/> 
-	      		-->
-	      		
-	      		<!-- 
-	      		<ref bean="temporaryFolderCleanerTrigger"/>
-	      		<ref bean="notificationTrigger"/>
-	      		<ref bean="UserSyncJobTrigger"/>
-	      		-->
-	    	</list>
-	  	</property>
+			<list>
+				<!-- Working -->
+				<!--
+					<ref bean="dvkReceiveTrigger"/> <ref bean="dvkSendTrigger"/> <ref
+					bean="dvkUpdateStatusTrigger"/> <ref
+					bean="dvkUpdateStatusToDVKTrigger"/> <ref
+					bean="DeleteDocumentsFromDVKJobTrigger"/>
+				-->
+
+				<!--
+					<ref bean="temporaryFolderCleanerTrigger"/> <ref
+					bean="notificationTrigger"/> <ref bean="UserSyncJobTrigger"/>
+				-->
+			</list>
+		</property>
 	</bean>
 
 	<!-- MessageSource -->
@@ -729,19 +730,20 @@
 			</list>
 		</property>
 	</bean>
-	
+
 	<!-- Nagios Logger -->
 	<bean id="nagiosLogger" class="ee.adit.util.NagiosLogger" />
-	
+
 	<!-- Configuration -->
 	<bean id="configuration" class="ee.adit.util.Configuration">
-		<property name="getJoinedMaxResults" value="2"/>
-		<property name="tempDir" value="C:\temp"/>
-		<property name="deleteTemporaryFiles" value="true"/>
-		<property name="schedulerEventTypeName" value="Minu dokumentide teavitus"/>
-		<property name="dvkResponseMessageStylesheet" value="C:\dev\microlink\adit\src\main\resources\DVKresponseMessage.xsl"/>
+		<property name="getJoinedMaxResults" value="2" />
+		<property name="tempDir" value="C:\temp" />
+		<property name="deleteTemporaryFiles" value="true" />
+		<property name="schedulerEventTypeName" value="Minu dokumentide teavitus" />
+		<property name="dvkResponseMessageStylesheet"
+			value="C:\dev\microlink\adit\src\main\resources\DVKresponseMessage.xsl" />
 		<!-- Üldine kettamahu piirang ühe kasutaja kohta baitides -->
-		<property name="globalDiskQuota" value="10240000"/>
+		<property name="globalDiskQuota" value="10240000" />
 		<property name="locales">
 			<list>
 				<value>en_us</value>
@@ -749,16 +751,16 @@
 			</list>
 		</property>
 		<property name="testDocumentID" value="999999999999" />
-		<property name="dvkTestDocumentID" value="9999999999"/>
+		<property name="dvkTestDocumentID" value="9999999999" />
 	</bean>
 
 	<bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
-        <property name="mappings">
-            <value>
-            	/*=monitorController
+		<property name="mappings">
+			<value>
+				/*=monitorController
             </value>
-        </property>
-    </bean>
+		</property>
+	</bean>
 
 	<bean id="monitorController" class="ee.adit.web.controller.MonitorController">
 		<property name="monitorService" ref="monitorService" />
@@ -766,13 +768,13 @@
 	</bean>
 
 	<bean id="monitorService" class="ee.adit.service.MonitorService">
-		<property name="marshaller" ref="castorMarshaller"/>
-		<property name="unmarshaller" ref="castorMarshaller"/>
+		<property name="marshaller" ref="castorMarshaller" />
+		<property name="unmarshaller" ref="castorMarshaller" />
 		<property name="documentDAO" ref="documentDAO" />
 		<property name="dvkDAO" ref="dvkDAO" />
 		<property name="configuration" ref="configuration" />
 		<property name="nagiosLogger" ref="nagiosLogger" />
-		<property name="documentService" ref="documentService"/>
+		<property name="documentService" ref="documentService" />
 	</bean>
 
 </beans>

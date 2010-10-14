@@ -41,6 +41,8 @@ import ee.adit.pojo.SaveDocumentRequestDocument;
 import ee.adit.util.Configuration;
 import ee.adit.util.NagiosLogger;
 import ee.adit.util.Util;
+import ee.webmedia.xtee.client.service.StandardXTeeConsumer;
+import ee.webmedia.xtee.client.service.XTeeServiceConfiguration;
 
 /**
  * 
@@ -463,13 +465,11 @@ public class MonitorService {
 			message.addAttachment("document", dataHandler);
 			
 			LOG.debug("Attachment added with id: 'document'");
-			String uri = "http://localhost:7001/adit/service";
+			String uri = "http://localhost:9001/adit/service";
 		
 			Object resultObject = webServiceTemplate.marshalSendAndReceive(uri, message);
 			
 			LOG.debug("resultObject.class: " + resultObject.getClass());
-			
-			
 			
 			Date end = new Date();
 			long endTime = end.getTime();
