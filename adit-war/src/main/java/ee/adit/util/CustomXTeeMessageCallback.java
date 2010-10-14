@@ -78,6 +78,9 @@ public class CustomXTeeMessageCallback implements WebServiceMessageCallback
     pnimi.addTextNode(sb.toString());
     String toimik = serviceConfigurator.getToimik();
     toimikEl.addTextNode(toimik != null ? toimik : "");
+    
+    infosysteem.addAttribute(env.createName("xsi:type"), "xsd:string");
+    
   }
 
   /** 
