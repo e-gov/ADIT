@@ -97,6 +97,7 @@ public class CustomXTeeMessageCallback implements WebServiceMessageCallback
     env.addNamespaceDeclaration("xsi", "http://www.w3.org/2001/XMLSchema-instance");
     env.addNamespaceDeclaration("SOAP-ENC", "http://schemas.xmlsoap.org/soap/encoding/");
     env.addNamespaceDeclaration("ns4", "http://x-tee.riik.ee/xsd/xtee.xsd");
+    env.addNamespaceDeclaration("adit", "http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid");
     env.addNamespaceDeclaration("ns5", "http://producers." + serviceConfigurator.getDatabase() + ".xtee.riik.ee/producer/"
         + serviceConfigurator.getDatabase());
     env.setEncodingStyle("http://schemas.xmlsoap.org/soap/encoding/");
