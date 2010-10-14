@@ -358,7 +358,7 @@
 				<targetPath>../adit/WEB-INF/classes</targetPath>
 				<excludes>
 					<exclude>adit-servlet.xml</exclude>
-					<exclude>monitor-servlet.xml</exclude>
+					<exclude>adit-monitor-servlet.xml</exclude>
 					<exclude>weblogic.xml</exclude>
 					<exclude>weblogic-application.xml</exclude>
 				</excludes>
@@ -368,7 +368,7 @@
 				<targetPath>../adit/WEB-INF</targetPath>
 				<includes>
 					<include>adit-servlet.xml</include>
-					<include>monitor-servlet.xml</include>
+					<include>adit-monitor-servlet.xml</include>
 					<include>weblogic.xml</include>
 				</includes>
 			</resource>
