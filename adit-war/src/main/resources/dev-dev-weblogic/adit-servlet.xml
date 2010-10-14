@@ -293,6 +293,11 @@
 		<property name="unmarshaller" ref="castorMarshaller"/>
 	</bean>
 
+	<bean id="monitorController" class="ee.adit.web.controller.MonitorController">
+		<property name="monitorService" ref="monitorService" />
+		<property name="configuration" ref="configuration" />
+	</bean>
+
 	<!-- Endpoint Mappings -->
 	
 	<bean id="endpointMapping"
@@ -424,10 +429,7 @@
 		<property name="documentService" ref="documentService"/>
 	</bean>
 
-	<bean id="monitorController" class="ee.adit.web.controller.MonitorController">
-		<property name="monitorService" ref="monitorService" />
-		<property name="configuration" ref="configuration" />
-	</bean>
+	
 
 	<bean id="aditDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
 	  	<property name="jndiName" value="jdbc/adit"/>
