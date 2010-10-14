@@ -5,10 +5,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import ee.adit.monitor.MonitorResult;
+import ee.adit.service.MonitorService;
+import ee.adit.util.Configuration;
+
 @Controller
 public class MonitorController {
 
 	private static Logger LOG = Logger.getLogger(MonitorController.class);
+	
+	private MonitorService monitorService;
+	
+	private Configuration configuration;
 	
 	@RequestMapping("/monitor")
 	public ModelAndView aditMonitor() {
@@ -19,8 +27,7 @@ public class MonitorController {
 		// 1. X-tee päringud
 		//    - saveDocument()
 		//    - getDocument()
-
-		
+		MonitorResult saveDocumentCheckResult = getMonitorService().saveDocumentCheck(getConfiguration().getTestDocumentID());
 		
 		// 2. ADIT -> DVK
 		//    - ADIT -> DVK UK
@@ -39,6 +46,22 @@ public class MonitorController {
 		// 6. Rakenduse vead (tabelist ERROR_LOG, kus level = FATAL/ERROR)		
 		
 		return mav;
+	}
+
+	public MonitorService getMonitorService() {
+		return monitorService;
+	}
+
+	public void setMonitorService(MonitorService monitorService) {
+		this.monitorService = monitorService;
+	}
+
+	public Configuration getConfiguration() {
+		return configuration;
+	}
+
+	public void setConfiguration(Configuration configuration) {
+		this.configuration = configuration;
 	}
 	
 }

@@ -1,15 +1,28 @@
 package ee.adit.service;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.StringReader;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.springframework.oxm.Marshaller;
+import org.springframework.oxm.Unmarshaller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ws.client.core.WebServiceTemplate;
+import org.springframework.ws.soap.saaj.SaajSoapMessage;
+import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 
 import dvk.api.ml.PojoMessage;
 import dvk.api.ml.PojoSettings;
@@ -17,6 +30,10 @@ import dvk.api.ml.PojoSettings;
 import ee.adit.dao.DocumentDAO;
 import ee.adit.dao.dvk.DvkDAO;
 import ee.adit.dao.pojo.Document;
+import ee.adit.monitor.MonitorResult;
+import ee.adit.pojo.SaveDocumentRequest;
+import ee.adit.pojo.SaveDocumentRequestAttachment;
+import ee.adit.pojo.SaveDocumentRequestDocument;
 import ee.adit.util.Configuration;
 import ee.adit.util.NagiosLogger;
 import ee.adit.util.Util;
@@ -60,6 +77,16 @@ public class MonitorService {
 	private NagiosLogger nagiosLogger;
 	
 	private DocumentService documentService;
+	
+	/**
+	 * Marshaller - required to convert Java objects to XML.
+	 */
+	private Marshaller marshaller;
+
+	/**
+	 * Unmarshaller - required to convert XML to Java objects.
+	 */
+	private Unmarshaller unmarshaller;
 	
 	public void check() {
 		LOG.info("ADIT monitor - Checking database and application.");
@@ -390,6 +417,54 @@ public class MonitorService {
 	}
 	
 	/**
+	 * Tests "saveDocument" request.
+	 * 
+	 * @param documentID test document ID
+	 * @return test result
+	 */
+	public MonitorResult saveDocumentCheck(Long documentID) {
+		MonitorResult result = new MonitorResult();
+		
+		try {
+			WebServiceTemplate webServiceTemplate = new WebServiceTemplate();
+			
+			SaveDocumentRequest request = new SaveDocumentRequest();
+			SaveDocumentRequestDocument document = new SaveDocumentRequestDocument();
+			document.setHref("cid:document");
+			request.setDocument(document);
+			
+			SaveDocumentRequestAttachment requestAttachment = new SaveDocumentRequestAttachment();
+			requestAttachment.setDocumentType(DocumentService.DocType_Letter);
+			requestAttachment.setId(documentID);		
+			String newTitle = Util.dateToXMLDate(new Date());
+			requestAttachment.setTitle(newTitle);
+			
+			// TODO: Add attachment
+			SaajSoapMessageFactory messageFactory = new SaajSoapMessageFactory();
+			SaajSoapMessage message = (SaajSoapMessage) messageFactory.createWebServiceMessage();
+			
+			// Write to temporary file
+			String fileName = this.marshal(requestAttachment);
+			LOG.debug("Request attachment marshalled to temporary file: '" + fileName + "'.");
+			
+			
+			/*DataSource dataSource = new FileDataSource(base64zippedFile);
+			DataHandler dataHandler = new DataHandler(dataSource);
+			message.addAttachment("document", dataHandler);*/
+			
+			
+			/*StreamSource source = new StreamSource(new StringReader(null));
+		    StreamResult streamResult = new StreamResult(System.out);
+		    webServiceTemplate.sendSourceAndReceiveToResult("http://localhost:8080/AnotherWebService", source, streamResult);
+			*/
+		} catch(Exception e) {
+			LOG.error("Error while testing 'saveDocument' request: ", e);
+		}
+		
+		return result;
+	}
+	
+	/**
 	 * Handle application exception.
 	 */
 	public void handleException(Exception e) {
@@ -434,5 +509,52 @@ public class MonitorService {
 
 	public void setDocumentService(DocumentService documentService) {
 		this.documentService = documentService;
+	}
+	
+	/**
+	 * Marshals the object to XML and stores the result in a temporary file.
+	 * The location of the temporary file is specified by {@link Configuration}}
+	 * 
+	 * @param object the object to be marshalled.
+	 * @return the absolute path to the temporary file created.
+	 */
+	public String marshal(Object object) {
+		String result = null;
+		FileOutputStream fos = null;
+		try {
+			// Create outputStream
+			String tempFileName = Util.generateRandomFileName();
+			String tempFileFullName = this.getConfiguration().getTempDir() + File.separator + tempFileName;
+			fos = new FileOutputStream(tempFileFullName);
+			StreamResult reponseObjectResult = new StreamResult(fos);
+			
+			// Marshal to output
+			this.getMarshaller().marshal(object, reponseObjectResult);
+			
+			result = tempFileFullName;
+		} catch (Exception e) {
+			LOG.error("Error while marshalling object: " + object.getClass());
+		} finally {
+			Util.safeCloseStream(fos);
+			fos = null;
+		}
+		
+		return result;
+	}
+
+	public Marshaller getMarshaller() {
+		return marshaller;
+	}
+
+	public void setMarshaller(Marshaller marshaller) {
+		this.marshaller = marshaller;
+	}
+
+	public Unmarshaller getUnmarshaller() {
+		return unmarshaller;
+	}
+
+	public void setUnmarshaller(Unmarshaller unmarshaller) {
+		this.unmarshaller = unmarshaller;
 	}
 }

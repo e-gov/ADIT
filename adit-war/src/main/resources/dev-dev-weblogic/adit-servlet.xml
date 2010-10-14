@@ -415,12 +415,18 @@
 		<property name="configuration" ref="configuration"/>
 	</bean>
 
+	<!-- Monitoring resources -->
 	<bean id="monitorService" class="ee.adit.service.MonitorService">
 		<property name="documentDAO" ref="documentDAO" />
 		<property name="dvkDAO" ref="dvkDAO" />
 		<property name="configuration" ref="configuration" />
 		<property name="nagiosLogger" ref="nagiosLogger" />
 		<property name="documentService" ref="documentService"/>
+	</bean>
+
+	<bean id="monitorController" class="ee.adit.web.controller.MonitorController">
+		<property name="monitorService" ref="monitorService" />
+		<property name="configuration" ref="configuration" />
 	</bean>
 
 	<bean id="aditDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
