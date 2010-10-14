@@ -431,6 +431,8 @@ public class MonitorService {
 		
 		try {
 			WebServiceTemplate webServiceTemplate = new WebServiceTemplate();
+			webServiceTemplate.setMarshaller(getMarshaller());
+			webServiceTemplate.setUnmarshaller(getUnmarshaller());
 			
 			SaveDocumentRequest request = new SaveDocumentRequest();
 			SaveDocumentRequestDocument document = new SaveDocumentRequestDocument();
