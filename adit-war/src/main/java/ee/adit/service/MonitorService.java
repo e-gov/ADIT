@@ -41,6 +41,7 @@ import ee.adit.pojo.SaveDocumentRequestDocument;
 import ee.adit.pojo.SaveDocumentResponse;
 import ee.adit.util.Configuration;
 import ee.adit.util.CustomMessageCallbackFactory;
+import ee.adit.util.CustomXTeeServiceConfiguration;
 import ee.adit.util.NagiosLogger;
 import ee.adit.util.Util;
 import ee.webmedia.xtee.client.service.SimpleXTeeServiceConfiguration;
@@ -477,18 +478,18 @@ public class MonitorService {
 			
 			//LOG.debug("resultObject.class: " + resultObject.getClass());
 			
-			SimpleXTeeServiceConfiguration xTeeServiceConfiguration = new SimpleXTeeServiceConfiguration();
+			CustomXTeeServiceConfiguration xTeeServiceConfiguration = new CustomXTeeServiceConfiguration();
 			xTeeServiceConfiguration.setDatabase("ametlikud-dokumendid");
 			xTeeServiceConfiguration.setIdCode("EE00000000000");
 			xTeeServiceConfiguration.setInstitution("10425769");
 			xTeeServiceConfiguration.setMethod("saveDocument");
 			xTeeServiceConfiguration.setVersion("v1");
 			xTeeServiceConfiguration.setSecurityServer(uri);
+			xTeeServiceConfiguration.setInfosysteem(TODO);
 			
 			StandardXTeeConsumer standardXTeeConsumer = new StandardXTeeConsumer();
 			standardXTeeConsumer.setWebServiceTemplate(webServiceTemplate);
 			standardXTeeConsumer.setServiceConfiguration(xTeeServiceConfiguration);
-			standardXTeeConsumer.setMsgCallbackFactory(new CustomMessageCallbackFactory());
 			
 			List<XTeeAttachment> attachments = new ArrayList<XTeeAttachment>();
 			XTeeAttachment xTeeAttachment = new XTeeAttachment("document", "text/xml", Util.getBytesFromFile(new File(base64zippedFile)));

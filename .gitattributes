@@ -320,6 +320,7 @@ adit-war/src/main/java/ee/adit/util/Configuration.java -text
 adit-war/src/main/java/ee/adit/util/CustomMessageCallbackFactory.java -text
 adit-war/src/main/java/ee/adit/util/CustomXTeeHeader.java -text
 adit-war/src/main/java/ee/adit/util/CustomXTeeMessageCallback.java -text
+adit-war/src/main/java/ee/adit/util/CustomXTeeServiceConfiguration.java -text
 adit-war/src/main/java/ee/adit/util/DVKUserSyncResult.java -text
 adit-war/src/main/java/ee/adit/util/FileSplitResult.java -text
 adit-war/src/main/java/ee/adit/util/NagiosLogger.java -text

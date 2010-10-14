@@ -9,11 +9,11 @@ import ee.webmedia.xtee.client.factory.XTeeMessageCallbackFactory;
 import ee.webmedia.xtee.client.service.XTeeAttachment;
 import ee.webmedia.xtee.client.service.XTeeServiceConfiguration;
 
-public class CustomMessageCallbackFactory extends StandardXTeeMessageCallbackFactory {
+public class CustomMessageCallbackFactory implements XTeeMessageCallbackFactory {
 	
 	@Override
 	public WebServiceMessageCallback create(XTeeServiceConfiguration conf, Collection<XTeeAttachment> attachments) {
-		return new CustomXTeeMessageCallback(conf, attachments);
+		return new CustomXTeeMessageCallback((CustomXTeeServiceConfiguration) conf, attachments);
 	}
 	
 }

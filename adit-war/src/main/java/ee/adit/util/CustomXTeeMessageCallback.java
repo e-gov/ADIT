@@ -21,10 +21,10 @@ public class CustomXTeeMessageCallback implements WebServiceMessageCallback
 {
   protected Random random = new Random(System.currentTimeMillis());
 	
-  private XTeeServiceConfiguration serviceConfigurator;
+  private CustomXTeeServiceConfiguration serviceConfigurator;
   private Collection<XTeeAttachment> attachments;
 
-  public CustomXTeeMessageCallback(XTeeServiceConfiguration serviceConfigurator, Collection<XTeeAttachment> attachments)
+  public CustomXTeeMessageCallback(CustomXTeeServiceConfiguration serviceConfigurator, Collection<XTeeAttachment> attachments)
   {
     this.serviceConfigurator = serviceConfigurator;
     this.attachments = attachments;
@@ -80,7 +80,6 @@ public class CustomXTeeMessageCallback implements WebServiceMessageCallback
     toimikEl.addTextNode(toimik != null ? toimik : "");
     
     infosysteem.addAttribute(env.createName("xsi:type"), "xsd:string");
-    
   }
 
   /** 
