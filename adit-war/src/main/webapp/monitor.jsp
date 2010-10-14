@@ -8,7 +8,7 @@
 </head>
 
 <%  
-	String status2 = (String) request.getAttribute("test");
+	String duration = (String) request.getAttribute("duration");
 %>
 
 <body>
@@ -23,7 +23,7 @@
 		<tr>
 			<td>Komponent X</td>
 			<td></td>
-			<td><%=status2%></td>
+			<td><%=duration%></td>
 		</tr>
 	</table>
 	
