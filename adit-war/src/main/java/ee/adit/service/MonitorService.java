@@ -38,6 +38,7 @@ import ee.adit.monitor.MonitorResult;
 import ee.adit.pojo.SaveDocumentRequest;
 import ee.adit.pojo.SaveDocumentRequestAttachment;
 import ee.adit.pojo.SaveDocumentRequestDocument;
+import ee.adit.pojo.SaveDocumentResponse;
 import ee.adit.util.Configuration;
 import ee.adit.util.NagiosLogger;
 import ee.adit.util.Util;
@@ -492,7 +493,7 @@ public class MonitorService {
 			XTeeAttachment xTeeAttachment = new XTeeAttachment("document", "text/xml", Util.getBytesFromFile(new File(base64zippedFile)));
 			attachments.add(xTeeAttachment);
 			
-			standardXTeeConsumer.sendRequest(request, attachments);
+			SaveDocumentResponse responseObject = (SaveDocumentResponse) standardXTeeConsumer.sendRequest(request, attachments);
 			
 			Date end = new Date();
 			long endTime = end.getTime();
