@@ -429,6 +429,10 @@ public class MonitorService {
 	public MonitorResult saveDocumentCheck(Long documentID) {
 		MonitorResult result = new MonitorResult();
 		
+		double duration = 0;
+		Date start = new Date();
+		long startTime = start.getTime();
+		
 		try {
 			WebServiceTemplate webServiceTemplate = new WebServiceTemplate();
 			webServiceTemplate.setMarshaller(getMarshaller());
@@ -466,9 +470,18 @@ public class MonitorService {
 			LOG.debug("resultObject.class: " + resultObject.getClass());
 			
 			
+			
+			Date end = new Date();
+			long endTime = end.getTime();
+			duration = (endTime - startTime) / 1000.0;
+			
+			result.setDuration(duration);
+			
 		} catch(Exception e) {
 			LOG.error("Error while testing 'saveDocument' request: ", e);
 		}
+		
+		
 		
 		return result;
 	}

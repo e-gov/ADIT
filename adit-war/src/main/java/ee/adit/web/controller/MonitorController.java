@@ -1,5 +1,7 @@
 package ee.adit.web.controller;
 
+import java.text.DecimalFormat;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -39,6 +41,11 @@ public class MonitorController extends AbstractController {
 		if(getConfiguration() == null)
 			LOG.error("getConfiguration() == null");
 		MonitorResult saveDocumentCheckResult = this.getMonitorService().saveDocumentCheck(getConfiguration().getTestDocumentID());
+		
+		DecimalFormat df = new DecimalFormat("0.000");
+		mav.addObject("duration", df.format(saveDocumentCheckResult.getDuration()));
+		
+		
 		
 		// 2. ADIT -> DVK
 		//    - ADIT -> DVK UK
