@@ -41,7 +41,9 @@ import ee.adit.pojo.SaveDocumentRequestDocument;
 import ee.adit.util.Configuration;
 import ee.adit.util.NagiosLogger;
 import ee.adit.util.Util;
+import ee.webmedia.xtee.client.service.SimpleXTeeServiceConfiguration;
 import ee.webmedia.xtee.client.service.StandardXTeeConsumer;
+import ee.webmedia.xtee.client.service.XTeeAttachment;
 import ee.webmedia.xtee.client.service.XTeeServiceConfiguration;
 
 /**
@@ -460,16 +462,37 @@ public class MonitorService {
 			LOG.debug("Request attachment marshalled to temporary file: '" + fileName + "'.");
 			String base64zippedFile = Util.gzipAndBase64Encode(fileName, getConfiguration().getTempDir(), true);
 			
+			
+			
 			DataSource dataSource = new FileDataSource(base64zippedFile);
 			DataHandler dataHandler = new DataHandler(dataSource);
 			message.addAttachment("document", dataHandler);
 			
 			LOG.debug("Attachment added with id: 'document'");
-			String uri = "http://localhost:9001/adit/service";
+			String uri = "http://localhost:7001/adit/service";
 		
 			Object resultObject = webServiceTemplate.marshalSendAndReceive(uri, message);
 			
 			LOG.debug("resultObject.class: " + resultObject.getClass());
+			
+			SimpleXTeeServiceConfiguration xTeeServiceConfiguration = new SimpleXTeeServiceConfiguration();
+			xTeeServiceConfiguration.setDatabase("ametlikud-dokumendid");
+			xTeeServiceConfiguration.setIdCode("EE00000000000");
+			xTeeServiceConfiguration.setInstitution("10425769");
+			xTeeServiceConfiguration.setMethod("saveDocument");
+			xTeeServiceConfiguration.setVersion("v1");
+			xTeeServiceConfiguration.setSecurityServer(uri);
+			
+			
+			StandardXTeeConsumer standardXTeeConsumer = new StandardXTeeConsumer();
+			standardXTeeConsumer.setWebServiceTemplate(webServiceTemplate);
+			standardXTeeConsumer.setServiceConfiguration(xTeeServiceConfiguration);
+			
+			List<XTeeAttachment> attachments = new ArrayList<XTeeAttachment>();
+			XTeeAttachment xTeeAttachment = new XTeeAttachment("document", "text/xml", Util.getBytesFromFile(new File(base64zippedFile)));
+			attachments.add(xTeeAttachment);
+			
+			standardXTeeConsumer.sendRequest(request, attachments);
 			
 			Date end = new Date();
 			long endTime = end.getTime();
