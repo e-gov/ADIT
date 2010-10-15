@@ -52,7 +52,6 @@ public class SaveDocumentResponseMonitorKeha {
     protected ArrayOfMessageMonitor messages;
     @XmlElement(name = "document_id", required = true)
     protected long documentId;
-    protected SaveDocumentRequestDocument document;
 
     /**
      * Gets the value of the messages property.
@@ -109,28 +108,4 @@ public class SaveDocumentResponseMonitorKeha {
 	public void setSuccess(boolean success) {
 		this.success = success;
 	}
-
-    /**
-     * Gets the value of the document property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link SaveDocumentRequestDocument }
-     *     
-     */
-    public SaveDocumentRequestDocument getDocument() {
-        return document;
-    }
-
-    /**
-     * Sets the value of the document property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link SaveDocumentRequestDocument }
-     *     
-     */
-    public void setDocument(SaveDocumentRequestDocument value) {
-        this.document = value;
-    }
 }

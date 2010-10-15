@@ -1046,6 +1046,9 @@
 		<field name="messages" type="ee.adit.pojo.ArrayOfMessageMonitor">
 			<bind-xml name="messages" />
 		</field>
+		<field name="documentId" type="long">
+			<bind-xml name="document_id" />
+		</field>
 	</class>
 	
 	<class name="ee.adit.pojo.ArrayOfMessageMonitor">
