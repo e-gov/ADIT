@@ -1043,8 +1043,15 @@
 		<map-to xml="keha" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"/>
 		<field name="success" type="boolean" >
 		</field>
-		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessageMonitor">
 			<bind-xml name="messages" />
+		</field>
+	</class>
+	
+	<class name="ee.adit.pojo.ArrayOfMessageMonitor">
+		<map-to xml="messages" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<field name="message" type="java.lang.String" collection="arraylist">
+			<bind-xml name="message" />
 		</field>
 	</class>
 	

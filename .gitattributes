@@ -223,6 +223,7 @@ adit-war/src/main/java/ee/adit/pojo/ArrayOfDocumentWorkflowStatus.java -text
 adit-war/src/main/java/ee/adit/pojo/ArrayOfEmailAddress.java -text
 adit-war/src/main/java/ee/adit/pojo/ArrayOfFileId.java -text
 adit-war/src/main/java/ee/adit/pojo/ArrayOfMessage.java -text
+adit-war/src/main/java/ee/adit/pojo/ArrayOfMessageMonitor.java -text
 adit-war/src/main/java/ee/adit/pojo/ArrayOfNotification.java -text
 adit-war/src/main/java/ee/adit/pojo/ArrayOfRecipientStatus.java -text
 adit-war/src/main/java/ee/adit/pojo/ArrayOfUserCode.java -text
