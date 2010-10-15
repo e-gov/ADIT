@@ -1,5 +1,6 @@
 package ee.adit.service;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -36,6 +37,7 @@ import ee.adit.dao.dvk.DvkDAO;
 import ee.adit.dao.pojo.Document;
 import ee.adit.monitor.MonitorResult;
 import ee.adit.pojo.ArrayOfMessageMonitor;
+import ee.adit.pojo.OutputDocumentFile;
 import ee.adit.pojo.SaveDocumentRequest;
 import ee.adit.pojo.SaveDocumentRequestAttachment;
 import ee.adit.pojo.SaveDocumentRequestDocument;
@@ -458,6 +460,21 @@ public class MonitorService {
 			requestAttachment.setId(documentID);		
 			String newTitle = Util.dateToXMLDate(new Date());
 			requestAttachment.setTitle(newTitle);
+			
+			List<OutputDocumentFile> files = new ArrayList<OutputDocumentFile>();
+			
+			String tmpFileName = Util.createTemporaryFile(new ByteArrayInputStream(newTitle.getBytes("UTF-8")), getConfiguration().getTempDir());
+			
+			File tmpFile = new File(tmpFileName);
+			
+			OutputDocumentFile file = new OutputDocumentFile();
+			file.setContentType("text/plain");
+			file.setName("test.txt");
+			file.setSizeBytes(tmpFile.length());
+			file.setSysTempFile(tmpFileName);
+			
+			files.add(file);
+			requestAttachment.setFiles(files);
 			
 			SaajSoapMessageFactory messageFactory = new SaajSoapMessageFactory(MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL));
 			SaajSoapMessage message = (SaajSoapMessage) messageFactory.createWebServiceMessage();
