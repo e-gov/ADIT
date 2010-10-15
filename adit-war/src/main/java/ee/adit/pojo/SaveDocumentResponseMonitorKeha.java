@@ -49,7 +49,7 @@ public class SaveDocumentResponseMonitorKeha {
 
     protected boolean success;
     @XmlElement(required = true)
-    protected ArrayOfMessage messages;
+    protected ArrayOfMessageMonitor messages;
     @XmlElement(name = "document_id", required = true)
     protected long documentId;
     protected SaveDocumentRequestDocument document;
@@ -62,7 +62,7 @@ public class SaveDocumentResponseMonitorKeha {
      *     {@link ArrayOfMessage }
      *     
      */
-    public ArrayOfMessage getMessages() {
+    public ArrayOfMessageMonitor getMessages() {
         return messages;
     }
 
@@ -74,7 +74,7 @@ public class SaveDocumentResponseMonitorKeha {
      *     {@link ArrayOfMessage }
      *     
      */
-    public void setMessages(ArrayOfMessage value) {
+    public void setMessages(ArrayOfMessageMonitor value) {
         this.messages = value;
     }
 
