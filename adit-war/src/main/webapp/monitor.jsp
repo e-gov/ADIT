@@ -18,11 +18,11 @@
 <body>
 	<h1>Adit Monitoring</h1>
 	
-	<table>
+	<table style="border: 1px solid #000;">
 		<tr>
-			<td>Component</td>
-			<td>Status</td>
-			<td>Time / Error</td>
+			<td><b>Component</b></td>
+			<td><b>Status</b></td>
+			<td><b>Time / Error</b></td>
 		</tr>
 		<tr>
 			<td>saveDocument() request</td>
