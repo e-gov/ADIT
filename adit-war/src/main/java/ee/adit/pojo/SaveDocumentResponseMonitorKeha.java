@@ -45,7 +45,7 @@ import ee.adit.pojo.ArrayOfMessage;
     "documentId",
     "document"
 })
-public class SaveDocumentResponseMonitor {
+public class SaveDocumentResponseMonitorKeha {
 
     protected Success success;
     @XmlElement(required = true)
