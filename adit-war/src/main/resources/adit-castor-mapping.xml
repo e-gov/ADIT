@@ -1034,8 +1034,23 @@
 	
 	<class name="ee.adit.pojo.SaveDocumentResponseMonitor">
 		<map-to xml="saveDocumentResponse" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"/>
-		<field name="keha" type="ee.adit.pojo.SuccessMonitor" >
+		<field name="keha" type="ee.adit.pojo.SaveDocumentResponseMonitorKeha" >
 			<bind-xml name="keha" />
+		</field>
+	</class>
+	
+	<class name="ee.adit.pojo.SaveDocumentResponseMonitorKeha">
+		<map-to xml="keha" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"/>
+		<field name="success" type="ee.adit.pojo.Success" >
+		</field>
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
+			<bind-xml name="messages" />
+		</field>
+		<field name="documentId" type="long">
+			<bind-xml name="document_id" />
+		</field>
+		<field name="document" type="ee.adit.pojo.SaveDocumentRequestDocument">
+			<bind-xml name="document" />
 		</field>
 	</class>
 	
