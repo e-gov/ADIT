@@ -8,10 +8,14 @@ INSERT INTO adit_user (
 
 INSERT INTO remote_application (
 	short_name,
-	organization_code
+	organization_code,
+	can_read,
+	can_write
 ) VALUES (
 	'MONITOR_TEST_APP',
-	'00000000000'
+	'00000000000',
+	1,
+	1
 );
 
 INSERT INTO document (
