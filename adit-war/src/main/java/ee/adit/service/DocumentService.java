@@ -494,7 +494,7 @@ public class DocumentService {
 								&& !"".equalsIgnoreCase(attachmentDocument
 										.getGuid().trim())) {
 							document.setGuid(attachmentDocument.getGuid());
-						} else if ((document.getGuid() == null)
+						} else if ((document.getGuid() == null) || attachmentDocument.getGuid() == null 
 								|| "".equalsIgnoreCase(attachmentDocument
 										.getGuid().trim())) {
 							// Generate new GUID
