@@ -41,6 +41,7 @@ import ee.adit.pojo.SaveDocumentRequestDocument;
 import ee.adit.pojo.SaveDocumentResponse;
 import ee.adit.util.Configuration;
 import ee.adit.util.CustomMessageCallbackFactory;
+import ee.adit.util.CustomXTeeConsumer;
 import ee.adit.util.CustomXTeeServiceConfiguration;
 import ee.adit.util.NagiosLogger;
 import ee.adit.util.Util;
@@ -463,9 +464,7 @@ public class MonitorService {
 			// Write to temporary file
 			String fileName = this.marshal(requestAttachment);
 			LOG.debug("Request attachment marshalled to temporary file: '" + fileName + "'.");
-			String base64zippedFile = Util.gzipAndBase64Encode(fileName, getConfiguration().getTempDir(), true);
-			
-			
+			String base64zippedFile = Util.gzipAndBase64Encode(fileName, getConfiguration().getTempDir(), true);			
 			
 			DataSource dataSource = new FileDataSource(base64zippedFile);
 			DataHandler dataHandler = new DataHandler(dataSource);
@@ -487,15 +486,16 @@ public class MonitorService {
 			xTeeServiceConfiguration.setSecurityServer(uri);
 			xTeeServiceConfiguration.setInfosysteem("00000000000");
 			
-			StandardXTeeConsumer standardXTeeConsumer = new StandardXTeeConsumer();
-			standardXTeeConsumer.setWebServiceTemplate(webServiceTemplate);
-			standardXTeeConsumer.setServiceConfiguration(xTeeServiceConfiguration);
+			CustomXTeeConsumer customXTeeConsumer = new CustomXTeeConsumer();
+			customXTeeConsumer.setWebServiceTemplate(webServiceTemplate);
+			customXTeeConsumer.setServiceConfiguration(xTeeServiceConfiguration);
+			customXTeeConsumer.setMsgCallbackFactory(new CustomMessageCallbackFactory());
 			
 			List<XTeeAttachment> attachments = new ArrayList<XTeeAttachment>();
 			XTeeAttachment xTeeAttachment = new XTeeAttachment("document", "text/xml", Util.getBytesFromFile(new File(base64zippedFile)));
 			attachments.add(xTeeAttachment);
 			
-			Object responseObject = standardXTeeConsumer.sendRequest(request, attachments);
+			Object responseObject = customXTeeConsumer.sendRequest(request, attachments);
 			
 			Date end = new Date();
 			long endTime = end.getTime();
