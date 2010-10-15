@@ -457,7 +457,6 @@ public class MonitorService {
 			String newTitle = Util.dateToXMLDate(new Date());
 			requestAttachment.setTitle(newTitle);
 			
-			// TODO: Add attachment
 			SaajSoapMessageFactory messageFactory = new SaajSoapMessageFactory(MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL));
 			SaajSoapMessage message = (SaajSoapMessage) messageFactory.createWebServiceMessage();
 			
