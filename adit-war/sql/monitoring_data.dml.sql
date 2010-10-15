@@ -6,6 +6,14 @@ INSERT INTO adit_user (
   'person'
 );
 
+INSERT INTO remote_application (
+	short_name,
+	organization_code
+) VALUES (
+	'MONITOR_TEST_APP',
+	'00000000000'
+);
+
 INSERT INTO document (
   ID,
   title,
