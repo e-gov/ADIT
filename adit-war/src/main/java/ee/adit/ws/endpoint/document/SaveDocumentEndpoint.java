@@ -311,29 +311,29 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 			
 			additionalInformationForLog = errorMessage;
 			super.logError(documentId, requestDate.getTime(), LogService.ErrorLogLevel_Error, errorMessage);
-			
-			LOG.debug("Adding request attachments to response object.");
-			try {
-				super.setIgnoreAttachmentHeaders(true);
-				boolean cidAdded = false;
-				Iterator<Attachment> i = this.getRequestMessage().getAttachments();
-				while(i.hasNext()) {
-					Attachment attachment = i.next();
-					String contentId = attachment.getContentId();
-					if ((contentId == null) || (contentId.length() < 1)) {
-						contentId = Util.generateRandomID();
-					} else {
-						contentId = Util.stripContentID(contentId);
-					}
-					this.getResponseMessage().addAttachment(contentId, attachment.getDataHandler());
-					if (!cidAdded) {
-						response.setDocument(new SaveDocumentRequestDocument("cid:" + contentId));
-						cidAdded = true;
-					}
+		}
+		
+		LOG.debug("Adding request attachments to response object.");
+		try {
+			super.setIgnoreAttachmentHeaders(true);
+			boolean cidAdded = false;
+			Iterator<Attachment> i = this.getRequestMessage().getAttachments();
+			while(i.hasNext()) {
+				Attachment attachment = i.next();
+				String contentId = attachment.getContentId();
+				if ((contentId == null) || (contentId.length() < 1)) {
+					contentId = Util.generateRandomID();
+				} else {
+					contentId = Util.stripContentID(contentId);
 				}
-			} catch (Exception ex) {
-				LOG.error("Failed sending request attachments back within response object!", ex);
+				this.getResponseMessage().addAttachment(contentId, attachment.getDataHandler());
+				if (!cidAdded) {
+					response.setDocument(new SaveDocumentRequestDocument("cid:" + contentId));
+					cidAdded = true;
+				}
 			}
+		} catch (Exception ex) {
+			LOG.error("Failed sending request attachments back within response object!", ex);
 		}
 		
 		super.logCurrentRequest(documentId, requestDate.getTime(), additionalInformationForLog);
