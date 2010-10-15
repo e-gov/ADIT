@@ -448,7 +448,7 @@ public class MonitorService {
 			
 			SaveDocumentRequest request = new SaveDocumentRequest();
 			SaveDocumentRequestDocument document = new SaveDocumentRequestDocument();
-			document.setHref("cid:documentOlematu");
+			document.setHref("cid:document");
 			request.setDocument(document);
 			
 			SaveDocumentRequestAttachment requestAttachment = new SaveDocumentRequestAttachment();
