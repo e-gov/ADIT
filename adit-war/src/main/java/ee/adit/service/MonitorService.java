@@ -484,7 +484,7 @@ public class MonitorService {
 			xTeeServiceConfiguration.setMethod("saveDocument");
 			xTeeServiceConfiguration.setVersion("v1");
 			xTeeServiceConfiguration.setSecurityServer(uri);
-			xTeeServiceConfiguration.setInfosysteem("00000000000");
+			xTeeServiceConfiguration.setInfosysteem("MONITOR_TEST_APP");
 			
 			CustomXTeeConsumer customXTeeConsumer = new CustomXTeeConsumer();
 			customXTeeConsumer.setWebServiceTemplate(webServiceTemplate);
