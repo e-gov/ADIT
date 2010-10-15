@@ -81,10 +81,8 @@ public class DocumentDAO extends HibernateDaoSupport {
 		
 		long result = 0;
 		for(DocumentFile docFile : userFiles) {
-			if(docFile != null) {
-				long fileSize = docFile.getFileSizeBytes();
-				result += fileSize;
-			}
+			long fileSize = docFile.getFileSizeBytes();
+			result += fileSize;
 		}
 		
 		return result;

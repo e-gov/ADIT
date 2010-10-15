@@ -33,10 +33,14 @@ INSERT INTO document (
 INSERT INTO document_file (
   id,
   document_id,
-  file_name
+  file_name,
+  content_type,
+  file_size_bytes
 ) VALUES (
   999999999999,
   999999999999,
-  'test.txt'
+  'test.txt',
+  'text/plain',
+  100
 );
 /
