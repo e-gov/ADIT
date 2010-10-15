@@ -39,6 +39,7 @@ import ee.adit.pojo.SaveDocumentRequest;
 import ee.adit.pojo.SaveDocumentRequestAttachment;
 import ee.adit.pojo.SaveDocumentRequestDocument;
 import ee.adit.pojo.SaveDocumentResponse;
+import ee.adit.pojo.SaveDocumentResponseMonitor;
 import ee.adit.util.Configuration;
 import ee.adit.util.CustomMessageCallbackFactory;
 import ee.adit.util.CustomXTeeConsumer;
@@ -494,7 +495,10 @@ public class MonitorService {
 			XTeeAttachment xTeeAttachment = new XTeeAttachment("document", "text/xml", Util.getBytesFromFile(new File(base64zippedFile)));
 			attachments.add(xTeeAttachment);
 			
-			Object responseObject = customXTeeConsumer.sendRequest(request, attachments);
+			SaveDocumentResponseMonitor response = (SaveDocumentResponseMonitor) customXTeeConsumer.sendRequest(request, attachments);
+			
+			LOG.info("response.success: " + response.getKeha().getSuccess());
+			LOG.info("response.documentId: " + response.getKeha().getDocumentId());
 			
 			Date end = new Date();
 			long endTime = end.getTime();
