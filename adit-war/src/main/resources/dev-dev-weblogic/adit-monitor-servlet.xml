@@ -370,11 +370,7 @@
 		<constructor-arg value="ametlikud-dokumendid" />
 	</bean>
 
-	<!-- Castor Marshaller -->
-	<bean id="castorMarshaller" class="org.springframework.oxm.castor.CastorMarshaller">
-		<property name="mappingLocation" value="classpath:/adit-castor-mapping.xml" />
-		<property name="ignoreExtraElements" value="true" />
-	</bean>
+	
 
 	<!-- Service Classes -->
 	<bean id="logService" class="ee.adit.service.LogService">
@@ -775,6 +771,12 @@
 		<property name="configuration" ref="configuration" />
 		<property name="nagiosLogger" ref="nagiosLogger" />
 		<property name="documentService" ref="documentService" />
+	</bean>
+
+	<!-- Castor Marshaller -->
+	<bean id="castorMarshaller" class="org.springframework.oxm.castor.CastorMarshaller">
+		<property name="mappingLocation" value="classpath:/adit-castor-mapping.xml" />
+		<property name="ignoreExtraElements" value="true" />
 	</bean>
 
 </beans>
