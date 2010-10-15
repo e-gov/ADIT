@@ -47,7 +47,7 @@ import ee.adit.pojo.ArrayOfMessage;
 })
 public class SaveDocumentResponseMonitor {
 
-    protected Success success;
+    protected String success;
     @XmlElement(required = true)
     protected ArrayOfMessage messages;
     @XmlElement(name = "document_id", required = true)
@@ -102,11 +102,11 @@ public class SaveDocumentResponseMonitor {
         this.documentId = value;
     }
 
-	public Success getSuccess() {
+	public String getSuccess() {
 		return success;
 	}
 
-	public void setSuccess(Success success) {
+	public void setSuccess(String success) {
 		this.success = success;
 	}
 
