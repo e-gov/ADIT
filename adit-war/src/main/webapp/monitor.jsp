@@ -18,16 +18,16 @@
 <body>
 	<h1>Adit Monitoring</h1>
 	
-	<table style="border: 1px solid #000;">
+	<table style="border: 1px solid #000; border-collapse: collapse; padding: 6px;">
 		<tr>
-			<td><b>Component</b></td>
-			<td><b>Status</b></td>
-			<td><b>Time / Error</b></td>
+			<td style="border: 1px solid #000;"><b>Component</b></td>
+			<td style="border: 1px solid #000;"><b>Status</b></td>
+			<td style="border: 1px solid #000;"><b>Time / Error</b></td>
 		</tr>
 		<tr>
-			<td>saveDocument() request</td>
-			<td><%=status%></td>
-			<td>
+			<td style="border: 1px solid #000;">saveDocument() request</td>
+			<td style="border: 1px solid #000;"><%=status%></td>
+			<td style="border: 1px solid #000;">
 				<%if(status == "OK") {
 				
 				%>
