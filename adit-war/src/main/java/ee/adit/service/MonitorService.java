@@ -35,6 +35,7 @@ import ee.adit.dao.DocumentDAO;
 import ee.adit.dao.dvk.DvkDAO;
 import ee.adit.dao.pojo.Document;
 import ee.adit.monitor.MonitorResult;
+import ee.adit.pojo.ArrayOfMessageMonitor;
 import ee.adit.pojo.SaveDocumentRequest;
 import ee.adit.pojo.SaveDocumentRequestAttachment;
 import ee.adit.pojo.SaveDocumentRequestDocument;
@@ -504,10 +505,26 @@ public class MonitorService {
 			long endTime = end.getTime();
 			duration = (endTime - startTime) / 1000.0;
 			
+			// Populate result
 			result.setDuration(duration);
+			result.setSuccess(response.getKeha().getSuccess());
+			
+			if(!result.isSuccess()) {
+				List<String> exceptions = new ArrayList<String>();
+				ArrayOfMessageMonitor messages = response.getKeha().getMessages();
+				result.setExceptions(messages.getMessage());
+				
+			}
+			
 			
 		} catch(Exception e) {
 			LOG.error("Error while testing 'saveDocument' request: ", e);
+			
+			result.setSuccess(false);
+			List<String> exceptions = new ArrayList<String>();
+			exceptions.add(e.getMessage());
+			result.setExceptions(exceptions);
+			
 		}
 		
 		

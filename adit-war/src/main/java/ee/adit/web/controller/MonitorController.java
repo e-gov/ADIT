@@ -42,9 +42,16 @@ public class MonitorController extends AbstractController {
 			LOG.error("getConfiguration() == null");
 		MonitorResult saveDocumentCheckResult = this.getMonitorService().saveDocumentCheck(getConfiguration().getTestDocumentID());
 		
-		DecimalFormat df = new DecimalFormat("0.000");
-		mav.addObject("duration", df.format(saveDocumentCheckResult.getDuration()));
 		
+		
+		if(saveDocumentCheckResult.isSuccess()) {
+			DecimalFormat df = new DecimalFormat("0.000");
+			mav.addObject("duration", df.format(saveDocumentCheckResult.getDuration()));
+			mav.addObject("status", "OK");
+		} else {
+			mav.addObject("status", "FAIL");
+			mav.addObject("exceptions", saveDocumentCheckResult.getExceptions());
+		}
 		
 		
 		// 2. ADIT -> DVK

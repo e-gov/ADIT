@@ -6,9 +6,9 @@ public class MonitorResult {
 
 	private String component;
 	
-	private String status;
+	private boolean success;
 	
-	private List<Exception> exceptions;
+	private List<String> exceptions;
 	
 	private double duration;
 
@@ -17,22 +17,14 @@ public class MonitorResult {
 	}
 
 	public void setComponent(String component) {
-		this.component = component;
+		this.component = component;	
 	}
 
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-	public List<Exception> getExceptions() {
+	public List<String> getExceptions() {
 		return exceptions;
 	}
 
-	public void setExceptions(List<Exception> exceptions) {
+	public void setExceptions(List<String> exceptions) {
 		this.exceptions = exceptions;
 	}
 
@@ -42,6 +34,14 @@ public class MonitorResult {
 
 	public void setDuration(double duration) {
 		this.duration = duration;
+	}
+
+	public boolean isSuccess() {
+		return success;
+	}
+
+	public void setSuccess(boolean success) {
+		this.success = success;
 	}
 	
 }

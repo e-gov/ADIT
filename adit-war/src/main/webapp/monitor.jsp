@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+<%@page import="java.util.List" %>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -9,6 +11,8 @@
 
 <%  
 	String duration = (String) request.getAttribute("duration");
+	List<String> exceptions = (List<String>) request.getAttribute("exceptions");
+	String status = (String) request.getAttribute("status");
 %>
 
 <body>
@@ -21,9 +25,28 @@
 			<td>Time / Error</td>
 		</tr>
 		<tr>
-			<td>Komponent X</td>
-			<td></td>
-			<td><%=duration%></td>
+			<td>saveDocument() request</td>
+			<td><%=status%></td>
+			<td>
+				<%if(status == "OK") {
+				
+				%>
+					<%=duration%> ms
+				<%
+				  } else {
+					  for(int i = 0; i < exceptions.size(); i++) {
+						String exception = exceptions.get(i);						  
+					  	if(i > 0)
+					  		exception = ", " + exception;
+				%>
+					
+					
+					<%=exception%>
+				<%
+					  }
+				  }
+				%>
+			</td>
 		</tr>
 	</table>
 	
