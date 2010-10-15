@@ -29,4 +29,14 @@ INSERT INTO document (
   'letter',
   'EE00000000000'
 );
+
+INSERT INTO document_file (
+  id,
+  document_id,
+  file_name
+) VALUES (
+  999999999999,
+  999999999999,
+  'test.txt'
+);
 /
