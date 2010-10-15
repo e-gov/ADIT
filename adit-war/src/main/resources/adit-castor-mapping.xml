@@ -1034,8 +1034,14 @@
 	
 	<class name="ee.adit.pojo.SaveDocumentResponseMonitor">
 		<map-to xml="saveDocumentResponse" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"/>
-		<field name="success" type="ee.adit.pojo.Success" >
+		<field name="success" type="ee.adit.pojo.SuccessMonitor" >
 			<bind-xml location="keha"/>
+		</field>
+	</class>
+	
+	<class name="ee.adit.pojo.SuccessMonitor">
+		<map-to xml="success" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<field name="success" type="java.lang.Boolean" container="true">
 		</field>
 	</class>
 	

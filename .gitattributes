@@ -303,6 +303,7 @@ adit-war/src/main/java/ee/adit/pojo/ShareDocumentRequest.java -text
 adit-war/src/main/java/ee/adit/pojo/ShareDocumentResponse.java -text
 adit-war/src/main/java/ee/adit/pojo/Signature.java -text
 adit-war/src/main/java/ee/adit/pojo/Success.java -text
+adit-war/src/main/java/ee/adit/pojo/SuccessMonitor.java -text
 adit-war/src/main/java/ee/adit/pojo/UnJoinRequest.java -text
 adit-war/src/main/java/ee/adit/pojo/UnJoinResponse.java -text
 adit-war/src/main/java/ee/adit/pojo/UnShareDocumentRequest.java -text
