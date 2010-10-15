@@ -468,6 +468,7 @@ public class MonitorService {
 			File tmpFile = new File(tmpFileName);
 			
 			OutputDocumentFile file = new OutputDocumentFile();
+			file.setId(999999999999L);
 			file.setContentType("text/plain");
 			file.setName("test.txt");
 			file.setSizeBytes(tmpFile.length());
