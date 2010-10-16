@@ -14,7 +14,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<projectBaseDir>C:\development\adit\trunk</projectBaseDir>
+		<projectBaseDir>E:\dev\adit\trunk</projectBaseDir>
 		<!--
 			Specifies which configuration resources to bundle with the build (ie.
 			"dev", "test", "production")
