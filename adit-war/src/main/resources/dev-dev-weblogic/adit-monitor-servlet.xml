@@ -769,6 +769,7 @@
 		<property name="configuration" ref="configuration" />
 		<property name="nagiosLogger" ref="nagiosLogger" />
 		<property name="documentService" ref="documentService" />
+		<property name="monitorConfiguration" ref="monitorConfiguration" />
 	</bean>
 
 	<!-- Castor Marshaller -->
