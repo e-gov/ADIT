@@ -53,7 +53,7 @@ public class GetDocumentResponseMonitor {
 
     protected boolean success;
     @XmlElement(required = true)
-    protected ArrayOfMessage messages;
+    protected ArrayOfMessageMonitor messages;
     @XmlElement(name = "document", required = true)
     protected GetDocumentResponseDocument document;
 
@@ -81,7 +81,7 @@ public class GetDocumentResponseMonitor {
      *     {@link ArrayOfMessage }
      *     
      */
-    public ArrayOfMessage getMessages() {
+    public ArrayOfMessageMonitor getMessages() {
         return messages;
     }
 
@@ -93,7 +93,7 @@ public class GetDocumentResponseMonitor {
      *     {@link ArrayOfMessage }
      *     
      */
-    public void setMessages(ArrayOfMessage value) {
+    public void setMessages(ArrayOfMessageMonitor value) {
         this.messages = value;
     }
 
