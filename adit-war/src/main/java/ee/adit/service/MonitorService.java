@@ -37,6 +37,8 @@ import ee.adit.dao.dvk.DvkDAO;
 import ee.adit.dao.pojo.Document;
 import ee.adit.monitor.MonitorResult;
 import ee.adit.pojo.ArrayOfMessageMonitor;
+import ee.adit.pojo.GetDocumentRequest;
+import ee.adit.pojo.GetDocumentResponse;
 import ee.adit.pojo.OutputDocumentFile;
 import ee.adit.pojo.SaveDocumentRequest;
 import ee.adit.pojo.SaveDocumentRequestAttachment;
@@ -471,7 +473,7 @@ public class MonitorService {
 			File tmpFile = new File(tmpFileName);
 			
 			OutputDocumentFile file = new OutputDocumentFile();
-			file.setId(999999999999L);
+			file.setId(this.getMonitorConfiguration().getTestDocumentFileId());
 			file.setContentType("text/plain");
 			file.setName("test.txt");
 			file.setSizeBytes(tmpFile.length());
@@ -480,33 +482,28 @@ public class MonitorService {
 			files.add(file);
 			requestAttachment.setFiles(files);
 			
-			SaajSoapMessageFactory messageFactory = new SaajSoapMessageFactory(MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL));
-			SaajSoapMessage message = (SaajSoapMessage) messageFactory.createWebServiceMessage();
+			//SaajSoapMessageFactory messageFactory = new SaajSoapMessageFactory(MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL));
+			//SaajSoapMessage message = (SaajSoapMessage) messageFactory.createWebServiceMessage();
 			
 			// Write to temporary file
 			String fileName = this.marshal(requestAttachment);
 			LOG.debug("Request attachment marshalled to temporary file: '" + fileName + "'.");
 			String base64zippedFile = Util.gzipAndBase64Encode(fileName, getConfiguration().getTempDir(), true);			
 			
-			DataSource dataSource = new FileDataSource(base64zippedFile);
-			DataHandler dataHandler = new DataHandler(dataSource);
-			message.addAttachment("document", dataHandler);
+			//DataSource dataSource = new FileDataSource(base64zippedFile);
+			//DataHandler dataHandler = new DataHandler(dataSource);
+			//message.addAttachment("document", dataHandler);
 			
 			LOG.debug("Attachment added with id: 'document'");
-			String uri = "http://localhost:10001/adit/service";
-		
-			//Object resultObject = webServiceTemplate.marshalSendAndReceive(uri, message);
-			
-			//LOG.debug("resultObject.class: " + resultObject.getClass());
 			
 			CustomXTeeServiceConfiguration xTeeServiceConfiguration = new CustomXTeeServiceConfiguration();
 			xTeeServiceConfiguration.setDatabase("ametlikud-dokumendid");
-			xTeeServiceConfiguration.setIdCode("EE00000000000");
-			xTeeServiceConfiguration.setInstitution("10425769");
+			xTeeServiceConfiguration.setIdCode(this.getMonitorConfiguration().getUserCode());
+			xTeeServiceConfiguration.setInstitution(this.getMonitorConfiguration().getInstitutionCode());
 			xTeeServiceConfiguration.setMethod("saveDocument");
 			xTeeServiceConfiguration.setVersion("v1");
-			xTeeServiceConfiguration.setSecurityServer(uri);
-			xTeeServiceConfiguration.setInfosysteem("MONITOR_TEST_APP");
+			xTeeServiceConfiguration.setSecurityServer(this.getMonitorConfiguration().getAditServiceUrl());
+			xTeeServiceConfiguration.setInfosysteem(this.getMonitorConfiguration().getRemoteApplicationShortName());
 			
 			CustomXTeeConsumer customXTeeConsumer = new CustomXTeeConsumer();
 			customXTeeConsumer.setWebServiceTemplate(webServiceTemplate);
@@ -531,10 +528,8 @@ public class MonitorService {
 			result.setSuccess(response.getKeha().getSuccess());
 			
 			if(!result.isSuccess()) {
-				List<String> exceptions = new ArrayList<String>();
 				ArrayOfMessageMonitor messages = response.getKeha().getMessages();
 				result.setExceptions(messages.getMessage());
-				
 			}
 			
 			
@@ -548,9 +543,69 @@ public class MonitorService {
 			
 		}
 		
+		return result;
+	}
+	
+	public MonitorResult getDocumentCheck() {
+		MonitorResult result = new MonitorResult();
 		
+		double duration = 0;
+		Date start = new Date();
+		long startTime = start.getTime();
+		
+		try {
+			WebServiceTemplate webServiceTemplate = new WebServiceTemplate();
+			webServiceTemplate.setMarshaller(getMarshaller());
+			webServiceTemplate.setUnmarshaller(getUnmarshaller());
+			
+			GetDocumentRequest request = new GetDocumentRequest();
+			request.setDocumentId(this.getMonitorConfiguration().getTestDocumentId());
+			request.setIncludeFileContents(true);
+			
+			SaajSoapMessageFactory messageFactory = new SaajSoapMessageFactory(MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL));
+			SaajSoapMessage message = (SaajSoapMessage) messageFactory.createWebServiceMessage();
+
+			CustomXTeeServiceConfiguration xTeeServiceConfiguration = new CustomXTeeServiceConfiguration();
+			xTeeServiceConfiguration.setDatabase("ametlikud-dokumendid");
+			xTeeServiceConfiguration.setIdCode(this.getMonitorConfiguration().getUserCode());
+			xTeeServiceConfiguration.setInstitution(this.getMonitorConfiguration().getInstitutionCode());
+			xTeeServiceConfiguration.setMethod("getDocument");
+			xTeeServiceConfiguration.setVersion("v1");
+			xTeeServiceConfiguration.setSecurityServer(this.getMonitorConfiguration().getAditServiceUrl());
+			xTeeServiceConfiguration.setInfosysteem(this.getMonitorConfiguration().getRemoteApplicationShortName());
+			
+			CustomXTeeConsumer customXTeeConsumer = new CustomXTeeConsumer();
+			customXTeeConsumer.setWebServiceTemplate(webServiceTemplate);
+			customXTeeConsumer.setServiceConfiguration(xTeeServiceConfiguration);
+			customXTeeConsumer.setMsgCallbackFactory(new CustomMessageCallbackFactory());
+			
+			GetDocumentResponse response = (GetDocumentResponse) customXTeeConsumer.sendRequest(request);
+
+			Date end = new Date();
+			long endTime = end.getTime();
+			duration = (endTime - startTime) / 1000.0;
+			
+			// Populate result
+			result.setDuration(duration);
+			result.setSuccess(response.isSuccess());
+			
+			if(!result.isSuccess()) {
+				// TODO
+			}
+			
+			
+		} catch(Exception e) {
+			LOG.error("Error while testing 'getDocument' request: ", e);
+			
+			result.setSuccess(false);
+			List<String> exceptions = new ArrayList<String>();
+			exceptions.add(e.getMessage());
+			result.setExceptions(exceptions);
+			
+		}
 		
 		return result;
+		
 	}
 	
 	/**

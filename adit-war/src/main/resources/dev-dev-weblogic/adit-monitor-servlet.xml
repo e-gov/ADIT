@@ -782,6 +782,7 @@
 		<property name="aditServiceUrl" value="http://localhost:7001/adit/service" />
 		<property name="remoteApplicationShortName" value="MONITOR_TEST_APP" />
 		<property name="userCode" value="EE00000000000" />
+		<property name="institutionCode" value="123456789" />
 		<property name="testDocumentId" value="999999999999" />
 		<property name="dvkTestDocumentID" value="9999999999" />
 		<property name="testDocumentFileId" value="999999999999" />

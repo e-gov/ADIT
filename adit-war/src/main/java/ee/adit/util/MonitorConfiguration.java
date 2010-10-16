@@ -8,6 +8,8 @@ public class MonitorConfiguration {
 	
 	private String userCode;
 	
+	private String institutionCode;
+	
 	private Long testDocumentId;
 	
 	private Long dvkTestDocumentID;
@@ -142,6 +144,14 @@ public class MonitorConfiguration {
 
 	public void setDvkTestDocumentID(Long dvkTestDocumentID) {
 		this.dvkTestDocumentID = dvkTestDocumentID;
+	}
+
+	public String getInstitutionCode() {
+		return institutionCode;
+	}
+
+	public void setInstitutionCode(String institutionCode) {
+		this.institutionCode = institutionCode;
 	}
 	
 }
