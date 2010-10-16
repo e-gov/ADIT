@@ -56,10 +56,6 @@ public class Configuration {
 	public List<String> getLocales() {
 		return locales;
 	}
-
-	private Long testDocumentID;
-	
-	private Long dvkTestDocumentID;
 	
 	/**
 	 * Sets the locales list
@@ -176,20 +172,5 @@ public class Configuration {
 	public void setGlobalDiskQuota(Long globalDiskQuota) {
 		this.globalDiskQuota = globalDiskQuota;
 	}
-
-	public Long getTestDocumentID() {
-		return testDocumentID;
-	}
-
-	public void setTestDocumentID(Long testDocumentID) {
-		this.testDocumentID = testDocumentID;
-	}
-
-	public Long getDvkTestDocumentID() {
-		return dvkTestDocumentID;
-	}
-
-	public void setDvkTestDocumentID(Long dvkTestDocumentID) {
-		this.dvkTestDocumentID = dvkTestDocumentID;
-	}
+	
 }

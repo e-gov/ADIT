@@ -47,6 +47,7 @@ import ee.adit.util.Configuration;
 import ee.adit.util.CustomMessageCallbackFactory;
 import ee.adit.util.CustomXTeeConsumer;
 import ee.adit.util.CustomXTeeServiceConfiguration;
+import ee.adit.util.MonitorConfiguration;
 import ee.adit.util.NagiosLogger;
 import ee.adit.util.Util;
 import ee.webmedia.xtee.client.service.SimpleXTeeServiceConfiguration;
@@ -94,6 +95,8 @@ public class MonitorService {
 	
 	private DocumentService documentService;
 	
+	private MonitorConfiguration monitorConfiguration;
+	
 	/**
 	 * Marshaller - required to convert Java objects to XML.
 	 */
@@ -110,12 +113,12 @@ public class MonitorService {
 		checkApplication();
 		
 		checkDBConnection();
-		checkDBRead(this.getConfiguration().getTestDocumentID());
-		checkDBWrite(this.getConfiguration().getTestDocumentID());
+		checkDBRead(this.getMonitorConfiguration().getTestDocumentId());
+		checkDBWrite(this.getMonitorConfiguration().getTestDocumentId());
 		
 		checkDVKconnection();
-		checkDVKRead(this.getConfiguration().getDvkTestDocumentID());
-		checkDVKWrite(this.getConfiguration().getDvkTestDocumentID());
+		checkDVKRead(this.getMonitorConfiguration().getDvkTestDocumentID());
+		checkDVKWrite(this.getMonitorConfiguration().getDvkTestDocumentID());
 		
 	}
 	
@@ -283,7 +286,7 @@ public class MonitorService {
 		// 3. Check test document ID
 		try {
 			
-			Long testDocumentID = this.getConfiguration().getTestDocumentID();
+			Long testDocumentID = this.getMonitorConfiguration().getTestDocumentId();
 			if(testDocumentID == null) {
 				throw new Exception("Test document ID not defined.");
 			}
@@ -643,5 +646,13 @@ public class MonitorService {
 
 	public void setUnmarshaller(Unmarshaller unmarshaller) {
 		this.unmarshaller = unmarshaller;
+	}
+
+	public MonitorConfiguration getMonitorConfiguration() {
+		return monitorConfiguration;
+	}
+
+	public void setMonitorConfiguration(MonitorConfiguration monitorConfiguration) {
+		this.monitorConfiguration = monitorConfiguration;
 	}
 }

@@ -746,8 +746,6 @@
 				<value>et_ee</value>
 			</list>
 		</property>
-		<property name="testDocumentID" value="999999999999" />
-		<property name="dvkTestDocumentID" value="9999999999" />
 	</bean>
 
 	<bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
@@ -777,6 +775,23 @@
 	<bean id="castorMarshaller" class="org.springframework.oxm.castor.CastorMarshaller">
 		<property name="mappingLocation" value="classpath:/adit-castor-mapping.xml" />
 		<property name="ignoreExtraElements" value="true" />
+	</bean>
+
+	<bean id="monitorConfiguration" class="ee.adit.util.MonitorConfiguration">
+		<property name="aditServiceUrl" value="http://localhost:7001/adit/service" />
+		<property name="remoteApplicationShortName" value="MONITOR_TEST_APP" />
+		<property name="userCode" value="EE00000000000" />
+		<property name="testDocumentId" value="999999999999" />
+		<property name="dvkTestDocumentID" value="9999999999" />
+		<property name="testDocumentFileId" value="999999999999" />
+		<property name="testUserCode" value="EE00000000000" />
+		<property name="documentSaveInterval" value="60000" />
+		<property name="documentSendToDvkInterval" value="60000" />
+		<property name="documentSendToDvkServerInterval" value="60000" />
+		<property name="documentSendToDvkFromDvkServerInterval" value="60000" />
+		<property name="documentSendToAditInterval" value="60000" />
+		<property name="notificationSendInterval" value="60000" />
+		<property name="errorInterval" value="60000" />
 	</bean>
 
 </beans>

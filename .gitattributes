@@ -328,6 +328,7 @@ adit-war/src/main/java/ee/adit/util/CustomXTeeMessageCallback.java -text
 adit-war/src/main/java/ee/adit/util/CustomXTeeServiceConfiguration.java -text
 adit-war/src/main/java/ee/adit/util/DVKUserSyncResult.java -text
 adit-war/src/main/java/ee/adit/util/FileSplitResult.java -text
+adit-war/src/main/java/ee/adit/util/MonitorConfiguration.java -text
 adit-war/src/main/java/ee/adit/util/NagiosLogger.java -text
 adit-war/src/main/java/ee/adit/util/SaveDocumentAttachmentHandler.java -text
 adit-war/src/main/java/ee/adit/util/TemporaryFolderCleanerJob.java -text
