@@ -426,16 +426,16 @@
 		<property name="configuration" ref="configuration"/>
 	</bean>
 
-	<!-- Monitoring resources -->
 	<bean id="monitorService" class="ee.adit.service.MonitorService">
+		<property name="marshaller" ref="castorMarshaller" />
+		<property name="unmarshaller" ref="castorMarshaller" />
 		<property name="documentDAO" ref="documentDAO" />
 		<property name="dvkDAO" ref="dvkDAO" />
 		<property name="configuration" ref="configuration" />
 		<property name="nagiosLogger" ref="nagiosLogger" />
-		<property name="documentService" ref="documentService"/>
-	</bean>
-
-	
+		<property name="documentService" ref="documentService" />
+		<property name="monitorConfiguration" ref="monitorConfiguration" />
+	</bean>	
 
 	<bean id="aditDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
 	  	<property name="jndiName" value="jdbc/adit"/>
@@ -770,6 +770,24 @@
 				<value>et_ee</value>
 			</list>
 		</property>
+	</bean>
+
+	<bean id="monitorConfiguration" class="ee.adit.util.MonitorConfiguration">
+		<property name="aditServiceUrl" value="http://localhost:7007/adit/service" />
+		<property name="remoteApplicationShortName" value="MONITOR_TEST_APP" />
+		<property name="userCode" value="EE00000000000" />
+		<property name="institutionCode" value="123456789" />
+		<property name="testDocumentId" value="999999999999" />
+		<property name="dvkTestDocumentID" value="9999999999" />
+		<property name="testDocumentFileId" value="999999999999" />
+		<property name="testUserCode" value="EE00000000000" />
+		<property name="documentSaveInterval" value="60000" />
+		<property name="documentSendToDvkInterval" value="60000" />
+		<property name="documentSendToDvkServerInterval" value="60000" />
+		<property name="documentSendToDvkFromDvkServerInterval" value="60000" />
+		<property name="documentSendToAditInterval" value="60000" />
+		<property name="notificationSendInterval" value="60000" />
+		<property name="errorInterval" value="60000" />
 	</bean>
 
 </beans>
