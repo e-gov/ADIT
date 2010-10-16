@@ -14,6 +14,7 @@ import org.springframework.web.servlet.mvc.AbstractController;
 import ee.adit.monitor.MonitorResult;
 import ee.adit.service.MonitorService;
 import ee.adit.util.Configuration;
+import ee.adit.util.MonitorConfiguration;
 
 public class MonitorController extends AbstractController {
 
@@ -22,6 +23,8 @@ public class MonitorController extends AbstractController {
 	private MonitorService monitorService;
 	
 	private Configuration configuration;
+	
+	private MonitorConfiguration monitorConfiguration;
 	
 	public MonitorController() {
 		LOG.info("MONITORCONTROLLER created.");
@@ -33,14 +36,14 @@ public class MonitorController extends AbstractController {
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("monitor.jsp");
 
-		// 1. X-tee p√§ringud
+		// 1. X-tee p‰ringud
 		//    - saveDocument()
 		//    - getDocument()
 		if(getMonitorService() == null)
 			LOG.error("getMonitorService() == null");
 		if(getConfiguration() == null)
 			LOG.error("getConfiguration() == null");
-		MonitorResult saveDocumentCheckResult = this.getMonitorService().saveDocumentCheck(getConfiguration().getTestDocumentID());
+		MonitorResult saveDocumentCheckResult = this.getMonitorService().saveDocumentCheck(getMonitorConfiguration().getTestDocumentId());
 		
 		
 		
@@ -89,6 +92,14 @@ public class MonitorController extends AbstractController {
 
 	public void setConfiguration(Configuration configuration) {
 		this.configuration = configuration;
+	}
+
+	public MonitorConfiguration getMonitorConfiguration() {
+		return monitorConfiguration;
+	}
+
+	public void setMonitorConfiguration(MonitorConfiguration monitorConfiguration) {
+		this.monitorConfiguration = monitorConfiguration;
 	}
 	
 }
