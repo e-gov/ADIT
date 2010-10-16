@@ -29,6 +29,7 @@ import ee.adit.monitor.MonitorResult;
 import ee.adit.pojo.ArrayOfMessageMonitor;
 import ee.adit.pojo.GetDocumentRequest;
 import ee.adit.pojo.GetDocumentResponse;
+import ee.adit.pojo.GetDocumentResponseMonitor;
 import ee.adit.pojo.OutputDocumentFile;
 import ee.adit.pojo.SaveDocumentRequest;
 import ee.adit.pojo.SaveDocumentRequestAttachment;
@@ -575,7 +576,7 @@ public class MonitorService {
 			
 			
 			List<XTeeAttachment> attachments = new ArrayList<XTeeAttachment>();
-			GetDocumentResponse response = (GetDocumentResponse) customXTeeConsumer.sendRequest(request, attachments);
+			GetDocumentResponseMonitor response = (GetDocumentResponseMonitor) customXTeeConsumer.sendRequest(request, attachments);
 			
 			Date end = new Date();
 			long endTime = end.getTime();
