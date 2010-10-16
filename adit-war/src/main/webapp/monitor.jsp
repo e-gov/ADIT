@@ -32,7 +32,7 @@
 				<%if(status == "OK") {
 				
 				%>
-					<%=duration%> ms
+					<%=duration%> s
 				<%
 				  } else {
 					  for(int i = 0; i < exceptions.size(); i++) {
