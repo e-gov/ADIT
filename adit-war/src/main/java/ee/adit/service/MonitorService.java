@@ -426,11 +426,12 @@ public class MonitorService {
 	/**
 	 * Tests "saveDocument" request.
 	 * 
-	 * @param documentID test document ID
 	 * @return test result
 	 */
 	public MonitorResult saveDocumentCheck() {
 		MonitorResult result = new MonitorResult();
+		
+		LOG.info("Testing 'saveDocument' request...");
 		
 		double duration = 0;
 		Date start = new Date();
@@ -532,8 +533,15 @@ public class MonitorService {
 		return result;
 	}
 	
+	/**
+	 * Tests "getDocument" request.
+	 * 
+	 * @return test result
+	 */
 	public MonitorResult getDocumentCheck() {
 		MonitorResult result = new MonitorResult();
+		
+		LOG.info("Testing 'getDocument' request...");
 		
 		double duration = 0;
 		Date start = new Date();
@@ -592,6 +600,19 @@ public class MonitorService {
 		
 		return result;
 		
+	}
+	
+	/**
+	 * Tests if documents are sent to DVK client.
+	 * 
+	 * @return test result
+	 */
+	public MonitorResult checkDvkSend(){
+		MonitorResult result = new MonitorResult();
+		
+		LOG.info("Testing DVK sending...");
+		
+		return result;
 	}
 	
 	/**
