@@ -43,4 +43,3 @@ INSERT INTO &&ADIT_SCHEMA..document_file (
   'text/plain',
   100
 );
-/
