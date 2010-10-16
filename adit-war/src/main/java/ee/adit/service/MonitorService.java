@@ -573,8 +573,10 @@ public class MonitorService {
 			customXTeeConsumer.setServiceConfiguration(xTeeServiceConfiguration);
 			customXTeeConsumer.setMsgCallbackFactory(new CustomMessageCallbackFactory());
 			
-			GetDocumentResponse response = (GetDocumentResponse) customXTeeConsumer.sendRequest(request);
-
+			
+			List<XTeeAttachment> attachments = new ArrayList<XTeeAttachment>();
+			GetDocumentResponse response = (GetDocumentResponse) customXTeeConsumer.sendRequest(request, attachments);
+			
 			Date end = new Date();
 			long endTime = end.getTime();
 			duration = (endTime - startTime) / 1000.0;
