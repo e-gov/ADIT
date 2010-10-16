@@ -1,4 +1,4 @@
-INSERT INTO adit_user (
+INSERT INTO &&ADIT_SCHEMA..adit_user (
   user_code,
   usertype
 ) VALUES (
@@ -6,7 +6,7 @@ INSERT INTO adit_user (
   'person'
 );
 
-INSERT INTO remote_application (
+INSERT INTO &&ADIT_SCHEMA..remote_application (
 	short_name,
 	organization_code,
 	can_read,
@@ -18,7 +18,7 @@ INSERT INTO remote_application (
 	1
 );
 
-INSERT INTO document (
+INSERT INTO &&ADIT_SCHEMA..document (
   ID,
   title,
   type,
@@ -30,7 +30,7 @@ INSERT INTO document (
   'EE00000000000'
 );
 
-INSERT INTO document_file (
+INSERT INTO &&ADIT_SCHEMA..document_file (
   id,
   document_id,
   file_name,
