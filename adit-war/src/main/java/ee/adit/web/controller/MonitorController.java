@@ -24,8 +24,6 @@ public class MonitorController extends AbstractController {
 	
 	private Configuration configuration;
 	
-	private MonitorConfiguration monitorConfiguration;
-	
 	public MonitorController() {
 		LOG.info("MONITORCONTROLLER created.");
 	}
@@ -43,7 +41,7 @@ public class MonitorController extends AbstractController {
 			LOG.error("getMonitorService() == null");
 		if(getConfiguration() == null)
 			LOG.error("getConfiguration() == null");
-		MonitorResult saveDocumentCheckResult = this.getMonitorService().saveDocumentCheck(getMonitorConfiguration().getTestDocumentId());
+		MonitorResult saveDocumentCheckResult = this.getMonitorService().saveDocumentCheck();
 		
 		
 		
@@ -92,14 +90,6 @@ public class MonitorController extends AbstractController {
 
 	public void setConfiguration(Configuration configuration) {
 		this.configuration = configuration;
-	}
-
-	public MonitorConfiguration getMonitorConfiguration() {
-		return monitorConfiguration;
-	}
-
-	public void setMonitorConfiguration(MonitorConfiguration monitorConfiguration) {
-		this.monitorConfiguration = monitorConfiguration;
 	}
 	
 }

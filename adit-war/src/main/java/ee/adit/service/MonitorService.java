@@ -3,35 +3,25 @@ package ee.adit.service;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.StringReader;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.activation.DataHandler;
-import javax.activation.DataSource;
-import javax.activation.FileDataSource;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPConstants;
-import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 
 import dvk.api.ml.PojoMessage;
-import dvk.api.ml.PojoSettings;
-
 import ee.adit.dao.DocumentDAO;
 import ee.adit.dao.dvk.DvkDAO;
 import ee.adit.dao.pojo.Document;
@@ -43,7 +33,6 @@ import ee.adit.pojo.OutputDocumentFile;
 import ee.adit.pojo.SaveDocumentRequest;
 import ee.adit.pojo.SaveDocumentRequestAttachment;
 import ee.adit.pojo.SaveDocumentRequestDocument;
-import ee.adit.pojo.SaveDocumentResponse;
 import ee.adit.pojo.SaveDocumentResponseMonitor;
 import ee.adit.util.Configuration;
 import ee.adit.util.CustomMessageCallbackFactory;
@@ -52,10 +41,7 @@ import ee.adit.util.CustomXTeeServiceConfiguration;
 import ee.adit.util.MonitorConfiguration;
 import ee.adit.util.NagiosLogger;
 import ee.adit.util.Util;
-import ee.webmedia.xtee.client.service.SimpleXTeeServiceConfiguration;
-import ee.webmedia.xtee.client.service.StandardXTeeConsumer;
 import ee.webmedia.xtee.client.service.XTeeAttachment;
-import ee.webmedia.xtee.client.service.XTeeServiceConfiguration;
 
 /**
  * 
@@ -443,7 +429,7 @@ public class MonitorService {
 	 * @param documentID test document ID
 	 * @return test result
 	 */
-	public MonitorResult saveDocumentCheck(Long documentID) {
+	public MonitorResult saveDocumentCheck() {
 		MonitorResult result = new MonitorResult();
 		
 		double duration = 0;
@@ -462,7 +448,7 @@ public class MonitorService {
 			
 			SaveDocumentRequestAttachment requestAttachment = new SaveDocumentRequestAttachment();
 			requestAttachment.setDocumentType(DocumentService.DocType_Letter);
-			requestAttachment.setId(documentID);		
+			requestAttachment.setId(this.getMonitorConfiguration().getTestDocumentId());		
 			String newTitle = Util.dateToXMLDate(new Date());
 			requestAttachment.setTitle(newTitle);
 			

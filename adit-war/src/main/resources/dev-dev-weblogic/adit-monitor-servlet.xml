@@ -759,7 +759,6 @@
 	<bean id="monitorController" class="ee.adit.web.controller.MonitorController">
 		<property name="monitorService" ref="monitorService" />
 		<property name="configuration" ref="configuration" />
-		<property name="monitorConfiguration" ref="monitorConfiguration" />
 	</bean>
 
 	<bean id="monitorService" class="ee.adit.service.MonitorService">
