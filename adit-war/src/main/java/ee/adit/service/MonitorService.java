@@ -581,7 +581,7 @@ public class MonitorService {
 			
 			GetDocumentResponseMonitor response = (GetDocumentResponseMonitor) customXTeeConsumer.sendRequest(request);
 			
-			LOG.info("Attachment saved to temporary file: ", interceptor.getTmpFile());
+			LOG.info("Attachment saved to temporary file: " + interceptor.getTmpFile());
 			
 			Date end = new Date();
 			long endTime = end.getTime();
