@@ -41,13 +41,12 @@ public class MonitorController extends AbstractController {
 		
 		try {
 			
-			// 1. X-tee päringud
 			if(getMonitorService() == null)
 				LOG.error("getMonitorService() == null");
 			if(getConfiguration() == null)
 				LOG.error("getConfiguration() == null");
 			
-			// 1. saveDocument request
+			// 1. SAVE_DOCUMENT
 			MonitorResult saveDocumentCheckResult = this.getMonitorService().saveDocumentCheck();
 			saveDocumentCheckResult.setDurationString(df.format(saveDocumentCheckResult.getDuration()));
 			if(saveDocumentCheckResult.isSuccess()) {
@@ -60,7 +59,7 @@ public class MonitorController extends AbstractController {
 			}
 			results.add(saveDocumentCheckResult);
 			
-			// 2. getDocument request
+			// 2. GET_DOCUMENT
 			MonitorResult getDocumentCheckResult = this.getMonitorService().getDocumentCheck();
 			getDocumentCheckResult.setDurationString(df.format(getDocumentCheckResult.getDuration()));
 			if(getDocumentCheckResult.isSuccess()) {
@@ -73,8 +72,18 @@ public class MonitorController extends AbstractController {
 			}
 			results.add(getDocumentCheckResult);
 			
-			
-			
+			// 3. DVK_SEND
+			MonitorResult dvkSendCheckResult = this.getMonitorService().checkDvkSend()();
+			dvkSendCheckResult.setDurationString(df.format(dvkSendCheckResult.getDuration()));
+			if(dvkSendCheckResult.isSuccess()) {
+				dvkSendCheckResult.setStatusString(MonitorService.OK);
+			} else {
+				dvkSendCheckResult.setStatusString(MonitorService.FAIL);
+			}
+			if(dvkSendCheckResult.getExceptions() != null && dvkSendCheckResult.getExceptions().size() > 0) {
+				dvkSendCheckResult.setExceptionString(dvkSendCheckResult.getExceptions().get(0));
+			}
+			results.add(dvkSendCheckResult);
 			
 			
 			// 2. ADIT -> DVK
