@@ -20,7 +20,8 @@ public class DocumentSharing implements java.io.Serializable {
 	private String taskDescription;
 	private Date creationDate;
 	private Date lastAccessDate;
-
+	private Date dvkSendDate;
+	
 	public DocumentSharing() {
 	}
 
@@ -127,6 +128,14 @@ public class DocumentSharing implements java.io.Serializable {
 
 	public void setLastAccessDate(Date lastAccessDate) {
 		this.lastAccessDate = lastAccessDate;
+	}
+
+	public Date getDvkSendDate() {
+		return dvkSendDate;
+	}
+
+	public void setDvkSendDate(Date dvkSendDate) {
+		this.dvkSendDate = dvkSendDate;
 	}
 
 }

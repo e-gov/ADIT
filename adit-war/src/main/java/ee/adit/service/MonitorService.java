@@ -682,9 +682,9 @@ public class MonitorService {
 	 */
 	public MonitorResult checkDvkSend(){
 		MonitorResult result = new MonitorResult();
-		result.setComponent("DVK_SEND");
+		result.setComponent("ADIT_TO_DVK_CLIENT_SEND");
 		
-		LOG.info("Testing DVK sending...");
+		LOG.info("Testing ADIT_TO_DVK_CLIENT_SEND...");
 		
 		double duration = 0;
 		boolean success = false;
@@ -716,16 +716,89 @@ public class MonitorService {
 			Date end = new Date();
 			long endTime = end.getTime();
 			duration = (endTime - startTime) / 1000.0;
-			
 			result.setDuration(duration);
 			
 		} catch(Exception e) {
-			LOG.error("Error while testing DVK_SEND: ", e);
+			LOG.error("Error while testing ADIT_TO_DVK_CLIENT_SEND: ", e);
 			result.setSuccess(false);
 			List<String> exceptions = new ArrayList<String>();
 			exceptions.add(e.getMessage());
 			result.setExceptions(exceptions);
 		}
+		
+		return result;
+	}
+	
+	/**
+	 * TODO
+	 * @return
+	 */
+	public MonitorResult checkDvkClientToDvkSend() {
+		MonitorResult result = new MonitorResult();
+		result.setComponent("DVK_CLIENT_TO_DVK_SEND");
+		
+		double duration = 0;
+		boolean success = false;
+		Date start = new Date();
+		long startTime = start.getTime();
+		
+		try {
+			
+			// Check if there are documents that are not being sent to DVK server
+			// That can not be checked because DVK client does not record the time
+			// when the message was created.
+			
+			// 1. Get the number of messages sent to DVK client from ADIT yesterday.
+			
+			
+			// 2. Get the number of messages sent to DVK server from DVK client yesterday.
+			
+			Date end = new Date();
+			long endTime = end.getTime();
+			duration = (endTime - startTime) / 1000.0;
+			result.setDuration(duration);
+			
+		} catch(Exception e) {
+			LOG.error("Error while testing DVK_CLIENT_TO_DVK_SEND: ", e);
+			result.setSuccess(false);
+			List<String> exceptions = new ArrayList<String>();
+			exceptions.add(e.getMessage());
+			result.setExceptions(exceptions);
+		}
+		
+		
+		return result;
+	}
+	
+	public MonitorResult checkDvkClientToAditSend() {
+		MonitorResult result = new MonitorResult();
+		result.setComponent("DVK_CLIENT_TO_ADIT_SEND");
+		
+		double duration = 0;
+		boolean success = false;
+		Date start = new Date();
+		long startTime = start.getTime();
+		
+		try {
+			
+			// Check if there are documents in the DVK client database that are
+			// not read into ADIT database.
+			
+			// select * from dvk_client.dhl_message where 
+			
+			Date end = new Date();
+			long endTime = end.getTime();
+			duration = (endTime - startTime) / 1000.0;
+			result.setDuration(duration);
+			
+		} catch(Exception e) {
+			LOG.error("Error while testing DVK_CLIENT_TO_ADIT_SEND: ", e);
+			result.setSuccess(false);
+			List<String> exceptions = new ArrayList<String>();
+			exceptions.add(e.getMessage());
+			result.setExceptions(exceptions);
+		}
+		
 		
 		return result;
 	}
