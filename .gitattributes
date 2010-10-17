@@ -460,5 +460,3 @@ adit-war/src/main/webapp/WEB-INF/web.xml -text
 adit-war/src/main/webapp/index.jsp -text
 adit-war/src/main/webapp/monitor.jsp -text
 /pom.xml -text
-src/main/webapp/META-INF/application.xml -text
-src/main/webapp/META-INF/weblogic-application.xml -text
