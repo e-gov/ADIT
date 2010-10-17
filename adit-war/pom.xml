@@ -392,6 +392,7 @@
 					<include>adit-datasource.xml</include>
 					<include>adit-jobs.xml</include>
 					<include>adit-services.xml</include>
+					<include>adit-endpoints.xml</include>
 				</includes>
 			</resource>
 
