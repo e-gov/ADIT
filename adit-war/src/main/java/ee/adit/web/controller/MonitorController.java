@@ -73,7 +73,7 @@ public class MonitorController extends AbstractController {
 			results.add(getDocumentCheckResult);
 			
 			// 3. DVK_SEND
-			MonitorResult dvkSendCheckResult = this.getMonitorService().checkDvkSend()();
+			MonitorResult dvkSendCheckResult = this.getMonitorService().checkDvkSend();
 			dvkSendCheckResult.setDurationString(df.format(dvkSendCheckResult.getDuration()));
 			if(dvkSendCheckResult.isSuccess()) {
 				dvkSendCheckResult.setStatusString(MonitorService.OK);
