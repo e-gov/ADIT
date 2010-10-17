@@ -922,6 +922,7 @@ public class DocumentService {
 										.getDocumentSharingType())) {
 							documentSharing
 									.setDocumentDvkStatus(DVKStatus_Sending);
+							documentSharing.setDvkSendDate(new Date());
 							session.saveOrUpdate(documentSharing);
 							LOG.debug("DocumentSharing status updated to: '"
 									+ DVKStatus_Sending + "'.");
