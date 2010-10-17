@@ -7,7 +7,28 @@
 <title>Adit Service</title>
 </head>
 
+<%
+	String requestURL = "/adit";
+	try {
+		requestURL = request.getRequestURL().toString();
+	} catch (Exception e) {
+		;
+	}
+%>
+
 <body>
 	<h1>Adit Service</h1>
+	
+	<table style="border: 1px solid #000; border-collapse: collapse;">
+		<tr>
+			<td style="border: 1px solid #000;"><b style="margin: 6px;">ADIT service</b></td>
+			<td style="border: 1px solid #000;"><span style="margin: 6px;"><%=requestURL%>/service</span></td>
+		</tr>
+		<tr>
+			<td style="border: 1px solid #000;"><b style="margin: 6px;">ADIT monitor</b></td>
+			<td style="border: 1px solid #000;"><span style="margin: 6px;"><%=requestURL%>/monitor</span></td>
+		</tr>
+	</table>
+	
 </body>
 </html>
