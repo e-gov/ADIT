@@ -397,12 +397,6 @@ adit-war/src/main/resources/dev-dev-weblogic/adit-configuration.xml -text
 adit-war/src/main/resources/dev-dev-weblogic/log4j.xml -text
 adit-war/src/main/resources/dev-dev-weblogic/nsca_send_clear.cfg -text
 adit-war/src/main/resources/dev-dev-weblogic/xtee.properties -text
-adit-war/src/main/resources/dev-dev/adit-servlet.xml -text
-adit-war/src/main/resources/dev-dev/hibernate_ora_dvk.cfg.xml -text
-adit-war/src/main/resources/dev-dev/jdigidoc.cfg -text
-adit-war/src/main/resources/dev-dev/log4j.xml -text
-adit-war/src/main/resources/dev-dev/nsca_send_clear.cfg -text
-adit-war/src/main/resources/dev-dev/xtee.properties -text
 adit-war/src/main/resources/dvkapi/Counter.hbm.xml -text
 adit-war/src/main/resources/dvkapi/Message.hbm.xml -text
 adit-war/src/main/resources/dvkapi/MessageRecipient.hbm.xml -text
