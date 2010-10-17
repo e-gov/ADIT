@@ -553,6 +553,7 @@ public class MonitorService {
 		LOG.info("Testing 'getDocument' request...");
 		
 		double duration = 0;
+		boolean success = false;
 		Date start = new Date();
 		long startTime = start.getTime();
 		
@@ -587,16 +588,21 @@ public class MonitorService {
 			
 			GetDocumentResponseMonitor response = (GetDocumentResponseMonitor) customXTeeConsumer.sendRequest(request);
 			
-			
+			OutputDocument document = null;
 			
 			if(interceptor.getTmpFile() != null) {
 				LOG.info("Attachment saved to temporary file: " + interceptor.getTmpFile());
-				
 				Source unmarshalSource = new SAXSource(new InputSource(new FileInputStream(interceptor.getTmpFile())));
+				document = (OutputDocument) getUnmarshaller().unmarshal(unmarshalSource);
+			}
+			
+			if(document != null) {
+				Date documentLastChangedDateTitle = Util.xmlDateToDate(document.getTitle());
 				
-				OutputDocument document = (OutputDocument) getUnmarshaller().unmarshal(unmarshalSource);
+				OutputDocumentFile documentFile = document.getFiles().getFiles().get(0);
+				File file = new File(documentFile.getSysTempFile());
 				
-				LOG.info("Document ID: " + document.getId());
+				String fileContents = Util.getFileContents();
 				
 			}
 			
@@ -607,7 +613,7 @@ public class MonitorService {
 			
 			// Populate result
 			result.setDuration(duration);
-			result.setSuccess(response.isSuccess());
+			result.setSuccess(success);
 			
 			if(!result.isSuccess()) {
 				// TODO

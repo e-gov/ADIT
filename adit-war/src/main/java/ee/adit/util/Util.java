@@ -17,6 +17,7 @@ import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.Date;
 import java.util.StringTokenizer;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Random;
 import java.util.regex.Matcher;
@@ -580,6 +581,18 @@ public class Util {
 	public static String dateToXMLDate(Date date) {
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-d'T'HH:mm:ss");
 		return df.format(date);
+	}
+	
+	/**
+	 * Converts an XML date to Date.
+	 * 
+	 * @param date in XML format
+	 * @return date
+	 * @throws ParseException 
+	 */
+	public static Date xmlDateToDate(String xmlDate) throws ParseException {
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-d'T'HH:mm:ss");
+		return df.parse(xmlDate);
 	}
 	
 	/**
@@ -1190,6 +1203,10 @@ public class Util {
 
         is.close();
         return bytes;
+    }
+    
+    public String getFileContents(File f) throws IOException {
+    	return new String(getBytesFromFile(f), "UTF-8");
     }
     
 }
