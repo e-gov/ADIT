@@ -592,7 +592,7 @@ public class MonitorService {
 			if(interceptor.getTmpFile() != null) {
 				LOG.info("Attachment saved to temporary file: " + interceptor.getTmpFile());
 				
-				Source unmarshalSource = new SAXSource(new InputSource(new FileInputStream(interceptor.getTmpFile()));
+				Source unmarshalSource = new SAXSource(new InputSource(new FileInputStream(interceptor.getTmpFile())));
 				
 				OutputDocument document = (OutputDocument) getUnmarshaller().unmarshal(unmarshalSource);
 				
