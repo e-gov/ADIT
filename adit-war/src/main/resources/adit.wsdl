@@ -4,6 +4,7 @@
 	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
 	xmlns:tns="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
 	xmlns:xtee="http://x-tee.riik.ee/xsd/xtee.xsd"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	targetNamespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid">
 
 	<wsdl:types>
@@ -13,22 +14,22 @@
 			targetNamespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid">
 			<import namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
 				schemaLocation="http://x-tee.riik.ee/xsd/xtee.xsd" />
-			<annotation>
-				<documentation xml:lang="ee">
+			<xs:annotation>
+				<xs:documentation xml:lang="ee">
 					ADIT(Avalike Dokumentide Infrastruktuuri Teenus) päringutes kasutatavate
 					andmete kirjeldus.
 					Dokument sisaldab nii (SOAP) päringute keha elementide kui ka päringute
 					manustes kasutatavate andmete kirjeldusi.
 					Litsenseeritud [LITSENTS] alusel.
-		  	</documentation>
-				<documentation xml:lang="en">
+		  		</xs:documentation>
+				<xs:documentation xml:lang="en">
 					Describes datatypes used in ADIT(Infrastructure Service for Public
 					Documents) requests.
 					The Documents containts both the datatypes used in (SOAP) request body
 					elements and attachments.
 					Licensed under [LICENSE].
-		  	</documentation>
-			</annotation>
+		  		</xs:documentation>
+			</xs:annotation>
 
 			<element name="joinRequest" type="tns:joinRequest" />
 			<element name="joinResponse" type="tns:joinResponse" />
@@ -76,7 +77,7 @@
 			<element name="sendDocumentResponse" type="tns:sendDocumentResponse" />
 
 			<element name="success" type="boolean">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Näitab, kas päring õnnestus
 					</documentation>
 					<documentation xml:lang="en">Indicates if the request was
@@ -85,7 +86,7 @@
 			</element>
 
 			<attribute name="href" type="string">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Viide manusele
 					</documentation>
 					<documentation xml:lang="en">Attachment reference
@@ -94,7 +95,7 @@
 			</attribute>
 
 			<complexType name="message">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Teade</documentation>
 					<documentation xml:lang="en">Message</documentation>
 				</annotation>
@@ -106,7 +107,7 @@
 			</complexType>
 
 			<complexType name="arrayOfMessage">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Teadete massiiv
 					</documentation>
 					<documentation xml:lang="en">Array of messages
@@ -119,7 +120,7 @@
 			</complexType>
 
 			<complexType name="arrayOfFileId">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Failide identifikaatorite
 						massiiv</documentation>
 					<documentation xml:lang="en">Array of file identificators
@@ -128,7 +129,7 @@
 				<sequence>
 					<element maxOccurs="unbounded" minOccurs="0" name="file_id"
 						type="integer">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Faili identifikaator
 							</documentation>
 							<documentation xml:lang="en">File identificator
@@ -139,7 +140,7 @@
 			</complexType>
 
 			<complexType name="arrayOfDocumentType">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Dokumendi tüüpide massiiv
 					</documentation>
 					<documentation xml:lang="en">Array of document types
@@ -148,7 +149,7 @@
 				<sequence>
 					<element maxOccurs="unbounded" minOccurs="0" name="document_type"
 						type="string">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Dokumendi tüüp
 							</documentation>
 							<documentation xml:lang="en">Document type
@@ -159,7 +160,7 @@
 			</complexType>
 
 			<complexType name="arrayOfDocumentDvkStatus">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Dokumendi
 						DVK(Dokumendivahetuskeskus) staatuste identifikaatorite massiiv
 					</documentation>
@@ -169,7 +170,7 @@
 				<sequence>
 					<element maxOccurs="unbounded" minOccurs="0" name="status_id"
 						type="integer">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Dokumendi
 								DVK(Dokumendivahetuskeskus) staatuse identifikaator
 							</documentation>
@@ -181,7 +182,7 @@
 			</complexType>
 
 			<complexType name="arrayOfDocumentWorkflowStatus">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Dokumendi töövoo staatuste
 						identifikaatorite massiiv</documentation>
 					<documentation xml:lang="en">Array of document workflow
@@ -190,7 +191,7 @@
 				<sequence>
 					<element maxOccurs="unbounded" minOccurs="0" name="status_id"
 						type="integer">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Dokumendi töövoo staatuse
 								identifikaator</documentation>
 							<documentation xml:lang="en">Document workflow status
@@ -201,7 +202,7 @@
 			</complexType>
 
 			<complexType name="arrayOfCreatorApplication">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Dokumendi loomiseks kasutatud
 						infosüsteemide lühinimede massiiv</documentation>
 					<documentation xml:lang="en">Array of the names of the
@@ -210,7 +211,7 @@
 				<sequence>
 					<element maxOccurs="unbounded" minOccurs="0"
 						name="creator_application" type="string">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Dokumendi loomiseks
 								kasutatud infosüsteemi lühinimi</documentation>
 							<documentation xml:lang="en">Name of the application
@@ -221,7 +222,7 @@
 			</complexType>
 
 			<complexType name="arrayOfUserCode">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Kasutajakoodide massiiv
 					</documentation>
 					<documentation xml:lang="en">Array of user codes
@@ -230,7 +231,7 @@
 				<sequence>
 					<element maxOccurs="unbounded" minOccurs="0" name="code"
 						type="string">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Kasutajakood
 							</documentation>
 							<documentation xml:lang="en">User codes</documentation>
@@ -240,7 +241,7 @@
 			</complexType>
 
 			<complexType name="recipientStatus">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Vastuvõtja(adressaat) staatus
 					</documentation>
 					<documentation xml:lang="en">Recipient status
@@ -248,7 +249,7 @@
 				</annotation>
 				<sequence>
 					<element name="code" type="string">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Vastuvõtja(adressaadi) kood
 							</documentation>
 							<documentation xml:lang="en">Recipient code
@@ -261,7 +262,7 @@
 			</complexType>
 
 			<complexType name="arrayOfRecipientStatus">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Vastuvõtja(adressaadi)
 						staatuste massiiv</documentation>
 					<documentation xml:lang="en">Array of recipient statuses
@@ -274,13 +275,13 @@
 			</complexType>
 
 			<complexType name="notification">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Teavitus</documentation>
 					<documentation xml:lang="en">Notification</documentation>
 				</annotation>
 				<sequence>
 					<element name="type" type="string">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Teavituse tüüp
 							</documentation>
 							<documentation xml:lang="en">Notification type
@@ -288,7 +289,7 @@
 						</annotation>
 					</element>
 					<element name="active" type="boolean">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Näitab, kas teavituse tüüp
 								on aktiivne</documentation>
 							<documentation xml:lang="en">Indicates if the
@@ -299,7 +300,7 @@
 			</complexType>
 
 			<complexType name="arrayOfNotification">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Teavituste massiiv
 					</documentation>
 					<documentation xml:lang="en">Array of notifications
@@ -312,7 +313,7 @@
 			</complexType>
 
 			<complexType name="emailAddress">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">E-posti aadress
 					</documentation>
 					<documentation xml:lang="en">E-mail address
@@ -320,7 +321,7 @@
 				</annotation>
 				<sequence>
 					<element name="address" type="string">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">E-posti aadress
 							</documentation>
 							<documentation xml:lang="en">E-mail address
@@ -328,7 +329,7 @@
 						</annotation>
 					</element>
 					<element name="redirected_to" type="string">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Suunamise e-posti aadress
 							</documentation>
 							<documentation xml:lang="en">Redirection e-mail address
@@ -339,7 +340,7 @@
 			</complexType>
 
 			<complexType name="arrayOfEmailAddress">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">E-posti aadresside massiiv
 					</documentation>
 					<documentation xml:lang="en">Array of e-mail addresses
@@ -352,21 +353,21 @@
 			</complexType>
 
 			<complexType name="joinRequest">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Päring "join"</documentation>
 					<documentation xml:lang="en">"join" request
 					</documentation>
 				</annotation>
 				<sequence>
 					<element name="userType" type="string">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Kasutajatüüp
 							</documentation>
 							<documentation xml:lang="en">Usertype</documentation>
 						</annotation>
 					</element>
 					<element name="userName" type="string">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Kasutajanimi
 							</documentation>
 							<documentation xml:lang="en">Username</documentation>
@@ -375,7 +376,7 @@
 				</sequence>
 			</complexType>
 			<complexType name="joinResponse">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Päringu "join" vastus
 					</documentation>
 					<documentation xml:lang="en">"join" request response
@@ -389,7 +390,7 @@
 
 			<!-- unJoin päringu tüübid -->
 			<complexType name="unJoinRequest">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Päring "unJoin"
 					</documentation>
 					<documentation xml:lang="en">"unJoin" request
@@ -398,7 +399,7 @@
 				<sequence />
 			</complexType>
 			<complexType name="unJoinResponse">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Päringu "unJoin" vastus
 					</documentation>
 					<documentation xml:lang="en">"unJoin" request response
@@ -412,7 +413,7 @@
 
 			<!-- getUserInfo päringu tüübid -->
 			<complexType name="getUserInfoRequest">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Päring "getUserInfo"
 					</documentation>
 					<documentation xml:lang="en">"getUserInfo" request
@@ -420,7 +421,7 @@
 				</annotation>
 				<sequence>
 					<element name="userList">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Kasutajate massiiv
 							</documentation>
 							<documentation xml:lang="en">Array of users
@@ -433,7 +434,7 @@
 				</sequence>
 			</complexType>
 			<complexType name="getUserInfoResponse">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Päringu "getUserInfo" vastus
 					</documentation>
 					<documentation xml:lang="en">"getUserInfo" request
@@ -443,7 +444,7 @@
 					<element ref="tns:success" />
 					<element name="messages" type="tns:arrayOfMessage" />
 					<element name="userList">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Kasutajate andmete massiiv
 							</documentation>
 							<documentation xml:lang="en">Array of user data
@@ -458,7 +459,7 @@
 
 			<!-- getJoined päringu tüübid -->
 			<complexType name="getJoinedRequest">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Päring "getJoined"
 					</documentation>
 					<documentation xml:lang="en">"getJoined" request
@@ -467,7 +468,7 @@
 				<sequence>
 					<element maxOccurs="1" minOccurs="0" name="maxResults"
 						type="integer">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Makimaalne tagastatavate
 								tulemuste arv</documentation>
 							<documentation xml:lang="en">Maximum number of results
@@ -476,7 +477,7 @@
 					</element>
 					<element maxOccurs="1" minOccurs="0" name="startIndex"
 						type="integer">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Tagastatavate tulemuste
 								algusindeks</documentation>
 							<documentation xml:lang="en">Offset(starting index) of
@@ -486,7 +487,7 @@
 				</sequence>
 			</complexType>
 			<complexType name="getJoinedResponse">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Päringu "getJoined" vastus
 					</documentation>
 					<documentation xml:lang="en">"getJoined" request response
@@ -496,7 +497,7 @@
 					<element ref="tns:success" />
 					<element name="messages" type="tns:arrayOfMessage" />
 					<element name="userList">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Kasutajate andmete massiiv
 							</documentation>
 							<documentation xml:lang="en">Array of user data
@@ -511,7 +512,7 @@
 
 			<!-- getNotifications päringu tüübid -->
 			<complexType name="getNotificationsRequest">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Päring "getNotifications"
 					</documentation>
 					<documentation xml:lang="en">"getNotifications" request
@@ -520,7 +521,7 @@
 				<sequence />
 			</complexType>
 			<complexType name="getNotificationsResponse">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Päringu "getNotifications"
 						vastus</documentation>
 					<documentation xml:lang="en">"getNotifications" request
@@ -532,7 +533,7 @@
 					<element name="notifications" nillable="false"
 						type="tns:arrayOfNotification" />
 					<element name="notifications_active" type="boolean">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Näitab, kas kasutajal on
 								teavitused aktiivsed</documentation>
 							<documentation xml:lang="en">Indicates if notifications
@@ -545,7 +546,7 @@
 
 			<!-- setNotifications päringu tüübid -->
 			<complexType name="setNotificationsRequest">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Päring "setNotifications"
 					</documentation>
 					<documentation xml:lang="en">"setNotifications" request
@@ -557,7 +558,7 @@
 				</sequence>
 			</complexType>
 			<complexType name="setNotificationsResponse">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Päringu "setNotifications"
 						vastus</documentation>
 					<documentation xml:lang="en">"setNotifications" request
@@ -570,7 +571,7 @@
 			</complexType>
 
 			<complexType name="getDocumentListRequest">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Päring "getDocumentList"
 					</documentation>
 					<documentation xml:lang="en">"getDocumentList" request
@@ -578,7 +579,7 @@
 				</annotation>
 				<sequence>
 					<element name="folder" type="string">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Dokumentide kaust
 							</documentation>
 							<documentation xml:lang="en">Folder of documents
@@ -589,7 +590,7 @@
 					<element name="document_dvk_statuses" type="tns:arrayOfDocumentDvkStatus" />
 					<element name="document_workflow_statuses" type="tns:arrayOfDocumentWorkflowStatus" />
 					<element name="has_been_viewed" type="boolean">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Näitab, kas antud dokumenti
 								on vaadatud</documentation>
 							<documentation xml:lang="en">Indicates if the document
@@ -597,7 +598,7 @@
 						</annotation>
 					</element>
 					<element name="is_deflated" type="boolean">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Näitab, kas antud dokument
 								on arhiveeritud</documentation>
 							<documentation xml:lang="en">Indicates if the document
@@ -606,7 +607,7 @@
 					</element>
 					<element name="creator_applications" type="tns:arrayOfCreatorApplication" />
 					<element name="search_phrase" type="string">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Otsingufraas
 							</documentation>
 							<documentation xml:lang="en">Search phrase
@@ -614,7 +615,7 @@
 						</annotation>
 					</element>
 					<element name="max_results" type="integer">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Maksimaalne tulemuste arv
 							</documentation>
 							<documentation xml:lang="en">Maximum number of returned
@@ -622,7 +623,7 @@
 						</annotation>
 					</element>
 					<element name="start_index" type="integer">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Tagastatavate tulemuste
 								algusindeks</documentation>
 							<documentation xml:lang="en">Offset(starting index) of
@@ -632,7 +633,7 @@
 				</sequence>
 			</complexType>
 			<complexType name="getDocumentListResponse">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Päringu "getDocumentList"
 						vastus</documentation>
 					<documentation xml:lang="en">"getDocumentList" request
@@ -642,7 +643,7 @@
 					<element ref="tns:success" />
 					<element name="messages" type="tns:arrayOfMessage" />
 					<element name="documentList">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Dokumentide massiiv
 							</documentation>
 							<documentation xml:lang="en">Array of documents
@@ -657,7 +658,7 @@
 
 			<!-- getDocument päringu tüübid -->
 			<complexType name="getDocumentRequest">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Päring "getDocument"
 					</documentation>
 					<documentation xml:lang="en">"getDocument" request
@@ -665,7 +666,7 @@
 				</annotation>
 				<sequence>
 					<element name="document_id" type="integer">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Dokumendi identifikaator
 							</documentation>
 							<documentation xml:lang="en">Document identificator
@@ -673,7 +674,7 @@
 						</annotation>
 					</element>
 					<element name="include_file_contents" type="boolean">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Näitab, kas tagastatakse ka
 								failide sisu</documentation>
 							<documentation xml:lang="en">Indicates if the content of
@@ -683,7 +684,7 @@
 				</sequence>
 			</complexType>
 			<complexType name="getDocumentResponse">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Päringu "getDocument" vastus
 					</documentation>
 					<documentation xml:lang="en">"getDocument" request
@@ -693,7 +694,7 @@
 					<element ref="tns:success" />
 					<element name="messages" type="tns:arrayOfMessage" />
 					<element name="document">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Dokumendi andmed
 							</documentation>
 							<documentation xml:lang="en">Document data
@@ -708,7 +709,7 @@
 
 			<!-- getDocumentFile päringu tüübid -->
 			<complexType name="getDocumentFileRequest">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Päring "getDocumentFile"
 					</documentation>
 					<documentation xml:lang="en">"getDocumentFile" request
@@ -716,7 +717,7 @@
 				</annotation>
 				<sequence>
 					<element name="document_id" type="integer">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Dokumendi identifikaator
 							</documentation>
 							<documentation xml:lang="en">Document identificator
@@ -727,7 +728,7 @@
 				</sequence>
 			</complexType>
 			<complexType name="getDocumentFileResponse">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Päringu "getDocumentFile"
 						vastus</documentation>
 					<documentation xml:lang="en">"getDocumentFile" request
@@ -737,7 +738,7 @@
 					<element ref="tns:success" />
 					<element name="messages" type="tns:arrayOfMessage" />
 					<element name="files">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Failid</documentation>
 							<documentation xml:lang="en">Files</documentation>
 						</annotation>
@@ -750,7 +751,7 @@
 
 			<!-- saveDocument päringu tüübid -->
 			<complexType name="saveDocumentRequest">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Päring "saveDocument"
 					</documentation>
 					<documentation xml:lang="en">"saveDocument" request
@@ -758,7 +759,7 @@
 				</annotation>
 				<sequence>
 					<element name="document">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Dokument</documentation>
 							<documentation xml:lang="en">Document</documentation>
 						</annotation>
@@ -769,7 +770,7 @@
 				</sequence>
 			</complexType>
 			<complexType name="saveDocumentResponse">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Päringu "saveDocument" vastus
 					</documentation>
 					<documentation xml:lang="en">"saveDocument" request
@@ -780,7 +781,7 @@
 					<element name="messages" type="tns:arrayOfMessage" />
 					<element name="document_id" type="integer" />
 					<element name="document">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Dokument</documentation>
 							<documentation xml:lang="en">Document</documentation>
 						</annotation>
@@ -793,7 +794,7 @@
 
 			<!-- saveDocumentFile päringu tüübid -->
 			<complexType name="saveDocumentFileRequest">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Päring "saveDocumentFile"
 					</documentation>
 					<documentation xml:lang="en">"saveDocumentFile" request
@@ -801,7 +802,7 @@
 				</annotation>
 				<sequence>
 					<element name="document_id" type="integer">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Dokumendi identifikaator
 							</documentation>
 							<documentation xml:lang="en">Document identificator
@@ -809,7 +810,7 @@
 						</annotation>
 					</element>
 					<element name="file">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Fail</documentation>
 							<documentation xml:lang="en">File</documentation>
 						</annotation>
@@ -820,7 +821,7 @@
 				</sequence>
 			</complexType>
 			<complexType name="saveDocumentFileResponse">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Päringu "saveDocumentFile"
 						vastus</documentation>
 					<documentation xml:lang="en">"saveDocumentFile" request
@@ -830,7 +831,7 @@
 					<element ref="tns:success" />
 					<element name="messages" type="tns:arrayOfMessage" />
 					<element name="file_id" type="integer">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Faili identifikaator
 							</documentation>
 							<documentation xml:lang="en">File identificator
@@ -838,7 +839,7 @@
 						</annotation>
 					</element>
 					<element name="file">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Fail</documentation>
 							<documentation xml:lang="en">File</documentation>
 						</annotation>
@@ -851,7 +852,7 @@
 
 			<!-- deleteDocumentFile päringu tüübid -->
 			<complexType name="deleteDocumentFileRequest">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Päring "deleteDocumentFile"
 					</documentation>
 					<documentation xml:lang="en">"deleteDocumentFile" request
@@ -859,7 +860,7 @@
 				</annotation>
 				<sequence>
 					<element name="document_id" type="integer">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Dokumendi identifikaator
 							</documentation>
 							<documentation xml:lang="en">Document identificator
@@ -867,7 +868,7 @@
 						</annotation>
 					</element>
 					<element name="file_id" type="integer">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Faili identifikaator
 							</documentation>
 							<documentation xml:lang="en">File identificator
@@ -877,7 +878,7 @@
 				</sequence>
 			</complexType>
 			<complexType name="deleteDocumentFileResponse">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Päringu "deleteDocumentFile"
 						vastus</documentation>
 					<documentation xml:lang="en">"deleteDocumentFile" request
@@ -891,7 +892,7 @@
 
 			<!-- deleteDocument päringu tüübid -->
 			<complexType name="deleteDocumentRequest">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Päring "deleteDocument"
 					</documentation>
 					<documentation xml:lang="en">"deleteDocument" request
@@ -899,7 +900,7 @@
 				</annotation>
 				<sequence>
 					<element name="document_id" type="integer">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Dokumendi identifikaator
 							</documentation>
 							<documentation xml:lang="en">Document identificator
@@ -909,7 +910,7 @@
 				</sequence>
 			</complexType>
 			<complexType name="deleteDocumentResponse">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Päringu "deleteDocument"
 						vastus</documentation>
 					<documentation xml:lang="en">"deleteDocument" request
@@ -923,7 +924,7 @@
 
 			<!-- deflateDocument päringu tüübid -->
 			<complexType name="deflateDocumentRequest">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Päring "deflateDocument"
 					</documentation>
 					<documentation xml:lang="en">"deflateDocument" request
@@ -931,7 +932,7 @@
 				</annotation>
 				<sequence>
 					<element name="document_id" type="integer">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Dokumendi identifikaator
 							</documentation>
 							<documentation xml:lang="en">Document identificator
@@ -941,7 +942,7 @@
 				</sequence>
 			</complexType>
 			<complexType name="deflateDocumentResponse">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Päringu "deflateDocument"
 						vastus</documentation>
 					<documentation xml:lang="en">"deflateDocument" request
@@ -955,7 +956,7 @@
 
 			<!-- prepareSignature päringu tüübid -->
 			<complexType name="prepareSignatureRequest">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Päring "prepareSignature"
 					</documentation>
 					<documentation xml:lang="en">"prepareSignature" request
@@ -963,7 +964,7 @@
 				</annotation>
 				<sequence>
 					<element name="document_id" type="integer">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Dokumendi identifikaator
 							</documentation>
 							<documentation xml:lang="en">Document identificator
@@ -971,13 +972,13 @@
 						</annotation>
 					</element>
 					<element name="manifest" type="string">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Manifest</documentation>
 							<documentation xml:lang="en">Manifest</documentation>
 						</annotation>
 					</element>
 					<element name="country" type="string">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Allkirjastamise asukoht -
 								riik</documentation>
 							<documentation xml:lang="en">Signing location - country
@@ -985,7 +986,7 @@
 						</annotation>
 					</element>
 					<element name="state" type="string">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Allkirjastamise asukoht -
 								osariik</documentation>
 							<documentation xml:lang="en">Signing location - state
@@ -993,7 +994,7 @@
 						</annotation>
 					</element>
 					<element name="city" type="string">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Allkirjastamise asukoht -
 								linn</documentation>
 							<documentation xml:lang="en">Signing location - city
@@ -1001,7 +1002,7 @@
 						</annotation>
 					</element>
 					<element name="zip" type="string">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Allkirjastamise asukoht -
 								postikood</documentation>
 							<documentation xml:lang="en">Signing location - zip code
@@ -1009,7 +1010,7 @@
 						</annotation>
 					</element>
 					<element name="signer_certificate">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Allkirjastaja sertifikaat
 							</documentation>
 							<documentation xml:lang="en">Signer certificate
@@ -1022,7 +1023,7 @@
 				</sequence>
 			</complexType>
 			<complexType name="prepareSignatureResponse">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Päringu "prepareSignature"
 						vastus</documentation>
 					<documentation xml:lang="en">"prepareSignature" request
@@ -1032,7 +1033,7 @@
 					<element ref="tns:success" />
 					<element name="messages" type="tns:arrayOfMessage" />
 					<element name="signature_hash" type="string">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Allkirja räsi kood
 							</documentation>
 							<documentation xml:lang="en">Signature hash
@@ -1043,7 +1044,7 @@
 			</complexType>
 
 			<complexType name="confirmSignatureRequest">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Päring "confirmSignature"
 					</documentation>
 					<documentation xml:lang="en">"confirmSignature" request
@@ -1051,7 +1052,7 @@
 				</annotation>
 				<sequence>
 					<element name="document_id" type="integer">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Dokumendi identifikaator
 							</documentation>
 							<documentation xml:lang="en">Document identificator
@@ -1059,7 +1060,7 @@
 						</annotation>
 					</element>
 					<element name="signature">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Allkiri</documentation>
 							<documentation xml:lang="en">Signature</documentation>
 						</annotation>
@@ -1070,7 +1071,7 @@
 				</sequence>
 			</complexType>
 			<complexType name="confirmSignatureResponse">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Päringu "confirmSignature"
 						vastus</documentation>
 					<documentation xml:lang="en">"confirmSignature" request
@@ -1083,7 +1084,7 @@
 			</complexType>
 
 			<complexType name="shareDocumentRequest">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Päring "shareDocument"
 					</documentation>
 					<documentation xml:lang="en">"shareDocument" request
@@ -1091,7 +1092,7 @@
 				</annotation>
 				<sequence>
 					<element name="document_id" type="integer">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Dokumendi identifikaator
 							</documentation>
 							<documentation xml:lang="en">Document identificator
@@ -1100,7 +1101,7 @@
 					</element>
 					<element name="recipient_list" type="tns:arrayOfUserCode" />
 					<element name="reason_for_sharing" type="string">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Jagamise põhjus
 							</documentation>
 							<documentation xml:lang="en">Reason for sharing
@@ -1108,7 +1109,7 @@
 						</annotation>
 					</element>
 					<element name="shared_for_signing" type="boolean">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Näitab, kas jagamise
 								eesmärk on allkirjastamine</documentation>
 							<documentation xml:lang="en">Indicates if the document
@@ -1118,7 +1119,7 @@
 				</sequence>
 			</complexType>
 			<complexType name="shareDocumentResponse">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Päringu "shareDocument"
 						vastus</documentation>
 					<documentation xml:lang="en">"shareDocument" request
@@ -1133,7 +1134,7 @@
 
 			<!-- unShareDocument päringu tüübid -->
 			<complexType name="unShareDocumentRequest">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Päring "unShareDocument"
 					</documentation>
 					<documentation xml:lang="en">"unShareDocument" request
@@ -1141,7 +1142,7 @@
 				</annotation>
 				<sequence>
 					<element name="document_id" type="integer">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Dokumendi identifikaator
 							</documentation>
 							<documentation xml:lang="en">Document identificator
@@ -1152,7 +1153,7 @@
 				</sequence>
 			</complexType>
 			<complexType name="unShareDocumentResponse">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Päringu "unShareDocument"
 						vastus</documentation>
 					<documentation xml:lang="en">"unShareDocument" request
@@ -1167,7 +1168,7 @@
 
 			<!-- markDocumentViewed päringu tüübid -->
 			<complexType name="markDocumentViewedRequest">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Päring "markDocumentViewed"
 					</documentation>
 					<documentation xml:lang="en">"markDocumentViewed" request
@@ -1175,7 +1176,7 @@
 				</annotation>
 				<sequence>
 					<element name="document_id" type="integer">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Dokumendi identifikaator
 							</documentation>
 							<documentation xml:lang="en">Document identificator
@@ -1185,7 +1186,7 @@
 				</sequence>
 			</complexType>
 			<complexType name="markDocumentViewedResponse">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Päringu "markDocumentViewed"
 						vastus</documentation>
 					<documentation xml:lang="en">"markDocumentViewed" request
@@ -1199,7 +1200,7 @@
 
 			<!-- modifyStatus päringu tüübid -->
 			<complexType name="modifyStatusRequest">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Päring "modifyStatus"
 					</documentation>
 					<documentation xml:lang="en">"modifyStatus" request
@@ -1207,7 +1208,7 @@
 				</annotation>
 				<sequence>
 					<element name="document_id" type="integer">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Dokumendi identifikaator
 							</documentation>
 							<documentation xml:lang="en">Document identificator
@@ -1215,7 +1216,7 @@
 						</annotation>
 					</element>
 					<element name="document_status_id" type="integer">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Dokumendi staatuse
 								identifikaator</documentation>
 							<documentation xml:lang="en">Document status
@@ -1225,7 +1226,7 @@
 				</sequence>
 			</complexType>
 			<complexType name="modifyStatusResponse">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Päringu "modifyStatus" vastus
 					</documentation>
 					<documentation xml:lang="en">"modifyStatus" request
@@ -1239,7 +1240,7 @@
 
 			<!-- getDocumentHistory päringu tüübid -->
 			<complexType name="getDocumentHistoryRequest">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Päring "getDocumentHistory"
 					</documentation>
 					<documentation xml:lang="en">"getDocumentHistory" request
@@ -1247,7 +1248,7 @@
 				</annotation>
 				<sequence>
 					<element name="document_id" nillable="false" type="integer">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Dokumendi identifikaator
 							</documentation>
 							<documentation xml:lang="en">Document identificator
@@ -1257,7 +1258,7 @@
 				</sequence>
 			</complexType>
 			<complexType name="getDocumentHistoryResponse">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Päringu "getDocumentHistory"
 						vastus</documentation>
 					<documentation xml:lang="en">"getDocumentHistory" request
@@ -1267,7 +1268,7 @@
 					<element ref="tns:success" />
 					<element name="messages" type="tns:arrayOfMessage" />
 					<element name="document_history_list">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Dokumendi ajalookirjete
 								massiiv</documentation>
 							<documentation xml:lang="en">Array of document history
@@ -1282,7 +1283,7 @@
 
 			<!-- sendDocument päringu tüübid -->
 			<complexType name="sendDocumentRequest">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Päring "sendDocument"
 					</documentation>
 					<documentation xml:lang="en">"sendDocument" request
@@ -1290,7 +1291,7 @@
 				</annotation>
 				<sequence>
 					<element name="document_id" nillable="false" type="integer">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Dokumendi identifikaator
 							</documentation>
 							<documentation xml:lang="en">Document identificator
@@ -1301,7 +1302,7 @@
 				</sequence>
 			</complexType>
 			<complexType name="sendDocumentResponse">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Päringu "sendDocument" vastus
 					</documentation>
 					<documentation xml:lang="en">"sendDocument" request
@@ -1319,7 +1320,7 @@
 			<!-- getJoined attachments -->
 			<element name="user_list" type="tns:getJoinedResponseAttachmentType" />
 			<complexType name="getJoinedResponseAttachmentType">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Päringu "getJoined" vastuse
 						manus</documentation>
 					<documentation xml:lang="en">Attachment for request
@@ -1330,14 +1331,14 @@
 				</sequence>
 			</complexType>
 			<complexType name="getJoinedResponseAttachmentUserListType">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Kasutajate nimekiri
 					</documentation>
 					<documentation xml:lang="en">User list</documentation>
 				</annotation>
 				<sequence>
 					<element name="total" type="integer">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Tagastatavate tulemuste arv
 							</documentation>
 							<documentation xml:lang="en">Total number of results
@@ -1349,28 +1350,28 @@
 				</sequence>
 			</complexType>
 			<complexType name="getJoinedResponseAttachmentUserType">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Kasutaja andmed
 					</documentation>
 					<documentation xml:lang="en">User data</documentation>
 				</annotation>
 				<sequence>
 					<element name="code" type="string">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Kasutajakood
 							</documentation>
 							<documentation xml:lang="en">Usercode</documentation>
 						</annotation>
 					</element>
 					<element name="name" type="string">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Kasutajanimi
 							</documentation>
 							<documentation xml:lang="en">Username</documentation>
 						</annotation>
 					</element>
 					<element name="type" type="string">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Kasutaja tüüp
 							</documentation>
 							<documentation xml:lang="en">Usertype</documentation>
@@ -1383,7 +1384,7 @@
 			<!-- request -->
 			<element name="getUserInfoRequestAttachmentV1" type="tns:getUserInfoRequestAttachmentV1Type" />
 			<complexType name="getUserInfoRequestAttachmentV1Type">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Päringu "getUserInfo" manus
 					</documentation>
 					<documentation xml:lang="en">Attachment for request
@@ -1395,7 +1396,7 @@
 				</sequence>
 			</complexType>
 			<complexType name="getUserInfoRequestAttachmentV1UserListType">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Kasutajakoodide massiiv
 					</documentation>
 					<documentation xml:lang="en">Array of user codes
@@ -1403,7 +1404,7 @@
 				</annotation>
 				<sequence>
 					<element name="code" type="string">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Kasutajakood
 							</documentation>
 							<documentation xml:lang="en">Usercode</documentation>
@@ -1414,7 +1415,7 @@
 			<!-- response -->
 			<element name="getUserInfoResponseAttachmentV1" type="tns:getUserInfoResponseAttachmentV1Type" />
 			<complexType name="getUserInfoResponseAttachmentV1Type">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Päringu "getUserInfo" vastuse
 						manus</documentation>
 					<documentation xml:lang="en">Attachment for request
@@ -1426,21 +1427,21 @@
 				</sequence>
 			</complexType>
 			<complexType name="getUserInfoResponseAttachmentV1UserListType">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Kasutaja andmed
 					</documentation>
 					<documentation xml:lang="en">User data</documentation>
 				</annotation>
 				<sequence>
 					<element name="code" type="string">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Kasutajakood
 							</documentation>
 							<documentation xml:lang="en">Usercode</documentation>
 						</annotation>
 					</element>
 					<element name="has_joined" type="boolean">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Näitab, kas kasutaja on
 								teenusega liitunud</documentation>
 							<documentation xml:lang="en">Indicates if the user has
@@ -1448,7 +1449,7 @@
 						</annotation>
 					</element>
 					<element name="free_space_bytes" type="integer">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Kasutajakonto vaba ruum
 							</documentation>
 							<documentation xml:lang="en">Useraccount free space
@@ -1456,7 +1457,7 @@
 						</annotation>
 					</element>
 					<element name="used_space_bytes" type="integer">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Kasutajakonto kasutatud
 								ruum</documentation>
 							<documentation xml:lang="en">Useraccount used space
@@ -1464,7 +1465,7 @@
 						</annotation>
 					</element>
 					<element name="can_read" type="boolean">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Näitab, kas kasutajal on
 								lugemisõigus</documentation>
 							<documentation xml:lang="en">Indicates if the user has
@@ -1472,7 +1473,7 @@
 						</annotation>
 					</element>
 					<element name="can_write" type="boolean">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Näitab, kas kasutajal on
 								kirjutamisõigus</documentation>
 							<documentation xml:lang="en">Indicates if the user has
@@ -1480,7 +1481,7 @@
 						</annotation>
 					</element>
 					<element name="uses_dvk" type="boolean">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Näitab, kas kasutaja
 								kasutab dokumentide vahetamiseks DVK-d</documentation>
 							<documentation xml:lang="en">Indicates if the user uses
@@ -1493,7 +1494,7 @@
 			<!-- getDocument attachments -->
 			<element name="document" type="tns:getDocumentResponseAttachmentV1Type" />
 			<complexType name="getDocumentResponseAttachmentV1Type">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Päringu "getDocument" vastuse
 						manus</documentation>
 					<documentation xml:lang="en">Attachment for request
@@ -1501,7 +1502,7 @@
 				</annotation>
 				<sequence>
 					<element name="id" type="integer">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Dokumendi identifikaator
 							</documentation>
 							<documentation xml:lang="en">Document identificator
@@ -1509,7 +1510,7 @@
 						</annotation>
 					</element>
 					<element name="guid" type="string">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Dokumendi globaalselt
 								unikaalne identifikaator (GUID)</documentation>
 							<documentation xml:lang="en">Document globally unique
@@ -1517,7 +1518,7 @@
 						</annotation>
 					</element>
 					<element name="title" type="string">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Dokumendi pealkiri
 							</documentation>
 							<documentation xml:lang="en">Document title
@@ -1525,7 +1526,7 @@
 						</annotation>
 					</element>
 					<element name="document_type" type="string">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Dokumendi tüüp
 							</documentation>
 							<documentation xml:lang="en">Document type
@@ -1533,7 +1534,7 @@
 						</annotation>
 					</element>
 					<element name="creator_code" type="string">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Dokumendi looja kood
 							</documentation>
 							<documentation xml:lang="en">Document creator code
@@ -1541,7 +1542,7 @@
 						</annotation>
 					</element>
 					<element name="created" type="date">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Dokumendi loomise aeg
 							</documentation>
 							<documentation xml:lang="en">Document creation time
@@ -1549,7 +1550,7 @@
 						</annotation>
 					</element>
 					<element name="creator_application" type="string">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Dokumendi loomiseks
 								kasutatud infosüsteem</documentation>
 							<documentation xml:lang="en">Application used for
@@ -1557,7 +1558,7 @@
 						</annotation>
 					</element>
 					<element name="last_modified" type="date">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Dokumendi viimase muutmise
 								aeg</documentation>
 							<documentation xml:lang="en">Last modification time of
@@ -1565,7 +1566,7 @@
 						</annotation>
 					</element>
 					<element name="signable" type="boolean">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Näitab, kas dokument on
 								allkirjastatav</documentation>
 							<documentation xml:lang="en">Indicates if the document
@@ -1579,7 +1580,7 @@
 			<!-- getDocumentFile attachments -->
 			<element name="getDocumentFileResponseAttachmentV1" type="tns:getDocumentFileResponseAttachmentV1Type" />
 			<complexType name="getDocumentFileResponseAttachmentV1Type">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Päringu "getDocumentFile"
 						vastuse manus</documentation>
 					<documentation xml:lang="en">Attachment for request
@@ -1591,7 +1592,7 @@
 				</sequence>
 			</complexType>
 			<complexType name="getDocumentFileResponseAttachmentV1FilesType">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Failide massiiv
 					</documentation>
 					<documentation xml:lang="en">Array of files
@@ -1603,14 +1604,14 @@
 				</sequence>
 			</complexType>
 			<complexType name="getDocumentFileResponseAttachmentV1FileType">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Faili andmed</documentation>
 					<documentation xml:lang="en">File information
 					</documentation>
 				</annotation>
 				<sequence>
 					<element name="id" type="integer">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Faili identifikaator
 							</documentation>
 							<documentation xml:lang="en">File identificator
@@ -1618,13 +1619,13 @@
 						</annotation>
 					</element>
 					<element name="name" type="string">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Faili nimi</documentation>
 							<documentation xml:lang="en">File name</documentation>
 						</annotation>
 					</element>
 					<element name="ontent_type" type="string">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Faili MIME tüüp
 							</documentation>
 							<documentation xml:lang="en">File MIME type
@@ -1632,7 +1633,7 @@
 						</annotation>
 					</element>
 					<element name="description" type="string">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Faili kirjeldus
 							</documentation>
 							<documentation xml:lang="en">File description
@@ -1640,7 +1641,7 @@
 						</annotation>
 					</element>
 					<element name="size_bytes" type="integer">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Faili suurus baitides
 							</documentation>
 							<documentation xml:lang="en">File size in bytes
@@ -1648,7 +1649,7 @@
 						</annotation>
 					</element>
 					<element name="data" type="string">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Faili sisu</documentation>
 							<documentation xml:lang="en">File content
 							</documentation>
@@ -1661,7 +1662,7 @@
 			<element name="getDocumentHistoryResponseAttachmentV1"
 				type="tns:getDocumentHistoryResponseAttachmentV1Type" />
 			<complexType name="getDocumentHistoryResponseAttachmentV1Type">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Päringu "getDocumentHistory"
 						vastuse manus</documentation>
 					<documentation xml:lang="en">Attachment for request
@@ -1669,7 +1670,7 @@
 				</annotation>
 				<sequence>
 					<element name="id" type="integer">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Dokumendi identifikaator
 							</documentation>
 							<documentation xml:lang="en">Document identificator
@@ -1677,7 +1678,7 @@
 						</annotation>
 					</element>
 					<element name="guid" type="string">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Dokumendi globaalselt
 								unikaalne identifikaator (GUID)</documentation>
 							<documentation xml:lang="en">Document globally unique
@@ -1689,7 +1690,7 @@
 				</sequence>
 			</complexType>
 			<complexType name="getDocumentHistoryResponseAttachmentV1ActivityListType">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Dokumendi ajalookirjete
 						massiiv</documentation>
 					<documentation xml:lang="en">Array of document history
@@ -1701,7 +1702,7 @@
 				</sequence>
 			</complexType>
 			<complexType name="getDocumentHistoryResponseAttachmentV1ActivityType">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Dokumendi ajalookirje
 					</documentation>
 					<documentation xml:lang="en">Document history record
@@ -1709,7 +1710,7 @@
 				</annotation>
 				<sequence>
 					<element name="time" type="date">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Toimingu aeg
 							</documentation>
 							<documentation xml:lang="en">Activity time
@@ -1717,7 +1718,7 @@
 						</annotation>
 					</element>
 					<element name="type" type="string">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Toimingu tüüp
 							</documentation>
 							<documentation xml:lang="en">Activity type
@@ -1731,7 +1732,7 @@
 				</sequence>
 			</complexType>
 			<complexType name="getDocumentHistoryResponseAttachmentV1ActorsType">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Toimingu tegija
 					</documentation>
 					<documentation xml:lang="en">Activity actor
@@ -1743,7 +1744,7 @@
 				</sequence>
 			</complexType>
 			<complexType name="getDocumentHistoryResponseAttachmentV1SubjectsType">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Toimingu subjekt
 					</documentation>
 					<documentation xml:lang="en">Activity subject
@@ -1755,7 +1756,7 @@
 				</sequence>
 			</complexType>
 			<complexType name="getDocumentHistoryResponseAttachmentV1ActorType">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Toimingu tegija/subjekti
 						andmed</documentation>
 					<documentation xml:lang="en">Activity actor/subject
@@ -1763,14 +1764,14 @@
 				</annotation>
 				<sequence>
 					<element name="code" type="string">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Kasutajakood
 							</documentation>
 							<documentation xml:lang="en">Usercode</documentation>
 						</annotation>
 					</element>
 					<element name="name" type="string">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Kasutaja nimi
 							</documentation>
 							<documentation xml:lang="en">User name</documentation>
@@ -1782,7 +1783,7 @@
 			<!-- getDocumentList attachments -->
 			<element name="document_list" type="tns:getDocumentListResponseAttachmentV1Type" />
 			<complexType name="getDocumentListResponseAttachmentV1Type">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Päringu "getDocumentList"
 						vastuse manus</documentation>
 					<documentation xml:lang="en">Attachment for request
@@ -1790,7 +1791,7 @@
 				</annotation>
 				<sequence>
 					<element name="total" type="integer">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Tagastatavate tulemuste arv
 							</documentation>
 							<documentation xml:lang="en">Number of results returned
@@ -1802,7 +1803,7 @@
 				</sequence>
 			</complexType>
 			<complexType name="getDocumentListResponseAttachmentV1DocumentType">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Dokumendi andmed
 					</documentation>
 					<documentation xml:lang="en">Document information
@@ -1810,7 +1811,7 @@
 				</annotation>
 				<sequence>
 					<element name="id" type="integer">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Dokumendi identifikaator
 							</documentation>
 							<documentation xml:lang="en">Document identificator
@@ -1818,7 +1819,7 @@
 						</annotation>
 					</element>
 					<element name="guid" type="string">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Dokumendi globaalselt
 								unikaalne identifikaator (GUID)</documentation>
 							<documentation xml:lang="en">Document globally unique
@@ -1826,7 +1827,7 @@
 						</annotation>
 					</element>
 					<element name="title" type="string">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Dokumendi pealkiri
 							</documentation>
 							<documentation xml:lang="en">Document title
@@ -1834,7 +1835,7 @@
 						</annotation>
 					</element>
 					<element name="document_type" type="string">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Dokumendi tüüp
 							</documentation>
 							<documentation xml:lang="en">Document type
@@ -1842,7 +1843,7 @@
 						</annotation>
 					</element>
 					<element name="creator_code" type="string">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Dokumendi looja kood
 							</documentation>
 							<documentation xml:lang="en">Document creator code
@@ -1850,7 +1851,7 @@
 						</annotation>
 					</element>
 					<element name="created" type="date">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Dokumendi loomise aeg
 							</documentation>
 							<documentation xml:lang="en">Document creation time
@@ -1858,7 +1859,7 @@
 						</annotation>
 					</element>
 					<element name="creator_application" type="string">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Dokumendi loomiseks
 								kasutatud infosüsteem</documentation>
 							<documentation xml:lang="en">Application used for
@@ -1866,7 +1867,7 @@
 						</annotation>
 					</element>
 					<element name="last_modified" type="date">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Dokumendi viimase muutmise
 								aeg</documentation>
 							<documentation xml:lang="en">Last modification time of
@@ -1874,7 +1875,7 @@
 						</annotation>
 					</element>
 					<element name="signable" type="boolean">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Näitab, kas dokument on
 								allkirjastatav</documentation>
 							<documentation xml:lang="en">Indicates if the document
@@ -1889,7 +1890,7 @@
 				</sequence>
 			</complexType>
 			<complexType name="getDocumentListResponseAttachmentV1SentToType">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Kasutajate andmete massiiv
 					</documentation>
 					<documentation xml:lang="en">Array of user information
@@ -1901,7 +1902,7 @@
 				</sequence>
 			</complexType>
 			<complexType name="getDocumentListResponseAttachmentV1SentToUserType">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Kasutaja andmed
 					</documentation>
 					<documentation xml:lang="en">User information
@@ -1909,21 +1910,21 @@
 				</annotation>
 				<sequence>
 					<element name="code" type="string">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Kasutajakood
 							</documentation>
 							<documentation xml:lang="en">Usercode</documentation>
 						</annotation>
 					</element>
 					<element name="name" type="string">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Kasutaja nimi
 							</documentation>
 							<documentation xml:lang="en">User name</documentation>
 						</annotation>
 					</element>
 					<element name="hasBeenViewed" type="boolean">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Näitab, kas antud kasutaja
 								on dokumenti vaadanud</documentation>
 							<documentation xml:lang="en">Indicates if this user has
@@ -1931,7 +1932,7 @@
 						</annotation>
 					</element>
 					<element name="openedTime" type="date">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Näitab, millal see kasutaja
 								dokumendi avas</documentation>
 							<documentation xml:lang="en">The time when the document
@@ -1939,7 +1940,7 @@
 						</annotation>
 					</element>
 					<element name="workflowStatusId" type="integer">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Selle kasutaja töövoo
 								staatuse identifikaator antud dokumendi jaoks</documentation>
 							<documentation xml:lang="en">The workflow status
@@ -1947,7 +1948,7 @@
 						</annotation>
 					</element>
 					<element name="dvkStatusId" type="integer">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Selle kasutaja DVK staatuse
 								identifikaator antud dokumendi jaoks</documentation>
 							<documentation xml:lang="en">The DVK status
@@ -1957,7 +1958,7 @@
 				</sequence>
 			</complexType>
 			<complexType name="getDocumentListResponseAttachmentV1SharedToType">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Kasutajate andmete massiiv
 					</documentation>
 					<documentation xml:lang="en">Array of user information
@@ -1969,7 +1970,7 @@
 				</sequence>
 			</complexType>
 			<complexType name="getDocumentListResponseAttachmentV1SharedToUserType">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Kasutaja andmed
 					</documentation>
 					<documentation xml:lang="en">User information
@@ -1977,21 +1978,21 @@
 				</annotation>
 				<sequence>
 					<element name="code" type="string">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Kasutajakood
 							</documentation>
 							<documentation xml:lang="en">Usercode</documentation>
 						</annotation>
 					</element>
 					<element name="name" type="string">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Kasutaja nimi
 							</documentation>
 							<documentation xml:lang="en">User name</documentation>
 						</annotation>
 					</element>
 					<element name="hasBeenViewed" type="boolean">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Näitab, kas antud kasutaja
 								on dokumenti vaadanud</documentation>
 							<documentation xml:lang="en">Indicates if this user has
@@ -1999,7 +2000,7 @@
 						</annotation>
 					</element>
 					<element name="openedTime" type="date">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Näitab, millal see kasutaja
 								dokumendi avas</documentation>
 							<documentation xml:lang="en">The time when the document
@@ -2007,7 +2008,7 @@
 						</annotation>
 					</element>
 					<element name="workflowStatusId" type="integer">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Selle kasutaja töövoo
 								staatuse identifikaator antud dokumendi jaoks</documentation>
 							<documentation xml:lang="en">The workflow status
@@ -2015,7 +2016,7 @@
 						</annotation>
 					</element>
 					<element name="dvkStatusId" type="integer">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Selle kasutaja DVK staatuse
 								identifikaator antud dokumendi jaoks</documentation>
 							<documentation xml:lang="en">The DVK status
@@ -2028,7 +2029,7 @@
 			<!-- saveDocument attachments -->
 			<element name="saveDocumentRequestAttachmentV1" type="tns:saveDocumentRequestAttachmentV1Type" />
 			<complexType name="saveDocumentRequestAttachmentV1Type">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Päringu "saveDocument" manus
 					</documentation>
 					<documentation xml:lang="en">Attachment for request
@@ -2040,14 +2041,14 @@
 				</sequence>
 			</complexType>
 			<complexType name="saveDocumentRequestAttachmentV1DocumentType">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Dokumendi andmed
 					</documentation>
 					<documentation xml:lang="en">Document data</documentation>
 				</annotation>
 				<sequence>
 					<element name="id" type="integer">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Dokumendi identifikaator
 							</documentation>
 							<documentation xml:lang="en">Document identificator
@@ -2055,7 +2056,7 @@
 						</annotation>
 					</element>
 					<element name="guid" type="string">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Dokumendi globaalselt
 								unikaalne identifikaator (GUID)</documentation>
 							<documentation xml:lang="en">Document globally unique
@@ -2063,7 +2064,7 @@
 						</annotation>
 					</element>
 					<element name="title" type="string">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Dokumendi pealkiri
 							</documentation>
 							<documentation xml:lang="en">Document title
@@ -2071,7 +2072,7 @@
 						</annotation>
 					</element>
 					<element name="document_type" type="string">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Dokumendi tüüp
 							</documentation>
 							<documentation xml:lang="en">Document type
@@ -2079,7 +2080,7 @@
 						</annotation>
 					</element>
 					<element name="previous_document_id" type="integer">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Eelmise dokumendi
 								identifikaator (kui dokument on vastuseks teisele dokumendile)
 							</documentation>
@@ -2097,7 +2098,7 @@
 
 			<!-- Attachments common types -->
 			<complexType name="documentFilesType">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Dokumendi failide andmed
 					</documentation>
 					<documentation xml:lang="en">Document files information
@@ -2105,13 +2106,13 @@
 				</annotation>
 				<sequence>
 					<element name="total_files" type="integer">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Failide arv</documentation>
 							<documentation xml:lang="en">File count</documentation>
 						</annotation>
 					</element>
 					<element name="total_bytes" type="integer">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Failide maht baitides
 							</documentation>
 							<documentation xml:lang="en">Total size of files in
@@ -2122,7 +2123,7 @@
 				</sequence>
 			</complexType>
 			<complexType name="subDocumentFilesType">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Dokumendi faili alamtüüp
 					</documentation>
 					<documentation xml:lang="en">Document file subtype
@@ -2133,7 +2134,7 @@
 				</sequence>
 			</complexType>
 			<complexType name="fileType">
-				<annotation>
+				<xs:annotation>
 					<documentation xml:lang="ee">Dokumendi faili andmed
 					</documentation>
 					<documentation xml:lang="en">Document file information
@@ -2141,7 +2142,7 @@
 				</annotation>
 				<sequence>
 					<element name="id" type="integer">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Faili identifikaator
 							</documentation>
 							<documentation xml:lang="en">File identificator
@@ -2149,13 +2150,13 @@
 						</annotation>
 					</element>
 					<element name="name" type="string">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Faili nimi</documentation>
 							<documentation xml:lang="en">File name</documentation>
 						</annotation>
 					</element>
 					<element name="content_type" type="string">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Faili MIME tüüp
 							</documentation>
 							<documentation xml:lang="en">File MIME type
@@ -2163,7 +2164,7 @@
 						</annotation>
 					</element>
 					<element name="description" type="string">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Faili kirjeldus
 							</documentation>
 							<documentation xml:lang="en">File description
@@ -2171,7 +2172,7 @@
 						</annotation>
 					</element>
 					<element name="size_bytes" type="integer">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Faili suurus baitides
 							</documentation>
 							<documentation xml:lang="en">File size in bytes
@@ -2179,7 +2180,7 @@
 						</annotation>
 					</element>
 					<element name="data" type="string">
-						<annotation>
+						<xs:annotation>
 							<documentation xml:lang="ee">Faili sisu</documentation>
 							<documentation xml:lang="en">File data</documentation>
 						</annotation>
@@ -2380,7 +2381,7 @@
 
 	<wsdl:portType name="adit">
 		<wsdl:operation name="getJoined">
-			<documentation>
+			<xs:documentation>
 				<xtee:title>Teenusega liitunud kasutajate päring</xtee:title>
 				<xtee:notes>Tagastab teenusega liitunud kasutajate andmed</xtee:notes>
 			</documentation>
@@ -2390,7 +2391,7 @@
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="unShareDocument">
-			<documentation>
+			<xs:documentation>
 				<xtee:title>Dokumendi jagamise lõpetamine</xtee:title>
 				<xtee:notes>Dokumendi jagamise lõpetamine</xtee:notes>
 			</documentation>
@@ -2400,7 +2401,7 @@
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="saveDocumentFile">
-			<documentation>
+			<xs:documentation>
 				<xtee:title>Dokumendi faili salvestamine</xtee:title>
 				<xtee:notes>Dokumendi faili salvestamine</xtee:notes>
 			</documentation>
@@ -2410,7 +2411,7 @@
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="confirmSignature">
-			<documentation>
+			<xs:documentation>
 				<xtee:title>Allkirja kinnitamine</xtee:title>
 				<xtee:notes>Võimaldab kinnitada päringuga "prepareSignature" loodud allkirja</xtee:notes>
 			</documentation>
@@ -2420,7 +2421,7 @@
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="deflateDocument">
-			<documentation>
+			<xs:documentation>
 				<xtee:title>Dokumendi arhiveerimine</xtee:title>
 				<xtee:notes>Arhiveerimisel asendatakse dokumendi failide sisu räsikoodiga</xtee:notes>
 			</documentation>
@@ -2430,7 +2431,7 @@
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="getUserInfo">
-			<documentation>
+			<xs:documentation>
 				<xtee:title>Kasutaja info päring</xtee:title>
 				<xtee:notes>Kasutaja info päring</xtee:notes>
 			</documentation>
@@ -2440,7 +2441,7 @@
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="deleteDocument">
-			<documentation>
+			<xs:documentation>
 				<xtee:title>Dokumendi kustutamine</xtee:title>
 				<xtee:notes>Dokumendi kustutamisel asendatakse dokumendi failide sisu räsikoodiga</xtee:notes>
 			</documentation>
@@ -2450,7 +2451,7 @@
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="markDocumentViewed">
-			<documentation>
+			<xs:documentation>
 				<xtee:title>Märgib dokumendi vaadatuks</xtee:title>
 				<xtee:notes>Märgib dokumendi vaadatuks</xtee:notes>
 			</documentation>
@@ -2461,7 +2462,7 @@
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="join">
-			<documentation>
+			<xs:documentation>
 				<xtee:title>Teenusega liitumine</xtee:title>
 				<xtee:notes>Päringu käivitaja liitumiseks teenusega</xtee:notes>
 			</documentation>
@@ -2471,7 +2472,7 @@
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="sendDocument">
-			<documentation>
+			<xs:documentation>
 				<xtee:title>Dokumendi saatmine</xtee:title>
 				<xtee:notes>Võimaldab saata dokumenti teistele kasutajatele</xtee:notes>
 			</documentation>
@@ -2481,7 +2482,7 @@
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="getNotifications">
-			<documentation>
+			<xs:documentation>
 				<xtee:title>Kasutaja teavitused</xtee:title>
 				<xtee:notes>Tagastab kasutaja teavituste seaded</xtee:notes>
 			</documentation>
@@ -2491,7 +2492,7 @@
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="getDocument">
-			<documentation>
+			<xs:documentation>
 				<xtee:title>Dokumendi päring</xtee:title>
 				<xtee:notes>Tagastab dokumendi</xtee:notes>
 			</documentation>
@@ -2501,7 +2502,7 @@
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="unJoin">
-			<documentation>
+			<xs:documentation>
 				<xtee:title>Teenusest lahkumine</xtee:title>
 				<xtee:notes>Päringu käivitanud isik lahkub teenusest</xtee:notes>
 			</documentation>
@@ -2511,7 +2512,7 @@
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="deleteDocumentFile">
-			<documentation>
+			<xs:documentation>
 				<xtee:title>Dokumendi faili kustutamine</xtee:title>
 				<xtee:notes>Kustutab dokumendi faili - dokumendi faili sisu asendatakse räsiga</xtee:notes>
 			</documentation>
@@ -2522,7 +2523,7 @@
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="getDocumentFile">
-			<documentation>
+			<xs:documentation>
 				<xtee:title>Dokumendi faili päring</xtee:title>
 				<xtee:notes>Tagastab dokumendi faili</xtee:notes>
 			</documentation>
@@ -2532,7 +2533,7 @@
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="modifyStatus">
-			<documentation>
+			<xs:documentation>
 				<xtee:title>Dokumendi staatuse muutmine</xtee:title>
 				<xtee:notes>Muudab dokumendi staatuse</xtee:notes>
 			</documentation>
@@ -2542,7 +2543,7 @@
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="saveDocument">
-			<documentation>
+			<xs:documentation>
 				<xtee:title>Dokumendi salvestamine</xtee:title>
 				<xtee:notes>Dokument (ja failid) salvestatakse</xtee:notes>
 			</documentation>
@@ -2552,7 +2553,7 @@
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="prepareSignature">
-			<documentation>
+			<xs:documentation>
 				<xtee:title>Allkirja ettevalmistamine</xtee:title>
 				<xtee:notes>Valmistab ette dokumendile antava allkirja</xtee:notes>
 			</documentation>
@@ -2562,7 +2563,7 @@
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="getDocumentHistory">
-			<documentation>
+			<xs:documentation>
 				<xtee:title>Dokumendi ajaloo päring</xtee:title>
 				<xtee:notes>Tagastab dokumendi ajalookirjed</xtee:notes>
 			</documentation>
@@ -2573,7 +2574,7 @@
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="setNotifications">
-			<documentation>
+			<xs:documentation>
 				<xtee:title>Kasutaja teavituste seadmine</xtee:title>
 				<xtee:notes>Seadistab kasutaja teavitused</xtee:notes>
 			</documentation>
@@ -2583,7 +2584,7 @@
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="getDocumentList">
-			<documentation>
+			<xs:documentation>
 				<xtee:title>Dokumendi otsing</xtee:title>
 				<xtee:notes>Võimaldab otsida dokumente, tagastatakse leitud dokumentide andmed</xtee:notes>
 			</documentation>
@@ -2593,7 +2594,7 @@
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="shareDocument">
-			<documentation>
+			<xs:documentation>
 				<xtee:title>Dokumendi jagamine</xtee:title>
 				<xtee:notes>Jagab dokumendi määratud kasutajatele</xtee:notes>
 			</documentation>
