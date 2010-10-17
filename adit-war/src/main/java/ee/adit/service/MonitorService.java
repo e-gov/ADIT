@@ -1053,8 +1053,8 @@ public class MonitorService {
 			
 			Long errorCount = getErrorLogDAO().getErrors(comparisonDate);
 			
-			if(unsentNotificationCount > 0) {
-				throw new AditInternalException("Number of notifications not sent in time: " + unsentNotificationCount);
+			if(errorCount > 0) {
+				throw new AditInternalException("Number of errors: " + errorCount);
 			} else {
 				success = true;
 			}
