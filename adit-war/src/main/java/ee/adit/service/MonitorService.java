@@ -702,7 +702,7 @@ public class MonitorService {
 		MonitorResult result = new MonitorResult();
 		result.setComponent("GET_USER_INFO");
 		
-		LOG.info("Testing 'getUserInfo' request...");
+		LOG.info("Testing 'getUserInfo' request. Service URL: " + this.getMonitorConfiguration().getAditServiceUrl());
 		
 		double duration = 0;
 		boolean success = false;
