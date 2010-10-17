@@ -13,12 +13,11 @@
 	</modules>
 
 	<properties>
+		<!-- Encoding for source files -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<!-- Project root folder absolute path -->
 		<projectBaseDir>E:\dev\adit\trunk</projectBaseDir>
-		<!--
-			Specifies which configuration resources to bundle with the build (ie.
-			"dev", "test", "production")
-		-->
+		<!-- Specifies which configuration resources to bundle with the build (ie. "dev", "test", "production")	-->
 		<resourceDir>dev-dev-weblogic</resourceDir>
 	</properties>
 
