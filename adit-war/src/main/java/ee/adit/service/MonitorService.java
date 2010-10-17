@@ -733,7 +733,8 @@ public class MonitorService {
 	}
 	
 	/**
-	 * TODO
+	 * Checks if documents are being sent from DVK UK to DVK.
+	 * 
 	 * @return
 	 */
 	public MonitorResult checkDvkClientToDvkSend() {
@@ -741,7 +742,6 @@ public class MonitorService {
 		result.setComponent("DVK_CLIENT_TO_DVK_SEND");
 		
 		double duration = 0;
-		boolean success = false;
 		Date start = new Date();
 		long startTime = start.getTime();
 		
@@ -771,6 +771,7 @@ public class MonitorService {
 			
 			if(documentSharingCount == pojoMessageCount) {
 				LOG.info("Number of documents sent from ADIT -> DVK UK matches the number of documents sent from DVK UK -> DVK");
+				result.setSuccess(true);
 			} else {
 				throw new AditInternalException("Number of documents sent from ADIT -> DVK UK does not match the number of documents sent from DVK UK -> DVK: " + documentSharingCount + "/" + pojoMessageCount + " (ADIT->DVKUK / DVKUK->DVK)");
 			}
@@ -787,7 +788,6 @@ public class MonitorService {
 			exceptions.add(e.getMessage());
 			result.setExceptions(exceptions);
 		}
-		
 		
 		return result;
 	}
