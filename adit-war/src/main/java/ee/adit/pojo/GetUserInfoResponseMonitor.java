@@ -46,7 +46,7 @@ public class GetUserInfoResponseMonitor {
 	@XmlElement(required = true)
 	protected boolean success;
     @XmlElement(required = true)
-    protected ArrayOfMessage messages;
+    protected ArrayOfMessageMonitor messages;
     @XmlElement(required = true)
     protected UserList userList;
 
@@ -55,10 +55,10 @@ public class GetUserInfoResponseMonitor {
      * 
      * @return
      *     possible object is
-     *     {@link ArrayOfMessage }
+     *     {@link ArrayOfMessageMonitor }
      *     
      */
-    public ArrayOfMessage getMessages() {
+    public ArrayOfMessageMonitor getMessages() {
         return messages;
     }
 
@@ -67,10 +67,10 @@ public class GetUserInfoResponseMonitor {
      * 
      * @param value
      *     allowed object is
-     *     {@link ArrayOfMessage }
+     *     {@link ArrayOfMessageMonitor }
      *     
      */
-    public void setMessages(ArrayOfMessage value) {
+    public void setMessages(ArrayOfMessageMonitor value) {
         this.messages = value;
     }
 
