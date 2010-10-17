@@ -23,7 +23,7 @@
 			<td style="border: 1px solid #000;"><b style="margin: 6px;">Component</b></td>
 			<td style="border: 1px solid #000;"><b style="margin: 6px;">Status</b></td>
 			<td style="border: 1px solid #000;"><b style="margin: 6px;">Time / Error</b></td>
-		</tr>
+		</tr>		
 		<tr>
 			<td style="border: 1px solid #000;"><span style="margin: 6px;">saveDocument() </span></td>
 			<td style="border: 1px solid #000;"><span style="margin: 6px;"><%=status%></span></td>
@@ -50,6 +50,7 @@
 				</span>
 			</td>
 		</tr>
+		
 	</table>
 	
 </body>
