@@ -34,7 +34,7 @@ public class CustomClientInterceptor implements ClientInterceptor {
 	public boolean handleResponse(MessageContext arg0)
 			throws WebServiceClientException {
 		
-		LOG.debug("CustomClientInterceptor invoked...");
+		LOG.debug("CustomClientInterceptor invoked. Extracting attachments...");
 		boolean result = false;
 		
 		try {

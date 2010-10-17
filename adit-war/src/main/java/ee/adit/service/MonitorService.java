@@ -2,7 +2,9 @@ package ee.adit.service;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -10,6 +12,8 @@ import java.util.List;
 
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPConstants;
+import javax.xml.transform.Source;
+import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.log4j.Logger;
@@ -21,6 +25,7 @@ import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
+import org.xml.sax.InputSource;
 
 import dvk.api.ml.PojoMessage;
 import ee.adit.dao.DocumentDAO;
@@ -31,6 +36,7 @@ import ee.adit.pojo.ArrayOfMessageMonitor;
 import ee.adit.pojo.GetDocumentRequest;
 import ee.adit.pojo.GetDocumentResponse;
 import ee.adit.pojo.GetDocumentResponseMonitor;
+import ee.adit.pojo.OutputDocument;
 import ee.adit.pojo.OutputDocumentFile;
 import ee.adit.pojo.SaveDocumentRequest;
 import ee.adit.pojo.SaveDocumentRequestAttachment;
@@ -581,7 +587,19 @@ public class MonitorService {
 			
 			GetDocumentResponseMonitor response = (GetDocumentResponseMonitor) customXTeeConsumer.sendRequest(request);
 			
-			LOG.info("Attachment saved to temporary file: " + interceptor.getTmpFile());
+			
+			
+			if(interceptor.getTmpFile() != null) {
+				LOG.info("Attachment saved to temporary file: " + interceptor.getTmpFile());
+				
+				Source unmarshalSource = new SAXSource(new InputSource(new FileInputStream(interceptor.getTmpFile()));
+				
+				OutputDocument document = (OutputDocument) getUnmarshaller().unmarshal(unmarshalSource);
+				
+				LOG.info("Document ID: " + document.getId());
+				
+			}
+			
 			
 			Date end = new Date();
 			long endTime = end.getTime();
