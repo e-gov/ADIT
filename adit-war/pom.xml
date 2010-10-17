@@ -377,6 +377,7 @@
 					<include>messages_en.properties</include>
 					<include>messages_et.properties</include>
 					<include>adit.wsdl</include>
+					<include>jdigidoc.cfg</include>
 				</includes>
 			</resource>
 			<resource>
