@@ -392,6 +392,7 @@ adit-war/src/main/resources/castor-mapping/xsd.v1/rkel_letter.xsd -text
 adit-war/src/main/resources/castor-mapping/xsd.v2/dhl-meta-automatic.xsd -text
 adit-war/src/main/resources/castor-mapping/xsd.v2/dhl-meta-manual.xsd -text
 adit-war/src/main/resources/castor-mapping/xsd.v2/dhl.xsd -text
+adit-war/src/main/resources/dev-dev-weblogic/adit-configuration.xml -text
 adit-war/src/main/resources/dev-dev-weblogic/adit-monitor-servlet.xml -text
 adit-war/src/main/resources/dev-dev-weblogic/adit-servlet.xml -text
 adit-war/src/main/resources/dev-dev-weblogic/hibernate_ora_dvk.cfg.xml -text
