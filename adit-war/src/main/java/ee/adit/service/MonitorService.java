@@ -602,7 +602,11 @@ public class MonitorService {
 				OutputDocumentFile documentFile = document.getFiles().getFiles().get(0);
 				File file = new File(documentFile.getSysTempFile());
 				
-				String fileContents = Util.getFileContents();
+				String fileContents = Util.getFileContents(file);
+				Date documentLastChangedDateContents = Util.xmlDateToDate(fileContents);
+				
+				LOG.info("Document title date: " + documentLastChangedDateTitle);
+				LOG.info("Document contents date: " + documentLastChangedDateContents);
 				
 			}
 			

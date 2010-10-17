@@ -1205,7 +1205,7 @@ public class Util {
         return bytes;
     }
     
-    public String getFileContents(File f) throws IOException {
+    public static String getFileContents(File f) throws IOException {
     	return new String(getBytesFromFile(f), "UTF-8");
     }
     
