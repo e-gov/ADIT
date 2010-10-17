@@ -31,6 +31,9 @@ WHENEVER SQLERROR EXIT ROLLBACK SQL.SQLCODE
 -- Grant rights to ADIT application user
 @@grant.sql
 
+-- Create synonyms for ADIT_APP
+@@synonyms.sql
+
 -- Insert classificators
 @@run_dml.sql
 
