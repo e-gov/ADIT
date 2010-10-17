@@ -357,39 +357,16 @@
 				<directory>src/main/resources/${resourceDir}</directory>
 				<targetPath>../adit/WEB-INF/classes</targetPath>
 				<excludes>
-					<exclude>adit-servlet.xml</exclude>
-					<exclude>adit-monitor-servlet.xml</exclude>
-					<exclude>adit-application.xml</exclude>
-					<exclude>adit-dao.xml</exclude>
-					<exclude>adit-datasource.xml</exclude>
-					<exclude>adit-jobs.xml</exclude>
-					<exclude>adit-services.xml</exclude>
-					<exclude>weblogic.xml</exclude>
-					<exclude>weblogic-application.xml</exclude>
+					<exclude>adit-configuration.xml</exclude>
 				</excludes>
 			</resource>
 			<resource>
 				<directory>src/main/resources/${resourceDir}</directory>
 				<targetPath>../adit/WEB-INF</targetPath>
 				<includes>
-					<include>adit-servlet.xml</include>
-					<include>adit-monitor-servlet.xml</include>
-					<include>adit-application.xml</include>
-					<include>adit-dao.xml</include>
-					<include>adit-datasource.xml</include>
-					<include>adit-jobs.xml</include>
-					<include>adit-services.xml</include>
-					<include>weblogic.xml</include>
+					<include>adit-configuration.xml</include>
 				</includes>
 			</resource>
-			<resource>
-				<directory>src/main/resources/${resourceDir}</directory>
-				<targetPath>../adit/META-INF</targetPath>
-				<includes>
-					<include>weblogic-application.xml</include>
-				</includes>
-			</resource>
-
 			<!-- Include static resources -->
 			<resource>
 				<directory>src/main/resources</directory>
@@ -400,6 +377,13 @@
 					<include>messages_en.properties</include>
 					<include>messages_et.properties</include>
 					<include>adit.wsdl</include>
+					<include>adit-servlet.xml</include>
+					<include>adit-monitor-servlet.xml</include>
+					<include>adit-application.xml</include>
+					<include>adit-dao.xml</include>
+					<include>adit-datasource.xml</include>
+					<include>adit-jobs.xml</include>
+					<include>adit-services.xml</include>
 				</includes>
 			</resource>
 			<resource>
