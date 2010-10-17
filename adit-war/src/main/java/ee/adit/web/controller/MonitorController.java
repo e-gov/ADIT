@@ -1,6 +1,8 @@
 package ee.adit.web.controller;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,51 +35,69 @@ public class MonitorController extends AbstractController {
 		LOG.info("ADIT monitoring servlet invoked.");
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("monitor.jsp");
-
-		// 1. X-tee p�ringud
-		//    - saveDocument()
-		//    - getDocument()
-		if(getMonitorService() == null)
-			LOG.error("getMonitorService() == null");
-		if(getConfiguration() == null)
-			LOG.error("getConfiguration() == null");
-		MonitorResult saveDocumentCheckResult = this.getMonitorService().saveDocumentCheck();
+		DecimalFormat df = new DecimalFormat("0.000");
 		
-		if(saveDocumentCheckResult.isSuccess()) {
-			DecimalFormat df = new DecimalFormat("0.000");
-			mav.addObject("duration", df.format(saveDocumentCheckResult.getDuration()));
-			mav.addObject("status", "OK");
-		} else {
-			mav.addObject("status", "FAIL");
-			mav.addObject("exceptions", saveDocumentCheckResult.getExceptions());
+		List<MonitorResult> results = new ArrayList<MonitorResult>();
+		
+		try {
+			
+			// 1. X-tee p�ringud
+			if(getMonitorService() == null)
+				LOG.error("getMonitorService() == null");
+			if(getConfiguration() == null)
+				LOG.error("getConfiguration() == null");
+			
+			// 1. saveDocument request
+			MonitorResult saveDocumentCheckResult = this.getMonitorService().saveDocumentCheck();
+			saveDocumentCheckResult.setDurationString(df.format(saveDocumentCheckResult.getDuration()));
+			if(saveDocumentCheckResult.isSuccess()) {
+				saveDocumentCheckResult.setStatusString(MonitorService.OK);
+			} else {
+				saveDocumentCheckResult.setStatusString(MonitorService.FAIL);
+			}
+			if(saveDocumentCheckResult.getExceptions() != null && saveDocumentCheckResult.getExceptions().size() > 0) {
+				saveDocumentCheckResult.setExceptionString(saveDocumentCheckResult.getExceptions().get(0));
+			}
+			results.add(saveDocumentCheckResult);
+			
+			// 2. getDocument request
+			MonitorResult getDocumentCheckResult = this.getMonitorService().getDocumentCheck();
+			getDocumentCheckResult.setDurationString(df.format(getDocumentCheckResult.getDuration()));
+			if(getDocumentCheckResult.isSuccess()) {
+				getDocumentCheckResult.setStatusString(MonitorService.OK);
+			} else {
+				getDocumentCheckResult.setStatusString(MonitorService.FAIL);
+			}
+			if(getDocumentCheckResult.getExceptions() != null && getDocumentCheckResult.getExceptions().size() > 0) {
+				getDocumentCheckResult.setExceptionString(getDocumentCheckResult.getExceptions().get(0));
+			}
+			results.add(getDocumentCheckResult);
+			
+			
+			
+			
+			
+			// 2. ADIT -> DVK
+			//    - ADIT -> DVK UK
+			//    - DVK UK -> DVK
+
+			// 3. DVK -> ADIT   
+			//    - DVK -> DVK UK
+			//    - DVK UK -> ADIT
+			
+			// 4. Kasutajad
+			//    - testkasutaja päring ADIT-ist üle X-tee
+			
+			// 5. Teavituskalendri liides
+			//    - kas on teavitusi, mille saatmine on ebaõnnestunud
+			
+			// 6. Rakenduse vead (tabelist ERROR_LOG, kus level = FATAL/ERROR)	
+		
+		} catch (Exception e) {
+			LOG.error("Error while invoking monitoring controller: ", e);
 		}
 		
-		MonitorResult getDocumentCheckResult = this.getMonitorService().getDocumentCheck();
-		
-		if(getDocumentCheckResult.isSuccess()) {
-			DecimalFormat df = new DecimalFormat("0.000");
-			mav.addObject("duration2", df.format(getDocumentCheckResult.getDuration()));
-			mav.addObject("status2", "OK");
-		} else {
-			mav.addObject("status2", "FAIL");
-			mav.addObject("exceptions2", getDocumentCheckResult.getExceptions());
-		}
-		
-		// 2. ADIT -> DVK
-		//    - ADIT -> DVK UK
-		//    - DVK UK -> DVK
-
-		// 3. DVK -> ADIT   
-		//    - DVK -> DVK UK
-		//    - DVK UK -> ADIT
-		
-		// 4. Kasutajad
-		//    - testkasutaja päring ADIT-ist üle X-tee
-		
-		// 5. Teavituskalendri liides
-		//    - kas on teavitusi, mille saatmine on ebaõnnestunud
-		
-		// 6. Rakenduse vead (tabelist ERROR_LOG, kus level = FATAL/ERROR)	
+		mav.addObject("results", results);
 		
 		return mav;
 	}

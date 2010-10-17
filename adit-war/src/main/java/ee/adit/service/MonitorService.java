@@ -31,6 +31,7 @@ import dvk.api.ml.PojoMessage;
 import ee.adit.dao.DocumentDAO;
 import ee.adit.dao.dvk.DvkDAO;
 import ee.adit.dao.pojo.Document;
+import ee.adit.exception.AditInternalException;
 import ee.adit.monitor.MonitorResult;
 import ee.adit.pojo.ArrayOfMessageMonitor;
 import ee.adit.pojo.GetDocumentRequest;
@@ -65,10 +66,10 @@ import ee.webmedia.xtee.client.service.XTeeAttachment;
  */
 public class MonitorService {
 
-	private static final String OK = "OK";
-	private static final String FAIL = "FAIL";
-	private static final String MS = "ms";
-	private static final String SECONDS = "seconds";
+	public static final String OK = "OK";
+	public static final String FAIL = "FAIL";
+	public static final String MS = "ms";
+	public static final String SECONDS = "seconds";
 	
 	private static final String ADIT_DB_CONNECTION = "ADIT_DB_CONNECTION";
 	private static final String ADIT_DB_CONNECTION_READ = "ADIT_DB_CONNECTION_READ";
@@ -549,6 +550,7 @@ public class MonitorService {
 	 */
 	public MonitorResult getDocumentCheck() {
 		MonitorResult result = new MonitorResult();
+		result.setComponent("getDocument");
 		
 		LOG.info("Testing 'getDocument' request...");
 		
@@ -588,12 +590,26 @@ public class MonitorService {
 			
 			GetDocumentResponseMonitor response = (GetDocumentResponseMonitor) customXTeeConsumer.sendRequest(request);
 			
+			if(response != null) {
+				if(!response.isSuccess()) {
+					String responseErrorMessage = null;
+					if(response.getMessages() != null && response.getMessages().getMessage() != null && response.getMessages().getMessage().size() > 0) {
+						responseErrorMessage = response.getMessages().getMessage().get(0);
+					}
+					throw new AditInternalException("The 'getDocument' request was not successful: " + responseErrorMessage);
+				}
+			} else {
+				throw new AditInternalException("The 'getDocument' request was not successful: response could not be unmarshalled: unmarshalling returned null.");
+			}
+			
 			OutputDocument document = null;
 			
 			if(interceptor.getTmpFile() != null) {
 				LOG.info("Attachment saved to temporary file: " + interceptor.getTmpFile());
 				Source unmarshalSource = new SAXSource(new InputSource(new FileInputStream(interceptor.getTmpFile())));
 				document = (OutputDocument) getUnmarshaller().unmarshal(unmarshalSource);
+			} else {
+				throw new AditInternalException("Response message interceptor could not extract the attachment.");
 			}
 			
 			if(document != null) {
@@ -619,16 +635,17 @@ public class MonitorService {
 					
 					if(lastChangedTitleMs > currentTimeMs) {
 						LOG.info("The document was changed during the last 'saveDocument' request.");
+						success = true;
 					} else {
-						LOG.error("The document was not changed during the last 'saveDocument' request.");
+						throw new AditInternalException("The document was not changed during the last 'saveDocument' request.");
 					}
 					
 				} else {
-					LOG.warn("Document title and contents datetime do not match.");
+					throw new AditInternalException("Document title and document file content datetime do not match.");
 				}
-				
+			} else {
+				throw new AditInternalException("Response message document not initialized.");
 			}
-			
 			
 			Date end = new Date();
 			long endTime = end.getTime();
@@ -636,21 +653,14 @@ public class MonitorService {
 			
 			// Populate result
 			result.setDuration(duration);
-			result.setSuccess(success);
-			
-			if(!result.isSuccess()) {
-				// TODO
-			}
-			
+			result.setSuccess(success);			
 			
 		} catch(Exception e) {
 			LOG.error("Error while testing 'getDocument' request: ", e);
-			
 			result.setSuccess(false);
 			List<String> exceptions = new ArrayList<String>();
 			exceptions.add(e.getMessage());
 			result.setExceptions(exceptions);
-			
 		}
 		
 		return result;

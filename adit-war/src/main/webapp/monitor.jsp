@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <%@page import="java.util.List" %>
+<%@page import="java.util.ArrayList" %>
+<%@page import="ee.adit.monitor.MonitorResult" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -10,9 +12,13 @@
 </head>
 
 <%  
-	String duration = (String) request.getAttribute("duration");
-	List<String> exceptions = (List<String>) request.getAttribute("exceptions");
-	String status = (String) request.getAttribute("status");
+
+	List<MonitorResult> results = new ArrayList<MonitorResult>();
+	try {
+		results = (List<MonitorResult>) request.getAttribute("results");
+	} catch (Exception e) {
+		;
+	}
 %>
 
 <body>
@@ -23,33 +29,38 @@
 			<td style="border: 1px solid #000;"><b style="margin: 6px;">Component</b></td>
 			<td style="border: 1px solid #000;"><b style="margin: 6px;">Status</b></td>
 			<td style="border: 1px solid #000;"><b style="margin: 6px;">Time / Error</b></td>
-		</tr>		
-		<tr>
-			<td style="border: 1px solid #000;"><span style="margin: 6px;">saveDocument() </span></td>
-			<td style="border: 1px solid #000;"><span style="margin: 6px;"><%=status%></span></td>
-			<td style="border: 1px solid #000;">
-				<span style="margin: 6px;">
-				<%if(status == "OK") {
-				
-				%>
-					<%=duration%> s
-				<%
-				  } else {
-					  for(int i = 0; i < exceptions.size(); i++) {
-						String exception = exceptions.get(i);						  
-					  	if(i > 0)
-					  		exception = ", " + exception;
-				%>
-					
-					
-					<%=exception%>
-				<%
-					  }
-				  }
-				%>
-				</span>
-			</td>
 		</tr>
+		
+		<%
+			for(int i = 0; i < results.size(); i++) {
+				MonitorResult result = results.get(i);
+		%>
+		
+			<tr>
+				<td style="border: 1px solid #000;"><span style="margin: 6px;"><%=result.getComponent()%></span></td>
+				<td style="border: 1px solid #000;"><span style="margin: 6px;"><%=result.getStatusString()%></span></td>
+				<td style="border: 1px solid #000;">
+					<span style="margin: 6px;">
+					<%if(result.isSuccess()) {
+					
+					%>
+						<%=result.getDurationString()%> s
+					<%
+					  } else {
+					%>
+						<%=result.getExceptionString()%>
+					<%
+					  }
+					%>
+					</span>
+				</td>
+			</tr>
+			
+		<%
+			}
+		%>
+			
+		
 		
 	</table>
 	

@@ -12,6 +12,12 @@ public class MonitorResult {
 	
 	private double duration;
 
+	private String durationString;
+	
+	private String exceptionString;
+	
+	private String statusString;
+	
 	public String getComponent() {
 		return component;
 	}
@@ -42,6 +48,30 @@ public class MonitorResult {
 
 	public void setSuccess(boolean success) {
 		this.success = success;
+	}
+
+	public String getDurationString() {
+		return durationString;
+	}
+
+	public void setDurationString(String durationString) {
+		this.durationString = durationString;
+	}
+
+	public String getExceptionString() {
+		return exceptionString;
+	}
+
+	public void setExceptionString(String exceptionString) {
+		this.exceptionString = exceptionString;
+	}
+
+	public String getStatusString() {
+		return statusString;
+	}
+
+	public void setStatusString(String statusString) {
+		this.statusString = statusString;
 	}
 	
 }
