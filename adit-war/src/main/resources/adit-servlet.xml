@@ -10,11 +10,12 @@
 						http://www.springframework.org/schema/tx
 						http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
 
+	<import resource="adit-endpoints.xml"/>
 	<import resource="adit-services.xml"/>
 	<import resource="adit-datasource.xml"/>
 	<import resource="adit-dao.xml"/>
 	<import resource="adit-jobs.xml"/>
 	<import resource="adit-application.xml"/>
-	<import resource="adit-configuration.xml"/>	
+	<import resource="adit-configuration.xml"/>
 
 </beans>
