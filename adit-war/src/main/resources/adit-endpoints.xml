@@ -10,7 +10,7 @@
 						http://www.springframework.org/schema/tx
 						http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
 
-<!-- X-Road client import (located in jar) -->
+	<!-- X-Road client import (located in jar) -->
 	<import resource="classpath:xtee.xml" />
 
 	<!-- User endpoints -->
