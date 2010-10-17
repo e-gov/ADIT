@@ -369,6 +369,7 @@ adit-war/src/main/resources/adit-application.xml -text
 adit-war/src/main/resources/adit-castor-mapping.xml -text
 adit-war/src/main/resources/adit-dao.xml -text
 adit-war/src/main/resources/adit-datasource.xml -text
+adit-war/src/main/resources/adit-endpoints.xml -text
 adit-war/src/main/resources/adit-jobs.xml -text
 adit-war/src/main/resources/adit-monitor-servlet.xml -text
 adit-war/src/main/resources/adit-services.xml -text
