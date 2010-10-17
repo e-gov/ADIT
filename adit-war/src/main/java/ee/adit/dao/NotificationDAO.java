@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -54,7 +55,9 @@ public class NotificationDAO extends HibernateDaoSupport {
 		Session session = null;
 		try {
 			session = this.getSessionFactory().openSession();
-			result = (Long) session.createQuery(SQL).uniqueResult();
+			Query query = session.createQuery(SQL);
+			query.setParameter("comparisonDate", comparisonDate);
+			result = (Long) query.uniqueResult();
 		} catch (Exception e) {
 			throw new AditInternalException("Error while fetching unsent notifications: ", e);
 		} finally {

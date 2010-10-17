@@ -1007,7 +1007,6 @@ public class MonitorService {
 			long currentDateMs = (new Date()).getTime();
 			Date comparisonDate = new Date(currentDateMs - getMonitorConfiguration().getNotificationSendInterval());
 			
-			// TODO: get document_history where notification_status = 'saada'
 			Long unsentNotificationCount = getNotificationDAO().getUnsentNotifications(comparisonDate);
 			
 			if(unsentNotificationCount > 0) {
