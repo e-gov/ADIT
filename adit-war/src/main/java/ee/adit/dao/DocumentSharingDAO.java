@@ -1,7 +1,10 @@
 package ee.adit.dao;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import org.apache.log4j.Logger;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -43,6 +46,32 @@ public class DocumentSharingDAO extends HibernateDaoSupport{
 	public List<DocumentSharing> getDVKSharings(Long documentID) {
 		String SQL = "from DocumentSharing where documentId = " + documentID + " and documentSharingType = '" + DocumentService.SharingType_SendDvk + "'";
 		return this.getSessionFactory().openSession().createQuery(SQL).list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<DocumentSharing> getDVKSharings(Date creationDateComparison) {
+		List<DocumentSharing> result = new ArrayList<DocumentSharing>();
+		String SQL = "from DocumentSharing where documentSharingType = '" + DocumentService.SharingType_SendDvk + "' and documentDvkStatus = " + DocumentService.DVKStatus_Missing + " and creationDate < :comparisonDate";
+		
+		Session session = null;
+		Transaction transaction = null;
+		try {
+			
+			session = this.getSessionFactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(SQL);
+			query.setParameter("comparisonDate", creationDateComparison);
+			result = query.list();
+			
+		} catch (Exception e) {
+			throw new AditInternalException("Error while fetching DVK DocumentSharings: ", e);
+		} finally {
+			if(session != null) {
+				session.close();
+			}
+		}	
+		
+		return result;
 	}
 	
 }

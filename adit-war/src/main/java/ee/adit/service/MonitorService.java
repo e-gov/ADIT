@@ -29,8 +29,10 @@ import org.xml.sax.InputSource;
 
 import dvk.api.ml.PojoMessage;
 import ee.adit.dao.DocumentDAO;
+import ee.adit.dao.DocumentSharingDAO;
 import ee.adit.dao.dvk.DvkDAO;
 import ee.adit.dao.pojo.Document;
+import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.exception.AditInternalException;
 import ee.adit.monitor.MonitorResult;
 import ee.adit.pojo.ArrayOfMessageMonitor;
@@ -84,6 +86,8 @@ public class MonitorService {
 	private static Logger LOG = Logger.getLogger(MonitorService.class);
 	
 	private DocumentDAO documentDAO; 
+	
+	private DocumentSharingDAO documentSharingDAO;
 	
 	private DvkDAO dvkDAO;
 	
@@ -440,7 +444,7 @@ public class MonitorService {
 	 */
 	public MonitorResult saveDocumentCheck() {
 		MonitorResult result = new MonitorResult();
-		result.setComponent("saveDocument");
+		result.setComponent("SAVE_DOCUMENT");
 		
 		LOG.info("Testing 'saveDocument' request...");
 		
@@ -532,7 +536,7 @@ public class MonitorService {
 			
 			
 		} catch(Exception e) {
-			LOG.error("Error while testing 'saveDocument' request: ", e);
+			LOG.error("Error while testing SAVE_DOCUMENT: ", e);
 			
 			result.setSuccess(false);
 			List<String> exceptions = new ArrayList<String>();
@@ -551,7 +555,7 @@ public class MonitorService {
 	 */
 	public MonitorResult getDocumentCheck() {
 		MonitorResult result = new MonitorResult();
-		result.setComponent("getDocument");
+		result.setComponent("GET_DOCUMENT");
 		
 		LOG.info("Testing 'getDocument' request...");
 		
@@ -614,8 +618,7 @@ public class MonitorService {
 			}
 			
 			if(document != null) {
-				Date documentLastChangedDateTitle = Util.xmlDateToDate(document.getTitle());
-				OutputDocumentFile documentFile = document.getFiles().getFiles().get(0);				
+				Date documentLastChangedDateTitle = Util.xmlDateToDate(document.getTitle());				
 				File docTmpFile = new File(interceptor.getTmpFile());
 				String tmpFileContents = Util.getFileContents(docTmpFile);
 				
@@ -661,7 +664,7 @@ public class MonitorService {
 			result.setSuccess(success);			
 			
 		} catch(Exception e) {
-			LOG.error("Error while testing 'getDocument' request: ", e);
+			LOG.error("Error while testing GET_DOCUMENT: ", e);
 			result.setSuccess(false);
 			List<String> exceptions = new ArrayList<String>();
 			exceptions.add(e.getMessage());
@@ -679,8 +682,50 @@ public class MonitorService {
 	 */
 	public MonitorResult checkDvkSend(){
 		MonitorResult result = new MonitorResult();
+		result.setComponent("DVK_SEND");
 		
 		LOG.info("Testing DVK sending...");
+		
+		double duration = 0;
+		boolean success = false;
+		Date start = new Date();
+		long startTime = start.getTime();
+		
+		/*
+		 * 1. Query ADIT database for all documents that are meant for sending to DVK client.
+		 *    If there are messages that are not sent to DVK in the specified period, then the 
+		 *    connection is broken.
+		 */
+		
+		// 1. Query ADIT database
+		try {	
+			long comparisonDateMs = (new Date()).getTime();
+			comparisonDateMs = comparisonDateMs - getMonitorConfiguration().getDocumentSendToDvkInterval();
+			Date comparisonDate = new Date(comparisonDateMs);
+			
+			List<DocumentSharing> documentSharings = getDocumentSharingDAO().getDVKSharings(comparisonDate);
+			
+			if(documentSharings != null && documentSharings.size() > 0) {
+				// DVK connection down - documents were found, that have not been sent to DVK in time				
+				throw new AditInternalException("Number of documents not sent to DVK client in time: " + documentSharings.size());
+			} else {
+				LOG.debug("No document sharings found for DVK (with status 'missing' - 100)");
+				result.setSuccess(true);
+			}
+			
+			Date end = new Date();
+			long endTime = end.getTime();
+			duration = (endTime - startTime) / 1000.0;
+			
+			result.setDuration(duration);
+			
+		} catch(Exception e) {
+			LOG.error("Error while testing DVK_SEND: ", e);
+			result.setSuccess(false);
+			List<String> exceptions = new ArrayList<String>();
+			exceptions.add(e.getMessage());
+			result.setExceptions(exceptions);
+		}
 		
 		return result;
 	}
@@ -786,5 +831,13 @@ public class MonitorService {
 
 	public void setMonitorConfiguration(MonitorConfiguration monitorConfiguration) {
 		this.monitorConfiguration = monitorConfiguration;
+	}
+
+	public DocumentSharingDAO getDocumentSharingDAO() {
+		return documentSharingDAO;
+	}
+
+	public void setDocumentSharingDAO(DocumentSharingDAO documentSharingDAO) {
+		this.documentSharingDAO = documentSharingDAO;
 	}
 }
