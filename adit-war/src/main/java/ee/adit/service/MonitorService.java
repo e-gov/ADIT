@@ -586,6 +586,8 @@ public class MonitorService {
 			result.setDuration(duration);
 			result.setSuccess(response.isSuccess());
 			
+			LOG.info("Attachments size: " + attachments.size());
+			
 			if(!result.isSuccess()) {
 				// TODO
 			}
