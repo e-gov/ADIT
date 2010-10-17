@@ -349,6 +349,7 @@
 	<bean id="contextPath" class="java.lang.String">
 		<constructor-arg type="java.lang.String" value="ee.adit.pojo" />
 	</bean>
+	
 	<bean id="schema" class="org.springframework.xml.xsd.SimpleXsdSchema">
 		<property name="xsd" value="/WEB-INF/adit.xsd" />
 	</bean>
@@ -357,12 +358,7 @@
 		class="org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition">
 		<constructor-arg value="classpath:adit.wsdl" />
 	</bean>
-	<!--
-	<bean id="adit" class="ee.webmedia.xtee.wsdl.XTeeWsdlDefinition">
-		<property name="schema" ref="schema" />
-		<property name="portTypeName" value="adit" />
-	</bean>
-	-->
+	
 	<bean id="xteeDatabase" class="java.lang.String">
 		<constructor-arg value="ametlikud-dokumendid" />
 	</bean>
