@@ -377,13 +377,6 @@
 					<include>messages_en.properties</include>
 					<include>messages_et.properties</include>
 					<include>adit.wsdl</include>
-					<include>adit-servlet.xml</include>
-					<include>adit-monitor-servlet.xml</include>
-					<include>adit-application.xml</include>
-					<include>adit-dao.xml</include>
-					<include>adit-datasource.xml</include>
-					<include>adit-jobs.xml</include>
-					<include>adit-services.xml</include>
 				</includes>
 			</resource>
 			<resource>
@@ -391,6 +384,13 @@
 				<targetPath>../adit/WEB-INF</targetPath>
 				<includes>
 					<include>adit.xsd</include>
+					<include>adit-servlet.xml</include>
+					<include>adit-monitor-servlet.xml</include>
+					<include>adit-application.xml</include>
+					<include>adit-dao.xml</include>
+					<include>adit-datasource.xml</include>
+					<include>adit-jobs.xml</include>
+					<include>adit-services.xml</include>
 				</includes>
 			</resource>
 
