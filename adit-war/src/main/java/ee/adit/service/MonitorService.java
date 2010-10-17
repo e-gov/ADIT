@@ -615,13 +615,11 @@ public class MonitorService {
 			if(document != null) {
 				Date documentLastChangedDateTitle = Util.xmlDateToDate(document.getTitle());
 				
-				OutputDocumentFile documentFile = document.getFiles().getFiles().get(0);
-				LOG.debug("DocumentFile: " + documentFile);
+				OutputDocumentFile documentFile = document.getFiles().getFiles().get(0);				
+				String docFileTmpFile = getConfiguration().getTempDir() + File.separator + documentFile.getSysTempFile();
+				LOG.debug("Document file temp file: '" + docFileTmpFile + "'.");
 				
-				if(documentFile != null)
-					LOG.debug("DocumentFile tempFile: '" + documentFile.getSysTempFile() + "'.");
-				
-				File file = new File(documentFile.getSysTempFile());
+				File file = new File(docFileTmpFile);
 				
 				String fileContents = Util.getFileContents(file);
 				Date documentLastChangedDateContents = Util.xmlDateToDate(fileContents);
