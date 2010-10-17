@@ -608,6 +608,25 @@ public class MonitorService {
 				LOG.info("Document title date: " + documentLastChangedDateTitle);
 				LOG.info("Document contents date: " + documentLastChangedDateContents);
 				
+				if(documentLastChangedDateTitle.equals(documentLastChangedDateContents)) {
+					LOG.info("Document title and contents datetime match.");
+					
+					// Check if document was indeed changed during the last 'saveDocument' request
+					Long docSaveInterval = getMonitorConfiguration().getDocumentSaveInterval();
+					
+					long lastChangedTitleMs = documentLastChangedDateTitle.getTime();
+					long currentTimeMs = (new Date()).getTime() - docSaveInterval;
+					
+					if(lastChangedTitleMs > currentTimeMs) {
+						LOG.info("The document was changed during the last 'saveDocument' request.");
+					} else {
+						LOG.error("The document was not changed during the last 'saveDocument' request.");
+					}
+					
+				} else {
+					LOG.warn("Document title and contents datetime do not match.");
+				}
+				
 			}
 			
 			
