@@ -751,7 +751,7 @@ public class MonitorService {
 				if(!response.getSuccess()) {
 					String responseErrorMessage = null;
 					if(response.getMessages() != null && response.getMessages().getMessage() != null && response.getMessages().getMessage().size() > 0) {
-						responseErrorMessage = response.getMessages().getMessage().get(0).getValue();
+						responseErrorMessage = response.getMessages().getMessage().get(0);
 					}
 					throw new AditInternalException("The 'getDocument' request was not successful: " + responseErrorMessage);
 				}
