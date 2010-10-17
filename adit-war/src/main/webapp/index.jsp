@@ -19,16 +19,12 @@
 <body>
 	<h1>Adit Service</h1>
 	
-	<table style="border: 1px solid #000; border-collapse: collapse;">
-		<tr>
-			<td style="border: 1px solid #000;"><b style="margin: 6px;">Web-Service</b></td>
-			<td style="border: 1px solid #000;"><span style="margin: 6px;"><a href="<%=requestURL%>/service"><%=requestURL%>/service</a></span></td>
-		</tr>
-		<tr>
-			<td style="border: 1px solid #000;"><b style="margin: 6px;">Monitor</b></td>
-			<td style="border: 1px solid #000;"><span style="margin: 6px;"><a href="<%=requestURL%>/monitor"><%=requestURL%>/monitor</a></span></td>
-		</tr>
-	</table>
+	
+	<ul>
+		<li><a href="<%=requestURL%>/service">Web-Service</a></li>
+		<li><a href="<%=requestURL%>/service/adit.wsdl">Web-Service WSDL</a></li>
+		<li><a href="<%=requestURL%>/monitor">Monitor</a></li>
+	</ul>
 	
 </body>
 </html>
