@@ -770,6 +770,7 @@
 		<property name="nagiosLogger" ref="nagiosLogger" />
 		<property name="documentService" ref="documentService" />
 		<property name="monitorConfiguration" ref="monitorConfiguration" />
+		<property name="documentSharingDAO" ref="documentSharingDAO" />
 	</bean>
 
 	<!-- Castor Marshaller -->
