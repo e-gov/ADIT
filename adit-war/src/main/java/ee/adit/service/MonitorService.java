@@ -686,9 +686,9 @@ public class MonitorService {
 	 */
 	public MonitorResult checkDvkSend(){
 		MonitorResult result = new MonitorResult();
-		result.setComponent("ADIT_TO_DVK_CLIENT_SEND");
+		result.setComponent("DVK_SEND");
 		
-		LOG.info("Testing ADIT_TO_DVK_CLIENT_SEND...");
+		LOG.info("Testing DVK_SEND...");
 		
 		double duration = 0;
 		boolean success = false;
@@ -723,7 +723,7 @@ public class MonitorService {
 			result.setDuration(duration);
 			
 		} catch(Exception e) {
-			LOG.error("Error while testing ADIT_TO_DVK_CLIENT_SEND: ", e);
+			LOG.error("Error while testing DVK_SEND: ", e);
 			result.setSuccess(false);
 			List<String> exceptions = new ArrayList<String>();
 			exceptions.add(e.getMessage());

@@ -319,7 +319,7 @@ public class DvkDAO {
 	public List<PojoMessage> getReceivedDocuments(Date comparisonDate) throws Exception {
 		List<PojoMessage> result = new ArrayList<PojoMessage>();
 		
-		String SQL = "from PojoMessage where incoming = true and recipientStatusId = " + DocumentService.DVKStatus_Received + " and receivedDate <= :comparisonDate";
+		String SQL = "from PojoMessage where isIncoming = true and recipientStatusId = " + DocumentService.DVKStatus_Received + " and receivedDate <= :comparisonDate";
 		Session session = null;
 		
 		try {
