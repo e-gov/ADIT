@@ -213,8 +213,11 @@ public class DvkDAO {
 	 */
 	public List<PojoOrganization> getUsers() {
 		List<PojoOrganization> result = new ArrayList<PojoOrganization>();
-		String SQL = "from PojoOrganization where dhlCapable = true";
+		//String SQL = "from PojoOrganization where dhlCapable = true";
+		String SQL = "from PojoOrganization";
 		Session session = null;
+		
+		LOG.debug("Fetching organizations...");
 		
 		try {
 			session = this.getSessionFactory().openSession();
