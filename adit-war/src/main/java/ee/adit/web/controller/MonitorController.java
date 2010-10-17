@@ -85,18 +85,19 @@ public class MonitorController extends AbstractController {
 			}
 			results.add(dvkSendCheckResult);
 			
-			// 4. DVK_CLIENT_TO_DVK_SEND
-			MonitorResult checkDvkClientToDvkSendResult = this.getMonitorService().checkDvkClientToDvkSend();
-			checkDvkClientToDvkSendResult.setDurationString(df.format(checkDvkClientToDvkSendResult.getDuration()));
-			if(checkDvkClientToDvkSendResult.isSuccess()) {
-				checkDvkClientToDvkSendResult.setStatusString(MonitorService.OK);
+			// 3. DVK_RECEIVE
+			MonitorResult checkDvkReceiveResult = this.getMonitorService().checkDvkReceive();
+			checkDvkReceiveResult.setDurationString(df.format(checkDvkReceiveResult.getDuration()));
+			if(checkDvkReceiveResult.isSuccess()) {
+				checkDvkReceiveResult.setStatusString(MonitorService.OK);
 			} else {
-				checkDvkClientToDvkSendResult.setStatusString(MonitorService.FAIL);
+				checkDvkReceiveResult.setStatusString(MonitorService.FAIL);
 			}
-			if(checkDvkClientToDvkSendResult.getExceptions() != null && checkDvkClientToDvkSendResult.getExceptions().size() > 0) {
-				checkDvkClientToDvkSendResult.setExceptionString(checkDvkClientToDvkSendResult.getExceptions().get(0));
+			if(checkDvkReceiveResult.getExceptions() != null && checkDvkReceiveResult.getExceptions().size() > 0) {
+				checkDvkReceiveResult.setExceptionString(checkDvkReceiveResult.getExceptions().get(0));
 			}
-			results.add(checkDvkClientToDvkSendResult);
+			results.add(checkDvkReceiveResult);
+			
 			
 			// 2. ADIT -> DVK
 			//    - ADIT -> DVK UK

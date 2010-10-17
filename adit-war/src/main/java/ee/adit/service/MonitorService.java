@@ -24,6 +24,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
@@ -737,7 +738,7 @@ public class MonitorService {
 	 * 
 	 * @return
 	 */
-	public MonitorResult checkDvkClientToDvkSend() {
+	/*public MonitorResult checkDvkClientToDvkSend() {
 		MonitorResult result = new MonitorResult();
 		result.setComponent("DVK_CLIENT_TO_DVK_SEND");
 		
@@ -790,14 +791,15 @@ public class MonitorService {
 		}
 		
 		return result;
-	}
+	}*/
 	
-	public MonitorResult checkDvkClientToAditSend() {
+	@Transactional
+	public MonitorResult checkDvkReceive() {
 		MonitorResult result = new MonitorResult();
-		result.setComponent("DVK_CLIENT_TO_ADIT_SEND");
+		result.setComponent("DVK_RECEIVE");
 		
 		double duration = 0;
-		boolean success = false;
+		int failCount = 0;
 		Date start = new Date();
 		long startTime = start.getTime();
 		
@@ -805,16 +807,39 @@ public class MonitorService {
 			
 			// Check if there are documents in the DVK client database that are
 			// not read into ADIT database.
+			long currentDateMs = (new Date()).getTime();
+			Date comparisonDate = new Date(currentDateMs - getMonitorConfiguration().getDocumentSendToAditInterval());
+			//  from PojoMessage where incoming = true and recipientStatusId = 105 and receivedDate <= :comparisonDate 
+			List<PojoMessage> receivedMessages = getDvkDAO().getReceivedDocuments(comparisonDate);
 			
-			// select * from dvk_client.dhl_message where 
 			
+			for(int i = 0; i < receivedMessages.size(); i++) {
+				try {
+					PojoMessage message = receivedMessages.get(i);
+					
+					Document document = getDocumentDAO().getDocumentByDVKID(message.getDhlId());
+					
+					if(document == null) {
+						// Document has not reached ADIT
+						failCount++;
+					}
+				} catch(Exception e) {
+					LOG.error("Could not check document received from DVK: ", e);
+				}
+			}
+			
+			if(failCount > 0) {
+				throw new AditInternalException("Some document have not been transfered to ADIT. Number of failed documents: " + failCount);
+			}
+				
+				
 			Date end = new Date();
 			long endTime = end.getTime();
 			duration = (endTime - startTime) / 1000.0;
 			result.setDuration(duration);
 			
 		} catch(Exception e) {
-			LOG.error("Error while testing DVK_CLIENT_TO_ADIT_SEND: ", e);
+			LOG.error("Error while testing DVK_RECEIVE: ", e);
 			result.setSuccess(false);
 			List<String> exceptions = new ArrayList<String>();
 			exceptions.add(e.getMessage());

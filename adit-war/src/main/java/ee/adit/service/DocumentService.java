@@ -1187,7 +1187,7 @@ public class DocumentService {
 											// (recipient_status_id = "102") in
 											// DVK Client database
 											dvkDocument
-													.setRecipientStatusId(DVKStatus_Sent);
+													.setRecipientStatusId(DVKStatus_Received);
 											this.getDvkDAO().updateDocument(
 													dvkDocument);
 

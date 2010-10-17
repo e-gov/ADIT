@@ -315,4 +315,27 @@ public class DvkDAO {
 		return result;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<PojoMessage> getReceivedDocuments(Date comparisonDate) throws Exception {
+		List<PojoMessage> result = new ArrayList<PojoMessage>();
+		
+		String SQL = "from PojoMessage where incoming = true and recipientStatusId = " + DocumentService.DVKStatus_Received + " and receivedDate <= :comparisonDate";
+		Session session = null;
+		
+		try {
+			session = this.getSessionFactory().openSession();
+			Transaction transaction = session.beginTransaction();
+			Query query = session.createQuery(SQL);
+			query.setParameter("comparisonDate", comparisonDate);
+			result = query.list();
+		} catch(Exception e) {
+			throw e;
+		} finally {
+			if(session != null)
+				session.close();
+		}
+		
+		return result;		
+	}
+	
 }
