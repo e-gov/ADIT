@@ -74,4 +74,30 @@ public class DocumentSharingDAO extends HibernateDaoSupport{
 		return result;
 	}
 	
+	public long getDocumentsSentToDvk(Date beginDate, Date endDate) {
+		long result = 0;
+		String SQL = "select count(*) from DocumentSharing where documentSharingType = '" + DocumentService.SharingType_SendDvk + "' and dvkSendDate is not null and dvkSendDate >= :beginDate and dvkSendDate <= :endDate";
+		
+		Session session = null;
+		Transaction transaction = null;
+		try {
+			
+			session = this.getSessionFactory().openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery(SQL);
+			query.setParameter("beginDate", beginDate);
+			query.setParameter("endDate", endDate);
+			result = (Long) query.uniqueResult();
+			
+		} catch (Exception e) {
+			throw new AditInternalException("Error while fetching DVK DocumentSharings: ", e);
+		} finally {
+			if(session != null) {
+				session.close();
+			}
+		}	
+		
+		return result;
+	}
+	
 }

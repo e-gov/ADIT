@@ -1,6 +1,7 @@
 package ee.adit.dao.dvk;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -285,4 +286,33 @@ public class DvkDAO {
 		this.sessionFactory = sessionFactory;
 	}
 
+	/**
+	 * Get only documents that have status 'sent' for all message recipients.
+	 * @return	List of documents that have status 'sent' for all message recipients
+	 * @throws Exception 
+	 */
+	@SuppressWarnings("unchecked")
+	public long getSentDocuments(Date beginDate, Date endDate) throws Exception {
+		long result = 0;
+		
+		String SQL = "select count(*) from PojoMessage where isIncoming = false and sendingDate => :beginDate and sendingDate <= :endDate)";
+		Session session = null;
+		
+		try {
+			session = this.getSessionFactory().openSession();
+			Transaction transaction = session.beginTransaction();
+			Query query = session.createQuery(SQL);
+			query.setParameter("beginDate", beginDate);
+			query.setParameter("endDate", endDate);
+			result = (Long) query.uniqueResult();
+		} catch(Exception e) {
+			throw e;
+		} finally {
+			if(session != null)
+				session.close();
+		}
+		
+		return result;
+	}
+	
 }

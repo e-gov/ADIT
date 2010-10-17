@@ -6,8 +6,11 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.xml.soap.MessageFactory;
@@ -748,10 +751,29 @@ public class MonitorService {
 			// That can not be checked because DVK client does not record the time
 			// when the message was created.
 			
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+			
+			Calendar cal = new GregorianCalendar();
+			Date currentDate = cal.getTime();
+			int day = cal.get(Calendar.DATE);
+			int month = cal.get(Calendar.MONTH);
+			int year = cal.get(Calendar.YEAR);
+			
+			Date beginDate = sdf.parse((day - 1) + "." + month + "." + year + " 00:00:00");
+			Date endDate = sdf.parse((day - 1) + "." + month + "." + year + " 23:59:59");
+			
 			// 1. Get the number of messages sent to DVK client from ADIT yesterday.
-			
-			
+			long documentSharingCount = getDocumentSharingDAO().getDocumentsSentToDvk(beginDate, endDate);
+
 			// 2. Get the number of messages sent to DVK server from DVK client yesterday.
+			long pojoMessageCount = getDvkDAO().getSentDocuments(beginDate, endDate);
+			
+			if(documentSharingCount == pojoMessageCount) {
+				LOG.info("Number of documents sent from ADIT -> DVK UK matches the number of documents sent from DVK UK -> DVK");
+			} else {
+				throw new AditInternalException("Number of documents sent from ADIT -> DVK UK does not match the number of documents sent from DVK UK -> DVK: " + documentSharingCount + "/" + pojoMessageCount + " (ADIT->DVKUK / DVKUK->DVK)");
+			}
 			
 			Date end = new Date();
 			long endTime = end.getTime();
