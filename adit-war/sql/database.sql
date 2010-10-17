@@ -202,8 +202,7 @@ CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING
 	creation_date     DATE,    /* Jagamise kuupĆ¤ev ja kellaaeg */
 	dvk_status_id     NUMBER(12),    /* Dokumendi DVK staatuse ID. NĆ¤itab, millises staatuses on jagatud dokument adressaadi DVK-s. */
 	wf_status_id      NUMBER(12),    /* TĆ¶Ć¶voo staatuse ID */
-	last_access_date  DATE,    /* KuupĆ¤ev ja kellaaeg, millal viimati jagatud dokumendi andmeid vaadati. */
-	dvk_send_date	  DATE	   /* Kuupäev ja kellaaeg, millal saadeti dokument DVK-sse (juhul kui tegemist on DVK-sse saatmisega) */
+	last_access_date  DATE    /* KuupĆ¤ev ja kellaaeg, millal viimati jagatud dokumendi andmeid vaadati. */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
 COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING IS 'Dokumendi jagamise andmed.';

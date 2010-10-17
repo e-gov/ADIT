@@ -37,8 +37,5 @@
         <property name="lastAccessDate" type="timestamp">
             <column name="LAST_ACCESS_DATE" length="7" />
         </property>
-        <property name="dvkSendDate" type="timestamp">
-            <column name="DVK_SEND_DATE" length="7" />
-        </property>
     </class>
 </hibernate-mapping>

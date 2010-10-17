@@ -74,7 +74,7 @@ public class DocumentSharingDAO extends HibernateDaoSupport{
 		return result;
 	}
 	
-	public long getDocumentsSentToDvk(Date beginDate, Date endDate) {
+	/*public long getDocumentsSentToDvk(Date beginDate, Date endDate) {
 		long result = 0;
 		String SQL = "select count(*) from DocumentSharing where documentSharingType = '" + DocumentService.SharingType_SendDvk + "' and dvkSendDate is not null and dvkSendDate >= :beginDate and dvkSendDate <= :endDate";
 		
@@ -98,6 +98,6 @@ public class DocumentSharingDAO extends HibernateDaoSupport{
 		}	
 		
 		return result;
-	}
+	}*/
 	
 }
