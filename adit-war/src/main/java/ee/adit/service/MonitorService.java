@@ -830,6 +830,8 @@ public class MonitorService {
 			
 			if(failCount > 0) {
 				throw new AditInternalException("Some document have not been transfered to ADIT. Number of failed documents: " + failCount);
+			} else {
+				result.setSuccess(true);
 			}
 				
 				
