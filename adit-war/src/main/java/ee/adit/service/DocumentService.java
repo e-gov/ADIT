@@ -111,32 +111,32 @@ public class DocumentService {
 	/**
 	 * Document DVK status - missing
 	 */
-	public static final Long DVKStatus_Missing = new Long(100);
+	public static final Long DVKStatus_Missing = new Long(0);
 	
 	/**
 	 * Document DVK status - waiting
 	 */
-	public static final Long DVKStatus_Waiting = new Long(101);
+	public static final Long DVKStatus_Waiting = new Long(1);
 	
 	/**
 	 * Document DVK status - sending
 	 */
-	public static final Long DVKStatus_Sending = new Long(102);
+	public static final Long DVKStatus_Sending = new Long(2);
 	
 	/**
 	 * Document DVK status - sent
 	 */
-	public static final Long DVKStatus_Sent = new Long(103);
+	public static final Long DVKStatus_Sent = new Long(3);
 	
 	/**
 	 * Document DVK status - aborted
 	 */
-	public static final Long DVKStatus_Aborted = new Long(104);
+	public static final Long DVKStatus_Aborted = new Long(4);
 	
 	/**
 	 * Document DVK status - received
 	 */
-	public static final Long DVKStatus_Received = new Long(105);
+	public static final Long DVKStatus_Received = new Long(5);
 
 	/**
 	 * DVK fault code used for deleted documents. Inserted to DVK when document deleted.
