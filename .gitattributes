@@ -365,7 +365,12 @@ adit-war/src/main/java/ee/adit/ws/endpoint/user/JoinEndpoint.java -text
 adit-war/src/main/java/ee/adit/ws/endpoint/user/SetNotificationsEndpoint.java -text
 adit-war/src/main/java/ee/adit/ws/endpoint/user/UnJoinEndpoint.java -text
 adit-war/src/main/resources/DVKresponseMessage.xsl -text
+adit-war/src/main/resources/adit-application.xml -text
 adit-war/src/main/resources/adit-castor-mapping.xml -text
+adit-war/src/main/resources/adit-dao.xml -text
+adit-war/src/main/resources/adit-datasource.xml -text
+adit-war/src/main/resources/adit-jobs.xml -text
+adit-war/src/main/resources/adit-services.xml -text
 adit-war/src/main/resources/adit-servlet.xml -text
 adit-war/src/main/resources/adit.wsdl -text
 adit-war/src/main/resources/adit.xsd -text
@@ -387,12 +392,7 @@ adit-war/src/main/resources/castor-mapping/xsd.v1/rkel_letter.xsd -text
 adit-war/src/main/resources/castor-mapping/xsd.v2/dhl-meta-automatic.xsd -text
 adit-war/src/main/resources/castor-mapping/xsd.v2/dhl-meta-manual.xsd -text
 adit-war/src/main/resources/castor-mapping/xsd.v2/dhl.xsd -text
-adit-war/src/main/resources/dev-dev-weblogic/adit-application.xml -text
-adit-war/src/main/resources/dev-dev-weblogic/adit-dao.xml -text
-adit-war/src/main/resources/dev-dev-weblogic/adit-datasource.xml -text
-adit-war/src/main/resources/dev-dev-weblogic/adit-jobs.xml -text
 adit-war/src/main/resources/dev-dev-weblogic/adit-monitor-servlet.xml -text
-adit-war/src/main/resources/dev-dev-weblogic/adit-services.xml -text
 adit-war/src/main/resources/dev-dev-weblogic/adit-servlet.xml -text
 adit-war/src/main/resources/dev-dev-weblogic/hibernate_ora_dvk.cfg.xml -text
 adit-war/src/main/resources/dev-dev-weblogic/jdigidoc.cfg -text
