@@ -761,11 +761,13 @@ public class UserService {
 		int modified = 0;
 		
 		try {
-			List<PojoOrganization> dvkUsers = this.getDvkDAO().getUsers();
+			List<PojoOrganization> dvkUsers = this.getDvkDAO().getUsers();			
+			LOG.info("Number of DVK users found: " + dvkUsers.size());
+			
 			Iterator<PojoOrganization> dvkUserIterator = dvkUsers.iterator();
 
 			List<AditUser> aditUsers = this.getAditUserDAO().listDVKUsers();
-			
+			LOG.info("Number of ADIT users found: " + aditUsers.size());
 			
 			List<AditUser> aditUsersCopy = new ArrayList<AditUser>(aditUsers);
 			
