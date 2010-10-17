@@ -269,6 +269,7 @@ adit-war/src/main/java/ee/adit/pojo/GetUserInfoRequestUserList.java -text
 adit-war/src/main/java/ee/adit/pojo/GetUserInfoResponse.java -text
 adit-war/src/main/java/ee/adit/pojo/GetUserInfoResponseAttachment.java -text
 adit-war/src/main/java/ee/adit/pojo/GetUserInfoResponseAttachmentUser.java -text
+adit-war/src/main/java/ee/adit/pojo/GetUserInfoResponseMonitor.java -text
 adit-war/src/main/java/ee/adit/pojo/JoinRequest.java -text
 adit-war/src/main/java/ee/adit/pojo/JoinResponse.java -text
 adit-war/src/main/java/ee/adit/pojo/ListMethodsRequest.java -text

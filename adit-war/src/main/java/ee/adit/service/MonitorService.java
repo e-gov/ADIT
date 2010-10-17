@@ -43,6 +43,13 @@ import ee.adit.pojo.ArrayOfMessageMonitor;
 import ee.adit.pojo.GetDocumentRequest;
 import ee.adit.pojo.GetDocumentResponse;
 import ee.adit.pojo.GetDocumentResponseMonitor;
+import ee.adit.pojo.GetUserInfoRequest;
+import ee.adit.pojo.GetUserInfoRequestAttachmentUserList;
+import ee.adit.pojo.GetUserInfoRequestUserList;
+import ee.adit.pojo.GetUserInfoResponse;
+import ee.adit.pojo.GetUserInfoResponseAttachment;
+import ee.adit.pojo.GetUserInfoResponseAttachmentUser;
+import ee.adit.pojo.GetUserInfoResponseMonitor;
 import ee.adit.pojo.OutputDocument;
 import ee.adit.pojo.OutputDocumentFile;
 import ee.adit.pojo.SaveDocumentRequest;
@@ -680,6 +687,134 @@ public class MonitorService {
 	}
 	
 	/**
+	 * Tests "getDocument" request.
+	 * 
+	 * @return test result
+	 */
+	public MonitorResult getUserInfoCheck() {
+		MonitorResult result = new MonitorResult();
+		result.setComponent("GET_USER_INFO");
+		
+		LOG.info("Testing 'getUserInfo' request...");
+		
+		double duration = 0;
+		boolean success = false;
+		Date start = new Date();
+		long startTime = start.getTime();
+		
+		try {
+			WebServiceTemplate webServiceTemplate = new WebServiceTemplate();
+			webServiceTemplate.setMarshaller(getMarshaller());
+			webServiceTemplate.setUnmarshaller(getUnmarshaller());
+			CustomClientInterceptor interceptor = new CustomClientInterceptor();
+			interceptor.setConfiguration(getConfiguration());
+			webServiceTemplate.setInterceptors(new ClientInterceptor[] { interceptor });
+			
+			GetUserInfoRequest request = new GetUserInfoRequest();
+			GetUserInfoRequestUserList requestUserList = new GetUserInfoRequestUserList();
+			requestUserList.setHref("cid:userlist");
+			request.setUserList(requestUserList);
+			
+			GetUserInfoRequestAttachmentUserList requestAttachmentUserList = new GetUserInfoRequestAttachmentUserList();
+			ArrayList<String> codes = new ArrayList<String>();
+			codes.add(getMonitorConfiguration().getTestUserCode());
+			requestAttachmentUserList.setCodes(codes);
+			
+			String tmpFile = this.marshal(requestAttachmentUserList);
+			LOG.debug("Request attachment marshalled to temporary file: '" + tmpFile + "'.");
+			String base64zippedFile = Util.gzipAndBase64Encode(tmpFile, getConfiguration().getTempDir(), true);
+			
+			SaajSoapMessageFactory messageFactory = new SaajSoapMessageFactory(MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL));
+			SaajSoapMessage message = (SaajSoapMessage) messageFactory.createWebServiceMessage();
+
+			CustomXTeeServiceConfiguration xTeeServiceConfiguration = new CustomXTeeServiceConfiguration();
+			xTeeServiceConfiguration.setDatabase("ametlikud-dokumendid");
+			xTeeServiceConfiguration.setIdCode(this.getMonitorConfiguration().getUserCode());
+			xTeeServiceConfiguration.setInstitution(this.getMonitorConfiguration().getInstitutionCode());
+			xTeeServiceConfiguration.setMethod("getUserInfo");
+			xTeeServiceConfiguration.setVersion("v1");
+			xTeeServiceConfiguration.setSecurityServer(this.getMonitorConfiguration().getAditServiceUrl());
+			xTeeServiceConfiguration.setInfosysteem(this.getMonitorConfiguration().getRemoteApplicationShortName());
+			
+			CustomXTeeConsumer customXTeeConsumer = new CustomXTeeConsumer();
+			customXTeeConsumer.setWebServiceTemplate(webServiceTemplate);
+			customXTeeConsumer.setServiceConfiguration(xTeeServiceConfiguration);
+			customXTeeConsumer.setMsgCallbackFactory(new CustomMessageCallbackFactory());
+			
+			List<XTeeAttachment> attachments = new ArrayList<XTeeAttachment>();
+			XTeeAttachment xTeeAttachment = new XTeeAttachment("document", "text/xml", Util.getBytesFromFile(new File(base64zippedFile)));
+			attachments.add(xTeeAttachment);
+			
+			GetUserInfoResponseMonitor response = (GetUserInfoResponseMonitor) customXTeeConsumer.sendRequest(request, attachments);
+			
+			if(response != null) {
+				if(!response.getSuccess()) {
+					String responseErrorMessage = null;
+					if(response.getMessages() != null && response.getMessages().getMessage() != null && response.getMessages().getMessage().size() > 0) {
+						responseErrorMessage = response.getMessages().getMessage().get(0).getValue();
+					}
+					throw new AditInternalException("The 'getDocument' request was not successful: " + responseErrorMessage);
+				}
+			} else {
+				throw new AditInternalException("The 'getDocument' request was not successful: response could not be unmarshalled: unmarshalling returned null.");
+			}
+			
+			GetUserInfoResponseAttachment responseUserList = null;
+			
+			if(interceptor.getTmpFile() != null) {
+				LOG.info("Attachment saved to temporary file: " + interceptor.getTmpFile());
+				Source unmarshalSource = new SAXSource(new InputSource(new FileInputStream(interceptor.getTmpFile())));
+				responseUserList = (GetUserInfoResponseAttachment) getUnmarshaller().unmarshal(unmarshalSource);
+			} else {
+				throw new AditInternalException("Response message interceptor could not extract the attachment.");
+			}
+			
+			if(responseUserList != null) {
+				
+				List<GetUserInfoResponseAttachmentUser> responseList = responseUserList.getUserList();
+				
+				for(int i = 0; i < responseList.size(); i++) {
+					GetUserInfoResponseAttachmentUser user = responseList.get(i);
+					
+					if(user.getUserCode() != null && user.getUserCode().equals(getMonitorConfiguration().getTestUserCode())) {
+						if(user.isHasJoined()) {
+							success = true;
+						} else {
+							throw new AditInternalException("Testuser '" + getMonitorConfiguration().getTestUserCode() + "' has not joined ADIT.");
+						}
+					}
+					
+				}
+				
+				if(!success) {
+					throw new AditInternalException("Testuser '" + getMonitorConfiguration().getTestUserCode() + "' not found in response message attachment - user not registered.");
+				}
+				
+			} else {
+				throw new AditInternalException("Response message userlist not initialized.");
+			}
+			
+			Date end = new Date();
+			long endTime = end.getTime();
+			duration = (endTime - startTime) / 1000.0;
+			
+			// Populate result
+			result.setDuration(duration);
+			result.setSuccess(success);	
+			
+		} catch(Exception e) {
+			LOG.error("Error while testing GET_USER_INFO: ", e);
+			result.setSuccess(false);
+			List<String> exceptions = new ArrayList<String>();
+			exceptions.add(e.getMessage());
+			result.setExceptions(exceptions);
+		}
+		
+		return result;
+		
+	}
+	
+	/**
 	 * Tests if documents are sent to DVK client.
 	 * 
 	 * @return test result
@@ -798,6 +933,8 @@ public class MonitorService {
 		MonitorResult result = new MonitorResult();
 		result.setComponent("DVK_RECEIVE");
 		
+		LOG.info("Testing DVK_RECEIVE...");
+		
 		double duration = 0;
 		int failCount = 0;
 		Date start = new Date();
@@ -833,8 +970,7 @@ public class MonitorService {
 			} else {
 				result.setSuccess(true);
 			}
-				
-				
+			
 			Date end = new Date();
 			long endTime = end.getTime();
 			duration = (endTime - startTime) / 1000.0;
@@ -847,7 +983,6 @@ public class MonitorService {
 			exceptions.add(e.getMessage());
 			result.setExceptions(exceptions);
 		}
-		
 		
 		return result;
 	}

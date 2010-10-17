@@ -99,6 +99,20 @@ public class MonitorController extends AbstractController {
 			results.add(checkDvkReceiveResult);
 			
 			
+			// 4. GET_USER_INFO
+			MonitorResult getUserInfoCheckResult = this.getMonitorService().getUserInfoCheck();
+			getUserInfoCheckResult.setDurationString(df.format(getUserInfoCheckResult.getDuration()));
+			if(getUserInfoCheckResult.isSuccess()) {
+				getUserInfoCheckResult.setStatusString(MonitorService.OK);
+			} else {
+				getUserInfoCheckResult.setStatusString(MonitorService.FAIL);
+			}
+			if(getUserInfoCheckResult.getExceptions() != null && getUserInfoCheckResult.getExceptions().size() > 0) {
+				getUserInfoCheckResult.setExceptionString(getUserInfoCheckResult.getExceptions().get(0));
+			}
+			results.add(getUserInfoCheckResult);
+			
+			
 			// 2. ADIT -> DVK
 			//    - ADIT -> DVK UK
 			//    - DVK UK -> DVK
