@@ -18,6 +18,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
 import org.springframework.ws.client.core.WebServiceTemplate;
+import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 
@@ -36,6 +37,7 @@ import ee.adit.pojo.SaveDocumentRequestAttachment;
 import ee.adit.pojo.SaveDocumentRequestDocument;
 import ee.adit.pojo.SaveDocumentResponseMonitor;
 import ee.adit.util.Configuration;
+import ee.adit.util.CustomClientInterceptor;
 import ee.adit.util.CustomMessageCallbackFactory;
 import ee.adit.util.CustomXTeeConsumer;
 import ee.adit.util.CustomXTeeServiceConfiguration;
@@ -552,6 +554,9 @@ public class MonitorService {
 			WebServiceTemplate webServiceTemplate = new WebServiceTemplate();
 			webServiceTemplate.setMarshaller(getMarshaller());
 			webServiceTemplate.setUnmarshaller(getUnmarshaller());
+			CustomClientInterceptor interceptor = new CustomClientInterceptor();
+			interceptor.setConfiguration(getConfiguration());
+			webServiceTemplate.setInterceptors(new ClientInterceptor[] { interceptor });
 			
 			GetDocumentRequest request = new GetDocumentRequest();
 			request.setDocumentId(this.getMonitorConfiguration().getTestDocumentId());
@@ -574,9 +579,9 @@ public class MonitorService {
 			customXTeeConsumer.setServiceConfiguration(xTeeServiceConfiguration);
 			customXTeeConsumer.setMsgCallbackFactory(new CustomMessageCallbackFactory());
 			
+			GetDocumentResponseMonitor response = (GetDocumentResponseMonitor) customXTeeConsumer.sendRequest(request);
 			
-			List<XTeeAttachment> attachments = new ArrayList<XTeeAttachment>();
-			GetDocumentResponseMonitor response = (GetDocumentResponseMonitor) customXTeeConsumer.sendRequest(request, attachments);
+			LOG.info("Attachment saved to temporary file: ", interceptor.getTmpFile());
 			
 			Date end = new Date();
 			long endTime = end.getTime();
@@ -585,8 +590,6 @@ public class MonitorService {
 			// Populate result
 			result.setDuration(duration);
 			result.setSuccess(response.isSuccess());
-			
-			LOG.info("Attachments size: " + attachments.size());
 			
 			if(!result.isSuccess()) {
 				// TODO

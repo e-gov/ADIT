@@ -322,6 +322,7 @@ adit-war/src/main/java/ee/adit/service/UserService.java -text
 adit-war/src/main/java/ee/adit/stateportal/NotificationStatus.java -text
 adit-war/src/main/java/ee/adit/stateportal/StatePortalClient.java -text
 adit-war/src/main/java/ee/adit/util/Configuration.java -text
+adit-war/src/main/java/ee/adit/util/CustomClientInterceptor.java -text
 adit-war/src/main/java/ee/adit/util/CustomMessageCallbackFactory.java -text
 adit-war/src/main/java/ee/adit/util/CustomXTeeConsumer.java -text
 adit-war/src/main/java/ee/adit/util/CustomXTeeHeader.java -text
