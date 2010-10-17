@@ -348,6 +348,33 @@ public class Util {
 	}
 
 	/**
+	 * Base64 decodes and Unzip-s the specified file.
+	 * 
+     * @param inputFile absolute path to the file to be processed
+     * @param tempDir directory where to put the result and any temporary files
+     * @param deleteTemporaryFiles parameter specifying if temporary files are to be deleted immediately after work is complete 
+     * @return absolute path to the result file
+	 * @throws IOException
+	 */
+	public static String unzip(String inputFile, String tempDir) throws IOException {
+		String unzipOutFileName = inputFile + "_unzipOutBuffer.adit";
+		FileOutputStream unzipOutFileStream = new FileOutputStream(unzipOutFileName, false);
+		FileInputStream gzipFileInputStream = new FileInputStream(inputFile);
+		GZIPInputStream gzipInputStream = new GZIPInputStream(gzipFileInputStream);
+
+		int len;
+		byte[] buf = new byte[1024];
+		while ((len = gzipInputStream.read(buf)) > 0) {
+			unzipOutFileStream.write(buf, 0, len);
+		}
+		unzipOutFileStream.close();
+		gzipInputStream.close();
+		gzipFileInputStream.close();
+
+		return unzipOutFileName;
+	}
+	
+	/**
 	 * Base64 decodes a file.
 	 * 
      * @param inputFile absolute path to the file to be processed

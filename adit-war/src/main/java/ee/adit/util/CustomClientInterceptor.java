@@ -51,7 +51,7 @@ public class CustomClientInterceptor implements ClientInterceptor {
 			if(a != null) {
 				String rawTmpFile = Util.createTemporaryFile(a.getInputStream(), this.getConfiguration().getTempDir());
 				LOG.debug("Raw data saved to temporary file: " + rawTmpFile);
-				String decodedTmpFile = Util.base64DecodeAndUnzip(rawTmpFile, this.getConfiguration().getTempDir(), true);
+				String decodedTmpFile = Util.unzip(rawTmpFile, this.getConfiguration().getTempDir());
 				this.setTmpFile(decodedTmpFile);
 				result = true;
 			}
