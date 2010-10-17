@@ -1221,4 +1221,12 @@ public class Util {
     	return new String(getBytesFromFile(f), "UTF-8");
     }
     
+    public static String removeCountryPrefix(String code) {
+    	return code.replace("EE", "");
+    }
+    
+    public static String addCountryPrefix(String code, String prefix) {
+    	return prefix + code;    	
+    }
+    
 }

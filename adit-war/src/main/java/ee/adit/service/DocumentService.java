@@ -748,7 +748,11 @@ public class DocumentService {
 				// Transport information
 				Transport transport = new Transport();
 				List<Saaja> saajad = new ArrayList<Saaja>();
-
+				List<Saatja> saatjad = new ArrayList<Saatja>();
+				Saatja saatja = new Saatja();
+				saatja.setRegNr(Util.removeCountryPrefix(getConfiguration().getDvkOrgCode()));
+				saatja.setIsikukood(Util.removeCountryPrefix(document.getCreatorCode()));
+				
 				Iterator<DocumentSharing> documentSharings = document
 						.getDocumentSharings().iterator();
 

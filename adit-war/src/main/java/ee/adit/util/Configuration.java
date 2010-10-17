@@ -49,6 +49,9 @@ public class Configuration {
 	 */
 	private List<String> locales;
 	
+	private String dvkOrgCode;
+	
+	
 	/**
 	 * Retrieves the list of the locales
 	 * @return	Locales list
@@ -171,6 +174,14 @@ public class Configuration {
 	 */
 	public void setGlobalDiskQuota(Long globalDiskQuota) {
 		this.globalDiskQuota = globalDiskQuota;
+	}
+
+	public String getDvkOrgCode() {
+		return dvkOrgCode;
+	}
+
+	public void setDvkOrgCode(String dvkOrgCode) {
+		this.dvkOrgCode = dvkOrgCode;
 	}
 	
 }
