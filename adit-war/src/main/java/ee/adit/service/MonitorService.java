@@ -622,9 +622,8 @@ public class MonitorService {
 				int startIndex = tmpFileContents.indexOf("<data>");
 				int endIndex = tmpFileContents.indexOf("</data>");
 				
-				String fileContent = tmpFileContents.substring(startIndex, endIndex);
-				LOG.debug("fileContent: " + fileContent);
-				
+				String base64fileContent = tmpFileContents.substring(startIndex + "<data>".length(), endIndex);
+				String fileContent = Util.base64decode(base64fileContent);
 				Date documentLastChangedDateContents = Util.xmlDateToDate(fileContent);
 				
 				LOG.info("Document title date: " + documentLastChangedDateTitle);

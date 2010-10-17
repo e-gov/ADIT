@@ -40,6 +40,7 @@ import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
 import org.apache.fop.apps.MimeConstants;
 import org.apache.log4j.Logger;
+import org.castor.core.util.Base64Decoder;
 import org.castor.core.util.Base64Encoder;
 
 import ee.adit.exception.AditInternalException;
@@ -83,6 +84,17 @@ public class Util {
 		return new String(Base64Encoder.encode(string.getBytes("UTF-8")));
 	}
 
+	/**
+	 * Base64 decodes the specified string.
+	 * 
+	 * @param string the string to be encoded
+	 * @return the base64 encoded string
+	 * @throws UnsupportedEncodingException
+	 */
+	public static String base64decode(String string) throws UnsupportedEncodingException {
+		return new String(Base64Decoder.decode(string));
+	}
+	
 	/**
 	 * Generates a random GUID / UUID.
 	 * 
