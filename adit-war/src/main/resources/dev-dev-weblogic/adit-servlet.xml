@@ -436,6 +436,7 @@
 		<property name="documentService" ref="documentService" />
 		<property name="monitorConfiguration" ref="monitorConfiguration" />
 		<property name="documentSharingDAO" ref="documentSharingDAO" />
+		<property name="notificationDAO" ref="notificationDAO" />
 	</bean>	
 
 	<bean id="aditDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">

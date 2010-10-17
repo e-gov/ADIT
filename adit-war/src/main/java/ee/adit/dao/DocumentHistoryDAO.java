@@ -1,11 +1,15 @@
 package ee.adit.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Session;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.DocumentHistory;
+import ee.adit.exception.AditInternalException;
 
 public class DocumentHistoryDAO extends HibernateDaoSupport {
 	

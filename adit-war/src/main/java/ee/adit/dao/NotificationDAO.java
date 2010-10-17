@@ -1,6 +1,7 @@
 package ee.adit.dao;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -9,7 +10,9 @@ import org.hibernate.Session;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.Notification;
+import ee.adit.exception.AditInternalException;
 
 public class NotificationDAO extends HibernateDaoSupport {
 	private static Logger LOG = Logger.getLogger(NotificationDAO.class);
@@ -40,6 +43,24 @@ public class NotificationDAO extends HibernateDaoSupport {
 				return notification.getId();
 			}
 		});
+		
+		return result;
+	}
+	
+	public Long getUnsentNotifications(Date comparisonDate) {
+		Long result = 0L;
+		String SQL = "select count(*) from Notification where notification.notificationId is null and eventDate <= :comparisonDate"; 
+		
+		Session session = null;
+		try {
+			session = this.getSessionFactory().openSession();
+			result = (Long) session.createQuery(SQL).uniqueResult();
+		} catch (Exception e) {
+			throw new AditInternalException("Error while updating Document: ", e);
+		} finally {
+			if(session != null)
+				session.close();
+		}
 		
 		return result;
 	}

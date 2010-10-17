@@ -33,7 +33,9 @@ import org.xml.sax.InputSource;
 
 import dvk.api.ml.PojoMessage;
 import ee.adit.dao.DocumentDAO;
+import ee.adit.dao.DocumentHistoryDAO;
 import ee.adit.dao.DocumentSharingDAO;
+import ee.adit.dao.NotificationDAO;
 import ee.adit.dao.dvk.DvkDAO;
 import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.DocumentSharing;
@@ -101,6 +103,8 @@ public class MonitorService {
 	private DocumentSharingDAO documentSharingDAO;
 	
 	private DvkDAO dvkDAO;
+	
+	private NotificationDAO notificationDAO;
 	
 	private Configuration configuration;
 	
@@ -987,6 +991,48 @@ public class MonitorService {
 		return result;
 	}
 	
+	public MonitorResult checkNotifications() {
+		MonitorResult result = new MonitorResult();
+		result.setComponent("NOTIFICATIONS");
+		
+		LOG.info("Testing NOTIFICATIONS...");
+		
+		double duration = 0;
+		boolean success = false;
+		Date start = new Date();
+		long startTime = start.getTime();
+		
+		try {
+			
+			long currentDateMs = (new Date()).getTime();
+			Date comparisonDate = new Date(currentDateMs - getMonitorConfiguration().getNotificationSendInterval());
+			
+			// TODO: get document_history where notification_status = 'saada'
+			Long unsentNotificationCount = getNotificationDAO().getUnsentNotifications(comparisonDate);
+			
+			if(unsentNotificationCount > 0) {
+				throw new AditInternalException("Number of notifications not sent in time: " + unsentNotificationCount);
+			} else {
+				success = true;
+			}
+			
+			Date end = new Date();
+			long endTime = end.getTime();
+			duration = (endTime - startTime) / 1000.0;
+			result.setDuration(duration);
+			result.setSuccess(success);
+			
+		} catch(Exception e) {
+			LOG.error("Error while testing NOTIFICATIONS: ", e);
+			result.setSuccess(false);
+			List<String> exceptions = new ArrayList<String>();
+			exceptions.add(e.getMessage());
+			result.setExceptions(exceptions);
+		}
+		
+		return result;
+	}
+	
 	/**
 	 * Handle application exception.
 	 */
@@ -1096,5 +1142,13 @@ public class MonitorService {
 
 	public void setDocumentSharingDAO(DocumentSharingDAO documentSharingDAO) {
 		this.documentSharingDAO = documentSharingDAO;
+	}
+
+	public NotificationDAO getNotificationDAO() {
+		return notificationDAO;
+	}
+
+	public void setNotificationDAO(NotificationDAO notificationDAO) {
+		this.notificationDAO = notificationDAO;
 	}
 }
