@@ -49,14 +49,14 @@ public class NotificationDAO extends HibernateDaoSupport {
 	
 	public Long getUnsentNotifications(Date comparisonDate) {
 		Long result = 0L;
-		String SQL = "select count(*) from Notification where notification.notificationId is null and eventDate <= :comparisonDate"; 
+		String SQL = "select count(*) from Notification where notificationId is null and eventDate <= :comparisonDate"; 
 		
 		Session session = null;
 		try {
 			session = this.getSessionFactory().openSession();
 			result = (Long) session.createQuery(SQL).uniqueResult();
 		} catch (Exception e) {
-			throw new AditInternalException("Error while updating Document: ", e);
+			throw new AditInternalException("Error while fetching unsent notifications: ", e);
 		} finally {
 			if(session != null)
 				session.close();
