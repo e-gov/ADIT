@@ -1076,7 +1076,7 @@
 		<field name="success" type="java.lang.Boolean" >
 			<bind-xml location="keha" />
 		</field>
-		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessageMonitor">
 			<bind-xml name="messages" location="keha" />
 		</field>
 		<field name="userList" type="ee.adit.pojo.UserList">
