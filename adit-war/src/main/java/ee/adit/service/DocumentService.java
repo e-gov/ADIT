@@ -752,6 +752,8 @@ public class DocumentService {
 				Saatja saatja = new Saatja();
 				saatja.setRegNr(Util.removeCountryPrefix(getConfiguration().getDvkOrgCode()));
 				saatja.setIsikukood(Util.removeCountryPrefix(document.getCreatorCode()));
+				saatjad.add(saatja);
+				transport.setSaatjad(saatjad);
 				
 				Iterator<DocumentSharing> documentSharings = document
 						.getDocumentSharings().iterator();
