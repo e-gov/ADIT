@@ -440,6 +440,7 @@ public class MonitorService {
 	 */
 	public MonitorResult saveDocumentCheck() {
 		MonitorResult result = new MonitorResult();
+		result.setComponent("saveDocument");
 		
 		LOG.info("Testing 'saveDocument' request...");
 		
@@ -614,15 +615,17 @@ public class MonitorService {
 			
 			if(document != null) {
 				Date documentLastChangedDateTitle = Util.xmlDateToDate(document.getTitle());
-				
 				OutputDocumentFile documentFile = document.getFiles().getFiles().get(0);				
-				String docFileTmpFile = getConfiguration().getTempDir() + File.separator + documentFile.getSysTempFile();
-				LOG.debug("Document file temp file: '" + docFileTmpFile + "'.");
+				File docTmpFile = new File(interceptor.getTmpFile());
+				String tmpFileContents = Util.getFileContents(docTmpFile);
 				
-				File file = new File(docFileTmpFile);
+				int startIndex = tmpFileContents.indexOf("<data>");
+				int endIndex = tmpFileContents.indexOf("</data>");
 				
-				String fileContents = Util.getFileContents(file);
-				Date documentLastChangedDateContents = Util.xmlDateToDate(fileContents);
+				String fileContent = tmpFileContents.substring(startIndex, endIndex);
+				LOG.debug("fileContent: " + fileContent);
+				
+				Date documentLastChangedDateContents = Util.xmlDateToDate(fileContent);
 				
 				LOG.info("Document title date: " + documentLastChangedDateTitle);
 				LOG.info("Document contents date: " + documentLastChangedDateContents);
