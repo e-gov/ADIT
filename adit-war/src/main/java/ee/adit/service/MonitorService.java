@@ -35,6 +35,7 @@ import dvk.api.ml.PojoMessage;
 import ee.adit.dao.DocumentDAO;
 import ee.adit.dao.DocumentHistoryDAO;
 import ee.adit.dao.DocumentSharingDAO;
+import ee.adit.dao.ErrorLogDAO;
 import ee.adit.dao.NotificationDAO;
 import ee.adit.dao.dvk.DvkDAO;
 import ee.adit.dao.pojo.Document;
@@ -105,6 +106,8 @@ public class MonitorService {
 	private DvkDAO dvkDAO;
 	
 	private NotificationDAO notificationDAO;
+	
+	private ErrorLogDAO errorLogDAO;
 	
 	private Configuration configuration;
 	
@@ -1032,6 +1035,47 @@ public class MonitorService {
 		return result;
 	}
 	
+	public MonitorResult checkErrorLog() {
+		MonitorResult result = new MonitorResult();
+		result.setComponent("ERROR_LOG");
+		
+		LOG.info("Testing ERROR_LOG...");
+		
+		double duration = 0;
+		boolean success = false;
+		Date start = new Date();
+		long startTime = start.getTime();
+		
+		try {
+			
+			long currentDateMs = (new Date()).getTime();
+			Date comparisonDate = new Date(currentDateMs - getMonitorConfiguration().getErrorInterval());
+			
+			Long errorCount = getErrorLogDAO().getErrors(comparisonDate);
+			
+			if(unsentNotificationCount > 0) {
+				throw new AditInternalException("Number of notifications not sent in time: " + unsentNotificationCount);
+			} else {
+				success = true;
+			}
+			
+			Date end = new Date();
+			long endTime = end.getTime();
+			duration = (endTime - startTime) / 1000.0;
+			result.setDuration(duration);
+			result.setSuccess(success);
+			
+		} catch(Exception e) {
+			LOG.error("Error while testing ERROR_LOG: ", e);
+			result.setSuccess(false);
+			List<String> exceptions = new ArrayList<String>();
+			exceptions.add(e.getMessage());
+			result.setExceptions(exceptions);
+		}
+		
+		return result;
+	}
+	
 	/**
 	 * Handle application exception.
 	 */
@@ -1149,5 +1193,13 @@ public class MonitorService {
 
 	public void setNotificationDAO(NotificationDAO notificationDAO) {
 		this.notificationDAO = notificationDAO;
+	}
+
+	public ErrorLogDAO getErrorLogDAO() {
+		return errorLogDAO;
+	}
+
+	public void setErrorLogDAO(ErrorLogDAO errorLogDAO) {
+		this.errorLogDAO = errorLogDAO;
 	}
 }

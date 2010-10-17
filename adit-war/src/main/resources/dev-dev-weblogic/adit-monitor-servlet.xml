@@ -772,6 +772,7 @@
 		<property name="monitorConfiguration" ref="monitorConfiguration" />
 		<property name="documentSharingDAO" ref="documentSharingDAO" />
 		<property name="notificationDAO" ref="notificationDAO" />
+		<property name="errorLogDAO" ref="errorLogDAO" />
 	</bean>
 
 	<!-- Castor Marshaller -->
