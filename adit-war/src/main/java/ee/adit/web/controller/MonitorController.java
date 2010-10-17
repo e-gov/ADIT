@@ -125,6 +125,18 @@ public class MonitorController extends AbstractController {
 			}
 			results.add(checkNotificationsResult);
 			
+			// 6. ERROR_LOG
+			MonitorResult checkErrorLogResult = this.getMonitorService().checkErrorLog();
+			checkErrorLogResult.setDurationString(df.format(checkErrorLogResult.getDuration()));
+			if(checkErrorLogResult.isSuccess()) {
+				checkErrorLogResult.setStatusString(MonitorService.OK);
+			} else {
+				checkErrorLogResult.setStatusString(MonitorService.FAIL);
+			}
+			if(checkErrorLogResult.getExceptions() != null && checkErrorLogResult.getExceptions().size() > 0) {
+				checkErrorLogResult.setExceptionString(checkErrorLogResult.getExceptions().get(0));
+			}
+			results.add(checkErrorLogResult);
 			
 			// 2. ADIT -> DVK
 			//    - ADIT -> DVK UK
