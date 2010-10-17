@@ -742,7 +742,7 @@ public class MonitorService {
 			customXTeeConsumer.setMsgCallbackFactory(new CustomMessageCallbackFactory());
 			
 			List<XTeeAttachment> attachments = new ArrayList<XTeeAttachment>();
-			XTeeAttachment xTeeAttachment = new XTeeAttachment("document", "text/xml", Util.getBytesFromFile(new File(base64zippedFile)));
+			XTeeAttachment xTeeAttachment = new XTeeAttachment("userlist", "text/xml", Util.getBytesFromFile(new File(base64zippedFile)));
 			attachments.add(xTeeAttachment);
 			
 			GetUserInfoResponseMonitor response = (GetUserInfoResponseMonitor) customXTeeConsumer.sendRequest(request, attachments);
