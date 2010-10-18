@@ -804,7 +804,9 @@ public class DocumentService {
 						String temporaryFile = Util.createTemporaryFile(
 								inputStream, tempDir);
 
-						dvkFile.setFile(new File(temporaryFile));
+						String zipTemporaryFile = Util.gzipFile(temporaryFile, tempDir);
+						
+						dvkFile.setFile(new File(zipTemporaryFile));
 						dvkFiles.add(dvkFile);
 
 					} catch (Exception e) {
