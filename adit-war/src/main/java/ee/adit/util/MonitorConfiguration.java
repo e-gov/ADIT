@@ -22,10 +22,6 @@ public class MonitorConfiguration {
 	
 	private Long documentSendToDvkInterval;
 	
-	private Long documentSendToDvkServerInterval;
-	
-	private Long documentSendToDvkFromDvkServerInterval;
-	
 	private Long documentSendToAditInterval;
 	
 	private Long notificationSendInterval;
@@ -94,24 +90,6 @@ public class MonitorConfiguration {
 
 	public void setDocumentSendToDvkInterval(Long documentSendToDvkInterval) {
 		this.documentSendToDvkInterval = documentSendToDvkInterval;
-	}
-
-	public Long getDocumentSendToDvkServerInterval() {
-		return documentSendToDvkServerInterval;
-	}
-
-	public void setDocumentSendToDvkServerInterval(
-			Long documentSendToDvkServerInterval) {
-		this.documentSendToDvkServerInterval = documentSendToDvkServerInterval;
-	}
-
-	public Long getDocumentSendToDvkFromDvkServerInterval() {
-		return documentSendToDvkFromDvkServerInterval;
-	}
-
-	public void setDocumentSendToDvkFromDvkServerInterval(
-			Long documentSendToDvkFromDvkServerInterval) {
-		this.documentSendToDvkFromDvkServerInterval = documentSendToDvkFromDvkServerInterval;
 	}
 
 	public Long getDocumentSendToAditInterval() {
