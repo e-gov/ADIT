@@ -19,6 +19,8 @@ import java.util.Iterator;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.soap.AttachmentPart;
+import javax.xml.soap.MimeHeader;
+import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPEnvelope;
@@ -282,6 +284,15 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 				}
 			}
 		}
+		
+		MimeHeaders mimeHeaders = responseMessage.getMimeHeaders();
+		
+		Iterator i = mimeHeaders.getAllHeaders();
+		while(i.hasNext()) {
+			MimeHeader h = (MimeHeader) i.next();
+			LOG.info("MIME header: '" + h.getName() + " - " + h.getValue());
+		}
+		
 	}
 
 	/**
