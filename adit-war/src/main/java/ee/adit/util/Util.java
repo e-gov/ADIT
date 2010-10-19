@@ -1221,7 +1221,10 @@ public class Util {
     }
     
     public static String removeCountryPrefix(String code) {
-    	return code.replace("EE", "");
+    	if(code != null)
+    		return code.replace("EE", "");
+    	else 
+    		return null;
     }
     
     public static String addCountryPrefix(String code, String prefix) {
