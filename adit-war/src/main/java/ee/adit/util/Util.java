@@ -332,7 +332,6 @@ public class Util {
 		inputFileStream.close();
 
 		// Unzip
-
 		String unzipOutFileName = inputFile + "_unzipOutBuffer.adit";
 		FileOutputStream unzipOutFileStream = new FileOutputStream(unzipOutFileName, false);
 		FileInputStream gzipFileInputStream = new FileInputStream(base64DecodedFile);

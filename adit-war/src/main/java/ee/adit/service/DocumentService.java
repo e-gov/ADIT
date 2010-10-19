@@ -804,7 +804,7 @@ public class DocumentService {
 						String temporaryFile = Util.createTemporaryFile(
 								inputStream, tempDir);
 
-						String zipTemporaryFile = Util.gzipFile(temporaryFile, tempDir);
+						String zipTemporaryFile = Util.gzipAndBase64Encode(temporaryFile, tempDir, true);
 						
 						dvkFile.setFile(new File(zipTemporaryFile));
 						dvkFiles.add(dvkFile);
