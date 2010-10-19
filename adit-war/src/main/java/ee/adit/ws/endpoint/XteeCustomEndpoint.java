@@ -275,7 +275,7 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 			addHeader(header, responseMessage);
 
 		// Add the proper MIME header
-		responseMessage.getMimeHeaders().addHeader("Content-Type", "text/xml");
+		responseMessage.getMimeHeaders().addHeader("Content-Type", "application/soap+xml;charset=utf-8");
 		
 		if ((responseMessage != null) && !this.isIgnoreAttachmentHeaders()) {
 			Iterator it = responseMessage.getAttachments();
@@ -286,14 +286,6 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 					at.setMimeHeader("Content-Encoding", "gzip");
 				}
 			}
-		}
-		
-		MimeHeaders mimeHeaders = responseMessage.getMimeHeaders();
-		
-		Iterator i = mimeHeaders.getAllHeaders();
-		while(i.hasNext()) {
-			MimeHeader h = (MimeHeader) i.next();
-			LOG.info("MIME header: '" + h.getName() + " - " + h.getValue());
 		}
 		
 	}
