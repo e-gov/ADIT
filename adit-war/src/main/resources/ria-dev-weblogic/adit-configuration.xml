@@ -25,7 +25,6 @@
 				<value>et_ee</value>
 			</list>
 		</property>
-		<property name="testDocumentID" value="999999999999" />
 	</bean>
 
 	<bean id="monitorConfiguration" class="ee.adit.util.MonitorConfiguration">
