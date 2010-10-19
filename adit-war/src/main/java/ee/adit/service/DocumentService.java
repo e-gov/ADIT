@@ -707,6 +707,8 @@ public class DocumentService {
 
 		final String tempDir = this.getConfiguration().getTempDir();
 
+		LOG.info("Starting to send documents to DVK. Using org.code '" + this.getConfiguration().getDvkOrgCode() + "'");
+		
 		LOG.debug("Fetching documents for sending to DVK...");
 		Session session = this.getDocumentDAO().getSessionFactory()
 				.openSession();
