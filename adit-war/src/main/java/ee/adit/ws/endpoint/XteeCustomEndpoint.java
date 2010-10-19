@@ -274,9 +274,12 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 		if (!metaService)
 			addHeader(header, responseMessage);
 
+		// Add the proper MIME header
+		responseMessage.getMimeHeaders().addHeader("Content-Type", "text/xml");
+		
 		if ((responseMessage != null) && !this.isIgnoreAttachmentHeaders()) {
 			Iterator it = responseMessage.getAttachments();
-			if (it != null) {
+			if (it != null) {				
 				while (it.hasNext()) {
 					AttachmentPart at = (AttachmentPart) it.next();
 					at.setMimeHeader("Content-Transfer-Encoding", "base64");
