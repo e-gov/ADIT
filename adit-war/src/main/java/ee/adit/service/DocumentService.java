@@ -802,11 +802,8 @@ public class DocumentService {
 						InputStream inputStream = f.getFileData()
 								.getBinaryStream();
 						String temporaryFile = Util.createTemporaryFile(
-								inputStream, tempDir);
-
-						String zipTemporaryFile = Util.gzipAndBase64Encode(temporaryFile, tempDir, true);
-						
-						dvkFile.setFile(new File(zipTemporaryFile));
+								inputStream, tempDir);					
+						dvkFile.setFile(new File(temporaryFile));
 						dvkFiles.add(dvkFile);
 
 					} catch (Exception e) {
