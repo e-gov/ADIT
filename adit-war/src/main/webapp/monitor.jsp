@@ -30,36 +30,10 @@
 			<td><b>Status</b></td>
 			<td><b>Time / Error</b></td>
 		</tr>
-		
-		<%
-			for(int i = 0; i < results.size(); i++) {
+		<%for(int i = 0; i < results.size(); i++) {
 				MonitorResult result = results.get(i);
-		%>
-		
-			<tr>
-				<td><%=result.getComponent()%></td>
-				<td><%=result.getStatusString()%></td>
-				<td>
-					<%if(result.isSuccess()) {
-					
-					%>
-						<%=result.getDurationString()%> s
-					<%
-					  } else {
-					%>
-						<%=result.getExceptionString()%>
-					<%
-					  }
-					%>
-				</td>
-			</tr>
-			
-		<%
-			}
-		%>
-			
-		
-		
+		%><tr><td><%=result.getComponent()%></td><td><%=result.getStatusString()%></td><td><%if(result.isSuccess()) {%><%=result.getDurationString()%> s<%} else {%><%=result.getExceptionString()%><%}%></td></tr>
+		<%}%>
 	</table>
 	
 </body>
