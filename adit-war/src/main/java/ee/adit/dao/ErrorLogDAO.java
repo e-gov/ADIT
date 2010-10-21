@@ -36,9 +36,21 @@ public class ErrorLogDAO extends HibernateDaoSupport {
 		return result;
 	}
 	
-	public Long getErrors(Date comparisonDate) {
-		Long result = 0L;
-		String SQL = "select count(*) from ErrorLog where (errorLevel = '" + LogService.ErrorLogLevel_Fatal + "' or errorLevel = '" + LogService.ErrorLogLevel_Error + "') and errorDate <= :comparisonDate"; 
+	public Long getErrors(Date comparisonDate, String level) {
+		
+		String SQL = null;
+		// FATAL
+		if(LogService.ErrorLogLevel_Fatal.equalsIgnoreCase(level)) {
+			SQL = "select count(*) from ErrorLog where (errorLevel = '" + LogService.ErrorLogLevel_Fatal + "') and errorDate <= :comparisonDate";
+		} else if(LogService.ErrorLogLevel_Error.equalsIgnoreCase(level)) {
+			SQL = "select count(*) from ErrorLog where (errorLevel = '" + LogService.ErrorLogLevel_Fatal + "' or errorLevel = '" + LogService.ErrorLogLevel_Error + "') and errorDate <= :comparisonDate";
+		} else if(LogService.ErrorLogLevel_Warn.equalsIgnoreCase(level)) {
+			SQL = "select count(*) from ErrorLog where (errorLevel = '" + LogService.ErrorLogLevel_Fatal + "' or errorLevel = '" + LogService.ErrorLogLevel_Error + "' or errorLevel = '" + LogService.ErrorLogLevel_Warn + "') and errorDate <= :comparisonDate";
+		} else {
+			SQL = "select count(*) from ErrorLog where (errorLevel = '" + LogService.ErrorLogLevel_Fatal + "') and errorDate <= :comparisonDate";
+		}
+		
+		Long result = 0L; 
 		
 		Session session = null;
 		try {

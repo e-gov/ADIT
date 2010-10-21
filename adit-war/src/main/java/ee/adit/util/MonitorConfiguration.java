@@ -28,6 +28,8 @@ public class MonitorConfiguration {
 	
 	private Long errorInterval;
 
+	private String errorLevel;
+	
 	public String getAditServiceUrl() {
 		return aditServiceUrl;
 	}
@@ -130,6 +132,14 @@ public class MonitorConfiguration {
 
 	public void setInstitutionCode(String institutionCode) {
 		this.institutionCode = institutionCode;
+	}
+
+	public String getErrorLevel() {
+		return errorLevel;
+	}
+
+	public void setErrorLevel(String errorLevel) {
+		this.errorLevel = errorLevel;
 	}
 	
 }

@@ -1051,7 +1051,7 @@ public class MonitorService {
 			long currentDateMs = (new Date()).getTime();
 			Date comparisonDate = new Date(currentDateMs - getMonitorConfiguration().getErrorInterval());
 			
-			Long errorCount = getErrorLogDAO().getErrors(comparisonDate);
+			Long errorCount = getErrorLogDAO().getErrors(comparisonDate, getMonitorConfiguration().getErrorLevel());
 			
 			if(errorCount > 0) {
 				throw new AditInternalException("Number of errors: " + errorCount);
