@@ -144,7 +144,6 @@ public class MonitorController extends AbstractController {
 				checkErrorLogResult.setStatusString(MonitorService.OK);
 			} else {
 				checkErrorLogResult.setStatusString(MonitorService.FAIL);
-				summaryStatusOk = false;
 			}
 			if(checkErrorLogResult.getExceptions() != null && checkErrorLogResult.getExceptions().size() > 0) {
 				checkErrorLogResult.setExceptionString(checkErrorLogResult.getExceptions().get(0));
