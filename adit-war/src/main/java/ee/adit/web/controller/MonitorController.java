@@ -165,6 +165,8 @@ public class MonitorController extends AbstractController {
 			} else {
 				summaryStatusResult.setStatusString(MonitorService.FAIL);
 			}
+			
+			results.add(summaryStatusResult);
 		
 		} catch (Exception e) {
 			LOG.error("Error while invoking monitoring controller: ", e);
