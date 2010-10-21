@@ -26,9 +26,9 @@
 	
 	<table style="border: 1px solid #000; border-collapse: collapse;">
 		<tr>
-			<td style="border: 1px solid #000;"><b style="margin: 6px;">Component</b></td>
-			<td style="border: 1px solid #000;"><b style="margin: 6px;">Status</b></td>
-			<td style="border: 1px solid #000;"><b style="margin: 6px;">Time / Error</b></td>
+			<td><b>Component</b></td>
+			<td><b>Status</b></td>
+			<td><b>Time / Error</b></td>
 		</tr>
 		
 		<%
@@ -37,10 +37,9 @@
 		%>
 		
 			<tr>
-				<td style="border: 1px solid #000;"><span style="margin: 6px;"><%=result.getComponent()%></span></td>
-				<td style="border: 1px solid #000;"><span style="margin: 6px;"><%=result.getStatusString()%></span></td>
-				<td style="border: 1px solid #000;">
-					<span style="margin: 6px;">
+				<td><%=result.getComponent()%></td>
+				<td><%=result.getStatusString()%></td>
+				<td>
 					<%if(result.isSuccess()) {
 					
 					%>
@@ -52,7 +51,6 @@
 					<%
 					  }
 					%>
-					</span>
 				</td>
 			</tr>
 			

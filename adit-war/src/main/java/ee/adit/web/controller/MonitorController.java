@@ -2,6 +2,7 @@ package ee.adit.web.controller;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,8 +39,13 @@ public class MonitorController extends AbstractController {
 		DecimalFormat df = new DecimalFormat("0.000");
 		
 		List<MonitorResult> results = new ArrayList<MonitorResult>();
+		boolean summaryStatusOk = true;
 		
 		try {
+		
+			double duration = 0;
+			Date start = new Date();
+			long startTime = start.getTime();
 			
 			if(getMonitorService() == null)
 				LOG.error("getMonitorService() == null");
@@ -53,6 +59,7 @@ public class MonitorController extends AbstractController {
 				saveDocumentCheckResult.setStatusString(MonitorService.OK);
 			} else {
 				saveDocumentCheckResult.setStatusString(MonitorService.FAIL);
+				summaryStatusOk = false;
 			}
 			if(saveDocumentCheckResult.getExceptions() != null && saveDocumentCheckResult.getExceptions().size() > 0) {
 				saveDocumentCheckResult.setExceptionString(saveDocumentCheckResult.getExceptions().get(0));
@@ -66,6 +73,7 @@ public class MonitorController extends AbstractController {
 				getDocumentCheckResult.setStatusString(MonitorService.OK);
 			} else {
 				getDocumentCheckResult.setStatusString(MonitorService.FAIL);
+				summaryStatusOk = false;
 			}
 			if(getDocumentCheckResult.getExceptions() != null && getDocumentCheckResult.getExceptions().size() > 0) {
 				getDocumentCheckResult.setExceptionString(getDocumentCheckResult.getExceptions().get(0));
@@ -79,6 +87,7 @@ public class MonitorController extends AbstractController {
 				dvkSendCheckResult.setStatusString(MonitorService.OK);
 			} else {
 				dvkSendCheckResult.setStatusString(MonitorService.FAIL);
+				summaryStatusOk = false;
 			}
 			if(dvkSendCheckResult.getExceptions() != null && dvkSendCheckResult.getExceptions().size() > 0) {
 				dvkSendCheckResult.setExceptionString(dvkSendCheckResult.getExceptions().get(0));
@@ -92,6 +101,7 @@ public class MonitorController extends AbstractController {
 				checkDvkReceiveResult.setStatusString(MonitorService.OK);
 			} else {
 				checkDvkReceiveResult.setStatusString(MonitorService.FAIL);
+				summaryStatusOk = false;
 			}
 			if(checkDvkReceiveResult.getExceptions() != null && checkDvkReceiveResult.getExceptions().size() > 0) {
 				checkDvkReceiveResult.setExceptionString(checkDvkReceiveResult.getExceptions().get(0));
@@ -106,6 +116,7 @@ public class MonitorController extends AbstractController {
 				getUserInfoCheckResult.setStatusString(MonitorService.OK);
 			} else {
 				getUserInfoCheckResult.setStatusString(MonitorService.FAIL);
+				summaryStatusOk = false;
 			}
 			if(getUserInfoCheckResult.getExceptions() != null && getUserInfoCheckResult.getExceptions().size() > 0) {
 				getUserInfoCheckResult.setExceptionString(getUserInfoCheckResult.getExceptions().get(0));
@@ -119,6 +130,7 @@ public class MonitorController extends AbstractController {
 				checkNotificationsResult.setStatusString(MonitorService.OK);
 			} else {
 				checkNotificationsResult.setStatusString(MonitorService.FAIL);
+				summaryStatusOk = false;
 			}
 			if(checkNotificationsResult.getExceptions() != null && checkNotificationsResult.getExceptions().size() > 0) {
 				checkNotificationsResult.setExceptionString(checkNotificationsResult.getExceptions().get(0));
@@ -132,27 +144,27 @@ public class MonitorController extends AbstractController {
 				checkErrorLogResult.setStatusString(MonitorService.OK);
 			} else {
 				checkErrorLogResult.setStatusString(MonitorService.FAIL);
+				summaryStatusOk = false;
 			}
 			if(checkErrorLogResult.getExceptions() != null && checkErrorLogResult.getExceptions().size() > 0) {
 				checkErrorLogResult.setExceptionString(checkErrorLogResult.getExceptions().get(0));
 			}
 			results.add(checkErrorLogResult);
-			
-			// 2. ADIT -> DVK
-			//    - ADIT -> DVK UK
-			//    - DVK UK -> DVK
 
-			// 3. DVK -> ADIT   
-			//    - DVK -> DVK UK
-			//    - DVK UK -> ADIT
+			Date end = new Date();
+			long endTime = end.getTime();
+			duration = (endTime - startTime) / 1000.0;
 			
-			// 4. Kasutajad
-			//    - testkasutaja päring ADIT-ist üle X-tee
+			// 7. SUMMARY_STATUS
+			MonitorResult summaryStatusResult = new MonitorResult();
+			summaryStatusResult.setComponent("SUMMARY_STATUS");
+			summaryStatusResult.setDurationString(df.format(duration));
 			
-			// 5. Teavituskalendri liides
-			//    - kas on teavitusi, mille saatmine on ebaõnnestunud
-			
-			// 6. Rakenduse vead (tabelist ERROR_LOG, kus level = FATAL/ERROR)	
+			if(summaryStatusOk) {
+				summaryStatusResult.setStatusString(MonitorService.OK);
+			} else {
+				summaryStatusResult.setStatusString(MonitorService.FAIL);
+			}
 		
 		} catch (Exception e) {
 			LOG.error("Error while invoking monitoring controller: ", e);
