@@ -1,5 +1,6 @@
 package ee.adit.ws.endpoint.document;
 
+import java.io.InputStream;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -42,7 +43,7 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
 	private static Logger LOG = Logger.getLogger(ConfirmSignatureEndpoint.class);
 	private UserService userService;
 	private DocumentService documentService;
-	private Resource digidocConfigurationFile;
+	private String digidocConfigurationFile;
 
 	public UserService getUserService() {
 		return userService;
@@ -60,11 +61,11 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
 		this.documentService = documentService;
 	}
 	
-	public Resource getDigidocConfigurationFile() {
+	public String getDigidocConfigurationFile() {
 		return digidocConfigurationFile;
 	}
 
-	public void setDigidocConfigurationFile(Resource digidocConfigurationFile) {
+	public void setDigidocConfigurationFile(String digidocConfigurationFile) {
 		this.digidocConfigurationFile = digidocConfigurationFile;
 	}
 
@@ -236,11 +237,16 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
 					throw aditCodedException;
 				}
 				
+				InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream(getDigidocConfigurationFile());
+				
+				String jdigidocCfgTmpFile = Util.createTemporaryFile(input, getConfiguration().getTempDir());
+				LOG.info("JDigidoc.cfg file created as a temporary file: '" + jdigidocCfgTmpFile + "'");
+				
 				this.documentService.confirmSignature(
 						doc.getId(),
 						signatureFile,
 						header.getIsikukood(),
-						digidocConfigurationFile.getFile().getAbsolutePath(),
+						jdigidocCfgTmpFile,
 						this.getConfiguration().getTempDir());
 				
 				// Send scheduler notification to document owner.
