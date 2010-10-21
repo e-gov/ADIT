@@ -159,6 +159,8 @@ public class MonitorController extends AbstractController {
 			MonitorResult summaryStatusResult = new MonitorResult();
 			summaryStatusResult.setComponent("SUMMARY_STATUS");
 			summaryStatusResult.setDurationString(df.format(duration));
+			summaryStatusResult.setExceptionString(df.format(duration));
+			summaryStatusResult.setSuccess(summaryStatusOk);
 			
 			if(summaryStatusOk) {
 				summaryStatusResult.setStatusString(MonitorService.OK);
