@@ -1,5 +1,6 @@
 package ee.adit.ws.endpoint.document;
 
+import java.io.InputStream;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.Locale;
@@ -42,7 +43,7 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
 	private static Logger LOG = Logger.getLogger(PrepareSignatureEndpoint.class);
 	private UserService userService;
 	private DocumentService documentService;
-	private Resource digidocConfigurationFile;
+	private String digidocConfigurationFile;
 
 	public UserService getUserService() {
 		return userService;
@@ -60,11 +61,11 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
 		this.documentService = documentService;
 	}
 	
-	public Resource getDigidocConfigurationFile() {
+	public String getDigidocConfigurationFile() {
 		return digidocConfigurationFile;
 	}
 
-	public void setDigidocConfigurationFile(Resource digidocConfigurationFile) {
+	public void setDigidocConfigurationFile(String digidocConfigurationFile) {
 		this.digidocConfigurationFile = digidocConfigurationFile;
 	}
 
@@ -247,6 +248,11 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
 					throw aditCodedException;
 				}
 				
+				InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream(getDigidocConfigurationFile());
+				
+				String jdigidocCfgTmpFile = Util.createTemporaryFile(input, getConfiguration().getTempDir());
+				LOG.info("JDigidoc.cfg file created as a temporary file: '" + jdigidocCfgTmpFile + "'");
+				
 				PrepareSignatureInternalResult sigResult = this.documentService.prepareSignature(
 						doc.getId(),
 						request.getManifest(),
@@ -255,7 +261,7 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
 						request.getCity(),
 						request.getZip(),
 						certFile,
-						digidocConfigurationFile.getFile().getAbsolutePath(),
+						jdigidocCfgTmpFile,
 						this.getConfiguration().getTempDir(),
 						xroadRequestUser);
 				

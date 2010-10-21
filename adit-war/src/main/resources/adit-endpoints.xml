@@ -92,12 +92,8 @@
 		<property name="messageService" ref="messageService"/>
 		<!-- NB! Value is case sensitive -->
 		<!-- <property name="digidocConfigurationFile" value="classpath:jdigidoc.cfg" /> -->
-		<property name="digidocConfigurationFile" ref="jdigidocResource" />
+		
 		<property name="monitorService" ref="monitorService"/>
-	</bean>
-	
-	<bean name="jdigidocResource" class="org.springframework.core.io.ClassPathResource">
-		<constructor-arg><value>jdigidoc.cfg</value></constructor-arg>
 	</bean>
 	
 	<bean id="DeflateDocumentEndpoint" class="ee.adit.ws.endpoint.document.DeflateDocumentEndpoint">
