@@ -6,7 +6,7 @@ GRANT select, insert, update ON &&ADIT_SCHEMA..DOCUMENT_DVK_STATUS TO &&ADIT_APP
 GRANT select, insert, update ON &&ADIT_SCHEMA..DOCUMENT_FILE TO &&ADIT_APP.;
 GRANT select, insert, update ON &&ADIT_SCHEMA..DOCUMENT_HISTORY TO &&ADIT_APP.;
 GRANT select, insert, update ON &&ADIT_SCHEMA..DOCUMENT_HISTORY_TYPE TO &&ADIT_APP.;
-GRANT select, insert, update ON &&ADIT_SCHEMA..DOCUMENT_SHARING TO &&ADIT_APP.;
+GRANT select, insert, update, delete ON &&ADIT_SCHEMA..DOCUMENT_SHARING TO &&ADIT_APP.;
 GRANT select, insert, update ON &&ADIT_SCHEMA..DOCUMENT_SHARING_TYPE TO &&ADIT_APP.;
 GRANT select, insert, update ON &&ADIT_SCHEMA..DOCUMENT_TYPE TO &&ADIT_APP.;
 GRANT select, insert, update ON &&ADIT_SCHEMA..DOCUMENT_WF_STATUS TO &&ADIT_APP.;
