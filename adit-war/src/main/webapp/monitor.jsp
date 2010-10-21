@@ -24,7 +24,7 @@
 <body>
 	<h1>Adit Monitoring</h1>
 	
-	<table style="border: 1px solid #000; border-collapse: collapse;">
+	<table border=1>
 		<tr>
 			<td><b>Component</b></td>
 			<td><b>Status</b></td>
