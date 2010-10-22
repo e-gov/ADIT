@@ -1406,6 +1406,8 @@ public class DocumentService {
 	public int updateDocumentsFromDVK() {
 		int result = 0;
 
+		LOG.info("Updating DVK statuses...");
+		
 		// 1. Võtame kõik dokumendid ADIT andmebaasist, millel DVK staatus ei
 		// ole "saadetud"
 		List<Document> documents = this.getDocumentDAO()
