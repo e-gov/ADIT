@@ -24,6 +24,7 @@
 				<value>et_ee</value>
 			</list>
 		</property>
+		<property name="dvkOrgCode" value="87654321" />
 	</bean>
 
 	<bean id="monitorConfiguration" class="ee.adit.util.MonitorConfiguration">
