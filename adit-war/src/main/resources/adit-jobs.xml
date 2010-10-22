@@ -156,9 +156,11 @@
 				<!-- Working -->
 				<ref bean="UserSyncJobTrigger"/>
 				<ref bean="dvkSendTrigger"/>
+				<ref bean="dvkUpdateStatusTrigger"/>
+				<ref bean="dvkReceiveTrigger"/>
 				<!--
-					<ref bean="dvkReceiveTrigger"/>  
-					<ref bean="dvkUpdateStatusTrigger"/> 
+					  
+					 
 					<ref bean="dvkUpdateStatusToDVKTrigger"/>
 					<ref bean="DeleteDocumentsFromDVKJobTrigger"/>
 				-->
