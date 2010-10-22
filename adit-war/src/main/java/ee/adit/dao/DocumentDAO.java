@@ -407,7 +407,10 @@ public class DocumentDAO extends HibernateDaoSupport {
 			        				try {
 			        					byte[] buffer = new byte[10240];
 			        					int len = 0;
-			        					blobDataStream = docFile.getFileData().getBinaryStream();
+			        					Blob fileData = docFile.getFileData();
+			        					if(fileData == null)
+			        						throw new IOException("File blob data not initialized.");
+			        					blobDataStream = fileData.getBinaryStream();
 			        					fileOutputStream = new FileOutputStream(outputFileName);
 			        					while ((len = blobDataStream.read(buffer)) > 0) {
 			        						fileOutputStream.write(buffer, 0, len);

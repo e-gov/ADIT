@@ -765,7 +765,7 @@ public class DocumentService {
 
 					if (DocumentService.SharingType_SendDvk
 							.equalsIgnoreCase(documentSharing
-									.getDocumentSharingType())) {
+									.getDocumentSharingType()) && (DocumentService.DVKStatus_Waiting.equals(documentSharing.getDocumentDvkStatus()) || DocumentService.DVKStatus_Missing.equals(documentSharing.getDocumentDvkStatus()) || documentSharing.getDocumentDvkStatus() == null)) {
 
 						AditUser recipient = this.getAditUserDAO().getUserByID(
 								documentSharing.getUserCode());
