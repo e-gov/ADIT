@@ -703,7 +703,7 @@ public class DocumentService {
 	public int sendDocumentsToDVK() {
 		int result = 0;
 
-		final String SQL_QUERY = "select doc from Document doc, DocumentSharing docSharing where docSharing.documentSharingType = 'send_dvk' and (docSharing.documentDvkStatus is null or docSharing.documentDvkStatus = 100) and docSharing.documentId = doc.id";
+		final String SQL_QUERY = "select doc from Document doc, DocumentSharing docSharing where docSharing.documentSharingType = 'send_dvk' and (docSharing.documentDvkStatus is null or docSharing.documentDvkStatus = " + DocumentService.DVKStatus_Missing + ") and docSharing.documentId = doc.id";
 
 		final String tempDir = this.getConfiguration().getTempDir();
 
