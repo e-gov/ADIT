@@ -44,15 +44,6 @@
 		</layout>
     </appender>
     
-    <appender name="nagios" class="org.apache.log4j.DailyRollingFileAppender">
-		<param name="file" value="log/adit/adit_sql.log" />
-		<param name="datePattern" value="'.'yyyy-MM" />
-		<param name="append" value="true" /> 
-		<layout class="org.apache.log4j.PatternLayout">
-	    	<param name="ConversionPattern" value="%d{ABSOLUTE}%5p %C:%L - %m%n"/>
-		</layout>
-    </appender>
-    
     <logger name="ee.adit.ws">
     	<level value="DEBUG"></level>
     	<appender-ref ref="file" />
@@ -97,11 +88,6 @@
     <logger name="org.hibernate">
     	<level value="info"></level>
     	<appender-ref ref="file" />
-    </logger>
-    
-    <logger name="org.hibernate.SQL">
-    	<level value="debug"></level>
-    	<appender-ref ref="sql" />
     </logger>
      
     <logger name="ee.sk.utils.ConfigManager">
