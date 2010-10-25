@@ -128,7 +128,7 @@
 
 	<bean id="notificationTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
 		<property name="jobDetail" ref="sendNotificationsJobDetails" />
-		<property name="startDelay" value="0" />
+		<property name="startDelay" value="30000" />
 		<property name="repeatInterval" value="60000" />
 	</bean>
 
@@ -158,6 +158,7 @@
 				<ref bean="dvkSendTrigger"/>
 				<ref bean="dvkUpdateStatusTrigger"/>
 				<ref bean="dvkReceiveTrigger"/>
+				<ref bean="notificationTrigger"/>
 				<!--
 					  
 					 
@@ -166,8 +167,7 @@
 				-->
 
 				<!--
-					<ref bean="temporaryFolderCleanerTrigger"/> <ref
-					bean="notificationTrigger"/> 
+					<ref bean="temporaryFolderCleanerTrigger"/>  
 				-->
 			</list>
 		</property>
