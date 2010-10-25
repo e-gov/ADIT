@@ -1,5 +1,8 @@
 package ee.adit.util;
 
+import javax.xml.namespace.QName;
+import javax.xml.soap.Name;
+import javax.xml.soap.SOAPHeaderElement;
 import javax.xml.soap.SOAPMessage;
 
 import org.apache.log4j.Logger;
@@ -40,6 +43,11 @@ public class CustomXTeeResponseSanitizerInterceptor implements ClientInterceptor
 				LOG.debug("SOAP Header: " + ssm.getSOAPHeader());
 				LOG.debug("SOAP Body: " + ssm.getSOAPBody());
 
+				if(ssm.getSOAPHeader() == null) {
+					SOAPHeaderElement headerElement = ssm.getSOAPHeader().addHeaderElement(new QName("nimi"));
+					headerElement.setValue("teavituskalender.lisaSyndmus.v1");
+				}
+					
 				XTeeConverter converter = new XTeeConverter();
 				mc.clearResponse();
 				mc.setResponse(converter.convert(ssm));
