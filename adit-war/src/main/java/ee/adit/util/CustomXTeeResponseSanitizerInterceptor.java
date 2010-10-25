@@ -49,7 +49,6 @@ public class CustomXTeeResponseSanitizerInterceptor implements ClientInterceptor
 			LOG.debug("Handling response with interceptor. SaajSoapMessage created.");
 			
 			try {
-
 				
 				LOG.debug("SOAP Header: " + ssm.getSOAPHeader());
 				LOG.debug("SOAP Body: " + ssm.getSOAPBody());
