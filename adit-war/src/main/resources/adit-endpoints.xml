@@ -363,4 +363,10 @@
 		<constructor-arg value="ametlikud-dokumendid" />
 	</bean>
 	
+	<bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory">
+    <property name="messageFactory">
+        <bean class="weblogic.xml.saaj.MessageFactoryImpl"/>
+    </property>
+</bean>
+	
 </beans>
