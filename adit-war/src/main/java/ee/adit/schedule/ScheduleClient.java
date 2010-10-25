@@ -41,6 +41,12 @@ public class ScheduleClient {
 	public static String NotificationType_Modify = "modify";
 	public static String NotificationType_Sign = "sign";
 	
+	public ScheduleClient() {
+		LOG.debug("Constructing ScheduleClient. Setting messagefactory...");
+		System.setProperty("javax.xml.soap.MessageFactory",
+		"weblogic.xml.saaj.MessageFactoryImpl");
+	}
+	
 	/**
 	 * Adds a notification to "teavituskalender" X-Road database.
 	 * <br><br>
