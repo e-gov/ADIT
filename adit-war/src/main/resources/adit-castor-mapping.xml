@@ -1030,7 +1030,51 @@
 		</field>
 	</class>	
 	
-	<!-- Monitoring response messages -->
+	<!-- Monitoring request/response messages -->
+	
+	<class name="ee.adit.pojo.SaveDocumentRequestAttachmentMonitor">
+		<map-to xml="saveDocumentRequestAttachmentV1" />
+		<field name="id" type="java.lang.Long">
+			<bind-xml name="id" location="document" />
+		</field>
+		<field name="guid" type="java.lang.String">
+			<bind-xml name="guid" location="document" />
+		</field>
+		<field name="title" type="java.lang.String">
+			<bind-xml name="title" location="document" />
+		</field>
+		<field name="documentType" type="java.lang.String">
+			<bind-xml name="document_type" location="document" />
+		</field>
+		<field name="previousDocumentID" type="java.lang.Long">
+			<bind-xml name="previous_document_id" location="document" />
+		</field>		
+		<field name="files" type="ee.adit.pojo.OutputDocumentFileMonitor" collection="arraylist">
+			<bind-xml name="file" location="document/files"/>
+		</field>
+	</class>
+	
+	<class name="ee.adit.pojo.OutputDocumentFileMonitor">
+		<map-to xml="file"/>
+		<field name="id" type="java.lang.Long">
+			<bind-xml name="id"/>
+		</field>
+		<field name="name" type="java.lang.String">
+			<bind-xml name="name"/>
+		</field>
+		<field name="contentType" type="java.lang.String">
+			<bind-xml name="content_type"/>
+		</field>
+		<field name="description" type="java.lang.String">
+			<bind-xml name="description"/>
+		</field>
+		<field name="sizeBytes" type="java.lang.Long">
+			<bind-xml name="size_bytes"/>
+		</field>
+		<field name="data" type="java.lang.String">
+			<bind-xml name="data"/>
+		</field>
+	</class>
 	
 	<class name="ee.adit.pojo.SaveDocumentResponseMonitor">
 		<map-to xml="saveDocumentResponse" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"/>

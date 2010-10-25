@@ -55,8 +55,10 @@ import ee.adit.pojo.GetUserInfoResponseAttachmentUser;
 import ee.adit.pojo.GetUserInfoResponseMonitor;
 import ee.adit.pojo.OutputDocument;
 import ee.adit.pojo.OutputDocumentFile;
+import ee.adit.pojo.OutputDocumentFileMonitor;
 import ee.adit.pojo.SaveDocumentRequest;
 import ee.adit.pojo.SaveDocumentRequestAttachment;
+import ee.adit.pojo.SaveDocumentRequestAttachmentMonitor;
 import ee.adit.pojo.SaveDocumentRequestDocument;
 import ee.adit.pojo.SaveDocumentResponseMonitor;
 import ee.adit.util.Configuration;
@@ -480,24 +482,26 @@ public class MonitorService {
 			document.setHref("cid:document");
 			request.setDocument(document);
 			
-			SaveDocumentRequestAttachment requestAttachment = new SaveDocumentRequestAttachment();
+			SaveDocumentRequestAttachmentMonitor requestAttachment = new SaveDocumentRequestAttachmentMonitor();
 			requestAttachment.setDocumentType(DocumentService.DocType_Letter);
 			requestAttachment.setId(this.getMonitorConfiguration().getTestDocumentId());		
 			String newTitle = Util.dateToXMLDate(new Date());
 			requestAttachment.setTitle(newTitle);
 			
-			List<OutputDocumentFile> files = new ArrayList<OutputDocumentFile>();
+			List<OutputDocumentFileMonitor> files = new ArrayList<OutputDocumentFileMonitor>();
 			
 			String tmpFileName = Util.createTemporaryFile(new ByteArrayInputStream(newTitle.getBytes("UTF-8")), getConfiguration().getTempDir());
+			String dataFile = Util.gzipAndBase64Encode(tmpFileName, getConfiguration().getTempDir(), true);
 			
 			File tmpFile = new File(tmpFileName);
+			String fileContents = Util.getFileContents(new File(dataFile));
 			
-			OutputDocumentFile file = new OutputDocumentFile();
+			OutputDocumentFileMonitor file = new OutputDocumentFileMonitor();
 			file.setId(this.getMonitorConfiguration().getTestDocumentFileId());
 			file.setContentType("text/plain");
 			file.setName("test.txt");
 			file.setSizeBytes(tmpFile.length());
-			file.setSysTempFile(tmpFileName);
+			file.setData(fileContents);
 			
 			files.add(file);
 			requestAttachment.setFiles(files);

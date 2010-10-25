@@ -283,6 +283,7 @@ adit-war/src/main/java/ee/adit/pojo/Notification.java -text
 adit-war/src/main/java/ee/adit/pojo/ObjectFactory.java -text
 adit-war/src/main/java/ee/adit/pojo/OutputDocument.java -text
 adit-war/src/main/java/ee/adit/pojo/OutputDocumentFile.java -text
+adit-war/src/main/java/ee/adit/pojo/OutputDocumentFileMonitor.java -text
 adit-war/src/main/java/ee/adit/pojo/OutputDocumentFilesList.java -text
 adit-war/src/main/java/ee/adit/pojo/PrepareSignatureInternalResult.java -text
 adit-war/src/main/java/ee/adit/pojo/PrepareSignatureRequest.java -text
@@ -294,6 +295,7 @@ adit-war/src/main/java/ee/adit/pojo/SaveDocumentFileRequestFile.java -text
 adit-war/src/main/java/ee/adit/pojo/SaveDocumentFileResponse.java -text
 adit-war/src/main/java/ee/adit/pojo/SaveDocumentRequest.java -text
 adit-war/src/main/java/ee/adit/pojo/SaveDocumentRequestAttachment.java -text
+adit-war/src/main/java/ee/adit/pojo/SaveDocumentRequestAttachmentMonitor.java -text
 adit-war/src/main/java/ee/adit/pojo/SaveDocumentRequestDocument.java -text
 adit-war/src/main/java/ee/adit/pojo/SaveDocumentResponse.java -text
 adit-war/src/main/java/ee/adit/pojo/SaveDocumentResponseMonitor.java -text
