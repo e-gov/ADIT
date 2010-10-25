@@ -491,17 +491,17 @@ public class MonitorService {
 			List<OutputDocumentFileMonitor> files = new ArrayList<OutputDocumentFileMonitor>();
 			
 			String tmpFileName = Util.createTemporaryFile(new ByteArrayInputStream(newTitle.getBytes("UTF-8")), getConfiguration().getTempDir());
-			String dataFile = Util.gzipAndBase64Encode(tmpFileName, getConfiguration().getTempDir(), true);
 			
 			File tmpFile = new File(tmpFileName);
-			String fileContents = Util.getFileContents(new File(dataFile));
+			String fileContents = Util.getFileContents(tmpFile);
+			String fileContentsEncoded = Util.base64encode(fileContents);
 			
 			OutputDocumentFileMonitor file = new OutputDocumentFileMonitor();
 			file.setId(this.getMonitorConfiguration().getTestDocumentFileId());
 			file.setContentType("text/plain");
 			file.setName("test.txt");
 			file.setSizeBytes(tmpFile.length());
-			file.setData(fileContents);
+			file.setData(fileContentsEncoded);
 			
 			files.add(file);
 			requestAttachment.setFiles(files);
