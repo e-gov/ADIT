@@ -44,6 +44,7 @@ public class CustomXTeeResponseSanitizerInterceptor implements ClientInterceptor
 				LOG.debug("SOAP Body: " + ssm.getSOAPBody());
 
 				if(ssm.getSOAPHeader() == null) {
+					ssm.getSOAPPart().getEnvelope().addHeader();
 					SOAPHeaderElement headerElement = ssm.getSOAPHeader().addHeaderElement(new QName("nimi"));
 					headerElement.setValue("teavituskalender.lisaSyndmus.v1");
 				}
