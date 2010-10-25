@@ -30,7 +30,7 @@
 	</bean>
 
 	<bean id="monitorConfiguration" class="ee.adit.util.MonitorConfiguration">
-		<property name="aditServiceUrl" value="http://localhost:7001/adit/service" />
+		<property name="aditServiceUrl" value="http://localhost:7020/adit/service" />
 		<property name="remoteApplicationShortName" value="MONITOR_TEST_APP" />
 		<property name="userCode" value="EE00000000000" />
 		<property name="institutionCode" value="123456789" />
