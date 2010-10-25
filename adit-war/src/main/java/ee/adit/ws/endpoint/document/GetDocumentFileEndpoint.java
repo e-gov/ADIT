@@ -36,6 +36,7 @@ import ee.adit.service.LogService;
 import ee.adit.service.UserService;
 import ee.adit.util.CustomXTeeHeader;
 import ee.adit.util.Util;
+import ee.adit.util.XRoadQueryName;
 import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
 import ee.webmedia.xtee.annotation.XTeeService;
 
@@ -265,7 +266,7 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 									if (!isViewed && (docCreator != null) && (userService.findNotification(docCreator.getUserNotifications(), ScheduleClient.NotificationType_View) != null)) {
 										ScheduleClient.addEvent(
 											docCreator,
-											this.getMessageSource().getMessage("scheduler.message.view", new Object[] { doc.getTitle(), docCreator.getUserCode() }, Locale.ENGLISH),
+											this.getMessageSource().getMessage("scheduler.message.view", new Object[] { doc.getTitle(), user.getUserCode() }, Locale.ENGLISH),
 											this.getConfiguration().getSchedulerEventTypeName(),
 											requestDate,
 											ScheduleClient.NotificationType_View,

@@ -248,7 +248,7 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
 									if (!isViewed && (docCreator != null) && (userService.findNotification(docCreator.getUserNotifications(), ScheduleClient.NotificationType_View) != null)) {
 										ScheduleClient.addEvent(
 											docCreator,
-											this.getMessageSource().getMessage("scheduler.message.view", new Object[] { doc.getTitle(), docCreator.getUserCode() }, Locale.ENGLISH),
+											this.getMessageSource().getMessage("scheduler.message.view", new Object[] { doc.getTitle(), user.getUserCode() }, Locale.ENGLISH),
 											this.getConfiguration().getSchedulerEventTypeName(),
 											requestDate,
 											ScheduleClient.NotificationType_View,
