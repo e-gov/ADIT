@@ -330,6 +330,7 @@ adit-war/src/main/java/ee/adit/util/CustomMessageCallbackFactory.java -text
 adit-war/src/main/java/ee/adit/util/CustomXTeeConsumer.java -text
 adit-war/src/main/java/ee/adit/util/CustomXTeeHeader.java -text
 adit-war/src/main/java/ee/adit/util/CustomXTeeMessageCallback.java -text
+adit-war/src/main/java/ee/adit/util/CustomXTeeResponseSanitizerInterceptor.java -text
 adit-war/src/main/java/ee/adit/util/CustomXTeeServiceConfiguration.java -text
 adit-war/src/main/java/ee/adit/util/DVKUserSyncResult.java -text
 adit-war/src/main/java/ee/adit/util/FileSplitResult.java -text

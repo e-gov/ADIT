@@ -5,10 +5,12 @@ import java.util.Calendar;
 
 import org.apache.log4j.Logger;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Notification;
 import ee.adit.service.UserService;
+import ee.adit.util.CustomXTeeResponseSanitizerInterceptor;
 import ee.adit.util.Util;
 import ee.riik.xtee.teavituskalender.producers.producer.teavituskalender.LisaSyndmusDocument;
 import ee.riik.xtee.teavituskalender.producers.producer.teavituskalender.LisaSyndmusResponseDocument;
@@ -197,6 +199,10 @@ public class ScheduleClient {
 				conf.setDatabase("teavituskalender");
 				conf.setMethod("lisaSyndmus");
 				conf.setVersion("v1");
+				
+				ClientInterceptor ci = new CustomXTeeResponseSanitizerInterceptor();
+				
+				xteeService.getWebServiceTemplate().setInterceptors(new ClientInterceptor[] { ci });
 				LisaSyndmusResponseDocument ret = (LisaSyndmusResponseDocument) xteeService.sendRequest(doc, conf);
 				
 				if (ret != null) {
