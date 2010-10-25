@@ -45,7 +45,7 @@ public class CustomXTeeResponseSanitizerInterceptor implements ClientInterceptor
 
 				if(ssm.getSOAPHeader() == null) {
 					ssm.getSOAPPart().getEnvelope().addHeader();
-					SOAPHeaderElement headerElement = ssm.getSOAPHeader().addHeaderElement(new QName("nimi"));
+					SOAPHeaderElement headerElement = ssm.getSOAPHeader().addHeaderElement(new QName("http://producers.teavituskalender.xtee.riik.ee/producer/teavituskalender", "nimi"));
 					headerElement.setValue("teavituskalender.lisaSyndmus.v1");
 				}
 					
