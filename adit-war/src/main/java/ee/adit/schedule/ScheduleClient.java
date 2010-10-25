@@ -179,9 +179,6 @@ public class ScheduleClient {
 			keha.setAlgus(eventDate);
 			keha.setLopp(eventDate);
 			
-			// REMOVE
-			ee.webmedia.xtee.client.util.XTeeResponseSanitizerInterceptor i;
-			
 			ClassPathXmlApplicationContext ctx = null;
 			try {
 				ctx = startContext();
