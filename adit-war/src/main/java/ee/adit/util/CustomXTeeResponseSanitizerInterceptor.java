@@ -1,9 +1,12 @@
 package ee.adit.util;
 
+import java.io.StringWriter;
+
 import javax.xml.namespace.QName;
 import javax.xml.soap.Name;
 import javax.xml.soap.SOAPHeaderElement;
 import javax.xml.soap.SOAPMessage;
+import javax.xml.transform.stream.StreamResult;
 
 import org.apache.log4j.Logger;
 import org.springframework.ws.WebServiceMessage;
@@ -32,9 +35,17 @@ public class CustomXTeeResponseSanitizerInterceptor implements ClientInterceptor
 	 */
 	public boolean handleResponse(MessageContext mc) throws WebServiceClientException {
 		WebServiceMessage message = mc.getResponse();
+		
+		StreamResult res = (StreamResult) message.getPayloadResult();
+		StringWriter strWrt = new StringWriter();
+		res.setWriter(strWrt);
+		
+		LOG.debug("StringWriter.toString: 1: " + strWrt.toString());
+		
 		if (message instanceof SaajSoapMessage) {
 			SOAPMessage ssm = ((SaajSoapMessage) message).getSaajMessage();
-
+			
+			LOG.debug("StringWriter.toString: 2: " + strWrt.toString());
 			LOG.debug("Handling response with interceptor. SaajSoapMessage created.");
 			
 			try {
