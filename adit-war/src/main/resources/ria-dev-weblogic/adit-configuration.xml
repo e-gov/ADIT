@@ -26,6 +26,9 @@
 			</list>
 		</property>
 		<property name="dvkOrgCode" value="70006317" />
+		<property name="xteeInstitution" value="70006317" />
+		<property name="xteeSecurityServer" value="http://10.0.14.1/cgi-bin/consumer_proxy" />
+		<property name="xteeIdCode" value="00000000000" />
 	</bean>
 
 	<bean id="monitorConfiguration" class="ee.adit.util.MonitorConfiguration">

@@ -51,6 +51,11 @@ public class Configuration {
 	
 	private String dvkOrgCode;
 	
+	private String xteeInstitution;
+	
+	private String xteeSecurityServer;
+	
+	private String xteeIdCode;
 	
 	/**
 	 * Retrieves the list of the locales
@@ -182,6 +187,30 @@ public class Configuration {
 
 	public void setDvkOrgCode(String dvkOrgCode) {
 		this.dvkOrgCode = dvkOrgCode;
+	}
+
+	public String getXteeInstitution() {
+		return xteeInstitution;
+	}
+
+	public void setXteeInstitution(String xteeInstitution) {
+		this.xteeInstitution = xteeInstitution;
+	}
+
+	public String getXteeSecurityServer() {
+		return xteeSecurityServer;
+	}
+
+	public void setXteeSecurityServer(String xteeSecurityServer) {
+		this.xteeSecurityServer = xteeSecurityServer;
+	}
+
+	public String getXteeIdCode() {
+		return xteeIdCode;
+	}
+
+	public void setXteeIdCode(String xteeIdCode) {
+		this.xteeIdCode = xteeIdCode;
 	}
 	
 }

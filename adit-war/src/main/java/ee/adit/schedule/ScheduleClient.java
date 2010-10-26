@@ -412,16 +412,15 @@ public class ScheduleClient {
 				WSConsumptionLoggingInterceptor li = new WSConsumptionLoggingInterceptor();
 				webServiceTemplate.setInterceptors(new ClientInterceptor[] { ci, li });
 								
-				SaajSoapMessageFactory messageFactory = new SaajSoapMessageFactory(MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL));
-				SaajSoapMessage message = (SaajSoapMessage) messageFactory.createWebServiceMessage();
+				//SaajSoapMessageFactory messageFactory = new SaajSoapMessageFactory(MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL));
+				//SaajSoapMessage message = (SaajSoapMessage) messageFactory.createWebServiceMessage();
 
-				Properties props = load("xtee.properties");
-				String xteeInstitution = (String) props.get("institution");
-				String xteeSecurityServer = (String) props.get("security.server");
-				String xteeDatabase = (String) props.get("database");
-				String xteeMethod = (String) props.get("method");
-				String xteeVersion = (String) props.get("version");
-				String xteeIdCode = (String) props.get("idcode");
+				String xteeInstitution = getConfiguration().getXteeInstitution();
+				String xteeSecurityServer = getConfiguration().getXteeSecurityServer();
+				String xteeDatabase = "teavituskalender";
+				String xteeMethod = "lisaSyndmus";
+				String xteeVersion = "v1";
+				String xteeIdCode = getConfiguration().getXteeIdCode();
 				
 				
 				SimpleXTeeServiceConfiguration xTeeServiceConfiguration = new SimpleXTeeServiceConfiguration();
@@ -589,13 +588,6 @@ public class ScheduleClient {
 		ctx.start();
 		return ctx;
 	}
-
-	public static Properties load(String propsName) throws Exception {
-        Properties props = new Properties();
-        URL url = ClassLoader.getSystemResource(propsName);
-        props.load(url.openStream());
-        return props;
-    }
 	
 	public Marshaller getMarshaller() {
 		return marshaller;
