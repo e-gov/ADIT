@@ -318,6 +318,8 @@ adit-war/src/main/java/ee/adit/pojo/UserList.java -text
 adit-war/src/main/java/ee/adit/pojo/notification/LisaSyndmusRequest.java -text
 adit-war/src/main/java/ee/adit/pojo/notification/LisaSyndmusRequestKasutaja.java -text
 adit-war/src/main/java/ee/adit/pojo/notification/LisaSyndmusRequestLugejad.java -text
+adit-war/src/main/java/ee/adit/pojo/notification/LisaSyndmusResponse.java -text
+adit-war/src/main/java/ee/adit/pojo/notification/LisaSyndmusResponseTulemus.java -text
 adit-war/src/main/java/ee/adit/schedule/ScheduleClient.java -text
 adit-war/src/main/java/ee/adit/schedule/SendNotificationsJob.java -text
 adit-war/src/main/java/ee/adit/service/DocumentService.java -text

@@ -1180,4 +1180,24 @@
 		</field>
 	</class>
 	
+	<class name="ee.adit.pojo.notification.LisaSyndmusResponse">
+		<map-to xml="lisaSyndmusVastus" ns-uri="http://producers.teavituskalender.xtee.riik.ee/producer/teavituskalender"/>
+		<field name="tulemus" type="ee.adit.pojo.notification.LisaSyndmusResponseTulemus" >
+			<bind-xml name="tulemus" location="keha" />
+		</field>
+		<field name="syndmusId" type="java.lang.Integer">
+			<bind-xml name="syndmusId" location="keha" />
+		</field>
+	</class>
+	
+	<class name="ee.adit.pojo.notification.LisaSyndmusResponseTulemus">
+		<map-to xml="tulemus" ns-uri="http://producers.teavituskalender.xtee.riik.ee/producer/teavituskalender"/>
+		<field name="tulemuseKood" type="java.lang.Integer" >
+			<bind-xml name="tulemuseKood" location="keha" />
+		</field>
+		<field name="tulemuseTekst" type="java.lang.String">
+			<bind-xml name="tulemuseTekst" location="keha" />
+		</field>
+	</class>
+	
 </mapping>

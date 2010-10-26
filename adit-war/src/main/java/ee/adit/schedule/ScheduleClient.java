@@ -1,20 +1,47 @@
 package ee.adit.schedule;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.math.BigInteger;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Properties;
+
+import javax.xml.soap.MessageFactory;
+import javax.xml.soap.SOAPConstants;
+import javax.xml.transform.Source;
+import javax.xml.transform.sax.SAXSource;
 
 import org.apache.log4j.Logger;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.oxm.Marshaller;
+import org.springframework.oxm.Unmarshaller;
+import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
+import org.springframework.ws.soap.saaj.SaajSoapMessage;
+import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
+import org.xml.sax.InputSource;
 
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Notification;
+import ee.adit.exception.AditInternalException;
+import ee.adit.pojo.GetDocumentRequest;
+import ee.adit.pojo.GetDocumentResponseMonitor;
+import ee.adit.pojo.OutputDocument;
 import ee.adit.pojo.notification.LisaSyndmusRequest;
 import ee.adit.pojo.notification.LisaSyndmusRequestKasutaja;
 import ee.adit.pojo.notification.LisaSyndmusRequestLugejad;
+import ee.adit.pojo.notification.LisaSyndmusResponse;
 import ee.adit.service.UserService;
+import ee.adit.util.Configuration;
+import ee.adit.util.CustomClientInterceptor;
+import ee.adit.util.CustomMessageCallbackFactory;
+import ee.adit.util.CustomXTeeConsumer;
 import ee.adit.util.CustomXTeeResponseSanitizerInterceptor;
+import ee.adit.util.CustomXTeeServiceConfiguration;
 import ee.adit.util.Util;
 import ee.riik.xtee.teavituskalender.producers.producer.teavituskalender.LisaSyndmusDocument;
 import ee.riik.xtee.teavituskalender.producers.producer.teavituskalender.LisaSyndmusResponseDocument;
@@ -58,6 +85,18 @@ public class ScheduleClient {
 	public static String NotificationUser_Person = "isik";
 	public static String NotificationUser_Official = "ametnik";
 	public static String NotificationUser_Institution = "asutus";
+	
+	/**
+	 * Marshaller - required to convert Java objects to XML.
+	 */
+	private Marshaller marshaller;
+
+	/**
+	 * Unmarshaller - required to convert XML to Java objects.
+	 */
+	private Unmarshaller unmarshaller;
+	
+	private Configuration configuration;
 	
 	/**
 	 * Adds a notification to "teavituskalender" X-Road database.
@@ -315,7 +354,7 @@ public class ScheduleClient {
 	 * @return
 	 * 		Notification ID in "teavituskalender" database
 	 */
-	public static long addEventWithCastor(
+	public long addEventWithCastor(
 			final long notificationId,
 			final AditUser eventOwner,
 			final String eventText,
@@ -363,36 +402,51 @@ public class ScheduleClient {
 			request.setAlgus(eventDate.getTime());
 			request.setLopp(eventDate.getTime());
 			
-			// TODO: web-service call
-			
-			
-			
-			
-			
-			ClassPathXmlApplicationContext ctx = null;
 			try {
-				ctx = startContext();
-				StandardXTeeConsumer xteeService = (StandardXTeeConsumer) ctx.getBean("xteeConsumer");
-				SimpleXTeeServiceConfiguration conf = (SimpleXTeeServiceConfiguration) xteeService.getServiceConfiguration();
-				conf.setDatabase("teavituskalender");
-				conf.setMethod("lisaSyndmus");
-				conf.setVersion("v1");
+				WebServiceTemplate webServiceTemplate = new WebServiceTemplate();
+				webServiceTemplate.setMarshaller(getMarshaller());
+				webServiceTemplate.setUnmarshaller(getUnmarshaller());
 				
+				// Interceptors
 				ClientInterceptor ci = new CustomXTeeResponseSanitizerInterceptor();
 				WSConsumptionLoggingInterceptor li = new WSConsumptionLoggingInterceptor();
+				webServiceTemplate.setInterceptors(new ClientInterceptor[] { ci, li });
+								
+				SaajSoapMessageFactory messageFactory = new SaajSoapMessageFactory(MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL));
+				SaajSoapMessage message = (SaajSoapMessage) messageFactory.createWebServiceMessage();
+
+				Properties props = load("xtee.properties");
+				String xteeInstitution = (String) props.get("institution");
+				String xteeSecurityServer = (String) props.get("security.server");
+				String xteeDatabase = (String) props.get("database");
+				String xteeMethod = (String) props.get("method");
+				String xteeVersion = (String) props.get("version");
+				String xteeIdCode = (String) props.get("idcode");
 				
-				xteeService.getWebServiceTemplate().setInterceptors(new ClientInterceptor[] { ci, li });
-				LisaSyndmusResponseDocument ret = (LisaSyndmusResponseDocument) xteeService.sendRequest(doc, conf);
 				
-				if (ret != null) {
-					if (ret.getLisaSyndmusResponse() != null) {
-						if (ret.getLisaSyndmusResponse().getKeha() != null) {
-							BigInteger resultEventId = ret.getLisaSyndmusResponse().getKeha().getSyndmusId();
+				SimpleXTeeServiceConfiguration xTeeServiceConfiguration = new SimpleXTeeServiceConfiguration();
+				xTeeServiceConfiguration.setDatabase(xteeDatabase);
+				xTeeServiceConfiguration.setIdCode(xteeIdCode);
+				xTeeServiceConfiguration.setInstitution(xteeInstitution);
+				xTeeServiceConfiguration.setMethod(xteeMethod);
+				xTeeServiceConfiguration.setVersion(xteeVersion);
+				xTeeServiceConfiguration.setSecurityServer(xteeSecurityServer);
+				
+				CustomXTeeConsumer customXTeeConsumer = new CustomXTeeConsumer();
+				customXTeeConsumer.setWebServiceTemplate(webServiceTemplate);
+				customXTeeConsumer.setServiceConfiguration(xTeeServiceConfiguration);
+				customXTeeConsumer.setMsgCallbackFactory(new CustomMessageCallbackFactory());
+				
+				LisaSyndmusResponse response = (LisaSyndmusResponse) customXTeeConsumer.sendRequest(request);
+				
+				if(response != null) {
+					if (response != null) {
+							Integer resultEventId = response.getSyndmusId();
 							LOG.debug("LisaSyndmus result event ID: " + ((resultEventId == null) ? "NULL" : resultEventId.toString()));
 
-							if (ret.getLisaSyndmusResponse().getKeha().getTulemus() != null) {
-								BigInteger resultCode = ret.getLisaSyndmusResponse().getKeha().getTulemus().getTulemuseKood();
-								String resultMessage = ret.getLisaSyndmusResponse().getKeha().getTulemus().getTulemuseTekst();
+							if (response.getTulemus() != null) {
+								Integer resultCode = response.getTulemus().getTulemuseKood();
+								String resultMessage = response.getTulemus().getTulemuseTekst();
 								LOG.debug("LisaSyndmus result code: " + ((resultCode == null) ? "NULL" : resultCode.toString()));
 								LOG.debug("LisaSyndmus result message: " + resultMessage);
 								
@@ -403,20 +457,18 @@ public class ScheduleClient {
 							} else {
 								LOG.error("Error adding notification to 'teavituskalender' database. Response's 'tulemus' part is NULL. Related document ID: " + String.valueOf(relatedDocumentId));
 							}
-						} else {
-							LOG.error("Error adding notification to 'teavituskalender' database. Response's 'keha' part is NULL. Related document ID: " + String.valueOf(relatedDocumentId));
-						}
 					} else {
 						LOG.error("Error adding notification to 'teavituskalender' database. Response's 'LisaSyndmusResponse' part is NULL. Related document ID: " + String.valueOf(relatedDocumentId));
 					}
 				} else {
-					LOG.error("Error adding notification to 'teavituskalender' database. Response document is NULL. Related document ID: " + String.valueOf(relatedDocumentId));
+					throw new AditInternalException("The 'getDocument' request was not successful: response could not be unmarshalled: unmarshalling returned null.");
 				}
-			} finally {
-				if (ctx != null) {
-					ctx.close();
-				}
+						
+				
+			} catch(Exception e) {
+				LOG.error("Error while sending notifications: ", e);
 			}
+			
 		} catch (Exception ex) {
 			LOG.error("Error adding notification to 'teavituskalender' database. Related document ID: " + String.valueOf(relatedDocumentId), ex);
 		}
@@ -453,6 +505,7 @@ public class ScheduleClient {
 		}
 		
 		return eventId;
+		
 	}
 	
 	/**
@@ -535,5 +588,36 @@ public class ScheduleClient {
 		ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("xtee.xml");
 		ctx.start();
 		return ctx;
+	}
+
+	public static Properties load(String propsName) throws Exception {
+        Properties props = new Properties();
+        URL url = ClassLoader.getSystemResource(propsName);
+        props.load(url.openStream());
+        return props;
+    }
+	
+	public Marshaller getMarshaller() {
+		return marshaller;
+	}
+
+	public void setMarshaller(Marshaller marshaller) {
+		this.marshaller = marshaller;
+	}
+
+	public Unmarshaller getUnmarshaller() {
+		return unmarshaller;
+	}
+
+	public void setUnmarshaller(Unmarshaller unmarshaller) {
+		this.unmarshaller = unmarshaller;
+	}
+
+	public Configuration getConfiguration() {
+		return configuration;
+	}
+
+	public void setConfiguration(Configuration configuration) {
+		this.configuration = configuration;
 	}
 }
