@@ -132,7 +132,7 @@
 	<bean id="notificationTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
 		<property name="jobDetail" ref="sendNotificationsJobDetails" />
 		<property name="startDelay" value="10000" />
-		<property name="repeatInterval" value="300000" />
+		<property name="repeatInterval" value="10000" />
 	</bean>
 
 	<bean id="temporaryFolderCleanerTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
