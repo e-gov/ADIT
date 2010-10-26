@@ -1163,7 +1163,7 @@
 			<bind-xml name="kasutaja" />
 		</field>
 		<field name="type" type="java.lang.String">
-			<bind-xml name="type" type="attribute" />
+			<bind-xml name="SOAP-ENC:arrayType" node="attribute" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" />
 		</field>
 	</class>
 	

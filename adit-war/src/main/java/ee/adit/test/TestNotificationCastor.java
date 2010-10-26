@@ -50,7 +50,7 @@ public class TestNotificationCastor {
 		lugejad.add(lugeja);
 		
 		l.setKasutajad(lugejad);
-		l.setType("SOAP-ENC:Array");
+		l.setType("ns5:kasutaja[1]");
 		
 		o.setNahtavOmanikule(false);
 		o.setKirjeldus("Document Avaldus Jõgeva Linnavalitsusele was viewed by user EE70006317.");
