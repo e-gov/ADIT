@@ -1166,7 +1166,7 @@
 			<bind-xml name="xsi:type" node="attribute" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" />
 		</field>
 		<field name="type" type="java.lang.String">
-			<bind-xml name="SOAP-ENC:arrayType" node="attribute" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" />
+			<bind-xml name="SOAP-ENC:arrayType" node="attribute" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:ns9="http://producers.teavituskalender.xtee.riik.ee/producer/teavituskalender" />
 		</field>
 	</class>
 	
