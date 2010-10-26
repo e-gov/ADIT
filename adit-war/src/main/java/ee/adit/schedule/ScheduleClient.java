@@ -453,13 +453,15 @@ public class ScheduleClient {
 				
 				WebServiceTemplate webServiceTemplate2 = new WebServiceTemplate();
 				StringSource source = new StringSource(xml);
-				DOMResult result = new DOMResult();
+				StreamResult result = new StreamResult();
+				StringWriter strWriter = new StringWriter();
+				result.setWriter(strWriter);
 				
 				webServiceTemplate2.sendSourceAndReceiveToResult(xteeSecurityServer, source, result);
 				
+				LOG.debug("Notifications response message: " + strWriter.getBuffer().toString());
 				
-				
-				TransformerFactory transFactory = TransformerFactory.newInstance();
+				/*TransformerFactory transFactory = TransformerFactory.newInstance();
 				Transformer transformer = transFactory.newTransformer();
 				StringWriter buffer = new StringWriter();
 				transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
@@ -467,7 +469,7 @@ public class ScheduleClient {
 				      new StreamResult(buffer));
 				String str = buffer.toString();
 				
-				LOG.debug("Notifications response message: " + buffer);
+				LOG.debug("Notifications response message: " + buffer);*/
 				
 				/*LisaSyndmusResponse response = (LisaSyndmusResponse) customXTeeConsumer.sendRequest(request);
 				
