@@ -43,7 +43,7 @@ public class ModifyStatusEndpoint extends AbstractAditBaseEndpoint {
 	private static Logger LOG = Logger.getLogger(ModifyStatusEndpoint.class);
 	private UserService userService;
 	private DocumentService documentService;
-
+	private ScheduleClient scheduleClient;
 	public UserService getUserService() {
 		return userService;
 	}
@@ -226,7 +226,7 @@ public class ModifyStatusEndpoint extends AbstractAditBaseEndpoint {
 				if (!user.getUserCode().equalsIgnoreCase(doc.getCreatorCode())) {
 					AditUser docCreator = this.getUserService().getUserByID(doc.getCreatorCode());
 					if ((docCreator != null) && (userService.findNotification(docCreator.getUserNotifications(), ScheduleClient.NotificationType_Modify) != null)) {
-						ScheduleClient.addEvent(
+						getScheduleClient().addEvent(
 							docCreator,
 							this.getMessageSource().getMessage("scheduler.message.modify", new Object[] { doc.getTitle(), docCreator.getUserCode() }, Locale.ENGLISH),
 							this.getConfiguration().getSchedulerEventTypeName(),
@@ -336,5 +336,13 @@ public class ModifyStatusEndpoint extends AbstractAditBaseEndpoint {
 		LOG.debug("Document ID: " + String.valueOf(request.getDocumentId()));
 		LOG.debug("Document status ID: " + String.valueOf(request.getDocumentStatusId()));
 		LOG.debug("------------------------------------");
+	}
+
+	public ScheduleClient getScheduleClient() {
+		return scheduleClient;
+	}
+
+	public void setScheduleClient(ScheduleClient scheduleClient) {
+		this.scheduleClient = scheduleClient;
 	}
 }

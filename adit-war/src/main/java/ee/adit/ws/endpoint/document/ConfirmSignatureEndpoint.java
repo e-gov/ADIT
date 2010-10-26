@@ -45,6 +45,8 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
 	private DocumentService documentService;
 	private String digidocConfigurationFile;
 
+	private ScheduleClient scheduleClient;
+	
 	public UserService getUserService() {
 		return userService;
 	}
@@ -255,7 +257,7 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
 				if (!user.getUserCode().equalsIgnoreCase(doc.getCreatorCode())) {
 					AditUser docCreator = this.getUserService().getUserByID(doc.getCreatorCode());
 					if ((docCreator != null) && (userService.findNotification(docCreator.getUserNotifications(), ScheduleClient.NotificationType_Sign) != null)) {
-						ScheduleClient.addEvent(
+						getScheduleClient().addEvent(
 							docCreator,
 							this.getMessageSource().getMessage("scheduler.message.sign", new Object[] { doc.getTitle(), docCreator.getUserCode() }, Locale.ENGLISH),
 							this.getConfiguration().getSchedulerEventTypeName(),
@@ -349,5 +351,13 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
 			LOG.debug("Signature HREF: " + request.getSignature().getHref());
 		}
 		LOG.debug("----------------------------------------");
+	}
+
+	public ScheduleClient getScheduleClient() {
+		return scheduleClient;
+	}
+
+	public void setScheduleClient(ScheduleClient scheduleClient) {
+		this.scheduleClient = scheduleClient;
 	}
 }

@@ -43,7 +43,7 @@ public class MarkDocumentViewedEndpoint extends AbstractAditBaseEndpoint {
 	private static Logger LOG = Logger.getLogger(MarkDocumentViewedEndpoint.class);
 	private UserService userService;
 	private DocumentService documentService;
-
+	private ScheduleClient scheduleClient;
 	public UserService getUserService() {
 		return userService;
 	}
@@ -230,7 +230,7 @@ public class MarkDocumentViewedEndpoint extends AbstractAditBaseEndpoint {
 							if (!user.getUserCode().equalsIgnoreCase(doc.getCreatorCode())) {
 								AditUser docCreator = this.getUserService().getUserByID(doc.getCreatorCode());
 								if (!isViewed && (docCreator != null) && (userService.findNotification(docCreator.getUserNotifications(), ScheduleClient.NotificationType_View) != null)) {
-									ScheduleClient.addEvent(
+									getScheduleClient().addEvent(
 										docCreator,
 										this.getMessageSource().getMessage("scheduler.message.view", new Object[] { doc.getTitle(), xroadRequestUser.getUserCode() }, Locale.ENGLISH),
 										this.getConfiguration().getSchedulerEventTypeName(),
@@ -343,5 +343,13 @@ public class MarkDocumentViewedEndpoint extends AbstractAditBaseEndpoint {
 		LOG.debug("-------- MarkDocumentViewedRequest -------");
 		LOG.debug("Document ID: " + String.valueOf(request.getDocumentId()));
 		LOG.debug("------------------------------------------");
+	}
+
+	public ScheduleClient getScheduleClient() {
+		return scheduleClient;
+	}
+
+	public void setScheduleClient(ScheduleClient scheduleClient) {
+		this.scheduleClient = scheduleClient;
 	}
 }

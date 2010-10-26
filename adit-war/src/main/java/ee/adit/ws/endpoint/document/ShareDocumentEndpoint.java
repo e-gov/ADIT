@@ -45,7 +45,7 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 	private static Logger LOG = Logger.getLogger(ShareDocumentEndpoint.class);
 	private UserService userService;
 	private DocumentService documentService;
-
+	private ScheduleClient scheduleClient;
 	public UserService getUserService() {
 		return userService;
 	}
@@ -284,7 +284,7 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 					if ((status != null) && status.isSuccess()) {
 						AditUser recipient = this.getUserService().getUserByID(status.getCode());
 						if ((recipient != null) && (userService.findNotification(recipient.getUserNotifications(), ScheduleClient.NotificationType_Share) != null)) {
-							ScheduleClient.addEvent(
+							getScheduleClient().addEvent(
 								recipient,
 								this.getMessageSource().getMessage("scheduler.message.share", new Object[] { doc.getTitle(), userCode }, Locale.ENGLISH),
 								this.getConfiguration().getSchedulerEventTypeName(),
@@ -423,5 +423,13 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 		LOG.debug("Reason for sharing: " + request.getReasonForSharing());
 		LOG.debug("Shared for signing: " + request.getSharedForSigning());
 		LOG.debug("-------------------------------------");
+	}
+
+	public ScheduleClient getScheduleClient() {
+		return scheduleClient;
+	}
+
+	public void setScheduleClient(ScheduleClient scheduleClient) {
+		this.scheduleClient = scheduleClient;
 	}
 }

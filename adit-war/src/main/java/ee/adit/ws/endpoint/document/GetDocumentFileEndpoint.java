@@ -55,7 +55,7 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 	private static Logger LOG = Logger.getLogger(GetDocumentFileEndpoint.class);
 	private UserService userService;
 	private DocumentService documentService;
-
+	private ScheduleClient scheduleClient;
 	public UserService getUserService() {
 		return userService;
 	}
@@ -264,7 +264,7 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 								if (!user.getUserCode().equalsIgnoreCase(doc.getCreatorCode())) {
 									AditUser docCreator = this.getUserService().getUserByID(doc.getCreatorCode());
 									if (!isViewed && (docCreator != null) && (userService.findNotification(docCreator.getUserNotifications(), ScheduleClient.NotificationType_View) != null)) {
-										ScheduleClient.addEvent(
+										getScheduleClient().addEvent(
 											docCreator,
 											this.getMessageSource().getMessage("scheduler.message.view", new Object[] { doc.getTitle(), user.getUserCode() }, Locale.ENGLISH),
 											this.getConfiguration().getSchedulerEventTypeName(),
@@ -401,5 +401,13 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 			}
 		}
 		LOG.debug("---------------------------------------");
+	}
+
+	public ScheduleClient getScheduleClient() {
+		return scheduleClient;
+	}
+
+	public void setScheduleClient(ScheduleClient scheduleClient) {
+		this.scheduleClient = scheduleClient;
 	}
 }

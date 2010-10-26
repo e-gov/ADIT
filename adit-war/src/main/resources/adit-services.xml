@@ -79,4 +79,10 @@
 	<!-- Nagios Logger -->
 	<bean id="nagiosLogger" class="ee.adit.util.NagiosLogger" />
 			
+	<bean id="scheduleClient" class="ee.adit.schedule.ScheduleClient">
+		<property name="marshaller" ref="castorMarshaller" />
+		<property name="unmarshaller" ref="castorMarshaller" />
+		<property name="configuration" ref="configuration" />
+	</bean> 
+			
 </beans>

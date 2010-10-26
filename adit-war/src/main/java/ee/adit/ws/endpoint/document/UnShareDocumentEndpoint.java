@@ -46,7 +46,7 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 	private static Logger LOG = Logger.getLogger(UnShareDocumentEndpoint.class);
 	private UserService userService;
 	private DocumentService documentService;
-
+	private ScheduleClient scheduleClient;
 	public UserService getUserService() {
 		return userService;
 	}
@@ -303,7 +303,7 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 					if ((status != null) && status.isSuccess()) {
 						AditUser recipient = this.getUserService().getUserByID(status.getCode());
 						if ((recipient != null) && (userService.findNotification(recipient.getUserNotifications(), ScheduleClient.NotificationType_Share) != null)) {
-							ScheduleClient.addEvent(
+							getScheduleClient().addEvent(
 								recipient,
 								this.getMessageSource().getMessage("scheduler.message.unShare", new Object[] { userCode, doc.getTitle() }, Locale.ENGLISH),
 								this.getConfiguration().getSchedulerEventTypeName(),
@@ -424,5 +424,13 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 			}
 		}
 		LOG.debug("---------------------------------------");
+	}
+
+	public ScheduleClient getScheduleClient() {
+		return scheduleClient;
+	}
+
+	public void setScheduleClient(ScheduleClient scheduleClient) {
+		this.scheduleClient = scheduleClient;
 	}
 }

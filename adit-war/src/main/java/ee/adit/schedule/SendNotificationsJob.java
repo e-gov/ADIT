@@ -37,6 +37,8 @@ public class SendNotificationsJob extends QuartzJobBean {
 	 */
 	private Configuration configuration;
 	
+	private ScheduleClient scheduleClient;
+	
 	/** {@inheritDoc} */
 	@Override
 	protected void executeInternal(JobExecutionContext ctx) throws JobExecutionException {
@@ -45,7 +47,7 @@ public class SendNotificationsJob extends QuartzJobBean {
 			List<Notification> unsentNotifications = this.userService.getNotificationDAO().getUnsentNotifications();
 			
 			for (Notification item : unsentNotifications) {
-				ScheduleClient.addEvent(item, this.configuration.getSchedulerEventTypeName(), userService);
+				getScheduleClient().addEvent(item, this.configuration.getSchedulerEventTypeName(), userService);
 			}
 		} catch (Exception e) {
 			LOG.error("Error executing scheduled notification sending: ", e);
@@ -90,6 +92,14 @@ public class SendNotificationsJob extends QuartzJobBean {
 	 */
 	public void setConfiguration(Configuration configuration) {
 		this.configuration = configuration;
+	}
+
+	public ScheduleClient getScheduleClient() {
+		return scheduleClient;
+	}
+
+	public void setScheduleClient(ScheduleClient scheduleClient) {
+		this.scheduleClient = scheduleClient;
 	}
 
 }

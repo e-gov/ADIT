@@ -115,7 +115,7 @@ public class ScheduleClient {
 	 * @return
 	 * 		Notification ID in "teavituskalender" database
 	 */
-	public static long addEvent(Notification notification, final String eventType, final UserService userService) {
+	public long addEvent(Notification notification, final String eventType, final UserService userService) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(notification.getEventDate());
 		AditUser eventOwner = userService.getUserByID(notification.getUserCode());
@@ -156,7 +156,7 @@ public class ScheduleClient {
 	 * @return
 	 * 		Notification ID in "teavituskalender" database
 	 */
-	public static long addEvent(
+	public long addEvent(
 		final AditUser eventOwner,
 		final String eventText,
 		final String eventType,
@@ -196,7 +196,7 @@ public class ScheduleClient {
 	 * @return
 	 * 		Notification ID in "teavituskalender" database
 	 */
-	public static long addEvent(
+	/*public static long addEvent(
 			final long notificationId,
 			final AditUser eventOwner,
 			final String eventText,
@@ -324,7 +324,7 @@ public class ScheduleClient {
 		}
 		
 		return eventId;
-	}
+	}*/
 	
 	/**
 	 * Adds a notification to "teavituskalender" X-Road database.
@@ -354,7 +354,7 @@ public class ScheduleClient {
 	 * @return
 	 * 		Notification ID in "teavituskalender" database
 	 */
-	public long addEventWithCastor(
+	public long addEvent(
 			final long notificationId,
 			final AditUser eventOwner,
 			final String eventText,
