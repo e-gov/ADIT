@@ -431,10 +431,10 @@ public class ScheduleClient {
 				xTeeServiceConfiguration.setVersion(xteeVersion);
 				xTeeServiceConfiguration.setSecurityServer(xteeSecurityServer);
 				
-				CustomXTeeConsumer customXTeeConsumer = new CustomXTeeConsumer();
+				StandardXTeeConsumer customXTeeConsumer = new StandardXTeeConsumer();
 				customXTeeConsumer.setWebServiceTemplate(webServiceTemplate);
 				customXTeeConsumer.setServiceConfiguration(xTeeServiceConfiguration);
-				customXTeeConsumer.setMsgCallbackFactory(new CustomMessageCallbackFactory());
+				//customXTeeConsumer.setMsgCallbackFactory(new CustomMessageCallbackFactory());
 				
 				LisaSyndmusResponse response = (LisaSyndmusResponse) customXTeeConsumer.sendRequest(request);
 				
