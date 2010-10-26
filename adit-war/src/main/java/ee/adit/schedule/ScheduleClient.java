@@ -394,7 +394,7 @@ public class ScheduleClient {
 			
 			kasutajad.add(kasutaja);
 			lugejad.setKasutajad(kasutajad);
-			lugejad.setType("kasutaja[" + kasutajad.size() + "]");
+			lugejad.setType("ns5:kasutaja[" + kasutajad.size() + "]");
 			lugejad.setXsiType("SOAP-ENC:Array");
 			
 			request.setLugejad(lugejad);
