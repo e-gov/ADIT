@@ -403,6 +403,9 @@ public class ScheduleClient {
 			request.setLopp(eventDate.getTime());
 			
 			try {
+				
+				System.setProperty("weblogic.webservice.i18n.charset", "utf-8");
+				
 				WebServiceTemplate webServiceTemplate = new WebServiceTemplate();
 				webServiceTemplate.setMarshaller(getMarshaller());
 				webServiceTemplate.setUnmarshaller(getUnmarshaller());
