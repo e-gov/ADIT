@@ -2,6 +2,7 @@ package ee.adit.schedule;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.StringWriter;
 import java.math.BigInteger;
 import java.net.URL;
 import java.util.ArrayList;
@@ -12,9 +13,14 @@ import java.util.Properties;
 
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPConstants;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.apache.log4j.Logger;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -450,6 +456,18 @@ public class ScheduleClient {
 				DOMResult result = new DOMResult();
 				
 				webServiceTemplate2.sendSourceAndReceiveToResult(xteeSecurityServer, source, result);
+				
+				
+				
+				TransformerFactory transFactory = TransformerFactory.newInstance();
+				Transformer transformer = transFactory.newTransformer();
+				StringWriter buffer = new StringWriter();
+				transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+				transformer.transform(new DOMSource(result.getNode()),
+				      new StreamResult(buffer));
+				String str = buffer.toString();
+				
+				LOG.debug("Notifications response message: " + buffer);
 				
 				/*LisaSyndmusResponse response = (LisaSyndmusResponse) customXTeeConsumer.sendRequest(request);
 				
