@@ -1,6 +1,7 @@
 package ee.adit.schedule;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import org.apache.log4j.Logger;
@@ -9,6 +10,9 @@ import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Notification;
+import ee.adit.pojo.notification.LisaSyndmusRequest;
+import ee.adit.pojo.notification.LisaSyndmusRequestKasutaja;
+import ee.adit.pojo.notification.LisaSyndmusRequestLugejad;
 import ee.adit.service.UserService;
 import ee.adit.util.CustomXTeeResponseSanitizerInterceptor;
 import ee.adit.util.Util;
@@ -43,6 +47,17 @@ public class ScheduleClient {
 	public static String NotificationType_View = "view";
 	public static String NotificationType_Modify = "modify";
 	public static String NotificationType_Sign = "sign";
+	
+	public static String NotificationPriority_Low = "madal";
+	public static String NotificationPriority_Medium = "keskmine";
+	public static String NotificationPriority_High = "korge";
+	
+	public static String NotificationType_Teaituskalender_Liigis = "liigis";
+	public static String NotificationType_Teaituskalender_Kohustuslik = "kohustuslik";
+	
+	public static String NotificationUser_Person = "isik";
+	public static String NotificationUser_Official = "ametnik";
+	public static String NotificationUser_Institution = "asutus";
 	
 	/**
 	 * Adds a notification to "teavituskalender" X-Road database.
@@ -185,6 +200,174 @@ public class ScheduleClient {
 			// Start and end times
 			keha.setAlgus(eventDate);
 			keha.setLopp(eventDate);
+			
+			ClassPathXmlApplicationContext ctx = null;
+			try {
+				ctx = startContext();
+				StandardXTeeConsumer xteeService = (StandardXTeeConsumer) ctx.getBean("xteeConsumer");
+				SimpleXTeeServiceConfiguration conf = (SimpleXTeeServiceConfiguration) xteeService.getServiceConfiguration();
+				conf.setDatabase("teavituskalender");
+				conf.setMethod("lisaSyndmus");
+				conf.setVersion("v1");
+				
+				ClientInterceptor ci = new CustomXTeeResponseSanitizerInterceptor();
+				WSConsumptionLoggingInterceptor li = new WSConsumptionLoggingInterceptor();
+				
+				xteeService.getWebServiceTemplate().setInterceptors(new ClientInterceptor[] { ci, li });
+				LisaSyndmusResponseDocument ret = (LisaSyndmusResponseDocument) xteeService.sendRequest(doc, conf);
+				
+				if (ret != null) {
+					if (ret.getLisaSyndmusResponse() != null) {
+						if (ret.getLisaSyndmusResponse().getKeha() != null) {
+							BigInteger resultEventId = ret.getLisaSyndmusResponse().getKeha().getSyndmusId();
+							LOG.debug("LisaSyndmus result event ID: " + ((resultEventId == null) ? "NULL" : resultEventId.toString()));
+
+							if (ret.getLisaSyndmusResponse().getKeha().getTulemus() != null) {
+								BigInteger resultCode = ret.getLisaSyndmusResponse().getKeha().getTulemus().getTulemuseKood();
+								String resultMessage = ret.getLisaSyndmusResponse().getKeha().getTulemus().getTulemuseTekst();
+								LOG.debug("LisaSyndmus result code: " + ((resultCode == null) ? "NULL" : resultCode.toString()));
+								LOG.debug("LisaSyndmus result message: " + resultMessage);
+								
+								if ((resultCode != null) && (resultCode.intValue() == RESULT_OK)) {
+									eventId = resultEventId.longValue();
+									LOG.debug("Successfully added notification to 'teavituskalender' database. Related document ID: " + String.valueOf(relatedDocumentId));
+								}
+							} else {
+								LOG.error("Error adding notification to 'teavituskalender' database. Response's 'tulemus' part is NULL. Related document ID: " + String.valueOf(relatedDocumentId));
+							}
+						} else {
+							LOG.error("Error adding notification to 'teavituskalender' database. Response's 'keha' part is NULL. Related document ID: " + String.valueOf(relatedDocumentId));
+						}
+					} else {
+						LOG.error("Error adding notification to 'teavituskalender' database. Response's 'LisaSyndmusResponse' part is NULL. Related document ID: " + String.valueOf(relatedDocumentId));
+					}
+				} else {
+					LOG.error("Error adding notification to 'teavituskalender' database. Response document is NULL. Related document ID: " + String.valueOf(relatedDocumentId));
+				}
+			} finally {
+				if (ctx != null) {
+					ctx.close();
+				}
+			}
+		} catch (Exception ex) {
+			LOG.error("Error adding notification to 'teavituskalender' database. Related document ID: " + String.valueOf(relatedDocumentId), ex);
+		}
+		
+		// Save notification to database
+		if (eventId > 0) {
+			try {
+				userService.addNotification(
+					notificationId,
+					relatedDocumentId,
+					notificationType,
+					eventOwner.getUserCode(),
+					eventDate.getTime(),
+					eventText,
+					eventId,
+					Calendar.getInstance().getTime());
+			} catch (Exception ex) {
+				LOG.error("Failed saving successfully sent notification.", ex);
+			}
+		} else {
+			try {
+				userService.addNotification(
+					notificationId,
+					relatedDocumentId,
+					notificationType,
+					eventOwner.getUserCode(),
+					eventDate.getTime(),
+					eventText,
+					null,
+					null);
+			} catch (Exception ex) {
+				LOG.error("Failed saving unsent notification.", ex);
+			}
+		}
+		
+		return eventId;
+	}
+	
+	/**
+	 * Adds a notification to "teavituskalender" X-Road database.
+	 * <br><br>
+	 * This method intentionally throws no exception when failing.
+	 * Periodic attempts will be made to send notifications notifications
+	 * that could not be sent in previous attempts.
+	 * 
+	 * @param notificationId
+	 * 		Notification ID in local database
+	 * @param eventOwner
+	 * 		{@link AditUser} to whom this notification will be sent
+	 * @param eventText
+	 * 		Notification text
+	 * @param eventType
+	 * 		Name of notifications type in "teavituskalender" database
+	 * @param eventDate
+	 * 		Date and time describibg when the notified event occured
+	 * 		(for example, when a document was signed)
+	 * @param notificationType
+	 * 		Code of notification type in local database. This type is
+	 * 		more fine grained than the type in "teavituskalender" database
+	 * @param relatedDocumentId
+	 * 		ID of the document this notification is about 
+	 * @param userService
+	 * 		Current {@link UserService} instance
+	 * @return
+	 * 		Notification ID in "teavituskalender" database
+	 */
+	public static long addEventWithCastor(
+			final long notificationId,
+			final AditUser eventOwner,
+			final String eventText,
+			final String eventType,
+			final Calendar eventDate,
+			final String notificationType,
+			final long relatedDocumentId,
+			final UserService userService) {
+		long eventId = 0;
+		
+		try {
+			
+			LOG.debug("Setting messageFactory for addEvent call.");
+			System.setProperty("javax.xml.soap.MessageFactory", "weblogic.xml.saaj.MessageFactoryImpl");
+			
+			LisaSyndmusRequest request = new LisaSyndmusRequest();
+			request.setNahtavOmanikule(false);
+			request.setKirjeldus(eventText);
+			request.setTahtsus(NotificationPriority_Medium);
+			request.setSyndmuseTyyp(NotificationType_Teaituskalender_Liigis);
+			request.setLiik(eventType);
+			
+			LisaSyndmusRequestLugejad lugejad = new LisaSyndmusRequestLugejad();
+			
+			ArrayList<LisaSyndmusRequestKasutaja> kasutajad = new ArrayList<LisaSyndmusRequestKasutaja>();
+			
+			LisaSyndmusRequestKasutaja kasutaja = new LisaSyndmusRequestKasutaja();
+			
+			String userCode = eventOwner.getUserCode();
+			kasutaja.setKood(Util.getPersonalIdCodeWithoutCountryPrefix(userCode));
+			
+			if (UserService.USERTYPE_PERSON.equalsIgnoreCase(eventOwner.getUsertype().getShortName())) {
+				kasutaja.setKasutajaTyyp(NotificationUser_Person);
+			} else{
+				kasutaja.setKasutajaTyyp(NotificationUser_Institution);
+			}
+			
+			kasutajad.add(kasutaja);
+			lugejad.setKasutajad(kasutajad);
+			lugejad.setType("kasutaja[" + kasutajad.size() + "]");
+			lugejad.setXsiType("SOAP-ENC:Array");
+			
+			request.setLugejad(lugejad);
+			
+			request.setAlgus(eventDate.getTime());
+			request.setLopp(eventDate.getTime());
+			
+			// TODO: web-service call
+			
+			
+			
+			
 			
 			ClassPathXmlApplicationContext ctx = null;
 			try {
