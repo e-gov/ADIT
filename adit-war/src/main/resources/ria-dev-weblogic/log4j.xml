@@ -149,6 +149,11 @@
     	<appender-ref ref="file" />
     </logger>
     
+    <logger name="ee.webmedia">
+    	<level value="debug"/>
+    	<appender-ref ref="file" />
+    </logger>
+    
     <root>
 		<level value="error" />
 		<appender-ref ref="stdout" />

@@ -26,6 +26,7 @@ import ee.riik.xtee.teavituskalender.producers.producer.teavituskalender.OtsiKas
 import ee.riik.xtee.teavituskalender.producers.producer.teavituskalender.OtsiKasutajadDocument.OtsiKasutajad.Keha.Kasutajad;
 import ee.webmedia.xtee.client.service.SimpleXTeeServiceConfiguration;
 import ee.webmedia.xtee.client.service.StandardXTeeConsumer;
+import ee.webmedia.xtee.client.util.WSConsumptionLoggingInterceptor;
 
 /**
  * Web service client class for notification calendar (teavituskalender)
@@ -195,8 +196,9 @@ public class ScheduleClient {
 				conf.setVersion("v1");
 				
 				ClientInterceptor ci = new CustomXTeeResponseSanitizerInterceptor();
+				WSConsumptionLoggingInterceptor li = new WSConsumptionLoggingInterceptor();
 				
-				xteeService.getWebServiceTemplate().setInterceptors(new ClientInterceptor[] { ci });
+				xteeService.getWebServiceTemplate().setInterceptors(new ClientInterceptor[] { ci, li });
 				LisaSyndmusResponseDocument ret = (LisaSyndmusResponseDocument) xteeService.sendRequest(doc, conf);
 				
 				if (ret != null) {
