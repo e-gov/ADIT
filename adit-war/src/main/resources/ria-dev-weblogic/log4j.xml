@@ -154,7 +154,7 @@
     	<appender-ref ref="file" />
     </logger>
     
-    <logger name="ee.adit.schedule">
+    <logger name="ee.adit.schedule.ScheduleClient">
     	<level value="debug"/>
     	<appender-ref ref="file" />
     </logger>
