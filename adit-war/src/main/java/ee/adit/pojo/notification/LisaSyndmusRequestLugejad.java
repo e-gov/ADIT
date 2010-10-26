@@ -8,6 +8,8 @@ public class LisaSyndmusRequestLugejad {
 
 	private String type;
 	
+	private String xsiType;
+	
 	public ArrayList<LisaSyndmusRequestKasutaja> getKasutajad() {
 		return kasutajad;
 	}
@@ -22,6 +24,14 @@ public class LisaSyndmusRequestLugejad {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public String getXsiType() {
+		return xsiType;
+	}
+
+	public void setXsiType(String xsiType) {
+		this.xsiType = xsiType;
 	}
 	
 }

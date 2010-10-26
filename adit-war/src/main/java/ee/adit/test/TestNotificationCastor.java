@@ -51,6 +51,7 @@ public class TestNotificationCastor {
 		
 		l.setKasutajad(lugejad);
 		l.setType("ns5:kasutaja[1]");
+		l.setXsiType("SOAP-ENC:Array");
 		
 		o.setNahtavOmanikule(false);
 		o.setKirjeldus("Document Avaldus Jõgeva Linnavalitsusele was viewed by user EE70006317.");

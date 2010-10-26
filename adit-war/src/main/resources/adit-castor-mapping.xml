@@ -1162,6 +1162,9 @@
 		<field name="kasutajad" type="ee.adit.pojo.notification.LisaSyndmusRequestKasutaja" collection="arraylist" >
 			<bind-xml name="kasutaja" />
 		</field>
+		<field name="xsiType" type="java.lang.String">
+			<bind-xml name="xsi:type" node="attribute" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" />
+		</field>
 		<field name="type" type="java.lang.String">
 			<bind-xml name="SOAP-ENC:arrayType" node="attribute" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" />
 		</field>
