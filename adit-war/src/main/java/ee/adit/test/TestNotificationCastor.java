@@ -50,7 +50,7 @@ public class TestNotificationCastor {
 		lugejad.add(lugeja);
 		
 		l.setKasutajad(lugejad);
-		l.setType("ns5:kasutaja[1]");
+		l.setType("kasutaja[1]");
 		l.setXsiType("SOAP-ENC:Array");
 		
 		o.setNahtavOmanikule(false);
