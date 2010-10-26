@@ -214,6 +214,7 @@ public class MarkDocumentViewedEndpoint extends AbstractAditBaseEndpoint {
 										user,
 										xroadRequestUser,
 										header);
+								historyEvent.setDescription("Document viewed");
 								doc.getDocumentHistories().add(historyEvent);
 								saveDocument = true;
 							}
