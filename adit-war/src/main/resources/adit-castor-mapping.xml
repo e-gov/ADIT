@@ -1128,4 +1128,53 @@
 		</field>
 	</class>
 	
+	<!-- Notifications -->		
+	<class name="ee.adit.pojo.notification.LisaSyndmusRequest">
+		<map-to xml="lisaSyndmus" ns-uri="http://producers.teavituskalender.xtee.riik.ee/producer/teavituskalender"/>
+		<field name="nahtavOmanikule" type="java.lang.Boolean" >
+			<bind-xml name="nahtavOmanikule" location="keha" />
+		</field>
+		<field name="kirjeldus" type="java.lang.String">
+			<bind-xml name="kirjeldus" location="keha" />
+		</field>
+		<field name="tahtsus" type="java.lang.String">
+			<bind-xml name="tahtsus" location="keha" />
+		</field>
+		<field name="syndmuseTyyp" type="java.lang.String">
+			<bind-xml name="syndmuseTyyp" location="keha" />
+		</field>
+		<field name="liik" type="java.lang.String">
+			<bind-xml name="liik" location="keha" />
+		</field>
+		<field name="lugejad" type="ee.adit.pojo.notification.LisaSyndmusRequestLugejad" >
+			<bind-xml location="keha" />
+		</field>
+		<field name="algus" type="java.util.Date">
+			<bind-xml name="algus" location="keha" />
+		</field>
+		<field name="lopp" type="java.util.Date">
+			<bind-xml name="lopp" location="keha" />
+		</field>
+	</class>
+	
+	<class name="ee.adit.pojo.notification.LisaSyndmusRequestLugejad">
+		<map-to xml="lugejad" ns-uri="http://producers.teavituskalender.xtee.riik.ee/producer/teavituskalender"/>
+		<field name="kasutajad" type="ee.adit.pojo.notification.LisaSyndmusRequestKasutaja" collection="arraylist" >
+			<bind-xml name="kasutaja" />
+		</field>
+		<field name="type" type="java.lang.String">
+			<bind-xml name="type" type="attribute" />
+		</field>
+	</class>
+	
+	<class name="ee.adit.pojo.notification.LisaSyndmusRequestKasutaja">
+		<map-to xml="kasutaja" ns-uri="http://producers.teavituskalender.xtee.riik.ee/producer/teavituskalender"/>
+		<field name="kood" type="java.lang.String" >
+			<bind-xml name="kood" />
+		</field>
+		<field name="kasutajaTyyp" type="java.lang.String">
+			<bind-xml name="kasutajaTyyp" />
+		</field>
+	</class>
+	
 </mapping>

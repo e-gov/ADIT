@@ -315,6 +315,9 @@ adit-war/src/main/java/ee/adit/pojo/UnJoinResponse.java -text
 adit-war/src/main/java/ee/adit/pojo/UnShareDocumentRequest.java -text
 adit-war/src/main/java/ee/adit/pojo/UnShareDocumentResponse.java -text
 adit-war/src/main/java/ee/adit/pojo/UserList.java -text
+adit-war/src/main/java/ee/adit/pojo/notification/LisaSyndmusRequest.java -text
+adit-war/src/main/java/ee/adit/pojo/notification/LisaSyndmusRequestKasutaja.java -text
+adit-war/src/main/java/ee/adit/pojo/notification/LisaSyndmusRequestLugejad.java -text
 adit-war/src/main/java/ee/adit/schedule/ScheduleClient.java -text
 adit-war/src/main/java/ee/adit/schedule/SendNotificationsJob.java -text
 adit-war/src/main/java/ee/adit/service/DocumentService.java -text
@@ -324,6 +327,7 @@ adit-war/src/main/java/ee/adit/service/MonitorService.java -text
 adit-war/src/main/java/ee/adit/service/UserService.java -text
 adit-war/src/main/java/ee/adit/stateportal/NotificationStatus.java -text
 adit-war/src/main/java/ee/adit/stateportal/StatePortalClient.java -text
+adit-war/src/main/java/ee/adit/test/TestNotificationCastor.java -text
 adit-war/src/main/java/ee/adit/util/Configuration.java -text
 adit-war/src/main/java/ee/adit/util/CustomClientInterceptor.java -text
 adit-war/src/main/java/ee/adit/util/CustomMessageCallbackFactory.java -text
