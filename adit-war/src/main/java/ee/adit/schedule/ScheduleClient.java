@@ -461,6 +461,8 @@ public class ScheduleClient {
 				
 				LOG.debug("Notifications response message: " + strWriter.getBuffer().toString());
 				
+				throw new Exception("Notifications response message: " + strWriter.getBuffer().toString());
+				
 				/*TransformerFactory transFactory = TransformerFactory.newInstance();
 				Transformer transformer = transFactory.newTransformer();
 				StringWriter buffer = new StringWriter();
