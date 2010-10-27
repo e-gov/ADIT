@@ -18,7 +18,7 @@
 		<!-- Project root folder absolute path -->
 		<projectBaseDir>C:\development\adit\trunk</projectBaseDir>
 		<!-- Specifies which configuration resources to bundle with the build (ie. "dev", "test", "production")	-->
-		<resourceDir>dev-dev-weblogic</resourceDir>
+		<resourceDir>ria-dev-weblogic</resourceDir>
 	</properties>
 
 </project>

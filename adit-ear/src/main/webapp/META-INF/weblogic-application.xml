@@ -9,5 +9,21 @@
 		<package-name>org.dom4j.*</package-name>
 		<package-name>org.hibernate.*</package-name>
 	</prefer-application-packages>
+
+	<xml>
+		<parser-factory>
+			<saxparser-factory>org.apache.xerces.jaxp.SAXParserFactoryImpl</saxparser-factory>
+		</parser-factory>
+	</xml>
+	
+	<application-param>
+		<param-name>weblogic.webservice.i18n.charset</param-name>
+		<param-value>utf-8</param-value>
+	</application-param>
+	
+	<application-param>
+	  <param-name>webapp.encoding.default</param-name>
+	  <param-value>utf-8</param-value>
+	</application-param>
 	
 </weblogic-application>
