@@ -465,33 +465,6 @@ public class ScheduleClient {
 				StandardXTeeConsumer customXTeeConsumer = new StandardXTeeConsumer();
 				customXTeeConsumer.setWebServiceTemplate(webServiceTemplate);
 				customXTeeConsumer.setServiceConfiguration(xTeeServiceConfiguration);
-				//customXTeeConsumer.setMsgCallbackFactory(new CustomMessageCallbackFactory());
-				
-				/*String xml = "<env:Envelope xmlns:env=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:SOAP-ENC=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:ns4=\"http://x-tee.riik.ee/xsd/xtee.xsd\" xmlns:ns5=\"http://producers.teavituskalender.xtee.riik.ee/producer/teavituskalender\" env:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"><env:Header><ns4:asutus xsi:type=\"xsd:string\">70006317</ns4:asutus><ns4:andmekogu xsi:type=\"xsd:string\">teavituskalender</ns4:andmekogu><ns4:isikukood xsi:type=\"xsd:string\">00000000000</ns4:isikukood><ns4:id xsi:type=\"xsd:string\">12be832471b70006317-841676050</ns4:id><ns4:nimi xsi:type=\"xsd:string\">teavituskalender.lisaSyndmus.v1</ns4:nimi><ns4:toimik></ns4:toimik></env:Header><env:Body><ns5:lisaSyndmus><ns5:keha><ns5:nahtavOmanikule>false</ns5:nahtavOmanikule><ns5:kirjeldus>Document Avaldus Jõgeva Linnavalitsusele was viewed by user EE70006317.</ns5:kirjeldus><ns5:tahtsus>keskmine</ns5:tahtsus><ns5:syndmuseTyyp>liigis</ns5:syndmuseTyyp><ns5:liik>Minu dokumentide teavitus</ns5:liik><ns5:lugejad xmlns:ns1=\"http://www.w3.org/2001/XMLSchema-instance\" ns1:type=\"SOAP-ENC:Array\" xmlns:ns2=\"http://schemas.xmlsoap.org/soap/encoding/\" ns2:arrayType=\"ns5:kasutaja[1]\"><ns5:kasutaja><ns5:kood>70006317</ns5:kood><ns5:kasutajaTyyp>asutus</ns5:kasutajaTyyp></ns5:kasutaja></ns5:lugejad><ns5:algus>2010-10-25T10:44:59.000+03:00</ns5:algus><ns5:lopp>2010-10-25T10:44:59.000+03:00</ns5:lopp></ns5:keha></ns5:lisaSyndmus></env:Body></env:Envelope>";
-				//String xml = "<env:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:ns4="http://x-tee.riik.ee/xsd/xtee.xsd" xmlns:ns5="http://producers.teavituskalender.xtee.riik.ee/producer/teavituskalender" env:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"><env:Header><ns4:asutus xsi:type="xsd:string">70006317</ns4:asutus><ns4:andmekogu xsi:type="xsd:string">teavituskalender</ns4:andmekogu><ns4:isikukood xsi:type="xsd:string">00000000000</ns4:isikukood><ns4:id xsi:type="xsd:string">12be832471b70006317-841676050</ns4:id><ns4:nimi xsi:type="xsd:string">teavituskalender.lisaSyndmus.v1</ns4:nimi><ns4:toimik></ns4:toimik></env:Header><env:Body><ns5:lisaSyndmus><ns5:keha><ns5:nahtavOmanikule>false</ns5:nahtavOmanikule><ns5:kirjeldus>Document Avaldus Jõgeva Linnavalitsusele was viewed by user EE70006317.</ns5:kirjeldus><ns5:tahtsus>keskmine</ns5:tahtsus><ns5:syndmuseTyyp>liigis</ns5:syndmuseTyyp><ns5:liik>Minu dokumentide teavitus</ns5:liik><ns5:lugejad xmlns:ns1="http://www.w3.org/2001/XMLSchema-instance" ns1:type="SOAP-ENC:Array" xmlns:ns2="http://schemas.xmlsoap.org/soap/encoding/" ns2:arrayType="ns5:kasutaja[1]"><ns5:kasutaja><ns5:kood>70006317</ns5:kood><ns5:kasutajaTyyp>asutus</ns5:kasutajaTyyp></ns5:kasutaja></ns5:lugejad><ns5:algus>2010-10-25T10:44:59.000+03:00</ns5:algus><ns5:lopp>2010-10-25T10:44:59.000+03:00</ns5:lopp></ns5:keha></ns5:lisaSyndmus></env:Body></env:Envelope>";
-				
-				WebServiceTemplate webServiceTemplate2 = new WebServiceTemplate();
-				StringSource source = new StringSource(xml);
-				StreamResult result = new StreamResult();
-				StringWriter strWriter = new StringWriter();
-				result.setWriter(strWriter);
-				
-				webServiceTemplate2.sendSourceAndReceiveToResult(xteeSecurityServer, source, result);
-				
-				LOG.debug("Notifications response message: " + strWriter.getBuffer().toString());
-				
-				throw new Exception("Notifications response message: " + strWriter.getBuffer().toString());*/
-				
-				/*TransformerFactory transFactory = TransformerFactory.newInstance();
-				Transformer transformer = transFactory.newTransformer();
-				StringWriter buffer = new StringWriter();
-				transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-				transformer.transform(new DOMSource(result.getNode()),
-				      new StreamResult(buffer));
-				String str = buffer.toString();
-				
-				LOG.debug("Notifications response message: " + buffer);
-				*/
 				
 				LisaSyndmusResponse response = (LisaSyndmusResponse) customXTeeConsumer.sendRequest(request);
 				
