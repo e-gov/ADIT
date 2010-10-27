@@ -31,6 +31,7 @@ import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
+import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 import org.xml.sax.InputSource;
 
@@ -467,7 +468,9 @@ public class ScheduleClient {
 				customXTeeConsumer.setWebServiceTemplate(webServiceTemplate);
 				customXTeeConsumer.setServiceConfiguration(xTeeServiceConfiguration);
 				
+				LOG.error("Invoking notifications service...");
 				LisaSyndmusResponse response = (LisaSyndmusResponse) customXTeeConsumer.sendRequest(request);
+				LOG.error("Notifications service returned response: " + response);
 				
 				if(response != null) {
 					if (response != null) {
@@ -582,13 +585,51 @@ public class ScheduleClient {
 			LOG.debug("Setting messageFactory for addEvent call.");
 			System.setProperty("javax.xml.soap.MessageFactory", "weblogic.xml.saaj.MessageFactoryImpl");
 			
+			LisaSyndmusRequest request = new LisaSyndmusRequest();
+			request.setNahtavOmanikule(false);
+			request.setKirjeldus(eventText);
+			request.setTahtsus(NotificationPriority_Medium);
+			request.setSyndmuseTyyp(NotificationType_Teaituskalender_Liigis);
+			request.setLiik(eventType);
+			
+			LisaSyndmusRequestLugejad lugejad = new LisaSyndmusRequestLugejad();
+			
+			ArrayList<LisaSyndmusRequestKasutaja> kasutajad = new ArrayList<LisaSyndmusRequestKasutaja>();
+			
+			LisaSyndmusRequestKasutaja kasutaja = new LisaSyndmusRequestKasutaja();
+			
+			String userCode = eventOwner.getUserCode();
+			kasutaja.setKood(Util.getPersonalIdCodeWithoutCountryPrefix(userCode));
+			
+			if (UserService.USERTYPE_PERSON.equalsIgnoreCase(eventOwner.getUsertype().getShortName())) {
+				kasutaja.setKasutajaTyyp(NotificationUser_Person);
+			} else{
+				kasutaja.setKasutajaTyyp(NotificationUser_Institution);
+			}
+			
+			kasutajad.add(kasutaja);
+			lugejad.setKasutajad(kasutajad);
+			lugejad.setType("ns5:kasutaja + " + '[' + kasutajad.size() + ']');
+			lugejad.setXsiType("SOAP-ENC:Array");
+			
+			request.setLugejad(lugejad);
+			
+			request.setAlgus(Util.dateToXMLDate(eventDate.getTime()));
+			request.setLopp(Util.dateToXMLDate(eventDate.getTime()));
+			
+			StringResult strr = new StringResult();
+			getMarshaller().marshal(request, strr);
+			
+			
+			
 			try {
 				
 				System.setProperty("weblogic.webservice.i18n.charset", "utf-8");
 				
 				String xteeSecurityServer = getConfiguration().getXteeSecurityServer();
 				
-				String xml = "<env:Envelope xmlns:env=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:SOAP-ENC=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:ns4=\"http://x-tee.riik.ee/xsd/xtee.xsd\" xmlns:ns5=\"http://producers.teavituskalender.xtee.riik.ee/producer/teavituskalender\" env:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"><env:Header><ns4:asutus xsi:type=\"xsd:string\">70006317</ns4:asutus><ns4:andmekogu xsi:type=\"xsd:string\">teavituskalender</ns4:andmekogu><ns4:isikukood xsi:type=\"xsd:string\">00000000000</ns4:isikukood><ns4:id xsi:type=\"xsd:string\">12be832471b70006317-841676050</ns4:id><ns4:nimi xsi:type=\"xsd:string\">teavituskalender.lisaSyndmus.v1</ns4:nimi><ns4:toimik></ns4:toimik></env:Header><env:Body><ns5:lisaSyndmus><ns5:keha><ns5:nahtavOmanikule>false</ns5:nahtavOmanikule><ns5:kirjeldus>Document Avaldus Jõgeva Linnavalitsusele was viewed by user EE70006317.</ns5:kirjeldus><ns5:tahtsus>keskmine</ns5:tahtsus><ns5:syndmuseTyyp>liigis</ns5:syndmuseTyyp><ns5:liik>Minu dokumentide teavitus</ns5:liik><ns5:lugejad xmlns:ns1=\"http://www.w3.org/2001/XMLSchema-instance\" ns1:type=\"SOAP-ENC:Array\" xmlns:ns2=\"http://schemas.xmlsoap.org/soap/encoding/\" ns2:arrayType=\"ns5:kasutaja[1]\"><ns5:kasutaja><ns5:kood>70006317</ns5:kood><ns5:kasutajaTyyp>asutus</ns5:kasutajaTyyp></ns5:kasutaja></ns5:lugejad><ns5:algus>2010-10-25T10:44:59.000+03:00</ns5:algus><ns5:lopp>2010-10-25T10:44:59.000+03:00</ns5:lopp></ns5:keha></ns5:lisaSyndmus></env:Body></env:Envelope>";
+				String xml = "<env:Envelope xmlns:env=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:SOAP-ENC=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:ns4=\"http://x-tee.riik.ee/xsd/xtee.xsd\" xmlns:ns5=\"http://producers.teavituskalender.xtee.riik.ee/producer/teavituskalender\" env:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"><env:Header><ns4:asutus xsi:type=\"xsd:string\">70006317</ns4:asutus><ns4:andmekogu xsi:type=\"xsd:string\">teavituskalender</ns4:andmekogu><ns4:isikukood xsi:type=\"xsd:string\">00000000000</ns4:isikukood><ns4:id xsi:type=\"xsd:string\">12be832471b70006317-841676050</ns4:id><ns4:nimi xsi:type=\"xsd:string\">teavituskalender.lisaSyndmus.v1</ns4:nimi><ns4:toimik></ns4:toimik></env:Header><env:Body>" + strr + "</env:Body></env:Envelope>";
+				//String xml = "<env:Envelope xmlns:env=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:SOAP-ENC=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:ns4=\"http://x-tee.riik.ee/xsd/xtee.xsd\" xmlns:ns5=\"http://producers.teavituskalender.xtee.riik.ee/producer/teavituskalender\" env:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"><env:Header><ns4:asutus xsi:type=\"xsd:string\">70006317</ns4:asutus><ns4:andmekogu xsi:type=\"xsd:string\">teavituskalender</ns4:andmekogu><ns4:isikukood xsi:type=\"xsd:string\">00000000000</ns4:isikukood><ns4:id xsi:type=\"xsd:string\">12be832471b70006317-841676050</ns4:id><ns4:nimi xsi:type=\"xsd:string\">teavituskalender.lisaSyndmus.v1</ns4:nimi><ns4:toimik></ns4:toimik></env:Header><env:Body><ns5:lisaSyndmus><ns5:keha><ns5:nahtavOmanikule>false</ns5:nahtavOmanikule><ns5:kirjeldus>Document Avaldus Jõgeva Linnavalitsusele was viewed by user EE70006317.</ns5:kirjeldus><ns5:tahtsus>keskmine</ns5:tahtsus><ns5:syndmuseTyyp>liigis</ns5:syndmuseTyyp><ns5:liik>Minu dokumentide teavitus</ns5:liik><ns5:lugejad xmlns:ns1=\"http://www.w3.org/2001/XMLSchema-instance\" ns1:type=\"SOAP-ENC:Array\" xmlns:ns2=\"http://schemas.xmlsoap.org/soap/encoding/\" ns2:arrayType=\"ns5:kasutaja[1]\"><ns5:kasutaja><ns5:kood>70006317</ns5:kood><ns5:kasutajaTyyp>asutus</ns5:kasutajaTyyp></ns5:kasutaja></ns5:lugejad><ns5:algus>2010-10-25T10:44:59.000+03:00</ns5:algus><ns5:lopp>2010-10-25T10:44:59.000+03:00</ns5:lopp></ns5:keha></ns5:lisaSyndmus></env:Body></env:Envelope>";
 				//String xml = "<env:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:ns4="http://x-tee.riik.ee/xsd/xtee.xsd" xmlns:ns5="http://producers.teavituskalender.xtee.riik.ee/producer/teavituskalender" env:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"><env:Header><ns4:asutus xsi:type="xsd:string">70006317</ns4:asutus><ns4:andmekogu xsi:type="xsd:string">teavituskalender</ns4:andmekogu><ns4:isikukood xsi:type="xsd:string">00000000000</ns4:isikukood><ns4:id xsi:type="xsd:string">12be832471b70006317-841676050</ns4:id><ns4:nimi xsi:type="xsd:string">teavituskalender.lisaSyndmus.v1</ns4:nimi><ns4:toimik></ns4:toimik></env:Header><env:Body><ns5:lisaSyndmus><ns5:keha><ns5:nahtavOmanikule>false</ns5:nahtavOmanikule><ns5:kirjeldus>Document Avaldus Jõgeva Linnavalitsusele was viewed by user EE70006317.</ns5:kirjeldus><ns5:tahtsus>keskmine</ns5:tahtsus><ns5:syndmuseTyyp>liigis</ns5:syndmuseTyyp><ns5:liik>Minu dokumentide teavitus</ns5:liik><ns5:lugejad xmlns:ns1="http://www.w3.org/2001/XMLSchema-instance" ns1:type="SOAP-ENC:Array" xmlns:ns2="http://schemas.xmlsoap.org/soap/encoding/" ns2:arrayType="ns5:kasutaja[1]"><ns5:kasutaja><ns5:kood>70006317</ns5:kood><ns5:kasutajaTyyp>asutus</ns5:kasutajaTyyp></ns5:kasutaja></ns5:lugejad><ns5:algus>2010-10-25T10:44:59.000+03:00</ns5:algus><ns5:lopp>2010-10-25T10:44:59.000+03:00</ns5:lopp></ns5:keha></ns5:lisaSyndmus></env:Body></env:Envelope>";
 				
 				WebServiceTemplate webServiceTemplate2 = new WebServiceTemplate();
@@ -596,9 +637,51 @@ public class ScheduleClient {
 				StreamResult result = new StreamResult();
 				StringWriter strWriter = new StringWriter();
 				result.setWriter(strWriter);
-			
+				
 				webServiceTemplate2.sendSourceAndReceiveToResult(xteeSecurityServer, source, result);
-				LOG.debug("Notifications response message: " + strWriter.getBuffer().toString());	
+				
+				LOG.debug("Notifications response message: " + strWriter.getBuffer().toString());
+				
+				throw new Exception("Notifications response message: " + strWriter.getBuffer().toString());
+				
+				/*TransformerFactory transFactory = TransformerFactory.newInstance();
+				Transformer transformer = transFactory.newTransformer();
+				StringWriter buffer = new StringWriter();
+				transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+				transformer.transform(new DOMSource(result.getNode()),
+				      new StreamResult(buffer));
+				String str = buffer.toString();
+				
+				LOG.debug("Notifications response message: " + buffer);
+				*/
+				
+				/*LisaSyndmusResponse response = (LisaSyndmusResponse) customXTeeConsumer.sendRequest(request);
+				
+				if(response != null) {
+					if (response != null) {
+							Integer resultEventId = response.getSyndmusId();
+							LOG.debug("LisaSyndmus result event ID: " + ((resultEventId == null) ? "NULL" : resultEventId.toString()));
+
+							if (response.getTulemus() != null) {
+								Integer resultCode = response.getTulemus().getTulemuseKood();
+								String resultMessage = response.getTulemus().getTulemuseTekst();
+								LOG.debug("LisaSyndmus result code: " + ((resultCode == null) ? "NULL" : resultCode.toString()));
+								LOG.debug("LisaSyndmus result message: " + resultMessage);
+								
+								if ((resultCode != null) && (resultCode.intValue() == RESULT_OK)) {
+									eventId = resultEventId.longValue();
+									LOG.debug("Successfully added notification to 'teavituskalender' database. Related document ID: " + String.valueOf(relatedDocumentId));
+								}
+							} else {
+								LOG.error("Error adding notification to 'teavituskalender' database. Response's 'tulemus' part is NULL. Related document ID: " + String.valueOf(relatedDocumentId));
+							}
+					} else {
+						LOG.error("Error adding notification to 'teavituskalender' database. Response's 'LisaSyndmusResponse' part is NULL. Related document ID: " + String.valueOf(relatedDocumentId));
+					}
+				} else {
+					throw new AditInternalException("The 'getDocument' request was not successful: response could not be unmarshalled: unmarshalling returned null.");
+				}*/
+						
 				
 			} catch(Exception e) {
 				LOG.error("Error while sending notifications: ", e);
