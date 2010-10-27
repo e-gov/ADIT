@@ -108,6 +108,8 @@ public class CustomXTeeResponseSanitizerInterceptor implements ClientInterceptor
 		
 		if(firstChild != null) {
 			LOG.debug("firstChild.name: " + firstChild.getLocalName());
+			LOG.debug("firstChild.textContent: " + firstChild.getTextContent());
+			LOG.debug("firstChild.value: " + firstChild.getNodeValue());
 		}
 		
 		document.appendChild(firstChild);
