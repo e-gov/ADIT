@@ -219,6 +219,8 @@ public class ScheduleClient {
 			final UserService userService) {
 		long eventId = 0;
 		
+		LOG.debug("AddEvent with XteeBeans invoked...");
+		
 		try {
 			
 			LOG.debug("Setting messageFactory for addEvent call.");
@@ -399,7 +401,10 @@ public class ScheduleClient {
 			final UserService userService) {
 		long eventId = 0;
 		
+		LOG.debug("AddEvent with castor invoked...");
+		
 		try {
+			
 			
 			LOG.debug("Setting messageFactory for addEvent call.");
 			System.setProperty("javax.xml.soap.MessageFactory", "weblogic.xml.saaj.MessageFactoryImpl");
