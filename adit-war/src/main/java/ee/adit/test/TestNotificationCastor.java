@@ -15,6 +15,7 @@ import org.exolab.castor.xml.ValidationException;
 import ee.adit.pojo.notification.LisaSyndmusRequest;
 import ee.adit.pojo.notification.LisaSyndmusRequestKasutaja;
 import ee.adit.pojo.notification.LisaSyndmusRequestLugejad;
+import ee.adit.util.Util;
 
 public class TestNotificationCastor {
 	
@@ -58,8 +59,8 @@ public class TestNotificationCastor {
 		o.setTahtsus("keskmine");
 		o.setSyndmuseTyyp("liigis");
 		o.setLiik("Minu dokumentide teavitus");
-		o.setAlgus(d);
-		o.setLopp(d);
+		o.setAlgus(Util.dateToXMLDate(d));
+		o.setLopp(Util.dateToXMLDate(d));
 		o.setLugejad(l);
 		
 		

@@ -17,9 +17,9 @@ public class LisaSyndmusRequest {
 	
 	private LisaSyndmusRequestLugejad lugejad;
 	
-	private Date algus;
+	private String algus;
 	
-	private Date lopp;
+	private String lopp;
 	
 	private String xsiType;
 	
@@ -59,16 +59,16 @@ public class LisaSyndmusRequest {
 	public void setLugejad(LisaSyndmusRequestLugejad lugejad) {
 		this.lugejad = lugejad;
 	}
-	public Date getAlgus() {
+	public String getAlgus() {
 		return algus;
 	}
-	public void setAlgus(Date algus) {
+	public void setAlgus(String algus) {
 		this.algus = algus;
 	}
-	public Date getLopp() {
+	public String getLopp() {
 		return lopp;
 	}
-	public void setLopp(Date lopp) {
+	public void setLopp(String lopp) {
 		this.lopp = lopp;
 	}
 	public String getXsiType() {

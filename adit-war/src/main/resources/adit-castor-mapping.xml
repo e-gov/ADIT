@@ -1149,10 +1149,10 @@
 		<field name="lugejad" type="ee.adit.pojo.notification.LisaSyndmusRequestLugejad" >
 			<bind-xml location="keha" />
 		</field>
-		<field name="algus" type="java.util.Date">
+		<field name="algus" type="java.lang.String">
 			<bind-xml name="algus" location="keha" />
 		</field>
-		<field name="lopp" type="java.util.Date">
+		<field name="lopp" type="java.lang.String">
 			<bind-xml name="lopp" location="keha" />
 		</field>
 	</class>
