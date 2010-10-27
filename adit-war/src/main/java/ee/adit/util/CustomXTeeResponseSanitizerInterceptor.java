@@ -97,11 +97,13 @@ public class CustomXTeeResponseSanitizerInterceptor implements ClientInterceptor
 		LOG.debug("Removing namespace prefixes...");
 		
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		LOG.debug("Removing namespace prefixes1...");
 		DocumentBuilder builder = factory.newDocumentBuilder();
+		LOG.debug("Removing namespace prefixes2...");
 		Document document = builder.newDocument();
-		
+		LOG.debug("Removing namespace prefixes3...");
 		document.appendChild(body.getFirstChild());
-		
+		LOG.debug("Removing namespace prefixes4...");
 		String ns = "http://producers.teavituskalender.xtee.riik.ee/producer/teavituskalender";
 		NodeList nl = document.getElementsByTagNameNS(ns, "lisaSyndmusResponse");
 		
