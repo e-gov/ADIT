@@ -108,7 +108,11 @@ public class CustomXTeeResponseSanitizerInterceptor implements ClientInterceptor
 			// <tkal:lisaSyndmusResponse>
 			
 			Attr attribute = document.createAttribute("xmlns:tkal");
+			attribute.setValue("http://producers.teavituskalender.xtee.riik.ee/producer/teavituskalender");
+			Attr attribute2 = document.createAttribute("xmlns:xsi");
+			attribute2.setValue("http://www.w3.org/2001/XMLSchema-instance");
 			responseNode.appendChild(attribute);
+			responseNode.appendChild(attribute2);
 			
 			body.removeContents();
 			body.appendChild(document.getFirstChild());
