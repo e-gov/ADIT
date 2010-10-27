@@ -4,10 +4,12 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.io.StringWriter;
+import java.util.Iterator;
 
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.Name;
 import javax.xml.soap.SOAPBody;
@@ -22,12 +24,14 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.log4j.Logger;
+import org.apache.xerces.dom.ElementImpl;
 import org.apache.xerces.jaxp.DocumentBuilderFactoryImpl;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.client.WebServiceClientException;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
+import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -60,17 +64,6 @@ public class CustomXTeeResponseSanitizerInterceptor implements ClientInterceptor
 				LOG.debug("responseXML: " + responseXML);
 				
 				if (responseXML.contains("lisaSyndmusResponse")) {
-					// Remove namespace prefixes
-					/*
-					 * String startString = "<tkal:lisaSyndmusResponse>"; String
-					 * endString = "</tkal:lisaSyndmusResponse>"; int startIndex
-					 * = responseXML.indexOf(startString); int endIndex =
-					 * responseXML.indexOf(endString);
-					 * 
-					 * String subString = responseXML.substring(startIndex,
-					 * endIndex + endString.length()); LOG.debug("SubString: '"
-					 * + subString);
-					 */
 
 					responseXML.replace("<tkal:lisaSyndmusResponse>", "<tkal:lisaSyndmusResponse xmlns:tkal=\"http://producers.teavituskalender.xtee.riik.ee/producer/teavituskalender\">");
 
@@ -78,9 +71,8 @@ public class CustomXTeeResponseSanitizerInterceptor implements ClientInterceptor
 						SOAPMessage ssm = ((SaajSoapMessage) message).getSaajMessage();
 
 						try {
-
-							SOAPBody body = ssm.getSOAPBody();
-							body.setTextContent(responseXML);
+							
+							removeNamespacePrefixes(ssm.getSOAPBody());
 						    
 							mc.setResponse((WebServiceMessage) ssm);
 							
@@ -98,6 +90,31 @@ public class CustomXTeeResponseSanitizerInterceptor implements ClientInterceptor
 			}
 		}
 		return true;
+	}
+	
+	private void removeNamespacePrefixes(SOAPBody body) throws ParserConfigurationException {
+		
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder builder = factory.newDocumentBuilder();
+		Document document = builder.newDocument();
+		
+		document.appendChild(body.getFirstChild());
+		
+		String ns = "http://producers.teavituskalender.xtee.riik.ee/producer/teavituskalender";
+		NodeList nl = document.getElementsByTagNameNS(ns, "lisaSyndmusResponse");
+		
+		if(nl.getLength() > 0) {
+			Node responseNode = nl.item(0);
+			// <tkal:lisaSyndmusResponse>
+			responseNode.setPrefix(null);
+			
+			Attr attribute = document.createAttribute("xmlns:teavituskalender");
+			responseNode.appendChild(attribute);
+			
+			body.removeContents();
+			body.appendChild(document.getFirstChild());
+		}
+		
 	}
 
 }
