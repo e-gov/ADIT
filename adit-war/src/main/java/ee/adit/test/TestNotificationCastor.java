@@ -77,7 +77,7 @@ public class TestNotificationCastor {
 	
 	public static void unmarshal() throws IOException, MappingException, MarshalException, ValidationException {
 		String xml =  
-					    "<tkal:lisaSyndmusResponse>" + 
+					    "<tkal:lisaSyndmusResponse xmlns:tkal=\"\">" + 
 					     "<keha xsi:type=\"tkal:lisaSyndmusVastus\">" + 
 					        "<tulemus>" + 
 					          "<tulemuseKood xsi:type=\"xsd:integer\">0</tulemuseKood>" + 

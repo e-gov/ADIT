@@ -1,11 +1,14 @@
 package ee.adit.util;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
 import java.io.StringWriter;
 
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.soap.MessageFactory;
 import javax.xml.soap.Name;
 import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPHeaderElement;
@@ -47,80 +50,53 @@ public class CustomXTeeResponseSanitizerInterceptor implements ClientInterceptor
 		return true;
 	}
 
-	/**
-	 * Handles response messages.
-	 */
 	public boolean handleResponse(MessageContext mc) throws WebServiceClientException {
 		WebServiceMessage message = mc.getResponse();
-		StringWriter stringWriter = new StringWriter();
-		
-		try {
-			DOMResult res = (DOMResult) message.getPayloadResult();
-			
-			Source source = new DOMSource(res.getNode());
-	        
-			
-	        Result result = new StreamResult(stringWriter);
-	        TransformerFactory factory = TransformerFactory.newInstance();
-	        Transformer transformer = factory.newTransformer();
-	        transformer.transform(source, result);
-	        String responseXML = stringWriter.getBuffer().toString();
-	        
-	        LOG.debug("Notifications service response: " + responseXML);
-	        
-	        if(responseXML.contains("lisaSyndmusResponse")) {
-	        	// Remove namespace prefixes
-	        	/*String startString = "<tkal:lisaSyndmusResponse>";
-	        	String endString = "</tkal:lisaSyndmusResponse>";
-	        	int startIndex = responseXML.indexOf(startString);
-	        	int endIndex = responseXML.indexOf(endString);
-	        	
-	        	String subString = responseXML.substring(startIndex, endIndex + endString.length());
-	        	LOG.debug("SubString: '" + subString);*/
-	        	
-		        responseXML.replace("<tkal:lisaSyndmusResponse>", "<tkal:lisaSyndmusResponse xmlns:tkal=\"http://producers.teavituskalender.xtee.riik.ee/producer/teavituskalender\">");
-	        	
-		        if (message instanceof SaajSoapMessage) {
-					SOAPMessage ssm = ((SaajSoapMessage) message).getSaajMessage();
-					
-					try {
-						
-						SOAPBody body = ssm.getSOAPBody();
-						body.setTextContent(responseXML);							
-						
-					} catch (Exception e) {
-						throw new RuntimeException(e);
+		if (mc.getResponse() instanceof SaajSoapMessage) {
+			OutputStream out = new ByteArrayOutputStream();
+			try {
+				((SaajSoapMessage) mc.getResponse()).writeTo(out);
+				String responseXML = out.toString();
+				LOG.debug("responseXML: " + responseXML);
+				
+				if (responseXML.contains("lisaSyndmusResponse")) {
+					// Remove namespace prefixes
+					/*
+					 * String startString = "<tkal:lisaSyndmusResponse>"; String
+					 * endString = "</tkal:lisaSyndmusResponse>"; int startIndex
+					 * = responseXML.indexOf(startString); int endIndex =
+					 * responseXML.indexOf(endString);
+					 * 
+					 * String subString = responseXML.substring(startIndex,
+					 * endIndex + endString.length()); LOG.debug("SubString: '"
+					 * + subString);
+					 */
+
+					responseXML.replace("<tkal:lisaSyndmusResponse>", "<tkal:lisaSyndmusResponse xmlns:tkal=\"http://producers.teavituskalender.xtee.riik.ee/producer/teavituskalender\">");
+
+					if (message instanceof SaajSoapMessage) {
+						SOAPMessage ssm = ((SaajSoapMessage) message).getSaajMessage();
+
+						try {
+
+							SOAPBody body = ssm.getSOAPBody();
+							body.setTextContent(responseXML);
+						    
+							mc.setResponse((WebServiceMessage) ssm);
+							
+						} catch (Exception e) {
+							throw new RuntimeException(e);
+						}
 					}
+					
+				} else {
+					throw new AditInternalException("Notification service response message did not contain the element: 'tkal:lisaSyndmusResponse'");
 				}
-	        	
-	        } else {
-	        	throw new AditInternalException("Notification service response message did not contain the element: 'tkal:lisaSyndmusResponse'");
-	        }
-	        
-	        /*DocumentBuilderFactory dbf = new DocumentBuilderFactoryImpl();
-	        DocumentBuilder docBuilder = dbf.newDocumentBuilder();
-	        
-	        ByteArrayInputStream bis = new ByteArrayInputStream(responseXML.getBytes("UTF-8"));
-	        
-	        Document doc = docBuilder.parse(bis);
-	        
-	        NodeList nl = doc.getElementsByTagName("tkal:lisaSyndmusResponse");
-	        
-	        if(nl.getLength() > 0) {
-	        	Node node = nl.item(0);
-	        	
-	        	
-	        	
-	        } else {
-	        	throw new AditInternalException("Notification service response message did not contain the element: 'tkal:lisaSyndmusResponse'");
-	        }*/
-	        
-		} catch(Exception e) {
-			LOG.error("Error while getting DOMResult: ", e);
+
+			} catch (Exception e) {
+				// not important
+			}
 		}
-		
-		
-		
 		return true;
 	}
 
