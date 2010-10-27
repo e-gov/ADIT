@@ -46,11 +46,11 @@ import ee.adit.pojo.notification.LisaSyndmusRequestKasutaja;
 import ee.adit.pojo.notification.LisaSyndmusRequestLugejad;
 import ee.adit.pojo.notification.LisaSyndmusResponse;
 import ee.adit.service.UserService;
+import ee.adit.util.SchedulerSoapArrayInterceptor;
 import ee.adit.util.Configuration;
 import ee.adit.util.CustomClientInterceptor;
 import ee.adit.util.CustomMessageCallbackFactory;
 import ee.adit.util.CustomXTeeConsumer;
-import ee.adit.util.CustomXTeeResponseSanitizerInterceptor;
 import ee.adit.util.CustomXTeeServiceConfiguration;
 import ee.adit.util.Util;
 import ee.riik.xtee.teavituskalender.producers.producer.teavituskalender.LisaSyndmusDocument;
@@ -68,6 +68,7 @@ import ee.riik.xtee.teavituskalender.producers.producer.teavituskalender.OtsiKas
 import ee.webmedia.xtee.client.service.SimpleXTeeServiceConfiguration;
 import ee.webmedia.xtee.client.service.StandardXTeeConsumer;
 import ee.webmedia.xtee.client.util.WSConsumptionLoggingInterceptor;
+import ee.webmedia.xtee.client.util.XTeeResponseSanitizerInterceptor;
 
 /**
  * Web service client class for notification calendar (teavituskalender)
@@ -206,7 +207,7 @@ public class ScheduleClient {
 	 * @return
 	 * 		Notification ID in "teavituskalender" database
 	 */
-	/*public static long addEvent(
+	public static long addEvent(
 			final long notificationId,
 			final AditUser eventOwner,
 			final String eventText,
@@ -259,10 +260,11 @@ public class ScheduleClient {
 				conf.setMethod("lisaSyndmus");
 				conf.setVersion("v1");
 				
-				ClientInterceptor ci = new CustomXTeeResponseSanitizerInterceptor();
+				SchedulerSoapArrayInterceptor ai = new SchedulerSoapArrayInterceptor();
+				XTeeResponseSanitizerInterceptor ci = new XTeeResponseSanitizerInterceptor();
 				WSConsumptionLoggingInterceptor li = new WSConsumptionLoggingInterceptor();
 				
-				xteeService.getWebServiceTemplate().setInterceptors(new ClientInterceptor[] { ci, li });
+				xteeService.getWebServiceTemplate().setInterceptors(new ClientInterceptor[] { ai, ci, li });
 				LisaSyndmusResponseDocument ret = (LisaSyndmusResponseDocument) xteeService.sendRequest(doc, conf);
 				
 				if (ret != null) {
@@ -334,9 +336,9 @@ public class ScheduleClient {
 		}
 		
 		return eventId;
-	}*/
+	}
 	
-	public long addEvent(
+	/*public long addEvent(
 			final long notificationId,
 			final AditUser eventOwner,
 			final String eventText,
@@ -355,7 +357,7 @@ public class ScheduleClient {
 				relatedDocumentId,
 				userService
 		);
-	}
+	}*/
 	
 	/**
 	 * Adds a notification to "teavituskalender" X-Road database.

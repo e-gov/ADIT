@@ -343,6 +343,7 @@ adit-war/src/main/java/ee/adit/util/FileSplitResult.java -text
 adit-war/src/main/java/ee/adit/util/MonitorConfiguration.java -text
 adit-war/src/main/java/ee/adit/util/NagiosLogger.java -text
 adit-war/src/main/java/ee/adit/util/SaveDocumentAttachmentHandler.java -text
+adit-war/src/main/java/ee/adit/util/SchedulerSoapArrayInterceptor.java -text
 adit-war/src/main/java/ee/adit/util/TemporaryFolderCleanerJob.java -text
 adit-war/src/main/java/ee/adit/util/Util.java -text
 adit-war/src/main/java/ee/adit/util/XRoadQueryName.java -text
