@@ -23,28 +23,28 @@
 			<artifactId>xtee-server</artifactId>
 			<version>1.0</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}\lib\xtee-server-1.0-RC1.jar</systemPath>
+			<systemPath>${baseDir}/lib/xtee-server-1.0-RC1.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>ee.webmedia</groupId>
 			<artifactId>xtee-client</artifactId>
 			<version>1.0</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}\lib\xtee-client-1.0-RC1.jar</systemPath>
+			<systemPath>${baseDir}/lib/xtee-client-1.0-RC1.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>ee.ria</groupId>
 			<artifactId>teavituskalender-types</artifactId>
 			<version>1.0</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}\lib\teavituskalender-types.jar</systemPath>
+			<systemPath>${baseDir}/lib/teavituskalender-types.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>ee.ria</groupId>
 			<artifactId>riigiportaal-types</artifactId>
 			<version>1.0</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}\lib\riigiportaal-types.jar</systemPath>
+			<systemPath>${baseDir}/lib/riigiportaal-types.jar</systemPath>
 		</dependency>
 
 		<!-- Spring -->
@@ -53,21 +53,21 @@
 			<artifactId>ws</artifactId>
 			<version>1.5.9</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}\lib\spring-ws-1.5.9-all.jar</systemPath>
+			<systemPath>${baseDir}/lib/spring-ws-1.5.9-all.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring</artifactId>
 			<version>3.0.2</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}\lib\spring.jar</systemPath>
+			<systemPath>${baseDir}/lib/spring.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>servlet</artifactId>
 			<version>2.5.6</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}\lib\spring-webmvc.jar</systemPath>
+			<systemPath>${baseDir}/lib/spring-webmvc.jar</systemPath>
 		</dependency>
 
 
@@ -77,14 +77,14 @@
 			<artifactId>castor</artifactId>
 			<version>1.3.1</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}\lib\castor-1.3.1.jar</systemPath>
+			<systemPath>${baseDir}/lib/castor-1.3.1.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>org.castor</groupId>
 			<artifactId>core</artifactId>
 			<version>1.3.1</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}\lib\castor-1.3.1-core.jar</systemPath>
+			<systemPath>${baseDir}/lib/castor-1.3.1-core.jar</systemPath>
 		</dependency>
 
 
@@ -94,14 +94,14 @@
 			<artifactId>wsdl4j</artifactId>
 			<version>1.6.1</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}\lib\wsdl4j-1.6.1.jar</systemPath>
+			<systemPath>${baseDir}/lib/wsdl4j-1.6.1.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>java</groupId>
 			<artifactId>wsdl4j-qname</artifactId>
 			<version>1.6.1</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}\lib\wsdl4j-qname-1.6.1.jar</systemPath>
+			<systemPath>${baseDir}/lib/wsdl4j-qname-1.6.1.jar</systemPath>
 		</dependency>
 
 		<!-- Logging -->
@@ -110,28 +110,28 @@
 			<artifactId>log4j</artifactId>
 			<version>1.2.16</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}\lib\log4j-1.2.16.jar</systemPath>
+			<systemPath>${baseDir}/lib/log4j-1.2.16.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>org.apache</groupId>
 			<artifactId>log4j.nagios</artifactId>
 			<version>1.5.1</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}\lib\NagiosAppender-1.5.1.jar</systemPath>
+			<systemPath>${baseDir}/lib/NagiosAppender-1.5.1.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>org.apache</groupId>
 			<artifactId>commons-logging</artifactId>
 			<version>1.1.1</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}\lib\commons-logging-1.1.1.jar</systemPath>
+			<systemPath>${baseDir}/lib/commons-logging-1.1.1.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>slf4j</groupId>
 			<artifactId>log4j</artifactId>
 			<version>1.6.0</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}\lib\slf4j-log4j12-1.5.8.jar</systemPath>
+			<systemPath>${baseDir}/lib/slf4j-log4j12-1.5.8.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>java</groupId>
