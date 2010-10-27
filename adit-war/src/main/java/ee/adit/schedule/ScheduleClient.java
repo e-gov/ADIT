@@ -208,7 +208,7 @@ public class ScheduleClient {
 	 * @return
 	 * 		Notification ID in "teavituskalender" database
 	 */
-	/*public static long addEvent(
+	public static long addEvent(
 			final long notificationId,
 			final AditUser eventOwner,
 			final String eventText,
@@ -337,9 +337,9 @@ public class ScheduleClient {
 		}
 		
 		return eventId;
-	}*/
+	}
 	
-	public long addEvent(
+	/*public long addEvent(
 			final long notificationId,
 			final AditUser eventOwner,
 			final String eventText,
@@ -358,7 +358,7 @@ public class ScheduleClient {
 				relatedDocumentId,
 				userService
 		);
-	}
+	}*/
 	
 	/**
 	 * Adds a notification to "teavituskalender" X-Road database.
