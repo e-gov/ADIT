@@ -6,6 +6,10 @@ public class LisaSyndmusResponseTulemus {
 	
 	private String tulemuseTekst;
 
+	private String tulemuseKoodType;
+	
+	private String tulemuseTekstType;
+	
 	public Integer getTulemuseKood() {
 		return tulemuseKood;
 	}
@@ -20,6 +24,22 @@ public class LisaSyndmusResponseTulemus {
 
 	public void setTulemuseTekst(String tulemuseTekst) {
 		this.tulemuseTekst = tulemuseTekst;
+	}
+
+	public String getTulemuseKoodType() {
+		return tulemuseKoodType;
+	}
+
+	public void setTulemuseKoodType(String tulemuseKoodType) {
+		this.tulemuseKoodType = tulemuseKoodType;
+	}
+
+	public String getTulemuseTekstType() {
+		return tulemuseTekstType;
+	}
+
+	public void setTulemuseTekstType(String tulemuseTekstType) {
+		this.tulemuseTekstType = tulemuseTekstType;
 	}
 	
 }

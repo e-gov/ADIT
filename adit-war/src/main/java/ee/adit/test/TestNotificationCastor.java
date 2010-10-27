@@ -1,6 +1,7 @@
 package ee.adit.test;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,7 +31,7 @@ public class TestNotificationCastor {
 	public static void main(String[] args) throws IOException, MappingException, MarshalException, ValidationException {
 		
 		// Load Mapping
-		Mapping mapping = new Mapping();
+		/*Mapping mapping = new Mapping();
 		mapping.loadMapping("C:\\development\\adit\\adit-war\\src\\main\\resources\\adit-castor-mapping.xml");
 		StringWriter sw = new StringWriter();
 		
@@ -68,7 +69,35 @@ public class TestNotificationCastor {
 		
 		m.marshal(o);
 
-		System.out.println("Result: " + sw.getBuffer().toString());
+		System.out.println("Result: " + sw.getBuffer().toString());*/
+		
+		
+		unmarshal();
+	}
+	
+	public static void unmarshal() throws IOException, MappingException, MarshalException, ValidationException {
+		String xml =  
+					    "<tkal:lisaSyndmusResponse>" + 
+					     "<keha xsi:type=\"tkal:lisaSyndmusVastus\">" + 
+					        "<tulemus>" + 
+					          "<tulemuseKood xsi:type=\"xsd:integer\">0</tulemuseKood>" + 
+					          "<tulemuseTekst xsi:type=\"xsd:string\">Päring õnnestus</tulemuseTekst>" + 
+					        "</tulemus>" + 
+					        "<syndmusId xsi:type=\"xsd:integer\">5255151</syndmusId>" + 
+					      "</keha>" + 
+					    "</tkal:lisaSyndmusResponse>";
+		
+		// Load Mapping
+		Mapping mapping = new Mapping();
+		mapping.loadMapping("C:\\development\\adit\\adit-war\\src\\main\\resources\\adit-castor-mapping.xml");
+		StringWriter sw = new StringWriter();
+		
+		Unmarshaller m = new Unmarshaller();
+		m.setMapping(mapping);
+		
+		StringReader strr = new StringReader(xml);
+		
+		Object o = m.unmarshal(strr);
 		
 	}
 
