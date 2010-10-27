@@ -445,9 +445,9 @@ public class ScheduleClient {
 				webServiceTemplate.setUnmarshaller(getUnmarshaller());
 				
 				// Interceptors
-				ClientInterceptor ci = new CustomXTeeResponseSanitizerInterceptor();
+				//ClientInterceptor ci = new CustomXTeeResponseSanitizerInterceptor();
 				WSConsumptionLoggingInterceptor li = new WSConsumptionLoggingInterceptor();
-				webServiceTemplate.setInterceptors(new ClientInterceptor[] { ci, li });
+				webServiceTemplate.setInterceptors(new ClientInterceptor[] { li });
 								
 				//SaajSoapMessageFactory messageFactory = new SaajSoapMessageFactory(MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL));
 				//SaajSoapMessage message = (SaajSoapMessage) messageFactory.createWebServiceMessage();
