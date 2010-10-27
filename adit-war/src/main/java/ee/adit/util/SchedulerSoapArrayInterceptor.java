@@ -1,5 +1,9 @@
 package ee.adit.util;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Iterator;
 
 import javax.xml.soap.SOAPBody;
@@ -26,7 +30,6 @@ public class SchedulerSoapArrayInterceptor implements ClientInterceptor {
 	}
 
 	public boolean handleRequest(MessageContext mc) throws WebServiceClientException {
-		LOG.debug("handleRequest() started.");
 		if (mc.getRequest() instanceof SaajSoapMessage) {
 			SOAPMessage msg = ((SaajSoapMessage) mc.getRequest()).getSaajMessage();
 			try {
@@ -79,6 +82,9 @@ public class SchedulerSoapArrayInterceptor implements ClientInterceptor {
 			LOG.debug("Keha node is NULL!");
 			return;
 		}
+		
+		reformatDateInXml((Element)xroadKehaNode, "algus");
+		reformatDateInXml((Element)xroadKehaNode, "lopp");
 		
 		NodeList lugejadNodeList = ((Element)xroadKehaNode).getElementsByTagNameNS("http://producers.teavituskalender.xtee.riik.ee/producer/teavituskalender", "lugejad");
 		if ((lugejadNodeList == null) || (lugejadNodeList.getLength() != 1)) {
@@ -135,4 +141,86 @@ public class SchedulerSoapArrayInterceptor implements ClientInterceptor {
 			lugejadElement.setAttribute(soapEncPrefix + ":arrayType", tkPrefix + ":kasutaja["+ kasutajadNodeList.getLength() +"]");
 		}
 	}
+	
+	private void reformatDateInXml(Element xroadKehaElement, String tagName) {
+		NodeList nl = xroadKehaElement.getElementsByTagNameNS(NS_TK, tagName);
+		if ((nl != null) && (nl.getLength() > 0)) {
+			Element e = (Element)nl.item(0);
+			Date dateValue = getDateFromXML(e.getTextContent());
+			String modifiedDate = formatDate(dateValue);
+			if ((modifiedDate != null) && (modifiedDate.length() > 0)) {
+				e.setTextContent(modifiedDate);
+			}
+		} else {
+			LOG.debug(tagName + " node not found!");
+		}
+	}
+	
+    private Date getDateFromXML(String xmlDate) {
+        Date result = null;
+        if ((xmlDate != null) && !xmlDate.equalsIgnoreCase("")) {
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+            df.setLenient(false);
+            try {
+                result = df.parse(xmlDate);
+            } catch (ParseException e1) {
+                df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSZ");
+                df.setLenient(false);
+                try {
+                    result = df.parse(xmlDate);
+                } catch (ParseException e2) {
+                    df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SZ");
+                    df.setLenient(false);
+                    try {
+                        result = df.parse(xmlDate);
+                    } catch (ParseException e3) {
+                        df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+                        df.setLenient(false);
+                        try {
+                            result = df.parse(xmlDate);
+                        } catch (ParseException e4) {
+                            df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+                            df.setLenient(false);
+                            try {
+                                result = df.parse(xmlDate);
+                            } catch (ParseException e5) {
+                                if (xmlDate.contains("T")) {
+                                    return null;
+                                }
+                                df = new SimpleDateFormat("yyyy-MM-ddZ");
+                                df.setLenient(false);
+                                try {
+                                    result = df.parse(xmlDate);
+                                } catch (ParseException e6) {
+                                    df = new SimpleDateFormat("yyyy-MM-dd");
+                                    df.setLenient(false);
+                                    try {
+                                        result = df.parse(xmlDate);
+                                    } catch (ParseException e7) {
+                                        result = null;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return result;
+    }
+    
+    private String formatDate(Date date) {
+        try {
+            if (date == null) {
+                return "";
+            }
+
+            DateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+            String result = format.format(date);
+            return result;
+        } catch (Exception ex) {
+            LOG.error(ex);
+            return "";
+        }
+    }
 }
