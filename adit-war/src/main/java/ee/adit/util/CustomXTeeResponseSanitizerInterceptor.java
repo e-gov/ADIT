@@ -106,9 +106,8 @@ public class CustomXTeeResponseSanitizerInterceptor implements ClientInterceptor
 		if(nl.getLength() > 0) {
 			Node responseNode = nl.item(0);
 			// <tkal:lisaSyndmusResponse>
-			responseNode.setPrefix(null);
 			
-			Attr attribute = document.createAttribute("xmlns:teavituskalender");
+			Attr attribute = document.createAttribute("xmlns:tkal");
 			responseNode.appendChild(attribute);
 			
 			body.removeContents();
