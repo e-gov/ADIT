@@ -1181,7 +1181,7 @@
 	</class>
 	
 	<class name="ee.adit.pojo.notification.LisaSyndmusResponse">
-		<map-to xml="lisaSyndmusVastus" ns-uri="http://producers.teavituskalender.xtee.riik.ee/producer/teavituskalender"/>
+		<map-to xml="lisaSyndmusResponse" ns-uri="http://producers.teavituskalender.xtee.riik.ee/producer/teavituskalender"/>
 		<field name="tulemus" type="ee.adit.pojo.notification.LisaSyndmusResponseTulemus" >
 			<bind-xml name="tulemus" location="keha" />
 		</field>
