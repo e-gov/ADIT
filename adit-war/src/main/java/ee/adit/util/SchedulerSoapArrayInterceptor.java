@@ -16,7 +16,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class SchedulerSoapArrayInterceptor implements ClientInterceptor {
-	private static Logger LOG = Logger.getLogger(SoapArrayInterceptor.class);
+	private static Logger LOG = Logger.getLogger(SchedulerSoapArrayInterceptor.class);
 	public final String NS_TK = "http://producers.teavituskalender.xtee.riik.ee/producer/teavituskalender";
 	public final String NS_XSI = "http://www.w3.org/2001/XMLSchema-instance";
 	public final String NS_SOAPENC = "http://schemas.xmlsoap.org/soap/encoding/";

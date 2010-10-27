@@ -46,6 +46,7 @@ import ee.adit.pojo.notification.LisaSyndmusRequestKasutaja;
 import ee.adit.pojo.notification.LisaSyndmusRequestLugejad;
 import ee.adit.pojo.notification.LisaSyndmusResponse;
 import ee.adit.service.UserService;
+import ee.adit.util.CustomXTeeResponseSanitizerInterceptor;
 import ee.adit.util.SchedulerSoapArrayInterceptor;
 import ee.adit.util.Configuration;
 import ee.adit.util.CustomClientInterceptor;
