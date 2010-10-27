@@ -11,6 +11,7 @@ import org.exolab.castor.xml.MarshalException;
 import org.exolab.castor.xml.Marshaller;
 import org.exolab.castor.xml.Unmarshaller;
 import org.exolab.castor.xml.ValidationException;
+import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 
 import ee.adit.pojo.notification.LisaSyndmusRequest;
 import ee.adit.pojo.notification.LisaSyndmusRequestKasutaja;
