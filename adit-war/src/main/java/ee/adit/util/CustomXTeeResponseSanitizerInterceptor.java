@@ -94,6 +94,8 @@ public class CustomXTeeResponseSanitizerInterceptor implements ClientInterceptor
 	
 	private void removeNamespacePrefixes(SOAPBody body) throws ParserConfigurationException {
 		
+		LOG.debug("Removing namespace prefixes...");
+		
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
 		Document document = builder.newDocument();
@@ -103,10 +105,13 @@ public class CustomXTeeResponseSanitizerInterceptor implements ClientInterceptor
 		String ns = "http://producers.teavituskalender.xtee.riik.ee/producer/teavituskalender";
 		NodeList nl = document.getElementsByTagNameNS(ns, "lisaSyndmusResponse");
 		
+		LOG.debug("NodeList retrieved: size: " + nl.getLength());
+		
 		if(nl.getLength() > 0) {
 			Node responseNode = nl.item(0);
 			// <tkal:lisaSyndmusResponse>
 			
+			LOG.debug("Adding namespaces");
 			Attr attribute = document.createAttribute("xmlns:tkal");
 			attribute.setValue("http://producers.teavituskalender.xtee.riik.ee/producer/teavituskalender");
 			Attr attribute2 = document.createAttribute("xmlns:xsi");
@@ -114,7 +119,9 @@ public class CustomXTeeResponseSanitizerInterceptor implements ClientInterceptor
 			responseNode.appendChild(attribute);
 			responseNode.appendChild(attribute2);
 			
+			LOG.debug("Removing contents");
 			body.removeContents();
+			LOG.debug("Appending document...");
 			body.appendChild(document.getFirstChild());
 		}
 		
