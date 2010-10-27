@@ -433,8 +433,8 @@ public class ScheduleClient {
 			
 			request.setLugejad(lugejad);
 			
-			request.setAlgus(Util.dateToXMLDate(eventDate.getTime()));
-			request.setLopp(Util.dateToXMLDate(eventDate.getTime()));
+			request.setAlgus(Util.dateToXMLDatePart(eventDate.getTime()));
+			request.setLopp(Util.dateToXMLDatePart(eventDate.getTime()));
 			
 			try {
 				

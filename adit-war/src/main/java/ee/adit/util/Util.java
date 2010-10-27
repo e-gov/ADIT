@@ -595,6 +595,17 @@ public class Util {
 	}
 	
 	/**
+	 * Converts a date to XML format (only date part is returned).
+	 * 
+	 * @param date
+	 * @return date in XML format
+	 */
+	public static String dateToXMLDatePart(Date date) {
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-d");
+		return df.format(date);
+	}
+	
+	/**
 	 * Converts an XML date to Date.
 	 * 
 	 * @param date in XML format
