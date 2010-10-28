@@ -470,7 +470,7 @@ public class MonitorService {
 		MonitorResult result = new MonitorResult();
 		result.setComponent("SAVE_DOCUMENT");
 		
-		LOG.info("Testing 'saveDocument' request...");
+		LOG.info("Testing 'saveDocument' request. Service URL: " + serviceURI);
 		
 		double duration = 0;
 		Date start = new Date();
@@ -583,7 +583,7 @@ public class MonitorService {
 		MonitorResult result = new MonitorResult();
 		result.setComponent("GET_DOCUMENT");
 		
-		LOG.info("Testing 'getDocument' request...");
+		LOG.info("Testing 'getDocument' request. Service URL: " + serviceURI);
 		
 		double duration = 0;
 		boolean success = false;
