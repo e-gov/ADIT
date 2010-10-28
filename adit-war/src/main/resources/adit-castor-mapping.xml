@@ -1220,7 +1220,7 @@
 		</field>
 	</class>
 	
-	<class name="ee.adit.pojo.GetDocumentRequest">
+	<class name="ee.adit.pojo.GetDocumentRequestMonitor">
 		<map-to xml="getDocument" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" ns-prefix="adit" />
 		<field name="documentId" type="long">
 			<bind-xml name="document_id" location="keha" QName-prefix="adit" />
