@@ -1213,10 +1213,10 @@
 		</field>
 	</class>
 	
-	<class name="ee.adit.pojo.SaveDocumentRequestDocument">
-		<map-to xml="document" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+	<class name="ee.adit.pojo.SaveDocumentRequestDocumentMonitor">
+		<map-to xml="document" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" ns-prefix="adit" />
 		<field name="href" type="java.lang.String">
-			<bind-xml name="href" node="attribute" />
+			<bind-xml name="href" node="attribute" QName-prefix="adit" />
 		</field>
 	</class>
 	
