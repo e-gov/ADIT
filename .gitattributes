@@ -256,6 +256,7 @@ adit-war/src/main/java/ee/adit/pojo/GetDocumentListResponse.java -text
 adit-war/src/main/java/ee/adit/pojo/GetDocumentListResponseAttachment.java -text
 adit-war/src/main/java/ee/adit/pojo/GetDocumentListResponseList.java -text
 adit-war/src/main/java/ee/adit/pojo/GetDocumentRequest.java -text
+adit-war/src/main/java/ee/adit/pojo/GetDocumentRequestMonitor.java -text
 adit-war/src/main/java/ee/adit/pojo/GetDocumentResponse.java -text
 adit-war/src/main/java/ee/adit/pojo/GetDocumentResponseDocument.java -text
 adit-war/src/main/java/ee/adit/pojo/GetDocumentResponseMonitor.java -text
@@ -267,7 +268,9 @@ adit-war/src/main/java/ee/adit/pojo/GetNotificationsRequest.java -text
 adit-war/src/main/java/ee/adit/pojo/GetNotificationsResponse.java -text
 adit-war/src/main/java/ee/adit/pojo/GetUserInfoRequest.java -text
 adit-war/src/main/java/ee/adit/pojo/GetUserInfoRequestAttachmentUserList.java -text
+adit-war/src/main/java/ee/adit/pojo/GetUserInfoRequestMonitor.java -text
 adit-war/src/main/java/ee/adit/pojo/GetUserInfoRequestUserList.java -text
+adit-war/src/main/java/ee/adit/pojo/GetUserInfoRequestUserListMonitor.java -text
 adit-war/src/main/java/ee/adit/pojo/GetUserInfoResponse.java -text
 adit-war/src/main/java/ee/adit/pojo/GetUserInfoResponseAttachment.java -text
 adit-war/src/main/java/ee/adit/pojo/GetUserInfoResponseAttachmentUser.java -text

@@ -44,11 +44,14 @@ import ee.adit.exception.AditInternalException;
 import ee.adit.monitor.MonitorResult;
 import ee.adit.pojo.ArrayOfMessageMonitor;
 import ee.adit.pojo.GetDocumentRequest;
+import ee.adit.pojo.GetDocumentRequestMonitor;
 import ee.adit.pojo.GetDocumentResponse;
 import ee.adit.pojo.GetDocumentResponseMonitor;
 import ee.adit.pojo.GetUserInfoRequest;
 import ee.adit.pojo.GetUserInfoRequestAttachmentUserList;
+import ee.adit.pojo.GetUserInfoRequestMonitor;
 import ee.adit.pojo.GetUserInfoRequestUserList;
+import ee.adit.pojo.GetUserInfoRequestUserListMonitor;
 import ee.adit.pojo.GetUserInfoResponse;
 import ee.adit.pojo.GetUserInfoResponseAttachment;
 import ee.adit.pojo.GetUserInfoResponseAttachmentUser;
@@ -595,7 +598,7 @@ public class MonitorService {
 			interceptor.setConfiguration(getConfiguration());
 			webServiceTemplate.setInterceptors(new ClientInterceptor[] { interceptor });
 			
-			GetDocumentRequest request = new GetDocumentRequest();
+			GetDocumentRequestMonitor request = new GetDocumentRequestMonitor();
 			request.setDocumentId(this.getMonitorConfiguration().getTestDocumentId());
 			request.setIncludeFileContents(true);
 			
@@ -722,8 +725,8 @@ public class MonitorService {
 			interceptor.setConfiguration(getConfiguration());
 			webServiceTemplate.setInterceptors(new ClientInterceptor[] { interceptor });
 			
-			GetUserInfoRequest request = new GetUserInfoRequest();
-			GetUserInfoRequestUserList requestUserList = new GetUserInfoRequestUserList();
+			GetUserInfoRequestMonitor request = new GetUserInfoRequestMonitor();
+			GetUserInfoRequestUserListMonitor requestUserList = new GetUserInfoRequestUserListMonitor();
 			requestUserList.setHref("cid:userlist");
 			request.setUserList(requestUserList);
 			
