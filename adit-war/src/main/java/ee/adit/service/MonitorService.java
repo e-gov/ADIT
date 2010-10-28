@@ -466,7 +466,7 @@ public class MonitorService {
 	 * 
 	 * @return test result
 	 */
-	public MonitorResult saveDocumentCheck() {
+	public MonitorResult saveDocumentCheck(String serviceURI) {
 		MonitorResult result = new MonitorResult();
 		result.setComponent("SAVE_DOCUMENT");
 		
@@ -579,7 +579,7 @@ public class MonitorService {
 	 * 
 	 * @return test result
 	 */
-	public MonitorResult getDocumentCheck() {
+	public MonitorResult getDocumentCheck(String serviceURI) {
 		MonitorResult result = new MonitorResult();
 		result.setComponent("GET_DOCUMENT");
 		
@@ -706,11 +706,12 @@ public class MonitorService {
 	 * 
 	 * @return test result
 	 */
-	public MonitorResult getUserInfoCheck() {
+	public MonitorResult getUserInfoCheck(String serviceURI) {
 		MonitorResult result = new MonitorResult();
 		result.setComponent("GET_USER_INFO");
 		
-		LOG.info("Testing 'getUserInfo' request. Service URL: " + this.getMonitorConfiguration().getAditServiceUrl());
+		LOG.info("Testing 'getUserInfo' request. Service URL: " + serviceURI);
+		
 		
 		double duration = 0;
 		boolean success = false;

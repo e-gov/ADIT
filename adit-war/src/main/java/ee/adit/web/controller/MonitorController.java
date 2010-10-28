@@ -33,6 +33,14 @@ public class MonitorController extends AbstractController {
 	
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest arg0, HttpServletResponse arg1) throws Exception {
+		
+		String requestURI = arg0.getRequestURI();
+		LOG.debug("requestURI: " + requestURI);
+		
+		// http://locahost:8080/adit/monitor
+		
+		String serviceURI = requestURI.substring(0, requestURI.length() - 7) + "service";
+		
 		LOG.info("ADIT monitoring servlet invoked.");
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("monitor.jsp");
@@ -53,7 +61,7 @@ public class MonitorController extends AbstractController {
 				LOG.error("getConfiguration() == null");
 			
 			// 1. SAVE_DOCUMENT
-			MonitorResult saveDocumentCheckResult = this.getMonitorService().saveDocumentCheck();
+			MonitorResult saveDocumentCheckResult = this.getMonitorService().saveDocumentCheck(serviceURI);
 			saveDocumentCheckResult.setDurationString(df.format(saveDocumentCheckResult.getDuration()));
 			if(saveDocumentCheckResult.isSuccess()) {
 				saveDocumentCheckResult.setStatusString(MonitorService.OK);
@@ -67,7 +75,7 @@ public class MonitorController extends AbstractController {
 			results.add(saveDocumentCheckResult);
 			
 			// 2. GET_DOCUMENT
-			MonitorResult getDocumentCheckResult = this.getMonitorService().getDocumentCheck();
+			MonitorResult getDocumentCheckResult = this.getMonitorService().getDocumentCheck(serviceURI);
 			getDocumentCheckResult.setDurationString(df.format(getDocumentCheckResult.getDuration()));
 			if(getDocumentCheckResult.isSuccess()) {
 				getDocumentCheckResult.setStatusString(MonitorService.OK);
@@ -110,7 +118,7 @@ public class MonitorController extends AbstractController {
 			
 			
 			// 4. GET_USER_INFO
-			MonitorResult getUserInfoCheckResult = this.getMonitorService().getUserInfoCheck();
+			MonitorResult getUserInfoCheckResult = this.getMonitorService().getUserInfoCheck(serviceURI);
 			getUserInfoCheckResult.setDurationString(df.format(getUserInfoCheckResult.getDuration()));
 			if(getUserInfoCheckResult.isSuccess()) {
 				getUserInfoCheckResult.setStatusString(MonitorService.OK);
