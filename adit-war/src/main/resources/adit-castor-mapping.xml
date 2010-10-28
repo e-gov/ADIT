@@ -1233,7 +1233,7 @@
 	<!-- GetUserInfo -->
  	<class name="ee.adit.pojo.GetUserInfoRequestMonitor">
 		<map-to xml="getUserInfo" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" ns-prefix="adit" />
-		<field name="userList" type="ee.adit.pojo.GetUserInfoRequestUserList">
+		<field name="userList" type="ee.adit.pojo.GetUserInfoRequestUserListMonitor">
 			<bind-xml name="userList" location="keha" QName-prefix="adit" />
 		</field>
 	</class>
