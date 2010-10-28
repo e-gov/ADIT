@@ -299,6 +299,7 @@ adit-war/src/main/java/ee/adit/pojo/SaveDocumentRequest.java -text
 adit-war/src/main/java/ee/adit/pojo/SaveDocumentRequestAttachment.java -text
 adit-war/src/main/java/ee/adit/pojo/SaveDocumentRequestAttachmentMonitor.java -text
 adit-war/src/main/java/ee/adit/pojo/SaveDocumentRequestDocument.java -text
+adit-war/src/main/java/ee/adit/pojo/SaveDocumentRequestMonitor.java -text
 adit-war/src/main/java/ee/adit/pojo/SaveDocumentResponse.java -text
 adit-war/src/main/java/ee/adit/pojo/SaveDocumentResponseMonitor.java -text
 adit-war/src/main/java/ee/adit/pojo/SaveDocumentResponseMonitorKeha.java -text

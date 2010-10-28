@@ -60,6 +60,7 @@ import ee.adit.pojo.SaveDocumentRequest;
 import ee.adit.pojo.SaveDocumentRequestAttachment;
 import ee.adit.pojo.SaveDocumentRequestAttachmentMonitor;
 import ee.adit.pojo.SaveDocumentRequestDocument;
+import ee.adit.pojo.SaveDocumentRequestMonitor;
 import ee.adit.pojo.SaveDocumentResponseMonitor;
 import ee.adit.util.Configuration;
 import ee.adit.util.CustomClientInterceptor;
@@ -477,7 +478,7 @@ public class MonitorService {
 			webServiceTemplate.setMarshaller(getMarshaller());
 			webServiceTemplate.setUnmarshaller(getUnmarshaller());
 			
-			SaveDocumentRequest request = new SaveDocumentRequest();
+			SaveDocumentRequestMonitor request = new SaveDocumentRequestMonitor();
 			SaveDocumentRequestDocument document = new SaveDocumentRequestDocument();
 			document.setHref("cid:document");
 			request.setDocument(document);

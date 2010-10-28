@@ -1206,4 +1206,18 @@
 		</field>		
 	</class>
 	
+	<class name="ee.adit.pojo.SaveDocumentRequestMonitor">
+		<map-to xml="saveDocument" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" ns-prefix="adit" />
+		<field name="document" type="ee.adit.pojo.SaveDocumentRequestDocument">
+			<bind-xml name="document" location="keha" QName-prefix="adit" />
+		</field>
+	</class>
+	
+	<class name="ee.adit.pojo.SaveDocumentRequestDocument">
+		<map-to xml="document" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<field name="href" type="java.lang.String">
+			<bind-xml name="href" node="attribute" />
+		</field>
+	</class>
+	
 </mapping>
