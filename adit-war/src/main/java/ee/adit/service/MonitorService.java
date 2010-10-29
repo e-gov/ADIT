@@ -530,7 +530,7 @@ public class MonitorService {
 			xTeeServiceConfiguration.setInstitution(this.getMonitorConfiguration().getInstitutionCode());
 			xTeeServiceConfiguration.setMethod("saveDocument");
 			xTeeServiceConfiguration.setVersion("v1");
-			xTeeServiceConfiguration.setSecurityServer(this.getMonitorConfiguration().getAditServiceUrl());
+			xTeeServiceConfiguration.setSecurityServer(serviceURI);
 			xTeeServiceConfiguration.setInfosysteem(this.getMonitorConfiguration().getRemoteApplicationShortName());
 			
 			CustomXTeeConsumer customXTeeConsumer = new CustomXTeeConsumer();
@@ -611,7 +611,7 @@ public class MonitorService {
 			xTeeServiceConfiguration.setInstitution(this.getMonitorConfiguration().getInstitutionCode());
 			xTeeServiceConfiguration.setMethod("getDocument");
 			xTeeServiceConfiguration.setVersion("v1");
-			xTeeServiceConfiguration.setSecurityServer(this.getMonitorConfiguration().getAditServiceUrl());
+			xTeeServiceConfiguration.setSecurityServer(serviceURI);
 			xTeeServiceConfiguration.setInfosysteem(this.getMonitorConfiguration().getRemoteApplicationShortName());
 			
 			CustomXTeeConsumer customXTeeConsumer = new CustomXTeeConsumer();
@@ -749,7 +749,7 @@ public class MonitorService {
 			xTeeServiceConfiguration.setInstitution(this.getMonitorConfiguration().getInstitutionCode());
 			xTeeServiceConfiguration.setMethod("getUserInfo");
 			xTeeServiceConfiguration.setVersion("v1");
-			xTeeServiceConfiguration.setSecurityServer(this.getMonitorConfiguration().getAditServiceUrl());
+			xTeeServiceConfiguration.setSecurityServer(serviceURI);
 			xTeeServiceConfiguration.setInfosysteem(this.getMonitorConfiguration().getRemoteApplicationShortName());
 			
 			CustomXTeeConsumer customXTeeConsumer = new CustomXTeeConsumer();
