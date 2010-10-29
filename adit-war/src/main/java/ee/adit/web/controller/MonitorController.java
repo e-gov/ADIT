@@ -35,11 +35,15 @@ public class MonitorController extends AbstractController {
 	protected ModelAndView handleRequestInternal(HttpServletRequest arg0, HttpServletResponse arg1) throws Exception {
 		
 		String requestURI = arg0.getRequestURI();
+		String serverName = arg0.getServerName();
+		int serverPort = arg0.getServerPort();
 		LOG.debug("requestURI: " + requestURI);
+		LOG.debug("serverName: " + serverName);
+		LOG.debug("serverPort: " + serverPort);
 		
 		// http://locahost:8080/adit/monitor
 		
-		String serviceURI = requestURI.substring(0, requestURI.length() - 7) + "service";
+		String serviceURI = "http://" + serverName + ":" + serverPort + "/adit/service";
 		
 		LOG.info("ADIT monitoring servlet invoked.");
 		ModelAndView mav = new ModelAndView();
