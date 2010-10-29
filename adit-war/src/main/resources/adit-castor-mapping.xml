@@ -596,10 +596,10 @@
 	</class>
 	
 	<class name="ee.adit.pojo.SaveDocumentResponse">
-		<map-to xml="keha" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"/>
+		<map-to xml="keha" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" ns-prefix="adit"/>
 		<field name="success" type="ee.adit.pojo.Success" >
 		</field>
-		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage" >
 			<bind-xml name="messages" />
 		</field>
 		<field name="documentId" type="long">
@@ -958,9 +958,9 @@
 	</class>
 
 	<class name="ee.adit.pojo.ArrayOfMessage">
-		<map-to xml="messages" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="messages" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" ns-prefix="adit" />
 		<field name="message" type="ee.adit.pojo.Message" collection="arraylist">
-			<bind-xml name="message" />
+			<bind-xml name="message" QName-prefix="adit" />
 		</field>
 	</class>
 
