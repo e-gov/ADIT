@@ -157,12 +157,14 @@
 		<property name="triggers">
 			<list>
 				<!-- Working -->
+				<!-- 
 				<ref bean="notificationTrigger"/>
 				<ref bean="UserSyncJobTrigger"/>
 				<ref bean="dvkSendTrigger"/>
 				<ref bean="dvkUpdateStatusTrigger"/>
 				<ref bean="dvkReceiveTrigger"/>
-				
+				-->
+				 
 				<!--
 					  
 					 
