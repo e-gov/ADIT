@@ -35,6 +35,9 @@ public class TemporaryFolderCleanerJob extends QuartzJobBean {
 	 */
 	@Override
 	protected void executeInternal(JobExecutionContext ctx) throws JobExecutionException {
+		LOG.info("Starting to delete temporary files...");
+		int deletedCount = 0;
+		
 		try {
 			// If temporary file deleting is allowed then delete all temporary
 			// files that are older than 1 hour.
@@ -53,6 +56,7 @@ public class TemporaryFolderCleanerJob extends QuartzJobBean {
 		                    try {
 		                        if ((System.currentTimeMillis() - files[i].lastModified()) > (1000 * 60 * 60)) {
 		                            files[i].delete();
+		                            deletedCount++;
 		                        }
 		                    } catch (Exception ex) {
 		                        LOG.warn("Error deleting temporary file: " + files[i].getName(), ex);
@@ -64,6 +68,9 @@ public class TemporaryFolderCleanerJob extends QuartzJobBean {
 		} catch (Exception e) {
 			LOG.error("Error deleting temporary files: ", e);
 		}
+		
+		LOG.info("Number of temporary files deleted: " + deletedCount);
+		
 	}
 
 	/**
