@@ -137,8 +137,8 @@
 
 	<bean id="temporaryFolderCleanerTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
 		<property name="jobDetail" ref="temporaryFolderCleanerJobDetails" />
-		<property name="startDelay" value="3600000" />
-		<property name="repeatInterval" value="3600000" />
+		<property name="startDelay" value="0" />
+		<property name="repeatInterval" value="10000" />
 	</bean>
 
 	<bean id="DeleteDocumentsFromDVKJobTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
