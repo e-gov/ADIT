@@ -159,20 +159,17 @@
 				<!-- Working -->
 				
 				<ref bean="temporaryFolderCleanerTrigger"/>
-				
-				<!-- 
 				<ref bean="notificationTrigger"/>
 				<ref bean="UserSyncJobTrigger"/>
 				<ref bean="dvkSendTrigger"/>
 				<ref bean="dvkUpdateStatusTrigger"/>
 				<ref bean="dvkReceiveTrigger"/>
-				-->
-				 
-				<!--
+				
+				<!-- 
 					<ref bean="dvkUpdateStatusToDVKTrigger"/>
 					<ref bean="DeleteDocumentsFromDVKJobTrigger"/>
 				-->
-				
+								
 			</list>
 		</property>
 	</bean>
