@@ -157,6 +157,9 @@
 		<property name="triggers">
 			<list>
 				<!-- Working -->
+				
+				<ref bean="temporaryFolderCleanerTrigger"/>
+				
 				<!-- 
 				<ref bean="notificationTrigger"/>
 				<ref bean="UserSyncJobTrigger"/>
@@ -166,15 +169,10 @@
 				-->
 				 
 				<!--
-					  
-					 
 					<ref bean="dvkUpdateStatusToDVKTrigger"/>
 					<ref bean="DeleteDocumentsFromDVKJobTrigger"/>
 				-->
-
-				<!--
-					<ref bean="temporaryFolderCleanerTrigger"/>  
-				-->
+				
 			</list>
 		</property>
 	</bean>
