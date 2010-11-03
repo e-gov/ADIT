@@ -134,16 +134,16 @@ public class MonitorService {
 	private Unmarshaller unmarshaller;
 	
 	public void check() {
-		//LOG.info("ADIT monitor - Checking database and application.");
+		LOG.info("ADIT monitor - Checking database and application.");
 		
-		//checkApplication();
+		checkApplication();
 		
-		//checkDBConnection();
-		//checkDBRead(this.getMonitorConfiguration().getTestDocumentId());
+		checkDBConnection();
+		checkDBRead(this.getMonitorConfiguration().getTestDocumentId());
 		//checkDBWrite(this.getMonitorConfiguration().getTestDocumentId());
 		
-		//checkDVKconnection();
-		//checkDVKRead(this.getMonitorConfiguration().getDvkTestDocumentID());
+		checkDVKconnection();
+		checkDVKRead(this.getMonitorConfiguration().getDvkTestDocumentID());
 		//checkDVKWrite(this.getMonitorConfiguration().getDvkTestDocumentID());
 		
 	}
