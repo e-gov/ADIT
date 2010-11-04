@@ -49,7 +49,7 @@ public class AditUserDAO extends HibernateDaoSupport {
 	 * @param aditUser
 	 */
 	public void saveOrUpdate(AditUser aditUser) {
-		/*Session session = null;
+		Session session = null;
 		Transaction transaction = null;
 		try {
 			
@@ -67,13 +67,13 @@ public class AditUserDAO extends HibernateDaoSupport {
 			if(session != null) {
 				session.close();
 			}
-		}*/
+		}
 		
-		try {
+		/*try {
 			this.getHibernateTemplate().saveOrUpdate(aditUser);
 		} catch (Exception e) {
 			LOG.error("Exception while adding AditUser: ", e);
-		}
+		}*/
 	}
 
 	
