@@ -793,10 +793,10 @@ public class DocumentDAO extends HibernateDaoSupport {
 					documentFile.setFileData(fileData);
 					
 					if(updatingExisting) {
-						long diff = attachmentFile.getSizeBytes() - documentFile.getFileSizeBytes(); 
+						long diff = attachmentFile.getSizeBytes() - length; 
 						filesTotalSize = filesTotalSize + diff;
 					} else {
-						filesTotalSize = filesTotalSize + documentFile.getFileSizeBytes();
+						filesTotalSize = filesTotalSize + length;
 					}
 					
 					documentFile.setContentType(attachmentFile.getContentType());
