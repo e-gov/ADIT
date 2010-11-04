@@ -839,7 +839,7 @@ public class DocumentDAO extends HibernateDaoSupport {
 	public List<Document> getDocumentsWithoutDVKStatus(Long dvkStatusId) {
 		List<Document> result = null;
 		LOG.debug("Fetching documents for status update. StatusID: " + dvkStatusId);
-		String SQL = "from Document where documentDvkStatusId is not null and documentDvkStatusId != " + dvkStatusId;
+		String SQL = "from Document where dvkId is not null and documentDvkStatusId != " + dvkStatusId;
 		LOG.debug("SQL: " + SQL);
 		Session session = null;
 		try {
