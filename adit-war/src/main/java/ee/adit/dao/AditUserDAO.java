@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Property;
@@ -48,11 +49,31 @@ public class AditUserDAO extends HibernateDaoSupport {
 	 * @param aditUser
 	 */
 	public void saveOrUpdate(AditUser aditUser) {
+		Session session = null;
+		Transaction transaction = null;
 		try {
+			
+			session = this.getSessionFactory().openSession();
+			transaction = session.beginTransaction();
+			session.saveOrUpdate(aditUser);
+			transaction.commit();
+			
+		} catch (Exception e) {
+			if(transaction != null) {
+				transaction.rollback();
+			}
+			throw new AditInternalException("Error while updating AditUser: ", e);
+		} finally {
+			if(session != null) {
+				session.close();
+			}
+		}		
+		
+		/*try {
 			this.getHibernateTemplate().saveOrUpdate(aditUser);
 		} catch (Exception e) {
 			LOG.error("Exception while adding AditUser: ", e);
-		}
+		}*/
 	}
 
 	
