@@ -756,7 +756,8 @@ public class DocumentDAO extends HibernateDaoSupport {
 				// Save document and files
 				for(int i = 0; i < files.size(); i++) {
 					OutputDocumentFile attachmentFile = files.get(i);
-	
+					boolean updatingExisting = false;
+					
 					DocumentFile documentFile = new DocumentFile();
 					if ((attachmentFile.getId() != null) && (attachmentFile.getId() > 0)) {
 						documentFile = null;
@@ -764,13 +765,10 @@ public class DocumentDAO extends HibernateDaoSupport {
 						while (it.hasNext()) {
 							DocumentFile f = (DocumentFile)it.next();							
 							if (f.getId() == attachmentFile.getId()) {
-								long diff = attachmentFile.getSizeBytes() - f.getFileSizeBytes(); 
 								LOG.debug("Found existing file with ID " + attachmentFile.getId() + ". Updating existing file.");
 								documentFile = f;
-								filesTotalSize = filesTotalSize + diff;
+								updatingExisting = true;
 								break;
-							} else {
-								filesTotalSize = filesTotalSize + documentFile.getFileSizeBytes();
 							}
 						}
 					} else {
@@ -793,6 +791,13 @@ public class DocumentDAO extends HibernateDaoSupport {
 					//Blob fileData = Hibernate.createBlob(fileInputStream, length, session);
 					Blob fileData = Hibernate.createBlob(fileInputStream, length);
 					documentFile.setFileData(fileData);
+					
+					if(updatingExisting) {
+						long diff = attachmentFile.getSizeBytes() - documentFile.getFileSizeBytes(); 
+						filesTotalSize = filesTotalSize + diff;
+					} else {
+						filesTotalSize = filesTotalSize + documentFile.getFileSizeBytes();
+					}
 					
 					documentFile.setContentType(attachmentFile.getContentType());
 					documentFile.setDeleted(false);

@@ -468,7 +468,7 @@ public class DocumentService {
 			final String creatorCode, final String remoteApplication,
 			final long remainingDiskQuota, final String creatorUserCode, final String creatorUserName, final String creatorName) throws FileNotFoundException {
 		final DocumentDAO docDao = this.getDocumentDAO();
-
+		
 		return (SaveItemInternalResult) this.getDocumentDAO()
 				.getHibernateTemplate().execute(new HibernateCallback() {
 					public Object doInHibernate(Session session)
