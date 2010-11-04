@@ -444,12 +444,8 @@ public class UserService {
 		}
 		
 		if(user != null) {
-			long totalDiskQuota = getTotalDiskQuota(user, globalDiskQuota);
-			
-			AditUserDAO userDAO = getAditUserDAO();
-			String userCode = user.getUserCode();
-			
-			long usedDiskSpace = userDAO.getUsedSpaceForUser(userCode);
+			long totalDiskQuota = getTotalDiskQuota(user, globalDiskQuota);			
+			long usedDiskSpace = user.getDiskQuotaUsed();
 			long result = totalDiskQuota - usedDiskSpace;
 			LOG.debug("Remaining disk quota for user \"" + user.getUserCode()
 					+ "\" is " + result + " (total: " + totalDiskQuota + ", used: "
