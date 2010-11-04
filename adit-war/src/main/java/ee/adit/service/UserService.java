@@ -436,14 +436,24 @@ public class UserService {
 	 * @return
 	 */
 	public long getRemainingDiskQuota(AditUser user, long globalDiskQuota) {
-		long totalDiskQuota = getTotalDiskQuota(user, globalDiskQuota);
-		long usedDiskSpace = getAditUserDAO().getUsedSpaceForUser(
-				user.getUserCode());
-		long result = totalDiskQuota - usedDiskSpace;
-		LOG.debug("Remaining disk quota for user \"" + user.getUserCode()
-				+ "\" is " + result + " (total: " + totalDiskQuota + ", used: "
-				+ usedDiskSpace + ")");
-		return result;
+		
+		if(getAditUserDAO() == null) {
+			throw new AditInternalException("Could not find remaining disk quota for user: aditUserDAO not initialized.");
+		}
+		
+		if(user != null) {
+			long totalDiskQuota = getTotalDiskQuota(user, globalDiskQuota);
+			long usedDiskSpace = getAditUserDAO().getUsedSpaceForUser(
+					user.getUserCode());
+			long result = totalDiskQuota - usedDiskSpace;
+			LOG.debug("Remaining disk quota for user \"" + user.getUserCode()
+					+ "\" is " + result + " (total: " + totalDiskQuota + ", used: "
+					+ usedDiskSpace + ")");
+			return result;
+		} else {
+			throw new AditInternalException("Could not find remaining disk quota for user: user is null");
+		}
+		
 	}
 
 	/**
