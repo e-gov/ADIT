@@ -762,10 +762,12 @@ public class DocumentDAO extends HibernateDaoSupport {
 						documentFile = null;
 						Iterator it = document.getDocumentFiles().iterator();
 						while (it.hasNext()) {
-							DocumentFile f = (DocumentFile)it.next();
+							DocumentFile f = (DocumentFile)it.next();							
 							if (f.getId() == attachmentFile.getId()) {
+								long diff = attachmentFile.getSizeBytes() - f.getFileSizeBytes(); 
 								LOG.debug("Found existing file with ID " + attachmentFile.getId() + ". Updating existing file.");
 								documentFile = f;
+								filesTotalSize = filesTotalSize + diff;
 								break;
 							} else {
 								filesTotalSize = filesTotalSize + documentFile.getFileSizeBytes();
