@@ -244,6 +244,12 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 							documentId = saveResult.getItemId();
 							LOG.debug("Document saved with ID: " + documentId.toString());
 							response.setDocumentId(documentId);
+							
+							// Update user disk quota (used)
+							LOG.info("User disk quota shrinked by: " + saveResult.getAddedFilesSize());
+							user.setDiskQuotaUsed(user.getDiskQuotaUsed() + saveResult.getAddedFilesSize());
+							this.getUserService().getAditUserDAO().saveOrUpdate(user);
+							
 						} else {
 							if ((saveResult.getMessages() != null) && (saveResult.getMessages().size() > 0)) {
 								AditMultipleException aditMultipleException = new AditMultipleException("MultiException");
