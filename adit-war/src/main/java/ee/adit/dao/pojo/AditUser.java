@@ -22,6 +22,8 @@ public class AditUser implements java.io.Serializable {
 	private Set accessRestrictions = new HashSet(0);
 	private Set userNotifications = new HashSet(0);
 
+	private Long diskQuotaUsed;
+	
 	public AditUser() {
 	}
 
@@ -114,5 +116,13 @@ public class AditUser implements java.io.Serializable {
 
 	public void setUserNotifications(Set userNotifications) {
 		this.userNotifications = userNotifications;
+	}
+
+	public Long getDiskQuotaUsed() {
+		return diskQuotaUsed;
+	}
+
+	public void setDiskQuotaUsed(Long diskQuotaUsed) {
+		this.diskQuotaUsed = diskQuotaUsed;
 	}
 }

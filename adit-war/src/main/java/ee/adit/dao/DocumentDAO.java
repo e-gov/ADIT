@@ -72,7 +72,7 @@ public class DocumentDAO extends HibernateDaoSupport {
 		this.messageSource = messageSource;
 	}
 
-	@SuppressWarnings("unchecked")
+	/*@SuppressWarnings("unchecked")
 	public long getUsedSpaceForUser(String userCode) {
 		Boolean deflated = new Boolean(true);
 		Boolean deleted = new Boolean(true);
@@ -86,7 +86,7 @@ public class DocumentDAO extends HibernateDaoSupport {
 		}
 		
 		return result;
-	}
+	}*/
 	
 	public Document getDocument(long id) {
 		LOG.debug("Attempting to load document from database. Document id: " + String.valueOf(id));
@@ -701,6 +701,7 @@ public class DocumentDAO extends HibernateDaoSupport {
 	@SuppressWarnings("unchecked")
 	private SaveItemInternalResult saveImpl(Document document, List<OutputDocumentFile> files, long remainingDiskQuota, Session session) throws IOException {
 		SaveItemInternalResult result = new SaveItemInternalResult();
+		long filesTotalSize = 0;
 		
 		try {
 			if (document.getDocumentFiles() == null) {
@@ -773,7 +774,7 @@ public class DocumentDAO extends HibernateDaoSupport {
 					}
 					
 					if ((document.getId() > 0) && (documentFile != null) && (documentFile.getId() < 1)) {
-						newFilesAddedToExistingDocument = true;
+						newFilesAddedToExistingDocument = true;	
 					}
 					
 					String fileName = attachmentFile.getSysTempFile();
@@ -784,6 +785,10 @@ public class DocumentDAO extends HibernateDaoSupport {
 						LOG.error("Error saving document file: ", e);
 					}
 					long length = (new File(fileName)).length();
+					
+					if(newFilesAddedToExistingDocument) {
+						filesTotalSize = filesTotalSize + documentFile.getFileSizeBytes();
+					}
 					
 					//Blob fileData = Hibernate.createBlob(fileInputStream, length, session);
 					Blob fileData = Hibernate.createBlob(fileInputStream, length);
@@ -811,6 +816,7 @@ public class DocumentDAO extends HibernateDaoSupport {
 			
 			LOG.debug("Saved document ID: " + document.getId());
 			
+			result.setAddedFilesSize(filesTotalSize);
 			result.setItemId(document.getId());
 			result.setSuccess(document.getId() > 0);
 		} catch (HibernateException e) {

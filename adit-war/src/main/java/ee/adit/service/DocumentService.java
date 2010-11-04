@@ -565,7 +565,7 @@ public class DocumentService {
 						// Document to database
 						try {
 							result = docDao.save(document, filesList,
-									remainingDiskQuota, session);
+									remainingDiskQuota, session);							
 						} catch (Exception e) {
 							throw new HibernateException(e);
 						}
@@ -605,7 +605,17 @@ public class DocumentService {
 	 * @throws Exception
 	 */
 	public void save(Document doc, long remainingDiskQuota) throws Exception {
-		this.getDocumentDAO().save(doc, null, remainingDiskQuota, null);
+		SaveItemInternalResult saveResult = this.getDocumentDAO().save(doc, null, remainingDiskQuota, null);
+		
+		if(doc.getCreatorCode() != null) {
+			AditUser user = this.getAditUserDAO().getUserByID(doc.getCreatorCode());
+			
+			if(user != null) {
+				user.setDiskQuotaUsed(user.getDiskQuotaUsed() + saveResult.getAddedFilesSize());
+			}
+			
+		}
+		
 	}
 
 	/**
@@ -1174,6 +1184,11 @@ public class DocumentService {
 														.info("Document saved to ADIT database. ID: "
 																+ saveResult
 																		.getItemId());
+												
+												// Update user quota limit
+												user.setDiskQuotaUsed(user.getDiskQuotaUsed() + saveResult.getAddedFilesSize());
+												this.getAditUserDAO().saveOrUpdate(user);
+												
 											} else {
 												if ((saveResult.getMessages() != null)
 														&& (saveResult
@@ -2091,7 +2106,8 @@ public class DocumentService {
 	@Transactional
 	public void deleteDocument(long documentId, String userCode, String applicationName) throws Exception {
 		Document doc = this.getDocumentDAO().getDocument(documentId);
-
+		long deletedFilesSize = 0;
+		
 		// Check whether or not the document exists
 		if (doc == null) {
 			AditCodedException aditCodedException = new AditCodedException("document.nonExistent");
@@ -2122,6 +2138,8 @@ public class DocumentService {
 						DocumentFile docFile = (DocumentFile) it.next();
 						String resultCode = this.deflateDocumentFile(doc.getId(), docFile.getId(), true);
 
+						deletedFilesSize = deletedFilesSize + docFile.getFileSizeBytes();
+						
 						// Make sure no known error code was returned
 						if (resultCode.equalsIgnoreCase("already_deleted")) {
 							AditCodedException aditCodedException = new AditCodedException("file.isDeleted");
@@ -2179,6 +2197,13 @@ public class DocumentService {
 			// exceed disk quota by deleting files. Therefore it does not make much
 			// sense to calculate the actual disk quota here. 
 			this.getDocumentDAO().save(doc, null, Long.MAX_VALUE, null);
+			
+			if(deletedFilesSize > 0) {
+				AditUser user = this.getAditUserDAO().getUserByID(userCode);
+				user.setDiskQuotaUsed(user.getDiskQuotaUsed() - deletedFilesSize);
+				this.getAditUserDAO().saveOrUpdate(user);
+			}
+			
 		}
 	}
 
@@ -2199,7 +2224,8 @@ public class DocumentService {
 	@Transactional
 	public void DeflateDocument(long documentId, String userCode, String applicationName) throws Exception {
 		Document doc = this.getDocumentDAO().getDocument(documentId);
-
+		long deflatedFilesSize = 0;
+		
 		// Check whether or not the document exists
 		if (doc == null) {
 			AditCodedException aditCodedException = new AditCodedException("document.nonExistent");
@@ -2231,12 +2257,15 @@ public class DocumentService {
 
 		}
 
+		
+		
 		// Replace file contents with their MD5 hash codes
 		Iterator it = doc.getDocumentFiles().iterator();
 		while (it.hasNext()) {
 			DocumentFile docFile = (DocumentFile) it.next();
 			String resultCode = deflateDocumentFile(doc.getId(), docFile.getId(), false);
-
+			deflatedFilesSize = deflatedFilesSize + docFile.getFileSizeBytes();
+			
 			// Handle possible exceptions
 			if (!resultCode.equalsIgnoreCase("already_deleted")) {
 				// Ignore files that are already deleted
@@ -2266,6 +2295,13 @@ public class DocumentService {
 		// exceed disk quota by deleting files. Therefore it does not make much
 		// sense to calculate the actual disk quota here. 
 		this.getDocumentDAO().save(doc, null, Long.MAX_VALUE, null);
+		
+		if(deflatedFilesSize > 0) {
+			AditUser user = this.getAditUserDAO().getUserByID(userCode);
+			user.setDiskQuotaUsed(user.getDiskQuotaUsed() - deflatedFilesSize);
+			this.getAditUserDAO().saveOrUpdate(user);
+		}
+		
 	}
 
 	/**

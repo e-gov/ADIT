@@ -42,7 +42,7 @@ public class AditUserDAO extends HibernateDaoSupport {
 
 		return result;
 	}
-
+	
 	/**
 	 * 
 	 * @param aditUser
@@ -83,6 +83,19 @@ public class AditUserDAO extends HibernateDaoSupport {
 			}
 		}
 			
+		return result;
+	}
+	
+	public Long getUsedSpaceForUser(String userCode) {
+		Long result = new Long(0);
+		AditUser user = this.getUserByID(userCode);
+		
+		if(user != null) {
+			result = user.getDiskQuotaUsed();
+		} else {
+			throw new AditInternalException("Did not find user: " + userCode);
+		}
+		
 		return result;
 	}
 	

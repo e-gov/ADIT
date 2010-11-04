@@ -23,6 +23,9 @@
         <property name="diskQuota" type="java.lang.Long">
             <column name="DISK_QUOTA" precision="18" scale="0" />
         </property>
+        <property name="diskQuotaUsed" type="java.lang.Long">
+            <column name="DISK_QUOTA_USED" precision="18" scale="0" />
+        </property>
         <property name="deactivationDate" type="timestamp">
             <column name="DEACTIVATION_DATE" length="7" />
         </property>

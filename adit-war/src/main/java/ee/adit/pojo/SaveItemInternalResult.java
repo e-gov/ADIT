@@ -8,6 +8,8 @@ public class SaveItemInternalResult {
 	private long itemId;
 	private List<Message> messages;
 	
+	private long addedFilesSize;
+	
 	public SaveItemInternalResult() {
 		this.success = false;
 		this.itemId = 0;
@@ -33,5 +35,13 @@ public class SaveItemInternalResult {
 	}
 	public void setMessages(List<Message> messages) {
 		this.messages = messages;
+	}
+
+	public long getAddedFilesSize() {
+		return addedFilesSize;
+	}
+
+	public void setAddedFilesSize(long addedFilesSize) {
+		this.addedFilesSize = addedFilesSize;
 	}
 }

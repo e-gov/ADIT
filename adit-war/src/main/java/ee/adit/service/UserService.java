@@ -368,7 +368,7 @@ public class UserService {
 			LOG.debug("User has joined the service: " + userCode);
 			hasJoined = true;
 
-			usedSpace = this.getDocumentDAO().getUsedSpaceForUser(userCode);
+			usedSpace = this.getAditUserDAO().getUsedSpaceForUser(userCode);
 			LOG.debug("Information for user (" + userCode + "): ");
 			LOG.debug("UsedSpace for user: " + usedSpace);
 
@@ -437,7 +437,7 @@ public class UserService {
 	 */
 	public long getRemainingDiskQuota(AditUser user, long globalDiskQuota) {
 		long totalDiskQuota = getTotalDiskQuota(user, globalDiskQuota);
-		long usedDiskSpace = getDocumentDAO().getUsedSpaceForUser(
+		long usedDiskSpace = getAditUserDAO().getUsedSpaceForUser(
 				user.getUserCode());
 		long result = totalDiskQuota - usedDiskSpace;
 		LOG.debug("Remaining disk quota for user \"" + user.getUserCode()
