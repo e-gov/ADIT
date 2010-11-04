@@ -222,6 +222,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 							response.setDocumentId(documentId);
 							
 							// Update user disk quota (used)
+							LOG.info("User disk quota shrinked by: " + saveResult.getAddedFilesSize());
 							user.setDiskQuotaUsed(user.getDiskQuotaUsed() + saveResult.getAddedFilesSize());
 							this.getUserService().getAditUserDAO().saveOrUpdate(user);
 							

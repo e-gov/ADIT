@@ -815,6 +815,7 @@ public class DocumentDAO extends HibernateDaoSupport {
 			}
 			
 			LOG.debug("Saved document ID: " + document.getId());
+			LOG.info("filesTotalSize: " + filesTotalSize);
 			
 			result.setAddedFilesSize(filesTotalSize);
 			result.setItemId(document.getId());
