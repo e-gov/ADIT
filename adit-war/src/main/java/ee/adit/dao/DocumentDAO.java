@@ -767,6 +767,8 @@ public class DocumentDAO extends HibernateDaoSupport {
 								LOG.debug("Found existing file with ID " + attachmentFile.getId() + ". Updating existing file.");
 								documentFile = f;
 								break;
+							} else {
+								filesTotalSize = filesTotalSize + documentFile.getFileSizeBytes();
 							}
 						}
 					} else {
@@ -785,10 +787,6 @@ public class DocumentDAO extends HibernateDaoSupport {
 						LOG.error("Error saving document file: ", e);
 					}
 					long length = (new File(fileName)).length();
-					
-					if(newFilesAddedToExistingDocument) {
-						filesTotalSize = filesTotalSize + documentFile.getFileSizeBytes();
-					}
 					
 					//Blob fileData = Hibernate.createBlob(fileInputStream, length, session);
 					Blob fileData = Hibernate.createBlob(fileInputStream, length);
