@@ -695,6 +695,15 @@ NOCYCLE
 NOCACHE
 NOORDER;
 
+CREATE SEQUENCE &&ADIT_SCHEMA..ACCESS_RESTR_ID_SEQ
+INCREMENT BY 1
+START WITH 1
+NOMAXVALUE
+MINVALUE 1
+NOCYCLE
+NOCACHE
+NOORDER;
+
 /* Create indexes */
 /* All primary key indexes were created with primary key constraints */
 CREATE INDEX &&ADIT_SCHEMA..access_restriction_app_idx ON &&ADIT_SCHEMA..access_restriction (remote_application) TABLESPACE &&ADIT_INDEX_TABLESPACE.;

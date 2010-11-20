@@ -6,7 +6,9 @@
     <class name="ee.adit.dao.pojo.AccessRestriction" table="ACCESS_RESTRICTION" schema="ADIT">
         <id name="id" type="long">
             <column name="ID" precision="12" scale="0" />
-            <generator class="assigned" />
+            <generator class="sequence">
+            	<param name="sequence">access_restr_id_seq</param>
+            </generator>
         </id>
         <many-to-one name="aditUser" class="ee.adit.dao.pojo.AditUser" fetch="select" lazy="false">
             <column name="USER_CODE" length="50" not-null="true" />
