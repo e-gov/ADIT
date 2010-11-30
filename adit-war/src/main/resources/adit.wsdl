@@ -1631,7 +1631,7 @@
 							<xs:documentation xml:lang="en">File name</xs:documentation>
 						</xs:annotation>
 					</element>
-					<element name="ontent_type" type="string">
+					<element name="content_type" type="string">
 						<xs:annotation>
 							<xs:documentation xml:lang="ee">Faili MIME tüüp
 							</xs:documentation>
