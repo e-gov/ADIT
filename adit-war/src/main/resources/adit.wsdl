@@ -76,6 +76,13 @@
 			<element name="sendDocumentRequest" type="tns:sendDocumentRequest" />
 			<element name="sendDocumentResponse" type="tns:sendDocumentResponse" />
 
+			<element name="infosysteem" type="string">
+				<xs:annotation>
+					<xs:documentation xml:lang="ee">Infosüsteemi lühinimi</xs:documentation>
+					<xs:documentation xml:lang="en">Remote application short name</xs:documentation>
+				</xs:annotation>
+			</element>
+
 			<element name="success" type="boolean">
 				<xs:annotation>
 					<xs:documentation xml:lang="ee">Näitab, kas päring õnnestus
@@ -2186,10 +2193,7 @@
 						</xs:annotation>
 					</element>
 				</sequence>
-			</complexType>
-			
-			<xs:element name="infosysteem" type="string" />
-			
+			</complexType>			
 		</schema>
 	</wsdl:types>
 
@@ -2276,7 +2280,7 @@
 		</wsdl:part>
 		<wsdl:part element="xtee:nimi" name="nimi">
 		</wsdl:part>
-		<wsdl:part element="infosysteem" name="infosysteem">
+		<wsdl:part element="tns:infosysteem" name="infosysteem">
 		</wsdl:part>
 	</wsdl:message>
 	<wsdl:message name="setNotificationsRequest">
