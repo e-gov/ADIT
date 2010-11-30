@@ -2187,6 +2187,9 @@
 					</element>
 				</sequence>
 			</complexType>
+			
+			<xs:element name="infosysteem" type="string" />
+			
 		</schema>
 	</wsdl:types>
 
@@ -2272,6 +2275,8 @@
 		<wsdl:part element="xtee:id" name="id">
 		</wsdl:part>
 		<wsdl:part element="xtee:nimi" name="nimi">
+		</wsdl:part>
+		<wsdl:part element="infosysteem" name="infosysteem">
 		</wsdl:part>
 	</wsdl:message>
 	<wsdl:message name="setNotificationsRequest">
