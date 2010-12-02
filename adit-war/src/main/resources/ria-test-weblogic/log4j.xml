@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
 <log4j:configuration>
-	
- 	<appender name="stdout" class="org.apache.log4j.ConsoleAppender">
-	   	<layout class="org.apache.log4j.PatternLayout">
-	    	<param name="ConversionPattern" value="%d{ABSOLUTE}%5p %C:%L - %m%n"/>
-		</layout>
-    </appender>
     
     <appender name="file" class="org.apache.log4j.RollingFileAppender">
 		<param name="file" value="log/adit/adit.log" />
@@ -70,8 +64,7 @@
     
     <logger name="ee.adit.dvk">
     	<level value="INFO"/>
-    	<appender-ref ref="dvk"/>
-    	<appender-ref ref="stdout" />    	
+    	<appender-ref ref="dvk"/>   	
     </logger>
     
     <logger name="ee.adit.service.MonitorService">
@@ -161,7 +154,7 @@
     
     <root>
 		<level value="error" />
-		<appender-ref ref="stdout" />
+		<appender-ref ref="file" />
 	</root>
 	
 </log4j:configuration>

@@ -13,38 +13,34 @@
 	    <version>1.0.0</version>
 	</parent>
 
-	<properties>
-		<baseDir>${projectBaseDir}/adit-war</baseDir>
-	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>ee.webmedia</groupId>
 			<artifactId>xtee-server</artifactId>
 			<version>1.0</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}/lib/xtee-server-1.0-RC1.jar</systemPath>
+			<systemPath>${basedir}/lib/xtee-server-1.0-RC1.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>ee.webmedia</groupId>
 			<artifactId>xtee-client</artifactId>
 			<version>1.0</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}/lib/xtee-client-1.0-RC1.jar</systemPath>
+			<systemPath>${basedir}/lib/xtee-client-1.0-RC1.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>ee.ria</groupId>
 			<artifactId>teavituskalender-types</artifactId>
 			<version>1.0</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}/lib/teavituskalender-types.jar</systemPath>
+			<systemPath>${basedir}/lib/teavituskalender-types.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>ee.ria</groupId>
 			<artifactId>riigiportaal-types</artifactId>
 			<version>1.0</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}/lib/riigiportaal-types.jar</systemPath>
+			<systemPath>${basedir}/lib/riigiportaal-types.jar</systemPath>
 		</dependency>
 
 		<!-- Spring -->
@@ -53,21 +49,21 @@
 			<artifactId>ws</artifactId>
 			<version>1.5.9</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}/lib/spring-ws-1.5.9-all.jar</systemPath>
+			<systemPath>${basedir}/lib/spring-ws-1.5.9-all.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring</artifactId>
 			<version>3.0.2</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}/lib/spring.jar</systemPath>
+			<systemPath>${basedir}/lib/spring.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>servlet</artifactId>
 			<version>2.5.6</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}/lib/spring-webmvc.jar</systemPath>
+			<systemPath>${basedir}/lib/spring-webmvc.jar</systemPath>
 		</dependency>
 
 
@@ -77,14 +73,14 @@
 			<artifactId>castor</artifactId>
 			<version>1.3.1</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}/lib/castor-1.3.1.jar</systemPath>
+			<systemPath>${basedir}/lib/castor-1.3.1.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>org.castor</groupId>
 			<artifactId>core</artifactId>
 			<version>1.3.1</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}/lib/castor-1.3.1-core.jar</systemPath>
+			<systemPath>${basedir}/lib/castor-1.3.1-core.jar</systemPath>
 		</dependency>
 
 
@@ -94,14 +90,14 @@
 			<artifactId>wsdl4j</artifactId>
 			<version>1.6.1</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}/lib/wsdl4j-1.6.1.jar</systemPath>
+			<systemPath>${basedir}/lib/wsdl4j-1.6.1.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>java</groupId>
 			<artifactId>wsdl4j-qname</artifactId>
 			<version>1.6.1</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}/lib/wsdl4j-qname-1.6.1.jar</systemPath>
+			<systemPath>${basedir}/lib/wsdl4j-qname-1.6.1.jar</systemPath>
 		</dependency>
 
 		<!-- Logging -->
@@ -110,35 +106,35 @@
 			<artifactId>log4j</artifactId>
 			<version>1.2.16</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}/lib/log4j-1.2.16.jar</systemPath>
+			<systemPath>${basedir}/lib/log4j-1.2.16.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>org.apache</groupId>
 			<artifactId>log4j.nagios</artifactId>
 			<version>1.5.1</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}/lib/NagiosAppender-1.5.1.jar</systemPath>
+			<systemPath>${basedir}/lib/NagiosAppender-1.5.1.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>org.apache</groupId>
 			<artifactId>commons-logging</artifactId>
 			<version>1.1.1</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}/lib/commons-logging-1.1.1.jar</systemPath>
+			<systemPath>${basedir}/lib/commons-logging-1.1.1.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>slf4j</groupId>
 			<artifactId>log4j</artifactId>
 			<version>1.6.0</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}/lib/slf4j-log4j12-1.5.8.jar</systemPath>
+			<systemPath>${basedir}/lib/slf4j-log4j12-1.5.8.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>java</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>1.5.10</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}/lib/slf4j-api-1.5.8.jar</systemPath>
+			<systemPath>${basedir}/lib/slf4j-api-1.5.8.jar</systemPath>
 		</dependency>
 
 		<!-- Hibernate -->
@@ -147,42 +143,42 @@
 			<artifactId>antlr</artifactId>
 			<version>2.7.6</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}/lib/antlr-2.7.6.jar</systemPath>
+			<systemPath>${basedir}/lib/antlr-2.7.6.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>java</groupId>
 			<artifactId>commons-collections</artifactId>
 			<version>3.1</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}/lib/commons-collections-3.1.jar</systemPath>
+			<systemPath>${basedir}/lib/commons-collections-3.1.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>java</groupId>
 			<artifactId>dom4j</artifactId>
 			<version>1.6.1</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}/lib/dom4j-1.6.1.jar</systemPath>
+			<systemPath>${basedir}/lib/dom4j-1.6.1.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>java</groupId>
 			<artifactId>hibernate3</artifactId>
 			<version>1.6.1</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}/lib/hibernate3.jar</systemPath>
+			<systemPath>${basedir}/lib/hibernate3.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>java</groupId>
 			<artifactId>javassist</artifactId>
 			<version>3.9.0.GA</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}/lib/javassist-3.9.0.GA.jar</systemPath>
+			<systemPath>${basedir}/lib/javassist-3.9.0.GA.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>java</groupId>
 			<artifactId>jta</artifactId>
 			<version>1.1</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}/lib/jta-1.1.jar</systemPath>
+			<systemPath>${basedir}/lib/jta-1.1.jar</systemPath>
 		</dependency>
 
 
@@ -192,7 +188,7 @@
 			<artifactId>ojdbc</artifactId>
 			<version>1.6</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}/lib/ojdbc6.jar</systemPath>
+			<systemPath>${basedir}/lib/ojdbc6.jar</systemPath>
 		</dependency>
 
 		<!-- Codec -->
@@ -201,7 +197,7 @@
 			<artifactId>codec</artifactId>
 			<version>1.4</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}/lib/commons-codec-1.4.jar</systemPath>
+			<systemPath>${basedir}/lib/commons-codec-1.4.jar</systemPath>
 		</dependency>
 
 		<!-- DigiDoc -->
@@ -210,7 +206,7 @@
 			<artifactId>DigiDocLib</artifactId>
 			<version>2.3.19</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}/lib/JDigiDoc.jar</systemPath>
+			<systemPath>${basedir}/lib/JDigiDoc.jar</systemPath>
 		</dependency>
 
 
@@ -219,7 +215,7 @@
 			<artifactId>impl</artifactId>
 			<version>2.9.1</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}/lib/xercesImpl-2.9.1.jar</systemPath>
+			<systemPath>${basedir}/lib/xercesImpl-2.9.1.jar</systemPath>
 		</dependency>
 
 
@@ -228,35 +224,35 @@
 			<artifactId>apis</artifactId>
 			<version>1.0</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}/lib/xml-apis.jar</systemPath>
+			<systemPath>${basedir}/lib/xml-apis.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>xmlbeans</groupId>
 			<artifactId>qname</artifactId>
 			<version>1.0</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}/lib/xmlbeans-qname.jar</systemPath>
+			<systemPath>${basedir}/lib/xmlbeans-qname.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>xmlParser</groupId>
 			<artifactId>apis</artifactId>
 			<version>1.0</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}/lib/xmlParserAPIs.jar</systemPath>
+			<systemPath>${basedir}/lib/xmlParserAPIs.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>xml</groupId>
 			<artifactId>sec</artifactId>
 			<version>1.0</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}/lib/xmlsec.jar</systemPath>
+			<systemPath>${basedir}/lib/xmlsec.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>xml</groupId>
 			<artifactId>tinyxmlcanonicalizer</artifactId>
 			<version>0.9.0</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}/lib/tinyxmlcanonicalizer-0.9.0.jar</systemPath>
+			<systemPath>${basedir}/lib/tinyxmlcanonicalizer-0.9.0.jar</systemPath>
 		</dependency>
 
 		<!-- XmlBeans -->
@@ -265,7 +261,7 @@
 			<artifactId>XMLBeans</artifactId>
 			<version>2.4.0</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}/lib/xbean.jar</systemPath>
+			<systemPath>${basedir}/lib/xbean.jar</systemPath>
 		</dependency>
 
 		<!-- Quartz -->
@@ -274,7 +270,7 @@
 			<artifactId>scheduler</artifactId>
 			<version>1.8.3</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}/lib/quartz-1.8.3.jar</systemPath>
+			<systemPath>${basedir}/lib/quartz-1.8.3.jar</systemPath>
 		</dependency>
 
 		<!-- DVKAPI -->
@@ -283,7 +279,7 @@
 			<artifactId>api</artifactId>
 			<version>1.0</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}/lib/dvkapi.jar</systemPath>
+			<systemPath>${basedir}/lib/dvkapi.jar</systemPath>
 		</dependency>
 
 		<!-- FOP -->
@@ -292,35 +288,35 @@
 			<artifactId>fop</artifactId>
 			<version>1.0</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}/lib/fop.jar</systemPath>
+			<systemPath>${basedir}/lib/fop.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>xmlgraphics</groupId>
 			<artifactId>commons</artifactId>
 			<version>1.4</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}/lib/xmlgraphics-commons-1.4.jar</systemPath>
+			<systemPath>${basedir}/lib/xmlgraphics-commons-1.4.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>org.apache</groupId>
 			<artifactId>avalon-framework</artifactId>
 			<version>4.2.0</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}/lib/avalon-framework-4.2.0.jar</systemPath>
+			<systemPath>${basedir}/lib/avalon-framework-4.2.0.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>org.apache</groupId>
 			<artifactId>batik</artifactId>
 			<version>1.7</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}/lib/batik-all-1.7.jar</systemPath>
+			<systemPath>${basedir}/lib/batik-all-1.7.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>org.apache</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>1.3.1</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}/lib/commons-io-1.3.1.jar</systemPath>
+			<systemPath>${basedir}/lib/commons-io-1.3.1.jar</systemPath>
 		</dependency>
 		
 		<dependency>
@@ -328,7 +324,7 @@
 			<artifactId>ee</artifactId>
 			<version>1.3.1</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}/lib/j2ee.jar</systemPath>
+			<systemPath>${basedir}/lib/j2ee.jar</systemPath>
 		</dependency>
 		
 		<!-- SAAJ 1.3.2 -->
@@ -337,14 +333,14 @@
 			<artifactId>saaj-api</artifactId>
 			<version>1.3.2</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}/lib/saaj-api.jar</systemPath>
+			<systemPath>${basedir}/lib/saaj-api.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>com.sun</groupId>
 			<artifactId>saaj-impl</artifactId>
 			<version>1.3.2</version>
 			<scope>system</scope>
-			<systemPath>${baseDir}/lib/saaj-impl.jar</systemPath>
+			<systemPath>${basedir}/lib/saaj-impl.jar</systemPath>
 		</dependency>
 		
 	</dependencies>
@@ -414,12 +410,12 @@
 			</resource>
 
 			<resource>
-				<directory>${baseDir}/sql</directory>
+				<directory>${basedir}/sql</directory>
 				<filtering>false</filtering>
 				<targetPath>../adit/sql</targetPath>
 			</resource>
 			<resource>
-				<directory>${baseDir}/lib</directory>
+				<directory>${basedir}/lib</directory>
 				<includes>
 					<include>*</include>
 				</includes>
@@ -445,7 +441,7 @@
 				<artifactId>tomcat-maven-plugin</artifactId>
 				<configuration>
 					<server>tomcat6</server>
-					<warFile>${baseDir}/target/adit.war</warFile>
+					<warFile>${basedir}/target/adit.war</warFile>
 				</configuration>
 			</plugin>
 
