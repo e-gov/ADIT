@@ -729,7 +729,7 @@ adit-war/src/main/java/ee/adit/dao/RequestLogDAO.java -text
 adit-war/src/main/java/ee/adit/dao/UsertypeDAO.java -text
 adit-war/src/main/java/ee/adit/dao/dvk/DvkDAO.java -text
 adit-war/src/main/java/ee/adit/dao/dvk/package.html -text
-adit-war/src/main/java/ee/adit/dao/package.html -text
+adit-war/src/main/java/ee/adit/dao/package-info.java -text
 adit-war/src/main/java/ee/adit/dao/pojo/AccessRestriction.java -text
 adit-war/src/main/java/ee/adit/dao/pojo/AditLog.java -text
 adit-war/src/main/java/ee/adit/dao/pojo/AditUser.java -text
