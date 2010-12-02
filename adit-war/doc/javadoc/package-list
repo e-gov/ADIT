@@ -1,0 +1,15 @@
+ee.adit.dao
+ee.adit.dao.dvk
+ee.adit.dao.pojo
+ee.adit.dvk
+ee.adit.exception
+ee.adit.pojo
+ee.adit.pojo.notification
+ee.adit.schedule
+ee.adit.service
+ee.adit.stateportal
+ee.adit.util
+ee.adit.web.controller
+ee.adit.ws.endpoint
+ee.adit.ws.endpoint.document
+ee.adit.ws.endpoint.user
