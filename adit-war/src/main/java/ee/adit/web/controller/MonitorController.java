@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 
-import ee.adit.monitor.MonitorResult;
 import ee.adit.service.MonitorService;
 import ee.adit.util.Configuration;
 import ee.adit.util.MonitorConfiguration;
+import ee.adit.util.MonitorResult;
 
 public class MonitorController extends AbstractController {
 
