@@ -40,7 +40,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "ArrayOfNotification", propOrder = {"notification" })
 public class ArrayOfNotification {
 
-    protected List<Notification> notification;
+    private List<Notification> notification;
 
     /**
      * Gets the value of the notification property.

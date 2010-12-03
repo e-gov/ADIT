@@ -50,25 +50,25 @@ import javax.xml.bind.annotation.XmlType;
 public class GetDocumentListRequest {
 
     @XmlElement(required = true)
-    protected String folder;
+    private String folder;
     @XmlElement(name = "document_types", required = true)
-    protected ArrayOfDocumentType documentTypes;
+    private ArrayOfDocumentType documentTypes;
     @XmlElement(name = "document_dvk_statuses", required = true)
-    protected ArrayOfDocumentDvkStatus documentDvkStatuses;
+    private ArrayOfDocumentDvkStatus documentDvkStatuses;
     @XmlElement(name = "document_workflow_statuses", required = true)
-    protected ArrayOfDocumentWorkflowStatus documentWorkflowStatuses;
+    private ArrayOfDocumentWorkflowStatus documentWorkflowStatuses;
     @XmlElement(name = "has_been_viewed")
-    protected Boolean hasBeenViewed;
+    private Boolean hasBeenViewed;
     @XmlElement(name = "is_deflated")
-    protected boolean isDeflated;
+    private boolean isDeflated;
     @XmlElement(name = "creator_applications", required = true)
-    protected ArrayOfCreatorApplication creatorApplications;
+    private ArrayOfCreatorApplication creatorApplications;
     @XmlElement(name = "search_phrase", required = true)
-    protected String searchPhrase;
+    private String searchPhrase;
     @XmlElement(name = "max_results", required = true)
-    protected Long maxResults;
+    private Long maxResults;
     @XmlElement(name = "start_index", required = true)
-    protected Long startIndex;
+    private Long startIndex;
 
     /**
      * Gets the value of the folder property.

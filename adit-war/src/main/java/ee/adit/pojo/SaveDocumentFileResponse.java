@@ -40,12 +40,12 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "SaveDocumentFileResponse", propOrder = {"success", "messages", "fileId", "file" })
 public class SaveDocumentFileResponse {
 
-    protected boolean success;
+    private boolean success;
     @XmlElement(required = true)
-    protected ArrayOfMessage messages;
+    private ArrayOfMessage messages;
     @XmlElement(name = "file_id", required = true)
-    protected Long fileId;
-    protected SaveDocumentFileRequestFile file;
+    private Long fileId;
+    private SaveDocumentFileRequestFile file;
 
     /**
      * Gets the value of the success property.

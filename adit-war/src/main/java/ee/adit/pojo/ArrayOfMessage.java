@@ -40,7 +40,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "ArrayOfMessage", propOrder = {"message" })
 public class ArrayOfMessage {
 
-    protected List<Message> message;
+    private List<Message> message;
 
     /**
      * Gets the value of the message property.

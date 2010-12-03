@@ -42,9 +42,9 @@ import javax.xml.bind.annotation.XmlType;
 public class GetJoinedRequest {
 
     @XmlElement(required = true)
-    protected BigInteger maxResults;
+    private BigInteger maxResults;
     @XmlElement(required = true)
-    protected BigInteger startIndex;
+    private BigInteger startIndex;
 
     /**
      * Gets the value of the maxResults property.

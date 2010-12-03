@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlType;
 public class SaveDocumentFileRequestFile {
 
     @XmlAttribute
-    protected String href;
+    private String href;
 
     public SaveDocumentFileRequestFile() {
     }

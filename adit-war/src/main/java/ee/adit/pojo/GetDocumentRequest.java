@@ -40,9 +40,9 @@ import javax.xml.bind.annotation.XmlType;
 public class GetDocumentRequest {
 
     @XmlElement(name = "document_id", required = true)
-    protected Long documentId;
+    private Long documentId;
     @XmlElement(name = "include_file_contents")
-    protected Boolean includeFileContents;
+    private Boolean includeFileContents;
 
     /**
      * Gets the value of the documentId property.

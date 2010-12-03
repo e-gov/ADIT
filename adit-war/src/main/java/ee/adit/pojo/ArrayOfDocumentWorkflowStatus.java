@@ -42,7 +42,7 @@ import javax.xml.bind.annotation.XmlType;
 public class ArrayOfDocumentWorkflowStatus {
 
     @XmlElement(name = "status_id")
-    protected List<Long> statusId;
+    private List<Long> statusId;
 
     /**
      * Gets the value of the statusId property.

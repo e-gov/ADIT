@@ -39,9 +39,9 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "MarkDocumentViewedResponse", propOrder = {"success", "messages" })
 public class MarkDocumentViewedResponse {
 
-    protected boolean success;
+    private boolean success;
     @XmlElement(required = true)
-    protected ArrayOfMessage messages;
+    private ArrayOfMessage messages;
 
     /**
      * Gets the value of the success property.

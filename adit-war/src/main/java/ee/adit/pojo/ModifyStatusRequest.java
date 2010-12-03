@@ -40,9 +40,9 @@ import javax.xml.bind.annotation.XmlType;
 public class ModifyStatusRequest {
 
     @XmlElement(name = "document_id", required = true)
-    protected Long documentId;
+    private Long documentId;
     @XmlElement(name = "document_status_id", required = true)
-    protected Long documentStatusId;
+    private Long documentStatusId;
 
     /**
      * Gets the value of the documentId property.

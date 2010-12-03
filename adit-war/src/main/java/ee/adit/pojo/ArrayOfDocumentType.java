@@ -42,7 +42,7 @@ import javax.xml.bind.annotation.XmlType;
 public class ArrayOfDocumentType {
 
     @XmlElement(name = "document_type")
-    protected List<String> documentType;
+    private List<String> documentType;
 
     /**
      * Gets the value of the documentType property.

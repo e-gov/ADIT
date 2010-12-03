@@ -40,7 +40,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "ArrayOfUserCode", propOrder = {"code" })
 public class ArrayOfUserCode {
 
-    protected List<String> code;
+    private List<String> code;
 
     /**
      * Gets the value of the code property.

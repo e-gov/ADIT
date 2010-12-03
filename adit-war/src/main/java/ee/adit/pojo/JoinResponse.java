@@ -39,9 +39,9 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "JoinResponse", propOrder = {"success", "messages" })
 public class JoinResponse {
 
-    protected Success success;
+    private Success success;
     @XmlElement(required = true)
-    protected ArrayOfMessage messages;
+    private ArrayOfMessage messages;
 
     /**
      * Gets the value of the messages property.

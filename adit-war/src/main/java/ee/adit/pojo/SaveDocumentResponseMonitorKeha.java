@@ -40,11 +40,11 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "SaveDocumentResponse", propOrder = {"success", "messages", "documentId", "document" })
 public class SaveDocumentResponseMonitorKeha {
 
-    protected boolean success;
+    private boolean success;
     @XmlElement(required = true)
-    protected ArrayOfMessageMonitor messages;
+    private ArrayOfMessageMonitor messages;
     @XmlElement(name = "document_id", required = true)
-    protected long documentId;
+    private long documentId;
 
     /**
      * Gets the value of the messages property.

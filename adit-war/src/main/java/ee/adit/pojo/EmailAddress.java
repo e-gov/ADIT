@@ -40,9 +40,9 @@ import javax.xml.bind.annotation.XmlType;
 public class EmailAddress {
 
     @XmlElement(required = true)
-    protected String address;
+    private String address;
     @XmlElement(name = "redirected_to", required = true)
-    protected String redirectedTo;
+    private String redirectedTo;
 
     /**
      * Gets the value of the address property.

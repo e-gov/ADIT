@@ -39,7 +39,7 @@ import javax.xml.bind.annotation.XmlType;
 public class GetDocumentHistoryRequest {
 
     @XmlElement(name = "document_id", required = true)
-    protected Long documentId;
+    private Long documentId;
 
     /**
      * Gets the value of the documentId property.

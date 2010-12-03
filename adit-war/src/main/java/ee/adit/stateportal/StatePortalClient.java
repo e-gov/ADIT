@@ -24,11 +24,11 @@ import ee.webmedia.xtee.client.service.StandardXTeeConsumer;
  * 
  * @author Jaak Lember, Interinx, jaak@interinx.com
  */
-public class StatePortalClient {
+public final class StatePortalClient {
     private static Logger logger = Logger.getLogger(StatePortalClient.class);
     private static final int RESULT_OK = 0;
 
-    private StatePortalClient() {}
+    private StatePortalClient() { }
     
     /**
      * Executes X-Road request "riigiportaal.tellimusteStaatus.v1" and returns

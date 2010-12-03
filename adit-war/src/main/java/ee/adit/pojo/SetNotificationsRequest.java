@@ -39,7 +39,7 @@ import javax.xml.bind.annotation.XmlType;
 public class SetNotificationsRequest {
 
     @XmlElement(required = true)
-    protected ArrayOfNotification notifications;
+    private ArrayOfNotification notifications;
 
     /**
      * Gets the value of the notifications property.

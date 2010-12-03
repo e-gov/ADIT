@@ -40,11 +40,11 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "UnShareDocumentResponse", propOrder = {"success", "messages", "recipientList" })
 public class UnShareDocumentResponse {
 
-    protected boolean success;
+    private boolean success;
     @XmlElement(required = true)
-    protected ArrayOfMessage messages;
+    private ArrayOfMessage messages;
     @XmlElement(name = "recipient_list", required = true)
-    protected ArrayOfRecipientStatus recipientList;
+    private ArrayOfRecipientStatus recipientList;
 
     /**
      * Gets the value of the success property.

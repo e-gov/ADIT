@@ -40,9 +40,9 @@ import javax.xml.bind.annotation.XmlType;
 public class UnShareDocumentRequest {
 
     @XmlElement(name = "document_id", required = true)
-    protected Long documentId;
+    private Long documentId;
     @XmlElement(name = "recipient_list", required = true)
-    protected ArrayOfUserCode recipientList;
+    private ArrayOfUserCode recipientList;
 
     /**
      * Gets the value of the documentId property.

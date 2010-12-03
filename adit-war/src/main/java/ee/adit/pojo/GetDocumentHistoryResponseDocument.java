@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlType;
 public class GetDocumentHistoryResponseDocument {
 
     @XmlAttribute
-    protected String href;
+    private String href;
 
     /**
      * Gets the value of the href property.

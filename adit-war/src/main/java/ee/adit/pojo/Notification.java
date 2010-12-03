@@ -40,8 +40,8 @@ import javax.xml.bind.annotation.XmlType;
 public class Notification {
 
     @XmlElement(required = true)
-    protected String type;
-    protected boolean active;
+    private String type;
+    private boolean active;
 
     /**
      * Gets the value of the type property.

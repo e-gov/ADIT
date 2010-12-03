@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlType;
 public class GetUserInfoRequestMonitor {
 
     @XmlElement(required = true)
-    protected GetUserInfoRequestUserListMonitor userList;
+    private GetUserInfoRequestUserListMonitor userList;
 
     /**
      * Gets the value of the userList property.

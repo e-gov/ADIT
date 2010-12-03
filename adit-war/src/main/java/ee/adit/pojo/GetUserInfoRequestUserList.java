@@ -2,7 +2,7 @@ package ee.adit.pojo;
 
 public class GetUserInfoRequestUserList {
 
-    protected String href;
+    private String href;
 
     public GetUserInfoRequestUserList() {
     }

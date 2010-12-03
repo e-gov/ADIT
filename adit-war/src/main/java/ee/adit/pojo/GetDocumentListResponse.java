@@ -48,11 +48,11 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "GetDocumentListResponse", propOrder = {"success", "messages", "documentList" })
 public class GetDocumentListResponse {
 
-    protected boolean success;
+    private boolean success;
     @XmlElement(required = true)
-    protected ArrayOfMessage messages;
+    private ArrayOfMessage messages;
     @XmlElement(name = "document_list", required = true)
-    protected GetDocumentListResponseList documentList;
+    private GetDocumentListResponseList documentList;
 
     /**
      * Gets the value of the success property.

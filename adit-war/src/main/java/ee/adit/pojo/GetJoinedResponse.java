@@ -41,11 +41,11 @@ import javax.xml.bind.annotation.XmlType;
 public class GetJoinedResponse {
 
     @XmlElement(required = true)
-    protected Success success;
+    private Success success;
     @XmlElement(required = true)
-    protected ArrayOfMessage messages;
+    private ArrayOfMessage messages;
     @XmlElement(required = true)
-    protected UserList userList;
+    private UserList userList;
 
     /**
      * Gets the value of the messages property.

@@ -43,15 +43,15 @@ import javax.xml.bind.annotation.XmlType;
         "addressList" })
 public class GetNotificationsResponse {
 
-    protected boolean success;
+    private boolean success;
     @XmlElement(required = true)
-    protected ArrayOfMessage messages;
+    private ArrayOfMessage messages;
     @XmlElement(required = true)
-    protected ArrayOfNotification notifications;
+    private ArrayOfNotification notifications;
     @XmlElement(name = "notifications_active")
-    protected Boolean notificationsActive;
+    private Boolean notificationsActive;
     @XmlElement(name = "address_list", required = true)
-    protected ArrayOfEmailAddress addressList;
+    private ArrayOfEmailAddress addressList;
 
     /**
      * Gets the value of the success property.

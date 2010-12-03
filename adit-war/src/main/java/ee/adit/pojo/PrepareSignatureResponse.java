@@ -40,11 +40,11 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "PrepareSignatureResponse", propOrder = {"success", "messages", "signatureHash" })
 public class PrepareSignatureResponse {
 
-    protected boolean success;
+    private boolean success;
     @XmlElement(required = true)
-    protected ArrayOfMessage messages;
+    private ArrayOfMessage messages;
     @XmlElement(name = "signature_hash", required = true)
-    protected String signatureHash;
+    private String signatureHash;
 
     /**
      * Gets the value of the success property.

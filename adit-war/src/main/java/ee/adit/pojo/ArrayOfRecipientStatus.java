@@ -40,7 +40,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "ArrayOfRecipientStatus", propOrder = {"recipient" })
 public class ArrayOfRecipientStatus {
 
-    protected List<RecipientStatus> recipient;
+    private List<RecipientStatus> recipient;
 
     /**
      * Gets the value of the recipient property.

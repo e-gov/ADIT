@@ -42,7 +42,7 @@ import javax.xml.bind.annotation.XmlType;
 public class ArrayOfFileId {
 
     @XmlElement(name = "file_id")
-    protected List<Long> fileId;
+    private List<Long> fileId;
 
     /**
      * Gets the value of the fileId property.

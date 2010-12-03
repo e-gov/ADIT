@@ -38,9 +38,9 @@ import javax.xml.bind.annotation.XmlValue;
 public class Message {
 
     @XmlValue
-    protected String value;
+    private String value;
     @XmlAttribute
-    protected String lang;
+    private String lang;
 
     public Message() {
     }

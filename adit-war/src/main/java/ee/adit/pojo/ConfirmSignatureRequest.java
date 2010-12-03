@@ -48,9 +48,9 @@ import javax.xml.bind.annotation.XmlType;
 public class ConfirmSignatureRequest {
 
     @XmlElement(name = "document_id", required = true)
-    protected Long documentId;
+    private Long documentId;
     @XmlElement(required = true)
-    protected ConfirmSignatureRequestSignature signature;
+    private ConfirmSignatureRequestSignature signature;
 
     /**
      * Gets the value of the documentId property.

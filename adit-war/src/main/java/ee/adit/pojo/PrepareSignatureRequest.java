@@ -45,19 +45,19 @@ import javax.xml.bind.annotation.XmlType;
 public class PrepareSignatureRequest {
 
     @XmlElement(name = "document_id", required = true)
-    protected Long documentId;
+    private Long documentId;
     @XmlElement(required = true)
-    protected String manifest;
+    private String manifest;
     @XmlElement(required = true)
-    protected String country;
+    private String country;
     @XmlElement(required = true)
-    protected String state;
+    private String state;
     @XmlElement(required = true)
-    protected String city;
+    private String city;
     @XmlElement(required = true)
-    protected String zip;
+    private String zip;
     @XmlElement(required = true)
-    protected PrepareSignatureRequestCert signerCertificate;
+    private PrepareSignatureRequestCert signerCertificate;
 
     /**
      * Gets the value of the documentId property.

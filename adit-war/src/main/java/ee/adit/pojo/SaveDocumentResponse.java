@@ -40,12 +40,12 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "SaveDocumentResponse", propOrder = {"success", "messages", "documentId", "document" })
 public class SaveDocumentResponse {
 
-    protected Success success;
+    private Success success;
     @XmlElement(required = true)
-    protected ArrayOfMessage messages;
+    private ArrayOfMessage messages;
     @XmlElement(name = "document_id", required = true)
-    protected long documentId;
-    protected SaveDocumentRequestDocument document;
+    private long documentId;
+    private SaveDocumentRequestDocument document;
 
     /**
      * Gets the value of the messages property.

@@ -2,7 +2,7 @@ package ee.adit.pojo;
 
 public class GetUserInfoRequestUserListMonitor {
 
-    protected String href;
+    private String href;
 
     public GetUserInfoRequestUserListMonitor() {
     }

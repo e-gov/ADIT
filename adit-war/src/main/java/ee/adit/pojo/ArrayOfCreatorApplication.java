@@ -42,7 +42,7 @@ import javax.xml.bind.annotation.XmlType;
 public class ArrayOfCreatorApplication {
 
     @XmlElement(name = "creator_application")
-    protected List<String> creatorApplication;
+    private List<String> creatorApplication;
 
     /**
      * Gets the value of the creatorApplication property.

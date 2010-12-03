@@ -43,13 +43,13 @@ import javax.xml.bind.annotation.XmlType;
 public class ShareDocumentRequest {
 
     @XmlElement(name = "document_id", required = true)
-    protected Long documentId;
+    private Long documentId;
     @XmlElement(name = "recipient_list", required = true)
-    protected ArrayOfUserCode recipientList;
+    private ArrayOfUserCode recipientList;
     @XmlElement(name = "reason_for_sharing")
-    protected String reasonForSharing;
+    private String reasonForSharing;
     @XmlElement(name = "shared_for_signing")
-    protected Boolean sharedForSigning;
+    private Boolean sharedForSigning;
 
     /**
      * Gets the value of the documentId property.

@@ -2,19 +2,19 @@ package ee.adit.pojo;
 
 public class GetUserInfoResponseAttachmentUser {
 
-    String userCode;
+    private String userCode;
 
-    boolean hasJoined;
+    private boolean hasJoined;
 
-    Long freeSpace;
+    private Long freeSpace;
 
-    Long usedSpace;
+    private Long usedSpace;
 
-    boolean canRead;
+    private boolean canRead;
 
-    boolean canWrite;
+    private boolean canWrite;
 
-    boolean usesDVK;
+    private boolean usesDVK;
 
     public String getUserCode() {
         return userCode;

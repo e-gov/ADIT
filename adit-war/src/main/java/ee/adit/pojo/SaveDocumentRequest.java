@@ -47,7 +47,7 @@ import javax.xml.bind.annotation.XmlType;
 public class SaveDocumentRequest {
 
     @XmlElement(required = true)
-    protected SaveDocumentRequestDocument document;
+    private SaveDocumentRequestDocument document;
 
     /**
      * Gets the value of the document property.

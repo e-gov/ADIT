@@ -12,7 +12,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "ListMethodsResponse", propOrder = {"item" })
 public class ListMethodsResponse {
     @XmlElement(name = "item")
-    protected List<String> item;
+    private List<String> item;
 
     public List<String> getItem() {
         if (item == null) {

@@ -32,9 +32,9 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "DeflateDocumentResponse", propOrder = {"success", "messages" })
 public class DeflateDocumentResponse {
 
-    protected Success success;
+    private Success success;
     @XmlElement(required = true)
-    protected ArrayOfMessage messages;
+    private ArrayOfMessage messages;
 
     /**
      * Gets the value of the messages property.

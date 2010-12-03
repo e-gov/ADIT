@@ -22,7 +22,7 @@ package ee.adit.pojo;
  */
 public class SaveDocumentRequestDocumentMonitor {
 
-    protected String href;
+    private String href;
 
     public SaveDocumentRequestDocumentMonitor() {
     }

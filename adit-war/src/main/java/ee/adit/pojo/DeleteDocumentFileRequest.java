@@ -33,9 +33,9 @@ import javax.xml.bind.annotation.XmlType;
 public class DeleteDocumentFileRequest {
 
     @XmlElement(name = "document_id", required = true)
-    protected long documentId;
+    private long documentId;
     @XmlElement(name = "file_id", required = true)
-    protected long fileId;
+    private long fileId;
 
     /**
      * Gets the value of the documentId property.

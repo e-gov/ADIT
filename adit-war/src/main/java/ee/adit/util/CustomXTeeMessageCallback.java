@@ -21,7 +21,7 @@ public class CustomXTeeMessageCallback implements WebServiceMessageCallback {
 
     private static Logger logger = Logger.getLogger(CustomXTeeMessageCallback.class);
 
-    protected Random random = new Random(System.currentTimeMillis());
+    private Random random = new Random(System.currentTimeMillis());
 
     private CustomXTeeServiceConfiguration serviceConfigurator;
     private Collection<XTeeAttachment> attachments;

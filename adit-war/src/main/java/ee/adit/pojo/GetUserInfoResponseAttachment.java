@@ -4,7 +4,7 @@ import java.util.List;
 
 public class GetUserInfoResponseAttachment {
 
-    List<GetUserInfoResponseAttachmentUser> userList;
+    private List<GetUserInfoResponseAttachmentUser> userList;
 
     public List<GetUserInfoResponseAttachmentUser> getUserList() {
         return userList;

@@ -42,7 +42,7 @@ import javax.xml.bind.annotation.XmlType;
 public class ArrayOfEmailAddress {
 
     @XmlElement(name = "email_address")
-    protected List<EmailAddress> emailAddress;
+    private List<EmailAddress> emailAddress;
 
     /**
      * Gets the value of the emailAddress property.

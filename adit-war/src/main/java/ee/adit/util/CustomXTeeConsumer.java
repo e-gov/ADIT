@@ -17,8 +17,8 @@ public class CustomXTeeConsumer {
 
     private static Logger logger = Logger.getLogger(CustomXTeeConsumer.class);
 
-    protected WebServiceTemplate webServiceTemplate;
-    protected CustomMessageCallbackFactory msgCallbackFactory;
+    private WebServiceTemplate webServiceTemplate;
+    private CustomMessageCallbackFactory msgCallbackFactory;
     private XTeeServiceConfiguration serviceConfiguration;
 
     /**

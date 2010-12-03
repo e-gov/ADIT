@@ -41,9 +41,9 @@ import javax.xml.bind.annotation.XmlType;
 public class JoinRequest {
 
     @XmlElement(required = true)
-    protected String userType;
+    private String userType;
     @XmlElement(required = true)
-    protected String userName;
+    private String userName;
 
     /**
      * Gets the value of the userType property.

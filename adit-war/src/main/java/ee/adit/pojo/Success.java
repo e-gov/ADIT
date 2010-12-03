@@ -2,7 +2,7 @@ package ee.adit.pojo;
 
 public class Success {
 
-    boolean success;
+    private boolean success;
     
     public Success(boolean success) {
         this.success = success;

@@ -48,9 +48,9 @@ import javax.xml.bind.annotation.XmlType;
 public class SaveDocumentFileRequest {
 
     @XmlElement(name = "document_id", required = true)
-    protected Long documentId;
+    private Long documentId;
     @XmlElement(required = true)
-    protected SaveDocumentFileRequestFile file;
+    private SaveDocumentFileRequestFile file;
 
     /**
      * Gets the value of the documentId property.

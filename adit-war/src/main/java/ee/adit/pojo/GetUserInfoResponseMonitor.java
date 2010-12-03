@@ -41,11 +41,11 @@ import javax.xml.bind.annotation.XmlType;
 public class GetUserInfoResponseMonitor {
 
     @XmlElement(required = true)
-    protected boolean success;
+    private boolean success;
     @XmlElement(required = true)
-    protected ArrayOfMessageMonitor messages;
+    private ArrayOfMessageMonitor messages;
     @XmlElement(required = true)
-    protected UserList userList;
+    private UserList userList;
 
     /**
      * Gets the value of the messages property.

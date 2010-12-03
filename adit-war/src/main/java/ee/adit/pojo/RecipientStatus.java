@@ -41,10 +41,10 @@ import javax.xml.bind.annotation.XmlType;
 public class RecipientStatus {
 
     @XmlElement(required = true)
-    protected String code;
-    protected boolean success;
+    private String code;
+    private boolean success;
     @XmlElement(required = true)
-    protected ArrayOfMessage messages;
+    private ArrayOfMessage messages;
 
     /**
      * Gets the value of the code property.

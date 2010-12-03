@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.XmlType;
 public class DeflateDocumentRequest {
 
     @XmlElement(name = "document_id", required = true)
-    protected long documentId;
+    private long documentId;
 
     /**
      * Gets the value of the documentId property.

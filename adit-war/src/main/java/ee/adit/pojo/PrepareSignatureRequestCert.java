@@ -1,7 +1,7 @@
 package ee.adit.pojo;
 
 public class PrepareSignatureRequestCert {
-    protected String href;
+    private String href;
 
     /**
      * Gets the value of the href property.
