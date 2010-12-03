@@ -4,64 +4,64 @@ import java.util.List;
 
 public class SaveDocumentRequestAttachment {
 
-	private Long id;
-	
-	private String guid;
-	
-	private String title;
-	
-	private String documentType;
-	
-	private Long previousDocumentID;
-	
-	private List<OutputDocumentFile> files;
+    private Long id;
 
-	public Long getId() {
-		return id;
-	}
+    private String guid;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    private String title;
 
-	public String getGuid() {
-		return guid;
-	}
+    private String documentType;
 
-	public void setGuid(String guid) {
-		this.guid = guid;
-	}
+    private Long previousDocumentID;
 
-	public String getTitle() {
-		return title;
-	}
+    private List<OutputDocumentFile> files;
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public List<OutputDocumentFile> getFiles() {
-		return files;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setFiles(List<OutputDocumentFile> files) {
-		this.files = files;
-	}
+    public String getGuid() {
+        return guid;
+    }
 
-	public String getDocumentType() {
-		return documentType;
-	}
+    public void setGuid(String guid) {
+        this.guid = guid;
+    }
 
-	public void setDocumentType(String documentType) {
-		this.documentType = documentType;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public Long getPreviousDocumentID() {
-		return previousDocumentID;
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	public void setPreviousDocumentID(Long previousDocumentID) {
-		this.previousDocumentID = previousDocumentID;
-	}
-	
+    public List<OutputDocumentFile> getFiles() {
+        return files;
+    }
+
+    public void setFiles(List<OutputDocumentFile> files) {
+        this.files = files;
+    }
+
+    public String getDocumentType() {
+        return documentType;
+    }
+
+    public void setDocumentType(String documentType) {
+        this.documentType = documentType;
+    }
+
+    public Long getPreviousDocumentID() {
+        return previousDocumentID;
+    }
+
+    public void setPreviousDocumentID(Long previousDocumentID) {
+        this.previousDocumentID = previousDocumentID;
+    }
+
 }

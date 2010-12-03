@@ -1,16 +1,17 @@
 package ee.adit.pojo;
 
-import java.math.BigInteger;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
 /**
- * <p>Java class for DeflateDocumentRequest complex type.
+ * <p>
+ * Java class for DeflateDocumentRequest complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  * 
  * <pre>
  * &lt;complexType name="DeflateDocumentRequest">
@@ -27,19 +28,17 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "DeflateDocumentRequest", propOrder = {"documentId"})
+@XmlType(name = "DeflateDocumentRequest", propOrder = {"documentId" })
 public class DeflateDocumentRequest {
 
     @XmlElement(name = "document_id", required = true)
     protected long documentId;
-    
+
     /**
      * Gets the value of the documentId property.
      * 
-     * @return
-     *     possible object is
-     *     {@link BigInteger }
-     *     
+     * @return document id
+     * 
      */
     public long getDocumentId() {
         return documentId;
@@ -49,9 +48,8 @@ public class DeflateDocumentRequest {
      * Sets the value of the documentId property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link BigInteger }
-     *     
+     *            document id
+     * 
      */
     public void setDocumentId(long value) {
         this.documentId = value;

@@ -2,22 +2,18 @@ package ee.adit.pojo;
 
 public class Success {
 
-	boolean success;
+    boolean success;
+    
+    public Success(boolean success) {
+        this.success = success;
+    }
 
-	public Success() {
-		;
-	}
-	
-	public Success(boolean success) {
-		this.success = success;
-	}
-	
-	public boolean isSuccess() {
-		return success;
-	}
+    public boolean isSuccess() {
+        return success;
+    }
 
-	public void setSuccess(boolean success) {
-		this.success = success;
-	}
-	
+    public void setSuccess(boolean success) {
+        this.success = success;
+    }
+
 }

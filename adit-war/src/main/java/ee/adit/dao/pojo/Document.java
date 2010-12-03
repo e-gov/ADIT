@@ -12,296 +12,293 @@ import java.util.Set;
  */
 public class Document implements java.io.Serializable {
 
-	private static final long serialVersionUID = -4634603111062567273L;
-	private long id;
-	private String documentType;
-	private Document document;
-	private String guid;
-	private String title;
-	private String creatorCode;
-	private String creatorName;
-	private String creatorUserCode;
-	private String creatorUserName;
-	private Date creationDate;
-	private String remoteApplication;
-	private Date lastModifiedDate;
-	private Long documentDvkStatusId;
-	private Long dvkId;
-	private Long documentWfStatusId;
-	private Boolean locked;
-	private Date lockingDate;
-	private Boolean signable;
-	private Boolean deflated;
-	private Date deflateDate;
-	private Boolean deleted;
-	private Blob signatureContainer;
-	private Set documents = new HashSet(0);
-	private Set documentFiles = new HashSet(0);
-	private Set signatures = new HashSet(0);
-	private Set documentHistories = new HashSet(0);
-	private Set documentSharings = new HashSet(0);
+    private static final long serialVersionUID = -4634603111062567273L;
+    private long id;
+    private String documentType;
+    private Document document;
+    private String guid;
+    private String title;
+    private String creatorCode;
+    private String creatorName;
+    private String creatorUserCode;
+    private String creatorUserName;
+    private Date creationDate;
+    private String remoteApplication;
+    private Date lastModifiedDate;
+    private Long documentDvkStatusId;
+    private Long dvkId;
+    private Long documentWfStatusId;
+    private Boolean locked;
+    private Date lockingDate;
+    private Boolean signable;
+    private Boolean deflated;
+    private Date deflateDate;
+    private Boolean deleted;
+    private Blob signatureContainer;
+    private Set<Document> documents = new HashSet<Document>(0);
+    private Set<DocumentFile> documentFiles = new HashSet<DocumentFile>(0);
+    private Set<Signature> signatures = new HashSet<Signature>(0);
+    private Set<DocumentHistory> documentHistories = new HashSet<DocumentHistory>(0);
+    private Set<DocumentSharing> documentSharings = new HashSet<DocumentSharing>(0);
 
-	public Document() {
-	}
+    public Document() {
+    }
 
-	public Document(long id, String documentType, String creatorCode, String creatorUserCode) {
-		this.id = id;
-		this.documentType = documentType;
-		this.creatorCode = creatorCode;
-		this.creatorUserCode = creatorUserCode;
-	}
+    public Document(long id, String documentType, String creatorCode, String creatorUserCode) {
+        this.id = id;
+        this.documentType = documentType;
+        this.creatorCode = creatorCode;
+        this.creatorUserCode = creatorUserCode;
+    }
 
-	public Document(long id, String documentType, Document document,
-			String guid, String title, String creatorCode, String creatorName,
-			String creatorUserCode, String creatorUserName, Date creationDate,
-			String remoteApplication, Date lastModifiedDate,
-			Long documentDvkStatusId, Long dvkId, Long documentWfStatusId,
-			Boolean locked, Date lockingDate, Boolean signable,
-			Boolean deflated, Date deflateDate, Boolean deleted, Blob signatureContainer,
-			Set documents, Set documentFiles, Set signatures,
-			Set documentHistories, Set documentSharings) {
-		this.id = id;
-		this.documentType = documentType;
-		this.document = document;
-		this.guid = guid;
-		this.title = title;
-		this.creatorCode = creatorCode;
-		this.creatorName = creatorName;
-		this.creatorUserCode = creatorUserCode;
-		this.creatorUserName = creatorUserName;
-		this.creationDate = creationDate;
-		this.remoteApplication = remoteApplication;
-		this.lastModifiedDate = lastModifiedDate;
-		this.documentDvkStatusId = documentDvkStatusId;
-		this.dvkId = dvkId;
-		this.documentWfStatusId = documentWfStatusId;
-		this.locked = locked;
-		this.lockingDate = lockingDate;
-		this.signable = signable;
-		this.deflated = deflated;
-		this.deflateDate = deflateDate;
-		this.deleted = deleted;
-		this.signatureContainer = signatureContainer;
-		this.documents = documents;
-		this.documentFiles = documentFiles;
-		this.signatures = signatures;
-		this.documentHistories = documentHistories;
-		this.documentSharings = documentSharings;
-	}
+    public Document(long id, String documentType, Document document, String guid, String title, String creatorCode,
+            String creatorName, String creatorUserCode, String creatorUserName, Date creationDate,
+            String remoteApplication, Date lastModifiedDate, Long documentDvkStatusId, Long dvkId,
+            Long documentWfStatusId, Boolean locked, Date lockingDate, Boolean signable, Boolean deflated,
+            Date deflateDate, Boolean deleted, Blob signatureContainer, Set<Document> documents, Set<DocumentFile> documentFiles,
+            Set<Signature> signatures, Set<DocumentHistory> documentHistories, Set<DocumentSharing> documentSharings) {
+        this.id = id;
+        this.documentType = documentType;
+        this.document = document;
+        this.guid = guid;
+        this.title = title;
+        this.creatorCode = creatorCode;
+        this.creatorName = creatorName;
+        this.creatorUserCode = creatorUserCode;
+        this.creatorUserName = creatorUserName;
+        this.creationDate = creationDate;
+        this.remoteApplication = remoteApplication;
+        this.lastModifiedDate = lastModifiedDate;
+        this.documentDvkStatusId = documentDvkStatusId;
+        this.dvkId = dvkId;
+        this.documentWfStatusId = documentWfStatusId;
+        this.locked = locked;
+        this.lockingDate = lockingDate;
+        this.signable = signable;
+        this.deflated = deflated;
+        this.deflateDate = deflateDate;
+        this.deleted = deleted;
+        this.signatureContainer = signatureContainer;
+        this.documents = documents;
+        this.documentFiles = documentFiles;
+        this.signatures = signatures;
+        this.documentHistories = documentHistories;
+        this.documentSharings = documentSharings;
+    }
 
-	public long getId() {
-		return this.id;
-	}
+    public long getId() {
+        return this.id;
+    }
 
-	public void setId(long id) {
-		this.id = id;
-	}
+    public void setId(long id) {
+        this.id = id;
+    }
 
-	public String getDocumentType() {
-		return this.documentType;
-	}
+    public String getDocumentType() {
+        return this.documentType;
+    }
 
-	public void setDocumentType(String documentType) {
-		this.documentType = documentType;
-	}
+    public void setDocumentType(String documentType) {
+        this.documentType = documentType;
+    }
 
-	public Document getDocument() {
-		return this.document;
-	}
+    public Document getDocument() {
+        return this.document;
+    }
 
-	public void setDocument(Document document) {
-		this.document = document;
-	}
+    public void setDocument(Document document) {
+        this.document = document;
+    }
 
-	public String getGuid() {
-		return this.guid;
-	}
+    public String getGuid() {
+        return this.guid;
+    }
 
-	public void setGuid(String guid) {
-		this.guid = guid;
-	}
+    public void setGuid(String guid) {
+        this.guid = guid;
+    }
 
-	public String getTitle() {
-		return this.title;
-	}
+    public String getTitle() {
+        return this.title;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	public String getCreatorCode() {
-		return this.creatorCode;
-	}
+    public String getCreatorCode() {
+        return this.creatorCode;
+    }
 
-	public void setCreatorCode(String creatorCode) {
-		this.creatorCode = creatorCode;
-	}
-	
-	public String getCreatorName() {
-		return this.creatorName;
-	}
+    public void setCreatorCode(String creatorCode) {
+        this.creatorCode = creatorCode;
+    }
 
-	public void setCreatorName(String creatorName) {
-		this.creatorName = creatorName;
-	}
+    public String getCreatorName() {
+        return this.creatorName;
+    }
 
-	public String getCreatorUserCode() {
-		return creatorUserCode;
-	}
+    public void setCreatorName(String creatorName) {
+        this.creatorName = creatorName;
+    }
 
-	public void setCreatorUserCode(String creatorUserCode) {
-		this.creatorUserCode = creatorUserCode;
-	}
+    public String getCreatorUserCode() {
+        return creatorUserCode;
+    }
 
-	public String getCreatorUserName() {
-		return creatorUserName;
-	}
+    public void setCreatorUserCode(String creatorUserCode) {
+        this.creatorUserCode = creatorUserCode;
+    }
 
-	public void setCreatorUserName(String creatorUserName) {
-		this.creatorUserName = creatorUserName;
-	}
+    public String getCreatorUserName() {
+        return creatorUserName;
+    }
 
-	public Date getCreationDate() {
-		return this.creationDate;
-	}
+    public void setCreatorUserName(String creatorUserName) {
+        this.creatorUserName = creatorUserName;
+    }
 
-	public void setCreationDate(Date creationDate) {
-		this.creationDate = creationDate;
-	}
+    public Date getCreationDate() {
+        return this.creationDate;
+    }
 
-	public String getRemoteApplication() {
-		return this.remoteApplication;
-	}
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
 
-	public void setRemoteApplication(String remoteApplication) {
-		this.remoteApplication = remoteApplication;
-	}
+    public String getRemoteApplication() {
+        return this.remoteApplication;
+    }
 
-	public Date getLastModifiedDate() {
-		return this.lastModifiedDate;
-	}
+    public void setRemoteApplication(String remoteApplication) {
+        this.remoteApplication = remoteApplication;
+    }
 
-	public void setLastModifiedDate(Date lastModifiedDate) {
-		this.lastModifiedDate = lastModifiedDate;
-	}
+    public Date getLastModifiedDate() {
+        return this.lastModifiedDate;
+    }
 
-	public Long getDocumentDvkStatusId() {
-		return this.documentDvkStatusId;
-	}
+    public void setLastModifiedDate(Date lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
 
-	public void setDocumentDvkStatusId(Long documentDvkStatusId) {
-		this.documentDvkStatusId = documentDvkStatusId;
-	}
+    public Long getDocumentDvkStatusId() {
+        return this.documentDvkStatusId;
+    }
 
-	public Long getDvkId() {
-		return this.dvkId;
-	}
+    public void setDocumentDvkStatusId(Long documentDvkStatusId) {
+        this.documentDvkStatusId = documentDvkStatusId;
+    }
 
-	public void setDvkId(Long dvkId) {
-		this.dvkId = dvkId;
-	}
+    public Long getDvkId() {
+        return this.dvkId;
+    }
 
-	public Long getDocumentWfStatusId() {
-		return this.documentWfStatusId;
-	}
+    public void setDvkId(Long dvkId) {
+        this.dvkId = dvkId;
+    }
 
-	public void setDocumentWfStatusId(Long documentWfStatusId) {
-		this.documentWfStatusId = documentWfStatusId;
-	}
+    public Long getDocumentWfStatusId() {
+        return this.documentWfStatusId;
+    }
 
-	public Boolean getLocked() {
-		return this.locked;
-	}
+    public void setDocumentWfStatusId(Long documentWfStatusId) {
+        this.documentWfStatusId = documentWfStatusId;
+    }
 
-	public void setLocked(Boolean locked) {
-		this.locked = locked;
-	}
+    public Boolean getLocked() {
+        return this.locked;
+    }
 
-	public Date getLockingDate() {
-		return this.lockingDate;
-	}
+    public void setLocked(Boolean locked) {
+        this.locked = locked;
+    }
 
-	public void setLockingDate(Date lockingDate) {
-		this.lockingDate = lockingDate;
-	}
+    public Date getLockingDate() {
+        return this.lockingDate;
+    }
 
-	public Boolean getSignable() {
-		return this.signable;
-	}
+    public void setLockingDate(Date lockingDate) {
+        this.lockingDate = lockingDate;
+    }
 
-	public void setSignable(Boolean signable) {
-		this.signable = signable;
-	}
+    public Boolean getSignable() {
+        return this.signable;
+    }
 
-	public Boolean getDeflated() {
-		return this.deflated;
-	}
+    public void setSignable(Boolean signable) {
+        this.signable = signable;
+    }
 
-	public void setDeflated(Boolean deflated) {
-		this.deflated = deflated;
-	}
+    public Boolean getDeflated() {
+        return this.deflated;
+    }
 
-	public Date getDeflateDate() {
-		return this.deflateDate;
-	}
+    public void setDeflated(Boolean deflated) {
+        this.deflated = deflated;
+    }
 
-	public void setDeflateDate(Date deflateDate) {
-		this.deflateDate = deflateDate;
-	}
+    public Date getDeflateDate() {
+        return this.deflateDate;
+    }
 
-	public Boolean getDeleted() {
-		return this.deleted;
-	}
+    public void setDeflateDate(Date deflateDate) {
+        this.deflateDate = deflateDate;
+    }
 
-	public void setDeleted(Boolean deleted) {
-		this.deleted = deleted;
-	}
+    public Boolean getDeleted() {
+        return this.deleted;
+    }
 
-	public Blob getSignatureContainer() {
-		return this.signatureContainer;
-	}
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
 
-	public void setSignatureContainer(Blob signatureContainer) {
-		this.signatureContainer = signatureContainer;
-	}
-	
-	public Set getDocuments() {
-		return this.documents;
-	}
+    public Blob getSignatureContainer() {
+        return this.signatureContainer;
+    }
 
-	public void setDocuments(Set documents) {
-		this.documents = documents;
-	}
+    public void setSignatureContainer(Blob signatureContainer) {
+        this.signatureContainer = signatureContainer;
+    }
 
-	public Set getDocumentFiles() {
-		return this.documentFiles;
-	}
+    public Set<Document> getDocuments() {
+        return this.documents;
+    }
 
-	public void setDocumentFiles(Set documentFiles) {
-		this.documentFiles = documentFiles;
-	}
+    public void setDocuments(Set<Document> documents) {
+        this.documents = documents;
+    }
 
-	public Set getSignatures() {
-		return this.signatures;
-	}
+    public Set<DocumentFile> getDocumentFiles() {
+        return this.documentFiles;
+    }
 
-	public void setSignatures(Set signatures) {
-		this.signatures = signatures;
-	}
+    public void setDocumentFiles(Set<DocumentFile> documentFiles) {
+        this.documentFiles = documentFiles;
+    }
 
-	public Set getDocumentHistories() {
-		return this.documentHistories;
-	}
+    public Set<Signature> getSignatures() {
+        return this.signatures;
+    }
 
-	public void setDocumentHistories(Set documentHistories) {
-		this.documentHistories = documentHistories;
-	}
+    public void setSignatures(Set<Signature> signatures) {
+        this.signatures = signatures;
+    }
 
-	public Set getDocumentSharings() {
-		return this.documentSharings;
-	}
+    public Set<DocumentHistory> getDocumentHistories() {
+        return this.documentHistories;
+    }
 
-	public void setDocumentSharings(Set documentSharings) {
-		this.documentSharings = documentSharings;
-	}
+    public void setDocumentHistories(Set<DocumentHistory> documentHistories) {
+        this.documentHistories = documentHistories;
+    }
+
+    public Set<DocumentSharing> getDocumentSharings() {
+        return this.documentSharings;
+    }
+
+    public void setDocumentSharings(Set<DocumentSharing> documentSharings) {
+        this.documentSharings = documentSharings;
+    }
 }

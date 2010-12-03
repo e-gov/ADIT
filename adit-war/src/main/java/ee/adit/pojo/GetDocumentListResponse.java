@@ -5,7 +5,6 @@
 // Generated on: 2010.07.09 at 04:42:08 PM EEST 
 //
 
-
 package ee.adit.pojo;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -13,11 +12,13 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for GetDocumentListResponse complex type.
+ * <p>
+ * Java class for GetDocumentListResponse complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  * 
  * <pre>
  * &lt;complexType name="GetDocumentListResponse">
@@ -44,11 +45,7 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "GetDocumentListResponse", propOrder = {
-    "success",
-    "messages",
-    "documentList"
-})
+@XmlType(name = "GetDocumentListResponse", propOrder = {"success", "messages", "documentList" })
 public class GetDocumentListResponse {
 
     protected boolean success;
@@ -76,10 +73,8 @@ public class GetDocumentListResponse {
     /**
      * Gets the value of the messages property.
      * 
-     * @return
-     *     possible object is
-     *     {@link ArrayOfMessage }
-     *     
+     * @return possible object is {@link ArrayOfMessage }
+     * 
      */
     public ArrayOfMessage getMessages() {
         return messages;
@@ -89,9 +84,8 @@ public class GetDocumentListResponse {
      * Sets the value of the messages property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link ArrayOfMessage }
-     *     
+     *            allowed object is {@link ArrayOfMessage }
+     * 
      */
     public void setMessages(ArrayOfMessage value) {
         this.messages = value;
@@ -100,10 +94,8 @@ public class GetDocumentListResponse {
     /**
      * Gets the value of the documentList property.
      * 
-     * @return
-     *     possible object is
-     *     {@link GetDocumentListResponseList }
-     *     
+     * @return possible object is {@link GetDocumentListResponseList }
+     * 
      */
     public GetDocumentListResponseList getDocumentList() {
         return documentList;
@@ -113,9 +105,8 @@ public class GetDocumentListResponse {
      * Sets the value of the documentList property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link GetDocumentListResponseList }
-     *     
+     *            allowed object is {@link GetDocumentListResponseList }
+     * 
      */
     public void setDocumentList(GetDocumentListResponseList value) {
         this.documentList = value;

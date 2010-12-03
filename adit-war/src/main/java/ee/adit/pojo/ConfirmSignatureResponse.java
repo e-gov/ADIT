@@ -5,7 +5,6 @@
 // Generated on: 2010.07.15 at 11:00:45 AM EEST 
 //
 
-
 package ee.adit.pojo;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -13,11 +12,13 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for ConfirmSignatureResponse complex type.
+ * <p>
+ * Java class for ConfirmSignatureResponse complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  * 
  * <pre>
  * &lt;complexType name="ConfirmSignatureResponse">
@@ -35,10 +36,7 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "ConfirmSignatureResponse", propOrder = {
-    "success",
-    "messages"
-})
+@XmlType(name = "ConfirmSignatureResponse", propOrder = {"success", "messages" })
 public class ConfirmSignatureResponse {
 
     protected boolean success;
@@ -64,10 +62,8 @@ public class ConfirmSignatureResponse {
     /**
      * Gets the value of the messages property.
      * 
-     * @return
-     *     possible object is
-     *     {@link ArrayOfMessage }
-     *     
+     * @return possible object is {@link ArrayOfMessage }
+     * 
      */
     public ArrayOfMessage getMessages() {
         return messages;
@@ -77,9 +73,8 @@ public class ConfirmSignatureResponse {
      * Sets the value of the messages property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link ArrayOfMessage }
-     *     
+     *            allowed object is {@link ArrayOfMessage }
+     * 
      */
     public void setMessages(ArrayOfMessage value) {
         this.messages = value;

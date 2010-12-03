@@ -5,7 +5,6 @@
 // Generated on: 2010.07.07 at 10:40:05 AM EEST 
 //
 
-
 package ee.adit.pojo;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -13,11 +12,13 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for GetDocumentResponse complex type.
+ * <p>
+ * Java class for GetDocumentResponse complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  * 
  * <pre>
  * &lt;complexType name="GetDocumentResponse">
@@ -44,11 +45,7 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "GetDocumentResponse", propOrder = {
-    "success",
-    "messages",
-    "document"
-})
+@XmlType(name = "GetDocumentResponse", propOrder = {"success", "messages", "document" })
 public class GetDocumentResponse {
 
     protected boolean success;
@@ -67,7 +64,7 @@ public class GetDocumentResponse {
 
     /**
      * Sets the value of the success property.
-     * 
+     * @param value
      */
     public void setSuccess(boolean value) {
         this.success = value;
@@ -76,10 +73,8 @@ public class GetDocumentResponse {
     /**
      * Gets the value of the messages property.
      * 
-     * @return
-     *     possible object is
-     *     {@link ArrayOfMessage }
-     *     
+     * @return possible object is {@link ArrayOfMessage }
+     * 
      */
     public ArrayOfMessage getMessages() {
         return messages;
@@ -89,9 +84,8 @@ public class GetDocumentResponse {
      * Sets the value of the messages property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link ArrayOfMessage }
-     *     
+     *            allowed object is {@link ArrayOfMessage }
+     * 
      */
     public void setMessages(ArrayOfMessage value) {
         this.messages = value;
@@ -100,10 +94,8 @@ public class GetDocumentResponse {
     /**
      * Gets the value of the document property.
      * 
-     * @return
-     *     possible object is
-     *     {@link GetDocumentResponseDocument }
-     *     
+     * @return possible object is {@link GetDocumentResponseDocument }
+     * 
      */
     public GetDocumentResponseDocument getDocument() {
         return document;
@@ -113,9 +105,8 @@ public class GetDocumentResponse {
      * Sets the value of the document property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link GetDocumentResponseDocument }
-     *     
+     *            allowed object is {@link GetDocumentResponseDocument }
+     * 
      */
     public void setDocument(GetDocumentResponseDocument value) {
         this.document = value;

@@ -6,9 +6,12 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 
 /**
- * <p>Java class for anonymous complex type.
+ * <p>
+ * Java class for anonymous complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  * 
  * <pre>
  * &lt;complexType>
@@ -29,19 +32,18 @@ public class SaveDocumentFileRequestFile {
     @XmlAttribute
     protected String href;
 
-    public SaveDocumentFileRequestFile() {}
-    
-    public SaveDocumentFileRequestFile(String href) {
-    	this.href = href;
+    public SaveDocumentFileRequestFile() {
     }
-    
+
+    public SaveDocumentFileRequestFile(String href) {
+        this.href = href;
+    }
+
     /**
      * Gets the value of the href property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getHref() {
         return href;
@@ -51,9 +53,8 @@ public class SaveDocumentFileRequestFile {
      * Sets the value of the href property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *            allowed object is {@link String }
+     * 
      */
     public void setHref(String value) {
         this.href = value;

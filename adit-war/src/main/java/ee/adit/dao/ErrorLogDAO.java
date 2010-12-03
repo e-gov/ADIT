@@ -7,7 +7,6 @@ import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
@@ -16,56 +15,62 @@ import ee.adit.exception.AditInternalException;
 import ee.adit.service.LogService;
 
 public class ErrorLogDAO extends HibernateDaoSupport {
-	
-	private static Logger LOG = Logger.getLogger(ErrorLogDAO.class);
 
-	public Long save(final ErrorLog errorLogEntry) {
-		LOG.debug("Attempting to save error log entry...");
-		Long result = null;
+    private static Logger logger = Logger.getLogger(ErrorLogDAO.class);
 
-		result = (Long) this.getHibernateTemplate().execute(new HibernateCallback() {
+    public Long save(final ErrorLog errorLogEntry) {
+        logger.debug("Attempting to save error log entry...");
+        Long result = null;
 
-			@Override
-			public Object doInHibernate(Session session) throws HibernateException, SQLException {
-				session.save(errorLogEntry);
-				LOG.debug("Successfully saved error log entry with ID: " + errorLogEntry.getId());
-				return errorLogEntry.getId();
-			}
-		});
+        result = (Long) this.getHibernateTemplate().execute(new HibernateCallback() {
 
-		return result;
-	}
-	
-	public Long getErrors(Date comparisonDate, String level) {
-		
-		String SQL = null;
-		// FATAL
-		if(LogService.ErrorLogLevel_Fatal.equalsIgnoreCase(level)) {
-			SQL = "select count(*) from ErrorLog where (errorLevel = '" + LogService.ErrorLogLevel_Fatal + "') and errorDate <= :comparisonDate";
-		} else if(LogService.ErrorLogLevel_Error.equalsIgnoreCase(level)) {
-			SQL = "select count(*) from ErrorLog where (errorLevel = '" + LogService.ErrorLogLevel_Fatal + "' or errorLevel = '" + LogService.ErrorLogLevel_Error + "') and errorDate <= :comparisonDate";
-		} else if(LogService.ErrorLogLevel_Warn.equalsIgnoreCase(level)) {
-			SQL = "select count(*) from ErrorLog where (errorLevel = '" + LogService.ErrorLogLevel_Fatal + "' or errorLevel = '" + LogService.ErrorLogLevel_Error + "' or errorLevel = '" + LogService.ErrorLogLevel_Warn + "') and errorDate <= :comparisonDate";
-		} else {
-			SQL = "select count(*) from ErrorLog where (errorLevel = '" + LogService.ErrorLogLevel_Fatal + "') and errorDate <= :comparisonDate";
-		}
-		
-		Long result = 0L; 
-		
-		Session session = null;
-		try {
-			session = this.getSessionFactory().openSession();
-			Query query = session.createQuery(SQL);
-			query.setParameter("comparisonDate", comparisonDate);
-			result = (Long) query.uniqueResult();
-		} catch (Exception e) {
-			throw new AditInternalException("Error while fetching latest errors: ", e);
-		} finally {
-			if(session != null)
-				session.close();
-		}
-		
-		return result;
-	}
-	
+            @Override
+            public Object doInHibernate(Session session) throws HibernateException, SQLException {
+                session.save(errorLogEntry);
+                logger.debug("Successfully saved error log entry with ID: " + errorLogEntry.getId());
+                return errorLogEntry.getId();
+            }
+        });
+
+        return result;
+    }
+
+    public Long getErrors(Date comparisonDate, String level) {
+
+        String sql = null;
+        // FATAL
+        if (LogService.ERROR_LOG_LEVEL_FATAL.equalsIgnoreCase(level)) {
+            sql = "select count(*) from ErrorLog where (errorLevel = '" + LogService.ERROR_LOG_LEVEL_FATAL
+                    + "') and errorDate <= :comparisonDate";
+        } else if (LogService.ERROR_LOG_LEVEL_ERROR.equalsIgnoreCase(level)) {
+            sql = "select count(*) from ErrorLog where (errorLevel = '" + LogService.ERROR_LOG_LEVEL_FATAL
+                    + "' or errorLevel = '" + LogService.ERROR_LOG_LEVEL_ERROR + "') and errorDate <= :comparisonDate";
+        } else if (LogService.ERROR_LOG_LEVEL_WARN.equalsIgnoreCase(level)) {
+            sql = "select count(*) from ErrorLog where (errorLevel = '" + LogService.ERROR_LOG_LEVEL_FATAL
+                    + "' or errorLevel = '" + LogService.ERROR_LOG_LEVEL_ERROR + "' or errorLevel = '"
+                    + LogService.ERROR_LOG_LEVEL_WARN + "') and errorDate <= :comparisonDate";
+        } else {
+            sql = "select count(*) from ErrorLog where (errorLevel = '" + LogService.ERROR_LOG_LEVEL_FATAL
+                    + "') and errorDate <= :comparisonDate";
+        }
+
+        Long result = 0L;
+
+        Session session = null;
+        try {
+            session = this.getSessionFactory().openSession();
+            Query query = session.createQuery(sql);
+            query.setParameter("comparisonDate", comparisonDate);
+            result = (Long) query.uniqueResult();
+        } catch (Exception e) {
+            throw new AditInternalException("Error while fetching latest errors: ", e);
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+
+        return result;
+    }
+
 }

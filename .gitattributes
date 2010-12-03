@@ -2,6 +2,7 @@
 adit-ear/pom.xml -text
 adit-ear/src/main/webapp/META-INF/application.xml -text
 adit-ear/src/main/webapp/META-INF/weblogic-application.xml -text
+adit-war/.checkstyle -text
 adit-war/doc/adit.vsd -text
 adit-war/doc/adit_cs_checks.xml -text
 adit-war/doc/dvk_test/data.xml -text
@@ -367,7 +368,6 @@ adit-war/src/main/java/ee/adit/util/XRoadQueryName.java -text
 adit-war/src/main/java/ee/adit/util/package-info.java -text
 adit-war/src/main/java/ee/adit/web/controller/MonitorController.java -text
 adit-war/src/main/java/ee/adit/web/controller/package-info.java -text
-adit-war/src/main/java/ee/adit/web/controller/package.html -text
 adit-war/src/main/java/ee/adit/ws/endpoint/AbstractAditBaseEndpoint.java -text
 adit-war/src/main/java/ee/adit/ws/endpoint/AditEndpointMapping.java -text
 adit-war/src/main/java/ee/adit/ws/endpoint/ListMethodsEndpoint.java -text

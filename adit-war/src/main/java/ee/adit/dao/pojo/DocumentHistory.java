@@ -11,153 +11,152 @@ import ee.adit.util.CustomXTeeHeader;
  */
 public class DocumentHistory implements java.io.Serializable {
 
-	private static final long serialVersionUID = 1886348010778047855L;
-	private Long id;
-	private String remoteApplicationName;
-	private long documentId;
-	private String documentHistoryType;
-	private String description;
-	private Date eventDate;
-	private String userCode;
-	private String userName;
-	private String notificationStatus;
-	private String xteeNotificationId;
-	private String xteeUserCode;
-	private String xteeUserName;
+    private static final long serialVersionUID = 1886348010778047855L;
+    private Long id;
+    private String remoteApplicationName;
+    private long documentId;
+    private String documentHistoryType;
+    private String description;
+    private Date eventDate;
+    private String userCode;
+    private String userName;
+    private String notificationStatus;
+    private String xteeNotificationId;
+    private String xteeUserCode;
+    private String xteeUserName;
 
-	public DocumentHistory() {
-	}
+    public DocumentHistory() {
+    }
 
-	public DocumentHistory(Long id, long documentId) {
-		this.id = id;
-		this.documentId = documentId;
-	}
+    public DocumentHistory(Long id, long documentId) {
+        this.id = id;
+        this.documentId = documentId;
+    }
 
-	public DocumentHistory(Long id, String remoteApplicationName,
-			long documentId, String documentHistoryType, String description,
-			Date eventDate, String userCode, String userName, String notificationStatus,
-			String xteeNotificationId, String xteeUserCode, String xteeUserName) {
-		this.id = id;
-		this.remoteApplicationName = remoteApplicationName;
-		this.documentId = documentId;
-		this.documentHistoryType = documentHistoryType;
-		this.description = description;
-		this.eventDate = eventDate;
-		this.userCode = userCode;
-		this.userName = userName;
-		this.notificationStatus = notificationStatus;
-		this.xteeNotificationId = xteeNotificationId;
-		this.xteeUserCode = xteeUserCode;
-		this.xteeUserName = xteeUserName;
-	}
-	
-	public DocumentHistory(String historyType, Long documentId, Date eventDate,
-			AditUser user, AditUser xroadUser, CustomXTeeHeader header) {
-		this.setRemoteApplicationName(header.getInfosysteem());
-		this.setDocumentId(documentId);
-		this.setDocumentHistoryType(historyType);
-		this.setEventDate(eventDate);
-		this.setUserCode(user.getUserCode());
-		this.setUserName(user.getFullName());
-		this.setXteeUserCode(header.getIsikukood());
-		if (xroadUser != null) {
-			this.setXteeUserName(xroadUser.getFullName());
-		}
-	}
+    public DocumentHistory(Long id, String remoteApplicationName, long documentId, String documentHistoryType,
+            String description, Date eventDate, String userCode, String userName, String notificationStatus,
+            String xteeNotificationId, String xteeUserCode, String xteeUserName) {
+        this.id = id;
+        this.remoteApplicationName = remoteApplicationName;
+        this.documentId = documentId;
+        this.documentHistoryType = documentHistoryType;
+        this.description = description;
+        this.eventDate = eventDate;
+        this.userCode = userCode;
+        this.userName = userName;
+        this.notificationStatus = notificationStatus;
+        this.xteeNotificationId = xteeNotificationId;
+        this.xteeUserCode = xteeUserCode;
+        this.xteeUserName = xteeUserName;
+    }
 
-	public Long getId() {
-		return this.id;
-	}
+    public DocumentHistory(String historyType, Long documentId, Date eventDate, AditUser user, AditUser xroadUser,
+            CustomXTeeHeader header) {
+        this.setRemoteApplicationName(header.getInfosysteem());
+        this.setDocumentId(documentId);
+        this.setDocumentHistoryType(historyType);
+        this.setEventDate(eventDate);
+        this.setUserCode(user.getUserCode());
+        this.setUserName(user.getFullName());
+        this.setXteeUserCode(header.getIsikukood());
+        if (xroadUser != null) {
+            this.setXteeUserName(xroadUser.getFullName());
+        }
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public Long getId() {
+        return this.id;
+    }
 
-	public String getRemoteApplicationName() {
-		return this.remoteApplicationName;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setRemoteApplicationName(String remoteApplicationName) {
-		this.remoteApplicationName = remoteApplicationName;
-	}
+    public String getRemoteApplicationName() {
+        return this.remoteApplicationName;
+    }
 
-	public long getDocumentId() {
-		return this.documentId;
-	}
+    public void setRemoteApplicationName(String remoteApplicationName) {
+        this.remoteApplicationName = remoteApplicationName;
+    }
 
-	public void setDocumentId(long documentId) {
-		this.documentId = documentId;
-	}
+    public long getDocumentId() {
+        return this.documentId;
+    }
 
-	public String getDocumentHistoryType() {
-		return this.documentHistoryType;
-	}
+    public void setDocumentId(long documentId) {
+        this.documentId = documentId;
+    }
 
-	public void setDocumentHistoryType(String documentHistoryType) {
-		this.documentHistoryType = documentHistoryType;
-	}
+    public String getDocumentHistoryType() {
+        return this.documentHistoryType;
+    }
 
-	public String getDescription() {
-		return this.description;
-	}
+    public void setDocumentHistoryType(String documentHistoryType) {
+        this.documentHistoryType = documentHistoryType;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public String getDescription() {
+        return this.description;
+    }
 
-	public Date getEventDate() {
-		return this.eventDate;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public void setEventDate(Date eventDate) {
-		this.eventDate = eventDate;
-	}
+    public Date getEventDate() {
+        return this.eventDate;
+    }
 
-	public String getUserCode() {
-		return this.userCode;
-	}
+    public void setEventDate(Date eventDate) {
+        this.eventDate = eventDate;
+    }
 
-	public void setUserCode(String userCode) {
-		this.userCode = userCode;
-	}
-	
-	public String getUserName() {
-		return this.userName;
-	}
+    public String getUserCode() {
+        return this.userCode;
+    }
 
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
+    public void setUserCode(String userCode) {
+        this.userCode = userCode;
+    }
 
-	public String getNotificationStatus() {
-		return this.notificationStatus;
-	}
+    public String getUserName() {
+        return this.userName;
+    }
 
-	public void setNotificationStatus(String notificationStatus) {
-		this.notificationStatus = notificationStatus;
-	}
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
-	public String getXteeNotificationId() {
-		return this.xteeNotificationId;
-	}
+    public String getNotificationStatus() {
+        return this.notificationStatus;
+    }
 
-	public void setXteeNotificationId(String xteeNotificationId) {
-		this.xteeNotificationId = xteeNotificationId;
-	}
+    public void setNotificationStatus(String notificationStatus) {
+        this.notificationStatus = notificationStatus;
+    }
 
-	public String getXteeUserCode() {
-		return this.xteeUserCode;
-	}
+    public String getXteeNotificationId() {
+        return this.xteeNotificationId;
+    }
 
-	public void setXteeUserCode(String xteeUserCode) {
-		this.xteeUserCode = xteeUserCode;
-	}
+    public void setXteeNotificationId(String xteeNotificationId) {
+        this.xteeNotificationId = xteeNotificationId;
+    }
 
-	public String getXteeUserName() {
-		return this.xteeUserName;
-	}
+    public String getXteeUserCode() {
+        return this.xteeUserCode;
+    }
 
-	public void setXteeUserName(String xteeUserName) {
-		this.xteeUserName = xteeUserName;
-	}
+    public void setXteeUserCode(String xteeUserCode) {
+        this.xteeUserCode = xteeUserCode;
+    }
+
+    public String getXteeUserName() {
+        return this.xteeUserName;
+    }
+
+    public void setXteeUserName(String xteeUserName) {
+        this.xteeUserName = xteeUserName;
+    }
 }

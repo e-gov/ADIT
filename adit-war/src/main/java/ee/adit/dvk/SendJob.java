@@ -14,34 +14,33 @@ import ee.adit.service.DocumentService;
  */
 public class SendJob extends QuartzJobBean {
 
-	private static Logger LOG = Logger.getLogger(SendJob.class);
-	
-	private DocumentService documentService;
-	
-	@Override
-	protected void executeInternal(JobExecutionContext ctx)
-			throws JobExecutionException {
-		
-		try {
-			LOG.info("Executing scheduled job: Send documents to DVK");
-			
-			// Send documents to DVK Client database
-			int sentDocumentsCount = this.getDocumentService().sendDocumentsToDVK();
+    private static Logger logger = Logger.getLogger(SendJob.class);
 
-			LOG.debug("Documents sent to DVK (" + sentDocumentsCount + ")");
-			
-		} catch (Exception e) {
-			LOG.error("Error executing scheduled DVK sending: ", e);
-		}
+    private DocumentService documentService;
 
-	}
+    @Override
+    protected void executeInternal(JobExecutionContext ctx) throws JobExecutionException {
 
-	public DocumentService getDocumentService() {
-		return documentService;
-	}
+        try {
+            logger.info("Executing scheduled job: Send documents to DVK");
 
-	public void setDocumentService(DocumentService documentService) {
-		this.documentService = documentService;
-	}
-	
+            // Send documents to DVK Client database
+            int sentDocumentsCount = this.getDocumentService().sendDocumentsToDVK();
+
+            logger.debug("Documents sent to DVK (" + sentDocumentsCount + ")");
+
+        } catch (Exception e) {
+            logger.error("Error executing scheduled DVK sending: ", e);
+        }
+
+    }
+
+    public DocumentService getDocumentService() {
+        return documentService;
+    }
+
+    public void setDocumentService(DocumentService documentService) {
+        this.documentService = documentService;
+    }
+
 }

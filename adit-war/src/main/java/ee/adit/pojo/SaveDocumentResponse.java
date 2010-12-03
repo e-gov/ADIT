@@ -5,22 +5,20 @@
 // Generated on: 2010.06.21 at 02:30:22 PM EEST 
 //
 
-
 package ee.adit.pojo;
 
-import java.math.BigInteger;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-import ee.adit.pojo.ArrayOfMessage;
-
-
 /**
- * <p>Java class for SaveDocumentResponse complex type.
+ * <p>
+ * Java class for SaveDocumentResponse complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  * 
  * <pre>
  * &lt;complexType name="SaveDocumentResponse">
@@ -39,12 +37,7 @@ import ee.adit.pojo.ArrayOfMessage;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "SaveDocumentResponse", propOrder = {
-    "success",
-    "messages",
-    "documentId",
-    "document"
-})
+@XmlType(name = "SaveDocumentResponse", propOrder = {"success", "messages", "documentId", "document" })
 public class SaveDocumentResponse {
 
     protected Success success;
@@ -57,10 +50,8 @@ public class SaveDocumentResponse {
     /**
      * Gets the value of the messages property.
      * 
-     * @return
-     *     possible object is
-     *     {@link ArrayOfMessage }
-     *     
+     * @return possible object is {@link ArrayOfMessage }
+     * 
      */
     public ArrayOfMessage getMessages() {
         return messages;
@@ -70,9 +61,8 @@ public class SaveDocumentResponse {
      * Sets the value of the messages property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link ArrayOfMessage }
-     *     
+     *            allowed object is {@link ArrayOfMessage }
+     * 
      */
     public void setMessages(ArrayOfMessage value) {
         this.messages = value;
@@ -81,10 +71,8 @@ public class SaveDocumentResponse {
     /**
      * Gets the value of the documentId property.
      * 
-     * @return
-     *     possible object is
-     *     {@link BigInteger }
-     *     
+     * @return possible long
+     * 
      */
     public long getDocumentId() {
         return documentId;
@@ -94,29 +82,26 @@ public class SaveDocumentResponse {
      * Sets the value of the documentId property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link BigInteger }
-     *     
+     *            allowed long
+     * 
      */
     public void setDocumentId(long value) {
         this.documentId = value;
     }
 
-	public Success getSuccess() {
-		return success;
-	}
+    public Success getSuccess() {
+        return success;
+    }
 
-	public void setSuccess(Success success) {
-		this.success = success;
-	}
+    public void setSuccess(Success success) {
+        this.success = success;
+    }
 
     /**
      * Gets the value of the document property.
      * 
-     * @return
-     *     possible object is
-     *     {@link SaveDocumentRequestDocument }
-     *     
+     * @return possible object is {@link SaveDocumentRequestDocument }
+     * 
      */
     public SaveDocumentRequestDocument getDocument() {
         return document;
@@ -126,9 +111,8 @@ public class SaveDocumentResponse {
      * Sets the value of the document property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link SaveDocumentRequestDocument }
-     *     
+     *            allowed object is {@link SaveDocumentRequestDocument }
+     * 
      */
     public void setDocument(SaveDocumentRequestDocument value) {
         this.document = value;

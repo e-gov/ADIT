@@ -4,34 +4,34 @@ import java.util.ArrayList;
 
 public class LisaSyndmusRequestLugejad {
 
-	private ArrayList<LisaSyndmusRequestKasutaja> kasutajad;
+    private ArrayList<LisaSyndmusRequestKasutaja> kasutajad;
 
-	private String type;
-	
-	private String xsiType;
-	
-	public ArrayList<LisaSyndmusRequestKasutaja> getKasutajad() {
-		return kasutajad;
-	}
+    private String type;
 
-	public void setKasutajad(ArrayList<LisaSyndmusRequestKasutaja> kasutajad) {
-		this.kasutajad = kasutajad;
-	}
+    private String xsiType;
 
-	public String getType() {
-		return type;
-	}
+    public ArrayList<LisaSyndmusRequestKasutaja> getKasutajad() {
+        return kasutajad;
+    }
 
-	public void setType(String type) {
-		this.type = type;
-	}
+    public void setKasutajad(ArrayList<LisaSyndmusRequestKasutaja> kasutajad) {
+        this.kasutajad = kasutajad;
+    }
 
-	public String getXsiType() {
-		return xsiType;
-	}
+    public String getType() {
+        return type;
+    }
 
-	public void setXsiType(String xsiType) {
-		this.xsiType = xsiType;
-	}
-	
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getXsiType() {
+        return xsiType;
+    }
+
+    public void setXsiType(String xsiType) {
+        this.xsiType = xsiType;
+    }
+
 }

@@ -5,7 +5,6 @@
 // Generated on: 2010.06.16 at 02:48:15 PM EEST 
 //
 
-
 package ee.adit.pojo;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -13,11 +12,13 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for JoinRequest complex type.
+ * <p>
+ * Java class for JoinRequest complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  * 
  * <pre>
  * &lt;complexType name="JoinRequest">
@@ -36,11 +37,7 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "JoinRequest", propOrder = {
-    "userType",
-    "userName",
-    "dvkOrgCode"
-})
+@XmlType(name = "JoinRequest", propOrder = {"userType", "userName", "dvkOrgCode" })
 public class JoinRequest {
 
     @XmlElement(required = true)
@@ -51,10 +48,8 @@ public class JoinRequest {
     /**
      * Gets the value of the userType property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getUserType() {
         return userType;
@@ -64,9 +59,8 @@ public class JoinRequest {
      * Sets the value of the userType property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *            allowed object is {@link String }
+     * 
      */
     public void setUserType(String value) {
         this.userType = value;
@@ -75,10 +69,8 @@ public class JoinRequest {
     /**
      * Gets the value of the userName property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getUserName() {
         return userName;
@@ -88,9 +80,8 @@ public class JoinRequest {
      * Sets the value of the userName property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *            allowed object is {@link String }
+     * 
      */
     public void setUserName(String value) {
         this.userName = value;

@@ -5,11 +5,13 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for DeflateDocumentResponse complex type.
+ * <p>
+ * Java class for DeflateDocumentResponse complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  * 
  * <pre>
  * &lt;complexType name="DeflateDocumentResponse">
@@ -27,10 +29,7 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "DeflateDocumentResponse", propOrder = {
-    "success",
-    "messages"
-})
+@XmlType(name = "DeflateDocumentResponse", propOrder = {"success", "messages" })
 public class DeflateDocumentResponse {
 
     protected Success success;
@@ -40,10 +39,8 @@ public class DeflateDocumentResponse {
     /**
      * Gets the value of the messages property.
      * 
-     * @return
-     *     possible object is
-     *     {@link ArrayOfMessage }
-     *     
+     * @return possible object is {@link ArrayOfMessage }
+     * 
      */
     public ArrayOfMessage getMessages() {
         return messages;
@@ -53,19 +50,18 @@ public class DeflateDocumentResponse {
      * Sets the value of the messages property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link ArrayOfMessage }
-     *     
+     *            allowed object is {@link ArrayOfMessage }
+     * 
      */
     public void setMessages(ArrayOfMessage value) {
         this.messages = value;
     }
 
-	public Success getSuccess() {
-		return success;
-	}
+    public Success getSuccess() {
+        return success;
+    }
 
-	public void setSuccess(Success success) {
-		this.success = success;
-	}
+    public void setSuccess(Success success) {
+        this.success = success;
+    }
 }

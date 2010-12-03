@@ -5,18 +5,19 @@
 // Generated on: 2010.06.16 at 02:48:15 PM EEST 
 //
 
-
 package ee.adit.pojo;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for UnJoinRequest complex type.
+ * <p>
+ * Java class for UnJoinRequest complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  * 
  * <pre>
  * &lt;complexType name="UnJoinRequest">
@@ -35,14 +36,14 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "UnJoinRequest")
 public class UnJoinRequest {
 
-	private String keha;
+    private String keha;
 
-	public String getKeha() {
-		return keha;
-	}
+    public String getKeha() {
+        return keha;
+    }
 
-	public void setKeha(String keha) {
-		this.keha = keha;
-	}
-	
+    public void setKeha(String keha) {
+        this.keha = keha;
+    }
+
 }

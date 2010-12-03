@@ -2,44 +2,44 @@ package ee.adit.pojo.notification;
 
 public class LisaSyndmusResponseTulemus {
 
-	private Integer tulemuseKood;
-	
-	private String tulemuseTekst;
+    private Integer tulemuseKood;
 
-	private String tulemuseKoodType;
-	
-	private String tulemuseTekstType;
-	
-	public Integer getTulemuseKood() {
-		return tulemuseKood;
-	}
+    private String tulemuseTekst;
 
-	public void setTulemuseKood(Integer tulemuseKood) {
-		this.tulemuseKood = tulemuseKood;
-	}
+    private String tulemuseKoodType;
 
-	public String getTulemuseTekst() {
-		return tulemuseTekst;
-	}
+    private String tulemuseTekstType;
 
-	public void setTulemuseTekst(String tulemuseTekst) {
-		this.tulemuseTekst = tulemuseTekst;
-	}
+    public Integer getTulemuseKood() {
+        return tulemuseKood;
+    }
 
-	public String getTulemuseKoodType() {
-		return tulemuseKoodType;
-	}
+    public void setTulemuseKood(Integer tulemuseKood) {
+        this.tulemuseKood = tulemuseKood;
+    }
 
-	public void setTulemuseKoodType(String tulemuseKoodType) {
-		this.tulemuseKoodType = tulemuseKoodType;
-	}
+    public String getTulemuseTekst() {
+        return tulemuseTekst;
+    }
 
-	public String getTulemuseTekstType() {
-		return tulemuseTekstType;
-	}
+    public void setTulemuseTekst(String tulemuseTekst) {
+        this.tulemuseTekst = tulemuseTekst;
+    }
 
-	public void setTulemuseTekstType(String tulemuseTekstType) {
-		this.tulemuseTekstType = tulemuseTekstType;
-	}
-	
+    public String getTulemuseKoodType() {
+        return tulemuseKoodType;
+    }
+
+    public void setTulemuseKoodType(String tulemuseKoodType) {
+        this.tulemuseKoodType = tulemuseKoodType;
+    }
+
+    public String getTulemuseTekstType() {
+        return tulemuseTekstType;
+    }
+
+    public void setTulemuseTekstType(String tulemuseTekstType) {
+        this.tulemuseTekstType = tulemuseTekstType;
+    }
+
 }

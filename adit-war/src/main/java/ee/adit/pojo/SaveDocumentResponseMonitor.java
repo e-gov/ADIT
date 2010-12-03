@@ -5,28 +5,19 @@
 // Generated on: 2010.06.21 at 02:30:22 PM EEST 
 //
 
-
 package ee.adit.pojo;
-
-import java.math.BigInteger;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlType;
-
-import ee.adit.pojo.ArrayOfMessage;
 
 
 public class SaveDocumentResponseMonitor {
 
-	private SaveDocumentResponseMonitorKeha keha;
+    private SaveDocumentResponseMonitorKeha keha;
 
-	public SaveDocumentResponseMonitorKeha getKeha() {
-		return keha;
-	}
+    public SaveDocumentResponseMonitorKeha getKeha() {
+        return keha;
+    }
 
-	public void setKeha(SaveDocumentResponseMonitorKeha keha) {
-		this.keha = keha;
-	}
-	
+    public void setKeha(SaveDocumentResponseMonitorKeha keha) {
+        this.keha = keha;
+    }
+
 }

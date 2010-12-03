@@ -10,45 +10,49 @@ import java.util.Set;
  */
 public class DocumentDvkStatus implements java.io.Serializable {
 
-	private long id;
-	private String description;
-	private Set documentSharings = new HashSet(0);
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+    private long id;
+    private String description;
+    private Set<DocumentSharing> documentSharings = new HashSet<DocumentSharing>(0);
 
-	public DocumentDvkStatus() {
-	}
+    public DocumentDvkStatus() {
+    }
 
-	public DocumentDvkStatus(long id) {
-		this.id = id;
-	}
+    public DocumentDvkStatus(long id) {
+        this.id = id;
+    }
 
-	public DocumentDvkStatus(long id, String description, Set documentSharings) {
-		this.id = id;
-		this.description = description;
-		this.documentSharings = documentSharings;
-	}
+    public DocumentDvkStatus(long id, String description, Set<DocumentSharing> documentSharings) {
+        this.id = id;
+        this.description = description;
+        this.documentSharings = documentSharings;
+    }
 
-	public long getId() {
-		return this.id;
-	}
+    public long getId() {
+        return this.id;
+    }
 
-	public void setId(long id) {
-		this.id = id;
-	}
+    public void setId(long id) {
+        this.id = id;
+    }
 
-	public String getDescription() {
-		return this.description;
-	}
+    public String getDescription() {
+        return this.description;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public Set getDocumentSharings() {
-		return this.documentSharings;
-	}
+    public Set<DocumentSharing> getDocumentSharings() {
+        return this.documentSharings;
+    }
 
-	public void setDocumentSharings(Set documentSharings) {
-		this.documentSharings = documentSharings;
-	}
+    public void setDocumentSharings(Set<DocumentSharing> documentSharings) {
+        this.documentSharings = documentSharings;
+    }
 
 }

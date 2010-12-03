@@ -7,35 +7,39 @@ package ee.adit.dao.pojo;
  */
 public class DocumentHistoryType implements java.io.Serializable {
 
-	private String shortName;
-	private String description;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+    private String shortName;
+    private String description;
 
-	public DocumentHistoryType() {
-	}
+    public DocumentHistoryType() {
+    }
 
-	public DocumentHistoryType(String shortName) {
-		this.shortName = shortName;
-	}
+    public DocumentHistoryType(String shortName) {
+        this.shortName = shortName;
+    }
 
-	public DocumentHistoryType(String shortName, String description) {
-		this.shortName = shortName;
-		this.description = description;
-	}
+    public DocumentHistoryType(String shortName, String description) {
+        this.shortName = shortName;
+        this.description = description;
+    }
 
-	public String getShortName() {
-		return this.shortName;
-	}
+    public String getShortName() {
+        return this.shortName;
+    }
 
-	public void setShortName(String shortName) {
-		this.shortName = shortName;
-	}
+    public void setShortName(String shortName) {
+        this.shortName = shortName;
+    }
 
-	public String getDescription() {
-		return this.description;
-	}
+    public String getDescription() {
+        return this.description;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
 }

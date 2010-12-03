@@ -5,7 +5,6 @@
 // Generated on: 2010.07.13 at 04:42:34 PM EEST 
 //
 
-
 package ee.adit.pojo;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -13,11 +12,13 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for PrepareSignatureRequest complex type.
+ * <p>
+ * Java class for PrepareSignatureRequest complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  * 
  * <pre>
  * &lt;complexType name="PrepareSignatureRequest">
@@ -39,15 +40,8 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "PrepareSignatureRequest", propOrder = {
-    "documentId",
-    "manifest",
-    "country",
-    "state",
-    "city",
-    "zip",
-    "signerCertificate"
-})
+@XmlType(name = "PrepareSignatureRequest", propOrder = {"documentId", "manifest", "country", "state", "city", "zip",
+        "signerCertificate" })
 public class PrepareSignatureRequest {
 
     @XmlElement(name = "document_id", required = true)
@@ -68,10 +62,8 @@ public class PrepareSignatureRequest {
     /**
      * Gets the value of the documentId property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Long }
-     *     
+     * @return possible object is {@link Long }
+     * 
      */
     public Long getDocumentId() {
         return documentId;
@@ -81,9 +73,8 @@ public class PrepareSignatureRequest {
      * Sets the value of the documentId property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link Long }
-     *     
+     *            allowed object is {@link Long }
+     * 
      */
     public void setDocumentId(Long value) {
         this.documentId = value;
@@ -92,10 +83,8 @@ public class PrepareSignatureRequest {
     /**
      * Gets the value of the manifest property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getManifest() {
         return manifest;
@@ -105,9 +94,8 @@ public class PrepareSignatureRequest {
      * Sets the value of the manifest property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *            allowed object is {@link String }
+     * 
      */
     public void setManifest(String value) {
         this.manifest = value;
@@ -116,10 +104,8 @@ public class PrepareSignatureRequest {
     /**
      * Gets the value of the country property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getCountry() {
         return country;
@@ -129,9 +115,8 @@ public class PrepareSignatureRequest {
      * Sets the value of the country property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *            allowed object is {@link String }
+     * 
      */
     public void setCountry(String value) {
         this.country = value;
@@ -140,10 +125,8 @@ public class PrepareSignatureRequest {
     /**
      * Gets the value of the state property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getState() {
         return state;
@@ -153,9 +136,8 @@ public class PrepareSignatureRequest {
      * Sets the value of the state property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *            allowed object is {@link String }
+     * 
      */
     public void setState(String value) {
         this.state = value;
@@ -164,10 +146,8 @@ public class PrepareSignatureRequest {
     /**
      * Gets the value of the city property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getCity() {
         return city;
@@ -177,9 +157,8 @@ public class PrepareSignatureRequest {
      * Sets the value of the city property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *            allowed object is {@link String }
+     * 
      */
     public void setCity(String value) {
         this.city = value;
@@ -188,10 +167,8 @@ public class PrepareSignatureRequest {
     /**
      * Gets the value of the zip property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getZip() {
         return zip;
@@ -201,9 +178,8 @@ public class PrepareSignatureRequest {
      * Sets the value of the zip property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *            allowed object is {@link String }
+     * 
      */
     public void setZip(String value) {
         this.zip = value;
@@ -212,24 +188,21 @@ public class PrepareSignatureRequest {
     /**
      * Gets the value of the signerCertificate property.
      * 
-     * @return
-     *     possible object is
-     *     {@link PrepareSignatureRequestCert }
-     *     
+     * @return possible object is {@link PrepareSignatureRequestCert }
+     * 
      */
-	public PrepareSignatureRequestCert getSignerCertificate() {
-		return signerCertificate;
-	}
+    public PrepareSignatureRequestCert getSignerCertificate() {
+        return signerCertificate;
+    }
 
     /**
      * Sets the value of the signerCertificate property.
      * 
      * @param signerCertificate
-     *     allowed object is
-     *     {@link PrepareSignatureRequestCert }
-     *     
+     *            allowed object is {@link PrepareSignatureRequestCert }
+     * 
      */
-	public void setSignerCertificate(PrepareSignatureRequestCert signerCertificate) {
-		this.signerCertificate = signerCertificate;
-	}
+    public void setSignerCertificate(PrepareSignatureRequestCert signerCertificate) {
+        this.signerCertificate = signerCertificate;
+    }
 }

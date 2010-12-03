@@ -9,99 +9,97 @@ import java.util.Date;
  */
 public class RequestLog implements java.io.Serializable {
 
-	private static final long serialVersionUID = 3617008635099835817L;
-	private long id;
-	private String request;
-	private Long documentId;
-	private Date requestDate;
-	private String remoteApplicationShortName;
-	private String userCode;
-	private String organizationCode;
-	private String additionalInformation;
+    private static final long serialVersionUID = 3617008635099835817L;
+    private long id;
+    private String request;
+    private Long documentId;
+    private Date requestDate;
+    private String remoteApplicationShortName;
+    private String userCode;
+    private String organizationCode;
+    private String additionalInformation;
 
-	public RequestLog() {
-	}
+    public RequestLog() {
+    }
 
-	public RequestLog(long id) {
-		this.id = id;
-	}
+    public RequestLog(long id) {
+        this.id = id;
+    }
 
-	public RequestLog(long id, String request, Long documentId,
-			Date requestDate, String remoteApplicationShortName,
-			String userCode, String organizationCode,
-			String additionalInformation) {
-		this.id = id;
-		this.request = request;
-		this.documentId = documentId;
-		this.requestDate = requestDate;
-		this.remoteApplicationShortName = remoteApplicationShortName;
-		this.userCode = userCode;
-		this.organizationCode = organizationCode;
-		this.additionalInformation = additionalInformation;
-	}
+    public RequestLog(long id, String request, Long documentId, Date requestDate, String remoteApplicationShortName,
+            String userCode, String organizationCode, String additionalInformation) {
+        this.id = id;
+        this.request = request;
+        this.documentId = documentId;
+        this.requestDate = requestDate;
+        this.remoteApplicationShortName = remoteApplicationShortName;
+        this.userCode = userCode;
+        this.organizationCode = organizationCode;
+        this.additionalInformation = additionalInformation;
+    }
 
-	public long getId() {
-		return this.id;
-	}
+    public long getId() {
+        return this.id;
+    }
 
-	public void setId(long id) {
-		this.id = id;
-	}
+    public void setId(long id) {
+        this.id = id;
+    }
 
-	public String getRequest() {
-		return this.request;
-	}
+    public String getRequest() {
+        return this.request;
+    }
 
-	public void setRequest(String request) {
-		this.request = request;
-	}
+    public void setRequest(String request) {
+        this.request = request;
+    }
 
-	public Long getDocumentId() {
-		return this.documentId;
-	}
+    public Long getDocumentId() {
+        return this.documentId;
+    }
 
-	public void setDocumentId(Long documentId) {
-		this.documentId = documentId;
-	}
+    public void setDocumentId(Long documentId) {
+        this.documentId = documentId;
+    }
 
-	public Date getRequestDate() {
-		return this.requestDate;
-	}
+    public Date getRequestDate() {
+        return this.requestDate;
+    }
 
-	public void setRequestDate(Date requestDate) {
-		this.requestDate = requestDate;
-	}
+    public void setRequestDate(Date requestDate) {
+        this.requestDate = requestDate;
+    }
 
-	public String getRemoteApplicationShortName() {
-		return this.remoteApplicationShortName;
-	}
+    public String getRemoteApplicationShortName() {
+        return this.remoteApplicationShortName;
+    }
 
-	public void setRemoteApplicationShortName(String remoteApplicationShortName) {
-		this.remoteApplicationShortName = remoteApplicationShortName;
-	}
+    public void setRemoteApplicationShortName(String remoteApplicationShortName) {
+        this.remoteApplicationShortName = remoteApplicationShortName;
+    }
 
-	public String getUserCode() {
-		return this.userCode;
-	}
+    public String getUserCode() {
+        return this.userCode;
+    }
 
-	public void setUserCode(String userCode) {
-		this.userCode = userCode;
-	}
+    public void setUserCode(String userCode) {
+        this.userCode = userCode;
+    }
 
-	public String getOrganizationCode() {
-		return this.organizationCode;
-	}
+    public String getOrganizationCode() {
+        return this.organizationCode;
+    }
 
-	public void setOrganizationCode(String organizationCode) {
-		this.organizationCode = organizationCode;
-	}
+    public void setOrganizationCode(String organizationCode) {
+        this.organizationCode = organizationCode;
+    }
 
-	public String getAdditionalInformation() {
-		return this.additionalInformation;
-	}
+    public String getAdditionalInformation() {
+        return this.additionalInformation;
+    }
 
-	public void setAdditionalInformation(String additionalInformation) {
-		this.additionalInformation = additionalInformation;
-	}
+    public void setAdditionalInformation(String additionalInformation) {
+        this.additionalInformation = additionalInformation;
+    }
 
 }

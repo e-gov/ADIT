@@ -10,47 +10,46 @@ import java.util.Set;
  */
 public class DocumentSharingType implements java.io.Serializable {
 
-	private static final long serialVersionUID = 9025211919574912551L;
-	private String shortName;
-	private String description;
-	private Set documentSharings = new HashSet(0);
+    private static final long serialVersionUID = 9025211919574912551L;
+    private String shortName;
+    private String description;
+    private Set<DocumentSharing> documentSharings = new HashSet<DocumentSharing>(0);
 
-	public DocumentSharingType() {
-	}
+    public DocumentSharingType() {
+    }
 
-	public DocumentSharingType(String shortName) {
-		this.shortName = shortName;
-	}
+    public DocumentSharingType(String shortName) {
+        this.shortName = shortName;
+    }
 
-	public DocumentSharingType(String shortName, String description,
-			Set documentSharings) {
-		this.shortName = shortName;
-		this.description = description;
-		this.documentSharings = documentSharings;
-	}
+    public DocumentSharingType(String shortName, String description, Set<DocumentSharing> documentSharings) {
+        this.shortName = shortName;
+        this.description = description;
+        this.documentSharings = documentSharings;
+    }
 
-	public String getShortName() {
-		return this.shortName;
-	}
+    public String getShortName() {
+        return this.shortName;
+    }
 
-	public void setShortName(String shortName) {
-		this.shortName = shortName;
-	}
+    public void setShortName(String shortName) {
+        this.shortName = shortName;
+    }
 
-	public String getDescription() {
-		return this.description;
-	}
+    public String getDescription() {
+        return this.description;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public Set getDocumentSharings() {
-		return this.documentSharings;
-	}
+    public Set<DocumentSharing> getDocumentSharings() {
+        return this.documentSharings;
+    }
 
-	public void setDocumentSharings(Set documentSharings) {
-		this.documentSharings = documentSharings;
-	}
+    public void setDocumentSharings(Set<DocumentSharing> documentSharings) {
+        this.documentSharings = documentSharings;
+    }
 
 }

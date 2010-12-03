@@ -10,88 +10,92 @@ import java.util.Set;
  */
 public class RemoteApplication implements java.io.Serializable {
 
-	private String shortName;
-	private String name;
-	private String organizationCode;
-	private Boolean canRead;
-	private Boolean canWrite;
-	private Set accessRestrictions = new HashSet(0);
-	private Set documentHistories = new HashSet(0);
+    /**
+     * Serial version UID 
+     */
+    private static final long serialVersionUID = 1L;
+    
+    private String shortName;
+    private String name;
+    private String organizationCode;
+    private Boolean canRead;
+    private Boolean canWrite;
+    private Set<AccessRestriction> accessRestrictions = new HashSet<AccessRestriction>(0);
+    private Set<DocumentHistory> documentHistories = new HashSet<DocumentHistory>(0);
 
-	public RemoteApplication() {
-	}
+    public RemoteApplication() {
+    }
 
-	public RemoteApplication(String shortName, String organizationCode) {
-		this.shortName = shortName;
-		this.organizationCode = organizationCode;
-	}
+    public RemoteApplication(String shortName, String organizationCode) {
+        this.shortName = shortName;
+        this.organizationCode = organizationCode;
+    }
 
-	public RemoteApplication(String shortName, String name,
-			String organizationCode, Boolean canRead, Boolean canWrite,
-			Set accessRestrictions, Set documentHistories) {
-		this.shortName = shortName;
-		this.name = name;
-		this.organizationCode = organizationCode;
-		this.canRead = canRead;
-		this.canWrite = canWrite;
-		this.accessRestrictions = accessRestrictions;
-		this.documentHistories = documentHistories;
-	}
+    public RemoteApplication(String shortName, String name, String organizationCode, Boolean canRead, Boolean canWrite,
+            Set<AccessRestriction> accessRestrictions, Set<DocumentHistory> documentHistories) {
+        this.shortName = shortName;
+        this.name = name;
+        this.organizationCode = organizationCode;
+        this.canRead = canRead;
+        this.canWrite = canWrite;
+        this.accessRestrictions = accessRestrictions;
+        this.documentHistories = documentHistories;
+    }
 
-	public String getShortName() {
-		return this.shortName;
-	}
+    public String getShortName() {
+        return this.shortName;
+    }
 
-	public void setShortName(String shortName) {
-		this.shortName = shortName;
-	}
+    public void setShortName(String shortName) {
+        this.shortName = shortName;
+    }
 
-	public String getName() {
-		return this.name;
-	}
+    public String getName() {
+        return this.name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getOrganizationCode() {
-		return this.organizationCode;
-	}
+    public String getOrganizationCode() {
+        return this.organizationCode;
+    }
 
-	public void setOrganizationCode(String organizationCode) {
-		this.organizationCode = organizationCode;
-	}
+    public void setOrganizationCode(String organizationCode) {
+        this.organizationCode = organizationCode;
+    }
 
-	public Boolean getCanRead() {
-		return this.canRead;
-	}
+    public Boolean getCanRead() {
+        return this.canRead;
+    }
 
-	public void setCanRead(Boolean canRead) {
-		this.canRead = canRead;
-	}
+    public void setCanRead(Boolean canRead) {
+        this.canRead = canRead;
+    }
 
-	public Boolean getCanWrite() {
-		return this.canWrite;
-	}
+    public Boolean getCanWrite() {
+        return this.canWrite;
+    }
 
-	public void setCanWrite(Boolean canWrite) {
-		this.canWrite = canWrite;
-	}
+    public void setCanWrite(Boolean canWrite) {
+        this.canWrite = canWrite;
+    }
 
-	public Set getAccessRestrictions() {
-		return this.accessRestrictions;
-	}
+    public Set<AccessRestriction> getAccessRestrictions() {
+        return this.accessRestrictions;
+    }
 
-	public void setAccessRestrictions(Set accessRestrictions) {
-		this.accessRestrictions = accessRestrictions;
-	}
+    public void setAccessRestrictions(Set<AccessRestriction> accessRestrictions) {
+        this.accessRestrictions = accessRestrictions;
+    }
 
-	public Set getDocumentHistories() {
-		return this.documentHistories;
-	}
+    public Set<DocumentHistory> getDocumentHistories() {
+        return this.documentHistories;
+    }
 
-	public void setDocumentHistories(Set documentHistories) {
-		this.documentHistories = documentHistories;
-	}
+    public void setDocumentHistories(Set<DocumentHistory> documentHistories) {
+        this.documentHistories = documentHistories;
+    }
 
 }

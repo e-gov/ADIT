@@ -9,99 +9,98 @@ import java.sql.Blob;
  */
 public class DocumentFile implements java.io.Serializable {
 
-	private static final long serialVersionUID = 1428423268886079325L;
-	private long id;
-	private Document document;
-	private String fileName;
-	private String contentType;
-	private String description;
-	private Blob fileData;
-	private Long fileSizeBytes;
-	private Boolean deleted;
+    private static final long serialVersionUID = 1428423268886079325L;
+    private long id;
+    private Document document;
+    private String fileName;
+    private String contentType;
+    private String description;
+    private Blob fileData;
+    private Long fileSizeBytes;
+    private Boolean deleted;
 
-	public DocumentFile() {
-	}
+    public DocumentFile() {
+    }
 
-	public DocumentFile(long id, Document document, String fileName) {
-		this.id = id;
-		this.document = document;
-		this.fileName = fileName;
-	}
+    public DocumentFile(long id, Document document, String fileName) {
+        this.id = id;
+        this.document = document;
+        this.fileName = fileName;
+    }
 
-	public DocumentFile(long id, Document document, String fileName,
-			String contentType, String description, Blob fileData,
-			Long fileSizeBytes, Boolean deleted) {
-		this.id = id;
-		this.document = document;
-		this.fileName = fileName;
-		this.contentType = contentType;
-		this.description = description;
-		this.fileData = fileData;
-		this.fileSizeBytes = fileSizeBytes;
-		this.deleted = deleted;
-	}
+    public DocumentFile(long id, Document document, String fileName, String contentType, String description,
+            Blob fileData, Long fileSizeBytes, Boolean deleted) {
+        this.id = id;
+        this.document = document;
+        this.fileName = fileName;
+        this.contentType = contentType;
+        this.description = description;
+        this.fileData = fileData;
+        this.fileSizeBytes = fileSizeBytes;
+        this.deleted = deleted;
+    }
 
-	public long getId() {
-		return this.id;
-	}
+    public long getId() {
+        return this.id;
+    }
 
-	public void setId(long id) {
-		this.id = id;
-	}
+    public void setId(long id) {
+        this.id = id;
+    }
 
-	public Document getDocument() {
-		return this.document;
-	}
+    public Document getDocument() {
+        return this.document;
+    }
 
-	public void setDocument(Document document) {
-		this.document = document;
-	}
+    public void setDocument(Document document) {
+        this.document = document;
+    }
 
-	public String getFileName() {
-		return this.fileName;
-	}
+    public String getFileName() {
+        return this.fileName;
+    }
 
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
-	}
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
 
-	public String getContentType() {
-		return this.contentType;
-	}
+    public String getContentType() {
+        return this.contentType;
+    }
 
-	public void setContentType(String contentType) {
-		this.contentType = contentType;
-	}
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
+    }
 
-	public String getDescription() {
-		return this.description;
-	}
+    public String getDescription() {
+        return this.description;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public Blob getFileData() {
-		return this.fileData;
-	}
+    public Blob getFileData() {
+        return this.fileData;
+    }
 
-	public void setFileData(Blob fileData) {
-		this.fileData = fileData;
-	}
+    public void setFileData(Blob fileData) {
+        this.fileData = fileData;
+    }
 
-	public Long getFileSizeBytes() {
-		return this.fileSizeBytes;
-	}
+    public Long getFileSizeBytes() {
+        return this.fileSizeBytes;
+    }
 
-	public void setFileSizeBytes(Long fileSizeBytes) {
-		this.fileSizeBytes = fileSizeBytes;
-	}
+    public void setFileSizeBytes(Long fileSizeBytes) {
+        this.fileSizeBytes = fileSizeBytes;
+    }
 
-	public Boolean getDeleted() {
-		return this.deleted;
-	}
+    public Boolean getDeleted() {
+        return this.deleted;
+    }
 
-	public void setDeleted(Boolean deleted) {
-		this.deleted = deleted;
-	}
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
 }

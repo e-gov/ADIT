@@ -10,56 +10,59 @@ import java.util.Set;
  */
 public class DocumentWfStatus implements java.io.Serializable {
 
-	private long id;
-	private String description;
-	private String name;
-	private Set documentSharings = new HashSet(0);
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+    private long id;
+    private String description;
+    private String name;
+    private Set<DocumentSharing> documentSharings = new HashSet<DocumentSharing>(0);
 
-	public DocumentWfStatus() {
-	}
+    public DocumentWfStatus() {
+    }
 
-	public DocumentWfStatus(long id) {
-		this.id = id;
-	}
+    public DocumentWfStatus(long id) {
+        this.id = id;
+    }
 
-	public DocumentWfStatus(long id, String description, String name,
-			Set documentSharings) {
-		this.id = id;
-		this.description = description;
-		this.name = name;
-		this.documentSharings = documentSharings;
-	}
+    public DocumentWfStatus(long id, String description, String name, Set<DocumentSharing> documentSharings) {
+        this.id = id;
+        this.description = description;
+        this.name = name;
+        this.documentSharings = documentSharings;
+    }
 
-	public long getId() {
-		return this.id;
-	}
+    public long getId() {
+        return this.id;
+    }
 
-	public void setId(long id) {
-		this.id = id;
-	}
+    public void setId(long id) {
+        this.id = id;
+    }
 
-	public String getDescription() {
-		return this.description;
-	}
+    public String getDescription() {
+        return this.description;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public String getName() {
-		return this.name;
-	}
+    public String getName() {
+        return this.name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public Set getDocumentSharings() {
-		return this.documentSharings;
-	}
+    public Set<DocumentSharing> getDocumentSharings() {
+        return this.documentSharings;
+    }
 
-	public void setDocumentSharings(Set documentSharings) {
-		this.documentSharings = documentSharings;
-	}
+    public void setDocumentSharings(Set<DocumentSharing> documentSharings) {
+        this.documentSharings = documentSharings;
+    }
 
 }

@@ -9,80 +9,79 @@ import java.util.Date;
  */
 public class MetadataRequestLog implements java.io.Serializable {
 
-	private static final long serialVersionUID = 1L;
-	
-	private long id;
-	private long documentId;
-	private Date requestDate;
-	private String remoteApplicationShortName;
-	private String userCode;
-	private String organizationCode;
+    private static final long serialVersionUID = 1L;
 
-	public MetadataRequestLog() {
-	}
+    private long id;
+    private long documentId;
+    private Date requestDate;
+    private String remoteApplicationShortName;
+    private String userCode;
+    private String organizationCode;
 
-	public MetadataRequestLog(long id, long documentId) {
-		this.id = id;
-		this.documentId = documentId;
-	}
+    public MetadataRequestLog() {
+    }
 
-	public MetadataRequestLog(long id, long documentId, Date requestDate,
-			String remoteApplicationShortName, String userCode,
-			String organizationCode) {
-		this.id = id;
-		this.documentId = documentId;
-		this.requestDate = requestDate;
-		this.remoteApplicationShortName = remoteApplicationShortName;
-		this.userCode = userCode;
-		this.organizationCode = organizationCode;
-	}
+    public MetadataRequestLog(long id, long documentId) {
+        this.id = id;
+        this.documentId = documentId;
+    }
 
-	public long getId() {
-		return this.id;
-	}
+    public MetadataRequestLog(long id, long documentId, Date requestDate, String remoteApplicationShortName,
+            String userCode, String organizationCode) {
+        this.id = id;
+        this.documentId = documentId;
+        this.requestDate = requestDate;
+        this.remoteApplicationShortName = remoteApplicationShortName;
+        this.userCode = userCode;
+        this.organizationCode = organizationCode;
+    }
 
-	public void setId(long id) {
-		this.id = id;
-	}
+    public long getId() {
+        return this.id;
+    }
 
-	public long getDocumentId() {
-		return this.documentId;
-	}
+    public void setId(long id) {
+        this.id = id;
+    }
 
-	public void setDocumentId(long documentId) {
-		this.documentId = documentId;
-	}
+    public long getDocumentId() {
+        return this.documentId;
+    }
 
-	public Date getRequestDate() {
-		return this.requestDate;
-	}
+    public void setDocumentId(long documentId) {
+        this.documentId = documentId;
+    }
 
-	public void setRequestDate(Date requestDate) {
-		this.requestDate = requestDate;
-	}
+    public Date getRequestDate() {
+        return this.requestDate;
+    }
 
-	public String getRemoteApplicationShortName() {
-		return this.remoteApplicationShortName;
-	}
+    public void setRequestDate(Date requestDate) {
+        this.requestDate = requestDate;
+    }
 
-	public void setRemoteApplicationShortName(String remoteApplicationShortName) {
-		this.remoteApplicationShortName = remoteApplicationShortName;
-	}
+    public String getRemoteApplicationShortName() {
+        return this.remoteApplicationShortName;
+    }
 
-	public String getUserCode() {
-		return this.userCode;
-	}
+    public void setRemoteApplicationShortName(String remoteApplicationShortName) {
+        this.remoteApplicationShortName = remoteApplicationShortName;
+    }
 
-	public void setUserCode(String userCode) {
-		this.userCode = userCode;
-	}
+    public String getUserCode() {
+        return this.userCode;
+    }
 
-	public String getOrganizationCode() {
-		return this.organizationCode;
-	}
+    public void setUserCode(String userCode) {
+        this.userCode = userCode;
+    }
 
-	public void setOrganizationCode(String organizationCode) {
-		this.organizationCode = organizationCode;
-	}
+    public String getOrganizationCode() {
+        return this.organizationCode;
+    }
+
+    public void setOrganizationCode(String organizationCode) {
+        this.organizationCode = organizationCode;
+    }
 
 }

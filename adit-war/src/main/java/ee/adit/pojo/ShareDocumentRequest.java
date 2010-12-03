@@ -5,7 +5,6 @@
 // Generated on: 2010.07.08 at 02:57:06 PM EEST 
 //
 
-
 package ee.adit.pojo;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -13,11 +12,13 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for ShareDocumentRequest complex type.
+ * <p>
+ * Java class for ShareDocumentRequest complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  * 
  * <pre>
  * &lt;complexType name="ShareDocumentRequest">
@@ -37,12 +38,8 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "ShareDocumentRequest", propOrder = {
-    "documentId",
-    "recipientList",
-    "reasonForSharing",
-    "sharedForSigning"
-})
+@XmlType(name = "ShareDocumentRequest", propOrder = {"documentId", "recipientList", "reasonForSharing",
+        "sharedForSigning" })
 public class ShareDocumentRequest {
 
     @XmlElement(name = "document_id", required = true)
@@ -73,10 +70,8 @@ public class ShareDocumentRequest {
     /**
      * Gets the value of the recipientList property.
      * 
-     * @return
-     *     possible object is
-     *     {@link ArrayOfUserCode }
-     *     
+     * @return possible object is {@link ArrayOfUserCode }
+     * 
      */
     public ArrayOfUserCode getRecipientList() {
         return recipientList;
@@ -86,9 +81,8 @@ public class ShareDocumentRequest {
      * Sets the value of the recipientList property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link ArrayOfUserCode }
-     *     
+     *            allowed object is {@link ArrayOfUserCode }
+     * 
      */
     public void setRecipientList(ArrayOfUserCode value) {
         this.recipientList = value;
@@ -97,10 +91,8 @@ public class ShareDocumentRequest {
     /**
      * Gets the value of the reasonForSharing property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getReasonForSharing() {
         return reasonForSharing;
@@ -110,9 +102,8 @@ public class ShareDocumentRequest {
      * Sets the value of the reasonForSharing property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *            allowed object is {@link String }
+     * 
      */
     public void setReasonForSharing(String value) {
         this.reasonForSharing = value;
@@ -121,10 +112,8 @@ public class ShareDocumentRequest {
     /**
      * Gets the value of the sharedForSigning property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Boolean }
-     *     
+     * @return possible object is {@link Boolean }
+     * 
      */
     public Boolean getSharedForSigning() {
         return sharedForSigning;
@@ -134,9 +123,8 @@ public class ShareDocumentRequest {
      * Sets the value of the sharedForSigning property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link Boolean }
-     *     
+     *            allowed object is {@link Boolean }
+     * 
      */
     public void setSharedForSigning(Boolean value) {
         this.sharedForSigning = value;

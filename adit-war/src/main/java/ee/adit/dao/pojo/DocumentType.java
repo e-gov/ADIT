@@ -10,45 +10,50 @@ import java.util.Set;
  */
 public class DocumentType implements java.io.Serializable {
 
-	private String shortName;
-	private String description;
-	private Set documents = new HashSet(0);
+    /**
+     * Serial version UID
+     */
+    private static final long serialVersionUID = 1L;
+    
+    private String shortName;
+    private String description;
+    private Set<Document> documents = new HashSet<Document>(0);
 
-	public DocumentType() {
-	}
+    public DocumentType() {
+    }
 
-	public DocumentType(String shortName) {
-		this.shortName = shortName;
-	}
+    public DocumentType(String shortName) {
+        this.shortName = shortName;
+    }
 
-	public DocumentType(String shortName, String description, Set documents) {
-		this.shortName = shortName;
-		this.description = description;
-		this.documents = documents;
-	}
+    public DocumentType(String shortName, String description, Set<Document> documents) {
+        this.shortName = shortName;
+        this.description = description;
+        this.documents = documents;
+    }
 
-	public String getShortName() {
-		return this.shortName;
-	}
+    public String getShortName() {
+        return this.shortName;
+    }
 
-	public void setShortName(String shortName) {
-		this.shortName = shortName;
-	}
+    public void setShortName(String shortName) {
+        this.shortName = shortName;
+    }
 
-	public String getDescription() {
-		return this.description;
-	}
+    public String getDescription() {
+        return this.description;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public Set getDocuments() {
-		return this.documents;
-	}
+    public Set<Document> getDocuments() {
+        return this.documents;
+    }
 
-	public void setDocuments(Set documents) {
-		this.documents = documents;
-	}
+    public void setDocuments(Set<Document> documents) {
+        this.documents = documents;
+    }
 
 }

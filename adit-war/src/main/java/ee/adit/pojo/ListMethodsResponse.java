@@ -9,13 +9,11 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "ListMethodsResponse", propOrder = {
-    "item"
-})
+@XmlType(name = "ListMethodsResponse", propOrder = {"item" })
 public class ListMethodsResponse {
     @XmlElement(name = "item")
     protected List<String> item;
-    
+
     public List<String> getItem() {
         if (item == null) {
             item = new ArrayList<String>();
@@ -23,14 +21,14 @@ public class ListMethodsResponse {
         return this.item;
     }
 
-    public void setItem(List<String> item) {
-    	this.item = item;
+    public void setItem(List<String> itemParam) {
+        this.item = itemParam;
     }
-    
-    public void addItem(String item) {
-    	if (this.item == null) {
+
+    public void addItem(String itemParam) {
+        if (this.item == null) {
             this.item = new ArrayList<String>();
         }
-    	this.item.add(item);
+        this.item.add(itemParam);
     }
 }

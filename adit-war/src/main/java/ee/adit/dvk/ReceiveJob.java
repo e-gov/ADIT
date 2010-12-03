@@ -14,33 +14,33 @@ import ee.adit.service.DocumentService;
  */
 public class ReceiveJob extends QuartzJobBean {
 
-	private static Logger LOG = Logger.getLogger(ReceiveJob.class);
-	
-	private DocumentService documentService;
-	
-	@Override
-	protected void executeInternal(JobExecutionContext arg0) throws JobExecutionException {
-		
-		try {
-			LOG.info("Executing scheduled job: Receive documents from DVK");
-			
-			// Receive documents from DVK Client database		
-			int receivedDocumentsCount = this.getDocumentService().receiveDocumentsFromDVK();
+    private static Logger logger = Logger.getLogger(ReceiveJob.class);
 
-			LOG.debug("Documents received from DVK (" + receivedDocumentsCount + ")");
-			
-		} catch (Exception e) {
-			LOG.error("Error executing scheduled DVK receiving: ", e);
-		}
-		
-	}
+    private DocumentService documentService;
 
-	public DocumentService getDocumentService() {
-		return documentService;
-	}
+    @Override
+    protected void executeInternal(JobExecutionContext arg0) throws JobExecutionException {
 
-	public void setDocumentService(DocumentService documentService) {
-		this.documentService = documentService;
-	}
+        try {
+            logger.info("Executing scheduled job: Receive documents from DVK");
+
+            // Receive documents from DVK Client database
+            int receivedDocumentsCount = this.getDocumentService().receiveDocumentsFromDVK();
+
+            logger.debug("Documents received from DVK (" + receivedDocumentsCount + ")");
+
+        } catch (Exception e) {
+            logger.error("Error executing scheduled DVK receiving: ", e);
+        }
+
+    }
+
+    public DocumentService getDocumentService() {
+        return documentService;
+    }
+
+    public void setDocumentService(DocumentService documentService) {
+        this.documentService = documentService;
+    }
 
 }

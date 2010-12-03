@@ -5,7 +5,6 @@
 // Generated on: 2010.07.02 at 02:26:06 PM EEST 
 //
 
-
 package ee.adit.pojo;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -13,11 +12,13 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for GetDocumentFileResponse complex type.
+ * <p>
+ * Java class for GetDocumentFileResponse complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  * 
  * <pre>
  * &lt;complexType name="GetDocumentFileResponse">
@@ -44,11 +45,7 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "GetDocumentFileResponse", propOrder = {
-    "success",
-    "messages",
-    "files"
-})
+@XmlType(name = "GetDocumentFileResponse", propOrder = {"success", "messages", "files" })
 public class GetDocumentFileResponse {
 
     protected boolean success;
@@ -76,10 +73,8 @@ public class GetDocumentFileResponse {
     /**
      * Gets the value of the messages property.
      * 
-     * @return
-     *     possible object is
-     *     {@link ArrayOfMessage }
-     *     
+     * @return possible object is {@link ArrayOfMessage }
+     * 
      */
     public ArrayOfMessage getMessages() {
         return messages;
@@ -89,9 +84,8 @@ public class GetDocumentFileResponse {
      * Sets the value of the messages property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link ArrayOfMessage }
-     *     
+     *            allowed object is {@link ArrayOfMessage }
+     * 
      */
     public void setMessages(ArrayOfMessage value) {
         this.messages = value;
@@ -100,10 +94,8 @@ public class GetDocumentFileResponse {
     /**
      * Gets the value of the files property.
      * 
-     * @return
-     *     possible object is
-     *     {@link GetDocumentFileResponseFiles }
-     *     
+     * @return possible object is {@link GetDocumentFileResponseFiles }
+     * 
      */
     public GetDocumentFileResponseFiles getFiles() {
         return files;
@@ -113,9 +105,8 @@ public class GetDocumentFileResponse {
      * Sets the value of the files property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link GetDocumentFileResponseFiles }
-     *     
+     *            allowed object is {@link GetDocumentFileResponseFiles }
+     * 
      */
     public void setFiles(GetDocumentFileResponseFiles value) {
         this.files = value;

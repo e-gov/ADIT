@@ -5,7 +5,6 @@
 // Generated on: 2010.07.29 at 12:51:34 PM EEST 
 //
 
-
 package ee.adit.pojo;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -13,11 +12,13 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for EmailAddress complex type.
+ * <p>
+ * Java class for EmailAddress complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  * 
  * <pre>
  * &lt;complexType name="EmailAddress">
@@ -35,10 +36,7 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "EmailAddress", propOrder = {
-    "address",
-    "redirectedTo"
-})
+@XmlType(name = "EmailAddress", propOrder = {"address", "redirectedTo" })
 public class EmailAddress {
 
     @XmlElement(required = true)
@@ -49,10 +47,8 @@ public class EmailAddress {
     /**
      * Gets the value of the address property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getAddress() {
         return address;
@@ -62,9 +58,8 @@ public class EmailAddress {
      * Sets the value of the address property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *            allowed object is {@link String }
+     * 
      */
     public void setAddress(String value) {
         this.address = value;
@@ -73,10 +68,8 @@ public class EmailAddress {
     /**
      * Gets the value of the redirectedTo property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getRedirectedTo() {
         return redirectedTo;
@@ -86,9 +79,8 @@ public class EmailAddress {
      * Sets the value of the redirectedTo property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *            allowed object is {@link String }
+     * 
      */
     public void setRedirectedTo(String value) {
         this.redirectedTo = value;

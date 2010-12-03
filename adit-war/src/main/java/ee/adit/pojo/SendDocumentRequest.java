@@ -5,7 +5,6 @@
 // Generated on: 2010.07.20 at 11:37:41 AM EEST 
 //
 
-
 package ee.adit.pojo;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -13,11 +12,13 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for SendDocumentRequest complex type.
+ * <p>
+ * Java class for SendDocumentRequest complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  * 
  * <pre>
  * &lt;complexType name="SendDocumentRequest">
@@ -35,10 +36,7 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "SendDocumentRequest", propOrder = {
-    "documentId",
-    "recipientList"
-})
+@XmlType(name = "SendDocumentRequest", propOrder = {"documentId", "recipientList" })
 public class SendDocumentRequest {
 
     @XmlElement(name = "document_id", required = true)
@@ -49,10 +47,8 @@ public class SendDocumentRequest {
     /**
      * Gets the value of the documentId property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Long }
-     *     
+     * @return possible object is {@link Long }
+     * 
      */
     public Long getDocumentId() {
         return documentId;
@@ -62,9 +58,8 @@ public class SendDocumentRequest {
      * Sets the value of the documentId property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link Long }
-     *     
+     *            allowed object is {@link Long }
+     * 
      */
     public void setDocumentId(Long value) {
         this.documentId = value;
@@ -73,10 +68,8 @@ public class SendDocumentRequest {
     /**
      * Gets the value of the recipientList property.
      * 
-     * @return
-     *     possible object is
-     *     {@link ArrayOfUserCode }
-     *     
+     * @return possible object is {@link ArrayOfUserCode }
+     * 
      */
     public ArrayOfUserCode getRecipientList() {
         return recipientList;
@@ -86,9 +79,8 @@ public class SendDocumentRequest {
      * Sets the value of the recipientList property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link ArrayOfUserCode }
-     *     
+     *            allowed object is {@link ArrayOfUserCode }
+     * 
      */
     public void setRecipientList(ArrayOfUserCode value) {
         this.recipientList = value;

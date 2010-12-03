@@ -7,32 +7,35 @@ package ee.adit.dao.pojo;
  */
 public class UserNotification implements java.io.Serializable {
 
-	private UserNotificationId id;
-	private NotificationType notificationType;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+    private UserNotificationId id;
+    private NotificationType notificationType;
 
-	public UserNotification() {
-	}
+    public UserNotification() {
+    }
 
-	public UserNotification(UserNotificationId id,
-			NotificationType notificationType) {
-		this.id = id;
-		this.notificationType = notificationType;
-	}
+    public UserNotification(UserNotificationId id, NotificationType notificationType) {
+        this.id = id;
+        this.notificationType = notificationType;
+    }
 
-	public UserNotificationId getId() {
-		return this.id;
-	}
+    public UserNotificationId getId() {
+        return this.id;
+    }
 
-	public void setId(UserNotificationId id) {
-		this.id = id;
-	}
+    public void setId(UserNotificationId id) {
+        this.id = id;
+    }
 
-	public NotificationType getNotificationType() {
-		return this.notificationType;
-	}
+    public NotificationType getNotificationType() {
+        return this.notificationType;
+    }
 
-	public void setNotificationType(NotificationType notificationType) {
-		this.notificationType = notificationType;
-	}
+    public void setNotificationType(NotificationType notificationType) {
+        this.notificationType = notificationType;
+    }
 
 }

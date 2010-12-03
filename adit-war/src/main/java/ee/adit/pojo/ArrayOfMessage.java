@@ -5,20 +5,22 @@
 // Generated on: 2010.07.02 at 02:05:04 PM EEST 
 //
 
-
 package ee.adit.pojo;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for ArrayOfMessage complex type.
+ * <p>
+ * Java class for ArrayOfMessage complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  * 
  * <pre>
  * &lt;complexType name="ArrayOfMessage">
@@ -35,9 +37,7 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "ArrayOfMessage", propOrder = {
-    "message"
-})
+@XmlType(name = "ArrayOfMessage", propOrder = {"message" })
 public class ArrayOfMessage {
 
     protected List<Message> message;
@@ -46,21 +46,21 @@ public class ArrayOfMessage {
      * Gets the value of the message property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the message property.
+     * This accessor method returns a reference to the live list, not a
+     * snapshot. Therefore any modification you make to the returned list will
+     * be present inside the JAXB object. This is why there is not a
+     * <CODE>set</CODE> method for the message property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getMessage().add(newItem);
+     * getMessage().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link Message }
+     * Objects of the following type(s) are allowed in the list {@link Message }
      * 
      * 
      */
@@ -70,15 +70,15 @@ public class ArrayOfMessage {
         }
         return this.message;
     }
-    
-    public void setMessage(List<Message> message) {
-    	this.message = message;
+
+    public void setMessage(List<Message> msgs) {
+        this.message = msgs;
     }
-    
-    public void addMessage(Message message) {
-    	if (this.message == null) {
+
+    public void addMessage(Message msg) {
+        if (this.message == null) {
             this.message = new ArrayList<Message>();
         }
-    	this.message.add(message);
+        this.message.add(msg);
     }
 }

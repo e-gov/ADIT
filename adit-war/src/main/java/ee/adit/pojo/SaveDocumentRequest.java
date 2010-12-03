@@ -5,7 +5,6 @@
 // Generated on: 2010.06.21 at 02:30:22 PM EEST 
 //
 
-
 package ee.adit.pojo;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -13,11 +12,13 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for SaveDocumentRequest complex type.
+ * <p>
+ * Java class for SaveDocumentRequest complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  * 
  * <pre>
  * &lt;complexType name="SaveDocumentRequest">
@@ -42,9 +43,7 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "SaveDocumentRequest", propOrder = {
-    "document"
-})
+@XmlType(name = "SaveDocumentRequest", propOrder = {"document" })
 public class SaveDocumentRequest {
 
     @XmlElement(required = true)
@@ -53,10 +52,8 @@ public class SaveDocumentRequest {
     /**
      * Gets the value of the document property.
      * 
-     * @return
-     *     possible object is
-     *     {@link SaveDocumentRequestDocument }
-     *     
+     * @return possible object is {@link SaveDocumentRequestDocument }
+     * 
      */
     public SaveDocumentRequestDocument getDocument() {
         return document;
@@ -66,9 +63,8 @@ public class SaveDocumentRequest {
      * Sets the value of the document property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link SaveDocumentRequestDocument }
-     *     
+     *            allowed object is {@link SaveDocumentRequestDocument }
+     * 
      */
     public void setDocument(SaveDocumentRequestDocument value) {
         this.document = value;

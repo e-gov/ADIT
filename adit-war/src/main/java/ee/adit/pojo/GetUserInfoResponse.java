@@ -5,7 +5,6 @@
 // Generated on: 2010.06.16 at 02:48:15 PM EEST 
 //
 
-
 package ee.adit.pojo;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -13,11 +12,13 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for GetUserInfoResponse complex type.
+ * <p>
+ * Java class for GetUserInfoResponse complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  * 
  * <pre>
  * &lt;complexType name="GetUserInfoResponse">
@@ -36,15 +37,11 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "GetUserInfoResponse", propOrder = {
-    "success",
-    "messages",
-    "userList"
-})
+@XmlType(name = "GetUserInfoResponse", propOrder = {"success", "messages", "userList" })
 public class GetUserInfoResponse {
 
-	@XmlElement(required = true)
-	protected Success success;
+    @XmlElement(required = true)
+    protected Success success;
     @XmlElement(required = true)
     protected ArrayOfMessage messages;
     @XmlElement(required = true)
@@ -53,10 +50,8 @@ public class GetUserInfoResponse {
     /**
      * Gets the value of the messages property.
      * 
-     * @return
-     *     possible object is
-     *     {@link ArrayOfMessage }
-     *     
+     * @return possible object is {@link ArrayOfMessage }
+     * 
      */
     public ArrayOfMessage getMessages() {
         return messages;
@@ -66,28 +61,27 @@ public class GetUserInfoResponse {
      * Sets the value of the messages property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link ArrayOfMessage }
-     *     
+     *            allowed object is {@link ArrayOfMessage }
+     * 
      */
     public void setMessages(ArrayOfMessage value) {
         this.messages = value;
     }
 
-	public Success getSuccess() {
-		return success;
-	}
+    public Success getSuccess() {
+        return success;
+    }
 
-	public void setSuccess(Success success) {
-		this.success = success;
-	}
+    public void setSuccess(Success success) {
+        this.success = success;
+    }
 
-	public UserList getUserList() {
-		return userList;
-	}
+    public UserList getUserList() {
+        return userList;
+    }
 
-	public void setUserList(UserList userList) {
-		this.userList = userList;
-	}
+    public void setUserList(UserList userList) {
+        this.userList = userList;
+    }
 
 }

@@ -6,20 +6,22 @@ import ee.adit.pojo.Message;
 
 public class AditMultipleException extends AditException {
 
-	private List<Message> messages;
-	
-	public AditMultipleException(String message) {
-		super(message);
-	}
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+    private List<Message> messages;
 
-	public List<Message> getMessages() {
-		return messages;
-	}
+    public AditMultipleException(String message) {
+        super(message);
+    }
 
-	public void setMessages(List<Message> messages) {
-		this.messages = messages;
-	}
+    public List<Message> getMessages() {
+        return messages;
+    }
 
-	
-	
+    public void setMessages(List<Message> messages) {
+        this.messages = messages;
+    }
+
 }

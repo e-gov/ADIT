@@ -5,7 +5,6 @@
 // Generated on: 2010.06.16 at 02:48:15 PM EEST 
 //
 
-
 package ee.adit.pojo;
 
 import javax.xml.bind.JAXBElement;
@@ -13,37 +12,44 @@ import javax.xml.bind.annotation.XmlElementDecl;
 import javax.xml.bind.annotation.XmlRegistry;
 import javax.xml.namespace.QName;
 
-
 /**
- * This object contains factory methods for each 
- * Java content interface and Java element interface 
- * generated in the ee.adit.pojo package. 
- * <p>An ObjectFactory allows you to programatically 
- * construct new instances of the Java representation 
- * for XML content. The Java representation of XML 
- * content can consist of schema derived interfaces 
- * and classes representing the binding of schema 
- * type definitions, element declarations and model 
- * groups.  Factory methods for each of these are 
- * provided in this class.
+ * This object contains factory methods for each Java content interface and Java
+ * element interface generated in the ee.adit.pojo package.
+ * <p>
+ * An ObjectFactory allows you to programatically construct new instances of the
+ * Java representation for XML content. The Java representation of XML content
+ * can consist of schema derived interfaces and classes representing the binding
+ * of schema type definitions, element declarations and model groups. Factory
+ * methods for each of these are provided in this class.
  * 
  */
 @XmlRegistry
 public class ObjectFactory {
 
-    private final static QName _GetJoinedRequest_QNAME = new QName("http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid", "GetJoinedRequest");
-    private final static QName _GetDocumentRequest_QNAME = new QName("http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid", "GetDocumentRequest");
-    private final static QName _GetJoinedResponse_QNAME = new QName("http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid", "GetJoinedResponse");
-    private final static QName _JoinResponse_QNAME = new QName("http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid", "JoinResponse");
-    private final static QName _GetDocumentResponse_QNAME = new QName("http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid", "GetDocumentResponse");
-    private final static QName _UnJoinRequest_QNAME = new QName("http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid", "UnJoinRequest");
-    private final static QName _GetUserInfoRequest_QNAME = new QName("http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid", "GetUserInfoRequest");
-    private final static QName _JoinRequest_QNAME = new QName("http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid", "JoinRequest");
-    private final static QName _UnJoinResponse_QNAME = new QName("http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid", "UnJoinResponse");
-    private final static QName _GetUserInfoResponse_QNAME = new QName("http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid", "GetUserInfoResponse");
+    private static final QName _GetJoinedRequest_QNAME = new QName(
+            "http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid", "GetJoinedRequest");
+    private static final QName _GetDocumentRequest_QNAME = new QName(
+            "http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid", "GetDocumentRequest");
+    private static final QName _GetJoinedResponse_QNAME = new QName(
+            "http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid", "GetJoinedResponse");
+    private static final QName _JoinResponse_QNAME = new QName(
+            "http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid", "JoinResponse");
+    private static final QName _GetDocumentResponse_QNAME = new QName(
+            "http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid", "GetDocumentResponse");
+    private static final QName _UnJoinRequest_QNAME = new QName(
+            "http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid", "UnJoinRequest");
+    private static final QName _GetUserInfoRequest_QNAME = new QName(
+            "http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid", "GetUserInfoRequest");
+    private static final QName _JoinRequest_QNAME = new QName(
+            "http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid", "JoinRequest");
+    private static final QName _UnJoinResponse_QNAME = new QName(
+            "http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid", "UnJoinResponse");
+    private static final QName _GetUserInfoResponse_QNAME = new QName(
+            "http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid", "GetUserInfoResponse");
 
     /**
-     * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: ee.adit.pojo
+     * Create a new ObjectFactory that can be used to create new instances of
+     * schema derived classes for package: ee.adit.pojo
      * 
      */
     public ObjectFactory() {
@@ -138,7 +144,8 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link GetJoinedRequest }{@code >}}
+     * Create an instance of {@link JAXBElement }{@code <}
+     * {@link GetJoinedRequest }{@code >}
      * 
      */
     @XmlElementDecl(namespace = "http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid", name = "GetJoinedRequest")
@@ -147,7 +154,8 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link GetDocumentRequest }{@code >}}
+     * Create an instance of {@link JAXBElement }{@code <}
+     * {@link GetDocumentRequest }{@code >}
      * 
      */
     @XmlElementDecl(namespace = "http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid", name = "GetDocumentRequest")
@@ -156,7 +164,8 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link GetJoinedResponse }{@code >}}
+     * Create an instance of {@link JAXBElement }{@code <}
+     * {@link GetJoinedResponse }{@code >}
      * 
      */
     @XmlElementDecl(namespace = "http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid", name = "GetJoinedResponse")
@@ -165,7 +174,8 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link JoinResponse }{@code >}}
+     * Create an instance of {@link JAXBElement }{@code <}{@link JoinResponse }
+     * {@code >}
      * 
      */
     @XmlElementDecl(namespace = "http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid", name = "JoinResponse")
@@ -174,7 +184,8 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link GetDocumentResponse }{@code >}}
+     * Create an instance of {@link JAXBElement }{@code <}
+     * {@link GetDocumentResponse }{@code >}
      * 
      */
     @XmlElementDecl(namespace = "http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid", name = "GetDocumentResponse")
@@ -183,7 +194,8 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link UnJoinRequest }{@code >}}
+     * Create an instance of {@link JAXBElement }{@code <}{@link UnJoinRequest }
+     * {@code >}
      * 
      */
     @XmlElementDecl(namespace = "http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid", name = "UnJoinRequest")
@@ -192,7 +204,8 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link GetUserInfoRequest }{@code >}}
+     * Create an instance of {@link JAXBElement }{@code <}
+     * {@link GetUserInfoRequest }{@code >}
      * 
      */
     @XmlElementDecl(namespace = "http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid", name = "GetUserInfoRequest")
@@ -201,7 +214,8 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link JoinRequest }{@code >}}
+     * Create an instance of {@link JAXBElement }{@code <}{@link JoinRequest }
+     * {@code >}
      * 
      */
     @XmlElementDecl(namespace = "http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid", name = "JoinRequest")
@@ -210,7 +224,8 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link UnJoinResponse }{@code >}}
+     * Create an instance of {@link JAXBElement }{@code <}{@link UnJoinResponse }
+     * {@code >}
      * 
      */
     @XmlElementDecl(namespace = "http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid", name = "UnJoinResponse")
@@ -219,7 +234,8 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link GetUserInfoResponse }{@code >}}
+     * Create an instance of {@link JAXBElement }{@code <}
+     * {@link GetUserInfoResponse }{@code >}
      * 
      */
     @XmlElementDecl(namespace = "http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid", name = "GetUserInfoResponse")

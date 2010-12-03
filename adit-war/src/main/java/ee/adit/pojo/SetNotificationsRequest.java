@@ -5,7 +5,6 @@
 // Generated on: 2010.07.16 at 12:41:02 PM EEST 
 //
 
-
 package ee.adit.pojo;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -13,11 +12,13 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for SetNotificationsRequest complex type.
+ * <p>
+ * Java class for SetNotificationsRequest complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  * 
  * <pre>
  * &lt;complexType name="SetNotificationsRequest">
@@ -34,9 +35,7 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "SetNotificationsRequest", propOrder = {
-    "notifications"
-})
+@XmlType(name = "SetNotificationsRequest", propOrder = {"notifications" })
 public class SetNotificationsRequest {
 
     @XmlElement(required = true)
@@ -45,10 +44,8 @@ public class SetNotificationsRequest {
     /**
      * Gets the value of the notifications property.
      * 
-     * @return
-     *     possible object is
-     *     {@link ArrayOfNotification }
-     *     
+     * @return possible object is {@link ArrayOfNotification }
+     * 
      */
     public ArrayOfNotification getNotifications() {
         return notifications;
@@ -58,9 +55,8 @@ public class SetNotificationsRequest {
      * Sets the value of the notifications property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link ArrayOfNotification }
-     *     
+     *            allowed object is {@link ArrayOfNotification }
+     * 
      */
     public void setNotifications(ArrayOfNotification value) {
         this.notifications = value;

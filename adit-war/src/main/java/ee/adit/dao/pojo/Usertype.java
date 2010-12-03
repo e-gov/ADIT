@@ -10,56 +10,60 @@ import java.util.Set;
  */
 public class Usertype implements java.io.Serializable {
 
-	private String shortName;
-	private String description;
-	private Long diskQuota;
-	private Set aditUsers = new HashSet(0);
+    /**
+     * Serial version UID 
+     */
+    private static final long serialVersionUID = 1L;
+    
+    private String shortName;
+    private String description;
+    private Long diskQuota;
+    private Set<AditUser> aditUsers = new HashSet<AditUser>(0);
 
-	public Usertype() {
-	}
+    public Usertype() {
+    }
 
-	public Usertype(String shortName) {
-		this.shortName = shortName;
-	}
+    public Usertype(String shortName) {
+        this.shortName = shortName;
+    }
 
-	public Usertype(String shortName, String description, Long diskQuota,
-			Set aditUsers) {
-		this.shortName = shortName;
-		this.description = description;
-		this.diskQuota = diskQuota;
-		this.aditUsers = aditUsers;
-	}
+    public Usertype(String shortName, String description, Long diskQuota, Set<AditUser> aditUsers) {
+        this.shortName = shortName;
+        this.description = description;
+        this.diskQuota = diskQuota;
+        this.aditUsers = aditUsers;
+    }
 
-	public String getShortName() {
-		return this.shortName;
-	}
+    public String getShortName() {
+        return this.shortName;
+    }
 
-	public void setShortName(String shortName) {
-		this.shortName = shortName;
-	}
+    public void setShortName(String shortName) {
+        this.shortName = shortName;
+    }
 
-	public String getDescription() {
-		return this.description;
-	}
+    public String getDescription() {
+        return this.description;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public Long getDiskQuota() {
-		return this.diskQuota;
-	}
+    public Long getDiskQuota() {
+        return this.diskQuota;
+    }
 
-	public void setDiskQuota(Long diskQuota) {
-		this.diskQuota = diskQuota;
-	}
+    public void setDiskQuota(Long diskQuota) {
+        this.diskQuota = diskQuota;
+    }
 
-	public Set getAditUsers() {
-		return this.aditUsers;
-	}
+    public Set<AditUser> getAditUsers() {
+        return this.aditUsers;
+    }
 
-	public void setAditUsers(Set aditUsers) {
-		this.aditUsers = aditUsers;
-	}
+    public void setAditUsers(Set<AditUser> aditUsers) {
+        this.aditUsers = aditUsers;
+    }
 
 }

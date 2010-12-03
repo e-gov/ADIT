@@ -5,20 +5,22 @@
 // Generated on: 2010.07.08 at 11:09:52 AM EEST 
 //
 
-
 package ee.adit.pojo;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for ArrayOfRecipientStatus complex type.
+ * <p>
+ * Java class for ArrayOfRecipientStatus complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  * 
  * <pre>
  * &lt;complexType name="ArrayOfRecipientStatus">
@@ -35,9 +37,7 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "ArrayOfRecipientStatus", propOrder = {
-    "recipient"
-})
+@XmlType(name = "ArrayOfRecipientStatus", propOrder = {"recipient" })
 public class ArrayOfRecipientStatus {
 
     protected List<RecipientStatus> recipient;
@@ -46,15 +46,16 @@ public class ArrayOfRecipientStatus {
      * Gets the value of the recipient property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the recipient property.
+     * This accessor method returns a reference to the live list, not a
+     * snapshot. Therefore any modification you make to the returned list will
+     * be present inside the JAXB object. This is why there is not a
+     * <CODE>set</CODE> method for the recipient property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getRecipient().add(newItem);
+     * getRecipient().add(newItem);
      * </pre>
      * 
      * 
@@ -72,13 +73,13 @@ public class ArrayOfRecipientStatus {
     }
 
     public void setRecipient(List<RecipientStatus> recipient) {
-    	this.recipient = recipient;
+        this.recipient = recipient;
     }
-    
-    public void addRecipient(RecipientStatus recipient) {
-    	if (this.recipient == null) {
+
+    public void addRecipient(RecipientStatus recip) {
+        if (this.recipient == null) {
             this.recipient = new ArrayList<RecipientStatus>();
         }
-    	this.recipient.add(recipient);
+        this.recipient.add(recip);
     }
 }

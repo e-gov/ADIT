@@ -5,7 +5,6 @@
 // Generated on: 2010.07.16 at 04:32:16 PM EEST 
 //
 
-
 package ee.adit.pojo;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -13,11 +12,13 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for GetNotificationsResponse complex type.
+ * <p>
+ * Java class for GetNotificationsResponse complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  * 
  * <pre>
  * &lt;complexType name="GetNotificationsResponse">
@@ -38,13 +39,8 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "GetNotificationsResponse", propOrder = {
-    "success",
-    "messages",
-    "notifications",
-    "notificationsActive",
-    "addressList"
-})
+@XmlType(name = "GetNotificationsResponse", propOrder = {"success", "messages", "notifications", "notificationsActive",
+        "addressList" })
 public class GetNotificationsResponse {
 
     protected boolean success;
@@ -76,10 +72,8 @@ public class GetNotificationsResponse {
     /**
      * Gets the value of the messages property.
      * 
-     * @return
-     *     possible object is
-     *     {@link ArrayOfMessage }
-     *     
+     * @return possible object is {@link ArrayOfMessage }
+     * 
      */
     public ArrayOfMessage getMessages() {
         return messages;
@@ -89,9 +83,8 @@ public class GetNotificationsResponse {
      * Sets the value of the messages property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link ArrayOfMessage }
-     *     
+     *            allowed object is {@link ArrayOfMessage }
+     * 
      */
     public void setMessages(ArrayOfMessage value) {
         this.messages = value;
@@ -100,10 +93,8 @@ public class GetNotificationsResponse {
     /**
      * Gets the value of the notifications property.
      * 
-     * @return
-     *     possible object is
-     *     {@link ArrayOfNotification }
-     *     
+     * @return possible object is {@link ArrayOfNotification }
+     * 
      */
     public ArrayOfNotification getNotifications() {
         return notifications;
@@ -113,9 +104,8 @@ public class GetNotificationsResponse {
      * Sets the value of the notifications property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link ArrayOfNotification }
-     *     
+     *            allowed object is {@link ArrayOfNotification }
+     * 
      */
     public void setNotifications(ArrayOfNotification value) {
         this.notifications = value;
@@ -140,10 +130,8 @@ public class GetNotificationsResponse {
     /**
      * Gets the value of the addressList property.
      * 
-     * @return
-     *     possible object is
-     *     {@link ArrayOfEmailAddress }
-     *     
+     * @return possible object is {@link ArrayOfEmailAddress }
+     * 
      */
     public ArrayOfEmailAddress getAddressList() {
         return addressList;
@@ -153,9 +141,8 @@ public class GetNotificationsResponse {
      * Sets the value of the addressList property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link ArrayOfEmailAddress }
-     *     
+     *            allowed object is {@link ArrayOfEmailAddress }
+     * 
      */
     public void setAddressList(ArrayOfEmailAddress value) {
         this.addressList = value;

@@ -1,27 +1,26 @@
 package ee.adit.pojo.notification;
 
-import java.math.BigInteger;
 
 public class LisaSyndmusResponse {
 
-	private LisaSyndmusResponseTulemus tulemus;
-	
-	private Integer syndmusId;
+    private LisaSyndmusResponseTulemus tulemus;
 
-	public LisaSyndmusResponseTulemus getTulemus() {
-		return tulemus;
-	}
+    private Integer syndmusId;
 
-	public void setTulemus(LisaSyndmusResponseTulemus tulemus) {
-		this.tulemus = tulemus;
-	}
+    public LisaSyndmusResponseTulemus getTulemus() {
+        return tulemus;
+    }
 
-	public Integer getSyndmusId() {
-		return syndmusId;
-	}
+    public void setTulemus(LisaSyndmusResponseTulemus tulemus) {
+        this.tulemus = tulemus;
+    }
 
-	public void setSyndmusId(Integer syndmusId) {
-		this.syndmusId = syndmusId;
-	}
-	
+    public Integer getSyndmusId() {
+        return syndmusId;
+    }
+
+    public void setSyndmusId(Integer syndmusId) {
+        this.syndmusId = syndmusId;
+    }
+
 }

@@ -1,16 +1,17 @@
 package ee.adit.pojo;
 
-import java.math.BigInteger;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
 /**
- * <p>Java class for DeleteDocumentFileRequest complex type.
+ * <p>
+ * Java class for DeleteDocumentFileRequest complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  * 
  * <pre>
  * &lt;complexType name="DeleteDocumentFileRequest">
@@ -28,24 +29,19 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "DeleteDocumentFileRequest", propOrder = {
-	"documentId",
-	"fileId"
-})
+@XmlType(name = "DeleteDocumentFileRequest", propOrder = {"documentId", "fileId" })
 public class DeleteDocumentFileRequest {
 
     @XmlElement(name = "document_id", required = true)
     protected long documentId;
     @XmlElement(name = "file_id", required = true)
     protected long fileId;
-    
+
     /**
      * Gets the value of the documentId property.
      * 
-     * @return
-     *     possible object is
-     *     {@link BigInteger }
-     *     
+     * @return possible long
+     * 
      */
     public long getDocumentId() {
         return documentId;
@@ -55,21 +51,18 @@ public class DeleteDocumentFileRequest {
      * Sets the value of the documentId property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link BigInteger }
-     *     
+     *            allowed long
+     * 
      */
     public void setDocumentId(long value) {
         this.documentId = value;
     }
-    
+
     /**
      * Gets the value of the fileId property.
      * 
-     * @return
-     *     possible object is
-     *     {@link BigInteger }
-     *     
+     * @return possible long
+     * 
      */
     public long getFileId() {
         return fileId;
@@ -79,9 +72,8 @@ public class DeleteDocumentFileRequest {
      * Sets the value of the fileId property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link BigInteger }
-     *     
+     *            allowed long
+     * 
      */
     public void setFileId(long value) {
         this.fileId = value;

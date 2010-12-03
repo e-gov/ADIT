@@ -2,34 +2,34 @@ package ee.adit.pojo;
 
 public class GetJoinedResponseAttachmentUser {
 
-	private String code;
-	
-	private String name;
-	
-	private String type;
+    private String code;
 
-	public String getCode() {
-		return code;
-	}
+    private String name;
 
-	public void setCode(String code) {
-		this.code = code;
-	}
+    private String type;
 
-	public String getName() {
-		return name;
-	}
+    public String getCode() {
+        return code;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setCode(String code) {
+        this.code = code;
+    }
 
-	public String getType() {
-		return type;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setType(String type) {
-		this.type = type;
-	}
-	
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
 }

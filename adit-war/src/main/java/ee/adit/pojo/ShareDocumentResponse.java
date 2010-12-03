@@ -5,7 +5,6 @@
 // Generated on: 2010.07.08 at 02:57:06 PM EEST 
 //
 
-
 package ee.adit.pojo;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -13,11 +12,13 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for ShareDocumentResponse complex type.
+ * <p>
+ * Java class for ShareDocumentResponse complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  * 
  * <pre>
  * &lt;complexType name="ShareDocumentResponse">
@@ -36,11 +37,7 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "ShareDocumentResponse", propOrder = {
-    "success",
-    "messages",
-    "recipientList"
-})
+@XmlType(name = "ShareDocumentResponse", propOrder = {"success", "messages", "recipientList" })
 public class ShareDocumentResponse {
 
     protected boolean success;
@@ -68,10 +65,8 @@ public class ShareDocumentResponse {
     /**
      * Gets the value of the messages property.
      * 
-     * @return
-     *     possible object is
-     *     {@link ArrayOfMessage }
-     *     
+     * @return possible object is {@link ArrayOfMessage }
+     * 
      */
     public ArrayOfMessage getMessages() {
         return messages;
@@ -81,9 +76,8 @@ public class ShareDocumentResponse {
      * Sets the value of the messages property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link ArrayOfMessage }
-     *     
+     *            allowed object is {@link ArrayOfMessage }
+     * 
      */
     public void setMessages(ArrayOfMessage value) {
         this.messages = value;
@@ -92,10 +86,8 @@ public class ShareDocumentResponse {
     /**
      * Gets the value of the recipientList property.
      * 
-     * @return
-     *     possible object is
-     *     {@link ArrayOfRecipientStatus }
-     *     
+     * @return possible object is {@link ArrayOfRecipientStatus }
+     * 
      */
     public ArrayOfRecipientStatus getRecipientList() {
         return recipientList;
@@ -105,9 +97,8 @@ public class ShareDocumentResponse {
      * Sets the value of the recipientList property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link ArrayOfRecipientStatus }
-     *     
+     *            allowed object is {@link ArrayOfRecipientStatus }
+     * 
      */
     public void setRecipientList(ArrayOfRecipientStatus value) {
         this.recipientList = value;

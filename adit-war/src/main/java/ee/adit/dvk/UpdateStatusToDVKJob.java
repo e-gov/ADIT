@@ -14,33 +14,33 @@ import ee.adit.service.DocumentService;
  */
 public class UpdateStatusToDVKJob extends QuartzJobBean {
 
-	private static Logger LOG = Logger.getLogger(UpdateStatusToDVKJob.class);
-	
-	private DocumentService documentService;
-	
-	@Override
-	protected void executeInternal(JobExecutionContext arg0) throws JobExecutionException {
-		
-		try {
-			LOG.info("Executing scheduled job: Updating document statuses to DVK");
-			
-			// Update document statuses from DVK		
-			int updatedDocumentsCount = this.getDocumentService().updateDocumentsToDVK();
+    private static Logger logger = Logger.getLogger(UpdateStatusToDVKJob.class);
 
-			LOG.debug("Document statuses updated to DVK (" + updatedDocumentsCount + ")");
-			
-		} catch (Exception e) {
-			LOG.error("Error executing scheduled DVK statuses update: ", e);
-		}
-		
-	}
+    private DocumentService documentService;
 
-	public DocumentService getDocumentService() {
-		return documentService;
-	}
+    @Override
+    protected void executeInternal(JobExecutionContext arg0) throws JobExecutionException {
 
-	public void setDocumentService(DocumentService documentService) {
-		this.documentService = documentService;
-	}
+        try {
+            logger.info("Executing scheduled job: Updating document statuses to DVK");
+
+            // Update document statuses from DVK
+            int updatedDocumentsCount = this.getDocumentService().updateDocumentsToDVK();
+
+            logger.debug("Document statuses updated to DVK (" + updatedDocumentsCount + ")");
+
+        } catch (Exception e) {
+            logger.error("Error executing scheduled DVK statuses update: ", e);
+        }
+
+    }
+
+    public DocumentService getDocumentService() {
+        return documentService;
+    }
+
+    public void setDocumentService(DocumentService documentService) {
+        this.documentService = documentService;
+    }
 
 }

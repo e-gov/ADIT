@@ -5,7 +5,6 @@
 // Generated on: 2010.07.08 at 11:09:52 AM EEST 
 //
 
-
 package ee.adit.pojo;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -13,11 +12,13 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for UnShareDocumentRequest complex type.
+ * <p>
+ * Java class for UnShareDocumentRequest complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  * 
  * <pre>
  * &lt;complexType name="UnShareDocumentRequest">
@@ -35,10 +36,7 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "UnShareDocumentRequest", propOrder = {
-    "documentId",
-    "recipientList"
-})
+@XmlType(name = "UnShareDocumentRequest", propOrder = {"documentId", "recipientList" })
 public class UnShareDocumentRequest {
 
     @XmlElement(name = "document_id", required = true)
@@ -65,10 +63,8 @@ public class UnShareDocumentRequest {
     /**
      * Gets the value of the recipientList property.
      * 
-     * @return
-     *     possible object is
-     *     {@link ArrayOfUserCode }
-     *     
+     * @return possible object is {@link ArrayOfUserCode }
+     * 
      */
     public ArrayOfUserCode getRecipientList() {
         return recipientList;
@@ -78,9 +74,8 @@ public class UnShareDocumentRequest {
      * Sets the value of the recipientList property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link ArrayOfUserCode }
-     *     
+     *            allowed object is {@link ArrayOfUserCode }
+     * 
      */
     public void setRecipientList(ArrayOfUserCode value) {
         this.recipientList = value;

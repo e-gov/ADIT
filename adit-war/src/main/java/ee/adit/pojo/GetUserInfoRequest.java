@@ -6,20 +6,16 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "GetUserInfoRequest", propOrder = {
-    "userList"
-})
+@XmlType(name = "GetUserInfoRequest", propOrder = {"userList" })
 public class GetUserInfoRequest {
-	
+
     @XmlElement(required = true)
     protected GetUserInfoRequestUserList userList;
 
     /**
      * Gets the value of the userList property.
      * 
-     * @return
-     *     possible object is
-     *     byte[]
+     * @return possible object is byte[]
      */
     public GetUserInfoRequestUserList getUserList() {
         return userList;
@@ -29,8 +25,7 @@ public class GetUserInfoRequest {
      * Sets the value of the userList property.
      * 
      * @param value
-     *     allowed object is
-     *     byte[]
+     *            allowed object is byte[]
      */
     public void setUserList(GetUserInfoRequestUserList value) {
         this.userList = (value);

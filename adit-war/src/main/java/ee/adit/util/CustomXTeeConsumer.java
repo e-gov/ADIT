@@ -5,7 +5,6 @@ import java.util.Collection;
 import org.apache.log4j.Logger;
 import org.springframework.ws.client.core.WebServiceTemplate;
 
-import ee.webmedia.xtee.client.factory.StandardXTeeMessageCallbackFactory;
 import ee.webmedia.xtee.client.service.XTeeAttachment;
 import ee.webmedia.xtee.client.service.XTeeServiceConfiguration;
 
@@ -16,69 +15,71 @@ import ee.webmedia.xtee.client.service.XTeeServiceConfiguration;
  */
 public class CustomXTeeConsumer {
 
-	
-	private static Logger LOG = Logger.getLogger(CustomXTeeConsumer.class);
-	
-	protected WebServiceTemplate webServiceTemplate;
-	protected CustomMessageCallbackFactory msgCallbackFactory;
-	private XTeeServiceConfiguration serviceConfiguration;
+    private static Logger logger = Logger.getLogger(CustomXTeeConsumer.class);
 
-	/**
-	 * Sets the central class for client-side Web services
-	 */
-	public void setWebServiceTemplate(WebServiceTemplate webServiceTemplate) {
-		this.webServiceTemplate = webServiceTemplate;
-	}
+    protected WebServiceTemplate webServiceTemplate;
+    protected CustomMessageCallbackFactory msgCallbackFactory;
+    private XTeeServiceConfiguration serviceConfiguration;
 
-	/**
-	 * Sets the factory that is used to produce
-	 * <code>WebServiceMessageCallback</code> when web service invocation is
-	 * made.
-	 */
-	public void setMsgCallbackFactory(CustomMessageCallbackFactory msgCallbackFactory) {
-		this.msgCallbackFactory = msgCallbackFactory;
-	}
+    /**
+     * Sets the central class for client-side Web services
+     */
+    public void setWebServiceTemplate(WebServiceTemplate webServiceTemplate) {
+        this.webServiceTemplate = webServiceTemplate;
+    }
 
-	/**
-	 * Sets service configurator, which overrides values taken from spring
-	 * configuration if possible.
-	 * 
-	 * @param serviceConfiguration
-	 */
-	public void setServiceConfiguration(XTeeServiceConfiguration serviceConfigurator) {
-		this.serviceConfiguration = serviceConfigurator;
-	}
+    /**
+     * Sets the factory that is used to produce
+     * <code>WebServiceMessageCallback</code> when web service invocation is
+     * made.
+     */
+    public void setMsgCallbackFactory(CustomMessageCallbackFactory msgCallbackFactory) {
+        this.msgCallbackFactory = msgCallbackFactory;
+    }
 
-	public XTeeServiceConfiguration getServiceConfiguration() {
-		return serviceConfiguration;
-	}
+    /**
+     * Sets service configurator, which overrides values taken from spring
+     * configuration if possible.
+     * 
+     * @param serviceConfiguration
+     */
+    public void setServiceConfiguration(XTeeServiceConfiguration serviceConfigurator) {
+        this.serviceConfiguration = serviceConfigurator;
+    }
 
-	public WebServiceTemplate getWebServiceTemplate() {
-		return webServiceTemplate;
-	}
+    public XTeeServiceConfiguration getServiceConfiguration() {
+        return serviceConfiguration;
+    }
 
-	public <T> Object sendRequest(T t) {
-		return sendRealRequest(t, serviceConfiguration, null);
-	}
+    public WebServiceTemplate getWebServiceTemplate() {
+        return webServiceTemplate;
+    }
 
-	public <T> Object sendRequest(T t, Collection<XTeeAttachment> attachments) {
-		return sendRealRequest(t, serviceConfiguration, attachments);
-	}
+    public <T> Object sendRequest(T t) {
+        return sendRealRequest(t, serviceConfiguration, null);
+    }
 
-	public <T> Object sendRequest(T t, XTeeServiceConfiguration xteeServiceConfigurator) {
-		return sendRealRequest(t, xteeServiceConfigurator, null);
-	}
+    public <T> Object sendRequest(T t, Collection<XTeeAttachment> attachments) {
+        return sendRealRequest(t, serviceConfiguration, attachments);
+    }
 
-	public <T> Object sendRequest(T t, XTeeServiceConfiguration xteeServiceConfigurator, Collection<XTeeAttachment> attachments) {
-		return sendRealRequest(t, xteeServiceConfigurator, attachments);
-	}
+    public <T> Object sendRequest(T t, XTeeServiceConfiguration xteeServiceConfigurator) {
+        return sendRealRequest(t, xteeServiceConfigurator, null);
+    }
 
-	private <T> Object sendRealRequest(T t, XTeeServiceConfiguration xteeServiceConfigurator, Collection<XTeeAttachment> attachments) {
-		LOG.debug("Sending request using CustomXTeeConsumer...");
-		return webServiceTemplate.marshalSendAndReceive(serviceConfiguration.getSecurityServer(), t, getCurrentMessageCallbackFactory().create(xteeServiceConfigurator, attachments));
-	}
+    public <T> Object sendRequest(T t, XTeeServiceConfiguration xteeServiceConfigurator,
+            Collection<XTeeAttachment> attachments) {
+        return sendRealRequest(t, xteeServiceConfigurator, attachments);
+    }
 
-	protected CustomMessageCallbackFactory getCurrentMessageCallbackFactory() {
-		return msgCallbackFactory != null ? msgCallbackFactory : new CustomMessageCallbackFactory();
-	}
+    private <T> Object sendRealRequest(T t, XTeeServiceConfiguration xteeServiceConfigurator,
+            Collection<XTeeAttachment> attachments) {
+        logger.debug("Sending request using CustomXTeeConsumer...");
+        return webServiceTemplate.marshalSendAndReceive(serviceConfiguration.getSecurityServer(), t,
+                getCurrentMessageCallbackFactory().create(xteeServiceConfigurator, attachments));
+    }
+
+    protected CustomMessageCallbackFactory getCurrentMessageCallbackFactory() {
+        return msgCallbackFactory != null ? msgCallbackFactory : new CustomMessageCallbackFactory();
+    }
 }

@@ -2,74 +2,74 @@ package ee.adit.pojo;
 
 public class GetUserInfoResponseAttachmentUser {
 
-	String userCode;
-	
-	boolean hasJoined;
-	
-	Long freeSpace;
-	
-	Long usedSpace;
-	
-	boolean canRead;
-	
-	boolean canWrite;
-	
-	boolean usesDVK;
+    String userCode;
 
-	public String getUserCode() {
-		return userCode;
-	}
+    boolean hasJoined;
 
-	public void setUserCode(String userCode) {
-		this.userCode = userCode;
-	}
+    Long freeSpace;
 
-	public boolean isHasJoined() {
-		return hasJoined;
-	}
+    Long usedSpace;
 
-	public void setHasJoined(boolean hasJoined) {
-		this.hasJoined = hasJoined;
-	}
+    boolean canRead;
 
-	public Long getFreeSpace() {
-		return freeSpace;
-	}
+    boolean canWrite;
 
-	public void setFreeSpace(Long freeSpace) {
-		this.freeSpace = freeSpace;
-	}
+    boolean usesDVK;
 
-	public Long getUsedSpace() {
-		return usedSpace;
-	}
+    public String getUserCode() {
+        return userCode;
+    }
 
-	public void setUsedSpace(Long usedSpace) {
-		this.usedSpace = usedSpace;
-	}
+    public void setUserCode(String userCode) {
+        this.userCode = userCode;
+    }
 
-	public boolean isCanRead() {
-		return canRead;
-	}
+    public boolean isHasJoined() {
+        return hasJoined;
+    }
 
-	public void setCanRead(boolean canRead) {
-		this.canRead = canRead;
-	}
+    public void setHasJoined(boolean hasJoined) {
+        this.hasJoined = hasJoined;
+    }
 
-	public boolean isCanWrite() {
-		return canWrite;
-	}
+    public Long getFreeSpace() {
+        return freeSpace;
+    }
 
-	public void setCanWrite(boolean canWrite) {
-		this.canWrite = canWrite;
-	}
+    public void setFreeSpace(Long freeSpace) {
+        this.freeSpace = freeSpace;
+    }
 
-	public boolean isUsesDVK() {
-		return usesDVK;
-	}
+    public Long getUsedSpace() {
+        return usedSpace;
+    }
 
-	public void setUsesDVK(boolean usesDVK) {
-		this.usesDVK = usesDVK;
-	}
-	
+    public void setUsedSpace(Long usedSpace) {
+        this.usedSpace = usedSpace;
+    }
+
+    public boolean isCanRead() {
+        return canRead;
+    }
+
+    public void setCanRead(boolean canRead) {
+        this.canRead = canRead;
+    }
+
+    public boolean isCanWrite() {
+        return canWrite;
+    }
+
+    public void setCanWrite(boolean canWrite) {
+        this.canWrite = canWrite;
+    }
+
+    public boolean isUsesDVK() {
+        return usesDVK;
+    }
+
+    public void setUsesDVK(boolean usesDVK) {
+        this.usesDVK = usesDVK;
+    }
+
 }

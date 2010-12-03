@@ -2,144 +2,144 @@ package ee.adit.util;
 
 public class MonitorConfiguration {
 
-	private String aditServiceUrl;
-	
-	private String remoteApplicationShortName;
-	
-	private String userCode;
-	
-	private String institutionCode;
-	
-	private Long testDocumentId;
-	
-	private Long dvkTestDocumentID;
-	
-	private Long testDocumentFileId;
-	
-	private String testUserCode;
-	
-	private Long documentSaveInterval;
-	
-	private Long documentSendToDvkInterval;
-	
-	private Long documentSendToAditInterval;
-	
-	private Long notificationSendInterval;
-	
-	private Long errorInterval;
+    private String aditServiceUrl;
 
-	private String errorLevel;
-	
-	public String getAditServiceUrl() {
-		return aditServiceUrl;
-	}
+    private String remoteApplicationShortName;
 
-	public void setAditServiceUrl(String aditServiceUrl) {
-		this.aditServiceUrl = aditServiceUrl;
-	}
+    private String userCode;
 
-	public String getRemoteApplicationShortName() {
-		return remoteApplicationShortName;
-	}
+    private String institutionCode;
 
-	public void setRemoteApplicationShortName(String remoteApplicationShortName) {
-		this.remoteApplicationShortName = remoteApplicationShortName;
-	}
+    private Long testDocumentId;
 
-	public String getUserCode() {
-		return userCode;
-	}
+    private Long dvkTestDocumentID;
 
-	public void setUserCode(String userCode) {
-		this.userCode = userCode;
-	}
+    private Long testDocumentFileId;
 
-	public Long getTestDocumentId() {
-		return testDocumentId;
-	}
+    private String testUserCode;
 
-	public void setTestDocumentId(Long testDocumentId) {
-		this.testDocumentId = testDocumentId;
-	}
+    private Long documentSaveInterval;
 
-	public Long getTestDocumentFileId() {
-		return testDocumentFileId;
-	}
+    private Long documentSendToDvkInterval;
 
-	public void setTestDocumentFileId(Long testDocumentFileId) {
-		this.testDocumentFileId = testDocumentFileId;
-	}
+    private Long documentSendToAditInterval;
 
-	public String getTestUserCode() {
-		return testUserCode;
-	}
+    private Long notificationSendInterval;
 
-	public void setTestUserCode(String testUserCode) {
-		this.testUserCode = testUserCode;
-	}
+    private Long errorInterval;
 
-	public Long getDocumentSaveInterval() {
-		return documentSaveInterval;
-	}
+    private String errorLevel;
 
-	public void setDocumentSaveInterval(Long documentSaveInterval) {
-		this.documentSaveInterval = documentSaveInterval;
-	}
+    public String getAditServiceUrl() {
+        return aditServiceUrl;
+    }
 
-	public Long getDocumentSendToDvkInterval() {
-		return documentSendToDvkInterval;
-	}
+    public void setAditServiceUrl(String aditServiceUrl) {
+        this.aditServiceUrl = aditServiceUrl;
+    }
 
-	public void setDocumentSendToDvkInterval(Long documentSendToDvkInterval) {
-		this.documentSendToDvkInterval = documentSendToDvkInterval;
-	}
+    public String getRemoteApplicationShortName() {
+        return remoteApplicationShortName;
+    }
 
-	public Long getDocumentSendToAditInterval() {
-		return documentSendToAditInterval;
-	}
+    public void setRemoteApplicationShortName(String remoteApplicationShortName) {
+        this.remoteApplicationShortName = remoteApplicationShortName;
+    }
 
-	public void setDocumentSendToAditInterval(Long documentSendToAditInterval) {
-		this.documentSendToAditInterval = documentSendToAditInterval;
-	}
+    public String getUserCode() {
+        return userCode;
+    }
 
-	public Long getNotificationSendInterval() {
-		return notificationSendInterval;
-	}
+    public void setUserCode(String userCode) {
+        this.userCode = userCode;
+    }
 
-	public void setNotificationSendInterval(Long notificationSendInterval) {
-		this.notificationSendInterval = notificationSendInterval;
-	}
+    public Long getTestDocumentId() {
+        return testDocumentId;
+    }
 
-	public Long getErrorInterval() {
-		return errorInterval;
-	}
+    public void setTestDocumentId(Long testDocumentId) {
+        this.testDocumentId = testDocumentId;
+    }
 
-	public void setErrorInterval(Long errorInterval) {
-		this.errorInterval = errorInterval;
-	}
+    public Long getTestDocumentFileId() {
+        return testDocumentFileId;
+    }
 
-	public Long getDvkTestDocumentID() {
-		return dvkTestDocumentID;
-	}
+    public void setTestDocumentFileId(Long testDocumentFileId) {
+        this.testDocumentFileId = testDocumentFileId;
+    }
 
-	public void setDvkTestDocumentID(Long dvkTestDocumentID) {
-		this.dvkTestDocumentID = dvkTestDocumentID;
-	}
+    public String getTestUserCode() {
+        return testUserCode;
+    }
 
-	public String getInstitutionCode() {
-		return institutionCode;
-	}
+    public void setTestUserCode(String testUserCode) {
+        this.testUserCode = testUserCode;
+    }
 
-	public void setInstitutionCode(String institutionCode) {
-		this.institutionCode = institutionCode;
-	}
+    public Long getDocumentSaveInterval() {
+        return documentSaveInterval;
+    }
 
-	public String getErrorLevel() {
-		return errorLevel;
-	}
+    public void setDocumentSaveInterval(Long documentSaveInterval) {
+        this.documentSaveInterval = documentSaveInterval;
+    }
 
-	public void setErrorLevel(String errorLevel) {
-		this.errorLevel = errorLevel;
-	}
-	
+    public Long getDocumentSendToDvkInterval() {
+        return documentSendToDvkInterval;
+    }
+
+    public void setDocumentSendToDvkInterval(Long documentSendToDvkInterval) {
+        this.documentSendToDvkInterval = documentSendToDvkInterval;
+    }
+
+    public Long getDocumentSendToAditInterval() {
+        return documentSendToAditInterval;
+    }
+
+    public void setDocumentSendToAditInterval(Long documentSendToAditInterval) {
+        this.documentSendToAditInterval = documentSendToAditInterval;
+    }
+
+    public Long getNotificationSendInterval() {
+        return notificationSendInterval;
+    }
+
+    public void setNotificationSendInterval(Long notificationSendInterval) {
+        this.notificationSendInterval = notificationSendInterval;
+    }
+
+    public Long getErrorInterval() {
+        return errorInterval;
+    }
+
+    public void setErrorInterval(Long errorInterval) {
+        this.errorInterval = errorInterval;
+    }
+
+    public Long getDvkTestDocumentID() {
+        return dvkTestDocumentID;
+    }
+
+    public void setDvkTestDocumentID(Long dvkTestDocumentID) {
+        this.dvkTestDocumentID = dvkTestDocumentID;
+    }
+
+    public String getInstitutionCode() {
+        return institutionCode;
+    }
+
+    public void setInstitutionCode(String institutionCode) {
+        this.institutionCode = institutionCode;
+    }
+
+    public String getErrorLevel() {
+        return errorLevel;
+    }
+
+    public void setErrorLevel(String errorLevel) {
+        this.errorLevel = errorLevel;
+    }
+
 }

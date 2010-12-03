@@ -1,89 +1,77 @@
 package ee.adit.pojo;
 
 public class OutputDocumentFile {
-	private Long id;
-	private String name;
-	private String contentType;
-	private String description;
-	private Long sizeBytes;
-	private String sysTempFile;
-	
-	public Long getId() {
-		return id;
-	}
+    private Long id;
+    private String name;
+    private String contentType;
+    private String description;
+    private Long sizeBytes;
+    private String sysTempFile;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public String getSysTempFile() {
-		return sysTempFile;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public void setSysTempFile(String sysTempFile) {
-		this.sysTempFile = sysTempFile;
-	}
+    public String getSysTempFile() {
+        return sysTempFile;
+    }
 
-	public String getContentType() {
-		return contentType;
-	}
+    public void setSysTempFile(String sysTempFile) {
+        this.sysTempFile = sysTempFile;
+    }
 
-	public void setContentType(String contentType) {
-		this.contentType = contentType;
-	}
+    public String getContentType() {
+        return contentType;
+    }
 
-	public Long getSizeBytes() {
-		return sizeBytes;
-	}
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
+    }
 
-	public void setSizeBytes(Long sizeBytes) {
-		this.sizeBytes = sizeBytes;
-	}
-	
-	/*
-	public byte[] getData() {
-		byte[] result = new byte[]{};
-		
-		if ((this.tmpFileName == null) || (this.tmpFileName.length() < 1)) {
-			return result;
-		}
-		
-		if (!(new File(this.tmpFileName)).exists()) {
-			return result;
-		}
-		
-		FileInputStream inStream = null;
-		try {
-			inStream = new FileInputStream(this.tmpFileName);
-			result = new byte[(int)(new File(this.tmpFileName)).length()];
-			inStream.read(result);
-		} catch (IOException ex) {
-			
-		} finally {
-			if (inStream != null) {
-				try { inStream.close(); }
-				catch (Exception ex) {}
-				inStream = null;
-			}
-		}
-		
-		return result;
-	}
-	*/
+    public Long getSizeBytes() {
+        return sizeBytes;
+    }
+
+    public void setSizeBytes(Long sizeBytes) {
+        this.sizeBytes = sizeBytes;
+    }
+
+    /*
+     * public byte[] getData() { byte[] result = new byte[]{};
+     * 
+     * if ((this.tmpFileName == null) || (this.tmpFileName.length() < 1)) {
+     * return result; }
+     * 
+     * if (!(new File(this.tmpFileName)).exists()) { return result; }
+     * 
+     * FileInputStream inStream = null; try { inStream = new
+     * FileInputStream(this.tmpFileName); result = new byte[(int)(new
+     * File(this.tmpFileName)).length()]; inStream.read(result); } catch
+     * (IOException ex) {
+     * 
+     * } finally { if (inStream != null) { try { inStream.close(); } catch
+     * (Exception ex) {} inStream = null; } }
+     * 
+     * return result; }
+     */
 }

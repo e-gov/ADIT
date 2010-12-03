@@ -5,7 +5,6 @@
 // Generated on: 2010.07.08 at 04:45:18 PM EEST 
 //
 
-
 package ee.adit.pojo;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -13,11 +12,13 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for ModifyStatusRequest complex type.
+ * <p>
+ * Java class for ModifyStatusRequest complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  * 
  * <pre>
  * &lt;complexType name="ModifyStatusRequest">
@@ -35,10 +36,7 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "ModifyStatusRequest", propOrder = {
-    "documentId",
-    "documentStatusId"
-})
+@XmlType(name = "ModifyStatusRequest", propOrder = {"documentId", "documentStatusId" })
 public class ModifyStatusRequest {
 
     @XmlElement(name = "document_id", required = true)
@@ -49,10 +47,8 @@ public class ModifyStatusRequest {
     /**
      * Gets the value of the documentId property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Long }
-     *     
+     * @return possible object is {@link Long }
+     * 
      */
     public Long getDocumentId() {
         return documentId;
@@ -62,9 +58,8 @@ public class ModifyStatusRequest {
      * Sets the value of the documentId property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link Long }
-     *     
+     *            allowed object is {@link Long }
+     * 
      */
     public void setDocumentId(Long value) {
         this.documentId = value;
@@ -73,10 +68,8 @@ public class ModifyStatusRequest {
     /**
      * Gets the value of the documentStatusId property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Long }
-     *     
+     * @return possible object is {@link Long }
+     * 
      */
     public Long getDocumentStatusId() {
         return documentStatusId;
@@ -86,9 +79,8 @@ public class ModifyStatusRequest {
      * Sets the value of the documentStatusId property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link Long }
-     *     
+     *            allowed object is {@link Long }
+     * 
      */
     public void setDocumentStatusId(Long value) {
         this.documentStatusId = value;

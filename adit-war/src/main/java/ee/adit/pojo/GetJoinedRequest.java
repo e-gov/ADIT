@@ -5,20 +5,22 @@
 // Generated on: 2010.06.16 at 02:48:15 PM EEST 
 //
 
-
 package ee.adit.pojo;
 
 import java.math.BigInteger;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for GetJoinedRequest complex type.
+ * <p>
+ * Java class for GetJoinedRequest complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  * 
  * <pre>
  * &lt;complexType name="GetJoinedRequest">
@@ -36,10 +38,7 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "GetJoinedRequest", propOrder = {
-    "maxResults",
-    "startIndex"
-})
+@XmlType(name = "GetJoinedRequest", propOrder = {"maxResults", "startIndex" })
 public class GetJoinedRequest {
 
     @XmlElement(required = true)
@@ -50,10 +49,8 @@ public class GetJoinedRequest {
     /**
      * Gets the value of the maxResults property.
      * 
-     * @return
-     *     possible object is
-     *     {@link BigInteger }
-     *     
+     * @return possible object is {@link BigInteger }
+     * 
      */
     public BigInteger getMaxResults() {
         return maxResults;
@@ -63,9 +60,8 @@ public class GetJoinedRequest {
      * Sets the value of the maxResults property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link BigInteger }
-     *     
+     *            allowed object is {@link BigInteger }
+     * 
      */
     public void setMaxResults(BigInteger value) {
         this.maxResults = value;
@@ -74,10 +70,8 @@ public class GetJoinedRequest {
     /**
      * Gets the value of the startIndex property.
      * 
-     * @return
-     *     possible object is
-     *     {@link BigInteger }
-     *     
+     * @return possible object is {@link BigInteger }
+     * 
      */
     public BigInteger getStartIndex() {
         return startIndex;
@@ -87,9 +81,8 @@ public class GetJoinedRequest {
      * Sets the value of the startIndex property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link BigInteger }
-     *     
+     *            allowed object is {@link BigInteger }
+     * 
      */
     public void setStartIndex(BigInteger value) {
         this.startIndex = value;

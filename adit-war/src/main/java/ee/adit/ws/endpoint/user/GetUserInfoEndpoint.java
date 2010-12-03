@@ -1,13 +1,11 @@
 package ee.adit.ws.endpoint.user;
 
 import java.util.Calendar;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
-import org.springframework.ws.mime.Attachment;
 
 import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditInternalException;
@@ -28,9 +26,8 @@ import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
 import ee.webmedia.xtee.annotation.XTeeService;
 
 /**
- * Implementation of "getUserInfo" web method (web service request).
- * Contains request input validation, request-specific workflow
- * and response composition.  
+ * Implementation of "getUserInfo" web method (web service request). Contains
+ * request input validation, request-specific workflow and response composition.
  * 
  * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
  * @author Jaak Lember, Interinx, jaak@interinx.com
@@ -39,181 +36,189 @@ import ee.webmedia.xtee.annotation.XTeeService;
 @Component
 public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 
-	private static Logger LOG = Logger.getLogger(GetUserInfoEndpoint.class);
+    private static Logger logger = Logger.getLogger(GetUserInfoEndpoint.class);
 
-	private UserService userService;
+    private UserService userService;
 
-	public UserService getUserService() {
-		return userService;
-	}
+    public UserService getUserService() {
+        return userService;
+    }
 
-	public void setUserService(UserService userService) {
-		this.userService = userService;
-	}
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
 
-	@Override
-	protected Object invokeInternal(Object requestObject, int version) throws Exception {
-		LOG.debug("getUserInfo invoked. Version: " + version);
+    @Override
+    protected Object invokeInternal(Object requestObject, int version) throws Exception {
+        logger.debug("getUserInfo invoked. Version: " + version);
 
-		if (version == 1) {
-			return v1(requestObject);
-		} else {
-			throw new AditInternalException("This method does not support version specified: " + version);
-		}
-	}
+        if (version == 1) {
+            return v1(requestObject);
+        } else {
+            throw new AditInternalException("This method does not support version specified: " + version);
+        }
+    }
 
-	/**
-	 * Executes "V1" version of "getUserInfo" request.
-	 * 
-	 * @param requestObject		Request body object
-	 * @return					Response body object
-	 */
-	protected Object v1(Object requestObject) {
-		GetUserInfoResponse response = new GetUserInfoResponse();
-		ArrayOfMessage messages = new ArrayOfMessage();
-		Calendar requestDate = Calendar.getInstance();
-		String additionalInformationForLog = null;
+    /**
+     * Executes "V1" version of "getUserInfo" request.
+     * 
+     * @param requestObject
+     *            Request body object
+     * @return Response body object
+     */
+    protected Object v1(Object requestObject) {
+        GetUserInfoResponse response = new GetUserInfoResponse();
+        ArrayOfMessage messages = new ArrayOfMessage();
+        Calendar requestDate = Calendar.getInstance();
+        String additionalInformationForLog = null;
 
-		try {
+        try {
 
-			GetUserInfoRequest request = (GetUserInfoRequest) requestObject;
-			CustomXTeeHeader header = this.getHeader();
-			String applicationName = header.getInfosysteem();
-			
-			// Check header for required fields
-			checkHeader(header);
+            GetUserInfoRequest request = (GetUserInfoRequest) requestObject;
+            CustomXTeeHeader header = this.getHeader();
+            String applicationName = header.getInfosysteem();
 
-			// Kontrollime, kas päringu käivitanud infosüsteem on ADITis
-			// registreeritud
-			boolean applicationRegistered = this.getUserService().isApplicationRegistered(applicationName);
+            // Check header for required fields
+            checkHeader(header);
 
-			if (applicationRegistered) {
+            // Kontrollime, kas päringu käivitanud infosüsteem on ADITis
+            // registreeritud
+            boolean applicationRegistered = this.getUserService().isApplicationRegistered(applicationName);
 
-				// Kontrollime, kas päringu käivitanud infosüsteem tohib andmeid
-				// näha
-				int accessLevel = this.getUserService().getAccessLevel(applicationName);
+            if (applicationRegistered) {
 
-				if (accessLevel >= 1) {
+                // Kontrollime, kas päringu käivitanud infosüsteem tohib andmeid
+                // näha
+                int accessLevel = this.getUserService().getAccessLevel(applicationName);
 
-					
-					String attachmentID = null;
-					// Check if the attachment ID is specified
-					if(request.getUserList() != null && request.getUserList().getHref() != null && !request.getUserList().getHref().trim().equals("")) {
-						attachmentID = Util.extractContentID(request.getUserList().getHref());
-					} else {
-						throw new AditCodedException("request.saveDocument.attachment.id.notSpecified");
-					}
-					
-					// All primary checks passed.
-					LOG.debug("Processing attachment with id: '" + attachmentID + "'");
-					// Extract the SOAP message to a temporary file
-					String base64EncodedFile = extractAttachmentXML(this.getRequestMessage(), attachmentID);
+                if (accessLevel >= 1) {
 
-					// Base64 decode and unzip the temporary file
-					String xmlFile = Util.base64DecodeAndUnzip(base64EncodedFile, this.getConfiguration().getTempDir(), this.getConfiguration().getDeleteTemporaryFilesAsBoolean());
-					LOG.debug("Attachment unzipped to temporary file: " + xmlFile);
+                    String attachmentID = null;
+                    // Check if the attachment ID is specified
+                    if (request.getUserList() != null && request.getUserList().getHref() != null
+                            && !request.getUserList().getHref().trim().equals("")) {
+                        attachmentID = Util.extractContentID(request.getUserList().getHref());
+                    } else {
+                        throw new AditCodedException("request.saveDocument.attachment.id.notSpecified");
+                    }
 
-					// Unmarshal the XML from the temporary file
-					Object unmarshalledObject = null;
-					try {
-						unmarshalledObject = unMarshal(xmlFile);
-					} catch (Exception e) {
-						LOG.error("Error while unmarshalling SOAP attachment: ", e);
-						throw new AditCodedException("request.attachments.invalidFormat");
-					}
+                    // All primary checks passed.
+                    logger.debug("Processing attachment with id: '" + attachmentID + "'");
+                    // Extract the SOAP message to a temporary file
+                    String base64EncodedFile = extractAttachmentXML(this.getRequestMessage(), attachmentID);
 
-					// Check if the marshalling result is what we
-					// expected
-					if (unmarshalledObject != null) {
-						LOG.debug("XML unmarshalled to type: " + unmarshalledObject.getClass());
-						if (unmarshalledObject instanceof GetUserInfoRequestAttachmentUserList) {
+                    // Base64 decode and unzip the temporary file
+                    String xmlFile = Util.base64DecodeAndUnzip(base64EncodedFile, this.getConfiguration().getTempDir(),
+                            this.getConfiguration().getDeleteTemporaryFilesAsBoolean());
+                    logger.debug("Attachment unzipped to temporary file: " + xmlFile);
 
-							GetUserInfoRequestAttachmentUserList userList = (GetUserInfoRequestAttachmentUserList) unmarshalledObject;
+                    // Unmarshal the XML from the temporary file
+                    Object unmarshalledObject = null;
+                    try {
+                        unmarshalledObject = unMarshal(xmlFile);
+                    } catch (Exception e) {
+                        logger.error("Error while unmarshalling SOAP attachment: ", e);
+                        throw new AditCodedException("request.attachments.invalidFormat");
+                    }
 
-							List<GetUserInfoResponseAttachmentUser> userInfoList = this.getUserService().getUserInfo(userList);
-							GetUserInfoResponseAttachment responseAttachment = new GetUserInfoResponseAttachment();
-							responseAttachment.setUserList(userInfoList);
+                    // Check if the marshalling result is what we
+                    // expected
+                    if (unmarshalledObject != null) {
+                        logger.debug("XML unmarshalled to type: " + unmarshalledObject.getClass());
+                        if (unmarshalledObject instanceof GetUserInfoRequestAttachmentUserList) {
 
-							String responseAttachmentXMLFile = this.marshal(responseAttachment);
+                            GetUserInfoRequestAttachmentUserList userList = (GetUserInfoRequestAttachmentUserList) unmarshalledObject;
 
-							// Compress response attachment
-							// Base64 encoding will be done at SOAP
-							// envelope level
-							String attachmentFile = Util.gzipFile(responseAttachmentXMLFile, this.getConfiguration().getTempDir());
+                            List<GetUserInfoResponseAttachmentUser> userInfoList = this.getUserService().getUserInfo(
+                                    userList);
+                            GetUserInfoResponseAttachment responseAttachment = new GetUserInfoResponseAttachment();
+                            responseAttachment.setUserList(userInfoList);
 
-							// Add as an attachment
-							String contentID = addAttachment(attachmentFile);
-							UserList getUserInfoResponseUserList = new UserList();							
-							getUserInfoResponseUserList.setHref("cid:" + contentID);
-							response.setUserList(getUserInfoResponseUserList);
-							response.setSuccess(new Success(true));
-							messages.setMessage(this.getMessageService().getMessages("request.getUserInfo.success", new Object[] {}));
-							
-							String additionalMessage = this.getMessageService().getMessage("request.getUserInfo.success", new Object[] { }, Locale.ENGLISH);
-							additionalInformationForLog = LogService.RequestLog_Success + ": " + additionalMessage;
+                            String responseAttachmentXMLFile = this.marshal(responseAttachment);
 
-						} else {
-							throw new AditInternalException("Unmarshalling returned wrong type. Expected " + GetUserInfoRequestAttachmentUserList.class + ", got "
-									+ unmarshalledObject.getClass());
-						}
+                            // Compress response attachment
+                            // Base64 encoding will be done at SOAP
+                            // envelope level
+                            String attachmentFile = Util.gzipFile(responseAttachmentXMLFile, this.getConfiguration()
+                                    .getTempDir());
 
-					} else {
-						throw new AditInternalException("Unmarshalling failed for XML in file: " + xmlFile);
-					}
+                            // Add as an attachment
+                            String contentID = addAttachment(attachmentFile);
+                            UserList getUserInfoResponseUserList = new UserList();
+                            getUserInfoResponseUserList.setHref("cid:" + contentID);
+                            response.setUserList(getUserInfoResponseUserList);
+                            response.setSuccess(new Success(true));
+                            messages.setMessage(this.getMessageService().getMessages("request.getUserInfo.success",
+                                    new Object[] {}));
 
-					
-				} else {					
-					AditCodedException aditCodedException = new AditCodedException("application.insufficientPrivileges.read");
-					aditCodedException.setParameters(new Object[] { applicationName });
-					throw aditCodedException;
-				}
+                            String additionalMessage = this.getMessageService().getMessage(
+                                    "request.getUserInfo.success", new Object[] {}, Locale.ENGLISH);
+                            additionalInformationForLog = LogService.REQUEST_LOG_SUCCESS + ": " + additionalMessage;
 
-			} else {
-				AditCodedException aditCodedException = new AditCodedException("application.notRegistered");
-				aditCodedException.setParameters(new Object[] { applicationName });
-				throw aditCodedException;
-			}
+                        } else {
+                            throw new AditInternalException("Unmarshalling returned wrong type. Expected "
+                                    + GetUserInfoRequestAttachmentUserList.class + ", got "
+                                    + unmarshalledObject.getClass());
+                        }
 
-			
-			response.setSuccess(new Success(true));
-			response.setMessages(messages);
-			
-		} catch (Exception e) {
-			LOG.error("Exception: ", e);
-			String errorMessage = null;
-			response.setSuccess(new Success(false));
-			ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
+                    } else {
+                        throw new AditInternalException("Unmarshalling failed for XML in file: " + xmlFile);
+                    }
 
-			if (e instanceof AditCodedException) {
-				LOG.debug("Adding exception messages to response object.");
-				arrayOfMessage.setMessage(this.getMessageService().getMessages((AditCodedException) e));
-				errorMessage = this.getMessageService().getMessage(e.getMessage(), ((AditCodedException) e).getParameters(), Locale.ENGLISH);
-				errorMessage = "ERROR: " + errorMessage;
-			} else {
-				arrayOfMessage.getMessage().add(new Message("en", "Service error"));
-				errorMessage = "ERROR: " + e.getMessage();
-			}
+                } else {
+                    AditCodedException aditCodedException = new AditCodedException(
+                            "application.insufficientPrivileges.read");
+                    aditCodedException.setParameters(new Object[] {applicationName });
+                    throw aditCodedException;
+                }
 
-			additionalInformationForLog = errorMessage;
-			super.logError(null, requestDate.getTime(), LogService.ErrorLogLevel_Error, errorMessage);
-			
-			LOG.debug("Adding exception messages to response object.");
-			response.setMessages(arrayOfMessage);
-		}
+            } else {
+                AditCodedException aditCodedException = new AditCodedException("application.notRegistered");
+                aditCodedException.setParameters(new Object[] {applicationName });
+                throw aditCodedException;
+            }
 
-		super.logCurrentRequest(null, requestDate.getTime(), additionalInformationForLog);
-		return response;
-	}
+            response.setSuccess(new Success(true));
+            response.setMessages(messages);
 
-	@Override
-	protected Object getResultForGenericException(Exception ex) {
-		super.logError(null, Calendar.getInstance().getTime(), LogService.ErrorLogLevel_Fatal, "ERROR: " + ex.getMessage());
-		GetUserInfoResponse response = new GetUserInfoResponse();
-		response.setSuccess(new Success(false));
-		ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
-		arrayOfMessage.getMessage().add(new Message("en", ex.getMessage()));
-		response.setMessages(arrayOfMessage);
-		return response;
-	}
+        } catch (Exception e) {
+            logger.error("Exception: ", e);
+            String errorMessage = null;
+            response.setSuccess(new Success(false));
+            ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
+
+            if (e instanceof AditCodedException) {
+                logger.debug("Adding exception messages to response object.");
+                arrayOfMessage.setMessage(this.getMessageService().getMessages((AditCodedException) e));
+                errorMessage = this.getMessageService().getMessage(e.getMessage(),
+                        ((AditCodedException) e).getParameters(), Locale.ENGLISH);
+                errorMessage = "ERROR: " + errorMessage;
+            } else {
+                arrayOfMessage.getMessage().add(new Message("en", "Service error"));
+                errorMessage = "ERROR: " + e.getMessage();
+            }
+
+            additionalInformationForLog = errorMessage;
+            super.logError(null, requestDate.getTime(), LogService.ERROR_LOG_LEVEL_ERROR, errorMessage);
+
+            logger.debug("Adding exception messages to response object.");
+            response.setMessages(arrayOfMessage);
+        }
+
+        super.logCurrentRequest(null, requestDate.getTime(), additionalInformationForLog);
+        return response;
+    }
+
+    @Override
+    protected Object getResultForGenericException(Exception ex) {
+        super.logError(null, Calendar.getInstance().getTime(), LogService.ERROR_LOG_LEVEL_FATAL, "ERROR: "
+                + ex.getMessage());
+        GetUserInfoResponse response = new GetUserInfoResponse();
+        response.setSuccess(new Success(false));
+        ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
+        arrayOfMessage.getMessage().add(new Message("en", ex.getMessage()));
+        response.setMessages(arrayOfMessage);
+        return response;
+    }
 
 }

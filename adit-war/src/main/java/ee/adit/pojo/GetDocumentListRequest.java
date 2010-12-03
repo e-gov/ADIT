@@ -5,7 +5,6 @@
 // Generated on: 2010.07.09 at 04:42:08 PM EEST 
 //
 
-
 package ee.adit.pojo;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -13,11 +12,13 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for GetDocumentListRequest complex type.
+ * <p>
+ * Java class for GetDocumentListRequest complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  * 
  * <pre>
  * &lt;complexType name="GetDocumentListRequest">
@@ -43,18 +44,9 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "GetDocumentListRequest", propOrder = {
-    "folder",
-    "documentTypes",
-    "documentDvkStatuses",
-    "documentWorkflowStatuses",
-    "hasBeenViewed",
-    "isDeflated",
-    "creatorApplications",
-    "searchPhrase",
-    "maxResults",
-    "startIndex"
-})
+@XmlType(name = "GetDocumentListRequest", propOrder = {"folder", "documentTypes", "documentDvkStatuses",
+        "documentWorkflowStatuses", "hasBeenViewed", "isDeflated", "creatorApplications", "searchPhrase", "maxResults",
+        "startIndex" })
 public class GetDocumentListRequest {
 
     @XmlElement(required = true)
@@ -81,10 +73,8 @@ public class GetDocumentListRequest {
     /**
      * Gets the value of the folder property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getFolder() {
         return folder;
@@ -94,9 +84,8 @@ public class GetDocumentListRequest {
      * Sets the value of the folder property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *            allowed object is {@link String }
+     * 
      */
     public void setFolder(String value) {
         this.folder = value;
@@ -105,10 +94,8 @@ public class GetDocumentListRequest {
     /**
      * Gets the value of the documentTypes property.
      * 
-     * @return
-     *     possible object is
-     *     {@link ArrayOfDocumentType }
-     *     
+     * @return possible object is {@link ArrayOfDocumentType }
+     * 
      */
     public ArrayOfDocumentType getDocumentTypes() {
         return documentTypes;
@@ -118,9 +105,8 @@ public class GetDocumentListRequest {
      * Sets the value of the documentTypes property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link ArrayOfDocumentType }
-     *     
+     *            allowed object is {@link ArrayOfDocumentType }
+     * 
      */
     public void setDocumentTypes(ArrayOfDocumentType value) {
         this.documentTypes = value;
@@ -129,10 +115,8 @@ public class GetDocumentListRequest {
     /**
      * Gets the value of the documentDvkStatuses property.
      * 
-     * @return
-     *     possible object is
-     *     {@link ArrayOfDocumentDvkStatus }
-     *     
+     * @return possible object is {@link ArrayOfDocumentDvkStatus }
+     * 
      */
     public ArrayOfDocumentDvkStatus getDocumentDvkStatuses() {
         return documentDvkStatuses;
@@ -142,9 +126,8 @@ public class GetDocumentListRequest {
      * Sets the value of the documentDvkStatuses property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link ArrayOfDocumentDvkStatus }
-     *     
+     *            allowed object is {@link ArrayOfDocumentDvkStatus }
+     * 
      */
     public void setDocumentDvkStatuses(ArrayOfDocumentDvkStatus value) {
         this.documentDvkStatuses = value;
@@ -153,10 +136,8 @@ public class GetDocumentListRequest {
     /**
      * Gets the value of the documentWorkflowStatuses property.
      * 
-     * @return
-     *     possible object is
-     *     {@link ArrayOfDocumentWorkflowStatus }
-     *     
+     * @return possible object is {@link ArrayOfDocumentWorkflowStatus }
+     * 
      */
     public ArrayOfDocumentWorkflowStatus getDocumentWorkflowStatuses() {
         return documentWorkflowStatuses;
@@ -166,9 +147,8 @@ public class GetDocumentListRequest {
      * Sets the value of the documentWorkflowStatuses property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link ArrayOfDocumentWorkflowStatus }
-     *     
+     *            allowed object is {@link ArrayOfDocumentWorkflowStatus }
+     * 
      */
     public void setDocumentWorkflowStatuses(ArrayOfDocumentWorkflowStatus value) {
         this.documentWorkflowStatuses = value;
@@ -209,10 +189,8 @@ public class GetDocumentListRequest {
     /**
      * Gets the value of the creatorApplications property.
      * 
-     * @return
-     *     possible object is
-     *     {@link ArrayOfCreatorApplication }
-     *     
+     * @return possible object is {@link ArrayOfCreatorApplication }
+     * 
      */
     public ArrayOfCreatorApplication getCreatorApplications() {
         return creatorApplications;
@@ -222,9 +200,8 @@ public class GetDocumentListRequest {
      * Sets the value of the creatorApplications property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link ArrayOfCreatorApplication }
-     *     
+     *            allowed object is {@link ArrayOfCreatorApplication }
+     * 
      */
     public void setCreatorApplications(ArrayOfCreatorApplication value) {
         this.creatorApplications = value;
@@ -233,10 +210,8 @@ public class GetDocumentListRequest {
     /**
      * Gets the value of the searchPhrase property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getSearchPhrase() {
         return searchPhrase;
@@ -246,9 +221,8 @@ public class GetDocumentListRequest {
      * Sets the value of the searchPhrase property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *            allowed object is {@link String }
+     * 
      */
     public void setSearchPhrase(String value) {
         this.searchPhrase = value;
@@ -257,10 +231,8 @@ public class GetDocumentListRequest {
     /**
      * Gets the value of the maxResults property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Long }
-     *     
+     * @return possible object is {@link Long }
+     * 
      */
     public Long getMaxResults() {
         return maxResults;
@@ -270,9 +242,8 @@ public class GetDocumentListRequest {
      * Sets the value of the maxResults property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link Long }
-     *     
+     *            allowed object is {@link Long }
+     * 
      */
     public void setMaxResults(Long value) {
         this.maxResults = value;
@@ -281,10 +252,8 @@ public class GetDocumentListRequest {
     /**
      * Gets the value of the startIndex property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Long }
-     *     
+     * @return possible object is {@link Long }
+     * 
      */
     public Long getStartIndex() {
         return startIndex;
@@ -294,9 +263,8 @@ public class GetDocumentListRequest {
      * Sets the value of the startIndex property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link Long }
-     *     
+     *            allowed object is {@link Long }
+     * 
      */
     public void setStartIndex(Long value) {
         this.startIndex = value;

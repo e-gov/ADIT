@@ -5,7 +5,6 @@
 // Generated on: 2010.07.02 at 02:05:04 PM EEST 
 //
 
-
 package ee.adit.pojo;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -14,11 +13,13 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.XmlValue;
 
-
 /**
- * <p>Java class for Message complex type.
+ * <p>
+ * Java class for Message complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  * 
  * <pre>
  * &lt;complexType name="Message">
@@ -33,9 +34,7 @@ import javax.xml.bind.annotation.XmlValue;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "Message", propOrder = {
-    "value"
-})
+@XmlType(name = "Message", propOrder = {"value" })
 public class Message {
 
     @XmlValue
@@ -45,19 +44,17 @@ public class Message {
 
     public Message() {
     }
-    
+
     public Message(String lang, String messageText) {
-    	this.lang = lang;
-    	this.value = messageText;
+        this.lang = lang;
+        this.value = messageText;
     }
-    
+
     /**
      * Gets the value of the value property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getValue() {
         return value;
@@ -67,9 +64,8 @@ public class Message {
      * Sets the value of the value property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *            allowed object is {@link String }
+     * 
      */
     public void setValue(String value) {
         this.value = value;
@@ -78,10 +74,8 @@ public class Message {
     /**
      * Gets the value of the lang property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getLang() {
         return lang;
@@ -91,20 +85,20 @@ public class Message {
      * Sets the value of the lang property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *            allowed object is {@link String }
+     * 
      */
-    public void setLang(String value) {
-        this.lang = value;
+    public void setLang(String val) {
+        this.lang = val;
     }
 
-	@Override
-	public String toString() {
-		String result = "";
-		if(this.getValue() != null)
-			result = this.getValue();
-		
-		return result;
-	}
+    @Override
+    public String toString() {
+        String result = "";
+        if (this.getValue() != null) {
+            result = this.getValue();
+        }
+
+        return result;
+    }
 }

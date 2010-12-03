@@ -5,7 +5,6 @@
 // Generated on: 2010.07.15 at 01:51:05 PM EEST 
 //
 
-
 package ee.adit.pojo;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -13,11 +12,13 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for SaveDocumentFileResponse complex type.
+ * <p>
+ * Java class for SaveDocumentFileResponse complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  * 
  * <pre>
  * &lt;complexType name="SaveDocumentFileResponse">
@@ -36,12 +37,7 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "SaveDocumentFileResponse", propOrder = {
-    "success",
-    "messages",
-    "fileId",
-    "file"
-})
+@XmlType(name = "SaveDocumentFileResponse", propOrder = {"success", "messages", "fileId", "file" })
 public class SaveDocumentFileResponse {
 
     protected boolean success;
@@ -70,10 +66,8 @@ public class SaveDocumentFileResponse {
     /**
      * Gets the value of the messages property.
      * 
-     * @return
-     *     possible object is
-     *     {@link ArrayOfMessage }
-     *     
+     * @return possible object is {@link ArrayOfMessage }
+     * 
      */
     public ArrayOfMessage getMessages() {
         return messages;
@@ -83,9 +77,8 @@ public class SaveDocumentFileResponse {
      * Sets the value of the messages property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link ArrayOfMessage }
-     *     
+     *            allowed object is {@link ArrayOfMessage }
+     * 
      */
     public void setMessages(ArrayOfMessage value) {
         this.messages = value;
@@ -94,10 +87,8 @@ public class SaveDocumentFileResponse {
     /**
      * Gets the value of the fileId property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Long }
-     *     
+     * @return possible object is {@link Long }
+     * 
      */
     public Long getFileId() {
         return fileId;
@@ -107,9 +98,8 @@ public class SaveDocumentFileResponse {
      * Sets the value of the fileId property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link Long }
-     *     
+     *            allowed object is {@link Long }
+     * 
      */
     public void setFileId(Long value) {
         this.fileId = value;
@@ -118,10 +108,8 @@ public class SaveDocumentFileResponse {
     /**
      * Gets the value of the file property.
      * 
-     * @return
-     *     possible object is
-     *     {@link SaveDocumentFileRequestFile }
-     *     
+     * @return possible object is {@link SaveDocumentFileRequestFile }
+     * 
      */
     public SaveDocumentFileRequestFile getFile() {
         return file;
@@ -131,9 +119,8 @@ public class SaveDocumentFileResponse {
      * Sets the value of the file property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link SaveDocumentFileRequestFile }
-     *     
+     *            allowed object is {@link SaveDocumentFileRequestFile }
+     * 
      */
     public void setFile(SaveDocumentFileRequestFile value) {
         this.file = value;

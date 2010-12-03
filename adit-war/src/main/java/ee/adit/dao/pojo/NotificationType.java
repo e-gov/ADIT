@@ -11,65 +11,67 @@ import java.util.Set;
  */
 public class NotificationType implements java.io.Serializable {
 
-	private static final long serialVersionUID = 7045236652674886470L;
-	private String shortName;
-	private String description;
-	private Set userNotifications = new HashSet(0);
+    private static final long serialVersionUID = 7045236652674886470L;
+    private String shortName;
+    private String description;
+    private Set<UserNotification> userNotifications = new HashSet<UserNotification>(0);
 
-	public NotificationType() {
-	}
+    public NotificationType() {
+    }
 
-	public NotificationType(String shortName) {
-		this.shortName = shortName;
-	}
+    public NotificationType(String shortName) {
+        this.shortName = shortName;
+    }
 
-	public NotificationType(String shortName, String description,
-			Set userNotifications) {
-		this.shortName = shortName;
-		this.description = description;
-		this.userNotifications = userNotifications;
-	}
+    public NotificationType(String shortName, String description, Set<UserNotification> userNotifications) {
+        this.shortName = shortName;
+        this.description = description;
+        this.userNotifications = userNotifications;
+    }
 
-	public String getShortName() {
-		return this.shortName;
-	}
+    public String getShortName() {
+        return this.shortName;
+    }
 
-	public void setShortName(String shortName) {
-		this.shortName = shortName;
-	}
+    public void setShortName(String shortName) {
+        this.shortName = shortName;
+    }
 
-	public String getDescription() {
-		return this.description;
-	}
+    public String getDescription() {
+        return this.description;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public Set getUserNotifications() {
-		return this.userNotifications;
-	}
+    public Set<UserNotification> getUserNotifications() {
+        return this.userNotifications;
+    }
 
-	public void setUserNotifications(Set userNotifications) {
-		this.userNotifications = userNotifications;
-	}
-	
-	/**
-	 * Finds matching notification type from list by type's short name.
-	 * 
-	 * @param list				List containing notification types
-	 * @param typeShortName		Short name of notification type to be found 
-	 * @return					Found type or null if no matching type was found
-	 */
-	public static NotificationType findFromList(List<NotificationType> list, String typeShortName) {
-		if (list == null) {
-			return null;
-		}
-		for (NotificationType item : list) {
-			if ((item != null) && (item.getShortName() != null) && (item.getShortName().equalsIgnoreCase(typeShortName))) {
-				return item;
-			}
-		}
-		return null;
-	}
+    public void setUserNotifications(Set<UserNotification> userNotifications) {
+        this.userNotifications = userNotifications;
+    }
+
+    /**
+     * Finds matching notification type from list by type's short name.
+     * 
+     * @param list
+     *            List containing notification types
+     * @param typeShortName
+     *            Short name of notification type to be found
+     * @return Found type or null if no matching type was found
+     */
+    public static NotificationType findFromList(List<NotificationType> list, String typeShortName) {
+        if (list == null) {
+            return null;
+        }
+        for (NotificationType item : list) {
+            if ((item != null) && (item.getShortName() != null)
+                    && (item.getShortName().equalsIgnoreCase(typeShortName))) {
+                return item;
+            }
+        }
+        return null;
+    }
 }

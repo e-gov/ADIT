@@ -5,7 +5,6 @@
 // Generated on: 2010.07.08 at 05:56:23 PM EEST 
 //
 
-
 package ee.adit.pojo;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -13,11 +12,13 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for GetDocumentHistoryResponse complex type.
+ * <p>
+ * Java class for GetDocumentHistoryResponse complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  * 
  * <pre>
  * &lt;complexType name="GetDocumentHistoryResponse">
@@ -44,11 +45,7 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "GetDocumentHistoryResponse", propOrder = {
-    "success",
-    "messages",
-    "documentHistoryList"
-})
+@XmlType(name = "GetDocumentHistoryResponse", propOrder = {"success", "messages", "documentHistoryList" })
 public class GetDocumentHistoryResponse {
 
     protected boolean success;
@@ -76,10 +73,8 @@ public class GetDocumentHistoryResponse {
     /**
      * Gets the value of the messages property.
      * 
-     * @return
-     *     possible object is
-     *     {@link ArrayOfMessage }
-     *     
+     * @return possible object is {@link ArrayOfMessage }
+     * 
      */
     public ArrayOfMessage getMessages() {
         return messages;
@@ -89,9 +84,8 @@ public class GetDocumentHistoryResponse {
      * Sets the value of the messages property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link ArrayOfMessage }
-     *     
+     *            allowed object is {@link ArrayOfMessage }
+     * 
      */
     public void setMessages(ArrayOfMessage value) {
         this.messages = value;
@@ -100,10 +94,8 @@ public class GetDocumentHistoryResponse {
     /**
      * Gets the value of the documentHistoryList property.
      * 
-     * @return
-     *     possible object is
-     *     {@link GetDocumentHistoryResponseDocument }
-     *     
+     * @return possible object is {@link GetDocumentHistoryResponseDocument }
+     * 
      */
     public GetDocumentHistoryResponseDocument getDocumentHistoryList() {
         return documentHistoryList;
@@ -113,9 +105,8 @@ public class GetDocumentHistoryResponse {
      * Sets the value of the documentHistoryList property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link GetDocumentHistoryResponseDocument }
-     *     
+     *            allowed object is {@link GetDocumentHistoryResponseDocument }
+     * 
      */
     public void setDocumentHistoryList(GetDocumentHistoryResponseDocument value) {
         this.documentHistoryList = value;

@@ -7,17 +7,18 @@
 
 package ee.adit.pojo;
 
-import java.math.BigInteger;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
 /**
- * <p>Java class for DeleteDocumentRequest complex type.
+ * <p>
+ * Java class for DeleteDocumentRequest complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  * 
  * <pre>
  * &lt;complexType name="DeleteDocumentRequest">
@@ -34,19 +35,17 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "DeleteDocumentRequest", propOrder = {"documentId"})
+@XmlType(name = "DeleteDocumentRequest", propOrder = {"documentId" })
 public class DeleteDocumentRequest {
 
     @XmlElement(name = "document_id", required = true)
     protected long documentId;
-    
+
     /**
      * Gets the value of the documentId property.
      * 
-     * @return
-     *     possible object is
-     *     {@link BigInteger }
-     *     
+     * @return possible long
+     * 
      */
     public long getDocumentId() {
         return documentId;
@@ -56,9 +55,8 @@ public class DeleteDocumentRequest {
      * Sets the value of the documentId property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link BigInteger }
-     *     
+     *            allowed long
+     * 
      */
     public void setDocumentId(long value) {
         this.documentId = value;

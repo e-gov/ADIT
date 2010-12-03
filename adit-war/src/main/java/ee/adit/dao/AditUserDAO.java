@@ -14,110 +14,110 @@ import ee.adit.dao.pojo.AditUser;
 import ee.adit.exception.AditInternalException;
 
 /**
- * AditUser data access class. Provides methods for retrieving and manipulating user data.
+ * AditUser data access class. Provides methods for retrieving and manipulating
+ * user data.
  * 
  * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
  */
 public class AditUserDAO extends HibernateDaoSupport {
 
-	/**
-	 * Log4J logger
-	 */
-	private static Logger LOG = Logger.getLogger(AditUserDAO.class);
+    /**
+     * Log4J logger
+     */
+    private static Logger logger = Logger.getLogger(AditUserDAO.class);
 
-	/**
-	 * Retrieves user by ID.
-	 * 
-	 * @param userCode
-	 * @return
-	 */
-	public AditUser getUserByID(String userCode) {
-		AditUser result = null;
-		
-		try {
-			result = (AditUser) this.getHibernateTemplate().get(AditUser.class, userCode);
-		} catch (Exception e) {
-			LOG.error(
-					"Exception while finding AditUser by registration code: ", e);
-		}
+    /**
+     * Retrieves user by ID.
+     * 
+     * @param userCode
+     * @return
+     */
+    public AditUser getUserByID(String userCode) {
+        AditUser result = null;
 
-		return result;
-	}
-	
-	/**
-	 * 
-	 * @param aditUser
-	 */
-	public void saveOrUpdate(AditUser aditUser) {
-		Session session = null;
-		Transaction transaction = null;
-		try {
-			
-			session = this.getSessionFactory().openSession();
-			transaction = session.beginTransaction();
-			session.saveOrUpdate(aditUser);
-			transaction.commit();
-			
-		} catch (Exception e) {
-			if(transaction != null) {
-				transaction.rollback();
-			}
-			throw new AditInternalException("Error while updating AditUser: ", e);
-		} finally {
-			if(session != null) {
-				session.close();
-			}
-		}
-		
-		/*try {
-			this.getHibernateTemplate().saveOrUpdate(aditUser);
-		} catch (Exception e) {
-			LOG.error("Exception while adding AditUser: ", e);
-		}*/
-	}
+        try {
+            result = (AditUser) this.getHibernateTemplate().get(AditUser.class, userCode);
+        } catch (Exception e) {
+            logger.error("Exception while finding AditUser by registration code: ", e);
+        }
 
-	
+        return result;
+    }
 
-	public List<AditUser> listUsers(int startIndex, int maxResults) throws Exception {
-		List<AditUser> result = null;
-		
-		DetachedCriteria dt = DetachedCriteria.forClass(AditUser.class, "aditUser");
-		dt.add(Property.forName("aditUser.active").eq(new Boolean(true)));
-		dt.addOrder(Order.asc("aditUser.fullName"));
-		result = this.getHibernateTemplate().findByCriteria(dt, startIndex, maxResults);
-		
-		return result;
-	}
-	
-	public List<AditUser> listDVKUsers() throws Exception {
-		List<AditUser> result = null;
-		String SQL = "from AditUser where dvkOrgCode is not null";
-		Session session = null;
-		try {
-			session = this.getSessionFactory().openSession();
-			result = session.createQuery(SQL).list();
-		} catch (Exception e) {
-			throw new AditInternalException("Error while fetching DVK users from database: ", e);
-		} finally {
-			if(session != null) {
-				session.close();
-			}
-		}
-			
-		return result;
-	}
-	
-	public Long getUsedSpaceForUser(String userCode) {
-		Long result = new Long(0);
-		AditUser user = this.getUserByID(userCode);
-		
-		if(user != null) {
-			result = user.getDiskQuotaUsed();
-		} else {
-			throw new AditInternalException("Did not find user: " + userCode);
-		}
-		
-		return result;
-	}
-	
+    /**
+     * Saves changes for this user or inserts a new record.
+     * 
+     * @param aditUser user
+     */
+    public void saveOrUpdate(AditUser aditUser) {
+        Session session = null;
+        Transaction transaction = null;
+        try {
+
+            session = this.getSessionFactory().openSession();
+            transaction = session.beginTransaction();
+            session.saveOrUpdate(aditUser);
+            transaction.commit();
+
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            throw new AditInternalException("Error while updating AditUser: ", e);
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+
+        /*
+         * try { this.getHibernateTemplate().saveOrUpdate(aditUser); } catch
+         * (Exception e) { LOG.error("Exception while adding AditUser: ", e); }
+         */
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<AditUser> listUsers(int startIndex, int maxResults) throws Exception {
+        List<AditUser> result = null;
+
+        DetachedCriteria dt = DetachedCriteria.forClass(AditUser.class, "aditUser");
+        dt.add(Property.forName("aditUser.active").eq(new Boolean(true)));
+        dt.addOrder(Order.asc("aditUser.fullName"));
+        result = this.getHibernateTemplate().findByCriteria(dt, startIndex, maxResults);
+
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<AditUser> listDVKUsers() throws Exception {
+        List<AditUser> result = null;
+        String sql = "from AditUser where dvkOrgCode is not null";
+        Session session = null;
+        try {
+            session = this.getSessionFactory().openSession();
+            result = session.createQuery(sql).list();
+        } catch (Exception e) {
+            throw new AditInternalException("Error while fetching DVK users from database: ", e);
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+
+        return result;
+    }
+
+    public Long getUsedSpaceForUser(String userCode) {
+        Long result = new Long(0);
+        AditUser user = this.getUserByID(userCode);
+
+        if (user != null) {
+            result = user.getDiskQuotaUsed();
+        } else {
+            throw new AditInternalException("Did not find user: " + userCode);
+        }
+
+        return result;
+    }
+
 }

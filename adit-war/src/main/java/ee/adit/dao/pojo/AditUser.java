@@ -11,118 +11,117 @@ import java.util.Set;
  */
 public class AditUser implements java.io.Serializable {
 
-	private static final long serialVersionUID = -6652721298489200200L;
-	private String userCode;
-	private Usertype usertype;
-	private String fullName;
-	private Boolean active;
-	private String dvkOrgCode;
-	private Long diskQuota;
-	private Date deactivationDate;
-	private Set accessRestrictions = new HashSet(0);
-	private Set userNotifications = new HashSet(0);
+    private static final long serialVersionUID = -6652721298489200200L;
+    private String userCode;
+    private Usertype usertype;
+    private String fullName;
+    private Boolean active;
+    private String dvkOrgCode;
+    private Long diskQuota;
+    private Date deactivationDate;
+    private Set<AccessRestriction> accessRestrictions = new HashSet<AccessRestriction>(0);
+    private Set<UserNotification> userNotifications = new HashSet<UserNotification>(0);
 
-	private Long diskQuotaUsed;
-	
-	public AditUser() {
-	}
+    private Long diskQuotaUsed;
 
-	public AditUser(String userCode, Usertype usertype) {
-		this.userCode = userCode;
-		this.usertype = usertype;
-	}
+    public AditUser() {
+    }
 
-	public AditUser(String userCode, Usertype usertype, String fullName,
-			Boolean active, String dvkOrgCode, Long diskQuota,
-			Date deactivationDate, Set accessRestrictions, Set userNotifications) {
-		this.userCode = userCode;
-		this.usertype = usertype;
-		this.fullName = fullName;
-		this.active = active;
-		this.dvkOrgCode = dvkOrgCode;
-		this.diskQuota = diskQuota;
-		this.deactivationDate = deactivationDate;
-		this.accessRestrictions = accessRestrictions;
-		this.userNotifications = userNotifications;
-	}
+    public AditUser(String userCode, Usertype usertype) {
+        this.userCode = userCode;
+        this.usertype = usertype;
+    }
 
-	public String getUserCode() {
-		return this.userCode;
-	}
+    public AditUser(String userCode, Usertype usertype, String fullName, Boolean active, String dvkOrgCode,
+            Long diskQuota, Date deactivationDate, Set<AccessRestriction> accessRestrictions, Set<UserNotification> userNotifications) {
+        this.userCode = userCode;
+        this.usertype = usertype;
+        this.fullName = fullName;
+        this.active = active;
+        this.dvkOrgCode = dvkOrgCode;
+        this.diskQuota = diskQuota;
+        this.deactivationDate = deactivationDate;
+        this.accessRestrictions = accessRestrictions;
+        this.userNotifications = userNotifications;
+    }
 
-	public void setUserCode(String userCode) {
-		this.userCode = userCode;
-	}
+    public String getUserCode() {
+        return this.userCode;
+    }
 
-	public Usertype getUsertype() {
-		return this.usertype;
-	}
+    public void setUserCode(String userCode) {
+        this.userCode = userCode;
+    }
 
-	public void setUsertype(Usertype usertype) {
-		this.usertype = usertype;
-	}
+    public Usertype getUsertype() {
+        return this.usertype;
+    }
 
-	public String getFullName() {
-		return this.fullName;
-	}
+    public void setUsertype(Usertype usertype) {
+        this.usertype = usertype;
+    }
 
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
-	}
+    public String getFullName() {
+        return this.fullName;
+    }
 
-	public Boolean getActive() {
-		return this.active;
-	}
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
 
-	public void setActive(Boolean active) {
-		this.active = active;
-	}
+    public Boolean getActive() {
+        return this.active;
+    }
 
-	public String getDvkOrgCode() {
-		return this.dvkOrgCode;
-	}
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
 
-	public void setDvkOrgCode(String dvkOrgCode) {
-		this.dvkOrgCode = dvkOrgCode;
-	}
+    public String getDvkOrgCode() {
+        return this.dvkOrgCode;
+    }
 
-	public Long getDiskQuota() {
-		return this.diskQuota;
-	}
+    public void setDvkOrgCode(String dvkOrgCode) {
+        this.dvkOrgCode = dvkOrgCode;
+    }
 
-	public void setDiskQuota(Long diskQuota) {
-		this.diskQuota = diskQuota;
-	}
+    public Long getDiskQuota() {
+        return this.diskQuota;
+    }
 
-	public Date getDeactivationDate() {
-		return this.deactivationDate;
-	}
+    public void setDiskQuota(Long diskQuota) {
+        this.diskQuota = diskQuota;
+    }
 
-	public void setDeactivationDate(Date deactivationDate) {
-		this.deactivationDate = deactivationDate;
-	}
+    public Date getDeactivationDate() {
+        return this.deactivationDate;
+    }
 
-	public Set getAccessRestrictions() {
-		return this.accessRestrictions;
-	}
+    public void setDeactivationDate(Date deactivationDate) {
+        this.deactivationDate = deactivationDate;
+    }
 
-	public void setAccessRestrictions(Set accessRestrictions) {
-		this.accessRestrictions = accessRestrictions;
-	}
+    public Set<AccessRestriction> getAccessRestrictions() {
+        return this.accessRestrictions;
+    }
 
-	public Set getUserNotifications() {
-		return userNotifications;
-	}
+    public void setAccessRestrictions(Set<AccessRestriction> accessRestrictions) {
+        this.accessRestrictions = accessRestrictions;
+    }
 
-	public void setUserNotifications(Set userNotifications) {
-		this.userNotifications = userNotifications;
-	}
+    public Set<UserNotification> getUserNotifications() {
+        return userNotifications;
+    }
 
-	public Long getDiskQuotaUsed() {
-		return diskQuotaUsed;
-	}
+    public void setUserNotifications(Set<UserNotification> userNotifications) {
+        this.userNotifications = userNotifications;
+    }
 
-	public void setDiskQuotaUsed(Long diskQuotaUsed) {
-		this.diskQuotaUsed = diskQuotaUsed;
-	}
+    public Long getDiskQuotaUsed() {
+        return diskQuotaUsed;
+    }
+
+    public void setDiskQuotaUsed(Long diskQuotaUsed) {
+        this.diskQuotaUsed = diskQuotaUsed;
+    }
 }

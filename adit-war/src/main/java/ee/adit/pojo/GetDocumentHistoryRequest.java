@@ -5,7 +5,6 @@
 // Generated on: 2010.07.08 at 05:56:23 PM EEST 
 //
 
-
 package ee.adit.pojo;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -13,11 +12,13 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for GetDocumentHistoryRequest complex type.
+ * <p>
+ * Java class for GetDocumentHistoryRequest complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  * 
  * <pre>
  * &lt;complexType name="GetDocumentHistoryRequest">
@@ -34,9 +35,7 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "GetDocumentHistoryRequest", propOrder = {
-    "documentId"
-})
+@XmlType(name = "GetDocumentHistoryRequest", propOrder = {"documentId" })
 public class GetDocumentHistoryRequest {
 
     @XmlElement(name = "document_id", required = true)
@@ -45,10 +44,8 @@ public class GetDocumentHistoryRequest {
     /**
      * Gets the value of the documentId property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Long }
-     *     
+     * @return possible object is {@link Long }
+     * 
      */
     public Long getDocumentId() {
         return documentId;
@@ -58,9 +55,8 @@ public class GetDocumentHistoryRequest {
      * Sets the value of the documentId property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link Long }
-     *     
+     *            allowed object is {@link Long }
+     * 
      */
     public void setDocumentId(Long value) {
         this.documentId = value;

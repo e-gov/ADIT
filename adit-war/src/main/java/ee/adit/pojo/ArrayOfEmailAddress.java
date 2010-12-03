@@ -5,21 +5,23 @@
 // Generated on: 2010.07.29 at 12:51:34 PM EEST 
 //
 
-
 package ee.adit.pojo;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for ArrayOfEmailAddress complex type.
+ * <p>
+ * Java class for ArrayOfEmailAddress complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  * 
  * <pre>
  * &lt;complexType name="ArrayOfEmailAddress">
@@ -36,9 +38,7 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "ArrayOfEmailAddress", propOrder = {
-    "emailAddress"
-})
+@XmlType(name = "ArrayOfEmailAddress", propOrder = {"emailAddress" })
 public class ArrayOfEmailAddress {
 
     @XmlElement(name = "email_address")
@@ -48,15 +48,16 @@ public class ArrayOfEmailAddress {
      * Gets the value of the emailAddress property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the emailAddress property.
+     * This accessor method returns a reference to the live list, not a
+     * snapshot. Therefore any modification you make to the returned list will
+     * be present inside the JAXB object. This is why there is not a
+     * <CODE>set</CODE> method for the emailAddress property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getEmailAddress().add(newItem);
+     * getEmailAddress().add(newItem);
      * </pre>
      * 
      * 
@@ -74,13 +75,13 @@ public class ArrayOfEmailAddress {
     }
 
     public void setEmailAddress(List<EmailAddress> emailAddress) {
-    	this.emailAddress = emailAddress;
+        this.emailAddress = emailAddress;
     }
-    
+
     public void addEmailAddress(EmailAddress address) {
-    	if (this.emailAddress == null) {
+        if (this.emailAddress == null) {
             this.emailAddress = new ArrayList<EmailAddress>();
         }
-    	this.emailAddress.add(address);
+        this.emailAddress.add(address);
     }
 }

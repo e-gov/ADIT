@@ -4,14 +4,14 @@ import java.util.ArrayList;
 
 public class GetUserInfoRequestAttachmentUserList {
 
-	private ArrayList<String> codes;
+    private ArrayList<String> codes;
 
-	public ArrayList<String> getCodes() {
-		return codes;
-	}
+    public ArrayList<String> getCodes() {
+        return codes;
+    }
 
-	public void setCodes(ArrayList<String> codes) {
-		this.codes = codes;
-	}
-	
+    public void setCodes(ArrayList<String> codes) {
+        this.codes = codes;
+    }
+
 }

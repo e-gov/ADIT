@@ -5,20 +5,20 @@
 // Generated on: 2010.07.02 at 02:26:06 PM EEST 
 //
 
-
 package ee.adit.pojo;
 
-import java.math.BigInteger;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for GetDocumentFileRequest complex type.
+ * <p>
+ * Java class for GetDocumentFileRequest complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  * 
  * <pre>
  * &lt;complexType name="GetDocumentFileRequest">
@@ -36,10 +36,7 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "GetDocumentFileRequest", propOrder = {
-    "documentId",
-    "fileIdList"
-})
+@XmlType(name = "GetDocumentFileRequest", propOrder = {"documentId", "fileIdList" })
 public class GetDocumentFileRequest {
 
     @XmlElement(name = "document_id", required = true)
@@ -50,10 +47,8 @@ public class GetDocumentFileRequest {
     /**
      * Gets the value of the documentId property.
      * 
-     * @return
-     *     possible object is
-     *     {@link BigInteger }
-     *     
+     * @return possible object is {@link Long }
+     * 
      */
     public Long getDocumentId() {
         return documentId;
@@ -63,9 +58,8 @@ public class GetDocumentFileRequest {
      * Sets the value of the documentId property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link BigInteger }
-     *     
+     *            allowed object is {@link Long }
+     * 
      */
     public void setDocumentId(Long value) {
         this.documentId = value;
@@ -74,10 +68,8 @@ public class GetDocumentFileRequest {
     /**
      * Gets the value of the fileIdList property.
      * 
-     * @return
-     *     possible object is
-     *     {@link ArrayOfFileId }
-     *     
+     * @return possible object is {@link ArrayOfFileId }
+     * 
      */
     public ArrayOfFileId getFileIdList() {
         return fileIdList;
@@ -87,9 +79,8 @@ public class GetDocumentFileRequest {
      * Sets the value of the fileIdList property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link ArrayOfFileId }
-     *     
+     *            allowed object is {@link ArrayOfFileId }
+     * 
      */
     public void setFileIdList(ArrayOfFileId value) {
         this.fileIdList = value;

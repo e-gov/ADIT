@@ -4,24 +4,24 @@ import java.util.List;
 
 public class GetJoinedResponseAttachment {
 
-	private Integer total;
-	
-	private List<GetJoinedResponseAttachmentUser> users;
+    private Integer total;
 
-	public List<GetJoinedResponseAttachmentUser> getUsers() {
-		return users;
-	}
+    private List<GetJoinedResponseAttachmentUser> users;
 
-	public void setUsers(List<GetJoinedResponseAttachmentUser> users) {
-		this.users = users;
-	}
+    public List<GetJoinedResponseAttachmentUser> getUsers() {
+        return users;
+    }
 
-	public Integer getTotal() {
-		return total;
-	}
+    public void setUsers(List<GetJoinedResponseAttachmentUser> users) {
+        this.users = users;
+    }
 
-	public void setTotal(Integer total) {
-		this.total = total;
-	}
-	
+    public Integer getTotal() {
+        return total;
+    }
+
+    public void setTotal(Integer total) {
+        this.total = total;
+    }
+
 }

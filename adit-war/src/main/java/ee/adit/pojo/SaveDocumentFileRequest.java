@@ -5,7 +5,6 @@
 // Generated on: 2010.07.15 at 01:51:05 PM EEST 
 //
 
-
 package ee.adit.pojo;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -13,11 +12,13 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for SaveDocumentFileRequest complex type.
+ * <p>
+ * Java class for SaveDocumentFileRequest complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  * 
  * <pre>
  * &lt;complexType name="SaveDocumentFileRequest">
@@ -43,10 +44,7 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "SaveDocumentFileRequest", propOrder = {
-    "documentId",
-    "file"
-})
+@XmlType(name = "SaveDocumentFileRequest", propOrder = {"documentId", "file" })
 public class SaveDocumentFileRequest {
 
     @XmlElement(name = "document_id", required = true)
@@ -57,10 +55,8 @@ public class SaveDocumentFileRequest {
     /**
      * Gets the value of the documentId property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Long }
-     *     
+     * @return possible object is {@link Long }
+     * 
      */
     public Long getDocumentId() {
         return documentId;
@@ -70,9 +66,8 @@ public class SaveDocumentFileRequest {
      * Sets the value of the documentId property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link Long }
-     *     
+     *            allowed object is {@link Long }
+     * 
      */
     public void setDocumentId(Long value) {
         this.documentId = value;
@@ -81,10 +76,8 @@ public class SaveDocumentFileRequest {
     /**
      * Gets the value of the file property.
      * 
-     * @return
-     *     possible object is
-     *     {@link SaveDocumentFileRequestFile }
-     *     
+     * @return possible object is {@link SaveDocumentFileRequestFile }
+     * 
      */
     public SaveDocumentFileRequestFile getFile() {
         return file;
@@ -94,9 +87,8 @@ public class SaveDocumentFileRequest {
      * Sets the value of the file property.
      * 
      * @param value
-     *     allowed object is
-     *     {@link SaveDocumentFileRequestFile }
-     *     
+     *            allowed object is {@link SaveDocumentFileRequestFile }
+     * 
      */
     public void setFile(SaveDocumentFileRequestFile value) {
         this.file = value;
