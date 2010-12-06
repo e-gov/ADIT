@@ -484,5 +484,8 @@ adit-war/src/main/webapp/WEB-INF/web.xml -text
 adit-war/src/main/webapp/index.jsp -text
 adit-war/src/main/webapp/monitor.jsp -text
 doc/adit_kasutusjuhend.odt -text
+doc/adit_kirjeldus.odt -text
 doc/adit_paigaldusjuhend.odt -text
+doc/adit_riskianalüüs.odt -text
+doc/adit_taasteplaan.odt -text
 /pom.xml -text
