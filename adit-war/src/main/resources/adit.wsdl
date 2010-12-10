@@ -2394,6 +2394,7 @@
 				<xtee:title>Teenusega liitunud kasutajate päring</xtee:title>
 				<xtee:notes>Tagastab teenusega liitunud kasutajate andmed</xtee:notes>
 			</xs:documentation>
+			<xtee:version>v1</xtee:version>
 			<wsdl:input message="tns:getJoinedRequest" name="getJoinedRequest">
 			</wsdl:input>
 			<wsdl:output message="tns:getJoinedResponse" name="getJoinedResponse">
@@ -2404,6 +2405,7 @@
 				<xtee:title>Dokumendi jagamise lõpetamine</xtee:title>
 				<xtee:notes>Dokumendi jagamise lõpetamine</xtee:notes>
 			</xs:documentation>
+			<xtee:version>v1</xtee:version>
 			<wsdl:input message="tns:unShareDocumentRequest" name="unShareDocumentRequest">
 			</wsdl:input>
 			<wsdl:output message="tns:unShareDocumentResponse" name="unShareDocumentResponse">
@@ -2414,6 +2416,7 @@
 				<xtee:title>Dokumendi faili salvestamine</xtee:title>
 				<xtee:notes>Dokumendi faili salvestamine</xtee:notes>
 			</xs:documentation>
+			<xtee:version>v1</xtee:version>
 			<wsdl:input message="tns:saveDocumentFileRequest" name="saveDocumentFileRequest">
 			</wsdl:input>
 			<wsdl:output message="tns:saveDocumentFileResponse" name="saveDocumentFileResponse">
@@ -2424,6 +2427,7 @@
 				<xtee:title>Allkirja kinnitamine</xtee:title>
 				<xtee:notes>Võimaldab kinnitada päringuga "prepareSignature" loodud allkirja</xtee:notes>
 			</xs:documentation>
+			<xtee:version>v1</xtee:version>
 			<wsdl:input message="tns:confirmSignatureRequest" name="confirmSignatureRequest">
 			</wsdl:input>
 			<wsdl:output message="tns:confirmSignatureResponse" name="confirmSignatureResponse">
@@ -2434,6 +2438,7 @@
 				<xtee:title>Dokumendi arhiveerimine</xtee:title>
 				<xtee:notes>Arhiveerimisel asendatakse dokumendi failide sisu räsikoodiga</xtee:notes>
 			</xs:documentation>
+			<xtee:version>v1</xtee:version>
 			<wsdl:input message="tns:deflateDocumentRequest" name="deflateDocumentRequest">
 			</wsdl:input>
 			<wsdl:output message="tns:deflateDocumentResponse" name="deflateDocumentResponse">
@@ -2444,6 +2449,7 @@
 				<xtee:title>Kasutaja info päring</xtee:title>
 				<xtee:notes>Kasutaja info päring</xtee:notes>
 			</xs:documentation>
+			<xtee:version>v1</xtee:version>
 			<wsdl:input message="tns:getUserInfoRequest" name="getUserInfoRequest">
 			</wsdl:input>
 			<wsdl:output message="tns:getUserInfoResponse" name="getUserInfoResponse">
@@ -2454,6 +2460,7 @@
 				<xtee:title>Dokumendi kustutamine</xtee:title>
 				<xtee:notes>Dokumendi kustutamisel asendatakse dokumendi failide sisu räsikoodiga</xtee:notes>
 			</xs:documentation>
+			<xtee:version>v1</xtee:version>
 			<wsdl:input message="tns:deleteDocumentRequest" name="deleteDocumentRequest">
 			</wsdl:input>
 			<wsdl:output message="tns:deleteDocumentResponse" name="deleteDocumentResponse">
@@ -2464,6 +2471,7 @@
 				<xtee:title>Märgib dokumendi vaadatuks</xtee:title>
 				<xtee:notes>Märgib dokumendi vaadatuks</xtee:notes>
 			</xs:documentation>
+			<xtee:version>v1</xtee:version>
 			<wsdl:input message="tns:markDocumentViewedRequest" name="markDocumentViewedRequest">
 			</wsdl:input>
 			<wsdl:output message="tns:markDocumentViewedResponse"
@@ -2475,6 +2483,7 @@
 				<xtee:title>Teenusega liitumine</xtee:title>
 				<xtee:notes>Päringu käivitaja liitumiseks teenusega</xtee:notes>
 			</xs:documentation>
+			<xtee:version>v1</xtee:version>
 			<wsdl:input message="tns:joinRequest" name="joinRequest">
 			</wsdl:input>
 			<wsdl:output message="tns:joinResponse" name="joinResponse">
@@ -2485,6 +2494,7 @@
 				<xtee:title>Dokumendi saatmine</xtee:title>
 				<xtee:notes>Võimaldab saata dokumenti teistele kasutajatele</xtee:notes>
 			</xs:documentation>
+			<xtee:version>v1</xtee:version>
 			<wsdl:input message="tns:sendDocumentRequest" name="sendDocumentRequest">
 			</wsdl:input>
 			<wsdl:output message="tns:sendDocumentResponse" name="sendDocumentResponse">
@@ -2495,6 +2505,7 @@
 				<xtee:title>Kasutaja teavitused</xtee:title>
 				<xtee:notes>Tagastab kasutaja teavituste seaded</xtee:notes>
 			</xs:documentation>
+			<xtee:version>v1</xtee:version>
 			<wsdl:input message="tns:getNotificationsRequest" name="getNotificationsRequest">
 			</wsdl:input>
 			<wsdl:output message="tns:getNotificationsResponse" name="getNotificationsResponse">
@@ -2505,6 +2516,7 @@
 				<xtee:title>Dokumendi päring</xtee:title>
 				<xtee:notes>Tagastab dokumendi</xtee:notes>
 			</xs:documentation>
+			<xtee:version>v1</xtee:version>
 			<wsdl:input message="tns:getDocumentRequest" name="getDocumentRequest">
 			</wsdl:input>
 			<wsdl:output message="tns:getDocumentResponse" name="getDocumentResponse">
@@ -2515,6 +2527,7 @@
 				<xtee:title>Teenusest lahkumine</xtee:title>
 				<xtee:notes>Päringu käivitanud isik lahkub teenusest</xtee:notes>
 			</xs:documentation>
+			<xtee:version>v1</xtee:version>
 			<wsdl:input message="tns:unJoinRequest" name="unJoinRequest">
 			</wsdl:input>
 			<wsdl:output message="tns:unJoinResponse" name="unJoinResponse">
@@ -2525,6 +2538,7 @@
 				<xtee:title>Dokumendi faili kustutamine</xtee:title>
 				<xtee:notes>Kustutab dokumendi faili - dokumendi faili sisu asendatakse räsiga</xtee:notes>
 			</xs:documentation>
+			<xtee:version>v1</xtee:version>
 			<wsdl:input message="tns:deleteDocumentFileRequest" name="deleteDocumentFileRequest">
 			</wsdl:input>
 			<wsdl:output message="tns:deleteDocumentFileResponse"
@@ -2536,6 +2550,7 @@
 				<xtee:title>Dokumendi faili päring</xtee:title>
 				<xtee:notes>Tagastab dokumendi faili</xtee:notes>
 			</xs:documentation>
+			<xtee:version>v1</xtee:version>
 			<wsdl:input message="tns:getDocumentFileRequest" name="getDocumentFileRequest">
 			</wsdl:input>
 			<wsdl:output message="tns:getDocumentFileResponse" name="getDocumentFileResponse">
@@ -2546,6 +2561,7 @@
 				<xtee:title>Dokumendi staatuse muutmine</xtee:title>
 				<xtee:notes>Muudab dokumendi staatuse</xtee:notes>
 			</xs:documentation>
+			<xtee:version>v1</xtee:version>
 			<wsdl:input message="tns:modifyStatusRequest" name="modifyStatusRequest">
 			</wsdl:input>
 			<wsdl:output message="tns:modifyStatusResponse" name="modifyStatusResponse">
@@ -2556,6 +2572,7 @@
 				<xtee:title>Dokumendi salvestamine</xtee:title>
 				<xtee:notes>Dokument (ja failid) salvestatakse</xtee:notes>
 			</xs:documentation>
+			<xtee:version>v1</xtee:version>
 			<wsdl:input message="tns:saveDocumentRequest" name="saveDocumentRequest">
 			</wsdl:input>
 			<wsdl:output message="tns:saveDocumentResponse" name="saveDocumentResponse">
@@ -2566,6 +2583,7 @@
 				<xtee:title>Allkirja ettevalmistamine</xtee:title>
 				<xtee:notes>Valmistab ette dokumendile antava allkirja</xtee:notes>
 			</xs:documentation>
+			<xtee:version>v1</xtee:version>
 			<wsdl:input message="tns:prepareSignatureRequest" name="prepareSignatureRequest">
 			</wsdl:input>
 			<wsdl:output message="tns:prepareSignatureResponse" name="prepareSignatureResponse">
@@ -2576,6 +2594,7 @@
 				<xtee:title>Dokumendi ajaloo päring</xtee:title>
 				<xtee:notes>Tagastab dokumendi ajalookirjed</xtee:notes>
 			</xs:documentation>
+			<xtee:version>v1</xtee:version>
 			<wsdl:input message="tns:getDocumentHistoryRequest" name="getDocumentHistoryRequest">
 			</wsdl:input>
 			<wsdl:output message="tns:getDocumentHistoryResponse"
@@ -2587,6 +2606,7 @@
 				<xtee:title>Kasutaja teavituste seadmine</xtee:title>
 				<xtee:notes>Seadistab kasutaja teavitused</xtee:notes>
 			</xs:documentation>
+			<xtee:version>v1</xtee:version>
 			<wsdl:input message="tns:setNotificationsRequest" name="setNotificationsRequest">
 			</wsdl:input>
 			<wsdl:output message="tns:setNotificationsResponse" name="setNotificationsResponse">
@@ -2597,6 +2617,7 @@
 				<xtee:title>Dokumendi otsing</xtee:title>
 				<xtee:notes>Võimaldab otsida dokumente, tagastatakse leitud dokumentide andmed</xtee:notes>
 			</xs:documentation>
+			<xtee:version>v1</xtee:version>
 			<wsdl:input message="tns:getDocumentListRequest" name="getDocumentListRequest">
 			</wsdl:input>
 			<wsdl:output message="tns:getDocumentListResponse" name="getDocumentListResponse">
@@ -2607,6 +2628,7 @@
 				<xtee:title>Dokumendi jagamine</xtee:title>
 				<xtee:notes>Jagab dokumendi määratud kasutajatele</xtee:notes>
 			</xs:documentation>
+			<xtee:version>v1</xtee:version>
 			<wsdl:input message="tns:shareDocumentRequest" name="shareDocumentRequest">
 			</wsdl:input>
 			<wsdl:output message="tns:shareDocumentResponse" name="shareDocumentResponse">
