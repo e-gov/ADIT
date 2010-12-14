@@ -2393,8 +2393,7 @@
 			<xs:documentation>
 				<xtee:title>Teenusega liitunud kasutajate päring</xtee:title>
 				<xtee:notes>Tagastab teenusega liitunud kasutajate andmed</xtee:notes>
-			</xs:documentation>
-			<xtee:version>v1</xtee:version>
+			</xs:documentation>75002927
 			<wsdl:input message="tns:getJoinedRequest" name="getJoinedRequest">
 			</wsdl:input>
 			<wsdl:output message="tns:getJoinedResponse" name="getJoinedResponse">
@@ -2404,8 +2403,7 @@
 			<xs:documentation>
 				<xtee:title>Dokumendi jagamise lõpetamine</xtee:title>
 				<xtee:notes>Dokumendi jagamise lõpetamine</xtee:notes>
-			</xs:documentation>
-			<xtee:version>v1</xtee:version>
+			</xs:documentation>75002927
 			<wsdl:input message="tns:unShareDocumentRequest" name="unShareDocumentRequest">
 			</wsdl:input>
 			<wsdl:output message="tns:unShareDocumentResponse" name="unShareDocumentResponse">
@@ -2415,8 +2413,7 @@
 			<xs:documentation>
 				<xtee:title>Dokumendi faili salvestamine</xtee:title>
 				<xtee:notes>Dokumendi faili salvestamine</xtee:notes>
-			</xs:documentation>
-			<xtee:version>v1</xtee:version>
+			</xs:documentation>75002927
 			<wsdl:input message="tns:saveDocumentFileRequest" name="saveDocumentFileRequest">
 			</wsdl:input>
 			<wsdl:output message="tns:saveDocumentFileResponse" name="saveDocumentFileResponse">
@@ -2426,8 +2423,7 @@
 			<xs:documentation>
 				<xtee:title>Allkirja kinnitamine</xtee:title>
 				<xtee:notes>Võimaldab kinnitada päringuga "prepareSignature" loodud allkirja</xtee:notes>
-			</xs:documentation>
-			<xtee:version>v1</xtee:version>
+			</xs:documentation>75002927
 			<wsdl:input message="tns:confirmSignatureRequest" name="confirmSignatureRequest">
 			</wsdl:input>
 			<wsdl:output message="tns:confirmSignatureResponse" name="confirmSignatureResponse">
@@ -2437,8 +2433,7 @@
 			<xs:documentation>
 				<xtee:title>Dokumendi arhiveerimine</xtee:title>
 				<xtee:notes>Arhiveerimisel asendatakse dokumendi failide sisu räsikoodiga</xtee:notes>
-			</xs:documentation>
-			<xtee:version>v1</xtee:version>
+			</xs:documentation>75002927
 			<wsdl:input message="tns:deflateDocumentRequest" name="deflateDocumentRequest">
 			</wsdl:input>
 			<wsdl:output message="tns:deflateDocumentResponse" name="deflateDocumentResponse">
@@ -2448,8 +2443,7 @@
 			<xs:documentation>
 				<xtee:title>Kasutaja info päring</xtee:title>
 				<xtee:notes>Kasutaja info päring</xtee:notes>
-			</xs:documentation>
-			<xtee:version>v1</xtee:version>
+			</xs:documentation>75002927
 			<wsdl:input message="tns:getUserInfoRequest" name="getUserInfoRequest">
 			</wsdl:input>
 			<wsdl:output message="tns:getUserInfoResponse" name="getUserInfoResponse">
@@ -2459,8 +2453,7 @@
 			<xs:documentation>
 				<xtee:title>Dokumendi kustutamine</xtee:title>
 				<xtee:notes>Dokumendi kustutamisel asendatakse dokumendi failide sisu räsikoodiga</xtee:notes>
-			</xs:documentation>
-			<xtee:version>v1</xtee:version>
+			</xs:documentation>75002927
 			<wsdl:input message="tns:deleteDocumentRequest" name="deleteDocumentRequest">
 			</wsdl:input>
 			<wsdl:output message="tns:deleteDocumentResponse" name="deleteDocumentResponse">
@@ -2470,8 +2463,7 @@
 			<xs:documentation>
 				<xtee:title>Märgib dokumendi vaadatuks</xtee:title>
 				<xtee:notes>Märgib dokumendi vaadatuks</xtee:notes>
-			</xs:documentation>
-			<xtee:version>v1</xtee:version>
+			</xs:documentation>75002927
 			<wsdl:input message="tns:markDocumentViewedRequest" name="markDocumentViewedRequest">
 			</wsdl:input>
 			<wsdl:output message="tns:markDocumentViewedResponse"
@@ -2482,8 +2474,7 @@
 			<xs:documentation>
 				<xtee:title>Teenusega liitumine</xtee:title>
 				<xtee:notes>Päringu käivitaja liitumiseks teenusega</xtee:notes>
-			</xs:documentation>
-			<xtee:version>v1</xtee:version>
+			</xs:documentation>75002927
 			<wsdl:input message="tns:joinRequest" name="joinRequest">
 			</wsdl:input>
 			<wsdl:output message="tns:joinResponse" name="joinResponse">
@@ -2493,8 +2484,7 @@
 			<xs:documentation>
 				<xtee:title>Dokumendi saatmine</xtee:title>
 				<xtee:notes>Võimaldab saata dokumenti teistele kasutajatele</xtee:notes>
-			</xs:documentation>
-			<xtee:version>v1</xtee:version>
+			</xs:documentation>75002927
 			<wsdl:input message="tns:sendDocumentRequest" name="sendDocumentRequest">
 			</wsdl:input>
 			<wsdl:output message="tns:sendDocumentResponse" name="sendDocumentResponse">
@@ -2504,8 +2494,7 @@
 			<xs:documentation>
 				<xtee:title>Kasutaja teavitused</xtee:title>
 				<xtee:notes>Tagastab kasutaja teavituste seaded</xtee:notes>
-			</xs:documentation>
-			<xtee:version>v1</xtee:version>
+			</xs:documentation>75002927
 			<wsdl:input message="tns:getNotificationsRequest" name="getNotificationsRequest">
 			</wsdl:input>
 			<wsdl:output message="tns:getNotificationsResponse" name="getNotificationsResponse">
@@ -2515,8 +2504,7 @@
 			<xs:documentation>
 				<xtee:title>Dokumendi päring</xtee:title>
 				<xtee:notes>Tagastab dokumendi</xtee:notes>
-			</xs:documentation>
-			<xtee:version>v1</xtee:version>
+			</xs:documentation>75002927
 			<wsdl:input message="tns:getDocumentRequest" name="getDocumentRequest">
 			</wsdl:input>
 			<wsdl:output message="tns:getDocumentResponse" name="getDocumentResponse">
@@ -2526,8 +2514,7 @@
 			<xs:documentation>
 				<xtee:title>Teenusest lahkumine</xtee:title>
 				<xtee:notes>Päringu käivitanud isik lahkub teenusest</xtee:notes>
-			</xs:documentation>
-			<xtee:version>v1</xtee:version>
+			</xs:documentation>75002927
 			<wsdl:input message="tns:unJoinRequest" name="unJoinRequest">
 			</wsdl:input>
 			<wsdl:output message="tns:unJoinResponse" name="unJoinResponse">
@@ -2537,8 +2524,7 @@
 			<xs:documentation>
 				<xtee:title>Dokumendi faili kustutamine</xtee:title>
 				<xtee:notes>Kustutab dokumendi faili - dokumendi faili sisu asendatakse räsiga</xtee:notes>
-			</xs:documentation>
-			<xtee:version>v1</xtee:version>
+			</xs:documentation>75002927
 			<wsdl:input message="tns:deleteDocumentFileRequest" name="deleteDocumentFileRequest">
 			</wsdl:input>
 			<wsdl:output message="tns:deleteDocumentFileResponse"
@@ -2549,8 +2535,7 @@
 			<xs:documentation>
 				<xtee:title>Dokumendi faili päring</xtee:title>
 				<xtee:notes>Tagastab dokumendi faili</xtee:notes>
-			</xs:documentation>
-			<xtee:version>v1</xtee:version>
+			</xs:documentation>75002927
 			<wsdl:input message="tns:getDocumentFileRequest" name="getDocumentFileRequest">
 			</wsdl:input>
 			<wsdl:output message="tns:getDocumentFileResponse" name="getDocumentFileResponse">
@@ -2560,8 +2545,7 @@
 			<xs:documentation>
 				<xtee:title>Dokumendi staatuse muutmine</xtee:title>
 				<xtee:notes>Muudab dokumendi staatuse</xtee:notes>
-			</xs:documentation>
-			<xtee:version>v1</xtee:version>
+			</xs:documentation>75002927
 			<wsdl:input message="tns:modifyStatusRequest" name="modifyStatusRequest">
 			</wsdl:input>
 			<wsdl:output message="tns:modifyStatusResponse" name="modifyStatusResponse">
@@ -2571,8 +2555,7 @@
 			<xs:documentation>
 				<xtee:title>Dokumendi salvestamine</xtee:title>
 				<xtee:notes>Dokument (ja failid) salvestatakse</xtee:notes>
-			</xs:documentation>
-			<xtee:version>v1</xtee:version>
+			</xs:documentation>75002927
 			<wsdl:input message="tns:saveDocumentRequest" name="saveDocumentRequest">
 			</wsdl:input>
 			<wsdl:output message="tns:saveDocumentResponse" name="saveDocumentResponse">
@@ -2582,8 +2565,7 @@
 			<xs:documentation>
 				<xtee:title>Allkirja ettevalmistamine</xtee:title>
 				<xtee:notes>Valmistab ette dokumendile antava allkirja</xtee:notes>
-			</xs:documentation>
-			<xtee:version>v1</xtee:version>
+			</xs:documentation>75002927
 			<wsdl:input message="tns:prepareSignatureRequest" name="prepareSignatureRequest">
 			</wsdl:input>
 			<wsdl:output message="tns:prepareSignatureResponse" name="prepareSignatureResponse">
@@ -2593,8 +2575,7 @@
 			<xs:documentation>
 				<xtee:title>Dokumendi ajaloo päring</xtee:title>
 				<xtee:notes>Tagastab dokumendi ajalookirjed</xtee:notes>
-			</xs:documentation>
-			<xtee:version>v1</xtee:version>
+			</xs:documentation>75002927
 			<wsdl:input message="tns:getDocumentHistoryRequest" name="getDocumentHistoryRequest">
 			</wsdl:input>
 			<wsdl:output message="tns:getDocumentHistoryResponse"
@@ -2605,8 +2586,7 @@
 			<xs:documentation>
 				<xtee:title>Kasutaja teavituste seadmine</xtee:title>
 				<xtee:notes>Seadistab kasutaja teavitused</xtee:notes>
-			</xs:documentation>
-			<xtee:version>v1</xtee:version>
+			</xs:documentation>75002927
 			<wsdl:input message="tns:setNotificationsRequest" name="setNotificationsRequest">
 			</wsdl:input>
 			<wsdl:output message="tns:setNotificationsResponse" name="setNotificationsResponse">
@@ -2616,8 +2596,7 @@
 			<xs:documentation>
 				<xtee:title>Dokumendi otsing</xtee:title>
 				<xtee:notes>Võimaldab otsida dokumente, tagastatakse leitud dokumentide andmed</xtee:notes>
-			</xs:documentation>
-			<xtee:version>v1</xtee:version>
+			</xs:documentation>75002927
 			<wsdl:input message="tns:getDocumentListRequest" name="getDocumentListRequest">
 			</wsdl:input>
 			<wsdl:output message="tns:getDocumentListResponse" name="getDocumentListResponse">
@@ -2627,8 +2606,7 @@
 			<xs:documentation>
 				<xtee:title>Dokumendi jagamine</xtee:title>
 				<xtee:notes>Jagab dokumendi määratud kasutajatele</xtee:notes>
-			</xs:documentation>
-			<xtee:version>v1</xtee:version>
+			</xs:documentation>75002927
 			<wsdl:input message="tns:shareDocumentRequest" name="shareDocumentRequest">
 			</wsdl:input>
 			<wsdl:output message="tns:shareDocumentResponse" name="shareDocumentResponse">
@@ -2639,6 +2617,7 @@
 		<soap:binding style="rpc"
 			transport="http://schemas.xmlsoap.org/soap/http" />
 		<wsdl:operation name="getJoined">
+			<xtee:version>v1</xtee:version>
 			<soap:operation soapAction="" />
 			<wsdl:input name="getJoinedRequest">
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
@@ -2688,6 +2667,7 @@
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="unShareDocument">
+			<xtee:version>v1</xtee:version>
 			<soap:operation soapAction="" />
 			<wsdl:input name="unShareDocumentRequest">
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
@@ -2737,6 +2717,7 @@
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="saveDocumentFile">
+			<xtee:version>v1</xtee:version>
 			<soap:operation soapAction="" />
 			<wsdl:input name="saveDocumentFileRequest">
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
@@ -2786,6 +2767,7 @@
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="confirmSignature">
+			<xtee:version>v1</xtee:version>
 			<soap:operation soapAction="" />
 			<wsdl:input name="confirmSignatureRequest">
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
@@ -2835,6 +2817,7 @@
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="deflateDocument">
+			<xtee:version>v1</xtee:version>
 			<soap:operation soapAction="" />
 			<wsdl:input name="deflateDocumentRequest">
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
@@ -2884,6 +2867,7 @@
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="getUserInfo">
+			<xtee:version>v1</xtee:version>
 			<soap:operation soapAction="" />
 			<wsdl:input name="getUserInfoRequest">
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
@@ -2933,6 +2917,7 @@
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="deleteDocument">
+			<xtee:version>v1</xtee:version>
 			<soap:operation soapAction="" />
 			<wsdl:input name="deleteDocumentRequest">
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
@@ -2982,6 +2967,7 @@
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="markDocumentViewed">
+			<xtee:version>v1</xtee:version>
 			<soap:operation soapAction="" />
 			<wsdl:input name="markDocumentViewedRequest">
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
@@ -3031,6 +3017,7 @@
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="join">
+			<xtee:version>v1</xtee:version>
 			<soap:operation soapAction="" />
 			<wsdl:input name="joinRequest">
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
@@ -3080,6 +3067,7 @@
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="sendDocument">
+			<xtee:version>v1</xtee:version>
 			<soap:operation soapAction="" />
 			<wsdl:input name="sendDocumentRequest">
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
@@ -3129,6 +3117,7 @@
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="getNotifications">
+			<xtee:version>v1</xtee:version>
 			<soap:operation soapAction="" />
 			<wsdl:input name="getNotificationsRequest">
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
@@ -3178,6 +3167,7 @@
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="getDocument">
+			<xtee:version>v1</xtee:version>
 			<soap:operation soapAction="" />
 			<wsdl:input name="getDocumentRequest">
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
@@ -3227,6 +3217,7 @@
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="unJoin">
+			<xtee:version>v1</xtee:version>
 			<soap:operation soapAction="" />
 			<wsdl:input name="unJoinRequest">
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
@@ -3276,6 +3267,7 @@
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="deleteDocumentFile">
+			<xtee:version>v1</xtee:version>
 			<soap:operation soapAction="" />
 			<wsdl:input name="deleteDocumentFileRequest">
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
@@ -3325,6 +3317,7 @@
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="getDocumentFile">
+			<xtee:version>v1</xtee:version>
 			<soap:operation soapAction="" />
 			<wsdl:input name="getDocumentFileRequest">
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
@@ -3374,6 +3367,7 @@
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="modifyStatus">
+			<xtee:version>v1</xtee:version>
 			<soap:operation soapAction="" />
 			<wsdl:input name="modifyStatusRequest">
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
@@ -3423,6 +3417,7 @@
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="saveDocument">
+			<xtee:version>v1</xtee:version>
 			<soap:operation soapAction="" />
 			<wsdl:input name="saveDocumentRequest">
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
@@ -3472,6 +3467,7 @@
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="prepareSignature">
+			<xtee:version>v1</xtee:version>
 			<soap:operation soapAction="" />
 			<wsdl:input name="prepareSignatureRequest">
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
@@ -3521,6 +3517,7 @@
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="getDocumentHistory">
+			<xtee:version>v1</xtee:version>
 			<soap:operation soapAction="" />
 			<wsdl:input name="getDocumentHistoryRequest">
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
@@ -3570,6 +3567,7 @@
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="setNotifications">
+			<xtee:version>v1</xtee:version>
 			<soap:operation soapAction="" />
 			<wsdl:input name="setNotificationsRequest">
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
@@ -3619,6 +3617,7 @@
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="getDocumentList">
+			<xtee:version>v1</xtee:version>
 			<soap:operation soapAction="" />
 			<wsdl:input name="getDocumentListRequest">
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
@@ -3668,6 +3667,7 @@
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="shareDocument">
+			<xtee:version>v1</xtee:version>
 			<soap:operation soapAction="" />
 			<wsdl:input name="shareDocumentRequest">
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
@@ -3721,6 +3721,7 @@
 		<wsdl:port binding="tns:aditSoap11" name="aditSoap11">
 			<xtee:title>ADIT</xtee:title>
 			<soap:address location="http://TURVASERVER/cgi-bin/consumer_proxy" />
+			<xtee:address producer="ametlikud-dokumendid"/>
 		</wsdl:port>
 	</wsdl:service>
 </wsdl:definitions>
