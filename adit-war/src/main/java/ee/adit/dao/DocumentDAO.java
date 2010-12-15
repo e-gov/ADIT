@@ -54,60 +54,43 @@ import ee.adit.service.DocumentService;
 import ee.adit.service.MessageService;
 import ee.adit.util.Util;
 
+/**
+ * Document data access class. Provides methods for retrieving and manipulating
+ * document data.
+ * 
+ * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
+ * @author Jaak Lember, Interinx, jaak@interinx.com
+ */
 public class DocumentDAO extends HibernateDaoSupport {
+    
     private static Logger logger = Logger.getLogger(DocumentDAO.class);
+    
     private MessageSource messageSource;
 
     private MessageService messageService;
 
-    public MessageSource getMessageSource() {
-        return messageSource;
-    }
-
-    public void setMessageSource(MessageSource messageSource) {
-        this.messageSource = messageSource;
-    }
-
-    /*
-     * @SuppressWarnings("unchecked") public long getUsedSpaceForUser(String
-     * userCode) { Boolean deflated = new Boolean(true); Boolean deleted = new
-     * Boolean(true);
+    /**
+     * Fetches document by ID.
      * 
-     * List<DocumentFile> userFiles =this.getHibernateTemplate().find(
-     * "from DocumentFile docFile where docFile.document in (select doc.id from Document doc where doc.creatorCode = ? and (doc.deflated is null or doc.deflated != ?) and (doc.deleted is null or doc.deleted != ?)) and (docFile.deleted is null or docFile.deleted != ?)"
-     * , new Object[] {userCode, deflated, deleted, deleted});
-     * 
-     * long result = 0; for(DocumentFile docFile : userFiles) { long fileSize =
-     * docFile.getFileSizeBytes(); result += fileSize; }
-     * 
-     * return result; }
+     * @param id document ID
+     * @return document
      */
-
     public Document getDocument(long id) {
         logger.debug("Attempting to load document from database. Document id: " + String.valueOf(id));
         return (Document) this.getHibernateTemplate().get(Document.class, id);
     }
 
-    /*
-     * public Document getDocument(long id) {
-     * LOG.debug("Attempting to load document from database. Document id: " +
-     * String.valueOf(id)); Document result = null; Session session = null;
-     * Transaction transaction = null;
+    /**
+     * Document search.
      * 
+     * @param param search parameters
+     * @param userCode user code (document owner)
+     * @param temporaryFilesDir temporary directory
+     * @param filesNotFoundMessageBase exception message base
+     * @param currentRequestUserCode user code (the user that activated the request)
      * 
-     * try { session = this.getSessionFactory().openSession(); transaction =
-     * session.beginTransaction();
-     * 
-     * result = (Document) session.load(Document.class, id);
-     * 
-     * transaction.commit(); } catch(Exception e) { if(transaction != null &&
-     * transaction.isActive()) transaction.rollback();
-     * LOG.error("Error while loading document: ", e); } finally { if(session !=
-     * null) session.close(); }
-     * 
-     * return result; }
+     * @return document list
      */
-
     @SuppressWarnings("unchecked")
     public GetDocumentListResponseAttachment getDocumentSearchResult(final GetDocumentListRequest param,
             final String userCode, final String temporaryFilesDir, final String filesNotFoundMessageBase,
@@ -318,6 +301,21 @@ public class DocumentDAO extends HibernateDaoSupport {
         return result;
     }
 
+    /**
+     * Fetch document with files.
+     * 
+     * @param documentId document ID
+     * @param fileIdList document file ID list
+     * @param includeSignatures do signatures have to be included in the result
+     * @param includeSharings do sharings have to be included in the result
+     * @param includeFileContents do file contents have to be included in the result
+     * @param temporaryFilesDir temporary directory
+     * @param filesNotFoundMessageBase exception message base
+     * @param currentRequestUserCode user code (the user that activated the request)
+     * 
+     * @return document
+     * @throws Exception if any sort of exception occurred
+     */
     public OutputDocument getDocumentWithFiles(final long documentId, final List<Long> fileIdList,
             final boolean includeSignatures, final boolean includeSharings, final boolean includeFileContents,
             final String temporaryFilesDir, final String filesNotFoundMessageBase, final String currentRequestUserCode)
@@ -425,6 +423,21 @@ public class DocumentDAO extends HibernateDaoSupport {
         return result;
     }
 
+    /**
+     * Converts database document to output document.
+     * 
+     * @param doc document to be converted
+     * @param fileIdList document files 
+     * @param includeSignatures do signatures have to be included in the result
+     * @param includeSharings do sharings have to be included in the result
+     * @param includeFileContents do file contents have to be included in the result
+     * @param temporaryFilesDir temporary directory
+     * @param filesNotFoundMessageBase exception message base
+     * @param currentRequestUserCode user code (the user that activated the request)
+     * 
+     * @return document in output format
+     * @throws SQLException
+     */
     @SuppressWarnings("unchecked")
     private OutputDocument dbDocumentToOutputDocument(Document doc, final List<Long> fileIdList,
             final boolean includeSignatures, final boolean includeSharings, final boolean includeFileContents,
@@ -636,6 +649,17 @@ public class DocumentDAO extends HibernateDaoSupport {
         return result;
     }
 
+    /**
+     * Save document with files.
+     * 
+     * @param document document
+     * @param files document files
+     * @param remainingDiskQuota remaining disk quota for user
+     * @param existingSession the existing database session
+     * 
+     * @return save result
+     * @throws Exception
+     */
     public SaveItemInternalResult save(Document document, List<OutputDocumentFile> files, long remainingDiskQuota,
             Session existingSession) throws Exception {
         if ((existingSession != null) && (existingSession.isOpen())) {
@@ -645,6 +669,16 @@ public class DocumentDAO extends HibernateDaoSupport {
         }
     }
 
+    /**
+     * Save document in new session.
+     * 
+     * @param document document
+     * @param files document files
+     * @param remainingDiskQuota remaining disk quota for user
+     * 
+     * @return save result
+     * @throws Exception
+     */
     public SaveItemInternalResult save(final Document document, final List<OutputDocumentFile> files,
             final long remainingDiskQuota) throws Exception {
         return (SaveItemInternalResult) this.getHibernateTemplate().execute(new HibernateCallback() {
@@ -658,6 +692,17 @@ public class DocumentDAO extends HibernateDaoSupport {
         });
     }
 
+    /**
+     * Save document.
+     * 
+     * @param document document
+     * @param files document files
+     * @param remainingDiskQuota remaining disk quota for user
+     * @param session session to be used for saving
+     * 
+     * @return save result
+     * @throws IOException
+     */
     @SuppressWarnings("unchecked")
     private SaveItemInternalResult saveImpl(Document document, List<OutputDocumentFile> files, long remainingDiskQuota,
             Session session) throws IOException {
@@ -807,6 +852,14 @@ public class DocumentDAO extends HibernateDaoSupport {
         return result;
     }
 
+    /**
+     * Cheks if document exists.
+     * 
+     * @param document DVK document
+     * @param recipient recipient
+     * 
+     * @return true if document exists
+     */
     @SuppressWarnings("unchecked")
     public boolean checkIfDocumentExists(PojoMessage document, Saaja recipient) {
         boolean result = true;
@@ -822,6 +875,12 @@ public class DocumentDAO extends HibernateDaoSupport {
         return result;
     }
 
+    /**
+     * Fetch documents without the specified DVK status.
+     * 
+     * @param dvkStatusId DVK status ID
+     * @return document list
+     */
     @SuppressWarnings("unchecked")
     public List<Document> getDocumentsWithoutDVKStatus(Long dvkStatusId) {
         List<Document> result = null;
@@ -839,6 +898,11 @@ public class DocumentDAO extends HibernateDaoSupport {
         return result;
     }
 
+    /**
+     * Update existing document
+     * 
+     * @param document document
+     */
     public void update(Document document) {
         Session session = null;
         Transaction transaction = null;
@@ -857,6 +921,12 @@ public class DocumentDAO extends HibernateDaoSupport {
         }
     }
 
+    /**
+     * Fetch document by DVK ID.
+     * 
+     * @param dvkMessageID document DVK ID
+     * @return document
+     */
     public Document getDocumentByDVKID(Long dvkMessageID) {
         Document result = null;
         String sql = "from Document where dvkId = " + dvkMessageID;
@@ -871,7 +941,15 @@ public class DocumentDAO extends HibernateDaoSupport {
 
         return result;
     }
+    
+    public MessageSource getMessageSource() {
+        return messageSource;
+    }
 
+    public void setMessageSource(MessageSource messageSource) {
+        this.messageSource = messageSource;
+    }
+    
     public MessageService getMessageService() {
         return messageService;
     }

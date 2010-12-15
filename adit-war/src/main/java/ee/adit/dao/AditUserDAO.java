@@ -76,6 +76,14 @@ public class AditUserDAO extends HibernateDaoSupport {
          */
     }
 
+    /**
+     * Fetches a list of all the active users ordered by name.
+     * 
+     * @param startIndex start index (offset) of the result list
+     * @param maxResults maximum number of results
+     * @return list of users
+     * @throws Exception
+     */
     @SuppressWarnings("unchecked")
     public List<AditUser> listUsers(int startIndex, int maxResults) throws Exception {
         List<AditUser> result = null;
@@ -88,6 +96,12 @@ public class AditUserDAO extends HibernateDaoSupport {
         return result;
     }
 
+    /**
+     * Fetches all DVK users. No additional filtering is applied.
+     * 
+     * @return list of DVK users
+     * @throws Exception
+     */
     @SuppressWarnings("unchecked")
     public List<AditUser> listDVKUsers() throws Exception {
         List<AditUser> result = null;
@@ -107,6 +121,12 @@ public class AditUserDAO extends HibernateDaoSupport {
         return result;
     }
 
+    /**
+     * Calculates used disk quota for user.
+     * 
+     * @param userCode user code
+     * @return used space in bytes
+     */
     public Long getUsedSpaceForUser(String userCode) {
         Long result = new Long(0);
         AditUser user = this.getUserByID(userCode);

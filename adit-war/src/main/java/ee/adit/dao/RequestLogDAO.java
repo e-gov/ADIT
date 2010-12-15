@@ -10,10 +10,23 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import ee.adit.dao.pojo.RequestLog;
 
+/**
+ * Request log data access class. Provides methods for retrieving and manipulating
+ * request log data.
+ * 
+ * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
+ * @author Jaak Lember, Interinx, jaak@interinx.com
+ */
 public class RequestLogDAO extends HibernateDaoSupport {
 
     private static Logger logger = Logger.getLogger(RequestLogDAO.class);
 
+    /**
+     * Save request log.
+     * 
+     * @param requestLogEntry request log record
+     * @return ID
+     */
     public Long save(final RequestLog requestLogEntry) {
         logger.debug("Attempting to save request log entry...");
         Long result = null;

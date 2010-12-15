@@ -14,9 +14,22 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import ee.adit.dao.pojo.Notification;
 import ee.adit.exception.AditInternalException;
 
+/**
+ * Notification data access class. Provides methods for retrieving and manipulating
+ * notification data.
+ * 
+ * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
+ * @author Jaak Lember, Interinx, jaak@interinx.com
+ */
 public class NotificationDAO extends HibernateDaoSupport {
+    
     private static Logger logger = Logger.getLogger(NotificationDAO.class);
 
+    /**
+     * Fetch unsent notifications.
+     * 
+     * @return list of unsent notifications
+     */
     @SuppressWarnings("unchecked")
     public List<Notification> getUnsentNotifications() {
         List<Notification> result = null;
@@ -32,6 +45,12 @@ public class NotificationDAO extends HibernateDaoSupport {
         return result;
     }
 
+    /**
+     * Save notification.
+     * 
+     * @param notification notification
+     * @return ID
+     */
     public Long save(final Notification notification) {
         logger.debug("Attemptyng to save notification...");
         Long result = null;
@@ -49,6 +68,12 @@ public class NotificationDAO extends HibernateDaoSupport {
         return result;
     }
 
+    /**
+     * Fetch unsent notifications by date.
+     * 
+     * @param comparisonDate comparison date
+     * @return list of unsent notifications
+     */
     public Long getUnsentNotifications(Date comparisonDate) {
         Long result = 0L;
         String sql = "select count(*) from Notification where notificationId is null and eventDate <= :comparisonDate";

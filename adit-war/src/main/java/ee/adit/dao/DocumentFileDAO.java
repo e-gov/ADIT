@@ -11,9 +11,25 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import ee.adit.dao.pojo.DocumentFileDeflateResult;
 
+/**
+ * Document file data access class. Provides methods for retrieving and manipulating
+ * document file data.
+ * 
+ * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
+ * @author Jaak Lember, Interinx, jaak@interinx.com
+ */
 public class DocumentFileDAO extends HibernateDaoSupport {
+    
     private static Logger logger = Logger.getLogger(DocumentFileDAO.class);
 
+    /**
+     * Deflate document file.
+     * 
+     * @param documentId document ID
+     * @param fileId document file ID
+     * @param markDeleted mark document deleted
+     * @return deflation result code
+     */
     public String deflateDocumentFile(final long documentId, final long fileId, final boolean markDeleted) {
         logger.debug("deflateDocumentFile starting...");
         DocumentFileDeflateResult result = (DocumentFileDeflateResult) getHibernateTemplate().execute(

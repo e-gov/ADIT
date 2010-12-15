@@ -13,12 +13,31 @@ import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.exception.AditInternalException;
 import ee.adit.service.DocumentService;
 
+/**
+ * Document sharing data access class. Provides methods for retrieving and manipulating
+ * document sharing data.
+ * 
+ * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
+ * @author Jaak Lember, Interinx, jaak@interinx.com
+ */
 public class DocumentSharingDAO extends HibernateDaoSupport {
 
+    /**
+     * Save document sharing.
+     * 
+     * @param documentSharing document sharing
+     * @return ID
+     */
     public Long save(DocumentSharing documentSharing) {
         return (Long) this.getHibernateTemplate().save(documentSharing);
     }
 
+    /**
+     * Update document sharing.
+     * 
+     * @param documentSharing document sharing
+     * @throws AditInternalException if document sharing update failed
+     */
     public void update(DocumentSharing documentSharing) throws AditInternalException {
         Session session = null;
         Transaction transaction = null;
@@ -41,6 +60,12 @@ public class DocumentSharingDAO extends HibernateDaoSupport {
         }
     }
 
+    /**
+     * Get DVK sharings for document.
+     * 
+     * @param documentID document ID
+     * @return list of DVK sharings
+     */
     @SuppressWarnings("unchecked")
     public List<DocumentSharing> getDVKSharings(Long documentID) {
         String sql = "from DocumentSharing where documentId = " + documentID + " and documentSharingType = '"
@@ -48,6 +73,12 @@ public class DocumentSharingDAO extends HibernateDaoSupport {
         return this.getSessionFactory().openSession().createQuery(sql).list();
     }
 
+    /**
+     * Get DVK sharings by creation date.
+     * 
+     * @param creationDateComparison date to compare to
+     * @return list of document sharings
+     */
     @SuppressWarnings("unchecked")
     public List<DocumentSharing> getDVKSharings(Date creationDateComparison) {
         List<DocumentSharing> result = new ArrayList<DocumentSharing>();
@@ -74,27 +105,5 @@ public class DocumentSharingDAO extends HibernateDaoSupport {
 
         return result;
     }
-
-    /*
-     * public long getDocumentsSentToDvk(Date beginDate, Date endDate) { long
-     * result = 0; String SQL =
-     * "select count(*) from DocumentSharing where documentSharingType = '" +
-     * DocumentService.SharingType_SendDvk +
-     * "' and dvkSendDate is not null and dvkSendDate >= :beginDate and dvkSendDate <= :endDate"
-     * ;
-     * 
-     * Session session = null; Transaction transaction = null; try {
-     * 
-     * session = this.getSessionFactory().openSession(); transaction =
-     * session.beginTransaction(); Query query = session.createQuery(SQL);
-     * query.setParameter("beginDate", beginDate); query.setParameter("endDate",
-     * endDate); result = (Long) query.uniqueResult();
-     * 
-     * } catch (Exception e) { throw new
-     * AditInternalException("Error while fetching DVK DocumentSharings: ", e);
-     * } finally { if(session != null) { session.close(); } }
-     * 
-     * return result; }
-     */
 
 }

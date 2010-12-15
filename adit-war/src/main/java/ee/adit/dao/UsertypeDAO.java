@@ -10,14 +10,33 @@ import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Usertype;
 import ee.adit.exception.AditInternalException;
 
+/**
+ * Usertype data access class. Provides methods for retrieving and manipulating
+ * usertype log data.
+ * 
+ * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
+ * @author Jaak Lember, Interinx, jaak@interinx.com
+ */
 public class UsertypeDAO extends HibernateDaoSupport {
 
     private static Logger logger = Logger.getLogger(RemoteApplicationDAO.class);
 
+    /**
+     * Fetch usertype by short name.
+     * 
+     * @param userTypeShortName usertype short name
+     * @return usertype
+     */
     public Usertype getByShortName(String userTypeShortName) {
         return (Usertype) this.getHibernateTemplate().get(Usertype.class, userTypeShortName.toLowerCase());
     }
 
+    /**
+     * Fetch usertype for user.
+     * 
+     * @param user user
+     * @return usertype
+     */
     @SuppressWarnings("unchecked")
     public Usertype getUsertype(AditUser user) {
         Usertype result = null;
@@ -39,6 +58,11 @@ public class UsertypeDAO extends HibernateDaoSupport {
         return result;
     }
 
+    /**
+     * Fetch usertype list.
+     * 
+     * @return list of all usertypes
+     */
     @SuppressWarnings("unchecked")
     public List<Usertype> listUsertypes() {
         Session session = null;

@@ -352,6 +352,13 @@ public class DvkDAO {
         return result;
     }
 
+    /**
+     * Fetch received documents from DVK client database.
+     * 
+     * @param comparisonDate comparison date
+     * @return list of messages
+     * @throws Exception
+     */
     @SuppressWarnings("unchecked")
     public List<PojoMessage> getReceivedDocuments(Date comparisonDate) throws Exception {
         List<PojoMessage> result = new ArrayList<PojoMessage>();

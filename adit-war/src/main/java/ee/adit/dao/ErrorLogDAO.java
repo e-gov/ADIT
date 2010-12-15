@@ -14,10 +14,23 @@ import ee.adit.dao.pojo.ErrorLog;
 import ee.adit.exception.AditInternalException;
 import ee.adit.service.LogService;
 
+/**
+ * Error log data access class. Provides methods for retrieving and manipulating
+ * error log data.
+ * 
+ * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
+ * @author Jaak Lember, Interinx, jaak@interinx.com
+ */
 public class ErrorLogDAO extends HibernateDaoSupport {
 
     private static Logger logger = Logger.getLogger(ErrorLogDAO.class);
 
+    /**
+     * Save error log.
+     * 
+     * @param errorLogEntry error log record
+     * @return ID
+     */
     public Long save(final ErrorLog errorLogEntry) {
         logger.debug("Attempting to save error log entry...");
         Long result = null;
@@ -35,6 +48,13 @@ public class ErrorLogDAO extends HibernateDaoSupport {
         return result;
     }
 
+    /**
+     * Fetch error log by date and level.
+     * 
+     * @param comparisonDate comparison date
+     * @param level log level
+     * @return list of log entries
+     */
     public Long getErrors(Date comparisonDate, String level) {
 
         String sql = null;
