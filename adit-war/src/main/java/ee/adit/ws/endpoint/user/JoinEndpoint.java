@@ -30,14 +30,8 @@ import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
  */
 public class JoinEndpoint extends AbstractAditBaseEndpoint {
 
-    /**
-     * Log4J logger
-     */
     private static Logger logger = Logger.getLogger(JoinEndpoint.class);
 
-    /**
-     * User service
-     */
     private UserService userService;
 
     @Override

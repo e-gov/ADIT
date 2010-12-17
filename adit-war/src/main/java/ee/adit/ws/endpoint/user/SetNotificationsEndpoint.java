@@ -35,15 +35,9 @@ import ee.webmedia.xtee.annotation.XTeeService;
 @XTeeService(name = "setNotifications", version = "v1")
 @Component
 public class SetNotificationsEndpoint extends AbstractAditBaseEndpoint {
-    
-    /**
-     * Log4J logger
-     */
+
     private static Logger logger = Logger.getLogger(JoinEndpoint.class);
     
-    /**
-     * User service
-     */
     private UserService userService;
 
     @Override
