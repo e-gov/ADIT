@@ -20,7 +20,6 @@ import ee.adit.pojo.Message;
 import ee.adit.pojo.RecipientStatus;
 import ee.adit.pojo.SendDocumentRequest;
 import ee.adit.pojo.SendDocumentResponse;
-import ee.adit.schedule.ScheduleClient;
 import ee.adit.service.DocumentService;
 import ee.adit.service.LogService;
 import ee.adit.service.UserService;

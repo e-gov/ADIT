@@ -25,7 +25,6 @@ import ee.adit.pojo.SaveDocumentFileRequestFile;
 import ee.adit.pojo.SaveDocumentFileResponse;
 import ee.adit.pojo.SaveDocumentRequestAttachment;
 import ee.adit.pojo.SaveItemInternalResult;
-import ee.adit.schedule.ScheduleClient;
 import ee.adit.service.DocumentService;
 import ee.adit.service.LogService;
 import ee.adit.service.UserService;

@@ -25,7 +25,6 @@ import ee.adit.pojo.GetDocumentHistoryResponse;
 import ee.adit.pojo.GetDocumentHistoryResponseAttachment;
 import ee.adit.pojo.GetDocumentHistoryResponseDocument;
 import ee.adit.pojo.Message;
-import ee.adit.schedule.ScheduleClient;
 import ee.adit.service.DocumentService;
 import ee.adit.service.LogService;
 import ee.adit.service.UserService;

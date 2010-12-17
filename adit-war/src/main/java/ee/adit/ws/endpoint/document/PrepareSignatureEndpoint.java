@@ -19,7 +19,6 @@ import ee.adit.pojo.Message;
 import ee.adit.pojo.PrepareSignatureInternalResult;
 import ee.adit.pojo.PrepareSignatureRequest;
 import ee.adit.pojo.PrepareSignatureResponse;
-import ee.adit.schedule.ScheduleClient;
 import ee.adit.service.DocumentService;
 import ee.adit.service.LogService;
 import ee.adit.service.UserService;

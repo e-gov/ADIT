@@ -19,7 +19,6 @@ import ee.adit.pojo.GetDocumentListResponseAttachment;
 import ee.adit.pojo.GetDocumentListResponseList;
 import ee.adit.pojo.Message;
 import ee.adit.pojo.OutputDocument;
-import ee.adit.schedule.ScheduleClient;
 import ee.adit.service.DocumentService;
 import ee.adit.service.LogService;
 import ee.adit.service.UserService;
