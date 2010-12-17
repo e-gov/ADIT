@@ -45,20 +45,11 @@ import ee.webmedia.xtee.annotation.XTeeService;
 @XTeeService(name = "saveDocumentFile", version = "v1")
 @Component
 public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
-    
-    /** 
-     * Log4J logger
-     */
+
     private static Logger logger = Logger.getLogger(SaveDocumentFileEndpoint.class);
-    
-    /**
-     * User service
-     */
+
     private UserService userService;
-    
-    /**
-     * Document service
-     */
+
     private DocumentService documentService;
 
     @Override

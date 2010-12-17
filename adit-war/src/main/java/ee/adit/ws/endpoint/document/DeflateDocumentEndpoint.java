@@ -35,19 +35,10 @@ import ee.webmedia.xtee.annotation.XTeeService;
 @Component
 public class DeflateDocumentEndpoint extends AbstractAditBaseEndpoint {
 
-    /**
-     * Log4J logger
-     */
     private static Logger logger = Logger.getLogger(DeflateDocumentEndpoint.class);
     
-    /**
-     * User service
-     */
     private UserService userService;
     
-    /**
-     * Document service
-     */
     private DocumentService documentService;
 
     @Override

@@ -39,24 +39,12 @@ import ee.webmedia.xtee.annotation.XTeeService;
 @Component
 public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
     
-    /** 
-     * Log4J logger
-     */
     private static Logger logger = Logger.getLogger(PrepareSignatureEndpoint.class);
     
-    /**
-     * User service
-     */
     private UserService userService;
     
-    /**
-     * Document service
-     */
     private DocumentService documentService;
 
-    /**
-     * Digidoc configuration file
-     */
     private String digidocConfigurationFile;
 
     @Override

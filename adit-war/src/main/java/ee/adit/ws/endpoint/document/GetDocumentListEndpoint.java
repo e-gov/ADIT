@@ -39,19 +39,10 @@ import ee.webmedia.xtee.annotation.XTeeService;
 @Component
 public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
 
-    /** 
-     * Log4J logger
-     */
     private static Logger logger = Logger.getLogger(GetDocumentListEndpoint.class);
 
-    /**
-     * User service
-     */
     private UserService userService;
     
-    /**
-     * Document service
-     */
     private DocumentService documentService;
 
     @Override

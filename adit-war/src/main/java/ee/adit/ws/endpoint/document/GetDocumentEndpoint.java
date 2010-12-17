@@ -43,24 +43,12 @@ import ee.webmedia.xtee.annotation.XTeeService;
 @Component
 public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
     
-    /**
-     * Log4J logger
-     */
     private static Logger logger = Logger.getLogger(GetDocumentEndpoint.class);
-    
-    /**
-     * User service
-     */
+
     private UserService userService;
-    
-    /**
-     * Document service
-     */
+
     private DocumentService documentService;
-    
-    /**
-     * Schedule client
-     */
+
     private ScheduleClient scheduleClient;
 
     @Override

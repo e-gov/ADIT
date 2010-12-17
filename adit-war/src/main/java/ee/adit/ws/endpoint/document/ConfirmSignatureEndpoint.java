@@ -37,30 +37,15 @@ import ee.webmedia.xtee.annotation.XTeeService;
 @XTeeService(name = "confirmSignature", version = "v1")
 @Component
 public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
-    
-    /**
-     * Log4J logger
-     */
+
     private static Logger logger = Logger.getLogger(ConfirmSignatureEndpoint.class);
-    
-    /**
-     * User service
-     */
+
     private UserService userService;
-    
-    /**
-     * Document service
-     */
+
     private DocumentService documentService;
-    
-    /**
-     * Digidoc configuration file
-     */
+
     private String digidocConfigurationFile;
 
-    /**
-     * Schedule client
-     */
     private ScheduleClient scheduleClient;
 
     @Override
