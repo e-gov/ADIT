@@ -73,77 +73,34 @@ public class Configuration {
      */
     private String xteeIdCode;
 
-    /**
-     * Retrieves the list of the locales
-     * 
-     * @return Locales list
-     */
     public List<String> getLocales() {
         return locales;
     }
 
-    /**
-     * Sets the locales list
-     * 
-     * @param locales
-     *            Locales list
-     */
     public void setLocales(List<String> locales) {
         this.locales = locales;
     }
 
-    /**
-     * Retrieves the max result size for the getJoined query
-     * 
-     * @return Max result size for the getJoined query
-     */
     public BigInteger getGetJoinedMaxResults() {
         return getJoinedMaxResults;
     }
 
-    /**
-     * Sets the max result size for the getJoined query
-     * 
-     * @param getJoinedMaxResults
-     *            Max result size for the getJoined query
-     */
     public void setGetJoinedMaxResults(BigInteger getJoinedMaxResults) {
         this.getJoinedMaxResults = getJoinedMaxResults;
     }
 
-    /**
-     * Retrieves the absolute path to the temporary files directory
-     * 
-     * @return Absolute path to temporary files directory
-     */
     public String getTempDir() {
         return tempDir;
     }
 
-    /**
-     * Sets the absolute path to the temporary files directory
-     * 
-     * @param tempDir
-     *            Absolute path to temporary files directory
-     */
     public void setTempDir(String tempDir) {
         this.tempDir = tempDir;
     }
 
-    /**
-     * Retrieves the value for deleting temporary files
-     * 
-     * @return String value of temporary files deletaion setting
-     */
     public String getDeleteTemporaryFiles() {
         return deleteTemporaryFiles;
     }
 
-    /**
-     * Sets the value for deleting temporary files
-     * 
-     * @param deleteTemporaryFiles
-     */
     public void setDeleteTemporaryFiles(String deleteTemporaryFiles) {
         this.deleteTemporaryFiles = deleteTemporaryFiles;
     }
@@ -163,125 +120,58 @@ public class Configuration {
         return result;
     }
 
-    /**
-     * Retrieves the scheduler event type name
-     * 
-     * @return Scheduler event type name
-     */
     public String getSchedulerEventTypeName() {
         return schedulerEventTypeName;
     }
 
-    /**
-     * Sets the scheduler event type name
-     */
     public void setSchedulerEventTypeName(String schedulerEventTypeName) {
         this.schedulerEventTypeName = schedulerEventTypeName;
     }
 
-    /**
-     * Retrieves the absolute path to the DVK response message stylesheet
-     * 
-     * @return Absolute path to the DVK response message stylesheet
-     */
     public String getDvkResponseMessageStylesheet() {
         return dvkResponseMessageStylesheet;
     }
 
-    /**
-     * Sets the absolute path to the DVK response message stylesheet
-     */
     public void setDvkResponseMessageStylesheet(String dvkResponseMessageStylesheet) {
         this.dvkResponseMessageStylesheet = dvkResponseMessageStylesheet;
     }
 
-    /**
-     * Retrieves the global disk quota
-     * 
-     * @return Global disk quota in bytes
-     */
     public Long getGlobalDiskQuota() {
         return globalDiskQuota;
     }
 
-    /**
-     * Sets the global disk quota
-     * 
-     * @param globalDiskQuota
-     *            Global disk quota in bytes
-     */
     public void setGlobalDiskQuota(Long globalDiskQuota) {
         this.globalDiskQuota = globalDiskQuota;
     }
 
-    /**
-     * Get DVK org code
-     * 
-     * @return DVK org code
-     */
     public String getDvkOrgCode() {
         return dvkOrgCode;
     }
 
-    /**
-     * Set DVK org code
-     * 
-     * @param dvkOrgCode DVK org code
-     */
     public void setDvkOrgCode(String dvkOrgCode) {
         this.dvkOrgCode = dvkOrgCode;
     }
 
-    /**
-     * Get XTee institution
-     * 
-     * @return XTee institution
-     */
     public String getXteeInstitution() {
         return xteeInstitution;
     }
 
-    /**
-     * Set XTee institution
-     * 
-     * @param xteeInstitution XTee institution
-     */
     public void setXteeInstitution(String xteeInstitution) {
         this.xteeInstitution = xteeInstitution;
     }
 
-    /**
-     * Get XTee security server 
-     * 
-     * @return XTee security server
-     */
     public String getXteeSecurityServer() {
         return xteeSecurityServer;
     }
 
-    /**
-     * Set XTee security server
-     * 
-     * @param xteeSecurityServer XTee security server
-     */
     public void setXteeSecurityServer(String xteeSecurityServer) {
         this.xteeSecurityServer = xteeSecurityServer;
     }
 
-    /**
-     * XTee user code
-     * 
-     * @return XTee user code
-     */
     public String getXteeIdCode() {
         return xteeIdCode;
     }
 
-    /**
-     * Set XTee user code
-     * 
-     * @param xteeIdCode XTee user code
-     */
     public void setXteeIdCode(String xteeIdCode) {
         this.xteeIdCode = xteeIdCode;
     }

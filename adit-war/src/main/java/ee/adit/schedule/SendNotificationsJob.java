@@ -21,20 +21,11 @@ import ee.adit.util.Configuration;
  * @author Jaak Lember, Interinx, jaak@interinx.com
  */
 public class SendNotificationsJob extends QuartzJobBean {
-    /**
-     * Log4J logger
-     */
+
     private static Logger logger = Logger.getLogger(SendNotificationsJob.class);
 
-    /**
-     * Instance of {@link UserService} class that implements business logic of
-     * user-specific operations.
-     */
     private UserService userService;
 
-    /**
-     * Application configuration as {@link Configuration} object.
-     */
     private Configuration configuration;
 
     private ScheduleClient scheduleClient;
@@ -54,58 +45,26 @@ public class SendNotificationsJob extends QuartzJobBean {
         }
     }
 
-    /**
-     * Gets current user service instance.
-     * 
-     * @return User service instance
-     */
     public UserService getUserService() {
         return userService;
     }
 
-    /**
-     * Sets current user service instance.
-     * 
-     * @param userService
-     *            User service instance
-     */
     public void setUserService(UserService userService) {
         this.userService = userService;
     }
 
-    /**
-     * Gets current application configuration
-     * 
-     * @return Application configuration object
-     */
     public Configuration getConfiguration() {
         return configuration;
     }
 
-    /**
-     * Sets current application configuration as {@link Configuration} object
-     * 
-     * @param configuration
-     *            Application configuration object
-     */
     public void setConfiguration(Configuration configuration) {
         this.configuration = configuration;
     }
 
-    /**
-     * Get schedule client
-     * 
-     * @return schedule client
-     */
     public ScheduleClient getScheduleClient() {
         return scheduleClient;
     }
     
-    /**
-     * Set schedule client
-     * 
-     * @param scheduleClient schedule client
-     */
     public void setScheduleClient(ScheduleClient scheduleClient) {
         this.scheduleClient = scheduleClient;
     }

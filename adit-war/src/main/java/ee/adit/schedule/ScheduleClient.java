@@ -52,34 +52,78 @@ import ee.webmedia.xtee.client.util.XTeeResponseSanitizerInterceptor;
  * @author Jaak Lember, Interinx, jaak@interinx.com
  */
 public class ScheduleClient {
+    
     private static Logger logger = Logger.getLogger(ScheduleClient.class);
+    
     private static final int RESULT_OK = 0;
 
+    /**
+     * Notification type SEND 
+     */
     public static final String NOTIFICATION_TYPE_SEND = "send";
+    
+    /**
+     * Notification type SHARE 
+     */
     public static final String NOTIFICATION_TYPE_SHARE = "share";
+    
+    /**
+     * Notification type VIEW 
+     */
     public static final String NOTIFICATION_TYPE_VIEW = "view";
+    
+    /**
+     * Notification type MODIFY 
+     */
     public static final String NOTIFICATION_TYPE_MODIFY = "modify";
+    
+    /**
+     * Notification type SIGN 
+     */
     public static final String NOTIFICATION_TYPE_SIGN = "sign";
 
+    /**
+     * Notification priority LOW 
+     */
     public static final String NOTIFICATION_PRIORITY_LOW = "madal";
+    
+    /**
+     * Notification priority MEDIUM 
+     */
     public static final String NOTIFICATION_PRIORITY_MEDIUM = "keskmine";
+    
+    /**
+     * Notification priority HIGH 
+     */
     public static final String NOTIFICATION_PRIORITY_HIGH = "korge";
 
+    /**
+     * Notification type type
+     */
     public static final String NOTIFICATION_TYPE_TEAVITUSKALENDER_LIIGIS = "liigis";
+    
+    /**
+     * Notification type OBLIGATORY
+     */
     public static final String NOTIFICATION_TYPE_TEAVITUSKALENDER_KOHUSTUSLIK = "kohustuslik";
 
+    /**
+     * Notification user type PERSON
+     */
     public static final String NOTIFICATION_USER_PERSON = "isik";
+    
+    /**
+     * Notification user type OFFICIAL
+     */
     public static final String NOTIFICATION_USER_OFFICIAL = "ametnik";
+    
+    /**
+     * Notification user type INSTITUTION
+     */
     public static final String NOTIFICATION_USER_INSTITUTION = "asutus";
 
-    /**
-     * Marshaller - required to convert Java objects to XML.
-     */
     private Marshaller marshaller;
 
-    /**
-     * Unmarshaller - required to convert XML to Java objects.
-     */
     private Unmarshaller unmarshaller;
 
     private Configuration configuration;

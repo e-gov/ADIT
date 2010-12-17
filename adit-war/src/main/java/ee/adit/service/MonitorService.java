@@ -125,9 +125,6 @@ public class MonitorService {
      */
     private static final String ADIT_APP = "ADIT_APP";
 
-    /**
-     * Log4J logger
-     */
     private static Logger logger = Logger.getLogger(MonitorService.class);
 
     private DocumentDAO documentDAO;
@@ -148,14 +145,8 @@ public class MonitorService {
 
     private MonitorConfiguration monitorConfiguration;
 
-    /**
-     * Marshaller - required to convert Java objects to XML.
-     */
     private Marshaller marshaller;
 
-    /**
-     * Unmarshaller - required to convert XML to Java objects.
-     */
     private Unmarshaller unmarshaller;
 
     /**
@@ -1108,91 +1099,6 @@ public class MonitorService {
     }
 
     /**
-     * Get DocumentDAO
-     * 
-     * @return DocumentDAO
-     */
-    public DocumentDAO getDocumentDAO() {
-        return documentDAO;
-    }
-
-    /**
-     * Set DocumentDAO
-     * @param documentDAO DocumentDAO
-     */
-    public void setDocumentDAO(DocumentDAO documentDAO) {
-        this.documentDAO = documentDAO;
-    }
-
-    /**
-     * Get DvkDAO
-     * @return DvkDAO
-     */
-    public DvkDAO getDvkDAO() {
-        return dvkDAO;
-    }
-
-    /**
-     * Set DvkDAO
-     * @param dvkDAO DvkDAO
-     */
-    public void setDvkDAO(DvkDAO dvkDAO) {
-        this.dvkDAO = dvkDAO;
-    }
-
-    /**
-     * Get Configuration
-     * @return Configuration
-     */
-    public Configuration getConfiguration() {
-        return configuration;
-    }
-
-    /**
-     * Set Configuration
-     * @param configuration Configuration
-     */
-    public void setConfiguration(Configuration configuration) {
-        this.configuration = configuration;
-    }
-
-    /**
-     * Get NagiosLogger
-     * 
-     * @return NagiosLogger
-     */
-    public NagiosLogger getNagiosLogger() {
-        return nagiosLogger;
-    }
-
-    /**
-     * Set NagiosLogger
-     * 
-     * @param nagiosLogger NagiosLogger
-     */
-    public void setNagiosLogger(NagiosLogger nagiosLogger) {
-        this.nagiosLogger = nagiosLogger;
-    }
-
-    /**
-     * Get DocumentService
-     * 
-     * @return DocumentService
-     */
-    public DocumentService getDocumentService() {
-        return documentService;
-    }
-
-    /**
-     * Set DocumentService
-     * 
-     * @param documentService DocumentService
-     */
-    public void setDocumentService(DocumentService documentService) {
-        this.documentService = documentService;
-    }
-
-    /**
      * Marshals the object to XML and stores the result in a temporary file. The
      * location of the temporary file is specified by {@link Configuration}
      * 
@@ -1224,111 +1130,91 @@ public class MonitorService {
 
         return result;
     }
+    
+    public DocumentDAO getDocumentDAO() {
+        return documentDAO;
+    }
 
-    /**
-     * Get Marshaller
-     * 
-     * @return Marshaller
-     */
+    public void setDocumentDAO(DocumentDAO documentDAO) {
+        this.documentDAO = documentDAO;
+    }
+
+    public DvkDAO getDvkDAO() {
+        return dvkDAO;
+    }
+
+    public void setDvkDAO(DvkDAO dvkDAO) {
+        this.dvkDAO = dvkDAO;
+    }
+
+    public Configuration getConfiguration() {
+        return configuration;
+    }
+
+    public void setConfiguration(Configuration configuration) {
+        this.configuration = configuration;
+    }
+
+    public NagiosLogger getNagiosLogger() {
+        return nagiosLogger;
+    }
+
+    public void setNagiosLogger(NagiosLogger nagiosLogger) {
+        this.nagiosLogger = nagiosLogger;
+    }
+
+    public DocumentService getDocumentService() {
+        return documentService;
+    }
+
+    public void setDocumentService(DocumentService documentService) {
+        this.documentService = documentService;
+    }
+    
     public Marshaller getMarshaller() {
         return marshaller;
     }
 
-    /**
-     * Set Marshaller
-     * 
-     * @param marshaller Marshaller
-     */
     public void setMarshaller(Marshaller marshaller) {
         this.marshaller = marshaller;
     }
 
-    /**
-     * Get Unmarshaller
-     * 
-     * @return Unmarshaller
-     */
     public Unmarshaller getUnmarshaller() {
         return unmarshaller;
     }
 
-    /**
-     * Set Unmarshaller
-     * 
-     * @param unmarshaller Unmarshaller
-     */
     public void setUnmarshaller(Unmarshaller unmarshaller) {
         this.unmarshaller = unmarshaller;
     }
 
-    /**
-     * Get MonitorConfiguration
-     * 
-     * @return MonitorConfiguration
-     */
     public MonitorConfiguration getMonitorConfiguration() {
         return monitorConfiguration;
     }
 
-    /**
-     * Set MonitorConfiguration
-     * 
-     * @param monitorConfiguration MonitorConfiguration
-     */
     public void setMonitorConfiguration(MonitorConfiguration monitorConfiguration) {
         this.monitorConfiguration = monitorConfiguration;
     }
 
-    /**
-     * Get DocumentSharingDAO
-     * 
-     * @return DocumentSharingDAO
-     */
     public DocumentSharingDAO getDocumentSharingDAO() {
         return documentSharingDAO;
     }
 
-    /**
-     * Set DocumentSharingDAO
-     * 
-     * @param documentSharingDAO DocumentSharingDAO
-     */
     public void setDocumentSharingDAO(DocumentSharingDAO documentSharingDAO) {
         this.documentSharingDAO = documentSharingDAO;
     }
 
-    /**
-     * Get NotificationDAO
-     * 
-     * @return NotificationDAO
-     */
     public NotificationDAO getNotificationDAO() {
         return notificationDAO;
     }
 
-    /**
-     * Set NotificationDAO
-     * 
-     * @param notificationDAO NotificationDAO
-     */
     public void setNotificationDAO(NotificationDAO notificationDAO) {
         this.notificationDAO = notificationDAO;
     }
 
-    /**
-     * Get ErrorLogDAO
-     * 
-     * @return ErrorLogDAO
-     */
     public ErrorLogDAO getErrorLogDAO() {
         return errorLogDAO;
     }
 
-    /**
-     * Set ErrorLogDAO
-     * 
-     * @param errorLogDAO ErrorLogDAO
-     */
     public void setErrorLogDAO(ErrorLogDAO errorLogDAO) {
         this.errorLogDAO = errorLogDAO;
     }

@@ -26,9 +26,6 @@ import ee.webmedia.xtee.client.service.StandardXTeeConsumer;
  */
 public final class StatePortalClient {
     
-    /**
-     * Log4J logger
-     */
     private static Logger logger = Logger.getLogger(StatePortalClient.class);
     
     /**

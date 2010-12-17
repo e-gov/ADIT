@@ -21,9 +21,6 @@ import ee.adit.dao.pojo.RequestLog;
  */
 public class LogService {
 
-    /**
-     * Log4J logger
-     */
     private static Logger logger = Logger.getLogger(LogService.class);
 
     /**
@@ -51,24 +48,12 @@ public class LogService {
      */
     public static final String REQUEST_LOG_FAIL = "ERROR: ";
 
-    /**
-     * Request log Data Access Object
-     */
     private RequestLogDAO requestLogDAO;
 
-    /**
-     * Error log Data Access Object
-     */
     private ErrorLogDAO errorLogDAO;
 
-    /**
-     * Download log Data Access Object
-     */
     private DownloadRequestLogDAO downloadRequestLogDAO;
 
-    /**
-     * Metadata log Data Access Object
-     */
     private MetadataRequestLogDAO metadataRequestLogDAO;
 
     /**
@@ -243,65 +228,26 @@ public class LogService {
         return this.requestLogDAO.save(requestLogEntry);
     }
 
-    /**
-     * Retrieves the error log DAO
-     * 
-     * @return {@link ErrorLogDAO} object that is used for saving
-     *         {@link ErrorLog} entries to database
-     */
     public ErrorLogDAO getErrorLogDAO() {
         return errorLogDAO;
     }
 
-    /**
-     * Sets the error log DAO
-     * 
-     * @param errorLogDAO
-     *            {@link ErrorLogDAO} object that will be used for saving
-     *            {@link ErrorLog} entries to database
-     */
     public void setErrorLogDAO(ErrorLogDAO errorLogDAO) {
         this.errorLogDAO = errorLogDAO;
     }
 
-    /**
-     * Retrieves the download log DAO
-     * 
-     * @return {@link DownloadRequestLogDAO} object that is used for saving
-     *         {@link DownloadRequestLog} entries to database
-     */
     public DownloadRequestLogDAO getDownloadRequestLogDAO() {
         return downloadRequestLogDAO;
     }
 
-    /**
-     * Sets the download log DAO
-     * 
-     * @param downloadRequestLogDAO
-     *            {@link DownloadRequestLogDAO} object that will be used for
-     *            saving {@link DownloadRequestLog} entries to database
-     */
     public void setDownloadRequestLogDAO(DownloadRequestLogDAO downloadRequestLogDAO) {
         this.downloadRequestLogDAO = downloadRequestLogDAO;
     }
 
-    /**
-     * Retrieves the metadata log DAO
-     * 
-     * @return {@link MetadataRequestLogDAO} object that is used for saving
-     *         {@link MetadataRequestLog} entries to database
-     */
     public MetadataRequestLogDAO getMetadataRequestLogDAO() {
         return metadataRequestLogDAO;
     }
 
-    /**
-     * Sets the metadata log DAO
-     * 
-     * @param metadataRequestLogDAO
-     *            {@link MetadataRequestLogDAO} object that will be used for
-     *            saving {@link MetadataRequestLog} entries to database
-     */
     public void setMetadataRequestLogDAO(MetadataRequestLogDAO metadataRequestLogDAO) {
         this.metadataRequestLogDAO = metadataRequestLogDAO;
     }

@@ -21,9 +21,6 @@ import ee.adit.util.Configuration;
  */
 public class MessageService {
 
-    /**
-     * Log4J logger
-     */
     private static Logger logger = Logger.getLogger(MessageService.class);
 
     /**
@@ -101,40 +98,18 @@ public class MessageService {
         return getMessages(e.getMessage(), e.getParameters());
     }
 
-    /**
-     * Retrieves the configuration
-     * 
-     * @return Application configuration as {@link Configuration} object
-     */
     public Configuration getConfiguration() {
         return configuration;
     }
 
-    /**
-     * Sets the configuration
-     * 
-     * @param configuration
-     *            Application configuration as {@link Configuration} object
-     */
     public void setConfiguration(Configuration configuration) {
         this.configuration = configuration;
     }
 
-    /**
-     * Retrieves the message source
-     * 
-     * @return Message source
-     */
     public MessageSource getMessageSource() {
         return messageSource;
     }
 
-    /**
-     * Sets the message source
-     * 
-     * @param messageSource
-     *            Message source
-     */
     public void setMessageSource(MessageSource messageSource) {
         this.messageSource = messageSource;
     }

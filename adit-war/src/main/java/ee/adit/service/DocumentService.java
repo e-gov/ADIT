@@ -260,67 +260,61 @@ public class DocumentService {
     public static final Integer DVK_RECEIVE_FAIL_REASON_USER_USES_DVK = 2;
 
     // Document history description literals
+    /**
+     * Document history description - CREATE
+     */
     public static final String DOCUMENT_HISTORY_DESCRIPTION_CREATE = "Document created";
+    
+    /**
+     * Document history description - LOCK
+     */
     public static final String DOCUMENT_HISTORY_DESCRIPTION_LOCK = "Document locked";
+    
+    /**
+     * Document history description - DELETE
+     */
     public static final String DOCUMENT_HISTORY_DESCRIPTION_DELETE = "Document deleted";
+    
+    /**
+     * Document history description - DELETE FILE
+     */
     public static final String DOCUMENT_HISTORY_DESCRIPTION_DELETEFILE = "Document file deleted. ID: ";
+    
+    /**
+     * Document history description - MODIFY STATUS
+     */
     public static final String DOCUMENT_HISTORY_DESCRIPTION_MODIFYSTATUS = "Document status modified to: ";
+    
+    /**
+     * Document history description - MODIFY
+     */
     public static final String DOCUMENT_HISTORY_DESCRIPTION_MODIFY = "Document modified";
+    
+    /**
+     * Document history description - MODIFY FILE
+     */
     public static final String DOCUMENT_HISTORY_DESCRIPTION_MODIFYFILE = "Document file modified. ID: ";
 
-    /**
-     * Log4J logger
-     */
     private static Logger logger = Logger.getLogger(UserService.class);
 
-    /**
-     * Message source
-     */
     private MessageSource messageSource;
 
-    /**
-     * Document type DAO
-     */
     private DocumentTypeDAO documentTypeDAO;
 
-    /**
-     * Document DAO
-     */
     private DocumentDAO documentDAO;
 
-    /**
-     * Document file DAO
-     */
     private DocumentFileDAO documentFileDAO;
 
-    /**
-     * Document workflow status DAO
-     */
     private DocumentWfStatusDAO documentWfStatusDAO;
 
-    /**
-     * Document sharing DAO
-     */
     private DocumentSharingDAO documentSharingDAO;
 
-    /**
-     * Document history DAO
-     */
     private DocumentHistoryDAO documentHistoryDAO;
 
-    /**
-     * ADIT user DAO
-     */
     private AditUserDAO aditUserDAO;
 
-    /**
-     * Configuration
-     */
     private Configuration configuration;
 
-    /**
-     * DVK DAO
-     */
     private DvkDAO dvkDAO;
 
     /**
@@ -2476,182 +2470,82 @@ public class DocumentService {
         }
     }
 
-    /**
-     * Get messagesource
-     * 
-     * @return messagesource
-     */
     public MessageSource getMessageSource() {
         return messageSource;
     }
 
-    /**
-     * Set messagesource
-     * 
-     * @param messageSource messagesource
-     */
     public void setMessageSource(MessageSource messageSource) {
         this.messageSource = messageSource;
     }
 
-    /**
-     * Get DocumentTypeDAO
-     * 
-     * @return DocumentTypeDAO
-     */
     public DocumentTypeDAO getDocumentTypeDAO() {
         return documentTypeDAO;
     }
 
-    /**
-     * Set DocumentTypeDAO
-     * 
-     * @param documentTypeDAO DocumentTypeDAO
-     */
     public void setDocumentTypeDAO(DocumentTypeDAO documentTypeDAO) {
         this.documentTypeDAO = documentTypeDAO;
     }
 
-    /**
-     * Get DocumentDAO
-     * 
-     * @return DocumentDAO
-     */
     public DocumentDAO getDocumentDAO() {
         return documentDAO;
     }
 
-    /**
-     * Set DocumentDAO
-     * 
-     * @param documentDAO DocumentDAO
-     */
     public void setDocumentDAO(DocumentDAO documentDAO) {
         this.documentDAO = documentDAO;
     }
 
-    /**
-     * Get DocumentFileDAO
-     * 
-     * @return DocumentFileDAO
-     */
     public DocumentFileDAO getDocumentFileDAO() {
         return documentFileDAO;
     }
 
-    /**
-     * Set DocumentFileDAO
-     * 
-     * @param documentFileDAO DocumentFileDAO
-     */
     public void setDocumentFileDAO(DocumentFileDAO documentFileDAO) {
         this.documentFileDAO = documentFileDAO;
     }
 
-    /**
-     * Get DocumentWfStatusDAO
-     * 
-     * @return DocumentWfStatusDAO
-     */
     public DocumentWfStatusDAO getDocumentWfStatusDAO() {
         return documentWfStatusDAO;
     }
 
-    /**
-     * Set DocumentWfStatusDAO
-     * 
-     * @param documentWfStatusDAO DocumentWfStatusDAO
-     */
     public void setDocumentWfStatusDAO(DocumentWfStatusDAO documentWfStatusDAO) {
         this.documentWfStatusDAO = documentWfStatusDAO;
     }
 
-    /**
-     * Get DocumentSharingDAO
-     * 
-     * @return DocumentSharingDAO
-     */
     public DocumentSharingDAO getDocumentSharingDAO() {
         return documentSharingDAO;
     }
 
-    /**
-     * Set DocumentSharingDAO
-     * 
-     * @param documentSharingDAO DocumentSharingDAO
-     */
     public void setDocumentSharingDAO(DocumentSharingDAO documentSharingDAO) {
         this.documentSharingDAO = documentSharingDAO;
     }
 
-    /**
-     * Get DocumentHistoryDAO
-     * 
-     * @return DocumentHistoryDAO
-     */
     public DocumentHistoryDAO getDocumentHistoryDAO() {
         return documentHistoryDAO;
     }
 
-    /**
-     * Set DocumentHistoryDAO
-     * 
-     * @param documentHistoryDAO DocumentHistoryDAO
-     */
     public void setDocumentHistoryDAO(DocumentHistoryDAO documentHistoryDAO) {
         this.documentHistoryDAO = documentHistoryDAO;
     }
 
-    /**
-     * Get Configuration
-     * 
-     * @return Configuration
-     */
     public Configuration getConfiguration() {
         return configuration;
     }
 
-    /**
-     * Set Configuration
-     * 
-     * @param configuration Configuration
-     */
     public void setConfiguration(Configuration configuration) {
         this.configuration = configuration;
     }
 
-    /**
-     * Get AditUserDAO
-     * 
-     * @return AditUserDAO
-     */
     public AditUserDAO getAditUserDAO() {
         return aditUserDAO;
     }
 
-    /**
-     * Set AditUserDAO
-     * 
-     * @param aditUserDAO AditUserDAO
-     */
     public void setAditUserDAO(AditUserDAO aditUserDAO) {
         this.aditUserDAO = aditUserDAO;
     }
 
-    /**
-     * Get DvkDAO
-     * 
-     * @return DvkDAO
-     */
     public DvkDAO getDvkDAO() {
         return dvkDAO;
     }
 
-    /**
-     * Set DvkDAO
-     * 
-     * @param dvkDAO DvkDAO
-     */
     public void setDvkDAO(DvkDAO dvkDAO) {
         this.dvkDAO = dvkDAO;
     }

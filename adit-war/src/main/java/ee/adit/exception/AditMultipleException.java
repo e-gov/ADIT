@@ -15,6 +15,9 @@ public class AditMultipleException extends AditException {
 
     private static final long serialVersionUID = 1L;
     
+    /**
+     * Message list
+     */
     private List<Message> messages;
 
     /**

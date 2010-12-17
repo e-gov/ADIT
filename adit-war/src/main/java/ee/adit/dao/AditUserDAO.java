@@ -21,9 +21,6 @@ import ee.adit.exception.AditInternalException;
  */
 public class AditUserDAO extends HibernateDaoSupport {
 
-    /**
-     * Log4J logger
-     */
     private static Logger logger = Logger.getLogger(AditUserDAO.class);
 
     /**
