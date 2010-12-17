@@ -33,26 +33,21 @@ import ee.webmedia.xtee.annotation.XTeeService;
 @XTeeService(name = "deleteDocument", version = "v1")
 @Component
 public class DeleteDocumentEndpoint extends AbstractAditBaseEndpoint {
+    
+    /**
+     * Log4J logger
+     */
     private static Logger logger = Logger.getLogger(DeleteDocumentEndpoint.class);
-
+    
+    /**
+     * User service
+     */
     private UserService userService;
-    private DocumentService documentService;
-
-    public UserService getUserService() {
-        return userService;
-    }
-
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
-
-    public DocumentService getDocumentService() {
-        return documentService;
-    }
-
-    public void setDocumentService(DocumentService documentService) {
-        this.documentService = documentService;
-    }
+    
+    /**
+     * Document service
+     */
+    private DocumentService documentService;    
 
     @Override
     protected Object invokeInternal(Object requestObject, int version) throws Exception {
@@ -236,5 +231,21 @@ public class DeleteDocumentEndpoint extends AbstractAditBaseEndpoint {
         logger.debug("-------- DeleteDocumentRequest -------");
         logger.debug("Document ID: " + String.valueOf(request.getDocumentId()));
         logger.debug("--------------------------------------");
+    }
+    
+    public UserService getUserService() {
+        return userService;
+    }
+
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+    public DocumentService getDocumentService() {
+        return documentService;
+    }
+
+    public void setDocumentService(DocumentService documentService) {
+        this.documentService = documentService;
     }
 }

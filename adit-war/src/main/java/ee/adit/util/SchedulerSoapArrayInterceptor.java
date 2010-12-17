@@ -19,16 +19,50 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+/**
+ * Scheduler interceptor. Corrects SOAP array instances.
+ *  
+ * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
+ * @author Jaak Lember, Interinx, jaak@interinx.com
+ * 
+ */
 public class SchedulerSoapArrayInterceptor implements ClientInterceptor {
+    
+    /**
+     * Log4J logger
+     */
     private static Logger logger = Logger.getLogger(SchedulerSoapArrayInterceptor.class);
+    
+    /**
+     * Notification calendar namespace
+     */
     public static final String NS_TK = "http://producers.teavituskalender.xtee.riik.ee/producer/teavituskalender";
+    
+    /**
+     * XML Schema namespace
+     */
     public static final String NS_XSI = "http://www.w3.org/2001/XMLSchema-instance";
+    
+    /**
+     * SOAP Encoding namespace 
+     */
     public static final String NS_SOAPENC = "http://schemas.xmlsoap.org/soap/encoding/";
 
+    /**
+     * Handle fault
+     * @param mc message context
+     * @return success
+     */
     public boolean handleFault(MessageContext mc) throws WebServiceClientException {
         return true;
     }
-
+    
+    /**
+     * Handle request
+     * 
+     * @param mc message context
+     * @return success
+     */
     public boolean handleRequest(MessageContext mc) throws WebServiceClientException {
         if (mc.getRequest() instanceof SaajSoapMessage) {
             SOAPMessage msg = ((SaajSoapMessage) mc.getRequest()).getSaajMessage();
@@ -41,10 +75,21 @@ public class SchedulerSoapArrayInterceptor implements ClientInterceptor {
         return true;
     }
 
+    /**
+     * Handle response
+     * @param mc message context
+     * @return success
+     */
     public boolean handleResponse(MessageContext mc) throws WebServiceClientException {
         return true;
     }
 
+    /**
+     * Add SOAP encoding attributes
+     * 
+     * @param msg SOAP message
+     * @throws SOAPException
+     */
     @SuppressWarnings("unchecked")
     public void addSoapEncAttributes(SOAPMessage msg) throws SOAPException {
         if (msg == null) {
@@ -148,6 +193,12 @@ public class SchedulerSoapArrayInterceptor implements ClientInterceptor {
         }
     }
 
+    /**
+     * Reformat dates in XML
+     * 
+     * @param xroadKehaElement XTee body element
+     * @param tagName tag name
+     */
     private void reformatDateInXml(Element xroadKehaElement, String tagName) {
         NodeList nl = xroadKehaElement.getElementsByTagNameNS(NS_TK, tagName);
         if ((nl != null) && (nl.getLength() > 0)) {
@@ -162,6 +213,12 @@ public class SchedulerSoapArrayInterceptor implements ClientInterceptor {
         }
     }
 
+    /**
+     * Get date from XML date string
+     * 
+     * @param xmlDate XML date string
+     * @return date
+     */
     private Date getDateFromXML(String xmlDate) {
         Date result = null;
         if ((xmlDate != null) && !xmlDate.equalsIgnoreCase("")) {
@@ -215,6 +272,12 @@ public class SchedulerSoapArrayInterceptor implements ClientInterceptor {
         return result;
     }
 
+    /**
+     * Format date to XML date string
+     * 
+     * @param date date
+     * @return XML date string
+     */
     private String formatDate(Date date) {
         try {
             if (date == null) {

@@ -53,12 +53,24 @@ public class Configuration {
      */
     private List<String> locales;
 
+    /**
+     * DVK org code
+     */
     private String dvkOrgCode;
 
+    /**
+     * XTee institution code
+     */
     private String xteeInstitution;
 
+    /**
+     * XTee security server
+     */
     private String xteeSecurityServer;
 
+    /**
+     * XTee user code
+     */
     private String xteeIdCode;
 
     /**
@@ -202,34 +214,74 @@ public class Configuration {
         this.globalDiskQuota = globalDiskQuota;
     }
 
+    /**
+     * Get DVK org code
+     * 
+     * @return DVK org code
+     */
     public String getDvkOrgCode() {
         return dvkOrgCode;
     }
 
+    /**
+     * Set DVK org code
+     * 
+     * @param dvkOrgCode DVK org code
+     */
     public void setDvkOrgCode(String dvkOrgCode) {
         this.dvkOrgCode = dvkOrgCode;
     }
 
+    /**
+     * Get XTee institution
+     * 
+     * @return XTee institution
+     */
     public String getXteeInstitution() {
         return xteeInstitution;
     }
 
+    /**
+     * Set XTee institution
+     * 
+     * @param xteeInstitution XTee institution
+     */
     public void setXteeInstitution(String xteeInstitution) {
         this.xteeInstitution = xteeInstitution;
     }
 
+    /**
+     * Get XTee security server 
+     * 
+     * @return XTee security server
+     */
     public String getXteeSecurityServer() {
         return xteeSecurityServer;
     }
 
+    /**
+     * Set XTee security server
+     * 
+     * @param xteeSecurityServer XTee security server
+     */
     public void setXteeSecurityServer(String xteeSecurityServer) {
         this.xteeSecurityServer = xteeSecurityServer;
     }
 
+    /**
+     * XTee user code
+     * 
+     * @return XTee user code
+     */
     public String getXteeIdCode() {
         return xteeIdCode;
     }
 
+    /**
+     * Set XTee user code
+     * 
+     * @param xteeIdCode XTee user code
+     */
     public void setXteeIdCode(String xteeIdCode) {
         this.xteeIdCode = xteeIdCode;
     }

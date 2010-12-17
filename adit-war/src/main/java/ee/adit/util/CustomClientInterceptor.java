@@ -10,12 +10,27 @@ import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.mime.Attachment;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 
+/**
+ * Response message interceptor. Saves message attachment to temporary file.
+ * 
+ * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
+ * @author Jaak Lember, Interinx, jaak@interinx.com
+ */
 public class CustomClientInterceptor implements ClientInterceptor {
 
+    /**
+     * Log4J logger
+     */
     private static Logger logger = Logger.getLogger(CustomClientInterceptor.class);
 
+    /**
+     * Temporary file address
+     */
     private String tmpFile;
 
+    /**
+     * Configuration
+     */
     private Configuration configuration;
 
     @Override
@@ -63,18 +78,34 @@ public class CustomClientInterceptor implements ClientInterceptor {
         return result;
     }
 
+    /**
+     * Get temporary file location
+     * @return temporary file location
+     */
     public String getTmpFile() {
         return tmpFile;
     }
 
+    /**
+     * Set temporary file location
+     * @param tmpFile temporary file location
+     */
     public void setTmpFile(String tmpFile) {
         this.tmpFile = tmpFile;
     }
 
+    /**
+     * Get configuration
+     * @return configuration
+     */
     public Configuration getConfiguration() {
         return configuration;
     }
 
+    /**
+     * Set configuration
+     * @param configuration configuration
+     */
     public void setConfiguration(Configuration configuration) {
         this.configuration = configuration;
     }

@@ -16,18 +16,43 @@ import ee.adit.service.MonitorService;
 import ee.adit.util.Configuration;
 import ee.adit.util.MonitorResult;
 
+/**
+ * Controller class for monitoring view.
+ * 
+ * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
+ * @author Jaak Lember, Interinx, jaak@interinx.com
+ */
 public class MonitorController extends AbstractController {
 
+    /**
+     * Log4J logger
+     */
     private static Logger logger = Logger.getLogger(MonitorController.class);
 
+    /**
+     * Monitor service
+     */
     private MonitorService monitorService;
 
+    /**
+     * Configuration
+     */
     private Configuration configuration;
 
+    /**
+     * Default constructor
+     */
     public MonitorController() {
         logger.info("MONITORCONTROLLER created.");
     }
 
+    /**
+     * Performs the actual monitoring and returns the response data.
+     * 
+     * @param arg0 HTTP request
+     * @param arg1 HTTP response
+     * @return model and view 
+     */
     @Override
     protected ModelAndView handleRequestInternal(HttpServletRequest arg0, HttpServletResponse arg1) throws Exception {
 
@@ -188,20 +213,36 @@ public class MonitorController extends AbstractController {
         return mav;
     }
 
+    /**
+     * Get monitor service
+     * @return monitor service
+     */
     public MonitorService getMonitorService() {
         return monitorService;
     }
 
+    /**
+     * Set monitor service
+     * @param monitorService monitor service
+     */
     public void setMonitorService(MonitorService monitorService) {
         logger.info("Setting MONITORSERVICE on MONITORCONTROLLER");
         this.monitorService = monitorService;
     }
 
+    /**
+     * Get configuration
+     * @return configuration
+     */
     public Configuration getConfiguration() {
         logger.info("Setting CONFIGURATION on MONITORCONTROLLER");
         return configuration;
     }
 
+    /**
+     * Set configuration
+     * @param configuration configuration
+     */
     public void setConfiguration(Configuration configuration) {
         this.configuration = configuration;
     }

@@ -25,9 +25,20 @@ import ee.webmedia.xtee.client.service.StandardXTeeConsumer;
  * @author Jaak Lember, Interinx, jaak@interinx.com
  */
 public final class StatePortalClient {
+    
+    /**
+     * Log4J logger
+     */
     private static Logger logger = Logger.getLogger(StatePortalClient.class);
+    
+    /**
+     * Result code OK
+     */
     private static final int RESULT_OK = 0;
 
+    /**
+     * Default constructors
+     */
     private StatePortalClient() { }
     
     /**

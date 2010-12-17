@@ -31,8 +31,14 @@ import ee.webmedia.xtee.annotation.XTeeService;
 @Component
 public class UnJoinEndpoint extends AbstractAditBaseEndpoint {
 
+    /**
+     * Log4J logger
+     */
     private static Logger logger = Logger.getLogger(UnJoinEndpoint.class);
 
+    /**
+     * User service
+     */
     private UserService userService;
 
     @Override

@@ -25,6 +25,7 @@ import ee.adit.pojo.SaveDocumentFileRequestFile;
 import ee.adit.pojo.SaveDocumentFileResponse;
 import ee.adit.pojo.SaveDocumentRequestAttachment;
 import ee.adit.pojo.SaveItemInternalResult;
+import ee.adit.schedule.ScheduleClient;
 import ee.adit.service.DocumentService;
 import ee.adit.service.LogService;
 import ee.adit.service.UserService;
@@ -45,25 +46,21 @@ import ee.webmedia.xtee.annotation.XTeeService;
 @XTeeService(name = "saveDocumentFile", version = "v1")
 @Component
 public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
+    
+    /** 
+     * Log4J logger
+     */
     private static Logger logger = Logger.getLogger(SaveDocumentFileEndpoint.class);
+    
+    /**
+     * User service
+     */
     private UserService userService;
+    
+    /**
+     * Document service
+     */
     private DocumentService documentService;
-
-    public UserService getUserService() {
-        return userService;
-    }
-
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
-
-    public DocumentService getDocumentService() {
-        return documentService;
-    }
-
-    public void setDocumentService(DocumentService documentService) {
-        this.documentService = documentService;
-    }
 
     @Override
     protected Object invokeInternal(Object requestObject, int version) throws Exception {
@@ -448,5 +445,21 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
         logger.debug("-------- SaveDocumentFileRequest -------");
         logger.debug("Document ID: " + request.getDocumentId());
         logger.debug("----------------------------------------");
+    }
+    
+    public UserService getUserService() {
+        return userService;
+    }
+
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+    public DocumentService getDocumentService() {
+        return documentService;
+    }
+
+    public void setDocumentService(DocumentService documentService) {
+        this.documentService = documentService;
     }
 }

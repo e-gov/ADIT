@@ -36,17 +36,17 @@ import ee.webmedia.xtee.annotation.XTeeService;
 @XTeeService(name = "getNotifications", version = "v1")
 @Component
 public class GetNotificationsEndpoint extends AbstractAditBaseEndpoint {
+    
+    /**
+     * Log4J logger
+     */
     private static Logger logger = Logger.getLogger(GetNotificationsEndpoint.class);
+    
+    /**
+     * User service
+     */
     private UserService userService;
-
-    public UserService getUserService() {
-        return userService;
-    }
-
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
-
+    
     @Override
     protected Object invokeInternal(Object requestObject, int version) throws Exception {
         logger.debug("getNotifications invoked. Version: " + version);
@@ -203,5 +203,13 @@ public class GetNotificationsEndpoint extends AbstractAditBaseEndpoint {
         arrayOfMessage.getMessage().add(new Message("en", ex.getMessage()));
         response.setMessages(arrayOfMessage);
         return response;
+    }
+    
+    public UserService getUserService() {
+        return userService;
+    }
+
+    public void setUserService(UserService userService) {
+        this.userService = userService;
     }
 }

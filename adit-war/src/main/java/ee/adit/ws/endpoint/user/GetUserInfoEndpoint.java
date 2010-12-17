@@ -36,17 +36,15 @@ import ee.webmedia.xtee.annotation.XTeeService;
 @Component
 public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 
+    /**
+     * Log4J logger
+     */
     private static Logger logger = Logger.getLogger(GetUserInfoEndpoint.class);
 
+    /**
+     * User service
+     */
     private UserService userService;
-
-    public UserService getUserService() {
-        return userService;
-    }
-
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
 
     @Override
     protected Object invokeInternal(Object requestObject, int version) throws Exception {
@@ -220,5 +218,12 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
         response.setMessages(arrayOfMessage);
         return response;
     }
+    
+    public UserService getUserService() {
+        return userService;
+    }
 
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
 }

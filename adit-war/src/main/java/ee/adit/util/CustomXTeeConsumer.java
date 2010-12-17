@@ -9,16 +9,32 @@ import ee.webmedia.xtee.client.service.XTeeAttachment;
 import ee.webmedia.xtee.client.service.XTeeServiceConfiguration;
 
 /**
- * Standard class for consuming X-Tee services.
+ * Custom XTee service consumer class.
+ *  
+ * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
+ * @author Jaak Lember, Interinx, jaak@interinx.com
  * 
- * @author Rando Mihkelsaar
  */
 public class CustomXTeeConsumer {
 
+    /**
+     * Log4J logger
+     */
     private static Logger logger = Logger.getLogger(CustomXTeeConsumer.class);
 
+    /**
+     * Web-service template
+     */
     private WebServiceTemplate webServiceTemplate;
+    
+    /**
+     * Message callback factory
+     */
     private CustomMessageCallbackFactory msgCallbackFactory;
+    
+    /**
+     * Service configuration
+     */
     private XTeeServiceConfiguration serviceConfiguration;
 
     /**
@@ -47,31 +63,75 @@ public class CustomXTeeConsumer {
         this.serviceConfiguration = serviceConfigurator;
     }
 
+    /**
+     * Get service configuration
+     * @return service configuration
+     */
     public XTeeServiceConfiguration getServiceConfiguration() {
         return serviceConfiguration;
     }
 
+    /**
+     * Get web-service template
+     * @return web-service template
+     */
     public WebServiceTemplate getWebServiceTemplate() {
         return webServiceTemplate;
     }
 
+    /**
+     * Send request.
+     * 
+     * @param t request
+     * @return response
+     */
     public <T> Object sendRequest(T t) {
         return sendRealRequest(t, serviceConfiguration, null);
     }
 
+    /**
+     * Send request
+     * 
+     * @param request
+     * @param attachments
+     * @return response
+     */
     public <T> Object sendRequest(T t, Collection<XTeeAttachment> attachments) {
         return sendRealRequest(t, serviceConfiguration, attachments);
     }
 
+    /**
+     * Send request
+     * 
+     * @param t request
+     * @param xteeServiceConfigurator service configuration
+     * @return response
+     */
     public <T> Object sendRequest(T t, XTeeServiceConfiguration xteeServiceConfigurator) {
         return sendRealRequest(t, xteeServiceConfigurator, null);
     }
 
+    /**
+     * Send request
+     * 
+     * @param t request
+     * @param xteeServiceConfigurator service configuration
+     * @param attachments attachments
+     * @return response
+     */
     public <T> Object sendRequest(T t, XTeeServiceConfiguration xteeServiceConfigurator,
             Collection<XTeeAttachment> attachments) {
         return sendRealRequest(t, xteeServiceConfigurator, attachments);
     }
 
+    /**
+     * Send request
+     * 
+     * @param t request
+     * @param xteeServiceConfigurator service configuration
+     * @param attachments attachments
+     * @return response
+     */
     private <T> Object sendRealRequest(T t, XTeeServiceConfiguration xteeServiceConfigurator,
             Collection<XTeeAttachment> attachments) {
         logger.debug("Sending request using CustomXTeeConsumer...");
@@ -79,6 +139,11 @@ public class CustomXTeeConsumer {
                 getCurrentMessageCallbackFactory().create(xteeServiceConfigurator, attachments));
     }
 
+    /**
+     * Get current message callback factory
+     * 
+     * @return message callback factory
+     */
     protected CustomMessageCallbackFactory getCurrentMessageCallbackFactory() {
         return msgCallbackFactory != null ? msgCallbackFactory : new CustomMessageCallbackFactory();
     }

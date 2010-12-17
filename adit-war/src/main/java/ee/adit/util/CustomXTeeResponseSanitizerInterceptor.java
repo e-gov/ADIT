@@ -23,18 +23,46 @@ import org.w3c.dom.NodeList;
 import ee.adit.exception.AditInternalException;
 import ee.webmedia.xtee.client.exception.XTeeException;
 
+/**
+ * Custom XTee response message sanitizer (cleaner). Acts as an interceptor.
+ *  
+ * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
+ * @author Jaak Lember, Interinx, jaak@interinx.com
+ * 
+ */
 public class CustomXTeeResponseSanitizerInterceptor implements ClientInterceptor {
 
+    /**
+     * Log4J logger
+     */
     private static Logger logger = Logger.getLogger(CustomXTeeResponseSanitizerInterceptor.class);
 
+    /**
+     * Handle fault
+     * 
+     * @param context message context
+     * @return success
+     */
     public boolean handleFault(MessageContext context) throws WebServiceClientException {
         throw new XTeeException();
     }
 
+    /**
+     * Handle request
+     * 
+     * @param context message context
+     * @response success
+     */
     public boolean handleRequest(MessageContext context) throws WebServiceClientException {
         return true;
     }
 
+    /**
+     * Handle response
+     * 
+     * @param mc message context
+     * @return success
+     */
     public boolean handleResponse(MessageContext mc) throws WebServiceClientException {
         WebServiceMessage message = mc.getResponse();
         if (mc.getResponse() instanceof SaajSoapMessage) {
@@ -76,6 +104,12 @@ public class CustomXTeeResponseSanitizerInterceptor implements ClientInterceptor
         return true;
     }
 
+    /**
+     * Remove namespace prefixes from SOAP body
+     * 
+     * @param body SOAP body
+     * @throws ParserConfigurationException
+     */
     private void removeNamespacePrefixes(SOAPBody body) throws ParserConfigurationException {
 
         logger.debug("Removing namespace prefixes...");

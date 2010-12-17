@@ -25,6 +25,7 @@ import ee.adit.pojo.GetDocumentHistoryResponse;
 import ee.adit.pojo.GetDocumentHistoryResponseAttachment;
 import ee.adit.pojo.GetDocumentHistoryResponseDocument;
 import ee.adit.pojo.Message;
+import ee.adit.schedule.ScheduleClient;
 import ee.adit.service.DocumentService;
 import ee.adit.service.LogService;
 import ee.adit.service.UserService;
@@ -45,25 +46,20 @@ import ee.webmedia.xtee.annotation.XTeeService;
 @Component
 public class GetDocumentHistoryEndpoint extends AbstractAditBaseEndpoint {
 
+    /** 
+     * Log4J logger
+     */
     private static Logger logger = Logger.getLogger(ModifyStatusEndpoint.class);
+    
+    /**
+     * User service
+     */
     private UserService userService;
+    
+    /**
+     * Document service
+     */
     private DocumentService documentService;
-
-    public UserService getUserService() {
-        return userService;
-    }
-
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
-
-    public DocumentService getDocumentService() {
-        return documentService;
-    }
-
-    public void setDocumentService(DocumentService documentService) {
-        this.documentService = documentService;
-    }
 
     @Override
     protected Object invokeInternal(Object requestObject, int version) throws Exception {
@@ -354,5 +350,21 @@ public class GetDocumentHistoryEndpoint extends AbstractAditBaseEndpoint {
         logger.debug("-------- GetDocumentHistoryRequest -------");
         logger.debug("Document ID: " + String.valueOf(request.getDocumentId()));
         logger.debug("------------------------------------------");
+    }
+    
+    public UserService getUserService() {
+        return userService;
+    }
+
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+    public DocumentService getDocumentService() {
+        return documentService;
+    }
+
+    public void setDocumentService(DocumentService documentService) {
+        this.documentService = documentService;
     }
 }

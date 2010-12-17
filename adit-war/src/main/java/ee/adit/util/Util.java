@@ -1267,6 +1267,12 @@ public final class Util {
         return result;
     }
 
+    /**
+     * Extract content ID from string
+     * 
+     * @param conentIDString string containing the content ID
+     * @return content ID
+     */
     public static String extractContentID(String conentIDString) {
         String result = conentIDString;
 
@@ -1284,6 +1290,12 @@ public final class Util {
         return result;
     }
 
+    /**
+     * Strip content ID - remove "<", ">"
+     * 
+     * @param contentID content ID string
+     * @return stripped content ID
+     */
     public static String stripContentID(String contentID) {
         String result = contentID;
 
@@ -1294,6 +1306,13 @@ public final class Util {
         return result;
     }
 
+    /**
+     * Convert file to byte array
+     * 
+     * @param file file
+     * @return byte array
+     * @throws IOException
+     */
     public static byte[] getBytesFromFile(File file) throws IOException {
         InputStream is = new FileInputStream(file);
 
@@ -1316,10 +1335,23 @@ public final class Util {
         return bytes;
     }
 
+    /**
+     * Get file content as string
+     * 
+     * @param f file
+     * @return file content
+     * @throws IOException
+     */
     public static String getFileContents(File f) throws IOException {
         return new String(getBytesFromFile(f), "UTF-8");
     }
 
+    /**
+     * Remove country prefix from string
+     * 
+     * @param code user code
+     * @return user code without country prefix
+     */
     public static String removeCountryPrefix(String code) {
         if (code != null) {
             return code.replace("EE", "");
@@ -1328,6 +1360,13 @@ public final class Util {
         }
     }
 
+    /**
+     * Add country prefix
+     * 
+     * @param code user code
+     * @param prefix country prefix
+     * @return user code with country prefix
+     */
     public static String addCountryPrefix(String code, String prefix) {
         return prefix + code;
     }

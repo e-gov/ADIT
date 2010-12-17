@@ -37,36 +37,31 @@ import ee.webmedia.xtee.annotation.XTeeService;
 @XTeeService(name = "confirmSignature", version = "v1")
 @Component
 public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
+    
+    /**
+     * Log4J logger
+     */
     private static Logger logger = Logger.getLogger(ConfirmSignatureEndpoint.class);
+    
+    /**
+     * User service
+     */
     private UserService userService;
+    
+    /**
+     * Document service
+     */
     private DocumentService documentService;
+    
+    /**
+     * Digidoc configuration file
+     */
     private String digidocConfigurationFile;
 
+    /**
+     * Schedule client
+     */
     private ScheduleClient scheduleClient;
-
-    public UserService getUserService() {
-        return userService;
-    }
-
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
-
-    public DocumentService getDocumentService() {
-        return documentService;
-    }
-
-    public void setDocumentService(DocumentService documentService) {
-        this.documentService = documentService;
-    }
-
-    public String getDigidocConfigurationFile() {
-        return digidocConfigurationFile;
-    }
-
-    public void setDigidocConfigurationFile(String digidocConfigurationFile) {
-        this.digidocConfigurationFile = digidocConfigurationFile;
-    }
 
     @Override
     protected Object invokeInternal(Object requestObject, int version) throws Exception {
@@ -371,5 +366,29 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
 
     public void setScheduleClient(ScheduleClient scheduleClient) {
         this.scheduleClient = scheduleClient;
+    }
+    
+    public UserService getUserService() {
+        return userService;
+    }
+
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+    public DocumentService getDocumentService() {
+        return documentService;
+    }
+
+    public void setDocumentService(DocumentService documentService) {
+        this.documentService = documentService;
+    }
+
+    public String getDigidocConfigurationFile() {
+        return digidocConfigurationFile;
+    }
+
+    public void setDigidocConfigurationFile(String digidocConfigurationFile) {
+        this.digidocConfigurationFile = digidocConfigurationFile;
     }
 }

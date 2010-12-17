@@ -248,6 +248,16 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
         return this.getUnmarshaller().unmarshal(streamSource);
     }
 
+    /**
+     * Extract attachment XML to temporary file.
+     * 
+     * @param message SOAP message
+     * @param attachmentID attachment ID to be extracted
+     * @return temporary file location
+     * @throws IOException
+     * @throws AditInternalException
+     * @throws AditCodedException
+     */
     public String extractAttachmentXML(SoapMessage message, String attachmentID) throws IOException,
             AditInternalException, AditCodedException {
         logger.info("Extracting attachment with ID: " + attachmentID);
@@ -413,6 +423,9 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
         }
     }
 
+    /**
+     * Check system.
+     */
     public void performSystemCheck() {
         getMonitorService().check();
     }
@@ -574,10 +587,18 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
         this.messageService = messageService;
     }
 
+    /**
+     * Get monitor service
+     * @return monitor service
+     */
     public MonitorService getMonitorService() {
         return monitorService;
     }
 
+    /**
+     * Set monitor service
+     * @param monitorService monitor service
+     */
     public void setMonitorService(MonitorService monitorService) {
         this.monitorService = monitorService;
     }

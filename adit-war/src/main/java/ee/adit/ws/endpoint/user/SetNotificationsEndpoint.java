@@ -35,16 +35,16 @@ import ee.webmedia.xtee.annotation.XTeeService;
 @XTeeService(name = "setNotifications", version = "v1")
 @Component
 public class SetNotificationsEndpoint extends AbstractAditBaseEndpoint {
+    
+    /**
+     * Log4J logger
+     */
     private static Logger logger = Logger.getLogger(JoinEndpoint.class);
+    
+    /**
+     * User service
+     */
     private UserService userService;
-
-    public UserService getUserService() {
-        return userService;
-    }
-
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
 
     @Override
     protected Object invokeInternal(Object requestObject, int version) throws Exception {
@@ -254,4 +254,11 @@ public class SetNotificationsEndpoint extends AbstractAditBaseEndpoint {
         logger.debug("----------------------------------------");
     }
 
+    public UserService getUserService() {
+        return userService;
+    }
+
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
 }

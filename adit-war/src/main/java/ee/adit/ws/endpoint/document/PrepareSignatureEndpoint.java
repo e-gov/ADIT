@@ -19,6 +19,7 @@ import ee.adit.pojo.Message;
 import ee.adit.pojo.PrepareSignatureInternalResult;
 import ee.adit.pojo.PrepareSignatureRequest;
 import ee.adit.pojo.PrepareSignatureResponse;
+import ee.adit.schedule.ScheduleClient;
 import ee.adit.service.DocumentService;
 import ee.adit.service.LogService;
 import ee.adit.service.UserService;
@@ -38,34 +39,26 @@ import ee.webmedia.xtee.annotation.XTeeService;
 @XTeeService(name = "prepareSignature", version = "v1")
 @Component
 public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
+    
+    /** 
+     * Log4J logger
+     */
     private static Logger logger = Logger.getLogger(PrepareSignatureEndpoint.class);
+    
+    /**
+     * User service
+     */
     private UserService userService;
+    
+    /**
+     * Document service
+     */
     private DocumentService documentService;
+
+    /**
+     * Digidoc configuration file
+     */
     private String digidocConfigurationFile;
-
-    public UserService getUserService() {
-        return userService;
-    }
-
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
-
-    public DocumentService getDocumentService() {
-        return documentService;
-    }
-
-    public void setDocumentService(DocumentService documentService) {
-        this.documentService = documentService;
-    }
-
-    public String getDigidocConfigurationFile() {
-        return digidocConfigurationFile;
-    }
-
-    public void setDigidocConfigurationFile(String digidocConfigurationFile) {
-        this.digidocConfigurationFile = digidocConfigurationFile;
-    }
 
     @Override
     protected Object invokeInternal(Object requestObject, int version) throws Exception {
@@ -371,5 +364,29 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
         logger.debug("City: " + request.getCity());
         logger.debug("Zip: " + request.getZip());
         logger.debug("----------------------------------------");
+    }
+    
+    public UserService getUserService() {
+        return userService;
+    }
+
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+    public DocumentService getDocumentService() {
+        return documentService;
+    }
+
+    public void setDocumentService(DocumentService documentService) {
+        this.documentService = documentService;
+    }
+
+    public String getDigidocConfigurationFile() {
+        return digidocConfigurationFile;
+    }
+
+    public void setDigidocConfigurationFile(String digidocConfigurationFile) {
+        this.digidocConfigurationFile = digidocConfigurationFile;
     }
 }

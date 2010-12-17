@@ -19,6 +19,7 @@ import ee.adit.pojo.GetDocumentListResponseAttachment;
 import ee.adit.pojo.GetDocumentListResponseList;
 import ee.adit.pojo.Message;
 import ee.adit.pojo.OutputDocument;
+import ee.adit.schedule.ScheduleClient;
 import ee.adit.service.DocumentService;
 import ee.adit.service.LogService;
 import ee.adit.service.UserService;
@@ -39,25 +40,20 @@ import ee.webmedia.xtee.annotation.XTeeService;
 @Component
 public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
 
+    /** 
+     * Log4J logger
+     */
     private static Logger logger = Logger.getLogger(GetDocumentListEndpoint.class);
+
+    /**
+     * User service
+     */
     private UserService userService;
+    
+    /**
+     * Document service
+     */
     private DocumentService documentService;
-
-    public UserService getUserService() {
-        return userService;
-    }
-
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
-
-    public DocumentService getDocumentService() {
-        return documentService;
-    }
-
-    public void setDocumentService(DocumentService documentService) {
-        this.documentService = documentService;
-    }
 
     @Override
     protected Object invokeInternal(Object requestObject, int version) throws Exception {
@@ -305,5 +301,21 @@ public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
         logger.debug("Max results: " + request.getMaxResults());
         logger.debug("Start indexr: " + request.getStartIndex());
         logger.debug("---------------------------------------");
+    }
+    
+    public UserService getUserService() {
+        return userService;
+    }
+
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+    public DocumentService getDocumentService() {
+        return documentService;
+    }
+
+    public void setDocumentService(DocumentService documentService) {
+        this.documentService = documentService;
     }
 }

@@ -20,6 +20,7 @@ import ee.adit.pojo.Message;
 import ee.adit.pojo.RecipientStatus;
 import ee.adit.pojo.SendDocumentRequest;
 import ee.adit.pojo.SendDocumentResponse;
+import ee.adit.schedule.ScheduleClient;
 import ee.adit.service.DocumentService;
 import ee.adit.service.LogService;
 import ee.adit.service.UserService;
@@ -39,10 +40,19 @@ import ee.webmedia.xtee.annotation.XTeeService;
 @Component
 public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 
+    /** 
+     * Log4J logger
+     */
     private static Logger logger = Logger.getLogger(SendDocumentEndpoint.class);
 
+    /**
+     * User service
+     */
     private UserService userService;
-
+    
+    /**
+     * Document service
+     */
     private DocumentService documentService;
 
     @Override

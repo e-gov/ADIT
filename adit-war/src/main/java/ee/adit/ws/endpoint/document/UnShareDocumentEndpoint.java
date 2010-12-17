@@ -43,26 +43,25 @@ import ee.webmedia.xtee.annotation.XTeeService;
 @Component
 public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 
+    /** 
+     * Log4J logger
+     */
     private static Logger logger = Logger.getLogger(UnShareDocumentEndpoint.class);
+    
+    /**
+     * User service
+     */
     private UserService userService;
+    
+    /**
+     * Document service
+     */
     private DocumentService documentService;
+    
+    /**
+     * Schedule client
+     */
     private ScheduleClient scheduleClient;
-
-    public UserService getUserService() {
-        return userService;
-    }
-
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
-
-    public DocumentService getDocumentService() {
-        return documentService;
-    }
-
-    public void setDocumentService(DocumentService documentService) {
-        this.documentService = documentService;
-    }
 
     /**
      * Executes "V1" version of "unShareDocument" request.
@@ -457,5 +456,21 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 
     public void setScheduleClient(ScheduleClient scheduleClient) {
         this.scheduleClient = scheduleClient;
+    }
+    
+    public UserService getUserService() {
+        return userService;
+    }
+
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+    public DocumentService getDocumentService() {
+        return documentService;
+    }
+
+    public void setDocumentService(DocumentService documentService) {
+        this.documentService = documentService;
     }
 }
