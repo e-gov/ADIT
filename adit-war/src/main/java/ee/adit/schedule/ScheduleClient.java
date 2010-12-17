@@ -749,26 +749,56 @@ public class ScheduleClient {
         return ctx;
     }
 
+    /**
+     * Get marshaller
+     * 
+     * @return marshaller
+     */
     public Marshaller getMarshaller() {
         return marshaller;
     }
 
+    /**
+     * Set marshaller
+     * 
+     * @param marshaller marshaller
+     */
     public void setMarshaller(Marshaller marshaller) {
         this.marshaller = marshaller;
     }
 
+    /**
+     * Get unmarshaller
+     * 
+     * @return unmarshaller
+     */
     public Unmarshaller getUnmarshaller() {
         return unmarshaller;
     }
 
+    /**
+     * Set unmarshaller
+     * 
+     * @param unmarshaller unmarshaller
+     */
     public void setUnmarshaller(Unmarshaller unmarshaller) {
         this.unmarshaller = unmarshaller;
     }
 
+    /**
+     * Get configuration
+     * 
+     * @return configuration
+     */
     public Configuration getConfiguration() {
         return configuration;
     }
 
+    /**
+     * Set configuration
+     * 
+     * @param configuration configuration
+     */
     public void setConfiguration(Configuration configuration) {
         this.configuration = configuration;
     }

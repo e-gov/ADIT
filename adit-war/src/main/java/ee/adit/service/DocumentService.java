@@ -697,6 +697,8 @@ public class DocumentService {
      * "send_dvk" <br />
      * 3. That DocumentSharing must have the "documentDvkStatus" not initialized
      * or set to "100"
+     * 
+     * @return number of documents sent to DVK
      */
     @SuppressWarnings("unchecked")
     public int sendDocumentsToDVK() {
@@ -1152,7 +1154,7 @@ public class DocumentService {
     /**
      * Converts the document object to {@code ContainerVer2} object.
      * 
-     * @param document
+     * @param document DVK document
      * @return DVK container object
      * @throws AditInternalException
      */
@@ -1539,6 +1541,13 @@ public class DocumentService {
      * dokument. Kui dokumendi adressaadiks on DVK kasutaja, siis talitatakse
      * sarnaselt eeltoodule, kuna DVK kasutajad peavad suhtlema otse omavahel,
      * mitte ADIT kaudu.
+     * 
+     * @param reasonCode reason code
+     * @param dvkContainer DVK container
+     * @param recipientCode recipient code
+     * @param receivedDate date of retrieval
+     * @param recipientName recipient name
+     * 
      */
     public void composeErrorResponse(Integer reasonCode, ContainerVer2 dvkContainer, String recipientCode,
             Date receivedDate, String recipientName) throws AditInternalException {
@@ -2467,82 +2476,182 @@ public class DocumentService {
         }
     }
 
+    /**
+     * Get messagesource
+     * 
+     * @return messagesource
+     */
     public MessageSource getMessageSource() {
         return messageSource;
     }
 
+    /**
+     * Set messagesource
+     * 
+     * @param messageSource messagesource
+     */
     public void setMessageSource(MessageSource messageSource) {
         this.messageSource = messageSource;
     }
 
+    /**
+     * Get DocumentTypeDAO
+     * 
+     * @return DocumentTypeDAO
+     */
     public DocumentTypeDAO getDocumentTypeDAO() {
         return documentTypeDAO;
     }
 
+    /**
+     * Set DocumentTypeDAO
+     * 
+     * @param documentTypeDAO DocumentTypeDAO
+     */
     public void setDocumentTypeDAO(DocumentTypeDAO documentTypeDAO) {
         this.documentTypeDAO = documentTypeDAO;
     }
 
+    /**
+     * Get DocumentDAO
+     * 
+     * @return DocumentDAO
+     */
     public DocumentDAO getDocumentDAO() {
         return documentDAO;
     }
 
+    /**
+     * Set DocumentDAO
+     * 
+     * @param documentDAO DocumentDAO
+     */
     public void setDocumentDAO(DocumentDAO documentDAO) {
         this.documentDAO = documentDAO;
     }
 
+    /**
+     * Get DocumentFileDAO
+     * 
+     * @return DocumentFileDAO
+     */
     public DocumentFileDAO getDocumentFileDAO() {
         return documentFileDAO;
     }
 
+    /**
+     * Set DocumentFileDAO
+     * 
+     * @param documentFileDAO DocumentFileDAO
+     */
     public void setDocumentFileDAO(DocumentFileDAO documentFileDAO) {
         this.documentFileDAO = documentFileDAO;
     }
 
+    /**
+     * Get DocumentWfStatusDAO
+     * 
+     * @return DocumentWfStatusDAO
+     */
     public DocumentWfStatusDAO getDocumentWfStatusDAO() {
         return documentWfStatusDAO;
     }
 
+    /**
+     * Set DocumentWfStatusDAO
+     * 
+     * @param documentWfStatusDAO DocumentWfStatusDAO
+     */
     public void setDocumentWfStatusDAO(DocumentWfStatusDAO documentWfStatusDAO) {
         this.documentWfStatusDAO = documentWfStatusDAO;
     }
 
+    /**
+     * Get DocumentSharingDAO
+     * 
+     * @return DocumentSharingDAO
+     */
     public DocumentSharingDAO getDocumentSharingDAO() {
         return documentSharingDAO;
     }
 
+    /**
+     * Set DocumentSharingDAO
+     * 
+     * @param documentSharingDAO DocumentSharingDAO
+     */
     public void setDocumentSharingDAO(DocumentSharingDAO documentSharingDAO) {
         this.documentSharingDAO = documentSharingDAO;
     }
 
+    /**
+     * Get DocumentHistoryDAO
+     * 
+     * @return DocumentHistoryDAO
+     */
     public DocumentHistoryDAO getDocumentHistoryDAO() {
         return documentHistoryDAO;
     }
 
+    /**
+     * Set DocumentHistoryDAO
+     * 
+     * @param documentHistoryDAO DocumentHistoryDAO
+     */
     public void setDocumentHistoryDAO(DocumentHistoryDAO documentHistoryDAO) {
         this.documentHistoryDAO = documentHistoryDAO;
     }
 
+    /**
+     * Get Configuration
+     * 
+     * @return Configuration
+     */
     public Configuration getConfiguration() {
         return configuration;
     }
 
+    /**
+     * Set Configuration
+     * 
+     * @param configuration Configuration
+     */
     public void setConfiguration(Configuration configuration) {
         this.configuration = configuration;
     }
 
+    /**
+     * Get AditUserDAO
+     * 
+     * @return AditUserDAO
+     */
     public AditUserDAO getAditUserDAO() {
         return aditUserDAO;
     }
 
+    /**
+     * Set AditUserDAO
+     * 
+     * @param aditUserDAO AditUserDAO
+     */
     public void setAditUserDAO(AditUserDAO aditUserDAO) {
         this.aditUserDAO = aditUserDAO;
     }
 
+    /**
+     * Get DvkDAO
+     * 
+     * @return DvkDAO
+     */
     public DvkDAO getDvkDAO() {
         return dvkDAO;
     }
 
+    /**
+     * Set DvkDAO
+     * 
+     * @param dvkDAO DvkDAO
+     */
     public void setDvkDAO(DvkDAO dvkDAO) {
         this.dvkDAO = dvkDAO;
     }

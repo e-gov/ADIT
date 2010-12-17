@@ -46,6 +46,9 @@ import ee.adit.util.DVKUserSyncResult;
  */
 public class UserService {
 
+    /**
+     * Log4J logger
+     */
     private static Logger logger = Logger.getLogger(UserService.class);
 
     private RemoteApplicationDAO remoteApplicationDAO;
@@ -64,11 +67,29 @@ public class UserService {
 
     private DvkDAO dvkDAO;
 
+    /**
+     * Usertype PERSON
+     */
     public static final String USERTYPE_PERSON = "PERSON";
+    
+    /**
+     * Usertype INSTITUTION
+     */
     public static final String USERTYPE_INSTITUTION = "INSTITUTION";
+    
+    /**
+     * Usertype COMPANY
+     */
     public static final String USERTYPE_COMPANY = "COMPANY";
 
+    /**
+     * Usertype WRITE
+     */
     public static final String ACCESS_RESTRICTION_WRITE = "WRITE";
+    
+    /**
+     * Usertype READ
+     */
     public static final String ACCESS_RESTRICTION_READ = "READ";
 
     /**
@@ -731,6 +752,8 @@ public class UserService {
     /**
      * Synchronize DVK users with ADIT user accounts: DVK -> ADIT only 1. Get
      * DVK users 2. Check if user exists in ADIT 3. Check is user data changed
+     * 
+     * @return result
      */
     public DVKUserSyncResult synchroinzeDVKUsers() {
 
@@ -838,66 +861,146 @@ public class UserService {
         return result;
     }
 
+    /**
+     * Get RemoteApplicationDAO
+     * 
+     * @return RemoteApplicationDAO
+     */
     public RemoteApplicationDAO getRemoteApplicationDAO() {
         return remoteApplicationDAO;
     }
 
+    /**
+     * Set RemoteApplicationDAO
+     * 
+     * @param remoteApplicationDAO RemoteApplicationDAO
+     */
     public void setRemoteApplicationDAO(RemoteApplicationDAO remoteApplicationDAO) {
         this.remoteApplicationDAO = remoteApplicationDAO;
     }
 
+    /**
+     * Get UsertypeDAO
+     * 
+     * @return UsertypeDAO
+     */
     public UsertypeDAO getUsertypeDAO() {
         return usertypeDAO;
     }
 
+    /**
+     * Set UsertypeDAO
+     * 
+     * @param usertypeDAO UsertypeDAO
+     */
     public void setUsertypeDAO(UsertypeDAO usertypeDAO) {
         this.usertypeDAO = usertypeDAO;
     }
 
+    /**
+     * Get NotificationTypeDAO
+     * 
+     * @return NotificationTypeDAO
+     */
     public NotificationTypeDAO getNotificationTypeDAO() {
         return notificationTypeDAO;
     }
 
+    /**
+     * Set NotificationTypeDAO
+     * 
+     * @param notificationTypeDAO NotificationTypeDAO
+     */
     public void setNotificationTypeDAO(NotificationTypeDAO notificationTypeDAO) {
         this.notificationTypeDAO = notificationTypeDAO;
     }
 
+    /**
+     * Get AditUserDAO
+     * 
+     * @return AditUserDAO
+     */
     public AditUserDAO getAditUserDAO() {
         return aditUserDAO;
     }
 
+    /**
+     * Set AditUserDAO
+     * 
+     * @param aditUserDAO AditUserDAO
+     */
     public void setAditUserDAO(AditUserDAO aditUserDAO) {
         this.aditUserDAO = aditUserDAO;
     }
 
+    /**
+     * Get DocumentDAO
+     * 
+     * @return DocumentDAO
+     */
     public DocumentDAO getDocumentDAO() {
         return documentDAO;
     }
 
+    /**
+     * Set DocumentDAO
+     * 
+     * @param documentDAO DocumentDAO
+     */
     public void setDocumentDAO(DocumentDAO documentDAO) {
         this.documentDAO = documentDAO;
     }
 
+    /**
+     * Get AccessRestrictionDAO
+     * 
+     * @return AccessRestrictionDAO
+     */
     public AccessRestrictionDAO getAccessRestrictionDAO() {
         return accessRestrictionDAO;
     }
 
+    /**
+     * Set AccessRestrictionDAO
+     * 
+     * @param accessRestrictionDAO AccessRestrictionDAO
+     */
     public void setAccessRestrictionDAO(AccessRestrictionDAO accessRestrictionDAO) {
         this.accessRestrictionDAO = accessRestrictionDAO;
     }
 
+    /**
+     * Get NotificationDAO
+     * 
+     * @return NotificationDAO
+     */
     public NotificationDAO getNotificationDAO() {
         return notificationDAO;
     }
 
+    /**
+     * Set NotificationDAO
+     * 
+     * @param notificationDAO NotificationDAO
+     */
     public void setNotificationDAO(NotificationDAO notificationDAO) {
         this.notificationDAO = notificationDAO;
     }
 
+    /**
+     * Get DvkDAO
+     * 
+     * @return DvkDAO
+     */
     public DvkDAO getDvkDAO() {
         return dvkDAO;
     }
 
+    /**
+     * Set DvkDAO
+     * 
+     * @param dvkDAO DvkDAO
+     */
     public void setDvkDAO(DvkDAO dvkDAO) {
         this.dvkDAO = dvkDAO;
     }

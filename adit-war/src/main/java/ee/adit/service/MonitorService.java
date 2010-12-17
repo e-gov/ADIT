@@ -70,21 +70,64 @@ import ee.webmedia.xtee.client.service.XTeeAttachment;
  */
 public class MonitorService {
 
+    /**
+     * Status OK
+     */
     public static final String OK = "OK";
+    
+    /**
+     * Status FAIL
+     */
     public static final String FAIL = "FAIL";
+    
+    /**
+     * Milliseconds
+     */
     public static final String MS = "ms";
+    
+    /**
+     * Seconds
+     */
     public static final String SECONDS = "seconds";
 
+    /**
+     * Component ADIT_DB_CONNECTION
+     */
     private static final String ADIT_DB_CONNECTION = "ADIT_DB_CONNECTION";
+    
+    /**
+     * Component ADIT_DB_CONNECTION_READ
+     */
     private static final String ADIT_DB_CONNECTION_READ = "ADIT_DB_CONNECTION_READ";
+    
+    /**
+     * Component ADIT_DB_CONNECTION_WRITE
+     */
     private static final String ADIT_DB_CONNECTION_WRITE = "ADIT_DB_CONNECTION_WRITE";
 
+    /**
+     * Component ADIT_UK_CONNECTION
+     */
     private static final String ADIT_UK_CONNECTION = "ADIT_UK_CONNECTION";
+    
+    /**
+     * Component ADIT_UK_CONNECTION_READ
+     */
     private static final String ADIT_UK_CONNECTION_READ = "ADIT_UK_CONNECTION_READ";
+    
+    /**
+     * Component ADIT_UK_CONNECTION_WRITE
+     */
     private static final String ADIT_UK_CONNECTION_WRITE = "ADIT_UK_CONNECTION_WRITE";
 
+    /**
+     * Component ADIT_APP
+     */
     private static final String ADIT_APP = "ADIT_APP";
 
+    /**
+     * Log4J logger
+     */
     private static Logger logger = Logger.getLogger(MonitorService.class);
 
     private DocumentDAO documentDAO;
@@ -115,6 +158,10 @@ public class MonitorService {
      */
     private Unmarshaller unmarshaller;
 
+    /**
+     * Check ADIT and DVK database read functions.
+     * 
+     */
     public void check() {
         logger.info("ADIT monitor - Checking database and application.");
 
@@ -176,6 +223,8 @@ public class MonitorService {
 
     /**
      * Check database read.
+     * 
+     * @param documentID test document ID
      */
     public void checkDBRead(long documentID) {
         logger.info("ADIT monitor - Checking database READ.");
@@ -212,6 +261,8 @@ public class MonitorService {
 
     /**
      * Check database write.
+     * 
+     * @param documentID test document ID
      */
     public void checkDBWrite(long documentID) {
         logger.info("ADIT monitor - Checking database WRITE.");
@@ -375,6 +426,8 @@ public class MonitorService {
 
     /**
      * Check DVK database read.
+     * 
+     * @param messageDhlId DVK test message ID
      */
     public void checkDVKRead(long messageDhlId) {
         logger.info("ADIT monitor - Checking DVK database READ.");
@@ -410,6 +463,8 @@ public class MonitorService {
 
     /**
      * Check DVK database read.
+     * 
+     * @param messageDhlId DVK test document ID
      */
     public void checkDVKWrite(long messageDhlId) {
         logger.info("ADIT monitor - Checking DVK WRITE.");
@@ -452,6 +507,7 @@ public class MonitorService {
     /**
      * Tests "saveDocument" request.
      * 
+     * @param serviceURI web-service URI
      * @return test result
      */
     public MonitorResult saveDocumentCheck(String serviceURI) {
@@ -569,6 +625,7 @@ public class MonitorService {
     /**
      * Tests "getDocument" request.
      * 
+     * @param serviceURI web-service URI
      * @return test result
      */
     public MonitorResult getDocumentCheck(String serviceURI) {
@@ -698,6 +755,7 @@ public class MonitorService {
     /**
      * Tests "getDocument" request.
      * 
+     * @param serviceURI web-service URI
      * @return test result
      */
     public MonitorResult getUserInfoCheck(String serviceURI) {
@@ -884,61 +942,10 @@ public class MonitorService {
     }
 
     /**
-     * Checks if documents are being sent from DVK UK to DVK.
+     * Checks if documents are being received from DVK.
      * 
-     * @return
+     * @return test result
      */
-    /*
-     * public MonitorResult checkDvkClientToDvkSend() { MonitorResult result =
-     * new MonitorResult(); result.setComponent("DVK_CLIENT_TO_DVK_SEND");
-     * 
-     * double duration = 0; Date start = new Date(); long startTime =
-     * start.getTime();
-     * 
-     * try {
-     * 
-     * // Check if there are documents that are not being sent to DVK server //
-     * That can not be checked because DVK client does not record the time //
-     * when the message was created.
-     * 
-     * 
-     * SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
-     * 
-     * Calendar cal = new GregorianCalendar(); Date currentDate = cal.getTime();
-     * int day = cal.get(Calendar.DATE); int month = cal.get(Calendar.MONTH);
-     * int year = cal.get(Calendar.YEAR);
-     * 
-     * Date beginDate = sdf.parse((day - 1) + "." + month + "." + year +
-     * " 00:00:00"); Date endDate = sdf.parse((day - 1) + "." + month + "." +
-     * year + " 23:59:59");
-     * 
-     * // 1. Get the number of messages sent to DVK client from ADIT yesterday.
-     * long documentSharingCount =
-     * getDocumentSharingDAO().getDocumentsSentToDvk(beginDate, endDate);
-     * 
-     * // 2. Get the number of messages sent to DVK server from DVK client
-     * yesterday. long pojoMessageCount =
-     * getDvkDAO().getSentDocuments(beginDate, endDate);
-     * 
-     * if(documentSharingCount == pojoMessageCount) {LOG.info(
-     * "Number of documents sent from ADIT -> DVK UK matches the number of documents sent from DVK UK -> DVK"
-     * ); result.setSuccess(true); } else { throw newAditInternalException(
-     * "Number of documents sent from ADIT -> DVK UK does not match the number of documents sent from DVK UK -> DVK: "
-     * + documentSharingCount + "/" + pojoMessageCount +
-     * " (ADIT->DVKUK / DVKUK->DVK)"); }
-     * 
-     * Date end = new Date(); long endTime = end.getTime(); duration = (endTime
-     * - startTime) / 1000.0; result.setDuration(duration);
-     * 
-     * } catch(Exception e) {
-     * LOG.error("Error while testing DVK_CLIENT_TO_DVK_SEND: ", e);
-     * result.setSuccess(false); List<String> exceptions = new
-     * ArrayList<String>(); exceptions.add(e.getMessage());
-     * result.setExceptions(exceptions); }
-     * 
-     * return result; }
-     */
-
     @Transactional
     public MonitorResult checkDvkReceive() {
         MonitorResult result = new MonitorResult();
@@ -999,6 +1006,11 @@ public class MonitorService {
         return result;
     }
 
+    /**
+     * Check if notifications have been sent.
+     * 
+     * @return test result 
+     */
     public MonitorResult checkNotifications() {
         MonitorResult result = new MonitorResult();
         result.setComponent("NOTIFICATIONS");
@@ -1040,6 +1052,11 @@ public class MonitorService {
         return result;
     }
 
+    /**
+     * Check error log
+     * 
+     * @return test result
+     */
     public MonitorResult checkErrorLog() {
         MonitorResult result = new MonitorResult();
         result.setComponent("ERROR_LOG");
@@ -1083,47 +1100,94 @@ public class MonitorService {
 
     /**
      * Handle application exception.
+     * 
+     * @param e exception
      */
     public void handleException(Exception e) {
         logger.info("ADIT monitor - Handling exception: " + e.getMessage());
     }
 
+    /**
+     * Get DocumentDAO
+     * 
+     * @return DocumentDAO
+     */
     public DocumentDAO getDocumentDAO() {
         return documentDAO;
     }
 
+    /**
+     * Set DocumentDAO
+     * @param documentDAO DocumentDAO
+     */
     public void setDocumentDAO(DocumentDAO documentDAO) {
         this.documentDAO = documentDAO;
     }
 
+    /**
+     * Get DvkDAO
+     * @return DvkDAO
+     */
     public DvkDAO getDvkDAO() {
         return dvkDAO;
     }
 
+    /**
+     * Set DvkDAO
+     * @param dvkDAO DvkDAO
+     */
     public void setDvkDAO(DvkDAO dvkDAO) {
         this.dvkDAO = dvkDAO;
     }
 
+    /**
+     * Get Configuration
+     * @return Configuration
+     */
     public Configuration getConfiguration() {
         return configuration;
     }
 
+    /**
+     * Set Configuration
+     * @param configuration Configuration
+     */
     public void setConfiguration(Configuration configuration) {
         this.configuration = configuration;
     }
 
+    /**
+     * Get NagiosLogger
+     * 
+     * @return NagiosLogger
+     */
     public NagiosLogger getNagiosLogger() {
         return nagiosLogger;
     }
 
+    /**
+     * Set NagiosLogger
+     * 
+     * @param nagiosLogger NagiosLogger
+     */
     public void setNagiosLogger(NagiosLogger nagiosLogger) {
         this.nagiosLogger = nagiosLogger;
     }
 
+    /**
+     * Get DocumentService
+     * 
+     * @return DocumentService
+     */
     public DocumentService getDocumentService() {
         return documentService;
     }
 
+    /**
+     * Set DocumentService
+     * 
+     * @param documentService DocumentService
+     */
     public void setDocumentService(DocumentService documentService) {
         this.documentService = documentService;
     }
@@ -1161,50 +1225,110 @@ public class MonitorService {
         return result;
     }
 
+    /**
+     * Get Marshaller
+     * 
+     * @return Marshaller
+     */
     public Marshaller getMarshaller() {
         return marshaller;
     }
 
+    /**
+     * Set Marshaller
+     * 
+     * @param marshaller Marshaller
+     */
     public void setMarshaller(Marshaller marshaller) {
         this.marshaller = marshaller;
     }
 
+    /**
+     * Get Unmarshaller
+     * 
+     * @return Unmarshaller
+     */
     public Unmarshaller getUnmarshaller() {
         return unmarshaller;
     }
 
+    /**
+     * Set Unmarshaller
+     * 
+     * @param unmarshaller Unmarshaller
+     */
     public void setUnmarshaller(Unmarshaller unmarshaller) {
         this.unmarshaller = unmarshaller;
     }
 
+    /**
+     * Get MonitorConfiguration
+     * 
+     * @return MonitorConfiguration
+     */
     public MonitorConfiguration getMonitorConfiguration() {
         return monitorConfiguration;
     }
 
+    /**
+     * Set MonitorConfiguration
+     * 
+     * @param monitorConfiguration MonitorConfiguration
+     */
     public void setMonitorConfiguration(MonitorConfiguration monitorConfiguration) {
         this.monitorConfiguration = monitorConfiguration;
     }
 
+    /**
+     * Get DocumentSharingDAO
+     * 
+     * @return DocumentSharingDAO
+     */
     public DocumentSharingDAO getDocumentSharingDAO() {
         return documentSharingDAO;
     }
 
+    /**
+     * Set DocumentSharingDAO
+     * 
+     * @param documentSharingDAO DocumentSharingDAO
+     */
     public void setDocumentSharingDAO(DocumentSharingDAO documentSharingDAO) {
         this.documentSharingDAO = documentSharingDAO;
     }
 
+    /**
+     * Get NotificationDAO
+     * 
+     * @return NotificationDAO
+     */
     public NotificationDAO getNotificationDAO() {
         return notificationDAO;
     }
 
+    /**
+     * Set NotificationDAO
+     * 
+     * @param notificationDAO NotificationDAO
+     */
     public void setNotificationDAO(NotificationDAO notificationDAO) {
         this.notificationDAO = notificationDAO;
     }
 
+    /**
+     * Get ErrorLogDAO
+     * 
+     * @return ErrorLogDAO
+     */
     public ErrorLogDAO getErrorLogDAO() {
         return errorLogDAO;
     }
 
+    /**
+     * Set ErrorLogDAO
+     * 
+     * @param errorLogDAO ErrorLogDAO
+     */
     public void setErrorLogDAO(ErrorLogDAO errorLogDAO) {
         this.errorLogDAO = errorLogDAO;
     }

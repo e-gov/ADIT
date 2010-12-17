@@ -92,10 +92,20 @@ public class SendNotificationsJob extends QuartzJobBean {
         this.configuration = configuration;
     }
 
+    /**
+     * Get schedule client
+     * 
+     * @return schedule client
+     */
     public ScheduleClient getScheduleClient() {
         return scheduleClient;
     }
-
+    
+    /**
+     * Set schedule client
+     * 
+     * @param scheduleClient schedule client
+     */
     public void setScheduleClient(ScheduleClient scheduleClient) {
         this.scheduleClient = scheduleClient;
     }
