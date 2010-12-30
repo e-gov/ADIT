@@ -89,10 +89,10 @@
         <!-- Checks for Naming Conventions.                  -->
         <!-- See http://checkstyle.sf.net/config_naming.html -->
         <module name="ConstantName">
-	    <property name="applyToProtected" value="false"/>
+	    	<property name="applyToProtected" value="false"/>
       	    <property name="applyToPackage" value="false"/>
       	    <property name="applyToPrivate" value="false"/>
-	</module>
+		</module>
         <module name="LocalFinalVariableName"/>
         <module name="LocalVariableName"/>
         <module name="MemberName"/>
