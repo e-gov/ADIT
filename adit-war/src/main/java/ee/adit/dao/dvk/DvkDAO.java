@@ -27,7 +27,7 @@ public class DvkDAO {
     private static Logger logger = Logger.getLogger(DvkDAO.class);
 
     /**
-     * Session factory
+     * Session factory.
      */
     private SessionFactory sessionFactory;
 
@@ -55,8 +55,8 @@ public class DvkDAO {
      * Retrieves incoming documents list containing documents that do not have
      * any status assigned.
      * 
-     * @param statusID
-     * @return
+     * @param statusID status id to exclude
+     * @return incoming documents without status
      * @throws Exception
      */
     @SuppressWarnings("unchecked")
@@ -84,7 +84,7 @@ public class DvkDAO {
     /**
      * Updates document.
      * 
-     * @param document
+     * @param document document
      * @throws Exception
      */
     public void updateDocument(PojoMessage document) throws Exception {
@@ -110,7 +110,7 @@ public class DvkDAO {
     /**
      * Retrieves recipients for the specified DVK message.
      * 
-     * @param dvkMessageID
+     * @param dvkMessageID DVK message ID
      * @param incoming
      *            specifies, if the message should be incoming / outgoing
      * @return list of message recipients
@@ -147,7 +147,7 @@ public class DvkDAO {
     /**
      * Retrieves DVK client settings.
      * 
-     * @return settings
+     * @return settings DVK client settings
      */
     public PojoSettings getDVKSettings() {
         Session session = null;
@@ -259,6 +259,9 @@ public class DvkDAO {
 
     /**
      * Test document read.
+     * 
+     * @param dhlMessageId DVK message ID
+     * @return result document
      */
     public PojoMessage testRead(long dhlMessageId) {
         PojoMessage result = null;
@@ -282,6 +285,9 @@ public class DvkDAO {
 
     /**
      * Test document read.
+     * 
+     * @param dhlMessageId DVK message ID
+     * @return result document
      */
     public PojoMessage getMessage(long dhlMessageId) {
         PojoMessage result = null;
@@ -302,18 +308,18 @@ public class DvkDAO {
     }
 
     /**
-     * Retrieves session factory
+     * Retrieves session factory.
      * 
-     * @return
+     * @return session factory
      */
     public SessionFactory getSessionFactory() {
         return sessionFactory;
     }
 
     /**
-     * Sets session factory
+     * Sets session factory.
      * 
-     * @param sessionFactory
+     * @param sessionFactory session factory
      */
     public void setSessionFactory(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;

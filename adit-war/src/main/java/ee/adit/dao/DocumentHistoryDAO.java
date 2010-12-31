@@ -22,7 +22,7 @@ public class DocumentHistoryDAO extends HibernateDaoSupport {
      * Save document history.
      * 
      * @param documentHistory document histroy record
-     * @return
+     * @return document history ID
      */
     public Long save(DocumentHistory documentHistory) {
         Long result = null;

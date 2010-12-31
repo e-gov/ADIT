@@ -12,12 +12,12 @@ public class AditCodedException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
     /**
-     * Parameter array
+     * Parameter array.
      */
     private Object[] parameters;
 
     /**
-     * Constructor
+     * Constructor.
      * 
      * @param message error message
      */
@@ -26,7 +26,7 @@ public class AditCodedException extends RuntimeException {
     }
 
     /**
-     * Constructor
+     * Constructor.
      * 
      * @param message error message
      * @param cause cause exception
@@ -36,7 +36,7 @@ public class AditCodedException extends RuntimeException {
     }
 
     /**
-     * Get parameter array
+     * Get parameter array.
      * 
      * @return parameter array
      */
@@ -45,7 +45,8 @@ public class AditCodedException extends RuntimeException {
     }
 
     /**
-     * Set parameter array
+     * Set parameter array.
+     * 
      * @param parameters parameters
      */
     public void setParameters(Object[] parameters) {

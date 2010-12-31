@@ -12,6 +12,10 @@
 		<version>1.0.9</version> </parent>
 	-->
 
+	<properties>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>ee.webmedia</groupId>
@@ -458,6 +462,7 @@
 				<configuration>
 					<configLocation>doc/adit_cs_checks.xml</configLocation>
 					<encoding>UTF-8</encoding>
+					<excludes>ee/adit/pojo/*,ee/adit/dao/pojo/*,ee/adit/pojo/notification/*</excludes>
 				</configuration>
 			</plugin>
 

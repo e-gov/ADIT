@@ -899,7 +899,7 @@ public class DocumentDAO extends HibernateDaoSupport {
     }
 
     /**
-     * Update existing document
+     * Update existing document.
      * 
      * @param document document
      */

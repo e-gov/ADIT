@@ -12,7 +12,7 @@ public class AditException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
     /**
-     * Constructor
+     * Constructor.
      * 
      * @param message error message
      */
@@ -21,7 +21,7 @@ public class AditException extends RuntimeException {
     }
 
     /**
-     * Constructor
+     * Constructor.
      * 
      * @param message error message
      * @param cause error cause

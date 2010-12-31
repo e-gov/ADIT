@@ -26,8 +26,8 @@ public class AditUserDAO extends HibernateDaoSupport {
     /**
      * Retrieves user by ID.
      * 
-     * @param userCode
-     * @return
+     * @param userCode user code (ID)
+     * @return user
      */
     public AditUser getUserByID(String userCode) {
         AditUser result = null;

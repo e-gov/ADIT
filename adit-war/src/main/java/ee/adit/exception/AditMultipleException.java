@@ -16,12 +16,12 @@ public class AditMultipleException extends AditException {
     private static final long serialVersionUID = 1L;
     
     /**
-     * Message list
+     * Message list.
      */
     private List<Message> messages;
 
     /**
-     * Constructor
+     * Constructor.
      * 
      * @param message error message
      */
@@ -30,18 +30,18 @@ public class AditMultipleException extends AditException {
     }
 
     /**
-     * Get message list
+     * Get message list.
      * 
-     * @return
+     * @return message list
      */
     public List<Message> getMessages() {
         return messages;
     }
 
     /**
-     * Set message list
+     * Set message list.
      * 
-     * @param messages
+     * @param messages message list
      */
     public void setMessages(List<Message> messages) {
         this.messages = messages;
