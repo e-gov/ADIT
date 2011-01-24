@@ -1548,6 +1548,32 @@
 							</xs:documentation>
 						</xs:annotation>
 					</element>
+					<element name="creator_name" type="string">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Dokumendi looja nimi
+							</xs:documentation>
+							<xs:documentation xml:lang="en">Document creator name
+							</xs:documentation>
+						</xs:annotation>
+					</element>
+					<element name="creator_user_code" type="string">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Dokumendi looja isikukood,
+								kui dokument on lisatud asutuse kasutajakonto kaudu
+							</xs:documentation>
+							<xs:documentation xml:lang="en">Personal ID code of document
+								creator if document has been added using organization account
+							</xs:documentation>
+						</xs:annotation>
+					</element>
+					<element name="creator_user_name" type="string">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Dokumendi looja nimi, kui dokument on lisatud asutuse kasutajakonto kaudu
+							</xs:documentation>
+							<xs:documentation xml:lang="en">Name of document creator if document has been added using organization account
+							</xs:documentation>
+						</xs:annotation>
+					</element>
 					<element name="created" type="date">
 						<xs:annotation>
 							<xs:documentation xml:lang="ee">Dokumendi loomise aeg
@@ -1572,6 +1598,68 @@
 								document</xs:documentation>
 						</xs:annotation>
 					</element>
+					<element name="dvk_status_id" type="integer">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">DVK staatuse ID, kui dokument
+								on DVK kaudu saadetud või saabunud</xs:documentation>
+							<xs:documentation xml:lang="en">DEC status id if document
+								has been sent or received using DEC</xs:documentation>
+						</xs:annotation>
+					</element>
+					<element name="dvk_id" type="integer">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Dokumendi DVK ID, kui dokument
+								on DVK kaudu saadetud või saabunud</xs:documentation>
+							<xs:documentation xml:lang="en">Documents DEC ID if document
+								has been sent or received using DEC</xs:documentation>
+						</xs:annotation>
+					</element>
+					<element name="workflow_status_id" type="integer">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Dokumendi menetlusstaatuse ID</xs:documentation>
+							<xs:documentation xml:lang="en">Documents workflow status ID</xs:documentation>
+						</xs:annotation>
+					</element>
+					<element name="last_accessed" type="datetime">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Dokumendi viimase vaatamise kuupäev
+								ja kellaaeg</xs:documentation>
+							<xs:documentation xml:lang="en">Date and time indicating the last time
+								the document was viewed or modified</xs:documentation>
+						</xs:annotation>
+					</element>
+					<element name="previous_document_id" type="integer">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Dokumendi eelmise versioooni või
+								antud dokumendi aluseks oleva dokumendi ID</xs:documentation>
+							<xs:documentation xml:lang="en">ID of documents last version or of
+								the document, that this document is based on</xs:documentation>
+						</xs:annotation>
+					</element>
+					<element name="previous_document_guid" type="string">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Dokumendi eelmise versioooni või
+								antud dokumendi aluseks oleva dokumendi GUID</xs:documentation>
+							<xs:documentation xml:lang="en">GUID of documents last version or of
+								the document, that this document is based on</xs:documentation>
+						</xs:annotation>
+					</element>
+					<element name="locked" type="boolean">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Näitab, kas dokument on lukustatud
+								(st dokumendi muutmine on keelatud)</xs:documentation>
+							<xs:documentation xml:lang="en">Indicates if the document is
+								locked (cannot be modified)</xs:documentation>
+						</xs:annotation>
+					</element>
+					<element name="lockingDate" type="datetime">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Dokumendi lukustamise kuupäev
+								ja kellaaeg</xs:documentation>
+							<xs:documentation xml:lang="en">Date and time indicating when
+								the document was locked</xs:documentation>
+						</xs:annotation>
+					</element>
 					<element name="signable" type="boolean">
 						<xs:annotation>
 							<xs:documentation xml:lang="ee">Näitab, kas dokument on
@@ -1580,7 +1668,97 @@
 								is signable</xs:documentation>
 						</xs:annotation>
 					</element>
+					<element name="deflated" type="boolean">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Näitab, kas dokument on
+								tühjendatud (st failide sisu on kustutatud)</xs:documentation>
+							<xs:documentation xml:lang="en">Indicates if the document
+								has peen deflated (document files erased)</xs:documentation>
+						</xs:annotation>
+					</element>
+					<element name="deflatingDate" type="date">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Dokumendi DVK ID, kui dokument
+								on DVK kaudu saadetud või saabunud</xs:documentation>
+							<xs:documentation xml:lang="en">Documents DEC ID if document
+								has been sent or received using DEC</xs:documentation>
+						</xs:annotation>
+					</element>
+					<element name="signatures" type="getDocumentResponseAttachmentV1SignatureListType">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Dokumendi allkirjade andmed</xs:documentation>
+							<xs:documentation xml:lang="en">Metadata of document signatures</xs:documentation>
+						</xs:annotation>
+					</element>
 					<element name="document_files" type="tns:documentFilesType" />
+				</sequence>
+			</complexType>
+			<complexType name="getDocumentResponseAttachmentV1SignatureType">
+				<all>
+					<element name="signer_code" type="string">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Allkirjastaja isikukood</xs:documentation>
+							<xs:documentation xml:lang="en">Signers personal ID code</xs:documentation>
+						</xs:annotation>
+					</element>
+					<element name="signer_name" type="string">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Allkirjastaja nimi</xs:documentation>
+							<xs:documentation xml:lang="en">Signers name</xs:documentation>
+						</xs:annotation>
+					</element>
+					<element name="manifest" type="string">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Allkirjastaja
+								roll ja/või resolutsioon</xs:documentation>
+							<xs:documentation xml:lang="en">Signers role
+								and/or resolution</xs:documentation>
+						</xs:annotation>
+					</element>
+					<element name="country" type="string">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Riik allkirjastaja
+								aadressis</xs:documentation>
+							<xs:documentation xml:lang="en">Country name in
+								signers address</xs:documentation>
+						</xs:annotation>
+					</element>
+					<element name="state" type="string">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Maakond allkirjastaja
+								aadressis</xs:documentation>
+							<xs:documentation xml:lang="en">State/county in
+								signers address</xs:documentation>
+						</xs:annotation>
+					</element>
+					<element name="city" type="string">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Linn/vald/küla
+								allkirjastaja aadressis</xs:documentation>
+							<xs:documentation xml:lang="en">Town/parish/village in
+								signers address</xs:documentation>
+						</xs:annotation>
+					</element>
+					<element name="zip" type="string">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Postiindeks allkirjastaja
+								aadressis</xs:documentation>
+							<xs:documentation xml:lang="en">Post code in signers
+								address</xs:documentation>
+						</xs:annotation>
+					</element>
+				</all>
+			</complexType>
+			<complexType name="getDocumentResponseAttachmentV1SignatureListType">
+				<xs:annotation>
+					<xs:documentation xml:lang="ee">Dokumendi allkirjade
+						metaandmete nimekiri</xs:documentation>
+					<xs:documentation xml:lang="en">List of document signature
+						metadata</xs:documentation>
+				</xs:annotation>
+				<sequence>
+					<element maxOccurs="unbounded" name="signature"
+						type="getDocumentResponseAttachmentV1SignatureType" />
 				</sequence>
 			</complexType>
 
@@ -1857,6 +2035,34 @@
 							</xs:documentation>
 						</xs:annotation>
 					</element>
+					<element name="creator_name" type="string">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Dokumendi looja nimi
+							</xs:documentation>
+							<xs:documentation xml:lang="en">Document creator name
+							</xs:documentation>
+						</xs:annotation>
+					</element>
+					<element name="creator_user_code" type="string">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Dokumendi looja isikukood,
+								kui dokument on lisatud asutuse kasutajakonto kaudu
+							</xs:documentation>
+							<xs:documentation xml:lang="en">Personal ID code of document
+								creator if document has been added using organization account
+							</xs:documentation>
+						</xs:annotation>
+					</element>
+					<element name="creator_user_name" type="string">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Dokumendi looja nimi, kui
+								dokument on lisatud asutuse kasutajakonto kaudu
+							</xs:documentation>
+							<xs:documentation xml:lang="en">Name of document creator
+								if document has been added using organization account
+							</xs:documentation>
+						</xs:annotation>
+					</element>
 					<element name="created" type="date">
 						<xs:annotation>
 							<xs:documentation xml:lang="ee">Dokumendi loomise aeg
@@ -1881,12 +2087,96 @@
 								document</xs:documentation>
 						</xs:annotation>
 					</element>
+					<element name="dvk_status_id" type="integer">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">DVK staatuse ID, kui dokument
+								on DVK kaudu saadetud või saabunud</xs:documentation>
+							<xs:documentation xml:lang="en">DEC status id if document
+								has been sent or received using DEC</xs:documentation>
+						</xs:annotation>
+					</element>
+					<element name="dvk_id" type="integer">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Dokumendi DVK ID, kui dokument
+								on DVK kaudu saadetud või saabunud</xs:documentation>
+							<xs:documentation xml:lang="en">Documents DEC ID if document
+								has been sent or received using DEC</xs:documentation>
+						</xs:annotation>
+					</element>
+					<element name="workflow_status_id" type="integer">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Dokumendi menetlusstaatuse ID</xs:documentation>
+							<xs:documentation xml:lang="en">Documents workflow status ID</xs:documentation>
+						</xs:annotation>
+					</element>
+					<element name="last_accessed" type="datetime">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Dokumendi viimase vaatamise kuupäev
+								ja kellaaeg</xs:documentation>
+							<xs:documentation xml:lang="en">Date and time indicating the last time
+								the document was viewed or modified</xs:documentation>
+						</xs:annotation>
+					</element>
+					<element name="previous_document_id" type="integer">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Dokumendi eelmise versioooni või
+								antud dokumendi aluseks oleva dokumendi ID</xs:documentation>
+							<xs:documentation xml:lang="en">ID of documents last version or of
+								the document, that this document is based on</xs:documentation>
+						</xs:annotation>
+					</element>
+					<element name="previous_document_guid" type="string">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Dokumendi eelmise versioooni või
+								antud dokumendi aluseks oleva dokumendi GUID</xs:documentation>
+							<xs:documentation xml:lang="en">GUID of documents last version or of
+								the document, that this document is based on</xs:documentation>
+						</xs:annotation>
+					</element>
+					<element name="locked" type="boolean">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Näitab, kas dokument on lukustatud
+								(st dokumendi muutmine on keelatud)</xs:documentation>
+							<xs:documentation xml:lang="en">Indicates if the document is
+								locked (cannot be modified)</xs:documentation>
+						</xs:annotation>
+					</element>
+					<element name="lockingDate" type="datetime">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Dokumendi lukustamise kuupäev
+								ja kellaaeg</xs:documentation>
+							<xs:documentation xml:lang="en">Date and time indicating when
+								the document was locked</xs:documentation>
+						</xs:annotation>
+					</element>
 					<element name="signable" type="boolean">
 						<xs:annotation>
 							<xs:documentation xml:lang="ee">Näitab, kas dokument on
 								allkirjastatav</xs:documentation>
 							<xs:documentation xml:lang="en">Indicates if the document
 								is signable</xs:documentation>
+						</xs:annotation>
+					</element>					
+					<element name="deflated" type="boolean">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Näitab, kas dokument on
+								tühjendatud (st failide sisu on kustutatud)</xs:documentation>
+							<xs:documentation xml:lang="en">Indicates if the document
+								has peen deflated (document files erased)</xs:documentation>
+						</xs:annotation>
+					</element>
+					<element name="deflatingDate" type="date">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Dokumendi DVK ID, kui dokument
+								on DVK kaudu saadetud või saabunud</xs:documentation>
+							<xs:documentation xml:lang="en">Documents DEC ID if document
+								has been sent or received using DEC</xs:documentation>
+						</xs:annotation>
+					</element>
+					<element name="signatures" type="getDocumentResponseAttachmentV1SignatureListType">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Dokumendi allkirjade andmed</xs:documentation>
+							<xs:documentation xml:lang="en">Metadata of document signatures</xs:documentation>
 						</xs:annotation>
 					</element>
 					<element name="sent_to"
