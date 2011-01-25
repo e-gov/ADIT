@@ -14,6 +14,11 @@
 
 	<properties>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		
+		<!-- Edit this to match your destination environment -->
+		<resourceDir>dev-dev-weblogic</resourceDir>
+		<!--<resourceDir>ria-test-weblogic</resourceDir>-->
+		<!--<resourceDir>dev-dev-weblogic</resourceDir>-->
 	</properties>
 
 	<dependencies>
@@ -355,30 +360,30 @@
 			<resource>
 				<directory>src/main/resources/castor-mapping</directory>
 				<filtering>false</filtering>
-				<targetPath>../adit/WEB-INF/classes/castor-mapping</targetPath>
+				<targetPath>../adit-${version}/WEB-INF/classes/castor-mapping</targetPath>
 			</resource>
 			<resource>
 				<directory>src/main/resources/dvkapi</directory>
 				<filtering>false</filtering>
-				<targetPath>../adit/WEB-INF/classes/dvkapi</targetPath>
+				<targetPath>../adit-${version}/WEB-INF/classes/dvkapi</targetPath>
 			</resource>
 			<resource>
 				<directory>src/main/resources/hbm</directory>
 				<filtering>false</filtering>
-				<targetPath>../adit/WEB-INF/classes/hbm</targetPath>
+				<targetPath>../adit-${version}/WEB-INF/classes/hbm</targetPath>
 			</resource>
 
 			<!-- Include all the environment specific configuration files -->
 			<resource>
 				<directory>src/main/resources/${resourceDir}</directory>
-				<targetPath>../adit/WEB-INF/classes</targetPath>
+				<targetPath>../adit-${version}/WEB-INF/classes</targetPath>
 				<excludes>
 					<exclude>adit-configuration.xml</exclude>
 				</excludes>
 			</resource>
 			<resource>
 				<directory>src/main/resources/${resourceDir}</directory>
-				<targetPath>../adit/WEB-INF</targetPath>
+				<targetPath>../adit-${version}/WEB-INF</targetPath>
 				<includes>
 					<include>adit-configuration.xml</include>
 				</includes>
@@ -386,7 +391,7 @@
 			<!-- Include static resources -->
 			<resource>
 				<directory>src/main/resources</directory>
-				<targetPath>../adit/WEB-INF/classes</targetPath>
+				<targetPath>../adit-${version}/WEB-INF/classes</targetPath>
 				<includes>
 					<include>adit-castor-mapping.xml</include>
 					<include>DVKresponseMessage.xsl</include>
@@ -398,7 +403,7 @@
 			</resource>
 			<resource>
 				<directory>src/main/resources</directory>
-				<targetPath>../adit/WEB-INF</targetPath>
+				<targetPath>../adit-${version}/WEB-INF</targetPath>
 				<includes>
 					<include>adit.xsd</include>
 					<include>adit-servlet.xml</include>
@@ -415,14 +420,14 @@
 			<resource>
 				<directory>${basedir}/sql</directory>
 				<filtering>false</filtering>
-				<targetPath>../adit/sql</targetPath>
+				<targetPath>../adit-${version}/sql</targetPath>
 			</resource>
 			<resource>
 				<directory>${basedir}/lib</directory>
 				<includes>
 					<include>*</include>
 				</includes>
-				<targetPath>../adit/WEB-INF/lib</targetPath>
+				<targetPath>../adit-${version}/WEB-INF/lib</targetPath>
 			</resource>
 		</resources>
 		<plugins>

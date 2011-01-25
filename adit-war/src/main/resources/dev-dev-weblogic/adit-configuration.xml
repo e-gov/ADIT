@@ -12,12 +12,11 @@
 
 	<!-- Configuration -->
 	<bean id="configuration" class="ee.adit.util.Configuration">
-		<property name="getJoinedMaxResults" value="2" />
+		<property name="getJoinedMaxResults" value="10" />
 		<property name="tempDir" value="C:\temp" />
 		<property name="deleteTemporaryFiles" value="true" />
 		<property name="schedulerEventTypeName" value="Minu dokumentide teavitus" />
-		<property name="dvkResponseMessageStylesheet"
-			value="C:\dev\microlink\adit\src\main\resources\DVKresponseMessage.xsl" />
+		<property name="dvkResponseMessageStylesheet" value="DVKresponseMessage.xsl" />
 		<!-- Üldine kettamahu piirang ühe kasutaja kohta baitides -->
 		<property name="globalDiskQuota" value="10240000" />
 		<property name="locales">
@@ -26,7 +25,7 @@
 				<value>et_ee</value>
 			</list>
 		</property>
-		<property name="dvkOrgCode" value="87654321" />
+		<property name="dvkOrgCode" value="10425769" />
 	</bean>
 
 	<bean id="monitorConfiguration" class="ee.adit.util.MonitorConfiguration">
