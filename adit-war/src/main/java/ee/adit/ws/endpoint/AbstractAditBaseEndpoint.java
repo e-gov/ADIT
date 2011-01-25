@@ -273,13 +273,16 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
         }
 
         Attachment attachment = this.getRequestMessage().getAttachment(attachmentID);
+        if ((attachment == null) && !(attachmentID.startsWith("<") && attachmentID.endsWith(">"))) {
+        	logger.debug("Did not find attachment with Content-ID: " + attachmentID + ", attempting to find one with Content-ID: <" + attachmentID + ">");
+        	attachment = this.getRequestMessage().getAttachment("<" + attachmentID + ">");
+        }
 
         if (attachment == null) {
             throw new AditCodedException("request.attachments.invalidID");
         }
 
         return extractXML(attachment);
-
     }
 
     /**
