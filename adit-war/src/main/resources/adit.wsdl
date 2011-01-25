@@ -1652,7 +1652,7 @@
 								locked (cannot be modified)</xs:documentation>
 						</xs:annotation>
 					</element>
-					<element name="lockingDate" type="datetime">
+					<element name="locking_date" type="datetime">
 						<xs:annotation>
 							<xs:documentation xml:lang="ee">Dokumendi lukustamise kuupäev
 								ja kellaaeg</xs:documentation>
@@ -1676,7 +1676,7 @@
 								has peen deflated (document files erased)</xs:documentation>
 						</xs:annotation>
 					</element>
-					<element name="deflatingDate" type="date">
+					<element name="deflating_date" type="date">
 						<xs:annotation>
 							<xs:documentation xml:lang="ee">Dokumendi DVK ID, kui dokument
 								on DVK kaudu saadetud või saabunud</xs:documentation>
@@ -2141,7 +2141,7 @@
 								locked (cannot be modified)</xs:documentation>
 						</xs:annotation>
 					</element>
-					<element name="lockingDate" type="datetime">
+					<element name="locking_date" type="datetime">
 						<xs:annotation>
 							<xs:documentation xml:lang="ee">Dokumendi lukustamise kuupäev
 								ja kellaaeg</xs:documentation>
@@ -2165,7 +2165,7 @@
 								has peen deflated (document files erased)</xs:documentation>
 						</xs:annotation>
 					</element>
-					<element name="deflatingDate" type="date">
+					<element name="deflating_date" type="date">
 						<xs:annotation>
 							<xs:documentation xml:lang="ee">Dokumendi DVK ID, kui dokument
 								on DVK kaudu saadetud või saabunud</xs:documentation>
