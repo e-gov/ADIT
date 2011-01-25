@@ -25,7 +25,10 @@
 				<value>et_ee</value>
 			</list>
 		</property>
-		<property name="dvkOrgCode" value="70006317" />
+		<property name="dvkOrgCode" value="70000007" />
+		<property name="xteeInstitution" value="70000007" />
+		<property name="xteeSecurityServer" value="http://10.0.15.1/cgi-bin/consumer_proxy" />
+		<property name="xteeIdCode" value="00000000000" />
 	</bean>
 
 	<bean id="monitorConfiguration" class="ee.adit.util.MonitorConfiguration">
