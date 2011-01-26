@@ -16,7 +16,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		
 		<!-- Edit this to match your destination environment -->
-		<resourceDir>dev-dev-weblogic</resourceDir>
+		<resourceDir>ria-dev-weblogic</resourceDir>
 		<!--<resourceDir>ria-test-weblogic</resourceDir>-->
 		<!--<resourceDir>dev-dev-weblogic</resourceDir>-->
 	</properties>

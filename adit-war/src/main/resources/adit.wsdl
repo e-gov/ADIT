@@ -10,7 +10,6 @@
 	<wsdl:types>
 		<schema xmlns="http://www.w3.org/2001/XMLSchema"
 			xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
-			elementFormDefault="qualified"
 			targetNamespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid">
 			<import namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
 				schemaLocation="http://x-tee.riik.ee/xsd/xtee.xsd" />
@@ -83,23 +82,25 @@
 				</xs:annotation>
 			</element>
 
-			<element name="success" type="boolean">
+			<simpleType name="success">
 				<xs:annotation>
 					<xs:documentation xml:lang="ee">Näitab, kas päring õnnestus
 					</xs:documentation>
 					<xs:documentation xml:lang="en">Indicates if the request was
 						successful</xs:documentation>
 				</xs:annotation>
-			</element>
-
-			<attribute name="href" type="string">
+				<restriction base="boolean" />
+			</simpleType>
+			
+			<simpleType name="href">
 				<xs:annotation>
 					<xs:documentation xml:lang="ee">Viide manusele
 					</xs:documentation>
 					<xs:documentation xml:lang="en">Attachment reference
 					</xs:documentation>
 				</xs:annotation>
-			</attribute>
+				<restriction base="string" />
+			</simpleType>
 
 			<complexType name="message">
 				<xs:annotation>
@@ -263,7 +264,7 @@
 							</xs:documentation>
 						</xs:annotation>
 					</element>
-					<element ref="tns:success" />
+					<element name="success" type="tns:success" />
 					<element name="messages" type="tns:arrayOfMessage" />
 				</sequence>
 			</complexType>
@@ -390,7 +391,7 @@
 					</xs:documentation>
 				</xs:annotation>
 				<sequence>
-					<element ref="tns:success" />
+					<element name="success" type="tns:success" />
 					<element name="messages" type="tns:arrayOfMessage" />
 				</sequence>
 			</complexType>
@@ -413,7 +414,7 @@
 					</xs:documentation>
 				</xs:annotation>
 				<sequence>
-					<element ref="tns:success" />
+					<element name="success" type="tns:success" />
 					<element name="messages" type="tns:arrayOfMessage" />
 				</sequence>
 			</complexType>
@@ -435,7 +436,7 @@
 							</xs:documentation>
 						</xs:annotation>
 						<complexType>
-							<attribute ref="tns:href" />
+							<attribute name="href" type="tns:href" />
 						</complexType>
 					</element>
 				</sequence>
@@ -448,7 +449,7 @@
 						response</xs:documentation>
 				</xs:annotation>
 				<sequence>
-					<element ref="tns:success" />
+					<element name="success" type="tns:success" />
 					<element name="messages" type="tns:arrayOfMessage" />
 					<element name="userList">
 						<xs:annotation>
@@ -458,7 +459,7 @@
 							</xs:documentation>
 						</xs:annotation>
 						<complexType>
-							<attribute ref="tns:href" />
+							<attribute name="href" type="tns:href" />
 						</complexType>
 					</element>
 				</sequence>
@@ -501,7 +502,7 @@
 					</xs:documentation>
 				</xs:annotation>
 				<sequence>
-					<element ref="tns:success" />
+					<element name="success" type="tns:success" />
 					<element name="messages" type="tns:arrayOfMessage" />
 					<element name="userList">
 						<xs:annotation>
@@ -511,7 +512,7 @@
 							</xs:documentation>
 						</xs:annotation>
 						<complexType>
-							<attribute ref="tns:href" />
+							<attribute name="href" type="tns:href" />
 						</complexType>
 					</element>
 				</sequence>
@@ -535,7 +536,7 @@
 						response</xs:documentation>
 				</xs:annotation>
 				<sequence>
-					<element ref="tns:success" />
+					<element name="success" type="tns:success" />
 					<element name="messages" type="tns:arrayOfMessage" />
 					<element name="notifications" nillable="false"
 						type="tns:arrayOfNotification" />
@@ -572,7 +573,7 @@
 						response</xs:documentation>
 				</xs:annotation>
 				<sequence>
-					<element ref="tns:success" />
+					<element name="success" type="tns:success" />
 					<element name="messages" type="tns:arrayOfMessage" />
 				</sequence>
 			</complexType>
@@ -647,7 +648,7 @@
 						response</xs:documentation>
 				</xs:annotation>
 				<sequence>
-					<element ref="tns:success" />
+					<element name="success" type="tns:success" />
 					<element name="messages" type="tns:arrayOfMessage" />
 					<element name="documentList">
 						<xs:annotation>
@@ -657,7 +658,7 @@
 							</xs:documentation>
 						</xs:annotation>
 						<complexType>
-							<attribute ref="tns:href" />
+							<attribute name="href" type="tns:href" />
 						</complexType>
 					</element>
 				</sequence>
@@ -698,7 +699,7 @@
 						response</xs:documentation>
 				</xs:annotation>
 				<sequence>
-					<element ref="tns:success" />
+					<element name="success" type="tns:success" />
 					<element name="messages" type="tns:arrayOfMessage" />
 					<element name="document">
 						<xs:annotation>
@@ -708,7 +709,7 @@
 							</xs:documentation>
 						</xs:annotation>
 						<complexType>
-							<attribute ref="tns:href" />
+							<attribute name="href" type="tns:href" />
 						</complexType>
 					</element>
 				</sequence>
@@ -742,7 +743,7 @@
 						response</xs:documentation>
 				</xs:annotation>
 				<sequence>
-					<element ref="tns:success" />
+					<element name="success" type="tns:success" />
 					<element name="messages" type="tns:arrayOfMessage" />
 					<element name="files">
 						<xs:annotation>
@@ -750,7 +751,7 @@
 							<xs:documentation xml:lang="en">Files</xs:documentation>
 						</xs:annotation>
 						<complexType>
-							<attribute ref="tns:href" />
+							<attribute name="href" type="tns:href" />
 						</complexType>
 					</element>
 				</sequence>
@@ -771,7 +772,7 @@
 							<xs:documentation xml:lang="en">Document</xs:documentation>
 						</xs:annotation>
 						<complexType>
-							<attribute ref="tns:href" />
+							<attribute name="href" type="tns:href" />
 						</complexType>
 					</element>
 				</sequence>
@@ -784,7 +785,7 @@
 						response</xs:documentation>
 				</xs:annotation>
 				<sequence>
-					<element ref="tns:success" />
+					<element name="success" type="tns:success" />
 					<element name="messages" type="tns:arrayOfMessage" />
 					<element name="document_id" type="integer" />
 					<element name="document">
@@ -793,7 +794,7 @@
 							<xs:documentation xml:lang="en">Document</xs:documentation>
 						</xs:annotation>
 						<complexType>
-							<attribute ref="tns:href" />
+							<attribute name="href" type="tns:href" />
 						</complexType>
 					</element>
 				</sequence>
@@ -822,7 +823,7 @@
 							<xs:documentation xml:lang="en">File</xs:documentation>
 						</xs:annotation>
 						<complexType>
-							<attribute ref="tns:href" />
+							<attribute name="href" type="tns:href" />
 						</complexType>
 					</element>
 				</sequence>
@@ -835,7 +836,7 @@
 						response</xs:documentation>
 				</xs:annotation>
 				<sequence>
-					<element ref="tns:success" />
+					<element name="success" type="tns:success" />
 					<element name="messages" type="tns:arrayOfMessage" />
 					<element name="file_id" type="integer">
 						<xs:annotation>
@@ -851,7 +852,7 @@
 							<xs:documentation xml:lang="en">File</xs:documentation>
 						</xs:annotation>
 						<complexType>
-							<attribute ref="tns:href" />
+							<attribute name="href" type="tns:href" />
 						</complexType>
 					</element>
 				</sequence>
@@ -892,7 +893,7 @@
 						response</xs:documentation>
 				</xs:annotation>
 				<sequence>
-					<element ref="tns:success" />
+					<element name="success" type="tns:success" />
 					<element name="messages" type="tns:arrayOfMessage" />
 				</sequence>
 			</complexType>
@@ -924,7 +925,7 @@
 						response</xs:documentation>
 				</xs:annotation>
 				<sequence>
-					<element ref="tns:success" />
+					<element name="success" type="tns:success" />
 					<element name="messages" type="tns:arrayOfMessage" />
 				</sequence>
 			</complexType>
@@ -956,7 +957,7 @@
 						response</xs:documentation>
 				</xs:annotation>
 				<sequence>
-					<element ref="tns:success" />
+					<element name="success" type="tns:success" />
 					<element name="messages" type="tns:arrayOfMessage" />
 				</sequence>
 			</complexType>
@@ -1024,7 +1025,7 @@
 							</xs:documentation>
 						</xs:annotation>
 						<complexType>
-							<attribute ref="tns:href" />
+							<attribute name="href" type="tns:href" />
 						</complexType>
 					</element>
 				</sequence>
@@ -1037,7 +1038,7 @@
 						response</xs:documentation>
 				</xs:annotation>
 				<sequence>
-					<element ref="tns:success" />
+					<element name="success" type="tns:success" />
 					<element name="messages" type="tns:arrayOfMessage" />
 					<element name="signature_hash" type="string">
 						<xs:annotation>
@@ -1072,7 +1073,7 @@
 							<xs:documentation xml:lang="en">Signature</xs:documentation>
 						</xs:annotation>
 						<complexType>
-							<attribute ref="tns:href" />
+							<attribute name="href" type="tns:href" />
 						</complexType>
 					</element>
 				</sequence>
@@ -1085,7 +1086,7 @@
 						response</xs:documentation>
 				</xs:annotation>
 				<sequence>
-					<element ref="tns:success" />
+					<element name="success" type="tns:success" />
 					<element name="messages" type="tns:arrayOfMessage" />
 				</sequence>
 			</complexType>
@@ -1133,7 +1134,7 @@
 						response</xs:documentation>
 				</xs:annotation>
 				<sequence>
-					<element ref="tns:success" />
+					<element name="success" type="tns:success" />
 					<element name="messages" type="tns:arrayOfMessage" />
 					<element name="recipient_list" type="tns:arrayOfRecipientStatus" />
 				</sequence>
@@ -1167,7 +1168,7 @@
 						response</xs:documentation>
 				</xs:annotation>
 				<sequence>
-					<element ref="tns:success" />
+					<element name="success" type="tns:success" />
 					<element name="messages" type="tns:arrayOfMessage" />
 					<element name="recipient_list" type="tns:arrayOfRecipientStatus" />
 				</sequence>
@@ -1200,7 +1201,7 @@
 						response</xs:documentation>
 				</xs:annotation>
 				<sequence>
-					<element ref="tns:success" />
+					<element name="success" type="tns:success" />
 					<element name="messages" type="tns:arrayOfMessage" />
 				</sequence>
 			</complexType>
@@ -1240,7 +1241,7 @@
 						response</xs:documentation>
 				</xs:annotation>
 				<sequence>
-					<element ref="tns:success" />
+					<element name="success" type="tns:success" />
 					<element name="messages" type="tns:arrayOfMessage" />
 				</sequence>
 			</complexType>
@@ -1272,7 +1273,7 @@
 						response</xs:documentation>
 				</xs:annotation>
 				<sequence>
-					<element ref="tns:success" />
+					<element name="success" type="tns:success" />
 					<element name="messages" type="tns:arrayOfMessage" />
 					<element name="document_history_list">
 						<xs:annotation>
@@ -1282,7 +1283,7 @@
 								records</xs:documentation>
 						</xs:annotation>
 						<complexType>
-							<attribute ref="tns:href" />
+							<attribute name="href" type="tns:href" />
 						</complexType>
 					</element>
 				</sequence>
@@ -1316,7 +1317,7 @@
 						response</xs:documentation>
 				</xs:annotation>
 				<sequence>
-					<element ref="tns:success" />
+					<element name="success" type="tns:success" />
 					<element name="messages" type="tns:arrayOfMessage" />
 					<element name="recipient_list" type="tns:arrayOfRecipientStatus" />
 				</sequence>
@@ -1620,7 +1621,7 @@
 							<xs:documentation xml:lang="en">Documents workflow status ID</xs:documentation>
 						</xs:annotation>
 					</element>
-					<element name="last_accessed" type="datetime">
+					<element name="last_accessed" type="dateTime">
 						<xs:annotation>
 							<xs:documentation xml:lang="ee">Dokumendi viimase vaatamise kuupäev
 								ja kellaaeg</xs:documentation>
@@ -1652,7 +1653,7 @@
 								locked (cannot be modified)</xs:documentation>
 						</xs:annotation>
 					</element>
-					<element name="locking_date" type="datetime">
+					<element name="locking_date" type="dateTime">
 						<xs:annotation>
 							<xs:documentation xml:lang="ee">Dokumendi lukustamise kuupäev
 								ja kellaaeg</xs:documentation>
@@ -1684,7 +1685,7 @@
 								has been sent or received using DEC</xs:documentation>
 						</xs:annotation>
 					</element>
-					<element name="signatures" type="getDocumentResponseAttachmentV1SignatureListType">
+					<element name="signatures" type="tns:getDocumentResponseAttachmentV1SignatureListType">
 						<xs:annotation>
 							<xs:documentation xml:lang="ee">Dokumendi allkirjade andmed</xs:documentation>
 							<xs:documentation xml:lang="en">Metadata of document signatures</xs:documentation>
@@ -1758,7 +1759,7 @@
 				</xs:annotation>
 				<sequence>
 					<element maxOccurs="unbounded" name="signature"
-						type="getDocumentResponseAttachmentV1SignatureType" />
+						type="tns:getDocumentResponseAttachmentV1SignatureType" />
 				</sequence>
 			</complexType>
 
@@ -2109,7 +2110,7 @@
 							<xs:documentation xml:lang="en">Documents workflow status ID</xs:documentation>
 						</xs:annotation>
 					</element>
-					<element name="last_accessed" type="datetime">
+					<element name="last_accessed" type="dateTime">
 						<xs:annotation>
 							<xs:documentation xml:lang="ee">Dokumendi viimase vaatamise kuupäev
 								ja kellaaeg</xs:documentation>
@@ -2141,7 +2142,7 @@
 								locked (cannot be modified)</xs:documentation>
 						</xs:annotation>
 					</element>
-					<element name="locking_date" type="datetime">
+					<element name="locking_date" type="dateTime">
 						<xs:annotation>
 							<xs:documentation xml:lang="ee">Dokumendi lukustamise kuupäev
 								ja kellaaeg</xs:documentation>
@@ -2173,7 +2174,7 @@
 								has been sent or received using DEC</xs:documentation>
 						</xs:annotation>
 					</element>
-					<element name="signatures" type="getDocumentResponseAttachmentV1SignatureListType">
+					<element name="signatures" type="tns:getDocumentResponseAttachmentV1SignatureListType">
 						<xs:annotation>
 							<xs:documentation xml:lang="ee">Dokumendi allkirjade andmed</xs:documentation>
 							<xs:documentation xml:lang="en">Metadata of document signatures</xs:documentation>
