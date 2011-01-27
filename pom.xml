@@ -4,7 +4,7 @@
 	<groupId>ee</groupId>
 	<artifactId>adit</artifactId>
 	<packaging>pom</packaging>
-	<version>1.0.12</version>
+	<version>1.0.13</version>
 	<name>ADIT Main Build</name>
 
 	<modules>
@@ -15,7 +15,14 @@
 	<properties>
 		<!-- Encoding for source files -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<!-- Specifies which configuration resources to bundle with the build (ie. "dev", "test", "production")	-->
+		
+		<!--
+		Specifies which configuration resources to bundle with the build (ie. "dev", "test", "production")
+		Possible values:
+			dev-dev-weblogic		Installs configuration for developers computer
+			ria-dev-weblogic		Installs configuration for ADIT development server in RIA
+			ria-test-weblogic		Installs configuration for ADIT test server in RIA
+		-->
 		<resourceDir>ria-dev-weblogic</resourceDir>
 	</properties>
 

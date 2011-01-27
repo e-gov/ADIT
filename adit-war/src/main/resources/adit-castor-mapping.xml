@@ -112,7 +112,7 @@
 	</class>
  	
  	<class name="ee.adit.pojo.GetUserInfoRequestAttachmentUserList">
-		<map-to xml="getUserInfoRequestAttachmentV1" />
+		<map-to xml="getUserInfoRequestAttachmentV1" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
 		<field name="codes" type="java.lang.String" collection="arraylist">
 			<bind-xml name="code" location="user_list"/>
 		</field>
@@ -131,7 +131,7 @@
 	</class>
  	
  	<class name="ee.adit.pojo.GetUserInfoResponseAttachment">
- 		<map-to xml="getUserInfoResponseAttachmentV1" />
+ 		<map-to xml="getUserInfoResponseAttachmentV1" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
  		<field name="userList" type="ee.adit.pojo.GetUserInfoResponseAttachmentUser" collection="arraylist">
 			<bind-xml name="user" location="user_list" />
 		</field>

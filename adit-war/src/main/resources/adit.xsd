@@ -5,13 +5,17 @@
 	
 	<annotation>
 	  	<documentation xml:lang="ee">
-	  		ADIT(Avalike Dokumentide Infrastruktuuri Teenus) päringutes kasutatavate andmete kirjeldus.
-	  		Dokument sisaldab nii (SOAP) päringute keha elementide kui ka päringute manustes kasutatavate andmete kirjeldusi.
+	  		ADIT(Avalike Dokumentide Infrastruktuuri Teenus) päringutes kasutatavate
+	  		andmete kirjeldus.
+	  		Dokument sisaldab nii (SOAP) päringute keha elementide kui ka päringute
+	  		manustes kasutatavate andmete kirjeldusi.
 	  		Litsenseeritud [LITSENTS] alusel.
 	  	</documentation>
 	  	<documentation xml:lang="en">
-	  		Describes datatypes used in ADIT(Infrastructure Service for Public Documents) requests.
-	  		The Documents containts both the datatypes used in (SOAP) request body elements and attachments.
+	  		Describes datatypes used in ADIT(Infrastructure Service for Public
+	  		Documents) requests.
+	  		The Documents containts both the datatypes used in (SOAP) request body
+	  		elements and attachments.
 	  		Licensed under [LICENSE].
 	  	</documentation>
   	</annotation>
@@ -61,19 +65,21 @@
 	<element name="sendDocumentRequest" type="tns:sendDocumentRequest"/>
 	<element name="sendDocumentResponse" type="tns:sendDocumentResponse"/>
 	
-	<element name="success" type="boolean" >
+	<simpleType name="success">
 		<annotation>
 			<documentation xml:lang="ee">Näitab, kas päring õnnestus</documentation>
 			<documentation xml:lang="en">Indicates if the request was successful</documentation>
 		</annotation>
-	</element>
+		<restriction base="boolean" />
+	</simpleType>
 	
-	<attribute name="href" type="string">
+	<simpleType name="href">
 		<annotation>
 			<documentation xml:lang="ee">Viide manusele</documentation>
 			<documentation xml:lang="en">Attachment reference</documentation>
 		</annotation>
-	</attribute>
+		<restriction base="string" />
+	</simpleType>
 	
 	<complexType name="message">
 		<annotation>
@@ -199,7 +205,7 @@
 			      	<documentation xml:lang="en">Recipient code</documentation>
 		    	</annotation>
 			</element>
-			<element ref="tns:success"/>
+			<element name="success" type="tns:success" />
 			<element name="messages" type="tns:arrayOfMessage"/>
 		</sequence>
 	</complexType>
@@ -302,7 +308,7 @@
 	      	<documentation xml:lang="en">"join" request response</documentation>
     	</annotation>
 		<sequence>
-			<element ref="tns:success"/>
+			<element name="success" type="tns:success" />
 			<element name="messages" type="tns:arrayOfMessage"></element>
 		</sequence>
 	</complexType>
@@ -321,7 +327,7 @@
 	      	<documentation xml:lang="en">"unJoin" request response</documentation>
     	</annotation>
 		<sequence>
-			<element ref="tns:success"/>
+			<element name="success" type="tns:success" />
 			<element name="messages" type="tns:arrayOfMessage"></element>
 		</sequence>
 	</complexType>
@@ -339,7 +345,7 @@
 			      	<documentation xml:lang="en">Array of users</documentation>
 		    	</annotation>
 				<complexType>
-					<attribute ref="tns:href"/>
+					<attribute name="href" type="tns:href" />
 				</complexType>
 			</element>
 		</sequence>
@@ -350,7 +356,7 @@
 	      	<documentation xml:lang="en">"getUserInfo" request response</documentation>
     	</annotation>
 		<sequence>
-			<element ref="tns:success"/>
+			<element name="success" type="tns:success" />
 			<element name="messages" type="tns:arrayOfMessage" />
 			<element name="userList">
 				<annotation>
@@ -358,7 +364,7 @@
 			      	<documentation xml:lang="en">Array of user data</documentation>
 		    	</annotation>
 				<complexType>
-					<attribute ref="tns:href"/>
+					<attribute name="href" type="tns:href" />
 				</complexType>
 			</element>
 		</sequence>
@@ -391,7 +397,7 @@
 	      	<documentation xml:lang="en">"getJoined" request response</documentation>
     	</annotation>
 		<sequence>
-			<element ref="tns:success"/>
+			<element name="success" type="tns:success" />
 			<element name="messages" type="tns:arrayOfMessage" />
 			<element name="userList">
 				<annotation>
@@ -399,7 +405,7 @@
 			      	<documentation xml:lang="en">Array of user data</documentation>
 		    	</annotation>
 				<complexType>
-					<attribute ref="tns:href"/>
+					<attribute name="href" type="tns:href" />
 				</complexType>
 			</element>
 		</sequence>
@@ -419,7 +425,7 @@
 	      	<documentation xml:lang="en">"getNotifications" request response</documentation>
     	</annotation>
 		<sequence>
-			<element ref="tns:success"/>
+			<element name="success" type="tns:success" />
 			<element name="messages" type="tns:arrayOfMessage"/>
 			<element name="notifications" type="tns:arrayOfNotification" nillable="false"/>
 			<element name="notifications_active" type="boolean">
@@ -448,7 +454,7 @@
 	      	<documentation xml:lang="en">"setNotifications" request response</documentation>
     	</annotation>
 		<sequence>
-			<element ref="tns:success"/>
+			<element name="success" type="tns:success" />
 			<element name="messages" type="tns:arrayOfMessage"></element>
 		</sequence>
 	</complexType>
@@ -507,7 +513,7 @@
 	      	<documentation xml:lang="en">"getDocumentList" request response</documentation>
     	</annotation>
 		<sequence>
-			<element ref="tns:success"/>
+			<element name="success" type="tns:success" />
 			<element name="messages" type="tns:arrayOfMessage"></element>
 			<element name="documentList">
 				<annotation>
@@ -515,7 +521,7 @@
 			      	<documentation xml:lang="en">Array of documents</documentation>
 		    	</annotation>
 				<complexType>
-					<attribute ref="tns:href"/>
+					<attribute name="href" type="tns:href" />
 				</complexType>
 			</element>
 		</sequence>
@@ -548,7 +554,7 @@
 	      	<documentation xml:lang="en">"getDocument" request response</documentation>
     	</annotation>
 		<sequence>
-			<element ref="tns:success"/>
+			<element name="success" type="tns:success" />
 			<element name="messages" type="tns:arrayOfMessage"></element>
 			<element name="document">
 				<annotation>
@@ -556,7 +562,7 @@
 			      	<documentation xml:lang="en">Document data</documentation>
 		    	</annotation>
 				<complexType>
-					<attribute ref="tns:href"/>
+					<attribute name="href" type="tns:href" />
 				</complexType>
 			</element>
 		</sequence>
@@ -584,7 +590,7 @@
 	      	<documentation xml:lang="en">"getDocumentFile" request response</documentation>
     	</annotation>
 		<sequence>
-			<element ref="tns:success"/>
+			<element name="success" type="tns:success" />
 			<element name="messages" type="tns:arrayOfMessage"></element>
 			<element name="files">
 				<annotation>
@@ -592,7 +598,7 @@
 			      	<documentation xml:lang="en">Files</documentation>
 		    	</annotation>
 				<complexType>
-					<attribute ref="tns:href"/>
+					<attribute name="href" type="tns:href" />
 				</complexType>
 			</element>
 		</sequence>
@@ -611,7 +617,7 @@
 					<documentation xml:lang="en">Document</documentation>
 				</annotation>
 				<complexType>
-					<attribute ref="tns:href"/>
+					<attribute name="href" type="tns:href" />
 				</complexType>
 			</element>
 		</sequence>
@@ -622,7 +628,7 @@
 	      	<documentation xml:lang="en">"saveDocument" request response</documentation>
     	</annotation>
 		<sequence>
-			<element ref="tns:success"/>
+			<element name="success" type="tns:success" />
 			<element name="messages" type="tns:arrayOfMessage"></element>
 			<element name="document_id" type="integer"></element>
 			<element name="document">
@@ -631,7 +637,7 @@
 					<documentation xml:lang="en">Document</documentation>
 				</annotation>
 				<complexType>
-					<attribute ref="tns:href"/>
+					<attribute name="href" type="tns:href" />
 				</complexType>
 			</element>
 		</sequence>
@@ -656,7 +662,7 @@
 			      	<documentation xml:lang="en">File</documentation>
 		    	</annotation>
 				<complexType>
-					<attribute ref="tns:href"/>
+					<attribute name="href" type="tns:href" />
 				</complexType>
 			</element>
 		</sequence>
@@ -667,7 +673,7 @@
 	      	<documentation xml:lang="en">"saveDocumentFile" request response</documentation>
     	</annotation>
 		<sequence>
-			<element ref="tns:success"/>
+			<element name="success" type="tns:success" />
 			<element name="messages" type="tns:arrayOfMessage"/>
 			<element name="file_id" type="integer">
 				<annotation>
@@ -681,7 +687,7 @@
 			      	<documentation xml:lang="en">File</documentation>
 		    	</annotation>
 				<complexType>
-					<attribute ref="tns:href"/>
+					<attribute name="href" type="tns:href" />
 				</complexType>
 			</element>
 		</sequence>
@@ -714,7 +720,7 @@
 	      	<documentation xml:lang="en">"deleteDocumentFile" request response</documentation>
     	</annotation>
 		<sequence>
-			<element ref="tns:success"/>
+			<element name="success" type="tns:success" />
 			<element name="messages" type="tns:arrayOfMessage"/>
 		</sequence>
 	</complexType>
@@ -740,7 +746,7 @@
 	      	<documentation xml:lang="en">"deleteDocument" request response</documentation>
     	</annotation>
 		<sequence>
-			<element ref="tns:success"/>
+			<element name="success" type="tns:success" />
 			<element name="messages" type="tns:arrayOfMessage"/>
 		</sequence>
 	</complexType>
@@ -766,7 +772,7 @@
 	      	<documentation xml:lang="en">"deflateDocument" request response</documentation>
     	</annotation>
 		<sequence>
-			<element ref="tns:success"/>
+			<element name="success" type="tns:success" />
 			<element name="messages" type="tns:arrayOfMessage"/>
 		</sequence>
 	</complexType>
@@ -820,7 +826,7 @@
 			      	<documentation xml:lang="en">Signer certificate</documentation>
 		    	</annotation>
 				<complexType>
-					<attribute ref="tns:href"/>
+					<attribute name="href" type="tns:href" />
 				</complexType>
 			</element>
 		</sequence>
@@ -831,7 +837,7 @@
 	      	<documentation xml:lang="en">"prepareSignature" request response</documentation>
     	</annotation>
 		<sequence>
-			<element ref="tns:success"/>
+			<element name="success" type="tns:success" />
 			<element name="messages" type="tns:arrayOfMessage"></element>
 			<element name="signature_hash" type="string">
 				<annotation>
@@ -860,7 +866,7 @@
 			      	<documentation xml:lang="en">Signature</documentation>
 		    	</annotation>
 				<complexType>
-					<attribute ref="tns:href"/>
+					<attribute name="href" type="tns:href" />
 				</complexType>
 			</element>
 		</sequence>
@@ -871,7 +877,7 @@
 	      	<documentation xml:lang="en">"confirmSignature" request response</documentation>
     	</annotation>
 		<sequence>
-			<element ref="tns:success"/>
+			<element name="success" type="tns:success" />
 			<element name="messages" type="tns:arrayOfMessage"></element>
 		</sequence>
 	</complexType>
@@ -909,7 +915,7 @@
 	      	<documentation xml:lang="en">"shareDocument" request response</documentation>
     	</annotation>
 		<sequence>
-			<element ref="tns:success"/>
+			<element name="success" type="tns:success" />
 			<element name="messages" type="tns:arrayOfMessage"/>
 			<element name="recipient_list" type="tns:arrayOfRecipientStatus"/>
 		</sequence>
@@ -937,7 +943,7 @@
 	      	<documentation xml:lang="en">"unShareDocument" request response</documentation>
     	</annotation>
 		<sequence>
-			<element ref="tns:success"/>
+			<element name="success" type="tns:success" />
 			<element name="messages" type="tns:arrayOfMessage"/>
 			<element name="recipient_list" type="tns:arrayOfRecipientStatus"/>
 		</sequence>
@@ -964,7 +970,7 @@
 	      	<documentation xml:lang="en">"markDocumentViewed" request response</documentation>
     	</annotation>
 		<sequence>
-			<element ref="tns:success"/>
+			<element name="success" type="tns:success" />
 			<element name="messages" type="tns:arrayOfMessage"/>
 		</sequence>
 	</complexType>
@@ -996,7 +1002,7 @@
 	      	<documentation xml:lang="en">"modifyStatus" request response</documentation>
     	</annotation>
 		<sequence>
-			<element ref="tns:success"/>
+			<element name="success" type="tns:success" />
 			<element name="messages" type="tns:arrayOfMessage"/>
 		</sequence>
 	</complexType>
@@ -1022,7 +1028,7 @@
 	      	<documentation xml:lang="en">"getDocumentHistory" request response</documentation>
     	</annotation>
 		<sequence>
-			<element ref="tns:success"/>
+			<element name="success" type="tns:success" />
 			<element name="messages" type="tns:arrayOfMessage"/>
 			<element name="document_history_list">
 				<annotation>
@@ -1030,7 +1036,7 @@
 			      	<documentation xml:lang="en">Array of document history records</documentation>
 		    	</annotation>
 				<complexType>
-					<attribute ref="tns:href"/>
+					<attribute name="href" type="tns:href" />
 				</complexType>
 			</element>
 		</sequence>
@@ -1058,7 +1064,7 @@
 	      	<documentation xml:lang="en">"sendDocument" request response</documentation>
     	</annotation>
 		<sequence>
-			<element ref="tns:success"/>
+			<element name="success" type="tns:success" />
 			<element name="messages" type="tns:arrayOfMessage"/>
 			<element name="recipient_list" type="tns:arrayOfRecipientStatus"/>
 		</sequence>
@@ -1158,51 +1164,60 @@
 	</complexType>
 	<complexType name="getUserInfoResponseAttachmentV1UserListType">
 		<annotation>
-	      	<documentation xml:lang="ee">Kasutaja andmed</documentation>
-	      	<documentation xml:lang="en">User data</documentation>
-    	</annotation>
+			<documentation xml:lang="ee">Kasutajate nimekiri</documentation>
+			<documentation xml:lang="en">List of users</documentation>
+		</annotation>
+		<sequence>
+			<element maxOccurs="unbounded" name="user" type="tns:getUserInfoResponseAttachmentV1UserType" />
+		</sequence>
+	</complexType>
+	<complexType name="getUserInfoResponseAttachmentV1UserType">
+		<annotation>
+			<documentation xml:lang="ee">Kasutaja andmed</documentation>
+			<documentation xml:lang="en">User data</documentation>
+		</annotation>
 		<sequence>
 			<element name="code" type="string">
 				<annotation>
-			      	<documentation xml:lang="ee">Kasutajakood</documentation>
-			      	<documentation xml:lang="en">Usercode</documentation>
-		    	</annotation>
+					<documentation xml:lang="ee">Kasutajakood</documentation>
+					<documentation xml:lang="en">Usercode</documentation>
+				</annotation>
 			</element>
 			<element name="has_joined" type="boolean">
 				<annotation>
-			      	<documentation xml:lang="ee">Näitab, kas kasutaja on teenusega liitunud</documentation>
-			      	<documentation xml:lang="en">Indicates if the user has joined the service</documentation>
-		    	</annotation>
+					<documentation xml:lang="ee">Näitab, kas kasutaja on teenusega liitunud</documentation>
+					<documentation xml:lang="en">Indicates if the user has joined the service</documentation>
+				</annotation>
 			</element>
 			<element name="free_space_bytes" type="integer">
 				<annotation>
-			      	<documentation xml:lang="ee">Kasutajakonto vaba ruum</documentation>
-			      	<documentation xml:lang="en">Useraccount free space</documentation>
-		    	</annotation>
+					<documentation xml:lang="ee">Kasutajakonto vaba ruum</documentation>
+					<documentation xml:lang="en">Useraccount free space</documentation>
+				</annotation>
 			</element>
 			<element name="used_space_bytes" type="integer">
 				<annotation>
-			      	<documentation xml:lang="ee">Kasutajakonto kasutatud ruum</documentation>
-			      	<documentation xml:lang="en">Useraccount used space</documentation>
-		    	</annotation>
+					<documentation xml:lang="ee">Kasutajakonto kasutatud ruum</documentation>
+					<documentation xml:lang="en">Useraccount used space</documentation>
+				</annotation>
 			</element>
 			<element name="can_read" type="boolean">
 				<annotation>
-			      	<documentation xml:lang="ee">Näitab, kas kasutajal on lugemisõigus</documentation>
-			      	<documentation xml:lang="en">Indicates if the user has reading privilege</documentation>
-		    	</annotation>
+					<documentation xml:lang="ee">Näitab, kas kasutajal on lugemisõigus</documentation>
+					<documentation xml:lang="en">Indicates if the user has reading privilege</documentation>
+				</annotation>
 			</element>
 			<element name="can_write" type="boolean">
 				<annotation>
-			      	<documentation xml:lang="ee">Näitab, kas kasutajal on kirjutamisõigus</documentation>
-			      	<documentation xml:lang="en">Indicates if the user has writing privilege</documentation>
-		    	</annotation>
+					<documentation xml:lang="ee">Näitab, kas kasutajal on kirjutamisõigus</documentation>
+					<documentation xml:lang="en">Indicates if the user has writing privilege</documentation>
+				</annotation>
 			</element>
 			<element name="uses_dvk" type="boolean">
 				<annotation>
-			      	<documentation xml:lang="ee">Näitab, kas kasutaja kasutab dokumentide vahetamiseks DVK-d</documentation>
-			      	<documentation xml:lang="en">Indicates if the user uses DVK to exchange documents</documentation>
-		    	</annotation>
+					<documentation xml:lang="ee">Näitab, kas kasutaja kasutab dokumentide vahetamiseks DVK-d</documentation>
+					<documentation xml:lang="en">Indicates if the user uses DVK to exchange documents</documentation>
+				</annotation>
 			</element>
 		</sequence>
 	</complexType>
@@ -1245,6 +1260,32 @@
 			      	<documentation xml:lang="en">Document creator code</documentation>
 		    	</annotation>
 			</element>
+			<element name="creator_name" type="string">
+				<annotation>
+					<documentation xml:lang="ee">Dokumendi looja nimi
+					</documentation>
+					<documentation xml:lang="en">Document creator name
+					</documentation>
+				</annotation>
+			</element>
+			<element name="creator_user_code" type="string">
+				<annotation>
+					<documentation xml:lang="ee">Dokumendi looja isikukood,
+						kui dokument on lisatud asutuse kasutajakonto kaudu
+					</documentation>
+					<documentation xml:lang="en">Personal ID code of document
+						creator if document has been added using organization account
+					</documentation>
+				</annotation>
+			</element>
+			<element name="creator_user_name" type="string">
+				<annotation>
+					<documentation xml:lang="ee">Dokumendi looja nimi, kui dokument on lisatud asutuse kasutajakonto kaudu
+					</documentation>
+					<documentation xml:lang="en">Name of document creator if document has been added using organization account
+					</documentation>
+				</annotation>
+			</element>
 			<element name="created" type="date">
 				<annotation>
 			      	<documentation xml:lang="ee">Dokumendi loomise aeg</documentation>
@@ -1259,17 +1300,173 @@
 			</element>
 			<element name="last_modified" type="date">
 				<annotation>
-			      	<documentation xml:lang="ee">Dokumendi viimase muutmise aeg</documentation>
-			      	<documentation xml:lang="en">Last modification time of document</documentation>
-		    	</annotation>
+					<documentation xml:lang="ee">Dokumendi viimase muutmise
+						aeg</documentation>
+					<documentation xml:lang="en">Last modification time of
+						document</documentation>
+				</annotation>
+			</element>
+			<element name="dvk_status_id" type="integer">
+				<annotation>
+					<documentation xml:lang="ee">DVK staatuse ID, kui dokument
+						on DVK kaudu saadetud või saabunud</documentation>
+					<documentation xml:lang="en">DEC status id if document
+						has been sent or received using DEC</documentation>
+				</annotation>
+			</element>
+			<element name="dvk_id" type="integer">
+				<annotation>
+					<documentation xml:lang="ee">Dokumendi DVK ID, kui dokument
+						on DVK kaudu saadetud või saabunud</documentation>
+					<documentation xml:lang="en">Documents DEC ID if document
+						has been sent or received using DEC</documentation>
+				</annotation>
+			</element>
+			<element name="workflow_status_id" type="integer">
+				<annotation>
+					<documentation xml:lang="ee">Dokumendi menetlusstaatuse ID</documentation>
+					<documentation xml:lang="en">Documents workflow status ID</documentation>
+				</annotation>
+			</element>
+			<element name="last_accessed" type="dateTime">
+				<annotation>
+					<documentation xml:lang="ee">Dokumendi viimase vaatamise kuupäev
+						ja kellaaeg</documentation>
+					<documentation xml:lang="en">Date and time indicating the last time
+						the document was viewed or modified</documentation>
+				</annotation>
+			</element>
+			<element name="previous_document_id" type="integer">
+				<annotation>
+					<documentation xml:lang="ee">Dokumendi eelmise versioooni või
+						antud dokumendi aluseks oleva dokumendi ID</documentation>
+					<documentation xml:lang="en">ID of documents last version or of
+						the document, that this document is based on</documentation>
+				</annotation>
+			</element>
+			<element name="previous_document_guid" type="string">
+				<annotation>
+					<documentation xml:lang="ee">Dokumendi eelmise versioooni või
+						antud dokumendi aluseks oleva dokumendi GUID</documentation>
+					<documentation xml:lang="en">GUID of documents last version or of
+						the document, that this document is based on</documentation>
+				</annotation>
+			</element>
+			<element name="locked" type="boolean">
+				<annotation>
+					<documentation xml:lang="ee">Näitab, kas dokument on lukustatud
+						(st dokumendi muutmine on keelatud)</documentation>
+					<documentation xml:lang="en">Indicates if the document is
+						locked (cannot be modified)</documentation>
+				</annotation>
+			</element>
+			<element name="locking_date" type="dateTime">
+				<annotation>
+					<documentation xml:lang="ee">Dokumendi lukustamise kuupäev
+						ja kellaaeg</documentation>
+					<documentation xml:lang="en">Date and time indicating when
+						the document was locked</documentation>
+				</annotation>
 			</element>
 			<element name="signable" type="boolean">
 				<annotation>
-			      	<documentation xml:lang="ee">Näitab, kas dokument on allkirjastatav</documentation>
-			      	<documentation xml:lang="en">Indicates if the document is signable</documentation>
-		    	</annotation>
+					<documentation xml:lang="ee">Näitab, kas dokument on
+						allkirjastatav</documentation>
+					<documentation xml:lang="en">Indicates if the document
+						is signable</documentation>
+				</annotation>
+			</element>
+			<element name="deflated" type="boolean">
+				<annotation>
+					<documentation xml:lang="ee">Näitab, kas dokument on
+						tühjendatud (st failide sisu on kustutatud)</documentation>
+					<documentation xml:lang="en">Indicates if the document
+						has peen deflated (document files erased)</documentation>
+				</annotation>
+			</element>
+			<element name="deflating_date" type="date">
+				<annotation>
+					<documentation xml:lang="ee">Dokumendi DVK ID, kui dokument
+						on DVK kaudu saadetud või saabunud</documentation>
+					<documentation xml:lang="en">Documents DEC ID if document
+						has been sent or received using DEC</documentation>
+				</annotation>
+			</element>
+			<element name="signatures" type="tns:getDocumentResponseAttachmentV1SignatureListType">
+				<annotation>
+					<documentation xml:lang="ee">Dokumendi allkirjade andmed</documentation>
+					<documentation xml:lang="en">Metadata of document signatures</documentation>
+				</annotation>
 			</element>
 			<element name="document_files" type="tns:documentFilesType"/>
+		</sequence>
+	</complexType>
+	<complexType name="getDocumentResponseAttachmentV1SignatureType">
+		<all>
+			<element name="signer_code" type="string">
+				<annotation>
+					<documentation xml:lang="ee">Allkirjastaja isikukood</documentation>
+					<documentation xml:lang="en">Signers personal ID code</documentation>
+				</annotation>
+			</element>
+			<element name="signer_name" type="string">
+				<annotation>
+					<documentation xml:lang="ee">Allkirjastaja nimi</documentation>
+					<documentation xml:lang="en">Signers name</documentation>
+				</annotation>
+			</element>
+			<element name="manifest" type="string">
+				<annotation>
+					<documentation xml:lang="ee">Allkirjastaja
+						roll ja/või resolutsioon</documentation>
+					<documentation xml:lang="en">Signers role
+						and/or resolution</documentation>
+				</annotation>
+			</element>
+			<element name="country" type="string">
+				<annotation>
+					<documentation xml:lang="ee">Riik allkirjastaja
+						aadressis</documentation>
+					<documentation xml:lang="en">Country name in
+						signers address</documentation>
+				</annotation>
+			</element>
+			<element name="state" type="string">
+				<annotation>
+					<documentation xml:lang="ee">Maakond allkirjastaja
+						aadressis</documentation>
+					<documentation xml:lang="en">State/county in
+						signers address</documentation>
+				</annotation>
+			</element>
+			<element name="city" type="string">
+				<annotation>
+					<documentation xml:lang="ee">Linn/vald/küla
+						allkirjastaja aadressis</documentation>
+					<documentation xml:lang="en">Town/parish/village in
+						signers address</documentation>
+				</annotation>
+			</element>
+			<element name="zip" type="string">
+				<annotation>
+					<documentation xml:lang="ee">Postiindeks allkirjastaja
+						aadressis</documentation>
+					<documentation xml:lang="en">Post code in signers
+						address</documentation>
+				</annotation>
+			</element>
+		</all>
+	</complexType>
+	<complexType name="getDocumentResponseAttachmentV1SignatureListType">
+		<annotation>
+			<documentation xml:lang="ee">Dokumendi allkirjade
+				metaandmete nimekiri</documentation>
+			<documentation xml:lang="en">List of document signature
+				metadata</documentation>
+		</annotation>
+		<sequence>
+			<element maxOccurs="unbounded" name="signature"
+				type="tns:getDocumentResponseAttachmentV1SignatureType" />
 		</sequence>
 	</complexType>
 	
@@ -1484,6 +1681,34 @@
 			      	<documentation xml:lang="en">Document creator code</documentation>
 		    	</annotation>
 			</element>
+			<element name="creator_name" type="string">
+				<annotation>
+					<documentation xml:lang="ee">Dokumendi looja nimi
+					</documentation>
+					<documentation xml:lang="en">Document creator name
+					</documentation>
+				</annotation>
+			</element>
+			<element name="creator_user_code" type="string">
+				<annotation>
+					<documentation xml:lang="ee">Dokumendi looja isikukood,
+						kui dokument on lisatud asutuse kasutajakonto kaudu
+					</documentation>
+					<documentation xml:lang="en">Personal ID code of document
+						creator if document has been added using organization account
+					</documentation>
+				</annotation>
+			</element>
+			<element name="creator_user_name" type="string">
+				<annotation>
+					<documentation xml:lang="ee">Dokumendi looja nimi, kui
+						dokument on lisatud asutuse kasutajakonto kaudu
+					</documentation>
+					<documentation xml:lang="en">Name of document creator
+						if document has been added using organization account
+					</documentation>
+				</annotation>
+			</element>
 			<element name="created" type="date">
 				<annotation>
 			      	<documentation xml:lang="ee">Dokumendi loomise aeg</documentation>
@@ -1498,18 +1723,106 @@
 			</element>
 			<element name="last_modified" type="date">
 				<annotation>
-			      	<documentation xml:lang="ee">Dokumendi viimase muutmise aeg</documentation>
-			      	<documentation xml:lang="en">Last modification time of document</documentation>
-		    	</annotation>
+					<documentation xml:lang="ee">Dokumendi viimase muutmise
+						aeg</documentation>
+					<documentation xml:lang="en">Last modification time of
+						document</documentation>
+				</annotation>
+			</element>
+			<element name="dvk_status_id" type="integer">
+				<annotation>
+					<documentation xml:lang="ee">DVK staatuse ID, kui dokument
+						on DVK kaudu saadetud või saabunud</documentation>
+					<documentation xml:lang="en">DEC status id if document
+						has been sent or received using DEC</documentation>
+				</annotation>
+			</element>
+			<element name="dvk_id" type="integer">
+				<annotation>
+					<documentation xml:lang="ee">Dokumendi DVK ID, kui dokument
+						on DVK kaudu saadetud või saabunud</documentation>
+					<documentation xml:lang="en">Documents DEC ID if document
+						has been sent or received using DEC</documentation>
+				</annotation>
+			</element>
+			<element name="workflow_status_id" type="integer">
+				<annotation>
+					<documentation xml:lang="ee">Dokumendi menetlusstaatuse ID</documentation>
+					<documentation xml:lang="en">Documents workflow status ID</documentation>
+				</annotation>
+			</element>
+			<element name="last_accessed" type="dateTime">
+				<annotation>
+					<documentation xml:lang="ee">Dokumendi viimase vaatamise kuupäev
+						ja kellaaeg</documentation>
+					<documentation xml:lang="en">Date and time indicating the last time
+						the document was viewed or modified</documentation>
+				</annotation>
+			</element>
+			<element name="previous_document_id" type="integer">
+				<annotation>
+					<documentation xml:lang="ee">Dokumendi eelmise versioooni või
+						antud dokumendi aluseks oleva dokumendi ID</documentation>
+					<documentation xml:lang="en">ID of documents last version or of
+						the document, that this document is based on</documentation>
+				</annotation>
+			</element>
+			<element name="previous_document_guid" type="string">
+				<annotation>
+					<documentation xml:lang="ee">Dokumendi eelmise versioooni või
+						antud dokumendi aluseks oleva dokumendi GUID</documentation>
+					<documentation xml:lang="en">GUID of documents last version or of
+						the document, that this document is based on</documentation>
+				</annotation>
+			</element>
+			<element name="locked" type="boolean">
+				<annotation>
+					<documentation xml:lang="ee">Näitab, kas dokument on lukustatud
+						(st dokumendi muutmine on keelatud)</documentation>
+					<documentation xml:lang="en">Indicates if the document is
+						locked (cannot be modified)</documentation>
+				</annotation>
+			</element>
+			<element name="locking_date" type="dateTime">
+				<annotation>
+					<documentation xml:lang="ee">Dokumendi lukustamise kuupäev
+						ja kellaaeg</documentation>
+					<documentation xml:lang="en">Date and time indicating when
+						the document was locked</documentation>
+				</annotation>
 			</element>
 			<element name="signable" type="boolean">
 				<annotation>
-			      	<documentation xml:lang="ee">Näitab, kas dokument on allkirjastatav</documentation>
-			      	<documentation xml:lang="en">Indicates if the document is signable</documentation>
-		    	</annotation>
+					<documentation xml:lang="ee">Näitab, kas dokument on
+						allkirjastatav</documentation>
+					<documentation xml:lang="en">Indicates if the document
+						is signable</documentation>
+				</annotation>
+			</element>					
+			<element name="deflated" type="boolean">
+				<annotation>
+					<documentation xml:lang="ee">Näitab, kas dokument on
+						tühjendatud (st failide sisu on kustutatud)</documentation>
+					<documentation xml:lang="en">Indicates if the document
+						has peen deflated (document files erased)</documentation>
+				</annotation>
 			</element>
-			<element name="sent_to" type="tns:getDocumentListResponseAttachmentV1SentToType"/>
-			<element name="shared_to" type="tns:getDocumentListResponseAttachmentV1SharedToType"/>
+			<element name="deflating_date" type="date">
+				<annotation>
+					<documentation xml:lang="ee">Dokumendi DVK ID, kui dokument
+						on DVK kaudu saadetud või saabunud</documentation>
+					<documentation xml:lang="en">Documents DEC ID if document
+						has been sent or received using DEC</documentation>
+				</annotation>
+			</element>
+			<element name="signatures" type="tns:getDocumentResponseAttachmentV1SignatureListType">
+				<annotation>
+					<documentation xml:lang="ee">Dokumendi allkirjade andmed</documentation>
+					<documentation xml:lang="en">Metadata of document signatures</documentation>
+				</annotation>
+			</element>
+			<element name="sent_to" type="tns:getDocumentListResponseAttachmentV1SentToType" />
+			<element name="shared_to" type="tns:getDocumentListResponseAttachmentV1SharedToType" />
 			<element name="document_files" type="tns:documentFilesType"/>
 		</sequence>
 	</complexType>
