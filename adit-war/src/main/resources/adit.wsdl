@@ -1436,6 +1436,16 @@
 			</complexType>
 			<complexType name="getUserInfoResponseAttachmentV1UserListType">
 				<xs:annotation>
+					<xs:documentation xml:lang="ee">Kasutajate nimekiri</xs:documentation>
+					<xs:documentation xml:lang="en">List of users</xs:documentation>
+				</xs:annotation>
+				<sequence>
+					<element maxOccurs="unbounded" name="user"
+						type="tns:getUserInfoResponseAttachmentV1UserType" />
+				</sequence>
+			</complexType>
+			<complexType name="getUserInfoResponseAttachmentV1UserType">
+				<xs:annotation>
 					<xs:documentation xml:lang="ee">Kasutaja andmed
 					</xs:documentation>
 					<xs:documentation xml:lang="en">User data</xs:documentation>

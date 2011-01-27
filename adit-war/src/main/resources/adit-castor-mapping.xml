@@ -133,7 +133,7 @@
  	<class name="ee.adit.pojo.GetUserInfoResponseAttachment">
  		<map-to xml="getUserInfoResponseAttachmentV1" />
  		<field name="userList" type="ee.adit.pojo.GetUserInfoResponseAttachmentUser" collection="arraylist">
-			<bind-xml name="user_list" />
+			<bind-xml name="user" location="user_list" />
 		</field>
  	</class>
  	
