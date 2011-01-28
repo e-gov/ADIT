@@ -1399,8 +1399,7 @@
 						"getUserInfo" request message</xs:documentation>
 				</xs:annotation>
 				<sequence>
-					<element name="user_list"
-						type="tns:getUserInfoRequestAttachmentV1UserListType" />
+					<element name="user_list" type="tns:getUserInfoRequestAttachmentV1UserListType" />
 				</sequence>
 			</complexType>
 			<complexType name="getUserInfoRequestAttachmentV1UserListType">
@@ -1411,10 +1410,9 @@
 					</xs:documentation>
 				</xs:annotation>
 				<sequence>
-					<element name="code" type="string">
+					<element name="code" type="string" maxOccurs="unbounded">
 						<xs:annotation>
-							<xs:documentation xml:lang="ee">Kasutajakood
-							</xs:documentation>
+							<xs:documentation xml:lang="ee">Kasutajakood</xs:documentation>
 							<xs:documentation xml:lang="en">Usercode</xs:documentation>
 						</xs:annotation>
 					</element>

@@ -138,7 +138,7 @@
  	</class>
  	
  	<class name="ee.adit.pojo.GetUserInfoResponseAttachmentUser">
- 		<map-to xml="user" />
+ 		<map-to xml="user" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
  		<field name="userCode" type="java.lang.String">
 			<bind-xml name="code" />
 		</field>
@@ -567,14 +567,14 @@
 	</class>
 	
 	<class name="ee.adit.pojo.SaveDocumentRequestDocument">
-		<map-to xml="document" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="document" />
 		<field name="href" type="java.lang.String">
 			<bind-xml name="href" node="attribute" />
 		</field>
 	</class>
 	
 	<class name="ee.adit.pojo.SaveDocumentRequestAttachment">
-		<map-to xml="saveDocumentRequestAttachmentV1" />
+		<map-to xml="saveDocumentRequestAttachmentV1" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
 		<field name="id" type="java.lang.Long">
 			<bind-xml name="id" location="document" />
 		</field>
@@ -1033,7 +1033,7 @@
 	<!-- Monitoring request/response messages -->
 	
 	<class name="ee.adit.pojo.SaveDocumentRequestAttachmentMonitor">
-		<map-to xml="saveDocumentRequestAttachmentV1" />
+		<map-to xml="saveDocumentRequestAttachmentV1Monitor" />
 		<field name="id" type="java.lang.Long">
 			<bind-xml name="id" location="document" />
 		</field>
