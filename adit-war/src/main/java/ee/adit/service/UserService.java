@@ -454,7 +454,11 @@ public class UserService {
         logger.info("Finding disk quota for user: " + user.getUserCode());
 
         if (user != null) {
-            long usedDiskSpace = user.getDiskQuotaUsed();
+            Long usedDiskSpace = user.getDiskQuotaUsed();
+            if (usedDiskSpace == null) {
+            	usedDiskSpace = 0L;
+            }
+            
             long totalDiskQuota = getTotalDiskQuota(user, globalDiskQuota);
             long result = totalDiskQuota - usedDiskSpace;
             logger.debug("Remaining disk quota for user \"" + user.getUserCode() + "\" is " + result + " (total: "
