@@ -129,7 +129,7 @@ public class AditUserDAO extends HibernateDaoSupport {
         AditUser user = this.getUserByID(userCode);
 
         if (user != null) {
-            result = user.getDiskQuotaUsed();
+            result = (user.getDiskQuotaUsed() == null) ? 0L : user.getDiskQuotaUsed();
         } else {
             throw new AditInternalException("Did not find user: " + userCode);
         }

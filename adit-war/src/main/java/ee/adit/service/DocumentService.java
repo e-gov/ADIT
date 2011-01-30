@@ -588,11 +588,13 @@ public class DocumentService {
             AditUser user = this.getAditUserDAO().getUserByID(doc.getCreatorCode());
 
             if (user != null) {
-                user.setDiskQuotaUsed(user.getDiskQuotaUsed() + saveResult.getAddedFilesSize());
+                Long usedDiskQuota = user.getDiskQuotaUsed();
+                if (usedDiskQuota == null) {
+                	usedDiskQuota = 0L;
+                }
+                user.setDiskQuotaUsed(usedDiskQuota + saveResult.getAddedFilesSize());
             }
-
         }
-
     }
 
     /**
@@ -1088,8 +1090,11 @@ public class DocumentService {
                                                         + saveResult.getItemId());
 
                                                 // Update user quota limit
-                                                user.setDiskQuotaUsed(user.getDiskQuotaUsed()
-                                                        + saveResult.getAddedFilesSize());
+                                                Long usedDiskQuota = user.getDiskQuotaUsed();
+                                                if (usedDiskQuota == null) {
+                                                	usedDiskQuota = 0L;
+                                                }
+                                                user.setDiskQuotaUsed(usedDiskQuota + saveResult.getAddedFilesSize());
                                                 this.getAditUserDAO().saveOrUpdate(user);
 
                                             } else {
@@ -2013,8 +2018,14 @@ public class DocumentService {
 
             if (deletedFilesSize > 0) {
                 AditUser user = this.getAditUserDAO().getUserByID(userCode);
-                user.setDiskQuotaUsed(user.getDiskQuotaUsed() - deletedFilesSize);
-                this.getAditUserDAO().saveOrUpdate(user);
+                if (user != null) {
+                    Long usedDiskQuota = user.getDiskQuotaUsed();
+                    if (usedDiskQuota == null) {
+                    	usedDiskQuota = 0L;
+                    }
+                    user.setDiskQuotaUsed(usedDiskQuota - deletedFilesSize);
+	                this.getAditUserDAO().saveOrUpdate(user);
+                }
             }
 
         }
@@ -2110,8 +2121,14 @@ public class DocumentService {
 
         if (deflatedFilesSize > 0) {
             AditUser user = this.getAditUserDAO().getUserByID(userCode);
-            user.setDiskQuotaUsed(user.getDiskQuotaUsed() - deflatedFilesSize);
-            this.getAditUserDAO().saveOrUpdate(user);
+            if (user != null) {
+                Long usedDiskQuota = user.getDiskQuotaUsed();
+                if (usedDiskQuota == null) {
+                	usedDiskQuota = 0L;
+                }
+                user.setDiskQuotaUsed(usedDiskQuota + deflatedFilesSize);
+	            this.getAditUserDAO().saveOrUpdate(user);
+            }
         }
 
     }

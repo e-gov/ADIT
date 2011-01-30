@@ -234,7 +234,11 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 
                             // Update user disk quota (used)
                             logger.info("User disk quota shrinked by: " + saveResult.getAddedFilesSize());
-                            user.setDiskQuotaUsed(user.getDiskQuotaUsed() + saveResult.getAddedFilesSize());
+                            Long usedDiskQuota = user.getDiskQuotaUsed();
+                            if (usedDiskQuota == null) {
+                            	usedDiskQuota = 0L;
+                            }
+                            user.setDiskQuotaUsed(usedDiskQuota + saveResult.getAddedFilesSize());
                             this.getUserService().getAditUserDAO().saveOrUpdate(user);
 
                         } else {
@@ -261,7 +265,11 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 
                             // Update user disk quota (used)
                             logger.info("User disk quota shrinked by: " + saveResult.getAddedFilesSize());
-                            user.setDiskQuotaUsed(user.getDiskQuotaUsed() + saveResult.getAddedFilesSize());
+                            Long usedDiskQuota = user.getDiskQuotaUsed();
+                            if (usedDiskQuota == null) {
+                            	usedDiskQuota = 0L;
+                            }
+                            user.setDiskQuotaUsed(usedDiskQuota + saveResult.getAddedFilesSize());
                             this.getUserService().getAditUserDAO().saveOrUpdate(user);
 
                         } else {
