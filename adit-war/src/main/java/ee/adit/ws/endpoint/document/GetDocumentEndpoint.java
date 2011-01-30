@@ -19,6 +19,7 @@ import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.GetDocumentRequest;
 import ee.adit.pojo.GetDocumentResponse;
+import ee.adit.pojo.GetDocumentResponseAttachment;
 import ee.adit.pojo.GetDocumentResponseDocument;
 import ee.adit.pojo.Message;
 import ee.adit.pojo.OutputDocument;
@@ -170,8 +171,7 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
                         // Kui kasutaja tohib dokumendile ligi pääseda, siis
                         // tagastame dokumendi
                         if (userIsDocOwner) {
-                            includeFileContents = (request.isIncludeFileContents() == null) ? false : request
-                                    .isIncludeFileContents();
+                            includeFileContents = (request.isIncludeFileContents() == null) ? false : request.isIncludeFileContents();
                             OutputDocument resultDoc = this.documentService.getDocumentDAO().getDocumentWithFiles(
                                     doc.getId(),
                                     null,
@@ -193,7 +193,9 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
 
                                 // 1. Convert java list to XML string and output
                                 // to file
-                                String xmlFile = marshal(resultDoc);
+                                GetDocumentResponseAttachment attachment = new GetDocumentResponseAttachment();
+                                attachment.setDocument(resultDoc);
+                                String xmlFile = marshal(attachment);
                                 Util.joinSplitXML(xmlFile, "data");
 
                                 // 2. GZip the temporary file
