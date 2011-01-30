@@ -399,6 +399,7 @@ adit-war/src/main/java/ee/adit/ws/endpoint/user/UnJoinEndpoint.java -text
 adit-war/src/main/java/ee/adit/ws/endpoint/user/package-info.java -text
 adit-war/src/main/resources/DVKresponseMessage.xsl -text
 adit-war/src/main/resources/adit-application.xml -text
+adit-war/src/main/resources/adit-attachments.xsd -text
 adit-war/src/main/resources/adit-castor-mapping.xml -text
 adit-war/src/main/resources/adit-dao.xml -text
 adit-war/src/main/resources/adit-datasource.xml -text
