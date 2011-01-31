@@ -175,8 +175,8 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
                             OutputDocument resultDoc = this.documentService.getDocumentDAO().getDocumentWithFiles(
                                     doc.getId(),
                                     null,
-                                    false,
-                                    false,
+                                    true,
+                                    true,
                                     includeFileContents,
                                     this.getConfiguration().getTempDir(),
                                     this.getMessageSource().getMessage("files.nonExistentOrDeleted", new Object[] {},
