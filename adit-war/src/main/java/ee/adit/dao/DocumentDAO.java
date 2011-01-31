@@ -9,6 +9,8 @@ import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -575,6 +577,7 @@ public class DocumentDAO extends HibernateDaoSupport {
             sendingData.setUserList(new ArrayList<DocumentSendingRecipient>());
             DocumentSharingData sharingData = new DocumentSharingData();
             sharingData.setUserList(new ArrayList<DocumentSharingRecipient>());
+            Date sendingDateCheck = null;
 
             if ((doc.getDocumentSharings() != null) && (!doc.getDocumentSharings().isEmpty())) {
                 Iterator it = doc.getDocumentSharings().iterator();
@@ -590,6 +593,7 @@ public class DocumentDAO extends HibernateDaoSupport {
                         rec.setName(sharing.getUserName());
                         rec.setOpenedTime(sharing.getLastAccessDate());
                         rec.setWorkflowStatusId(sharing.getDocumentWfStatus());
+                        rec.setSharedTime(sharing.getCreationDate());
                         sharingData.getUserList().add(rec);
                     } else {
                         DocumentSendingRecipient rec = new DocumentSendingRecipient();
@@ -600,6 +604,22 @@ public class DocumentDAO extends HibernateDaoSupport {
                         rec.setWorkflowStatusId(sharing.getDocumentWfStatus());
                         rec.setDvkStatusId(sharing.getDocumentDvkStatus());
                         sendingData.getUserList().add(rec);
+                        
+                        // There should be possible to have only one sending per document.
+                        // So it should be safe to take sending date from any sending record
+                        // associated to current document.
+                        sendingData.setSentTime(sharing.getCreationDate());
+                        
+                        // Check if assumptions mentioned above are also valid in real world 
+                        if ((sendingDateCheck != null) && (sharing.getCreationDate() != null)) {
+                        	long diffInMs = sharing.getCreationDate().getTime() - sendingDateCheck.getTime();
+                        	if (Math.abs(diffInMs) > (60L * 1000L)) {
+                        		logger.warn("Document "+ doc.getId() +" has multiple sendings with sending times varying more than 1 minute.");
+                        	}
+                        }
+                        if (sharing.getCreationDate() != null) {
+                        	sendingDateCheck = sharing.getCreationDate(); 
+                        }
                     }
                 }
             }
@@ -608,7 +628,7 @@ public class DocumentDAO extends HibernateDaoSupport {
             result.setSharedTo(sharingData);
         }
 
-        // Dokumendi andmed
+        // Document data
         result.setCreated(doc.getCreationDate());
         result.setCreatorApplication(doc.getRemoteApplication());
         result.setCreatorCode(doc.getCreatorCode());

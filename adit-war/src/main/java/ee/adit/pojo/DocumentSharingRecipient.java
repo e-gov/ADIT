@@ -8,6 +8,7 @@ public class DocumentSharingRecipient {
     private Boolean hasBeenViewed;
     private Date openedTime;
     private Long workflowStatusId;
+    private Date sharedTime;
 
     public String getCode() {
         return code;
@@ -48,4 +49,12 @@ public class DocumentSharingRecipient {
     public void setWorkflowStatusId(Long workflowStatusId) {
         this.workflowStatusId = workflowStatusId;
     }
+
+	public Date getSharedTime() {
+		return sharedTime;
+	}
+
+	public void setSharedTime(Date sharedTime) {
+		this.sharedTime = sharedTime;
+	}
 }
