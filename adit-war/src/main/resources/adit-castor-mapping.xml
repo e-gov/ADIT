@@ -313,10 +313,16 @@
 		<field name="workflowStatusId" type="java.lang.Long">
 			<bind-xml name="workflow_status_id"/>
 		</field>
+		<field name="sharedTime" type="java.util.Date">
+			<bind-xml name="shared_time"/>
+		</field>
 	</class>
  	
  	<class name="ee.adit.pojo.DocumentSendingData">
 		<map-to xml="sent_to"/>
+		<field name="sentTime" type="java.util.Date">
+			<bind-xml name="sent_time"/>
+		</field>
 		<field name="userList" type="ee.adit.pojo.DocumentSendingRecipient" collection="arraylist">
 			<bind-xml name="user" location="sent_to"/>
 		</field>

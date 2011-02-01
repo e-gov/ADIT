@@ -1710,6 +1710,8 @@
 							<xs:documentation xml:lang="en">Metadata of document signatures</xs:documentation>
 						</xs:annotation>
 					</xs:element>
+                    <xs:element name="sent_to" type="documentSentToV1Type" />
+                    <xs:element name="shared_to" type="documentSharedToV1Type" />
 					<xs:element name="document_files" type="documentFilesType" />
 				</xs:sequence>
 			</xs:complexType>
@@ -2212,147 +2214,12 @@
 							<xs:documentation xml:lang="en">Metadata of document signatures</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-                    <xs:element name="sent_to" type="getDocumentListResponseAttachmentV1SentToType" />
-                    <xs:element name="shared_to" type="getDocumentListResponseAttachmentV1SharedToType" />
+                    <xs:element name="sent_to" type="documentSentToV1Type" />
+                    <xs:element name="shared_to" type="documentSharedToV1Type" />
                     <xs:element name="document_files" type="documentFilesType" />
 				</xs:sequence>
 			</xs:complexType>
-            <xs:complexType name="getDocumentListResponseAttachmentV1SentToType">
-				<xs:annotation>
-					<xs:documentation xml:lang="ee">Kasutajate andmete massiiv
-					</xs:documentation>
-					<xs:documentation xml:lang="en">Array of user information
-					</xs:documentation>
-				</xs:annotation>
-                <xs:sequence>
-                    <xs:element maxOccurs="unbounded" name="user"
-						type="getDocumentListResponseAttachmentV1SentToUserType" />
-				</xs:sequence>
-			</xs:complexType>
-            <xs:complexType name="getDocumentListResponseAttachmentV1SentToUserType">
-				<xs:annotation>
-					<xs:documentation xml:lang="ee">Kasutaja andmed
-					</xs:documentation>
-					<xs:documentation xml:lang="en">User information
-					</xs:documentation>
-				</xs:annotation>
-                <xs:sequence>
-					<xs:element name="code" type="xs:string">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Kasutajakood
-							</xs:documentation>
-							<xs:documentation xml:lang="en">Usercode</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="name" type="xs:string">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Kasutaja nimi
-							</xs:documentation>
-							<xs:documentation xml:lang="en">User name</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="hasBeenViewed" type="xs:boolean">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Näitab, kas antud kasutaja
-								on dokumenti vaadanud</xs:documentation>
-							<xs:documentation xml:lang="en">Indicates if this user has
-								viewed the document</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="openedTime" type="xs:date">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Näitab, millal see kasutaja
-								dokumendi avas</xs:documentation>
-							<xs:documentation xml:lang="en">The time when the document
-								was opened by this user</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="workflowStatusId" type="xs:integer">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Selle kasutaja töövoo
-								staatuse identifikaator antud dokumendi jaoks</xs:documentation>
-							<xs:documentation xml:lang="en">The workflow status
-								identificator for this document</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="dvkStatusId" type="xs:integer">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Selle kasutaja DVK staatuse
-								identifikaator antud dokumendi jaoks</xs:documentation>
-							<xs:documentation xml:lang="en">The DVK status
-								identificator for this document</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-				</xs:sequence>
-			</xs:complexType>
-            <xs:complexType name="getDocumentListResponseAttachmentV1SharedToType">
-				<xs:annotation>
-					<xs:documentation xml:lang="ee">Kasutajate andmete massiiv
-					</xs:documentation>
-					<xs:documentation xml:lang="en">Array of user information
-					</xs:documentation>
-				</xs:annotation>
-                <xs:sequence>
-                    <xs:element maxOccurs="unbounded" name="user"
-						type="getDocumentListResponseAttachmentV1SharedToUserType" />
-				</xs:sequence>
-			</xs:complexType>
-			<xs:complexType name="getDocumentListResponseAttachmentV1SharedToUserType">
-				<xs:annotation>
-					<xs:documentation xml:lang="ee">Kasutaja andmed
-					</xs:documentation>
-					<xs:documentation xml:lang="en">User information
-					</xs:documentation>
-				</xs:annotation>
-				<xs:sequence>
-					<xs:element name="code" type="xs:string">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Kasutajakood
-							</xs:documentation>
-							<xs:documentation xml:lang="en">Usercode</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="name" type="xs:string">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Kasutaja nimi
-							</xs:documentation>
-							<xs:documentation xml:lang="en">User name</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="hasBeenViewed" type="xs:boolean">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Näitab, kas antud kasutaja
-								on dokumenti vaadanud</xs:documentation>
-							<xs:documentation xml:lang="en">Indicates if this user has
-								viewed the document</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="openedTime" type="xs:date">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Näitab, millal see kasutaja
-								dokumendi avas</xs:documentation>
-							<xs:documentation xml:lang="en">The time when the document
-								was opened by this user</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="workflowStatusId" type="xs:integer">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Selle kasutaja töövoo
-								staatuse identifikaator antud dokumendi jaoks</xs:documentation>
-							<xs:documentation xml:lang="en">The workflow status
-								identificator for this document</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="dvkStatusId" type="xs:integer">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Selle kasutaja DVK staatuse
-								identifikaator antud dokumendi jaoks</xs:documentation>
-							<xs:documentation xml:lang="en">The DVK status
-								identificator for this document</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-				</xs:sequence>
-			</xs:complexType>
+
 
 			<!-- saveDocument attachments -->
 			<xs:element name="saveDocumentRequestAttachmentV1" type="saveDocumentRequestAttachmentV1Type" />
@@ -2514,6 +2381,154 @@
 					</xs:element>
 				</xs:sequence>
 			</xs:complexType>
+			
+            <xs:complexType name="documentSentToV1Type">
+				<xs:annotation>
+					<xs:documentation xml:lang="ee">Kasutajate andmete massiiv
+					</xs:documentation>
+					<xs:documentation xml:lang="en">Array of user information
+					</xs:documentation>
+				</xs:annotation>
+                <xs:sequence>
+					<xs:element name="sent_time" type="xs:dateTime">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Saatmise kuupäev ja kellaaeg</xs:documentation>
+							<xs:documentation xml:lang="en">Sending date and time</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+                    <xs:element maxOccurs="unbounded" name="user" type="documentSentToV1UserType" />
+				</xs:sequence>
+			</xs:complexType>
+            <xs:complexType name="documentSentToV1UserType">
+				<xs:annotation>
+					<xs:documentation xml:lang="ee">Kasutaja andmed
+					</xs:documentation>
+					<xs:documentation xml:lang="en">User information
+					</xs:documentation>
+				</xs:annotation>
+                <xs:sequence>
+					<xs:element name="code" type="xs:string">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Kasutajakood
+							</xs:documentation>
+							<xs:documentation xml:lang="en">Usercode</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="name" type="xs:string">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Kasutaja nimi
+							</xs:documentation>
+							<xs:documentation xml:lang="en">User name</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="has_been_viewed" type="xs:boolean">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Näitab, kas antud kasutaja
+								on dokumenti vaadanud</xs:documentation>
+							<xs:documentation xml:lang="en">Indicates if this user has
+								viewed the document</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="opened_time" type="xs:dateTime">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Näitab, millal see kasutaja
+								dokumendi avas</xs:documentation>
+							<xs:documentation xml:lang="en">The time when the document
+								was opened by this user</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="workflow_status_id" type="xs:integer">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Selle kasutaja töövoo
+								staatuse identifikaator antud dokumendi jaoks</xs:documentation>
+							<xs:documentation xml:lang="en">The workflow status
+								identificator for this document</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="dvk_status_id" type="xs:integer">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Selle kasutaja DVK staatuse
+								identifikaator antud dokumendi jaoks</xs:documentation>
+							<xs:documentation xml:lang="en">The DVK status
+								identificator for this document</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:complexType>
+            <xs:complexType name="documentSharedToV1Type">
+				<xs:annotation>
+					<xs:documentation xml:lang="ee">Kasutajate andmete massiiv
+					</xs:documentation>
+					<xs:documentation xml:lang="en">Array of user information
+					</xs:documentation>
+				</xs:annotation>
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" name="user" type="documentSharedToV1UserType" />
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="documentSharedToV1UserType">
+				<xs:annotation>
+					<xs:documentation xml:lang="ee">Kasutaja andmed
+					</xs:documentation>
+					<xs:documentation xml:lang="en">User information
+					</xs:documentation>
+				</xs:annotation>
+				<xs:sequence>
+					<xs:element name="code" type="xs:string">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Kasutajakood
+							</xs:documentation>
+							<xs:documentation xml:lang="en">Usercode</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="name" type="xs:string">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Kasutaja nimi
+							</xs:documentation>
+							<xs:documentation xml:lang="en">User name</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="has_been_viewed" type="xs:boolean">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Näitab, kas antud kasutaja
+								on dokumenti vaadanud</xs:documentation>
+							<xs:documentation xml:lang="en">Indicates if this user has
+								viewed the document</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="opened_time" type="xs:dateTime">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Näitab, millal see kasutaja
+								dokumendi avas</xs:documentation>
+							<xs:documentation xml:lang="en">The time when the document
+								was opened by this user</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="workflow_status_id" type="xs:integer">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Selle kasutaja töövoo
+								staatuse identifikaator antud dokumendi jaoks</xs:documentation>
+							<xs:documentation xml:lang="en">The workflow status
+								identificator for this document</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="shared_time" type="xs:dateTime">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Dokumendi jagamise aeg</xs:documentation>
+							<xs:documentation xml:lang="en">Document sharing time</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="dvk_status_id" type="xs:integer">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Selle kasutaja DVK staatuse
+								identifikaator antud dokumendi jaoks</xs:documentation>
+							<xs:documentation xml:lang="en">The DVK status
+								identificator for this document</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:complexType>
+			
 		</xs:schema>
 	</wsdl:types>
 
