@@ -1519,269 +1519,10 @@
 						"getDocument" response message</xs:documentation>
 				</xs:annotation>
 				<xs:sequence>
-					<xs:element name="document" type="getDocumentResponseAttachmentV1DocumentType" />
+					<xs:element name="document" type="documentV1Type" />
 				</xs:sequence>
 			</xs:complexType>
-			<xs:complexType name="getDocumentResponseAttachmentV1DocumentType">
-				<xs:annotation>
-					<xs:documentation xml:lang="ee">Dokumendi andmed</xs:documentation>
-					<xs:documentation xml:lang="en">Document data</xs:documentation>
-				</xs:annotation>
-				<xs:sequence>
-					<xs:element name="id" type="xs:integer">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Dokumendi identifikaator
-							</xs:documentation>
-							<xs:documentation xml:lang="en">Document identificator
-							</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="guid" type="xs:string">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Dokumendi globaalselt
-								unikaalne identifikaator (GUID)</xs:documentation>
-							<xs:documentation xml:lang="en">Document globally unique
-								identificator (GUID)</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="title" type="xs:string">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Dokumendi pealkiri
-							</xs:documentation>
-							<xs:documentation xml:lang="en">Document title
-							</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="document_type" type="xs:string">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Dokumendi tüüp
-							</xs:documentation>
-							<xs:documentation xml:lang="en">Document type
-							</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="creator_code" type="xs:string">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Dokumendi looja kood
-							</xs:documentation>
-							<xs:documentation xml:lang="en">Document creator code
-							</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="creator_name" type="xs:string">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Dokumendi looja nimi
-							</xs:documentation>
-							<xs:documentation xml:lang="en">Document creator name
-							</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="creator_user_code" type="xs:string">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Dokumendi looja isikukood,
-								kui dokument on lisatud asutuse kasutajakonto kaudu
-							</xs:documentation>
-							<xs:documentation xml:lang="en">Personal ID code of document
-								creator if document has been added using organization account
-							</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="creator_user_name" type="xs:string">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Dokumendi looja nimi, kui dokument on lisatud asutuse kasutajakonto kaudu
-							</xs:documentation>
-							<xs:documentation xml:lang="en">Name of document creator if document has been added using organization account
-							</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="created" type="xs:date">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Dokumendi loomise aeg
-							</xs:documentation>
-							<xs:documentation xml:lang="en">Document creation time
-							</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="creator_application" type="xs:string">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Dokumendi loomiseks
-								kasutatud infosüsteem</xs:documentation>
-							<xs:documentation xml:lang="en">Application used for
-								creating the document</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="last_modified" type="xs:date">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Dokumendi viimase muutmise
-								aeg</xs:documentation>
-							<xs:documentation xml:lang="en">Last modification time of
-								document</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="dvk_status_id" type="xs:integer">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">DVK staatuse ID, kui dokument
-								on DVK kaudu saadetud või saabunud</xs:documentation>
-							<xs:documentation xml:lang="en">DEC status id if document
-								has been sent or received using DEC</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="dvk_id" type="xs:integer">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Dokumendi DVK ID, kui dokument
-								on DVK kaudu saadetud või saabunud</xs:documentation>
-							<xs:documentation xml:lang="en">Documents DEC ID if document
-								has been sent or received using DEC</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="workflow_status_id" type="xs:integer">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Dokumendi menetlusstaatuse ID</xs:documentation>
-							<xs:documentation xml:lang="en">Documents workflow status ID</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="last_accessed" type="xs:dateTime">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Dokumendi viimase vaatamise kuupäev
-								ja kellaaeg</xs:documentation>
-							<xs:documentation xml:lang="en">Date and time indicating the last time
-								the document was viewed or modified</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="previous_document_id" type="xs:integer">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Dokumendi eelmise versioooni või
-								antud dokumendi aluseks oleva dokumendi ID</xs:documentation>
-							<xs:documentation xml:lang="en">ID of documents last version or of
-								the document, that this document is based on</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="previous_document_guid" type="xs:string">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Dokumendi eelmise versioooni või
-								antud dokumendi aluseks oleva dokumendi GUID</xs:documentation>
-							<xs:documentation xml:lang="en">GUID of documents last version or of
-								the document, that this document is based on</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="locked" type="xs:boolean">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Näitab, kas dokument on lukustatud
-								(st dokumendi muutmine on keelatud)</xs:documentation>
-							<xs:documentation xml:lang="en">Indicates if the document is
-								locked (cannot be modified)</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="locking_date" type="xs:dateTime">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Dokumendi lukustamise kuupäev
-								ja kellaaeg</xs:documentation>
-							<xs:documentation xml:lang="en">Date and time indicating when
-								the document was locked</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="signable" type="xs:boolean">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Näitab, kas dokument on
-								allkirjastatav</xs:documentation>
-							<xs:documentation xml:lang="en">Indicates if the document
-								is signable</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="deflated" type="xs:boolean">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Näitab, kas dokument on
-								tühjendatud (st failide sisu on kustutatud)</xs:documentation>
-							<xs:documentation xml:lang="en">Indicates if the document
-								has peen deflated (document files erased)</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="deflating_date" type="xs:date">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Dokumendi DVK ID, kui dokument
-								on DVK kaudu saadetud või saabunud</xs:documentation>
-							<xs:documentation xml:lang="en">Documents DEC ID if document
-								has been sent or received using DEC</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="signatures" type="getDocumentResponseAttachmentV1SignatureListType">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Dokumendi allkirjade andmed</xs:documentation>
-							<xs:documentation xml:lang="en">Metadata of document signatures</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-                    <xs:element name="sent_to" type="documentSentToV1Type" />
-                    <xs:element name="shared_to" type="documentSharedToV1Type" />
-					<xs:element name="document_files" type="documentFilesType" />
-				</xs:sequence>
-			</xs:complexType>
-			<xs:complexType name="getDocumentResponseAttachmentV1SignatureType">
-				<xs:all>
-					<xs:element name="signer_code" type="xs:string">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Allkirjastaja isikukood</xs:documentation>
-							<xs:documentation xml:lang="en">Signers personal ID code</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="signer_name" type="xs:string">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Allkirjastaja nimi</xs:documentation>
-							<xs:documentation xml:lang="en">Signers name</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="manifest" type="xs:string">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Allkirjastaja
-								roll ja/või resolutsioon</xs:documentation>
-							<xs:documentation xml:lang="en">Signers role
-								and/or resolution</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="country" type="xs:string">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Riik allkirjastaja
-								aadressis</xs:documentation>
-							<xs:documentation xml:lang="en">Country name in
-								signers address</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="state" type="xs:string">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Maakond allkirjastaja
-								aadressis</xs:documentation>
-							<xs:documentation xml:lang="en">State/county in
-								signers address</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="city" type="xs:string">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Linn/vald/küla
-								allkirjastaja aadressis</xs:documentation>
-							<xs:documentation xml:lang="en">Town/parish/village in
-								signers address</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="zip" type="xs:string">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Postiindeks allkirjastaja
-								aadressis</xs:documentation>
-							<xs:documentation xml:lang="en">Post code in signers
-								address</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-				</xs:all>
-			</xs:complexType>
-			<xs:complexType name="getDocumentResponseAttachmentV1SignatureListType">
-				<xs:annotation>
-					<xs:documentation xml:lang="ee">Dokumendi allkirjade
-						metaandmete nimekiri</xs:documentation>
-					<xs:documentation xml:lang="en">List of document signature
-						metadata</xs:documentation>
-				</xs:annotation>
-				<xs:sequence>
-                    <xs:element maxOccurs="unbounded" name="signature" type="getDocumentResponseAttachmentV1SignatureType" />
-				</xs:sequence>
-			</xs:complexType>
+
 
 			<!-- getDocumentFile attachments -->
 			<xs:element name="getDocumentFileResponseAttachmentV1" type="getDocumentFileResponseAttachmentV1Type" />
@@ -2019,15 +1760,84 @@
 						</xs:annotation>
 					</xs:element>
 					<xs:element maxOccurs="unbounded" name="document"
-						type="getDocumentListResponseAttachmentV1DocumentType" />
+						type="documentV1Type" />
 				</xs:sequence>
 			</xs:complexType>
-			<xs:complexType name="getDocumentListResponseAttachmentV1DocumentType">
+
+			<!-- saveDocument attachments -->
+			<xs:element name="saveDocumentRequestAttachmentV1" type="saveDocumentRequestAttachmentV1Type" />
+			<xs:complexType name="saveDocumentRequestAttachmentV1Type">
+				<xs:annotation>
+					<xs:documentation xml:lang="ee">Päringu "saveDocument" manus
+					</xs:documentation>
+					<xs:documentation xml:lang="en">Attachment for request
+						"saveDocument" request message</xs:documentation>
+				</xs:annotation>
+				<xs:sequence>
+					<xs:element name="document" type="saveDocumentRequestAttachmentV1DocumentType" />
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="saveDocumentRequestAttachmentV1DocumentType">
 				<xs:annotation>
 					<xs:documentation xml:lang="ee">Dokumendi andmed
 					</xs:documentation>
-					<xs:documentation xml:lang="en">Document information
-					</xs:documentation>
+					<xs:documentation xml:lang="en">Document data</xs:documentation>
+				</xs:annotation>
+				<xs:sequence>
+					<xs:element name="id" type="xs:integer">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Dokumendi identifikaator
+							</xs:documentation>
+							<xs:documentation xml:lang="en">Document identificator
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="guid" type="xs:string">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Dokumendi globaalselt
+								unikaalne identifikaator (GUID)</xs:documentation>
+							<xs:documentation xml:lang="en">Document globally unique
+								identificator (GUID)</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="title" type="xs:string">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Dokumendi pealkiri
+							</xs:documentation>
+							<xs:documentation xml:lang="en">Document title
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="document_type" type="xs:string">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Dokumendi tüüp
+							</xs:documentation>
+							<xs:documentation xml:lang="en">Document type
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="previous_document_id" type="xs:integer">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Eelmise dokumendi
+								identifikaator (kui dokument on vastuseks teisele dokumendile)
+							</xs:documentation>
+							<xs:documentation xml:lang="en">Previous document
+								identificator (if the document is a response to another
+								document)</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="files" type="subDocumentFilesType" />
+				</xs:sequence>
+			</xs:complexType>
+
+			<!-- saveDocumentFile attachments -->
+			<xs:element name="saveDocumentFileAttachmentV1" type="fileType" />
+
+			<!-- Attachments common types -->
+			<xs:complexType name="documentV1Type">
+				<xs:annotation>
+					<xs:documentation xml:lang="ee">Dokumendi andmed</xs:documentation>
+					<xs:documentation xml:lang="en">Document data</xs:documentation>
 				</xs:annotation>
 				<xs:sequence>
 					<xs:element name="id" type="xs:integer">
@@ -2070,7 +1880,7 @@
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-                    <xs:element name="creator_name" type="xs:string">
+					<xs:element name="creator_name" type="xs:string">
 						<xs:annotation>
 							<xs:documentation xml:lang="ee">Dokumendi looja nimi
 							</xs:documentation>
@@ -2090,11 +1900,9 @@
 					</xs:element>
 					<xs:element name="creator_user_name" type="xs:string">
 						<xs:annotation>
-							<xs:documentation xml:lang="ee">Dokumendi looja nimi, kui
-								dokument on lisatud asutuse kasutajakonto kaudu
+							<xs:documentation xml:lang="ee">Dokumendi looja nimi, kui dokument on lisatud asutuse kasutajakonto kaudu
 							</xs:documentation>
-							<xs:documentation xml:lang="en">Name of document creator
-								if document has been added using organization account
+							<xs:documentation xml:lang="en">Name of document creator if document has been added using organization account
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
@@ -2106,7 +1914,7 @@
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-                    <xs:element name="creator_application" type="xs:string">
+					<xs:element name="creator_application" type="xs:string">
 						<xs:annotation>
 							<xs:documentation xml:lang="ee">Dokumendi loomiseks
 								kasutatud infosüsteem</xs:documentation>
@@ -2191,7 +1999,7 @@
 							<xs:documentation xml:lang="en">Indicates if the document
 								is signable</xs:documentation>
 						</xs:annotation>
-					</xs:element>					
+					</xs:element>
 					<xs:element name="deflated" type="xs:boolean">
 						<xs:annotation>
 							<xs:documentation xml:lang="ee">Näitab, kas dokument on
@@ -2208,7 +2016,7 @@
 								has been sent or received using DEC</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="signatures" type="getDocumentResponseAttachmentV1SignatureListType">
+					<xs:element name="signatures" type="documentSignatureListV1Type">
 						<xs:annotation>
 							<xs:documentation xml:lang="ee">Dokumendi allkirjade andmed</xs:documentation>
 							<xs:documentation xml:lang="en">Metadata of document signatures</xs:documentation>
@@ -2216,81 +2024,83 @@
 					</xs:element>
                     <xs:element name="sent_to" type="documentSentToV1Type" />
                     <xs:element name="shared_to" type="documentSharedToV1Type" />
-                    <xs:element name="document_files" type="documentFilesType" />
+					<xs:element name="document_files" type="documentFilesType" />
 				</xs:sequence>
 			</xs:complexType>
-
-
-			<!-- saveDocument attachments -->
-			<xs:element name="saveDocumentRequestAttachmentV1" type="saveDocumentRequestAttachmentV1Type" />
-			<xs:complexType name="saveDocumentRequestAttachmentV1Type">
+			
+			<xs:complexType name="documentSignatureV1Type">
 				<xs:annotation>
-					<xs:documentation xml:lang="ee">Päringu "saveDocument" manus
-					</xs:documentation>
-					<xs:documentation xml:lang="en">Attachment for request
-						"saveDocument" request message</xs:documentation>
+					<xs:documentation xml:lang="ee">Dokumendile antud allkirja metaandmed</xs:documentation>
+					<xs:documentation xml:lang="en">Document signature metadata</xs:documentation>
+				</xs:annotation>
+				<xs:all>
+					<xs:element name="signer_code" type="xs:string">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Allkirjastaja isikukood</xs:documentation>
+							<xs:documentation xml:lang="en">Signers personal ID code</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="signer_name" type="xs:string">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Allkirjastaja nimi</xs:documentation>
+							<xs:documentation xml:lang="en">Signers name</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="manifest" type="xs:string">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Allkirjastaja
+								roll ja/või resolutsioon</xs:documentation>
+							<xs:documentation xml:lang="en">Signers role
+								and/or resolution</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="country" type="xs:string">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Riik allkirjastaja
+								aadressis</xs:documentation>
+							<xs:documentation xml:lang="en">Country name in
+								signers address</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="state" type="xs:string">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Maakond allkirjastaja
+								aadressis</xs:documentation>
+							<xs:documentation xml:lang="en">State/county in
+								signers address</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="city" type="xs:string">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Linn/vald/küla
+								allkirjastaja aadressis</xs:documentation>
+							<xs:documentation xml:lang="en">Town/parish/village in
+								signers address</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="zip" type="xs:string">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Postiindeks allkirjastaja
+								aadressis</xs:documentation>
+							<xs:documentation xml:lang="en">Post code in signers
+								address</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:all>
+			</xs:complexType>
+			
+			<xs:complexType name="documentSignatureListV1Type">
+				<xs:annotation>
+					<xs:documentation xml:lang="ee">Dokumendi allkirjade
+						metaandmete nimekiri</xs:documentation>
+					<xs:documentation xml:lang="en">List of document signature
+						metadata</xs:documentation>
 				</xs:annotation>
 				<xs:sequence>
-					<xs:element name="document" type="saveDocumentRequestAttachmentV1DocumentType" />
+                    <xs:element maxOccurs="unbounded" name="signature" type="documentSignatureV1Type" />
 				</xs:sequence>
 			</xs:complexType>
-			<xs:complexType name="saveDocumentRequestAttachmentV1DocumentType">
-				<xs:annotation>
-					<xs:documentation xml:lang="ee">Dokumendi andmed
-					</xs:documentation>
-					<xs:documentation xml:lang="en">Document data</xs:documentation>
-				</xs:annotation>
-				<xs:sequence>
-					<xs:element name="id" type="xs:integer">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Dokumendi identifikaator
-							</xs:documentation>
-							<xs:documentation xml:lang="en">Document identificator
-							</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="guid" type="xs:string">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Dokumendi globaalselt
-								unikaalne identifikaator (GUID)</xs:documentation>
-							<xs:documentation xml:lang="en">Document globally unique
-								identificator (GUID)</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="title" type="xs:string">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Dokumendi pealkiri
-							</xs:documentation>
-							<xs:documentation xml:lang="en">Document title
-							</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="document_type" type="xs:string">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Dokumendi tüüp
-							</xs:documentation>
-							<xs:documentation xml:lang="en">Document type
-							</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="previous_document_id" type="xs:integer">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Eelmise dokumendi
-								identifikaator (kui dokument on vastuseks teisele dokumendile)
-							</xs:documentation>
-							<xs:documentation xml:lang="en">Previous document
-								identificator (if the document is a response to another
-								document)</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="files" type="subDocumentFilesType" />
-				</xs:sequence>
-			</xs:complexType>
-
-			<!-- saveDocumentFile attachments -->
-			<xs:element name="saveDocumentFileAttachmentV1" type="fileType" />
-
-			<!-- Attachments common types -->
+			
 			<xs:complexType name="documentFilesType">
 				<xs:annotation>
 					<xs:documentation xml:lang="ee">Dokumendi failide andmed

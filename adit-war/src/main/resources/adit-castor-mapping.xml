@@ -292,7 +292,7 @@
  	<class name="ee.adit.pojo.DocumentSharingData">
 		<map-to xml="shared_to"/>
 		<field name="userList" type="ee.adit.pojo.DocumentSharingRecipient" collection="arraylist">
-			<bind-xml name="user" location="shared_to"/>
+			<bind-xml name="user" />
 		</field>
 	</class>
  	
@@ -324,7 +324,7 @@
 			<bind-xml name="sent_time"/>
 		</field>
 		<field name="userList" type="ee.adit.pojo.DocumentSendingRecipient" collection="arraylist">
-			<bind-xml name="user" location="sent_to"/>
+			<bind-xml name="user" />
 		</field>
 	</class>
  	
@@ -475,7 +475,7 @@
 			<bind-xml name="messages" />
 		</field>
 		<field name="documentList" type="ee.adit.pojo.GetDocumentListResponseList">
-			<bind-xml name="documentList" location="keha" />
+			<bind-xml name="documentList" />
 		</field>
 	</class>
 	
@@ -516,7 +516,7 @@
 			<bind-xml name="messages" />
 		</field>
 		<field name="document" type="ee.adit.pojo.GetDocumentResponseDocument">
-			<bind-xml name="document" location="keha" />
+			<bind-xml name="document" />
 		</field>
 	</class>
 	
@@ -553,7 +553,7 @@
 			<bind-xml name="messages" />
 		</field>
 		<field name="files" type="ee.adit.pojo.GetDocumentFileResponseFiles">
-			<bind-xml name="files" location="keha" />
+			<bind-xml name="files" />
 		</field>
 	</class>
 	
@@ -888,7 +888,7 @@
 			<bind-xml name="messages" />
 		</field>
 		<field name="documentHistoryList" type="ee.adit.pojo.GetDocumentHistoryResponseDocument">
-			<bind-xml name="document_history_list" location="keha" />
+			<bind-xml name="document_history_list" />
 		</field>
 	</class>
 	
