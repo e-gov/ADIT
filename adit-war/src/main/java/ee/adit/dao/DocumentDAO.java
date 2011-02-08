@@ -131,7 +131,7 @@ public class DocumentDAO extends HibernateDaoSupport {
                             criteria.add(Subqueries.exists(sharedToMeSubquery));
                         } else if (param.getFolder().equalsIgnoreCase("outgoing")) {
                             // "Outgoing" means that:
-                            // - user is document ownar
+                            // - user is document owner
                             // - and document has been sent or shared to
                             // someone else
                             criteria.add(Restrictions.eq("creatorCode", userCode));
