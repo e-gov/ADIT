@@ -113,7 +113,7 @@ public class DocumentDAO extends HibernateDaoSupport {
                     criteria.add(Restrictions.or(Restrictions.isNull("deleted"), Restrictions.eq("deleted", false)));
 
                     // Document "folder" (local, incoming, outgoing)
-                    if (param.getFolder() != null) {
+                    if (!Util.isNullOrEmpty(param.getFolder())) {
                         if (param.getFolder().equalsIgnoreCase("local")) {
                             criteria.add(Restrictions.eq("creatorCode", userCode));
                             criteria.add(Restrictions.or(Restrictions.isNull("documentSharings"), Restrictions.isEmpty("documentSharings")));
@@ -137,6 +137,8 @@ public class DocumentDAO extends HibernateDaoSupport {
                             criteria.add(Restrictions.isNotNull("documentSharings"));
                             criteria.add(Restrictions.isNotEmpty("documentSharings"));
                         } else {
+                        	// If incorrect folder is specified then return all documents
+                        	// accessible to given user.
                             DetachedCriteria sharedToMeSubquery = DetachedCriteria.forClass(Document.class, "doc1")
                                     .createCriteria("documentSharings", "sh1")
                                     .add(Restrictions.eq("userCode", userCode))
@@ -146,6 +148,16 @@ public class DocumentDAO extends HibernateDaoSupport {
                             		Restrictions.eq("creatorCode", userCode),
                             		Subqueries.exists(sharedToMeSubquery)));
                         }
+                    } else {
+                    	// If no folder is specified then return all documents accessible to given user.
+                    	DetachedCriteria sharedToMeSubquery = DetachedCriteria.forClass(Document.class, "doc1")
+	                        .createCriteria("documentSharings", "sh1")
+	                        .add(Restrictions.eq("userCode", userCode))
+	                        .add(Property.forName("doc.id").eqProperty("doc1.id"))
+	                        .setProjection(Projections.id());
+                        criteria.add(Restrictions.or(
+	                		Restrictions.eq("creatorCode", userCode),
+	                		Subqueries.exists(sharedToMeSubquery)));
                     }
 
                     // Document type
@@ -208,8 +220,7 @@ public class DocumentDAO extends HibernateDaoSupport {
 
                     // Include deflated documents
                     if (!param.isIsDeflated()) {
-                        criteria.add(Restrictions.or(Restrictions.isNull("deflated"), Restrictions
-                                .eq("deflated", false)));
+                        criteria.add(Restrictions.or(Restrictions.isNull("deflated"), Restrictions.eq("deflated", false)));
                     }
 
                     // Creator application
