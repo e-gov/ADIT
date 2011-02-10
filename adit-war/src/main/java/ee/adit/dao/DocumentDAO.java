@@ -608,6 +608,8 @@ public class DocumentDAO extends HibernateDaoSupport {
                         rec.setOpenedTime(sharing.getLastAccessDate());
                         rec.setWorkflowStatusId(sharing.getDocumentWfStatus());
                         rec.setSharedTime(sharing.getCreationDate());
+                        rec.setReasonForSharing(sharing.getTaskDescription());
+                        rec.setSharedForSigning("sign".equalsIgnoreCase(sharing.getDocumentSharingType()));
                         sharingData.getUserList().add(rec);
                     } else {
                         DocumentSendingRecipient rec = new DocumentSendingRecipient();

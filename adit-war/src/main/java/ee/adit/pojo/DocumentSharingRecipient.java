@@ -9,6 +9,8 @@ public class DocumentSharingRecipient {
     private Date openedTime;
     private Long workflowStatusId;
     private Date sharedTime;
+    private String reasonForSharing;
+    private Boolean sharedForSigning;
 
     public String getCode() {
         return code;
@@ -56,5 +58,21 @@ public class DocumentSharingRecipient {
 
 	public void setSharedTime(Date sharedTime) {
 		this.sharedTime = sharedTime;
+	}
+
+	public String getReasonForSharing() {
+		return reasonForSharing;
+	}
+
+	public void setReasonForSharing(String reasonForSharing) {
+		this.reasonForSharing = reasonForSharing;
+	}
+
+	public Boolean getSharedForSigning() {
+		return sharedForSigning;
+	}
+
+	public void setSharedForSigning(Boolean sharedForSigning) {
+		this.sharedForSigning = sharedForSigning;
 	}
 }
