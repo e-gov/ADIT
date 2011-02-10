@@ -1,5 +1,7 @@
 package ee.adit.dao.pojo;
 
+import java.util.Date;
+
 // Generated 21.06.2010 14:02:03 by Hibernate Tools 3.2.4.GA
 
 /**
@@ -19,6 +21,7 @@ public class Signature implements java.io.Serializable {
     private String postIndex;
     private String signerCode;
     private String signerName;
+    private Date signingDate;
 
     public Signature() {
     }
@@ -29,7 +32,7 @@ public class Signature implements java.io.Serializable {
     }
 
     public Signature(long id, Document document, String userCode, String signerRole, String resolution, String country,
-            String county, String city, String postIndex, String signerCode, String signerName) {
+            String county, String city, String postIndex, String signerCode, String signerName, Date signingDate) {
         this.id = id;
         this.document = document;
         this.userCode = userCode;
@@ -41,6 +44,7 @@ public class Signature implements java.io.Serializable {
         this.postIndex = postIndex;
         this.signerCode = signerCode;
         this.signerName = signerName;
+        this.signingDate = signingDate;
     }
 
     public long getId() {
@@ -130,4 +134,12 @@ public class Signature implements java.io.Serializable {
     public void setSignerName(String signerName) {
         this.signerName = signerName;
     }
+
+	public Date getSigningDate() {
+		return signingDate;
+	}
+
+	public void setSigningDate(Date signingDate) {
+		this.signingDate = signingDate;
+	}
 }

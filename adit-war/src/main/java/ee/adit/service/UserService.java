@@ -349,7 +349,6 @@ public class UserService {
         List<String> userCodes = userList.getCodes();
 
         for (String userCode : userCodes) {
-
             GetUserInfoResponseAttachmentUser userInfo = getUserInfo(userCode);
             result.add(userInfo);
         }
@@ -381,7 +380,8 @@ public class UserService {
         if (user != null) {
             // User has joined the service
             logger.debug("User has joined the service: " + userCode);
-            hasJoined = true;
+            //hasJoined = true;
+            hasJoined = user.getActive();
 
             usedSpace = this.getAditUserDAO().getUsedSpaceForUser(userCode);
             logger.debug("Information for user (" + userCode + "): ");

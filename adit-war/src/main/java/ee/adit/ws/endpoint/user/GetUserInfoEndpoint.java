@@ -121,8 +121,7 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 
                             GetUserInfoRequestAttachmentUserList userList = (GetUserInfoRequestAttachmentUserList) unmarshalledObject;
 
-                            List<GetUserInfoResponseAttachmentUser> userInfoList = this.getUserService().getUserInfo(
-                                    userList);
+                            List<GetUserInfoResponseAttachmentUser> userInfoList = this.getUserService().getUserInfo(userList);
                             GetUserInfoResponseAttachment responseAttachment = new GetUserInfoResponseAttachment();
                             responseAttachment.setUserList(userInfoList);
 

@@ -84,7 +84,10 @@ public class UnJoinEndpoint extends AbstractAditBaseEndpoint {
                 if (accessLevel == 2) {
 
                     // Kontrollime, kas päringu käivitanud kasutaja eksisteerib
-                    AditUser aditUser = userService.getUserByID(header.getIsikukood());
+                    String userCode = ((this.getHeader().getAllasutus() != null) && (this.getHeader().getAllasutus().length() > 0)) ? this
+                            .getHeader().getAllasutus()
+                            : this.getHeader().getIsikukood();
+                    AditUser aditUser = this.getUserService().getUserByID(userCode);
 
                     if (aditUser != null) {
 
@@ -124,7 +127,7 @@ public class UnJoinEndpoint extends AbstractAditBaseEndpoint {
                         }
                     } else {
                         AditCodedException aditCodedException = new AditCodedException("user.nonExistent");
-                        aditCodedException.setParameters(new Object[] {header.getIsikukood() });
+                        aditCodedException.setParameters(new Object[] {userCode});
                         throw aditCodedException;
                     }
                 } else {

@@ -7,6 +7,8 @@ public class OutputDocument {
     private Long id;
     private String guid;
     private String title;
+    private String folder;
+    private Boolean hasBeenViewed;
     private String documentType;
     private String creatorCode;
     private String creatorName;
@@ -55,7 +57,23 @@ public class OutputDocument {
         this.title = title;
     }
 
-    public String getDocumentType() {
+    public String getFolder() {
+		return folder;
+	}
+
+	public void setFolder(String folder) {
+		this.folder = folder;
+	}
+
+	public Boolean getHasBeenViewed() {
+		return hasBeenViewed;
+	}
+
+	public void setHasBeenViewed(Boolean hasBeenViewed) {
+		this.hasBeenViewed = hasBeenViewed;
+	}
+
+	public String getDocumentType() {
         return documentType;
     }
 

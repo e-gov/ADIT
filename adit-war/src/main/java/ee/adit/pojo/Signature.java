@@ -1,5 +1,7 @@
 package ee.adit.pojo;
 
+import java.util.Date;
+
 public class Signature {
     private String signerCode;
     private String signerName;
@@ -8,6 +10,7 @@ public class Signature {
     private String state;
     private String city;
     private String zip;
+    private Date signingDate;
 
     public String getSignerCode() {
         return signerCode;
@@ -64,4 +67,12 @@ public class Signature {
     public void setZip(String zip) {
         this.zip = zip;
     }
+
+	public Date getSigningDate() {
+		return signingDate;
+	}
+
+	public void setSigningDate(Date signingDate) {
+		this.signingDate = signingDate;
+	}
 }

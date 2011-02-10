@@ -2461,13 +2461,13 @@ public class DocumentService {
                     if (sig.getSignedProperties().getClaimedRole(0) != null) {
                         aditSig.setSignerRole(sig.getSignedProperties().getClaimedRole(0));
                     }
+                    aditSig.setSigningDate(sig.getSignedProperties().getSigningTime());
                 }
                 aditSig.setDocument(doc);
                 if ((sig.getLastCertValue() != null) && (sig.getLastCertValue().getCert() != null)) {
                     X509Certificate cert = sig.getLastCertValue().getCert();
                     aditSig.setSignerCode(SignedDoc.getSubjectPersonalCode(cert));
-                    aditSig.setSignerName(SignedDoc.getSubjectLastName(cert) + ", "
-                            + SignedDoc.getSubjectFirstName(cert));
+                    aditSig.setSignerName(SignedDoc.getSubjectLastName(cert) + ", " + SignedDoc.getSubjectFirstName(cert));
                 }
                 aditSig.setUserCode(requestPersonalCode);
                 session.save(aditSig);

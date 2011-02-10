@@ -116,12 +116,11 @@ public class DocumentDAO extends HibernateDaoSupport {
                     if (param.getFolder() != null) {
                         if (param.getFolder().equalsIgnoreCase("local")) {
                             criteria.add(Restrictions.eq("creatorCode", userCode));
-                            criteria.add(Restrictions.or(Restrictions.isNull("documentSharings"), Restrictions
-                                    .isEmpty("documentSharings")));
+                            criteria.add(Restrictions.or(Restrictions.isNull("documentSharings"), Restrictions.isEmpty("documentSharings")));
                         } else if (param.getFolder().equalsIgnoreCase("incoming")) {
                             // "Incoming" means that:
                             // - someone else is document creator
-                            // - document kas been shared to user
+                            // - document has been shared to user
                             criteria.add(Restrictions.ne("creatorCode", userCode));
                             DetachedCriteria sharedToMeSubquery = DetachedCriteria.forClass(Document.class, "doc1")
                                     .createCriteria("documentSharings", "sh1").add(
@@ -139,12 +138,13 @@ public class DocumentDAO extends HibernateDaoSupport {
                             criteria.add(Restrictions.isNotEmpty("documentSharings"));
                         } else {
                             DetachedCriteria sharedToMeSubquery = DetachedCriteria.forClass(Document.class, "doc1")
-                                    .createCriteria("documentSharings", "sh1").add(
-                                            Restrictions.eq("userCode", userCode)).add(
-                                            Property.forName("doc.id").eqProperty("doc1.id")).setProjection(
-                                            Projections.id());
-                            criteria.add(Restrictions.or(Restrictions.eq("creatorCode", userCode), Subqueries
-                                    .exists(sharedToMeSubquery)));
+                                    .createCriteria("documentSharings", "sh1")
+                                    .add(Restrictions.eq("userCode", userCode))
+                                    .add(Property.forName("doc.id").eqProperty("doc1.id"))
+                                    .setProjection(Projections.id());
+                            criteria.add(Restrictions.or(
+                            		Restrictions.eq("creatorCode", userCode),
+                            		Subqueries.exists(sharedToMeSubquery)));
                         }
                     }
 
@@ -267,21 +267,26 @@ public class DocumentDAO extends HibernateDaoSupport {
                     criteria.setProjection(null);
                     criteria.setResultTransformer(Criteria.ROOT_ENTITY);
 
-                    // Then apply paging and ordering
-                    // and get the final list
+                    // Then apply paging and ordering and get the final list
                     int startIndex = (param.getStartIndex() != null) ? param.getStartIndex().intValue() : 0;
                     if (startIndex < 1) {
                         startIndex = 1;
                     }
                     int maxResults = (param.getMaxResults() != null) ? param.getMaxResults().intValue() : 20;
-                    if (maxResults < 1) {
-                        maxResults = 20;
+                    if (maxResults < 0) {
+                    	// It is OK to ask 0 results because it is the only way to get total number
+                    	// of documents without retrieving any of them.
+                    	maxResults = 20;
                     } else if (maxResults > 100) {
                         maxResults = 100;
                     }
+                    
                     criteria.setFirstResult(startIndex - 1);
                     criteria.setMaxResults(maxResults);
                     criteria.addOrder(Order.desc("id"));
+                    
+                    logger.info(criteria.toString());
+                    
                     List<Document> docList = criteria.list();
 
                     for (Document doc : docList) {
@@ -565,6 +570,7 @@ public class DocumentDAO extends HibernateDaoSupport {
                     outSig.setSignerName(sig.getSignerName());
                     outSig.setState(sig.getCounty());
                     outSig.setZip(sig.getPostIndex());
+                    outSig.setSigningDate(sig.getSigningDate());
                     docSignatures.add(outSig);
                 }
             }
@@ -665,7 +671,20 @@ public class DocumentDAO extends HibernateDaoSupport {
             result.setPreviousDocumentId(doc.getDocument().getId());
             result.setPreviousDocumentGuid(doc.getDocument().getGuid());
         }
+        
+        // Document folder
+        if (currentRequestUserCode.equalsIgnoreCase(doc.getCreatorCode()) &&
+        	((doc.getDocumentSharings() == null) || doc.getDocumentSharings().isEmpty())) {
+        	result.setFolder("local");
+        } else if (currentRequestUserCode.equalsIgnoreCase(doc.getCreatorCode())) {
+        	result.setFolder("outgoing");
+        } else {
+        	result.setFolder("incoming");
+        }
 
+        // Has the document been viewed?
+        result.setHasBeenViewed(false);		// FIXME
+        
         return result;
     }
 
