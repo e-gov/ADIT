@@ -693,7 +693,21 @@ public class DocumentDAO extends HibernateDaoSupport {
         }
 
         // Has the document been viewed?
-        result.setHasBeenViewed(false);		// FIXME
+        result.setHasBeenViewed(false);
+        if (currentRequestUserCode.equalsIgnoreCase(doc.getCreatorCode())) {
+        	result.setHasBeenViewed(true);		// FIXME
+        } else {
+            if ((doc.getDocumentSharings() != null) && (!doc.getDocumentSharings().isEmpty())) {
+                Iterator it = doc.getDocumentSharings().iterator();
+                while (it.hasNext()) {
+                    DocumentSharing sharing = (DocumentSharing) it.next();
+                    if (currentRequestUserCode.equalsIgnoreCase(sharing.getUserCode())) {
+                    	result.setHasBeenViewed(sharing.getLastAccessDate() != null);
+                    	break;
+                    }
+                }
+            }
+        }
         
         return result;
     }
