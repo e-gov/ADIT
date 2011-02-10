@@ -163,6 +163,7 @@ adit-war/sql/synonyms.sql -text
 adit-war/sql/testdata/adit_user.dml.sql -text
 adit-war/sql/testdata/create_tablespaces.sql -text
 adit-war/sql/testdata/remote_application.dml.sql -text
+adit-war/sql/updates/1_0_17/update_1_0_17.sql -text
 adit-war/sql/updates/1_0_8/update_1_0_8.sql -text
 adit-war/sql/usertype.dml.sql -text
 adit-war/src/main/java/ee/adit/dao/AccessRestrictionDAO.java -text

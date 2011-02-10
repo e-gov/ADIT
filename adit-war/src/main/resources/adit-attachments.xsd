@@ -534,6 +534,18 @@
 					</xs:documentation>
 				</xs:annotation>
 			</xs:element>
+			<xs:element name="folder" type="xs:string">
+				<xs:annotation>
+					<xs:documentation xml:lang="ee">Dokumendi virtuaalne kataloog</xs:documentation>
+					<xs:documentation xml:lang="en">Document virtual folder</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="has_been_viewed" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation xml:lang="ee">Kas dokumenti on vaadatud</xs:documentation>
+					<xs:documentation xml:lang="en">Has the document been viewed</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="document_type" type="xs:string">
 				<xs:annotation>
 					<xs:documentation xml:lang="ee">Dokumendi tüüp
@@ -756,6 +768,12 @@
 						address</xs:documentation>
 				</xs:annotation>
 			</xs:element>
+			<xs:element name="signing_date" type="xs:dateTime">
+				<xs:annotation>
+					<xs:documentation xml:lang="ee">Allkirjastamise kuupäev ja kellaaeg</xs:documentation>
+					<xs:documentation xml:lang="en">Signing date and time</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:all>
 	</xs:complexType>
 	
@@ -963,8 +981,7 @@
 			</xs:element>
 			<xs:element name="name" type="xs:string">
 				<xs:annotation>
-					<xs:documentation xml:lang="ee">Kasutaja nimi
-					</xs:documentation>
+					<xs:documentation xml:lang="ee">Kasutaja nimi</xs:documentation>
 					<xs:documentation xml:lang="en">User name</xs:documentation>
 				</xs:annotation>
 			</xs:element>
@@ -998,12 +1015,18 @@
 					<xs:documentation xml:lang="en">Document sharing time</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="dvk_status_id" type="xs:integer">
+			<xs:element name="reason_for_sharing" type="xs:string">
 				<xs:annotation>
-					<xs:documentation xml:lang="ee">Selle kasutaja DVK staatuse
-						identifikaator antud dokumendi jaoks</xs:documentation>
-					<xs:documentation xml:lang="en">The DVK status
-						identificator for this document</xs:documentation>
+					<xs:documentation xml:lang="ee">Dokumendi jagamise põhjus (tööülesanne)</xs:documentation>
+					<xs:documentation xml:lang="en">Reason for sharing (task description)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="shared_for_signing" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation xml:lang="ee">Näitab, kas dokument on
+						jagatud allkirjastamiseks</xs:documentation>
+					<xs:documentation xml:lang="en">Indicates if this document
+						has been shared for signing</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 		</xs:sequence>

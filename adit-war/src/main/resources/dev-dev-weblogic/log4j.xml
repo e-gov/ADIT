@@ -89,7 +89,7 @@
     
     <!-- OTHER FRAMEWORKS -->
     <logger name="org.hibernate">
-    	<level value="info"></level>
+    	<level value="debug"></level>
     	<appender-ref ref="file" />
     </logger>
      
@@ -148,7 +148,7 @@
     </logger>
     
     <logger name="org.springframework.orm.hibernate3">
-    	<level value="error"/>
+    	<level value="debug"/>
     	<appender-ref ref="file" />
     </logger>
     

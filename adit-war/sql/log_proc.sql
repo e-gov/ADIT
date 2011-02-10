@@ -1,7 +1,7 @@
 create or replace
 PACKAGE &&ADIT_SCHEMA..ADITLOG AS 
   
-  -- Logimise muutujad
+  -- Logging variables
   xtee_isikukood VARCHAR2(100);
   xtee_asutus VARCHAR2(100);
   remote_application_short_name VARCHAR2(50);

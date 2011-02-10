@@ -287,6 +287,9 @@
 		<field name="zip" type="java.lang.String">
 			<bind-xml name="zip"/>
 		</field>
+		<field name="signingDate" type="java.util.Date">
+			<bind-xml name="signing_date"/>
+		</field>
 	</class>
 
  	<class name="ee.adit.pojo.DocumentSharingData">
@@ -315,6 +318,12 @@
 		</field>
 		<field name="sharedTime" type="java.util.Date">
 			<bind-xml name="shared_time"/>
+		</field>
+		<field name="reasonForSharing" type="java.lang.String">
+			<bind-xml name="reason_for_sharing"/>
+		</field>
+		<field name="sharedForSigning" type="java.lang.Boolean">
+			<bind-xml name="shared_for_signing"/>
 		</field>
 	</class>
  	
@@ -360,6 +369,12 @@
 		</field>
 		<field name="title" type="java.lang.String">
 			<bind-xml name="title"/>
+		</field>
+		<field name="folder" type="java.lang.String">
+			<bind-xml name="folder"/>
+		</field>
+		<field name="hasBeenViewed" type="java.lang.Boolean">
+			<bind-xml name="has_been_viewed"/>
 		</field>
 		<field name="documentType" type="java.lang.String">
 			<bind-xml name="document_type"/>
