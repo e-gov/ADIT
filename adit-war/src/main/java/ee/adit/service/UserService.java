@@ -379,8 +379,11 @@ public class UserService {
 
         if (user != null) {
             // User has joined the service
-            logger.debug("User has joined the service: " + userCode);
-            //hasJoined = true;
+            if (user.getActive()) {
+            	logger.debug("User has joined the service: " + userCode);
+            } else {
+            	logger.debug("User has joined the service but is currently inactive: " + userCode);
+            }
             hasJoined = user.getActive();
 
             usedSpace = this.getAditUserDAO().getUsedSpaceForUser(userCode);
@@ -391,7 +394,7 @@ public class UserService {
                 // Disk quota defined in user table
                 user.getDiskQuota();
             } else {
-                // User disk quota not defined in user table - check usertype
+                // User disk quota not defined in user table - check user type
                 // for quota
                 Usertype usertype = this.getUsertypeDAO().getUsertype(user);
                 if (usertype != null && usertype.getDiskQuota() != null) {
@@ -450,10 +453,9 @@ public class UserService {
      * @return
      */
     public long getRemainingDiskQuota(AditUser user, long globalDiskQuota) {
-
-        logger.info("Finding disk quota for user: " + user.getUserCode());
-
         if (user != null) {
+        	logger.info("Finding disk quota for user: " + user.getUserCode());
+        	
             Long usedDiskSpace = user.getDiskQuotaUsed();
             if (usedDiskSpace == null) {
             	usedDiskSpace = 0L;

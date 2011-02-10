@@ -295,9 +295,6 @@ public class DocumentDAO extends HibernateDaoSupport {
                     criteria.setFirstResult(startIndex - 1);
                     criteria.setMaxResults(maxResults);
                     criteria.addOrder(Order.desc("id"));
-                    
-                    logger.info(criteria.toString());
-                    
                     List<Document> docList = criteria.list();
 
                     for (Document doc : docList) {
