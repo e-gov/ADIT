@@ -1371,4 +1371,16 @@ public final class Util {
         return prefix + code;
     }
 
+    /**
+     * Determines if given String is null or empty (zero length).
+     * Whitespace is not treated as empty string.
+     * 
+     * @param stringToEvaluate
+     * 		String that will be checked for having NULL or empty value
+     * @return
+     * 		true, if input String is NULL or has zero length 
+     */
+    public static boolean isNullOrEmpty(String stringToEvaluate) {
+    	return ((stringToEvaluate == null) || stringToEvaluate.isEmpty());
+    }
 }
