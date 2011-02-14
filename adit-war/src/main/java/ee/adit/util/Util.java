@@ -15,6 +15,7 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.lang.reflect.Field;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -43,6 +44,7 @@ import org.apache.log4j.Logger;
 import org.castor.core.util.Base64Decoder;
 import org.castor.core.util.Base64Encoder;
 
+import ee.adit.dao.pojo.Document;
 import ee.adit.exception.AditInternalException;
 
 /**
@@ -1382,5 +1384,17 @@ public final class Util {
      */
     public static boolean isNullOrEmpty(String stringToEvaluate) {
     	return ((stringToEvaluate == null) || stringToEvaluate.isEmpty());
+    }
+    
+    public static boolean classContainsField(Class targetClass, String fieldName) {
+    	Field[] declaredFields = targetClass.getDeclaredFields();
+    	boolean found = false;
+    	for (int i = 0; i < declaredFields.length; i++) {
+    		if (declaredFields[i].getName() == fieldName) {
+    			found = true;
+    			break;
+    		}
+    	}
+    	return found;
     }
 }

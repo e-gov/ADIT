@@ -433,6 +433,9 @@
 		<field name="deflatingDate" type="java.util.Date">
 			<bind-xml name="deflating_date"/>
 		</field>
+		<field name="removeDate" type="java.util.Date">
+			<bind-xml name="remove_date"/>
+		</field>
 		<field name="signatures" type="ee.adit.pojo.Signature" collection="arraylist">
 			<bind-xml name="signature" location="signatures"/>
 		</field>
@@ -474,11 +477,23 @@
 		<field name="searchPhrase" type="java.lang.String">
 			<bind-xml name="search_phrase" location="keha" />
 		</field>
+		<field name="periodStart" type="java.util.Date">
+			<bind-xml name="period_start" location="keha" />
+		</field>
+		<field name="periodEnd" type="java.util.Date">
+			<bind-xml name="period_end" location="keha" />
+		</field>
 		<field name="maxResults" type="java.lang.Long">
 			<bind-xml name="max_results" location="keha" />
 		</field>
 		<field name="startIndex" type="java.lang.Long">
 			<bind-xml name="start_index" location="keha" />
+		</field>
+		<field name="sortBy" type="java.lang.String">
+			<bind-xml name="sort_by" location="keha" />
+		</field>
+		<field name="SortOrder" type="java.lang.String">
+			<bind-xml name="sort_order" location="keha" />
 		</field>
 	</class>
 	

@@ -96,7 +96,7 @@ public class DocumentDAO extends HibernateDaoSupport {
     @SuppressWarnings("unchecked")
     public GetDocumentListResponseAttachment getDocumentSearchResult(final GetDocumentListRequest param,
             final String userCode, final String temporaryFilesDir, final String filesNotFoundMessageBase,
-            final String currentRequestUserCode) {
+            final String currentRequestUserCode, final Long documentRetentionDeadlineDays) {
 
         GetDocumentListResponseAttachment result = null;
 
@@ -197,10 +197,8 @@ public class DocumentDAO extends HibernateDaoSupport {
 
                     // Has the document been viewed?
                     // - if user is document creator, then it is viewed
-                    // - if document was sent to user then check viewing
-                    // status
-                    // - if document was shared to user then check
-                    // viewing status
+                    // - if document was sent to user then check viewing status
+                    // - if document was shared to user then check viewing status
                     if (param.isHasBeenViewed() != null) {
                         DetachedCriteria historySubquery = DetachedCriteria.forClass(Document.class, "doc5")
                                 .createCriteria("documentHistories", "history").add(
@@ -214,7 +212,8 @@ public class DocumentDAO extends HibernateDaoSupport {
                             disjunction.add(Subqueries.exists(historySubquery));
                             criteria.add(disjunction);
                         } else {
-                            criteria.add(Subqueries.notExists(historySubquery));
+                        	criteria.add(Restrictions.ne("creatorCode", userCode));
+                        	criteria.add(Subqueries.notExists(historySubquery));
                         }
                     }
 
@@ -271,6 +270,30 @@ public class DocumentDAO extends HibernateDaoSupport {
 
                         criteria.add(disjunction);
                     }
+                    
+                    // Last modified date range
+                    if (param.getPeriodStart() != null) {
+                    	criteria.add(Restrictions.isNotNull("lastModifiedDate"));
+                    	criteria.add(Restrictions.ge("lastModifiedDate", param.getPeriodStart()));
+                    }
+                    if (param.getPeriodEnd() != null) {
+                    	// Increase end date by 1 day to get documents modified 
+                    	// before 00:00 of next day.
+                    	Calendar cal = Calendar.getInstance();
+                    	cal.setTime(param.getPeriodEnd());
+                    	cal.add(Calendar.DATE, 1);
+                    	criteria.add(Restrictions.isNotNull("lastModifiedDate"));
+                    	criteria.add(Restrictions.lt("lastModifiedDate", cal.getTime()));
+                    } else if (param.getPeriodStart() != null) {
+                    	// If period start date is set and end date is not then return only
+                    	// documents modified within 7 days from period start date.
+                    	Calendar cal = Calendar.getInstance();
+                    	cal.setTime(param.getPeriodStart());
+                    	cal.add(Calendar.DATE, 8);
+                    	criteria.add(Restrictions.isNotNull("lastModifiedDate"));
+                    	criteria.add(Restrictions.lt("lastModifiedDate", cal.getTime()));
+                    }
+                    
 
                     // First get total number of matching documents
                     criteria.setProjection(Projections.rowCount());
@@ -294,12 +317,40 @@ public class DocumentDAO extends HibernateDaoSupport {
                     
                     criteria.setFirstResult(startIndex - 1);
                     criteria.setMaxResults(maxResults);
-                    criteria.addOrder(Order.desc("id"));
+                    
+                    // Search result ordering
+                    String sortBy = "lastModified";
+                    String sortOrder = "desc";
+                    if (!Util.isNullOrEmpty(param.getSortBy())) {
+                    	String sortByDbName = documentFieldXmlNameToDbName(param.getSortBy());
+	                    if (Util.classContainsField(Document.class, sortByDbName)) {
+	                    	sortBy = param.getSortBy();
+	                    	sortOrder = "asc";
+                    	} else {
+                            AditCodedException aditCodedException = new AditCodedException("request.getDocumentList.incorrectSortByField");
+                            aditCodedException.setParameters(new Object[] {param.getSortBy()});
+                            throw aditCodedException;
+                    	}
+                    }
+                    if (!Util.isNullOrEmpty(param.getSortOrder())) {
+                    	if ("desc".equalsIgnoreCase(param.getSortOrder())) {
+                    		sortOrder = "desc";
+                    	} else {
+                    		sortOrder = "asc";
+                    	}
+                    }
+                    
+                    if ("asc".equalsIgnoreCase(sortOrder)) {
+                    	criteria.addOrder(Order.asc(sortBy));
+                    } else {
+                    	criteria.addOrder(Order.desc(sortBy));
+                    }
+                    
                     List<Document> docList = criteria.list();
 
                     for (Document doc : docList) {
                         OutputDocument resultDoc = dbDocumentToOutputDocument(doc, null, true, true, false,
-                                temporaryFilesDir, filesNotFoundMessageBase, currentRequestUserCode);
+                                temporaryFilesDir, filesNotFoundMessageBase, currentRequestUserCode, documentRetentionDeadlineDays);
                         innerResult.getDocumentList().add(resultDoc);
                     }
 
@@ -333,9 +384,9 @@ public class DocumentDAO extends HibernateDaoSupport {
      */
     public OutputDocument getDocumentWithFiles(final long documentId, final List<Long> fileIdList,
             final boolean includeSignatures, final boolean includeSharings, final boolean includeFileContents,
-            final String temporaryFilesDir, final String filesNotFoundMessageBase, final String currentRequestUserCode)
+            final String temporaryFilesDir, final String filesNotFoundMessageBase,
+            final String currentRequestUserCode, final Long documentRetentionDeadlineDays)
             throws Exception {
-
         if (documentId <= 0) {
             throw new IllegalArgumentException("Document ID must be a positive integer. Currently supplied ID was "
                     + documentId + ".");
@@ -347,7 +398,6 @@ public class DocumentDAO extends HibernateDaoSupport {
             logger.debug("Attempting to load document files for document " + documentId);
             result = (OutputDocument) getHibernateTemplate().execute(new HibernateCallback() {
 
-                @SuppressWarnings("unchecked")
                 @Override
                 public Object doInHibernate(Session session) throws HibernateException, SQLException {
                     Document doc = (Document) session.get(Document.class, documentId);
@@ -424,7 +474,7 @@ public class DocumentDAO extends HibernateDaoSupport {
                     }
 
                     return dbDocumentToOutputDocument(doc, fileIdList, includeSignatures, includeSharings,
-                            includeFileContents, temporaryFilesDir, filesNotFoundMessageBase, currentRequestUserCode);
+                            includeFileContents, temporaryFilesDir, filesNotFoundMessageBase, currentRequestUserCode, documentRetentionDeadlineDays);
                 }
             });
         } catch (DataAccessException ex) {
@@ -449,14 +499,17 @@ public class DocumentDAO extends HibernateDaoSupport {
      * @param temporaryFilesDir temporary directory
      * @param filesNotFoundMessageBase exception message base
      * @param currentRequestUserCode user code (the user that activated the request)
+     * @param documentRetentionDeadlineDays
+     * 		Document retention deadline from application configuration. Will be
+     * 		used to calculate estimated remove date of document.
      * 
      * @return document in output format
      * @throws SQLException
      */
-    @SuppressWarnings("unchecked")
     private OutputDocument dbDocumentToOutputDocument(Document doc, final List<Long> fileIdList,
             final boolean includeSignatures, final boolean includeSharings, final boolean includeFileContents,
-            final String temporaryFilesDir, final String filesNotFoundMessageBase, final String currentRequestUserCode)
+            final String temporaryFilesDir, final String filesNotFoundMessageBase,
+            final String currentRequestUserCode, final Long documentRetentionDeadlineDays)
             throws SQLException {
 
         long totalBytes = 0;
@@ -674,6 +727,16 @@ public class DocumentDAO extends HibernateDaoSupport {
         result.setSignable(doc.getSignable());
         result.setTitle(doc.getTitle());
         result.setWorkflowStatusId(doc.getDocumentWfStatusId());
+        
+        // Estimated document remove date
+        Date removeDate = null;
+        if ((doc.getLastModifiedDate() != null) && (documentRetentionDeadlineDays != null) && (documentRetentionDeadlineDays > 0)) {
+        	Calendar cal = Calendar.getInstance();
+        	cal.setTime(doc.getLastModifiedDate());
+        	cal.add(Calendar.DATE, documentRetentionDeadlineDays.intValue());
+        	removeDate = cal.getTime();
+        }
+        result.setRemoveDate(removeDate);
 
         // If data about document previous version is present
         // then add it to output
@@ -766,7 +829,6 @@ public class DocumentDAO extends HibernateDaoSupport {
      * @return save result
      * @throws IOException
      */
-    @SuppressWarnings("unchecked")
     private SaveItemInternalResult saveImpl(Document document, List<OutputDocumentFile> files, long remainingDiskQuota,
             Session session) throws IOException {
         SaveItemInternalResult result = new SaveItemInternalResult();
@@ -1019,5 +1081,18 @@ public class DocumentDAO extends HibernateDaoSupport {
 
     public void setMessageService(MessageService messageService) {
         this.messageService = messageService;
+    }
+    
+    
+    private String documentFieldXmlNameToDbName(String xmlName) {
+    	if ("document_type".equalsIgnoreCase(xmlName)) {
+    		return "documentType";
+    	} else if("last_modified".equalsIgnoreCase(xmlName)) {
+    		return "lastModifiedDate";
+    	}  else if("dvk_id".equalsIgnoreCase(xmlName)) {
+    		return "dvkId";
+    	} else {
+    		return xmlName.toLowerCase();
+    	}
     }
 }

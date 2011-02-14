@@ -18,6 +18,10 @@
 		<property name="schedulerEventTypeName" value="Minu dokumentide teavitus"/>
 		<property name="dvkResponseMessageStylesheet" value="DVKresponseMessage.xsl"/>
 		<property name="globalDiskQuota" value="10240000"/>
+		
+		<!-- Dokumentide säilitustähtaeg päevades -->
+		<property name="documentRetentionDeadlineDays" value="365"/>
+		
 		<property name="locales">
 			<list>
 				<value>en_us</value>

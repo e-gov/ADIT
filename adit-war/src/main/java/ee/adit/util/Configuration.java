@@ -45,6 +45,13 @@ public class Configuration {
      * specific quota is declared for the user.
      */
     private Long globalDiskQuota;
+    
+    /**
+     * Document retention deadline in days.
+     * When given number of days has passed since last modification
+     * of document, then document will be deflated (document file contents removed)
+     */
+    private Long documentRetentionDeadlineDays;
 
     /**
      * The locales that specify in which languages the error messages are
@@ -144,7 +151,15 @@ public class Configuration {
         this.globalDiskQuota = globalDiskQuota;
     }
 
-    public String getDvkOrgCode() {
+    public Long getDocumentRetentionDeadlineDays() {
+		return documentRetentionDeadlineDays;
+	}
+
+	public void setDocumentRetentionDeadlineDays(Long documentRetentionDeadlineDays) {
+		this.documentRetentionDeadlineDays = documentRetentionDeadlineDays;
+	}
+
+	public String getDvkOrgCode() {
         return dvkOrgCode;
     }
 

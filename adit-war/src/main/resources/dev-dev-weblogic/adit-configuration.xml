@@ -19,6 +19,10 @@
 		<property name="dvkResponseMessageStylesheet" value="DVKresponseMessage.xsl" />
 		<!-- Üldine kettamahu piirang ühe kasutaja kohta baitides -->
 		<property name="globalDiskQuota" value="10240000" />
+		
+		<!-- Dokumentide säilitustähtaeg päevades -->
+		<property name="documentRetentionDeadlineDays" value="365"/>
+		
 		<property name="locales">
 			<list>
 				<value>en_us</value>

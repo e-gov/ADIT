@@ -28,6 +28,7 @@ public class OutputDocument {
     private Boolean signable;
     private Boolean deflated;
     private Date deflatingDate;
+    private Date removeDate;
     private List<Signature> signatures;
     private DocumentSendingData sentTo;
     private DocumentSharingData sharedTo;
@@ -225,7 +226,15 @@ public class OutputDocument {
         this.deflatingDate = deflatingDate;
     }
 
-    public List<Signature> getSignatures() {
+    public Date getRemoveDate() {
+		return removeDate;
+	}
+
+	public void setRemoveDate(Date removeDate) {
+		this.removeDate = removeDate;
+	}
+
+	public List<Signature> getSignatures() {
         return signatures;
     }
 

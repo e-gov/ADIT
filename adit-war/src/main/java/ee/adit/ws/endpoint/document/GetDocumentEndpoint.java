@@ -180,7 +180,7 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
                                     includeFileContents,
                                     this.getConfiguration().getTempDir(),
                                     this.getMessageSource().getMessage("files.nonExistentOrDeleted", new Object[] {},
-                                            Locale.ENGLISH), user.getUserCode());
+                                    Locale.ENGLISH), user.getUserCode(), getConfiguration().getDocumentRetentionDeadlineDays());
 
                             if (resultDoc != null) {
                                 // Remember file IDs for logging later on.

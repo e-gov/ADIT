@@ -137,9 +137,9 @@ public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
             GetDocumentListResponseAttachment att = this.documentService.getDocumentDAO().getDocumentSearchResult(
                     request, userCode, this.getConfiguration().getTempDir(),
                     this.getMessageSource().getMessage("files.nonExistentOrDeleted", new Object[] {}, Locale.ENGLISH),
-                    user.getUserCode());
+                    user.getUserCode(), getConfiguration().getDocumentRetentionDeadlineDays());
 
-            if ((att.getDocumentList() != null) && !att.getDocumentList().isEmpty()) {
+            if (att.getTotal() > 0) {
                 // Remember document ID-s for logging
                 for (OutputDocument outputDoc : att.getDocumentList()) {
                     documentIdList.add(outputDoc.getId());
@@ -158,8 +158,7 @@ public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
                 responseList.setHref("cid:" + contentID);
                 response.setDocumentList(responseList);
             } else {
-                AditCodedException aditCodedException = new AditCodedException(
-                        "request.getDocumentList.noDocumentsFound");
+                AditCodedException aditCodedException = new AditCodedException("request.getDocumentList.noDocumentsFound");
                 aditCodedException.setParameters(new Object[] {userCode });
                 throw aditCodedException;
             }

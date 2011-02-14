@@ -7,6 +7,8 @@
 
 package ee.adit.pojo;
 
+import java.util.Date;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -33,8 +35,12 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="is_deflated" type="{http://www.w3.org/2001/XMLSchema}boolean"/>
  *         &lt;element name="creator_applications" type="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}ArrayOfCreatorApplication"/>
  *         &lt;element name="search_phrase" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="period_start" type="{http://www.w3.org/2001/XMLSchema}date"/>
+ *         &lt;element name="period_end" type="{http://www.w3.org/2001/XMLSchema}date"/>
  *         &lt;element name="max_results" type="{http://www.w3.org/2001/XMLSchema}integer"/>
  *         &lt;element name="start_index" type="{http://www.w3.org/2001/XMLSchema}integer"/>
+ *         &lt;element name="sort_by" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="sort_order" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -45,8 +51,8 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "GetDocumentListRequest", propOrder = {"folder", "documentTypes", "documentDvkStatuses",
-        "documentWorkflowStatuses", "hasBeenViewed", "isDeflated", "creatorApplications", "searchPhrase", "maxResults",
-        "startIndex" })
+        "documentWorkflowStatuses", "hasBeenViewed", "isDeflated", "creatorApplications", "searchPhrase",
+        "periodStart", "periodEnd", "maxResults", "startIndex", "sortBy", "sortOrder" })
 public class GetDocumentListRequest {
 
     @XmlElement(required = true)
@@ -65,10 +71,19 @@ public class GetDocumentListRequest {
     private ArrayOfCreatorApplication creatorApplications;
     @XmlElement(name = "search_phrase", required = true)
     private String searchPhrase;
+    @XmlElement(name = "period_start")
+    private Date periodStart;
+    @XmlElement(name = "period_end")
+    private Date periodEnd;
     @XmlElement(name = "max_results", required = true)
     private Long maxResults;
     @XmlElement(name = "start_index", required = true)
     private Long startIndex;
+    @XmlElement(name = "sort_by")
+    private String sortBy;
+    @XmlElement(name = "sort_order")
+    private String sortOrder;
+    
 
     /**
      * Gets the value of the folder property.
@@ -229,6 +244,48 @@ public class GetDocumentListRequest {
     }
 
     /**
+     * Gets the value of the periodStart property.
+     * 
+     * @return possible object is {@link Date }
+     * 
+     */
+    public Date getPeriodStart() {
+		return periodStart;
+	}
+
+    /**
+     * Sets the value of the periodStart property.
+     * 
+     * @param value
+     *            allowed object is {@link Date }
+     * 
+     */
+    public void setPeriodStart(Date periodStart) {
+		this.periodStart = periodStart;
+	}
+
+    /**
+     * Gets the value of the periodEnd property.
+     * 
+     * @return possible object is {@link Date }
+     * 
+     */
+	public Date getPeriodEnd() {
+		return periodEnd;
+	}
+
+    /**
+     * Sets the value of the periodEnd property.
+     * 
+     * @param value
+     *            allowed object is {@link Date }
+     * 
+     */
+	public void setPeriodEnd(Date periodEnd) {
+		this.periodEnd = periodEnd;
+	}
+
+	/**
      * Gets the value of the maxResults property.
      * 
      * @return possible object is {@link Long }
@@ -269,5 +326,47 @@ public class GetDocumentListRequest {
     public void setStartIndex(Long value) {
         this.startIndex = value;
     }
+
+    /**
+     * Gets the value of the sortBy property.
+     * 
+     * @return possible object is {@link String }
+     * 
+     */
+	public String getSortBy() {
+		return sortBy;
+	}
+
+    /**
+     * Sets the value of the sortBy property.
+     * 
+     * @param value
+     *            allowed object is {@link String }
+     * 
+     */
+	public void setSortBy(String sortBy) {
+		this.sortBy = sortBy;
+	}
+
+    /**
+     * Gets the value of the sortOrder property.
+     * 
+     * @return possible object is {@link String }
+     * 
+     */
+	public String getSortOrder() {
+		return sortOrder;
+	}
+
+    /**
+     * Sets the value of the sortOrder property.
+     * 
+     * @param value
+     *            allowed object is {@link String }
+     * 
+     */
+	public void setSortOrder(String sortOrder) {
+		this.sortOrder = sortOrder;
+	}
 
 }

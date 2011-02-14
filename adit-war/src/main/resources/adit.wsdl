@@ -101,7 +101,7 @@
 				</xs:annotation>
 				<restriction base="string" />
 			</simpleType>
-
+			
 			<complexType name="message">
 				<xs:annotation>
 					<xs:documentation xml:lang="ee">Teade</xs:documentation>
@@ -622,6 +622,18 @@
 							</xs:documentation>
 						</xs:annotation>
 					</element>
+					<element name="period_start" type="date">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Viimase muudatuse vahemiku algus</xs:documentation>
+							<xs:documentation xml:lang="en">Start date of last modified range</xs:documentation>
+						</xs:annotation>
+					</element>
+					<element name="period_end" type="date">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Viimase muudatuse vahemiku lõpp</xs:documentation>
+							<xs:documentation xml:lang="en">End date of last modified range</xs:documentation>
+						</xs:annotation>
+					</element>
 					<element name="max_results" type="integer">
 						<xs:annotation>
 							<xs:documentation xml:lang="ee">Maksimaalne tulemuste arv
@@ -637,6 +649,37 @@
 							<xs:documentation xml:lang="en">Offset(starting index) of
 								the results returned</xs:documentation>
 						</xs:annotation>
+					</element>
+					<element name="sort_by">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Andmeväli, mille järgi otsingu
+								tulemused sorteeritakse</xs:documentation>
+							<xs:documentation xml:lang="en">Name of field that will
+								be used to sort search result</xs:documentation>
+						</xs:annotation>
+						<simpleType>
+							<restriction base="string">
+								<enumeration value="created"/>
+								<enumeration value="document_type"/>
+								<enumeration value="dvk_id"/>
+								<enumeration value="guid"/>
+								<enumeration value="id"/>
+								<enumeration value="last_modified"/>
+								<enumeration value="title"/>
+							</restriction>
+						</simpleType>
+					</element>
+					<element name="sort_order">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Otsingutulemuste sorteerimise suund</xs:documentation>
+							<xs:documentation xml:lang="en">Search result sort order</xs:documentation>
+						</xs:annotation>
+						<simpleType>
+							<restriction base="string">
+								<enumeration value="asc"/>
+								<enumeration value="desc"/>
+							</restriction>
+						</simpleType>
 					</element>
 				</sequence>
 			</complexType>
