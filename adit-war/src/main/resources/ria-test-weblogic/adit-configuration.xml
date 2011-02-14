@@ -12,13 +12,18 @@
 	
 	<!-- Configuration -->
 	<bean id="configuration" class="ee.adit.util.Configuration">
-		<property name="getJoinedMaxResults" value="2"/>
+		<property name="getJoinedMaxResults" value="10"/>
 		<property name="tempDir" value="tmp"/>
 		<property name="deleteTemporaryFiles" value="true"/>
 		<property name="schedulerEventTypeName" value="Minu dokumentide teavitus"/>
 		<property name="dvkResponseMessageStylesheet" value="DVKresponseMessage.xsl"/>
+		
 		<!-- Üldine kettamahu piirang ühe kasutaja kohta baitides -->
 		<property name="globalDiskQuota" value="10240000"/>
+		
+		<!-- Dokumentide säilitustähtaeg päevades -->
+		<property name="documentRetentionDeadlineDays" value="365"/>
+		
 		<property name="locales">
 			<list>
 				<value>en_us</value>
