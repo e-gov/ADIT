@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
@@ -323,20 +324,23 @@ public class DocumentDAO extends HibernateDaoSupport {
                     String sortOrder = "desc";
                     if (!Util.isNullOrEmpty(param.getSortBy())) {
                     	String sortByDbName = documentFieldXmlNameToDbName(param.getSortBy());
-	                    if (Util.classContainsField(Document.class, sortByDbName)) {
+	                    if (Arrays.asList("id", "guid", "title", "document_type", "created", "last_modified", "dvk_id").contains(param.getSortBy())
+	                    	&& Util.classContainsField(Document.class, sortByDbName)) {
 	                    	sortBy = sortByDbName;
 	                    	sortOrder = "asc";
                     	} else {
-                            AditCodedException aditCodedException = new AditCodedException("request.getDocumentList.incorrectSortByField");
+                            AditCodedException aditCodedException = new AditCodedException("request.getDocumentList.incorrectSortByParameter");
                             aditCodedException.setParameters(new Object[] {param.getSortBy()});
                             throw aditCodedException;
                     	}
                     }
                     if (!Util.isNullOrEmpty(param.getSortOrder())) {
-                    	if ("desc".equalsIgnoreCase(param.getSortOrder())) {
-                    		sortOrder = "desc";
+                    	if ("asc".equalsIgnoreCase(param.getSortOrder()) || "desc".equalsIgnoreCase(param.getSortOrder())) {
+                    		sortOrder = param.getSortOrder().toLowerCase();
                     	} else {
-                    		sortOrder = "asc";
+                            AditCodedException aditCodedException = new AditCodedException("request.getDocumentList.incorrectSortOrderParameter");
+                            aditCodedException.setParameters(new Object[] {param.getSortOrder()});
+                            throw aditCodedException;
                     	}
                     }
                     
