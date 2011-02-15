@@ -1390,7 +1390,7 @@ public final class Util {
     	Field[] declaredFields = targetClass.getDeclaredFields();
     	boolean found = false;
     	for (int i = 0; i < declaredFields.length; i++) {
-    		if (declaredFields[i].getName() == fieldName) {
+    		if (declaredFields[i].getName().compareTo(fieldName) == 0) {
     			found = true;
     			break;
     		}

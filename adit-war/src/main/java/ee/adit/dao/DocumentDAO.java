@@ -324,7 +324,7 @@ public class DocumentDAO extends HibernateDaoSupport {
                     if (!Util.isNullOrEmpty(param.getSortBy())) {
                     	String sortByDbName = documentFieldXmlNameToDbName(param.getSortBy());
 	                    if (Util.classContainsField(Document.class, sortByDbName)) {
-	                    	sortBy = param.getSortBy();
+	                    	sortBy = sortByDbName;
 	                    	sortOrder = "asc";
                     	} else {
                             AditCodedException aditCodedException = new AditCodedException("request.getDocumentList.incorrectSortByField");
