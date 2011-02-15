@@ -4,19 +4,20 @@
 	<groupId>ee</groupId>
 	<artifactId>adit-war</artifactId>
 	<packaging>war</packaging>
-	<version>1.0.17</version>
+	<version>1.0.18</version>
 	<name>ADIT Web Application</name>
 
-	<!--
-		<parent> <groupId>ee</groupId> <artifactId>adit</artifactId>
-		<version>1.0.9</version> </parent>
-	-->
+	<parent>
+		<groupId>ee</groupId>
+		<artifactId>adit</artifactId>
+		<version>1.0.18</version>
+	</parent>
 
 	<properties>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		
 		<!-- Edit this to match your destination environment -->
-		<resourceDir>ria-dev-weblogic</resourceDir>
+		<!--<resourceDir>ria-dev-weblogic</resourceDir>-->
 		<!--<resourceDir>ria-test-weblogic</resourceDir>-->
 		<!--<resourceDir>dev-dev-weblogic</resourceDir>-->
 	</properties>

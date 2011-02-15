@@ -1959,7 +1959,7 @@
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="created" type="xs:date">
+					<xs:element name="created" type="xs:dateTime">
 						<xs:annotation>
 							<xs:documentation xml:lang="ee">Dokumendi loomise aeg
 							</xs:documentation>
@@ -1975,7 +1975,7 @@
 								creating the document</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="last_modified" type="xs:date">
+					<xs:element name="last_modified" type="xs:dateTime">
 						<xs:annotation>
 							<xs:documentation xml:lang="ee">Dokumendi viimase muutmise
 								aeg</xs:documentation>
@@ -2061,12 +2061,12 @@
 								has peen deflated (document files erased)</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="deflating_date" type="xs:date">
+					<xs:element name="deflating_date" type="xs:dateTime">
 						<xs:annotation>
-							<xs:documentation xml:lang="ee">Dokumendi DVK ID, kui dokument
-								on DVK kaudu saadetud või saabunud</xs:documentation>
-							<xs:documentation xml:lang="en">Documents DEC ID if document
-								has been sent or received using DEC</xs:documentation>
+							<xs:documentation xml:lang="ee">Dokumendi failide kustutamise
+								kuupäev ja kellaaeg</xs:documentation>
+							<xs:documentation xml:lang="en">Date and time when
+								document files were deleted</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="signatures" type="documentSignatureListV1Type">

@@ -433,7 +433,7 @@
 		<field name="deflatingDate" type="java.util.Date">
 			<bind-xml name="deflating_date"/>
 		</field>
-		<field name="removeDate" type="java.util.Date">
+		<field name="removeDate" type="org.exolab.castor.types.Date">
 			<bind-xml name="remove_date"/>
 		</field>
 		<field name="signatures" type="ee.adit.pojo.Signature" collection="arraylist">
@@ -477,10 +477,10 @@
 		<field name="searchPhrase" type="java.lang.String">
 			<bind-xml name="search_phrase" location="keha" />
 		</field>
-		<field name="periodStart" type="java.util.Date">
+		<field name="periodStart" type="org.exolab.castor.types.Date">
 			<bind-xml name="period_start" location="keha" />
 		</field>
-		<field name="periodEnd" type="java.util.Date">
+		<field name="periodEnd" type="org.exolab.castor.types.Date">
 			<bind-xml name="period_end" location="keha" />
 		</field>
 		<field name="maxResults" type="java.lang.Long">
