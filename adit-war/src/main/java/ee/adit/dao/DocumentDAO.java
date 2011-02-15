@@ -281,7 +281,7 @@ public class DocumentDAO extends HibernateDaoSupport {
                     	// Increase end date by 1 day to get documents modified 
                     	// before 00:00 of next day.
                     	Calendar cal = Calendar.getInstance();
-                    	cal.setTime(param.getPeriodEnd());
+                    	cal.setTime(param.getPeriodEnd().toDate());
                     	cal.add(Calendar.DATE, 1);
                     	criteria.add(Restrictions.isNotNull("lastModifiedDate"));
                     	criteria.add(Restrictions.lt("lastModifiedDate", cal.getTime()));
@@ -289,7 +289,7 @@ public class DocumentDAO extends HibernateDaoSupport {
                     	// If period start date is set and end date is not then return only
                     	// documents modified within 7 days from period start date.
                     	Calendar cal = Calendar.getInstance();
-                    	cal.setTime(param.getPeriodStart());
+                    	cal.setTime(param.getPeriodStart().toDate());
                     	cal.add(Calendar.DATE, 8);
                     	criteria.add(Restrictions.isNotNull("lastModifiedDate"));
                     	criteria.add(Restrictions.lt("lastModifiedDate", cal.getTime()));
@@ -740,7 +740,7 @@ public class DocumentDAO extends HibernateDaoSupport {
         	cal.add(Calendar.DATE, documentRetentionDeadlineDays.intValue());
         	removeDate = cal.getTime();
         }
-        result.setRemoveDate(removeDate);
+        result.setRemoveDate(new org.exolab.castor.types.Date(removeDate));
 
         // If data about document previous version is present
         // then add it to output

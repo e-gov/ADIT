@@ -28,7 +28,7 @@ public class OutputDocument {
     private Boolean signable;
     private Boolean deflated;
     private Date deflatingDate;
-    private Date removeDate;
+    private org.exolab.castor.types.Date removeDate;
     private List<Signature> signatures;
     private DocumentSendingData sentTo;
     private DocumentSharingData sharedTo;
@@ -226,11 +226,11 @@ public class OutputDocument {
         this.deflatingDate = deflatingDate;
     }
 
-    public Date getRemoveDate() {
+    public org.exolab.castor.types.Date getRemoveDate() {
 		return removeDate;
 	}
 
-	public void setRemoveDate(Date removeDate) {
+	public void setRemoveDate(org.exolab.castor.types.Date removeDate) {
 		this.removeDate = removeDate;
 	}
 

@@ -72,9 +72,9 @@ public class GetDocumentListRequest {
     @XmlElement(name = "search_phrase", required = true)
     private String searchPhrase;
     @XmlElement(name = "period_start")
-    private Date periodStart;
+    private org.exolab.castor.types.Date periodStart;
     @XmlElement(name = "period_end")
-    private Date periodEnd;
+    private org.exolab.castor.types.Date periodEnd;
     @XmlElement(name = "max_results", required = true)
     private Long maxResults;
     @XmlElement(name = "start_index", required = true)
@@ -246,10 +246,10 @@ public class GetDocumentListRequest {
     /**
      * Gets the value of the periodStart property.
      * 
-     * @return possible object is {@link Date }
+     * @return possible object is {@link org.exolab.castor.types.Date }
      * 
      */
-    public Date getPeriodStart() {
+    public org.exolab.castor.types.Date getPeriodStart() {
 		return periodStart;
 	}
 
@@ -257,20 +257,20 @@ public class GetDocumentListRequest {
      * Sets the value of the periodStart property.
      * 
      * @param value
-     *            allowed object is {@link Date }
+     *            allowed object is {@link org.exolab.castor.types.Date }
      * 
      */
-    public void setPeriodStart(Date periodStart) {
+    public void setPeriodStart(org.exolab.castor.types.Date periodStart) {
 		this.periodStart = periodStart;
 	}
 
     /**
      * Gets the value of the periodEnd property.
      * 
-     * @return possible object is {@link Date }
+     * @return possible object is {@link org.exolab.castor.types.Date }
      * 
      */
-	public Date getPeriodEnd() {
+	public org.exolab.castor.types.Date getPeriodEnd() {
 		return periodEnd;
 	}
 
@@ -278,10 +278,10 @@ public class GetDocumentListRequest {
      * Sets the value of the periodEnd property.
      * 
      * @param value
-     *            allowed object is {@link Date }
+     *            allowed object is {@link org.exolab.castor.types.Date }
      * 
      */
-	public void setPeriodEnd(Date periodEnd) {
+	public void setPeriodEnd(org.exolab.castor.types.Date periodEnd) {
 		this.periodEnd = periodEnd;
 	}
 
