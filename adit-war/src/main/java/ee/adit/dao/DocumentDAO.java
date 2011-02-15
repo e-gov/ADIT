@@ -275,7 +275,7 @@ public class DocumentDAO extends HibernateDaoSupport {
                     // Last modified date range
                     if (param.getPeriodStart() != null) {
                     	criteria.add(Restrictions.isNotNull("lastModifiedDate"));
-                    	criteria.add(Restrictions.ge("lastModifiedDate", param.getPeriodStart()));
+                    	criteria.add(Restrictions.ge("lastModifiedDate", param.getPeriodStart().toDate()));
                     }
                     if (param.getPeriodEnd() != null) {
                     	// Increase end date by 1 day to get documents modified 
