@@ -157,21 +157,25 @@ public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
                 GetDocumentListResponseList responseList = new GetDocumentListResponseList();
                 responseList.setHref("cid:" + contentID);
                 response.setDocumentList(responseList);
-            } else {
-                AditCodedException aditCodedException = new AditCodedException("request.getDocumentList.noDocumentsFound");
-                aditCodedException.setParameters(new Object[] {userCode });
-                throw aditCodedException;
             }
 
             // Set response messages
             response.setSuccess(true);
-            messages.setMessage(this.getMessageService()
-                    .getMessages("request.getDocumentList.success", new Object[] {}));
-            response.setMessages(messages);
+            if (att.getTotal() > 0) {
+	            messages.setMessage(this.getMessageService().getMessages("request.getDocumentList.success", new Object[] {}));
+	            response.setMessages(messages);
+            } else {
+	            messages.setMessage(this.getMessageService().getMessages("request.getDocumentList.noDocumentsFound", new Object[] {userCode}));
+	            response.setMessages(messages);
+            }
 
-            String additionalMessage = this.getMessageService().getMessage("request.getDocumentList.success",
-                    new Object[] {}, Locale.ENGLISH);
-            additionalInformationForLog = LogService.REQUEST_LOG_SUCCESS + ": " + additionalMessage;
+            if (att.getTotal() > 0) {
+	            String additionalMessage = this.getMessageService().getMessage("request.getDocumentList.success", new Object[] {}, Locale.ENGLISH);
+	            additionalInformationForLog = LogService.REQUEST_LOG_SUCCESS + ": " + additionalMessage;
+            } else {
+	            String additionalMessage = this.getMessageService().getMessage("request.getDocumentList.noDocumentsFound", new Object[] {userCode}, Locale.ENGLISH);
+	            additionalInformationForLog = LogService.REQUEST_LOG_SUCCESS + ": " + additionalMessage;            	
+            }
 
         } catch (Exception e) {
             String errorMessage = null;

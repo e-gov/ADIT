@@ -238,14 +238,14 @@ public class DocumentDAO extends HibernateDaoSupport {
                     // Phrase search
                     if ((param.getSearchPhrase() != null) && (param.getSearchPhrase().length() > 0)) {
                         Disjunction disjunction = Restrictions.disjunction();
-                        disjunction.add(Restrictions.like("title", param.getSearchPhrase(), MatchMode.ANYWHERE));
-                        disjunction.add(Restrictions.like("creatorCode", param.getSearchPhrase(), MatchMode.ANYWHERE));
-                        disjunction.add(Restrictions.like("creatorName", param.getSearchPhrase(), MatchMode.ANYWHERE));
+                        disjunction.add(Restrictions.ilike("title", param.getSearchPhrase(), MatchMode.ANYWHERE));
+                        disjunction.add(Restrictions.ilike("creatorCode", param.getSearchPhrase(), MatchMode.ANYWHERE));
+                        disjunction.add(Restrictions.ilike("creatorName", param.getSearchPhrase(), MatchMode.ANYWHERE));
 
                         DetachedCriteria sigSubquery = DetachedCriteria.forClass(Document.class, "doc2")
                                 .createCriteria("signatures", "sig").add(
-                                        Restrictions.or(Restrictions.like("signerCode", param.getSearchPhrase(),
-                                                MatchMode.ANYWHERE), Restrictions.like("signerName", param
+                                        Restrictions.or(Restrictions.ilike("signerCode", param.getSearchPhrase(),
+                                                MatchMode.ANYWHERE), Restrictions.ilike("signerName", param
                                                 .getSearchPhrase(), MatchMode.ANYWHERE))).add(
                                         Property.forName("doc.id").eqProperty("doc2.id")).setProjection(
                                         Projections.id());
@@ -253,8 +253,8 @@ public class DocumentDAO extends HibernateDaoSupport {
 
                         DetachedCriteria shareSubquery = DetachedCriteria.forClass(Document.class, "doc3")
                                 .createCriteria("documentSharings", "sh").add(
-                                        Restrictions.or(Restrictions.like("userCode", param.getSearchPhrase(),
-                                                MatchMode.ANYWHERE), Restrictions.like("userName", param
+                                        Restrictions.or(Restrictions.ilike("userCode", param.getSearchPhrase(),
+                                                MatchMode.ANYWHERE), Restrictions.ilike("userName", param
                                                 .getSearchPhrase(), MatchMode.ANYWHERE))).add(
                                         Property.forName("doc.id").eqProperty("doc3.id")).setProjection(
                                         Projections.id());
@@ -262,8 +262,8 @@ public class DocumentDAO extends HibernateDaoSupport {
 
                         DetachedCriteria filesSubquery = DetachedCriteria.forClass(Document.class, "doc4")
                                 .createCriteria("documentFiles", "files").add(
-                                        Restrictions.or(Restrictions.like("fileName", param.getSearchPhrase(),
-                                                MatchMode.ANYWHERE), Restrictions.like("description", param
+                                        Restrictions.or(Restrictions.ilike("fileName", param.getSearchPhrase(),
+                                                MatchMode.ANYWHERE), Restrictions.ilike("description", param
                                                 .getSearchPhrase(), MatchMode.ANYWHERE))).add(
                                         Property.forName("doc.id").eqProperty("doc4.id")).setProjection(
                                         Projections.id());
