@@ -320,7 +320,7 @@ public class DocumentDAO extends HibernateDaoSupport {
                     criteria.setMaxResults(maxResults);
                     
                     // Search result ordering
-                    String sortBy = "lastModified";
+                    String sortBy = "lastModifiedDate";
                     String sortOrder = "desc";
                     if (!Util.isNullOrEmpty(param.getSortBy())) {
                     	String sortByDbName = documentFieldXmlNameToDbName(param.getSortBy());
