@@ -139,10 +139,12 @@ public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
                     this.getMessageSource().getMessage("files.nonExistentOrDeleted", new Object[] {}, Locale.ENGLISH),
                     user.getUserCode(), getConfiguration().getDocumentRetentionDeadlineDays());
 
-            if (att.getTotal() > 0) {
+            if (att != null) {
                 // Remember document ID-s for logging
-                for (OutputDocument outputDoc : att.getDocumentList()) {
-                    documentIdList.add(outputDoc.getId());
+                if (att.getDocumentList() != null) {
+	            	for (OutputDocument outputDoc : att.getDocumentList()) {
+	                    documentIdList.add(outputDoc.getId());
+	                }
                 }
 
                 // 1. Convert java list to XML string and output to file
