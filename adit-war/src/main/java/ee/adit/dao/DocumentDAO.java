@@ -350,6 +350,13 @@ public class DocumentDAO extends HibernateDaoSupport {
                     	criteria.addOrder(Order.desc(sortBy).ignoreCase());
                     }
                     
+                    // If primary sorting is done by field that can be NULL or have
+                    // same value for multiple documents then add secondary sorting by
+                    // last modified date.
+                    if (sortBy.equalsIgnoreCase("title") || sortBy.equalsIgnoreCase("documentType") || sortBy.equalsIgnoreCase("dvkId")) {
+                    	criteria.addOrder(Order.desc("lastModifiedDate").ignoreCase());
+                    }
+                    
                     List<Document> docList = criteria.list();
 
                     for (Document doc : docList) {
@@ -1095,6 +1102,8 @@ public class DocumentDAO extends HibernateDaoSupport {
     		return "lastModifiedDate";
     	}  else if("dvk_id".equalsIgnoreCase(xmlName)) {
     		return "dvkId";
+    	}  else if("created".equalsIgnoreCase(xmlName)) {
+    		return "creationDate";
     	} else {
     		return xmlName.toLowerCase();
     	}
