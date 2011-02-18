@@ -345,9 +345,9 @@ public class DocumentDAO extends HibernateDaoSupport {
                     }
                     
                     if ("asc".equalsIgnoreCase(sortOrder)) {
-                    	criteria.addOrder(Order.asc(sortBy));
+                    	criteria.addOrder(Order.asc(sortBy).ignoreCase());
                     } else {
-                    	criteria.addOrder(Order.desc(sortBy));
+                    	criteria.addOrder(Order.desc(sortBy).ignoreCase());
                     }
                     
                     List<Document> docList = criteria.list();
