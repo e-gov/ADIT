@@ -698,6 +698,12 @@
 						has been sent or received using DEC</xs:documentation>
 				</xs:annotation>
 			</xs:element>
+			<xs:element name="remove_date" type="xs:date">
+				<xs:annotation>
+					<xs:documentation xml:lang="ee">Dokumendi eeldatav kustutamise aeg</xs:documentation>
+					<xs:documentation xml:lang="en">Predicted document deleting date</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="signatures" type="documentSignatureListV1Type">
 				<xs:annotation>
 					<xs:documentation xml:lang="ee">Dokumendi allkirjade andmed</xs:documentation>
