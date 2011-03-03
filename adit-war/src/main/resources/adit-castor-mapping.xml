@@ -671,6 +671,13 @@
 		</field>
 	</class>
 	
+	<class name="ee.adit.pojo.SaveDocumentFileRequestAttachment">
+		<map-to xml="saveDocumentFileAttachmentV1" />
+		<field name="file" type="ee.adit.pojo.OutputDocumentFile">
+			<bind-xml name="file" />
+		</field>
+	</class>
+	
 	<class name="ee.adit.pojo.SaveDocumentFileResponse">
 		<map-to xml="keha" />
 		<field name="success" type="boolean" >

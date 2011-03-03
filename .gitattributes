@@ -304,6 +304,7 @@ adit-war/src/main/java/ee/adit/pojo/PrepareSignatureRequestCert.java -text
 adit-war/src/main/java/ee/adit/pojo/PrepareSignatureResponse.java -text
 adit-war/src/main/java/ee/adit/pojo/RecipientStatus.java -text
 adit-war/src/main/java/ee/adit/pojo/SaveDocumentFileRequest.java -text
+adit-war/src/main/java/ee/adit/pojo/SaveDocumentFileRequestAttachment.java -text
 adit-war/src/main/java/ee/adit/pojo/SaveDocumentFileRequestFile.java -text
 adit-war/src/main/java/ee/adit/pojo/SaveDocumentFileResponse.java -text
 adit-war/src/main/java/ee/adit/pojo/SaveDocumentRequest.java -text

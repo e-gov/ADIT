@@ -1874,7 +1874,16 @@
 			</xs:complexType>
 
 			<!-- saveDocumentFile attachments -->
-			<xs:element name="saveDocumentFileAttachmentV1" type="fileType" />
+			<xs:element name="saveDocumentFileAttachmentV1" type="saveDocumentFileRequestAttachmentV1Type" />
+			<xs:complexType name="saveDocumentFileRequestAttachmentV1Type">
+				<xs:annotation>
+					<xs:documentation xml:lang="ee">Päringu "saveDocumentFile" manus</xs:documentation>
+					<xs:documentation xml:lang="en">Attachment for request "saveDocumentFile" request message</xs:documentation>
+				</xs:annotation>
+				<xs:sequence>
+					<xs:element name="file" type="fileType" />
+				</xs:sequence>
+			</xs:complexType>
 
 			<!-- Attachments common types -->
 			<xs:complexType name="documentV1Type">

@@ -21,6 +21,7 @@ import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.Message;
 import ee.adit.pojo.OutputDocumentFile;
 import ee.adit.pojo.SaveDocumentFileRequest;
+import ee.adit.pojo.SaveDocumentFileRequestAttachment;
 import ee.adit.pojo.SaveDocumentFileRequestFile;
 import ee.adit.pojo.SaveDocumentFileResponse;
 import ee.adit.pojo.SaveDocumentRequestAttachment;
@@ -228,8 +229,7 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 
             String attachmentID = null;
             // Check if the attachment ID is specified
-            if (request.getFile() != null && request.getFile().getHref() != null
-                    && !request.getFile().getHref().trim().equals("")) {
+            if (request.getFile() != null && !Util.isNullOrEmpty(request.getFile().getHref())) {
                 attachmentID = Util.extractContentID(request.getFile().getHref());
             } else {
                 throw new AditCodedException("request.saveDocument.attachment.id.notSpecified");
@@ -264,8 +264,8 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
             // Check if the marshalling result is what we expected
             if (unmarshalledObject != null) {
                 logger.debug("XML unmarshalled to type: " + unmarshalledObject.getClass());
-                if (unmarshalledObject instanceof OutputDocumentFile) {
-                    OutputDocumentFile docFile = (OutputDocumentFile) unmarshalledObject;
+                if (unmarshalledObject instanceof SaveDocumentFileRequestAttachment) {
+                    OutputDocumentFile docFile = ((SaveDocumentFileRequestAttachment) unmarshalledObject).getFile();
                     updatedExistingFile = ((docFile.getId() != null) && (docFile.getId() > 0));
                     documentFileID = docFile.getId();
                     SaveItemInternalResult saveResult = this.getDocumentService().saveDocumentFile(doc.getId(),
