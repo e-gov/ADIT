@@ -267,7 +267,7 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
                 if (unmarshalledObject instanceof SaveDocumentFileRequestAttachment) {
                     OutputDocumentFile docFile = ((SaveDocumentFileRequestAttachment) unmarshalledObject).getFile();
                     updatedExistingFile = ((docFile.getId() != null) && (docFile.getId() > 0));
-                    documentFileID = docFile.getId();
+                    documentFileID = (docFile.getId() == null) ? 0L : docFile.getId();
                     SaveItemInternalResult saveResult = this.getDocumentService().saveDocumentFile(doc.getId(),
                             docFile, remainingDiskQuota, this.getConfiguration().getTempDir());
                     if (saveResult.isSuccess()) {
