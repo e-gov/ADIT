@@ -1950,25 +1950,22 @@ public class DocumentService {
                     Iterator it = doc.getDocumentFiles().iterator();
                     while (it.hasNext()) {
                         DocumentFile docFile = (DocumentFile) it.next();
-                        String resultCode = this.deflateDocumentFile(doc.getId(), docFile.getId(), true);
 
-                        deletedFilesSize = deletedFilesSize + docFile.getFileSizeBytes();
-
-                        // Make sure no known error code was returned
-                        if (resultCode.equalsIgnoreCase("already_deleted")) {
-                            AditCodedException aditCodedException = new AditCodedException("file.isDeleted");
-                            aditCodedException.setParameters(new Object[] {new Long(docFile.getId()).toString() });
-                            throw aditCodedException;
-                        } else if (resultCode.equalsIgnoreCase("file_does_not_exist")) {
-                            AditCodedException aditCodedException = new AditCodedException("file.nonExistent");
-                            aditCodedException.setParameters(new Object[] {new Long(docFile.getId()).toString() });
-                            throw aditCodedException;
-                        } else if (resultCode.equalsIgnoreCase("file_does_not_belong_to_document")) {
-                            AditCodedException aditCodedException = new AditCodedException(
-                                    "file.doesNotBelongToDocument");
-                            aditCodedException.setParameters(new Object[] {new Long(docFile.getId()).toString(),
-                                    new Long(doc.getId()).toString() });
-                            throw aditCodedException;
+                        if ((docFile.getDeleted() != null) && !docFile.getDeleted()) {
+	                        String resultCode = this.deflateDocumentFile(doc.getId(), docFile.getId(), true);
+	
+	                        // Make sure no relevant error code was returned
+	                        if (resultCode.equalsIgnoreCase("file_does_not_exist")) {
+	                            AditCodedException aditCodedException = new AditCodedException("file.nonExistent");
+	                            aditCodedException.setParameters(new Object[] {new Long(docFile.getId()).toString() });
+	                            throw aditCodedException;
+	                        } else if (resultCode.equalsIgnoreCase("file_does_not_belong_to_document")) {
+	                            AditCodedException aditCodedException = new AditCodedException("file.doesNotBelongToDocument");
+	                            aditCodedException.setParameters(new Object[] {new Long(docFile.getId()).toString(), new Long(doc.getId()).toString() });
+	                            throw aditCodedException;
+	                        }
+	                        
+	                        deletedFilesSize = deletedFilesSize + docFile.getFileSizeBytes();
                         }
                     }
                 }
@@ -2011,8 +2008,7 @@ public class DocumentService {
         // Save changes to database
         if (saveDocument) {
             // Using Long.MAX_VALUE for disk quota because it is not possible to
-            // exceed disk quota by deleting files. Therefore it does not make
-            // much
+            // exceed disk quota by deleting files. Therefore it does not make much
             // sense to calculate the actual disk quota here.
             this.getDocumentDAO().save(doc, null, Long.MAX_VALUE, null);
 
@@ -2023,7 +2019,15 @@ public class DocumentService {
                     if (usedDiskQuota == null) {
                     	usedDiskQuota = 0L;
                     }
-                    user.setDiskQuotaUsed(usedDiskQuota - deletedFilesSize);
+                    
+                    // Re-calculate used disk quota and prevent the result
+                    // from being negative.
+                    long newUsedDiskQuota = usedDiskQuota - deletedFilesSize;
+                    if (newUsedDiskQuota < 0) {
+                    	newUsedDiskQuota = 0;
+                    }
+                    
+                    user.setDiskQuotaUsed(newUsedDiskQuota);
 	                this.getAditUserDAO().saveOrUpdate(user);
                 }
             }
@@ -2085,23 +2089,21 @@ public class DocumentService {
         Iterator it = doc.getDocumentFiles().iterator();
         while (it.hasNext()) {
             DocumentFile docFile = (DocumentFile) it.next();
-            String resultCode = deflateDocumentFile(doc.getId(), docFile.getId(), false);
-            deflatedFilesSize = deflatedFilesSize + docFile.getFileSizeBytes();
-
-            // Handle possible exceptions
-            if (!resultCode.equalsIgnoreCase("already_deleted")) {
-                // Ignore files that are already deleted
-
+            
+            if ((docFile.getDeleted() != null) && !docFile.getDeleted()) {
+	            String resultCode = deflateDocumentFile(doc.getId(), docFile.getId(), false);
+	
                 if (resultCode.equalsIgnoreCase("file_does_not_exist")) {
                     AditCodedException aditCodedException = new AditCodedException("file.nonExistent");
                     aditCodedException.setParameters(new Object[] {new Long(docFile.getId()).toString() });
                     throw aditCodedException;
                 } else if (resultCode.equalsIgnoreCase("file_does_not_belong_to_document")) {
                     AditCodedException aditCodedException = new AditCodedException("file.doesNotBelongToDocument");
-                    aditCodedException.setParameters(new Object[] {new Long(docFile.getId()).toString(),
-                            new Long(doc.getId()).toString() });
+                    aditCodedException.setParameters(new Object[] {new Long(docFile.getId()).toString(), new Long(doc.getId()).toString() });
                     throw aditCodedException;
                 }
+	            
+	            deflatedFilesSize = deflatedFilesSize + docFile.getFileSizeBytes();
             }
         }
 
@@ -2126,7 +2128,15 @@ public class DocumentService {
                 if (usedDiskQuota == null) {
                 	usedDiskQuota = 0L;
                 }
-                user.setDiskQuotaUsed(usedDiskQuota + deflatedFilesSize);
+                
+                // Re-calculate used disk quota and prevent the result
+                // from being negative.
+                long newUsedDiskQuota = usedDiskQuota - deflatedFilesSize;
+                if (newUsedDiskQuota < 0) {
+                	newUsedDiskQuota = 0;
+                }
+
+                user.setDiskQuotaUsed(newUsedDiskQuota);
 	            this.getAditUserDAO().saveOrUpdate(user);
             }
         }
