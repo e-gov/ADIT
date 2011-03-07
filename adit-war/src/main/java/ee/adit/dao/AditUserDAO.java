@@ -57,7 +57,8 @@ public class AditUserDAO extends HibernateDaoSupport {
             transaction.commit();
 
         } catch (Exception e) {
-            if (transaction != null) {
+            logger.error(e);
+        	if (transaction != null) {
                 transaction.rollback();
             }
             throw new AditInternalException("Error while updating AditUser: ", e);
