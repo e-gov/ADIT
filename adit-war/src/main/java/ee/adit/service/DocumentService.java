@@ -2028,7 +2028,7 @@ public class DocumentService {
                     }
                     
                     user.setDiskQuotaUsed(newUsedDiskQuota);
-	                this.getAditUserDAO().saveOrUpdate(user);
+	                this.getAditUserDAO().saveOrUpdate(user, true);
                 }
             }
 

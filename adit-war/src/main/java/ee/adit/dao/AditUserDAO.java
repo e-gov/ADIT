@@ -47,25 +47,45 @@ public class AditUserDAO extends HibernateDaoSupport {
      * @param aditUser user
      */
     public void saveOrUpdate(AditUser aditUser) {
-        Session session = null;
-        Transaction transaction = null;
-        try {
-
-            session = this.getSessionFactory().openSession();
-            transaction = session.beginTransaction();
-            session.saveOrUpdate(aditUser);
-            transaction.commit();
-
-        } catch (Exception e) {
-            logger.error(e);
-        	if (transaction != null) {
-                transaction.rollback();
-            }
-            throw new AditInternalException("Error while updating AditUser: ", e);
-        } finally {
-            if (session != null) {
-                session.close();
-            }
+    	saveOrUpdate(aditUser, false);
+    }
+    
+    /**
+     * Saves changes for this user or inserts a new record.
+     * 
+     * @param aditUser user
+     * @param useExistingSession
+     * 		Should existing session be used for DB interaction
+     */
+    public void saveOrUpdate(AditUser aditUser, boolean useExistingSession) {
+        if (useExistingSession) {
+        	try {
+        		this.getHibernateTemplate().saveOrUpdate(aditUser);
+        	} catch (Exception e) {
+	            logger.error(e);
+	            throw new AditInternalException("Error while updating AditUser: ", e);
+	        }
+        } else {
+	    	Session session = null;
+	        Transaction transaction = null;
+	        try {
+	
+	            session = this.getSessionFactory().openSession();
+	            transaction = session.beginTransaction();
+	            session.saveOrUpdate(aditUser);
+	            transaction.commit();
+	
+	        } catch (Exception e) {
+	            logger.error(e);
+	        	if (transaction != null) {
+	                transaction.rollback();
+	            }
+	            throw new AditInternalException("Error while updating AditUser: ", e);
+	        } finally {
+	            if (session != null) {
+	                session.close();
+	            }
+	        }
         }
 
         /*
