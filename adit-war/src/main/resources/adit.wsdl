@@ -1588,61 +1588,7 @@
 					</xs:documentation>
 				</xs:annotation>
 				<xs:sequence>
-					<xs:element maxOccurs="unbounded" name="file" type="getDocumentFileResponseAttachmentV1FileType" />
-				</xs:sequence>
-			</xs:complexType>
-			<xs:complexType name="getDocumentFileResponseAttachmentV1FileType">
-				<xs:annotation>
-					<xs:documentation xml:lang="ee">Faili andmed</xs:documentation>
-					<xs:documentation xml:lang="en">File information
-					</xs:documentation>
-				</xs:annotation>
-				<xs:sequence>
-					<xs:element name="id" type="xs:integer">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Faili identifikaator
-							</xs:documentation>
-							<xs:documentation xml:lang="en">File identificator
-							</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="name" type="xs:string">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Faili nimi</xs:documentation>
-							<xs:documentation xml:lang="en">File name</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="content_type" type="xs:string">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Faili MIME tüüp
-							</xs:documentation>
-							<xs:documentation xml:lang="en">File MIME type
-							</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="description" type="xs:string">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Faili kirjeldus
-							</xs:documentation>
-							<xs:documentation xml:lang="en">File description
-							</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="size_bytes" type="xs:integer">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Faili suurus baitides
-							</xs:documentation>
-							<xs:documentation xml:lang="en">File size in bytes
-							</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="data" type="xs:string">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Faili sisu</xs:documentation>
-							<xs:documentation xml:lang="en">File content
-							</xs:documentation>
-						</xs:annotation>
-					</xs:element>
+					<xs:element maxOccurs="unbounded" name="file" type="fileType" />
 				</xs:sequence>
 			</xs:complexType>
 
@@ -2213,18 +2159,14 @@
 			</xs:complexType>
 			<xs:complexType name="fileType">
 				<xs:annotation>
-					<xs:documentation xml:lang="ee">Dokumendi faili andmed
-					</xs:documentation>
-					<xs:documentation xml:lang="en">Document file information
-					</xs:documentation>
+					<xs:documentation xml:lang="ee">Dokumendi faili andmed</xs:documentation>
+					<xs:documentation xml:lang="en">Document file information</xs:documentation>
 				</xs:annotation>
 				<xs:sequence>
 					<xs:element name="id" type="xs:integer">
 						<xs:annotation>
-							<xs:documentation xml:lang="ee">Faili identifikaator
-							</xs:documentation>
-							<xs:documentation xml:lang="en">File identificator
-							</xs:documentation>
+							<xs:documentation xml:lang="ee">Faili identifikaator</xs:documentation>
+							<xs:documentation xml:lang="en">File identificator</xs:documentation>
 						</xs:annotation>
 					</xs:element>
                     <xs:element name="name" type="xs:string">
@@ -2235,26 +2177,20 @@
 					</xs:element>
 					<xs:element name="content_type" type="xs:string">
 						<xs:annotation>
-							<xs:documentation xml:lang="ee">Faili MIME tüüp
-							</xs:documentation>
-							<xs:documentation xml:lang="en">File MIME type
-							</xs:documentation>
+							<xs:documentation xml:lang="ee">Faili MIME tüüp</xs:documentation>
+							<xs:documentation xml:lang="en">File MIME type</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="description" type="xs:string">
 						<xs:annotation>
-							<xs:documentation xml:lang="ee">Faili kirjeldus
-							</xs:documentation>
-							<xs:documentation xml:lang="en">File description
-							</xs:documentation>
+							<xs:documentation xml:lang="ee">Faili kirjeldus</xs:documentation>
+							<xs:documentation xml:lang="en">File description</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="size_bytes" type="xs:integer">
 						<xs:annotation>
-							<xs:documentation xml:lang="ee">Faili suurus baitides
-							</xs:documentation>
-							<xs:documentation xml:lang="en">File size in bytes
-							</xs:documentation>
+							<xs:documentation xml:lang="ee">Faili suurus baitides</xs:documentation>
+							<xs:documentation xml:lang="en">File size in bytes</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="data" type="xs:string">

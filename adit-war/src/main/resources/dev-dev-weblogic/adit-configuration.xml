@@ -13,7 +13,7 @@
 	<!-- Configuration -->
 	<bean id="configuration" class="ee.adit.util.Configuration">
 		<property name="getJoinedMaxResults" value="10" />
-		<property name="tempDir" value="C:\temp" />
+		<property name="tempDir" value="tmp" />
 		<property name="deleteTemporaryFiles" value="true" />
 		<property name="schedulerEventTypeName" value="Minu dokumentide teavitus" />
 		<property name="dvkResponseMessageStylesheet" value="DVKresponseMessage.xsl" />
