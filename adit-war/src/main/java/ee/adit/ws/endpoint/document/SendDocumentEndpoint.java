@@ -86,6 +86,9 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 
             // Check header for required fields
             checkHeader(header);
+            
+            // Check request body
+            checkRequest(request);
 
             // Check if the application is registered
             boolean applicationRegistered = this.getUserService().isApplicationRegistered(applicationName);
@@ -330,6 +333,32 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
         return response;
     }
 
+    /**
+     * Validates request body and makes sure that all required fields exist and
+     * are not empty. <br>
+     * <br>
+     * Throws {@link AditCodedException} if any errors in request data are
+     * found.
+     * 
+     * @param request
+     *            Request body as {@link SendDocumentRequest} object.
+     * @throws AditCodedException
+     *             Exception describing error found in request body.
+     */
+    private void checkRequest(SendDocumentRequest request) throws AditCodedException {
+        if (request != null) {
+            if (request.getDocumentId() <= 0) {
+                throw new AditCodedException("request.body.undefined.documentId");
+            } else if ((request.getRecipientList() == null) ||
+            	(request.getRecipientList().getCode() == null) ||
+            	request.getRecipientList().getCode().isEmpty()) {
+            	throw new AditCodedException("request.sendDocument.recipients.unspecified");
+            }
+        } else {
+            throw new AditCodedException("request.body.empty");
+        }
+    }
+    
     @Override
     protected Object getResultForGenericException(Exception ex) {
         super.logError(null, Calendar.getInstance().getTime(), LogService.ERROR_LOG_LEVEL_FATAL, "ERROR: "
