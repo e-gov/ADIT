@@ -179,13 +179,13 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
             ArrayOfUserCode recipientList = request.getRecipientList();
 
             if (recipientList != null && recipientList.getCode() != null && recipientList.getCode().size() > 0) {
-
                 Iterator<String> i = recipientList.getCode().iterator();
                 while (i.hasNext()) {
                     String recipientCode = i.next();
 
                     RecipientStatus recipientStatus = new RecipientStatus();
                     recipientStatus.setSuccess(true);
+                    recipientStatus.setCode(recipientCode);
 
                     // Check if the user is registered
                     AditUser recipient = this.getUserService().getUserByID(recipientCode);
@@ -201,8 +201,7 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
                         }
 
                         recipientStatus.setSuccess(false);
-                        List<Message> errorMessages = this.getMessageService().getMessages(messageCode,
-                                new Object[] {recipientCode });
+                        List<Message> errorMessages = this.getMessageService().getMessages(messageCode, new Object[] {recipientCode });
                         ArrayOfMessage recipientMessages = new ArrayOfMessage();
                         recipientMessages.setMessage(errorMessages);
                         recipientStatus.setMessages(recipientMessages);
@@ -219,11 +218,8 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
                         if (additionalInformationForLog != null && !additionalInformationForLog.trim().equals("")) {
                             additionalInformationForLog = additionalInformationForLog + ", ";
                         }
-                        additionalInformationForLog = additionalInformationForLog + localErrorMessage + recipientCode
-                                + " ";
-
+                        additionalInformationForLog = additionalInformationForLog + localErrorMessage + recipientCode + " ";
                     } else {
-
                         try {
                             // Lock the document
                             this.getDocumentService().lockDocument(doc);
@@ -239,7 +235,6 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 
                             // Add success message to response
                             recipientStatus.setSuccess(true);
-                            recipientStatus.setCode(recipient.getUserCode());
 
                             if (successCount > 0) {
                                 description = description + ", ";

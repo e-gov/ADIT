@@ -628,8 +628,8 @@ public class DocumentDAO extends HibernateDaoSupport {
         result.setFiles(filesListWrapper);
 
         // Signatures
+        List<ee.adit.pojo.Signature> docSignatures = new ArrayList<ee.adit.pojo.Signature>();
         if (includeSignatures) {
-            List<ee.adit.pojo.Signature> docSignatures = new ArrayList<ee.adit.pojo.Signature>();
             if ((doc.getSignatures() != null) && (!doc.getSignatures().isEmpty())) {
                 Iterator it = doc.getSignatures().iterator();
                 while (it.hasNext()) {
@@ -646,8 +646,10 @@ public class DocumentDAO extends HibernateDaoSupport {
                     docSignatures.add(outSig);
                 }
             }
-            result.setSignatures(docSignatures);
         }
+        // Empty signature list is added even if no signatures exist or signature data was not requested.
+        // This is done to make sure that all collections in document class behave in a similar fashion.
+        result.setSignatures(docSignatures);
 
         // Sharing/sending
         if (includeSharings) {
