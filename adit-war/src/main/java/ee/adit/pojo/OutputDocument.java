@@ -29,7 +29,7 @@ public class OutputDocument {
     private Boolean deflated;
     private Date deflatingDate;
     private org.exolab.castor.types.Date removeDate;
-    private List<Signature> signatures;
+    private DocumentSignatureList signatures;
     private DocumentSendingData sentTo;
     private DocumentSharingData sharedTo;
     private OutputDocumentFilesList files;
@@ -234,11 +234,11 @@ public class OutputDocument {
 		this.removeDate = removeDate;
 	}
 
-	public List<Signature> getSignatures() {
+	public DocumentSignatureList getSignatures() {
         return signatures;
     }
 
-    public void setSignatures(List<Signature> signatures) {
+    public void setSignatures(DocumentSignatureList signatures) {
         this.signatures = signatures;
     }
 

@@ -249,6 +249,7 @@ adit-war/src/main/java/ee/adit/pojo/DocumentSendingData.java -text
 adit-war/src/main/java/ee/adit/pojo/DocumentSendingRecipient.java -text
 adit-war/src/main/java/ee/adit/pojo/DocumentSharingData.java -text
 adit-war/src/main/java/ee/adit/pojo/DocumentSharingRecipient.java -text
+adit-war/src/main/java/ee/adit/pojo/DocumentSignatureList.java -text
 adit-war/src/main/java/ee/adit/pojo/EmailAddress.java -text
 adit-war/src/main/java/ee/adit/pojo/GetDocumentFileRequest.java -text
 adit-war/src/main/java/ee/adit/pojo/GetDocumentFileResponse.java -text
