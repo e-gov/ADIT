@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
+import ee.adit.dao.pojo.DocumentHistory;
 import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditException;
@@ -186,6 +187,8 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
                 throw aditCodedException;
             }
 
+            boolean documentIsAlreadyLocked = doc.getLocked();
+            
             // Document can be signed only if:
             // a) document belongs to user
             // b) document is sent or shared to user for signing
@@ -260,6 +263,14 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
                 throw aditCodedException;
             }
 
+            if (!documentIsAlreadyLocked) {
+	            // Document locking history event
+	            DocumentHistory historyEvent = new DocumentHistory(DocumentService.HISTORY_TYPE_LOCK, documentId,
+	                    requestDate.getTime(), user, xroadRequestUser, header);
+	            historyEvent.setDescription(DocumentService.DOCUMENT_HISTORY_DESCRIPTION_LOCK);
+	            this.getDocumentService().getDocumentHistoryDAO().save(historyEvent);
+            }
+            
             // Set response messages
             response.setSuccess(true);
             messages.setMessage(this.getMessageService().getMessages("request.prepareSignature.success",

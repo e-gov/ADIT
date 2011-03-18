@@ -639,7 +639,13 @@ public class DocumentDAO extends HibernateDaoSupport {
                     ee.adit.pojo.Signature outSig = new ee.adit.pojo.Signature();
                     outSig.setCity(sig.getCity());
                     outSig.setCountry(sig.getCountry());
-                    outSig.setManifest((sig.getSignerRole() + " " + sig.getResolution()).trim());
+                    
+                    String manifest = Util.isNullOrEmpty(sig.getSignerRole()) ? "" : sig.getSignerRole();
+                    if (!Util.isNullOrEmpty(sig.getResolution())) {
+                    	manifest += (Util.isNullOrEmpty(manifest) ? "" : " ") + sig.getResolution();
+                    }
+                    outSig.setManifest(manifest);
+                    
                     outSig.setSignerCode(sig.getSignerCode());
                     outSig.setSignerName(sig.getSignerName());
                     outSig.setState(sig.getCounty());

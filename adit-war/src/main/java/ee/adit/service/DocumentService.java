@@ -70,6 +70,7 @@ import ee.adit.pojo.SaveDocumentRequestAttachment;
 import ee.adit.pojo.SaveItemInternalResult;
 import ee.adit.util.Configuration;
 import ee.adit.util.Util;
+import ee.sk.digidoc.CertValue;
 import ee.sk.digidoc.DataFile;
 import ee.sk.digidoc.Signature;
 import ee.sk.digidoc.SignatureProductionPlace;
@@ -269,6 +270,11 @@ public class DocumentService {
      * Document history description - LOCK
      */
     public static final String DOCUMENT_HISTORY_DESCRIPTION_LOCK = "Document locked";
+    
+    /**
+     * Document history description - DEFLATE
+     */
+    public static final String DOCUMENT_HISTORY_DESCRIPTION_DEFLATE = "Document deflated";
     
     /**
      * Document history description - DELETE
@@ -2486,8 +2492,10 @@ public class DocumentService {
                     aditSig.setSigningDate(sig.getSignedProperties().getSigningTime());
                 }
                 aditSig.setDocument(doc);
-                if ((sig.getLastCertValue() != null) && (sig.getLastCertValue().getCert() != null)) {
-                    X509Certificate cert = sig.getLastCertValue().getCert();
+                
+                CertValue signerCertValue = sig.getCertValueOfType(CertValue.CERTVAL_TYPE_SIGNER);
+                if ((signerCertValue != null) && (signerCertValue.getCert() != null)) {
+                    X509Certificate cert = signerCertValue.getCert();
                     aditSig.setSignerCode(SignedDoc.getSubjectPersonalCode(cert));
                     aditSig.setSignerName(SignedDoc.getSubjectLastName(cert) + ", " + SignedDoc.getSubjectFirstName(cert));
                 }

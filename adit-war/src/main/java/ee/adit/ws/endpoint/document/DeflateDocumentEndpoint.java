@@ -150,7 +150,7 @@ public class DeflateDocumentEndpoint extends AbstractAditBaseEndpoint {
             // for deflation and locking.
             DocumentHistory deflateEvent = new DocumentHistory(DocumentService.HISTORY_TYPE_DEFLATE, documentId,
                     requestDate.getTime(), user, xroadRequestUser, header);
-            deflateEvent.setDescription(DocumentService.DOCUMENT_HISTORY_DESCRIPTION_CREATE);
+            deflateEvent.setDescription(DocumentService.DOCUMENT_HISTORY_DESCRIPTION_DEFLATE);
 
             DocumentHistory lockEvent = new DocumentHistory(DocumentService.HISTORY_TYPE_LOCK, documentId, requestDate
                     .getTime(), user, xroadRequestUser, header);
