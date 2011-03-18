@@ -7,7 +7,7 @@
 		<param name="datePattern" value="'.'yyyy-MM" />
 		<param name="append" value="true" /> 
 		<layout class="org.apache.log4j.PatternLayout">
-	    	<param name="ConversionPattern" value="%d{ABSOLUTE}%5p %C:%L - %m%n"/>
+	    	<param name="ConversionPattern" value="%d{ABSOLUTE}%5p %C - %m%n"/>
 		</layout>
     </appender>
     
@@ -16,7 +16,7 @@
 		<param name="datePattern" value="'.'yyyy-MM" />
 		<param name="append" value="true" /> 
 		<layout class="org.apache.log4j.PatternLayout">
-	    	<param name="ConversionPattern" value="%d{ABSOLUTE}%5p %C:%L - %m%n"/>
+	    	<param name="ConversionPattern" value="%d{ABSOLUTE}%5p %C - %m%n"/>
 		</layout>
     </appender>
     
@@ -25,7 +25,7 @@
 		<param name="datePattern" value="'.'yyyy-MM" />
 		<param name="append" value="true" /> 
 		<layout class="org.apache.log4j.PatternLayout">
-	    	<param name="ConversionPattern" value="%d{ABSOLUTE}%5p %C:%L - %m%n"/>
+	    	<param name="ConversionPattern" value="%d{ABSOLUTE}%5p %C - %m%n"/>
 		</layout>
     </appender>
     
@@ -34,7 +34,7 @@
 		<param name="datePattern" value="'.'yyyy-MM" />
 		<param name="append" value="true" /> 
 		<layout class="org.apache.log4j.PatternLayout">
-	    	<param name="ConversionPattern" value="%d{ABSOLUTE}%5p %C:%L - %m%n"/>
+	    	<param name="ConversionPattern" value="%d{ABSOLUTE}%5p %C - %m%n"/>
 		</layout>
     </appender>
     
