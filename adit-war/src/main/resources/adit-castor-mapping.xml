@@ -264,6 +264,13 @@
 		</field>
 	</class>
  	
+ 	<class name="ee.adit.pojo.DocumentSignatureList">
+		<map-to xml="signatures"/>
+		<field name="signatures" type="ee.adit.pojo.Signature" collection="arraylist">
+			<bind-xml name="signature" />
+		</field>
+	</class>
+ 	
  	<class name="ee.adit.pojo.Signature">
 		<map-to xml="signature"/>
 		<field name="signerCode" type="java.lang.String">
@@ -436,8 +443,8 @@
 		<field name="removeDate" type="org.exolab.castor.types.Date">
 			<bind-xml name="remove_date"/>
 		</field>
-		<field name="signatures" type="ee.adit.pojo.Signature" collection="arraylist">
-			<bind-xml name="signature" location="signatures"/>
+		<field name="signatures" type="ee.adit.pojo.DocumentSignatureList">
+			<bind-xml name="signatures" />
 		</field>
 		<field name="sentTo" type="ee.adit.pojo.DocumentSendingData">
 			<bind-xml name="sent_to" />

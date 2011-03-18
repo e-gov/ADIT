@@ -4,13 +4,13 @@
 	<groupId>ee</groupId>
 	<artifactId>adit-war</artifactId>
 	<packaging>war</packaging>
-	<version>1.0.21</version>
+	<version>1.0.22</version>
 	<name>ADIT Web Application</name>
 
 	<parent>
 		<groupId>ee</groupId>
 		<artifactId>adit</artifactId>
-		<version>1.0.21</version>
+		<version>1.0.22</version>
 	</parent>
 
 	<properties>
@@ -399,7 +399,6 @@
 					<include>messages_en.properties</include>
 					<include>messages_et.properties</include>
 					<include>adit.wsdl</include>
-					<include>jdigidoc.cfg</include>
 				</includes>
 			</resource>
 			<resource>

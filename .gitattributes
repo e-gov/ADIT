@@ -466,7 +466,6 @@ adit-war/src/main/resources/hbm/RequestLog.hbm.xml -text
 adit-war/src/main/resources/hbm/Signature.hbm.xml -text
 adit-war/src/main/resources/hbm/UserNotification.hbm.xml -text
 adit-war/src/main/resources/hbm/Usertype.hbm.xml -text
-adit-war/src/main/resources/jdigidoc.cfg -text
 adit-war/src/main/resources/messages_en.properties -text
 adit-war/src/main/resources/messages_et.properties -text
 adit-war/src/main/resources/ria-dev-tomcat/adit-configuration.xml -text

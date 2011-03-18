@@ -4,7 +4,7 @@
 	<groupId>ee</groupId>
 	<artifactId>adit</artifactId>
 	<packaging>pom</packaging>
-	<version>1.0.21</version>
+	<version>1.0.22</version>
 	<name>ADIT Main Build</name>
 
 	<modules>
@@ -23,7 +23,7 @@
 			ria-dev-weblogic		Installs configuration for ADIT development server in RIA
 			ria-test-weblogic		Installs configuration for ADIT test server in RIA
 		-->
-		<resourceDir>ria-dev-weblogic</resourceDir>
+		<resourceDir>dev-dev-weblogic</resourceDir>
 	</properties>
 
 </project>
