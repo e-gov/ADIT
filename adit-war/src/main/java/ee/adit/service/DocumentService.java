@@ -2164,7 +2164,7 @@ public class DocumentService {
      * @param certFile
      *            Absolute path to signers signing certificate file
      * @param digidocConfigFile
-     *            Absolute path tod digidoc configuration file
+     *            Absolute path to digidoc configuration file
      * @param temporaryFilesDir
      *            Absolute path to applications temporary files directory
      * @param xroadUser
@@ -2195,15 +2195,15 @@ public class DocumentService {
                 X509Certificate cert = SignedDoc.readCertificate(certFile);
 
                 // Remove country prefix from request user code, so it can be
-                // compared to cert personal id code more reliably
-                String fixedUserCode = Util.getPersonalIdCodeWithoutCountryPrefix(xroadUser.getUserCode());
+                // compared to certificate personal id code more reliably
+                String userCodeWithoutCountryPrefix = Util.getPersonalIdCodeWithoutCountryPrefix(xroadUser.getUserCode());
 
                 // Determine if certificate belongs to same person
                 // who executed current query
                 String certPersonalIdCode = SignedDoc.getSubjectPersonalCode(cert);
-                if (!fixedUserCode.equalsIgnoreCase(certPersonalIdCode)) {
+                if (!userCodeWithoutCountryPrefix.equalsIgnoreCase(certPersonalIdCode)) {
                     logger.info("Attempted to sign document " + documentId + " by person \"" + certPersonalIdCode
-                            + "\" while logged in as person \"" + fixedUserCode + "\"");
+                            + "\" while logged in as person \"" + userCodeWithoutCountryPrefix + "\"");
                     result.setSuccess(false);
                     result.setErrorCode("request.prepareSignature.signer.notCurrentUser");
                     return result;
@@ -2223,6 +2223,7 @@ public class DocumentService {
 
                     // Make sure that document is not already signed
                     // by the same person.
+                    int removeSignatureAtIndex = -1;
                     int sigCount = sdoc.countSignatures();
                     for (int i = 0; i < sigCount; i++) {
                         Signature existingSig = sdoc.getSignature(i);
@@ -2231,13 +2232,24 @@ public class DocumentService {
                             for (int j = 0; j < certCount; j++) {
                                 if ((existingSig.getCertValue(j) != null)
                                         && (existingSig.getCertValue(j).getCert() != null)) {
-                                    if (fixedUserCode.equalsIgnoreCase(SignedDoc.getSubjectPersonalCode(existingSig
+                                    if (userCodeWithoutCountryPrefix.equalsIgnoreCase(SignedDoc.getSubjectPersonalCode(existingSig
                                             .getCertValue(j).getCert()))) {
-                                        throw new AditCodedException("request.prepareSignature.signer.hasAlreadySigned");
+                                    	if (existingSig.findResponderCert() != null) {
+                                    		throw new AditCodedException("request.prepareSignature.signer.hasAlreadySigned");
+                                    	} else {
+                                    		removeSignatureAtIndex = i;
+                                    	}
                                     }
                                 }
                             }
                         }
+                    }
+                    
+                    // If the same person has already given an unconfirmed
+                    // and now attempts to prepare another signature then
+                    // lets remove the users earlier signature.
+                    if (removeSignatureAtIndex >= 0) {
+                    	sdoc.removeSignature(removeSignatureAtIndex);
                     }
                 }
 
@@ -2256,56 +2268,57 @@ public class DocumentService {
                     address.setPostalCode(zip);
                 }
 
-                // Create unique subdirectory for files
-                uniqueDir = new File(temporaryFilesDir + File.separator + documentId);
-                int uniqueCounter = 0;
-                while (uniqueDir.exists()) {
-                    uniqueDir = new File(temporaryFilesDir + File.separator + documentId + "_" + (++uniqueCounter));
-                }
-                uniqueDir.mkdir();
-
-                List<DocumentFile> filesList = new ArrayList<DocumentFile>(doc.getDocumentFiles());
-                for (DocumentFile docFile : filesList) {
-                    if (!docFile.getDeleted()) {
-                        String outputFileName = uniqueDir.getAbsolutePath() + File.separator + docFile.getFileName();
-
-                        InputStream blobDataStream = null;
-                        FileOutputStream fileOutputStream = null;
-                        try {
-                            byte[] buffer = new byte[10240];
-                            int len = 0;
-                            blobDataStream = docFile.getFileData().getBinaryStream();
-                            fileOutputStream = new FileOutputStream(outputFileName);
-                            while ((len = blobDataStream.read(buffer)) > 0) {
-                                fileOutputStream.write(buffer, 0, len);
-                            }
-
-                            // Add file to signature container
-                            sdoc.addDataFile(new File(outputFileName), docFile.getContentType(),
-                                    DataFile.CONTENT_EMBEDDED_BASE64);
-                        } catch (IOException ex) {
-                            throw new HibernateException(ex);
-                        } finally {
-                            try {
-                                if (blobDataStream != null) {
-                                    blobDataStream.close();
-                                }
-                                blobDataStream = null;
-                            } catch (Exception ex) {
-                                logger.error("Exception: ", ex);
-                            }
-
-                            try {
-                                if (fileOutputStream != null) {
-                                    fileOutputStream.close();
-                                }
-                                fileOutputStream = null;
-                            } catch (Exception ex) {
-                                logger.error("Exception: ", ex);
-                            }
-                        }
-
-                    }
+                if ((sdoc.countDataFiles() < 1) && (sdoc.countSignatures() < 1)) {
+	                // Create unique subdirectory for files
+	                uniqueDir = new File(temporaryFilesDir + File.separator + documentId);
+	                int uniqueCounter = 0;
+	                while (uniqueDir.exists()) {
+	                    uniqueDir = new File(temporaryFilesDir + File.separator + documentId + "_" + (++uniqueCounter));
+	                }
+	                uniqueDir.mkdir();
+	
+	                List<DocumentFile> filesList = new ArrayList<DocumentFile>(doc.getDocumentFiles());
+	                for (DocumentFile docFile : filesList) {
+	                    if (!docFile.getDeleted()) {
+	                        String outputFileName = uniqueDir.getAbsolutePath() + File.separator + docFile.getFileName();
+	
+	                        InputStream blobDataStream = null;
+	                        FileOutputStream fileOutputStream = null;
+	                        try {
+	                            byte[] buffer = new byte[10240];
+	                            int len = 0;
+	                            blobDataStream = docFile.getFileData().getBinaryStream();
+	                            fileOutputStream = new FileOutputStream(outputFileName);
+	                            while ((len = blobDataStream.read(buffer)) > 0) {
+	                                fileOutputStream.write(buffer, 0, len);
+	                            }
+	
+	                            // Add file to signature container
+	                            sdoc.addDataFile(new File(outputFileName), docFile.getContentType(), DataFile.CONTENT_EMBEDDED_BASE64);
+	                        } catch (IOException ex) {
+	                            throw new HibernateException(ex);
+	                        } finally {
+	                            try {
+	                                if (blobDataStream != null) {
+	                                    blobDataStream.close();
+	                                }
+	                                blobDataStream = null;
+	                            } catch (Exception ex) {
+	                                logger.error("Exception: ", ex);
+	                            }
+	
+	                            try {
+	                                if (fileOutputStream != null) {
+	                                    fileOutputStream.close();
+	                                }
+	                                fileOutputStream = null;
+	                            } catch (Exception ex) {
+	                                logger.error("Exception: ", ex);
+	                            }
+	                        }
+	
+	                    }
+	                }
                 }
 
                 // Add signature and calculate digest
@@ -2342,8 +2355,7 @@ public class DocumentService {
                 // Update document
                 session.update(doc);
             } finally {
-                // Delete temporary directory that was created
-                // only for this method.
+                // Delete temporary directory that was created only for this method.
                 try {
                     Util.deleteDir(uniqueDir);
                 } catch (Exception ex) {
@@ -2379,7 +2391,7 @@ public class DocumentService {
      * @param requestPersonalCode
      *            Personal ID code of the person who executed current request
      * @param digidocConfigFile
-     *            Absolute path tod digidoc configuration file
+     *            Absolute path to digidoc configuration file
      * @param temporaryFilesDir
      *            Absolute path to applications temporary files directory
      * @throws Exception
