@@ -477,6 +477,7 @@ adit-war/src/main/resources/ria-dev-weblogic/log4j.xml -text
 adit-war/src/main/resources/ria-dev-weblogic/nsca_send_clear.cfg -text
 adit-war/src/main/resources/ria-dev-weblogic/xtee.properties -text
 adit-war/src/main/resources/ria-test-weblogic/adit-configuration.xml -text
+adit-war/src/main/resources/ria-test-weblogic/jdigidoc.cfg -text
 adit-war/src/main/resources/ria-test-weblogic/log4j.xml -text
 adit-war/src/main/resources/ria-test-weblogic/nsca_send_clear.cfg -text
 adit-war/src/main/resources/ria-test-weblogic/xtee.properties -text
