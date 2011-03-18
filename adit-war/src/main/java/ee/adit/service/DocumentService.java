@@ -2480,7 +2480,7 @@ public class DocumentService {
                         aditSig.setCounty(location.getStateOrProvince());
                         aditSig.setPostIndex(location.getPostalCode());
                     }
-                    if (sig.getSignedProperties().getClaimedRole(0) != null) {
+                    if ((sig.getSignedProperties().countClaimedRoles() > 0) && (sig.getSignedProperties().getClaimedRole(0) != null)) {
                         aditSig.setSignerRole(sig.getSignedProperties().getClaimedRole(0));
                     }
                     aditSig.setSigningDate(sig.getSignedProperties().getSigningTime());
