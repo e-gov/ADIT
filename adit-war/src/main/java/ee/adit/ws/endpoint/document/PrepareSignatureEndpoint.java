@@ -187,7 +187,7 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
                 throw aditCodedException;
             }
 
-            boolean documentIsAlreadyLocked = doc.getLocked();
+            boolean documentIsAlreadyLocked = (doc.getLocked() == null) ? false : doc.getLocked();
             
             // Document can be signed only if:
             // a) document belongs to user
