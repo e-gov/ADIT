@@ -2357,6 +2357,8 @@ public class DocumentService {
                 // length, session);
                 Blob containerData = Hibernate.createBlob(fileInputStream, length);
                 doc.setSignatureContainer(containerData);
+                doc.setLocked(true);
+                doc.setLockingDate(new Date());
 
                 // Update document
                 session.update(doc);
