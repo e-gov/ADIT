@@ -529,15 +529,16 @@ public final class Util {
      * @return HEX string
      */
     public static String convertToHexString(final byte[] byteArray) {
-        final byte[] hexes = "0123456789ABCDEF".getBytes();
-        if (byteArray == null) {
-            return null;
-        }
-        final StringBuilder hex = new StringBuilder(2 * byteArray.length);
-        for (final byte b : byteArray) {
-            hex.append(hexes[(b >> 4) & 0xF]).append(hexes[(b) & 0xF]);
-        }
-        return hex.toString();
+		final String HEXES = "0123456789ABCDEF";
+		if (byteArray == null) {
+			return null;
+		}
+		final StringBuilder hex = new StringBuilder(2 * byteArray.length);
+		for (final byte b : byteArray) {
+			hex.append(HEXES.charAt((b & 0xF0) >> 4)).append(
+					HEXES.charAt((b & 0x0F)));
+		}
+		return hex.toString();
     }
 
     /**
