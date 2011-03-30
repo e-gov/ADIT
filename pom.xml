@@ -23,7 +23,7 @@
 			ria-dev-weblogic		Installs configuration for ADIT development server in RIA
 			ria-test-weblogic		Installs configuration for ADIT test server in RIA
 		-->
-		<resourceDir>dev-dev-weblogic</resourceDir>
+		<resourceDir>ria-dev-weblogic</resourceDir>
 	</properties>
 
 </project>
