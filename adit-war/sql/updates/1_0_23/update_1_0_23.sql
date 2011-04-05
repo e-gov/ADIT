@@ -3,6 +3,9 @@ ALTER TABLE &&ADIT_SCHEMA..DOCUMENT DROP COLUMN signature_container;
 ALTER TABLE &&ADIT_SCHEMA..DOCUMENT ADD (invisible_to_owner NUMBER(1,0) NULL);
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.invisible_to_owner IS 'Document has been made invisible to its owner. Is used when document has been sent to someone else and owner wants to delete it from his/her own view.';
 
+ALTER TABLE &&ADIT_SCHEMA..DOCUMENT ADD (signed NUMBER(1,0) NULL);
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.signed IS 'Document has been signed.';
+
 ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING ADD (deleted NUMBER(1,0) NULL);
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.deleted IS 'Document has been deleted by the user to whom it was sent.';
 
@@ -34,9 +37,6 @@ COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.ddoc_datafile_start_offset IS 'Fi
 
 ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_FILE ADD (ddoc_datafile_end_offset NUMBER(18) NULL);
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.ddoc_datafile_end_offset IS 'Last character index of current file in corresponding signature container';
-
-ALTER TABLE &&ADIT_SCHEMA..DOCUMENT ADD (signed NUMBER(1,0) NULL);
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.signed IS 'Document has been signed.';
 
 INSERT INTO &&ADIT_SCHEMA..document_history_type(
 	short_name,
