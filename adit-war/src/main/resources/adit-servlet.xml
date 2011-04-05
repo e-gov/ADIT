@@ -32,13 +32,11 @@
 	    </property>
 	</bean>
 	
- 	
-	<import resource="adit-endpoints.xml"/>
-	<import resource="adit-services.xml"/>
-	<import resource="adit-datasource.xml"/>
+ 	<import resource="adit-configuration.xml"/>
+ 	<import resource="adit-datasource.xml"/>
 	<import resource="adit-dao.xml"/>
+	<import resource="adit-services.xml"/>
+	<import resource="adit-endpoints.xml"/>
 	<import resource="adit-jobs.xml"/>
 	<import resource="adit-application.xml"/>
-	<import resource="adit-configuration.xml"/>
-
 </beans>
