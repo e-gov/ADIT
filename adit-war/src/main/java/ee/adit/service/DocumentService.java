@@ -16,7 +16,9 @@ import java.sql.Blob;
 import java.sql.Clob;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -69,6 +71,10 @@ import ee.adit.pojo.PrepareSignatureInternalResult;
 import ee.adit.pojo.SaveDocumentRequestAttachment;
 import ee.adit.pojo.SaveItemInternalResult;
 import ee.adit.util.Configuration;
+import ee.adit.util.CustomXTeeHeader;
+import ee.adit.util.DigiDocExtractionResult;
+import ee.adit.util.SimplifiedDigiDocParser;
+import ee.adit.util.StartEndOffsetPair;
 import ee.adit.util.Util;
 import ee.sk.digidoc.CertValue;
 import ee.sk.digidoc.DataFile;
@@ -224,6 +230,11 @@ public class DocumentService {
      * Document history type code - mark viewed
      */
     public static final String HISTORY_TYPE_MARK_VIEWED = "mark_viewed";
+    
+    /**
+     * Document history type code - extract file
+     */
+    public static final String HISTORY_TYPE_EXTRACT_FILE = "extract_file";
 
     /**
      * DVK container version used when sending documents using DVK
@@ -300,6 +311,18 @@ public class DocumentService {
      * Document history description - MODIFY FILE
      */
     public static final String DOCUMENT_HISTORY_DESCRIPTION_MODIFYFILE = "Document file modified. ID: ";
+    
+    /**
+     * Document history type code - extract file
+     */
+    public static final String DOCUMENT_HISTORY_DESCRIPTION_EXTRACT_FILE = "Files extracted from digital signature container";
+    
+	public static final int FILETYPE_DOCUMENT_FILE = 1;
+	public static final int FILETYPE_SIGNATURE_CONTAINER = 2;
+	public static final int FILETYPE_SIGNATURE_CONTAINER_DRAFT = 3;
+	public static final String FILETYPE_NAME_DOCUMENT_FILE = "document_file";
+	public static final String FILETYPE_NAME_SIGNATURE_CONTAINER = "signature_container";
+	public static final String FILETYPE_NAME_SIGNATURE_CONTAINER_DRAFT = "signature_container_draft";
 
     private static Logger logger = Logger.getLogger(UserService.class);
 
@@ -437,10 +460,13 @@ public class DocumentService {
      * @param fileId
      *            file ID
      * @param markDeleted
+     * @param failIfSignature
+     * 		If true then method will throw an error while attempting to delete
+     * 		digital signature container.
      * @return Deflation result code.
      */
-    public String deflateDocumentFile(long documentId, long fileId, boolean markDeleted) {
-        return this.getDocumentFileDAO().deflateDocumentFile(documentId, fileId, markDeleted);
+    public String deflateDocumentFile(long documentId, long fileId, boolean markDeleted, boolean failIfSignature) {
+        return this.getDocumentFileDAO().deflateDocumentFile(documentId, fileId, markDeleted, failIfSignature);
     }
 
     /**
@@ -460,11 +486,21 @@ public class DocumentService {
      * @throws FileNotFoundException
      */
     @Transactional
-    public SaveItemInternalResult save(final SaveDocumentRequestAttachment attachmentDocument,
-            final String creatorCode, final String remoteApplication, final long remainingDiskQuota,
-            final String creatorUserCode, final String creatorUserName, final String creatorName)
+    public SaveItemInternalResult save(
+    		final SaveDocumentRequestAttachment attachmentDocument,
+            final String creatorCode,
+            final String remoteApplication,
+            final long remainingDiskQuota,
+            final String creatorUserCode,
+            final String creatorUserName,
+            final String creatorName,
+            final String digidocConfigFile,
+            final AditUser currentUser,
+            final AditUser personWhoExecutedRequest,
+            final CustomXTeeHeader requestXroadHeader)
             throws FileNotFoundException {
-        final DocumentDAO docDao = this.getDocumentDAO();
+        
+    	final DocumentDAO docDao = this.getDocumentDAO();
 
         return (SaveItemInternalResult) this.getDocumentDAO().getHibernateTemplate().execute(new HibernateCallback() {
             public Object doInHibernate(Session session) throws HibernateException, SQLException {
@@ -494,6 +530,43 @@ public class DocumentService {
                 document.setTitle(attachmentDocument.getTitle());
                 document.setCreatorUserCode(creatorUserCode);
                 document.setCreatorUserName(creatorUserName);
+                
+                if ((attachmentDocument.getFiles() != null) && (attachmentDocument.getFiles().size() == 1)
+                	&& ((document.getDocumentFiles() == null) || (document.getDocumentFiles().size() == 0))) {
+                	OutputDocumentFile file = attachmentDocument.getFiles().get(0);
+                	
+                    String extension = Util.getFileExtension(file.getName()); 
+                    
+                    // If first added file happens to be a DigiDoc container then
+                    // extract files and signatures from container. Otherwise add
+                    // container as a regular file.
+                    if ((file.getId() <= 0) && "ddoc".equalsIgnoreCase(extension)) {
+                    	DigiDocExtractionResult extractionResult = extractDigiDocContainer(file.getSysTempFile(), digidocConfigFile);
+                    	if (extractionResult.isSuccess()) {
+                    		file.setFileType(FILETYPE_NAME_SIGNATURE_CONTAINER);
+                    		document.setSigned(true);
+                    		
+                            DocumentHistory historyEvent = new DocumentHistory(
+                           		 HISTORY_TYPE_EXTRACT_FILE, document.getId(),
+                           		 Calendar.getInstance().getTime(), currentUser,
+                           		 personWhoExecutedRequest, requestXroadHeader);
+                            historyEvent.setDescription(DOCUMENT_HISTORY_DESCRIPTION_EXTRACT_FILE);
+                            document.getDocumentHistories().add(historyEvent);
+                    		 
+                    		for (int i = 0; i < extractionResult.getFiles().size(); i++) {
+                    			DocumentFile df = extractionResult.getFiles().get(i);
+                    			df.setDocument(document);
+                    			document.getDocumentFiles().add(df);
+                    		}
+                             
+                    		for (int i = 0; i < extractionResult.getSignatures().size(); i++) {
+                    			ee.adit.dao.pojo.Signature sig = extractionResult.getSignatures().get(i);
+                    			sig.setDocument(document);
+                    			document.getSignatures().add(sig);
+                    		}
+                    	}
+                    }
+                }
 
                 try {
                     return docDao.save(document, attachmentDocument.getFiles(), remainingDiskQuota, session);
@@ -517,22 +590,26 @@ public class DocumentService {
      *            Absolute path to temporary files directory
      * @return Result of save as {@link SaveItemInternalResult} object.
      */
-    public SaveItemInternalResult saveDocumentFile(final long documentId, final OutputDocumentFile file,
-            final long remainingDiskQuota, final String temporaryFilesDir) {
-        final DocumentDAO docDao = this.getDocumentDAO();
+    public SaveItemInternalResult saveDocumentFile(
+    		final long documentId,
+    		final OutputDocumentFile file,
+            final long remainingDiskQuota,
+            final String temporaryFilesDir,
+            final String digidocConfigFile,
+            final AditUser currentUser,
+            final AditUser personWhoExecutedRequest,
+            final CustomXTeeHeader requestXroadHeader) {
+        
+    	final DocumentDAO docDao = this.getDocumentDAO();
 
         return (SaveItemInternalResult) this.getDocumentDAO().getHibernateTemplate().execute(new HibernateCallback() {
-            @SuppressWarnings("unchecked")
             public Object doInHibernate(Session session) throws HibernateException, SQLException {
                 SaveItemInternalResult result = new SaveItemInternalResult();
-                List<OutputDocumentFile> filesList = new ArrayList<OutputDocumentFile>();
-                filesList.add(file);
-
+                
                 Document document = (Document) session.get(Document.class, documentId);
-
+                
                 // Remember highest ID of existing files.
-                // This is useful later to find out which file was
-                // added.
+                // This is useful later to find out which file was added.
                 long maxId = -1;
                 if ((document != null) && (document.getDocumentFiles() != null)) {
                     Iterator it = document.getDocumentFiles().iterator();
@@ -546,7 +623,44 @@ public class DocumentService {
                     }
                 }
                 logger.debug("Highest existing file ID: " + maxId);
-
+                
+                List<OutputDocumentFile> filesList = new ArrayList<OutputDocumentFile>();
+                String extension = Util.getFileExtension(file.getName()); 
+                
+                // If first added file happens to be a DigiDoc container then
+                // extract files and signatures from container. Otherwise add
+                // container as a regular file.
+                if ((maxId <= 0) && "ddoc".equalsIgnoreCase(extension)) {
+                	 DigiDocExtractionResult extractionResult = extractDigiDocContainer(file.getSysTempFile(), digidocConfigFile);
+                	 if (extractionResult.isSuccess()) {
+                		 file.setFileType(FILETYPE_NAME_SIGNATURE_CONTAINER);
+                		 filesList.add(file);
+                		 
+                         DocumentHistory historyEvent = new DocumentHistory(
+                        		 HISTORY_TYPE_EXTRACT_FILE, document.getId(),
+                        		 Calendar.getInstance().getTime(), currentUser,
+                        		 personWhoExecutedRequest, requestXroadHeader);
+                         historyEvent.setDescription(DOCUMENT_HISTORY_DESCRIPTION_EXTRACT_FILE);
+                         document.getDocumentHistories().add(historyEvent);
+                		 
+                		 for (int i = 0; i < extractionResult.getFiles().size(); i++) {
+                			 DocumentFile df = extractionResult.getFiles().get(i);
+                			 df.setDocument(document);
+                			 document.getDocumentFiles().add(df);
+                		 }
+                         
+                		 for (int i = 0; i < extractionResult.getSignatures().size(); i++) {
+                			 ee.adit.dao.pojo.Signature sig = extractionResult.getSignatures().get(i);
+                			 sig.setDocument(document);
+                			 document.getSignatures().add(sig);
+                		 }
+                	 } else {
+                		 filesList.add(file);
+                	 }
+                } else {
+                	filesList.add(file);
+                }
+                
                 // Document to database
                 try {
                     result = docDao.save(document, filesList, remainingDiskQuota, session);
@@ -576,6 +690,78 @@ public class DocumentService {
                 return result;
             }
         });
+    }
+    
+    /**
+     * Extracts data files and signature data from DigiDoc container. 
+     * 
+     * @param pathToContainer
+     * 		Absolute path of DigiDoc container
+     * @param digidocConfigFile
+     * 		Absolute path of DigiDoc library configuration file
+     * @return
+     * 		File and signature meta-data wrapped into
+     * 		{@link DigiDocExtractionResult} object.
+     */
+    private DigiDocExtractionResult extractDigiDocContainer(final String pathToContainer, final String digidocConfigFile) {
+    	DigiDocExtractionResult result = new DigiDocExtractionResult();
+    	
+    	if (!Util.isNullOrEmpty(pathToContainer)) {
+    		File digiDocContainer = new File(pathToContainer);
+    		if (digiDocContainer.exists()) {
+    			try {
+	    			ConfigManager.init(digidocConfigFile);
+	    			SAXDigiDocFactory factory = new SAXDigiDocFactory();
+	                SignedDoc ddocContainer = factory.readSignedDoc(pathToContainer);
+	                
+	                int dataFilesCount = ddocContainer.countDataFiles();
+	                if (dataFilesCount > 0) {
+	                	Hashtable<String, StartEndOffsetPair> dataFileOffsets = SimplifiedDigiDocParser.findDigiDocDataFileOffsets(pathToContainer);
+		                for (int i = 0; i < dataFilesCount; i++) {
+		                	DataFile ddocDataFile = ddocContainer.getDataFile(i);
+		                	DocumentFile localFile = new DocumentFile();
+		                	localFile.setDeleted(false);
+		                	localFile.setContentType(ddocDataFile.getMimeType());
+		                	localFile.setFileName(ddocDataFile.getFileName());
+		                	localFile.setFileSizeBytes(ddocDataFile.getSize());
+		                	//localFile.setFileData();  // TODO: MD5 hash
+		                	
+		                	StartEndOffsetPair currentFileOffsets = dataFileOffsets.get(ddocDataFile.getId());
+		                	if (currentFileOffsets != null) {
+		                		localFile.setDdocDataFileId(ddocDataFile.getId());
+		                		localFile.setDdocDataFileStartOffset(currentFileOffsets.getStart());
+		                		localFile.setDdocDataFileEndOffset(currentFileOffsets.getEnd());
+		                	} else {
+		                		// TODO: Veateade?
+		                	}
+		                	
+		                	result.getFiles().add(localFile);
+		                }
+	                }
+	                
+	                int signaturesCount = ddocContainer.countSignatures();
+	                if (signaturesCount > 0) {
+	                	for (int i = 0; i < signaturesCount; i++) {
+	                		Signature ddocSignature = ddocContainer.getSignature(i);
+	                        ee.adit.dao.pojo.Signature localSignature = convertDigiDocSignatureToLocalSignature(ddocSignature);
+	                        result.getSignatures().add(localSignature);
+	                	}
+	                }
+	                result.setSuccess(true);
+    			} catch (Exception ex) {
+    				logger.error(ex);
+    				result.setSuccess(false);
+    				result.getFiles().clear();
+    				result.getSignatures().clear();
+    			}
+    		} else {
+    			logger.warn("DigiDoc container extraction failed because container file \""+ pathToContainer +"\" does not exist!");
+    		}
+    	} else {
+    		logger.warn("DigiDoc container extraction failed because container file was not supplied!");
+    	}
+    	
+    	return result;
     }
 
     /**
@@ -796,27 +982,31 @@ public class DocumentService {
                 // Convert the adit file to dvk file
                 while (aditFilesIterator.hasNext()) {
                     DocumentFile f = (DocumentFile) aditFilesIterator.next();
-                    Fail dvkFile = new Fail();
-
-                    logger.debug("FileName: " + f.getFileName());
-
-                    // Create a temporary file from the ADIT file and
-                    // add a reference to the DVK file
-                    try {
-                        InputStream inputStream = f.getFileData().getBinaryStream();
-                        String temporaryFile = Util.createTemporaryFile(inputStream, tempDir);
-                        dvkFile.setFile(new File(temporaryFile));
-                        dvkFiles.add(dvkFile);
-
-                    } catch (Exception e) {
-                        throw new HibernateException("Unable to create temporary file: ", e);
+                    
+                    if (((document.getSigned() == true) && (f.getDocumentFileTypeId() == FILETYPE_SIGNATURE_CONTAINER))
+                    	|| ((document.getSigned() != true) && (f.getDocumentFileTypeId() == FILETYPE_DOCUMENT_FILE))) {
+	                    Fail dvkFile = new Fail();
+	
+	                    logger.debug("FileName: " + f.getFileName());
+	
+	                    // Create a temporary file from the ADIT file and
+	                    // add a reference to the DVK file
+	                    try {
+	                    	InputStream inputStream = f.getFileData().getBinaryStream();
+	                        String temporaryFile = Util.createTemporaryFile(inputStream, tempDir);
+	                        dvkFile.setFile(new File(temporaryFile));
+	                        dvkFiles.add(dvkFile);
+	
+	                    } catch (Exception e) {
+	                        throw new HibernateException("Unable to create temporary file: ", e);
+	                    }
+	
+	                    dvkFile.setFailNimi(f.getFileName());
+	                    dvkFile.setFailPealkiri(null);
+	                    dvkFile.setFailSuurus(f.getFileSizeBytes());
+	                    dvkFile.setFailTyyp(f.getContentType());
+	                    dvkFile.setJrkNr(count++);
                     }
-
-                    dvkFile.setFailNimi(f.getFileName());
-                    dvkFile.setFailPealkiri(null);
-                    dvkFile.setFailSuurus(f.getFileSizeBytes());
-                    dvkFile.setFailTyyp(f.getContentType());
-                    dvkFile.setJrkNr(count++);
                 }
 
                 failideKonteiner.setKokku(count);
@@ -854,8 +1044,7 @@ public class DocumentService {
                     dvkMessageID = (Long) dvkSession.save(dvkMessage);
 
                     if (dvkMessageID == null || dvkMessageID.longValue() == 0) {
-                        logger
-                                .error("Error while saving outgoing message to DVK database - no ID returned by save method.");
+                        logger.error("Error while saving outgoing message to DVK database - no ID returned by save method.");
                         throw new DataRetrievalFailureException(
                                 "Error while saving outgoing message to DVK database - no ID returned by save method.");
                     } else {
@@ -880,8 +1069,7 @@ public class DocumentService {
 
                 try {
                     // Select the record for update
-                    PojoMessage dvkMessageToUpdate = (PojoMessage) dvkSession2.load(PojoMessage.class, dvkMessageID,
-                            LockMode.UPGRADE);
+                    PojoMessage dvkMessageToUpdate = (PojoMessage) dvkSession2.load(PojoMessage.class, dvkMessageID, LockMode.UPGRADE);
 
                     // Write the DVK Container to temporary file
                     String temporaryFile = this.getConfiguration().getTempDir() + File.separator
@@ -981,7 +1169,7 @@ public class DocumentService {
      * @return the number of documents received
      */
     @Transactional
-    public int receiveDocumentsFromDVK() {
+    public int receiveDocumentsFromDVK(String digidocConfigFile) {
         int result = 0;
 
         try {
@@ -1063,8 +1251,47 @@ public class DocumentService {
                                         aditDocument.setCreatorName(user.getFullName());
 
                                         // Get document files from DVK container
-                                        List<OutputDocumentFile> tempDocuments = this
-                                                .getDocumentOutputFiles(dvkContainer);
+                                        List<OutputDocumentFile> tempDocuments = this.getDocumentOutputFiles(dvkContainer);
+                                        
+                                        // Digital signature extraction
+                                        if ((tempDocuments != null) && (tempDocuments.size() == 1)) {
+                                        	OutputDocumentFile file = tempDocuments.get(0);
+                                            String extension = Util.getFileExtension(file.getName()); 
+                                            
+                                            // If first added file happens to be a DigiDoc container then
+                                            // extract files and signatures from container. Otherwise add
+                                            // container as a regular file.
+                                            if ((file.getId() <= 0) && "ddoc".equalsIgnoreCase(extension)) {
+                                            	DigiDocExtractionResult extractionResult = extractDigiDocContainer(file.getSysTempFile(), digidocConfigFile);
+                                            	if (extractionResult.isSuccess()) {
+                                            		file.setFileType(FILETYPE_NAME_SIGNATURE_CONTAINER);
+                                            		aditDocument.setSigned(true);
+                                            		
+                                            		CustomXTeeHeader dummyHeader = new CustomXTeeHeader();
+                                            		dummyHeader.addElement(CustomXTeeHeader.ISIKUKOOD, user.getUserCode());
+                                            		dummyHeader.addElement(CustomXTeeHeader.INFOSYSTEEM, "");
+                                            		
+                                                    DocumentHistory historyEvent = new DocumentHistory(
+                                                   		 HISTORY_TYPE_EXTRACT_FILE, aditDocument.getId(),
+                                                   		 Calendar.getInstance().getTime(), user,
+                                                   		 user, dummyHeader);
+                                                    historyEvent.setDescription(DOCUMENT_HISTORY_DESCRIPTION_EXTRACT_FILE);
+                                                    aditDocument.getDocumentHistories().add(historyEvent);
+                                            		 
+                                            		for (int i = 0; i < extractionResult.getFiles().size(); i++) {
+                                            			DocumentFile df = extractionResult.getFiles().get(i);
+                                            			df.setDocument(aditDocument);
+                                            			aditDocument.getDocumentFiles().add(df);
+                                            		}
+                                                     
+                                            		for (int i = 0; i < extractionResult.getSignatures().size(); i++) {
+                                            			ee.adit.dao.pojo.Signature sig = extractionResult.getSignatures().get(i);
+                                            			sig.setDocument(aditDocument);
+                                            			aditDocument.getSignatures().add(sig);
+                                            		}
+                                            	}
+                                            }
+                                        }
 
                                         Session aditSession = null;
                                         Transaction aditTransaction = null;
@@ -1922,7 +2149,6 @@ public class DocumentService {
      *            Short name of application that executed current request
      * @throws Exception
      */
-    @SuppressWarnings("unchecked")
     @Transactional
     public void deleteDocument(long documentId, String userCode, String applicationName) throws Exception {
         Document doc = this.getDocumentDAO().getDocument(documentId);
@@ -1946,19 +2172,36 @@ public class DocumentService {
         boolean saveDocument = false;
 
         // Check whether or not given document belongs to current user
-        if (doc.getCreatorCode().equalsIgnoreCase(userCode)) {
+        if ((userCode != null) && (userCode.equalsIgnoreCase(doc.getCreatorCode()))) {
+        	
+        	// If document has been sent then preserve contents and only mark
+        	// document as invisible to owner.
+        	// If document has been shared then cancel sharing and delete the document
+        	boolean hasBeenSent = false;
+        	if (doc.getDocumentSharings() != null) {
+                Iterator it = doc.getDocumentSharings().iterator();
+                while (it.hasNext()) {
+                    DocumentSharing sharing = (DocumentSharing) it.next();
+                    if (sharing.getDocumentSharingType().equalsIgnoreCase(DocumentService.SHARINGTYPE_SHARE)
+                        || sharing.getDocumentSharingType().equalsIgnoreCase(DocumentService.SHARINGTYPE_SIGN)) {
 
-            // Make sure the document is not locked.
-            if ((doc.getLocked() == null) || !doc.getLocked()) {
-
-                // Replace file contents with MD5 hash of original contents
-                if ((doc.getDocumentSharings() == null) || (doc.getDocumentSharings().size() < 1)) {
-                    Iterator it = doc.getDocumentFiles().iterator();
-                    while (it.hasNext()) {
-                        DocumentFile docFile = (DocumentFile) it.next();
-
-                        if ((docFile.getDeleted() != null) && !docFile.getDeleted()) {
-	                        String resultCode = this.deflateDocumentFile(doc.getId(), docFile.getId(), true);
+                        it.remove();
+                        sharing.setDocumentId(0);
+                    } else {
+                    	hasBeenSent = true;
+                    }
+                }
+        	}
+        	
+            // Replace file contents with MD5 hash of original contents
+            if (!hasBeenSent) {
+                if (doc.getDocumentFiles() != null) {
+	            	Iterator it = doc.getDocumentFiles().iterator();
+	                while (it.hasNext()) {
+	                    DocumentFile docFile = (DocumentFile) it.next();
+	
+	                    if ((docFile.getDeleted() == null) || !docFile.getDeleted()) {
+	                        String resultCode = this.deflateDocumentFile(doc.getId(), docFile.getId(), true, false);
 	
 	                        // Make sure no relevant error code was returned
 	                        if (resultCode.equalsIgnoreCase("file_does_not_exist")) {
@@ -1972,35 +2215,41 @@ public class DocumentService {
 	                        }
 	                        
 	                        deletedFilesSize = deletedFilesSize + docFile.getFileSizeBytes();
-                        }
-                    }
+	                    }
+	                }
                 }
-
-                // Mark document as deleted
                 doc.setDeleted(true);
                 saveDocument = true;
             } else {
-                AditCodedException aditCodedException = new AditCodedException("request.deleteDocument.document.locked");
-                aditCodedException.setParameters(new Object[] {new Long(documentId).toString() });
-                throw aditCodedException;
+                // Make sure that the document is not already deleted by owner
+                if ((doc.getInvisibleToOwner() != null) && doc.getInvisibleToOwner()) {
+                    AditCodedException aditCodedException = new AditCodedException("request.deleteDocument.document.deleted");
+                    aditCodedException.setParameters(new Object[] {new Long(documentId).toString() });
+                    throw aditCodedException;
+                } else {
+                	doc.setInvisibleToOwner(true);
+                	saveDocument = true;
+                }
             }
         } else if (doc.getDocumentSharings() != null) {
             // Check whether or not the document has been shared to current user
-            boolean changesMade = false;
             Iterator it = doc.getDocumentSharings().iterator();
             while (it.hasNext()) {
                 DocumentSharing sharing = (DocumentSharing) it.next();
                 if (sharing.getUserCode().equalsIgnoreCase(userCode)) {
-                    // doc.getDocumentSharings().remove(sharing); // NB! DO NOT
-                    // DO THAT - can throw ConcurrentModificationException
-                    it.remove();
-                    sharing.setDocumentId(0);
-                    changesMade = true;
+                    if (sharing.getDocumentSharingType().equalsIgnoreCase(DocumentService.SHARINGTYPE_SHARE)
+                    	|| sharing.getDocumentSharingType().equalsIgnoreCase(DocumentService.SHARINGTYPE_SIGN)) {
+	                    // doc.getDocumentSharings().remove(sharing); // NB! DO NOT
+	                    // DO THAT - can throw ConcurrentModificationException
+	                    it.remove();
+	                    sharing.setDocumentId(0);
+                    } else {
+                    	sharing.setDeleted(true);
+                    }
+                    saveDocument = true;
                 }
             }
-            if (changesMade) {
-                saveDocument = true;
-            } else {
+            if (!saveDocument) {
                 AditCodedException aditCodedException = new AditCodedException("document.doesNotBelongToUser");
                 aditCodedException.setParameters(new Object[] {new Long(documentId).toString(), userCode });
                 throw aditCodedException;
@@ -2096,8 +2345,8 @@ public class DocumentService {
         while (it.hasNext()) {
             DocumentFile docFile = (DocumentFile) it.next();
             
-            if ((docFile.getDeleted() != null) && !docFile.getDeleted()) {
-	            String resultCode = deflateDocumentFile(doc.getId(), docFile.getId(), false);
+            if ((docFile.getDeleted() == null) || !docFile.getDeleted()) {
+	            String resultCode = deflateDocumentFile(doc.getId(), docFile.getId(), false, false);
 	
                 if (resultCode.equalsIgnoreCase("file_does_not_exist")) {
                     AditCodedException aditCodedException = new AditCodedException("file.nonExistent");
@@ -2217,15 +2466,21 @@ public class DocumentService {
 
                 // Load document
                 Document doc = (Document) session.get(Document.class, documentId);
+                
+                // Find signature container (if exists)
+                DocumentFile signatureContainer = findSignatureContainerDraft(doc);
+                if (signatureContainer == null) {
+                	signatureContainer = findSignatureContainer(doc);
+                }
 
                 SignedDoc sdoc = null;
-                if (doc.getSignatureContainer() == null) {
+                if (signatureContainer == null) {
                     logger.debug("Creating new signature container.");
                     sdoc = new SignedDoc(SignedDoc.FORMAT_DIGIDOC_XML, SignedDoc.VERSION_1_3);
                 } else {
                     logger.debug("Loading existing signature container");
                     SAXDigiDocFactory factory = new SAXDigiDocFactory();
-                    sdoc = factory.readSignedDoc(doc.getSignatureContainer().getBinaryStream());
+                    sdoc = factory.readSignedDoc(signatureContainer.getFileData().getBinaryStream());
 
                     // Make sure that document is not already signed
                     // by the same person.
@@ -2285,7 +2540,7 @@ public class DocumentService {
 	
 	                List<DocumentFile> filesList = new ArrayList<DocumentFile>(doc.getDocumentFiles());
 	                for (DocumentFile docFile : filesList) {
-	                    if (!docFile.getDeleted()) {
+	                    if ((docFile.getDeleted() == null) || !docFile.getDeleted()) {
 	                        String outputFileName = uniqueDir.getAbsolutePath() + File.separator + docFile.getFileName();
 	
 	                        InputStream blobDataStream = null;
@@ -2300,7 +2555,8 @@ public class DocumentService {
 	                            }
 	
 	                            // Add file to signature container
-	                            sdoc.addDataFile(new File(outputFileName), docFile.getContentType(), DataFile.CONTENT_EMBEDDED_BASE64);
+	                            DataFile df = sdoc.addDataFile(new File(outputFileName), docFile.getContentType(), DataFile.CONTENT_EMBEDDED_BASE64);
+	                            docFile.setDdocDataFileId(df.getId());
 	                        } catch (IOException ex) {
 	                            throw new HibernateException(ex);
 	                        } finally {
@@ -2356,7 +2612,19 @@ public class DocumentService {
                 // Blob containerData = Hibernate.createBlob(fileInputStream,
                 // length, session);
                 Blob containerData = Hibernate.createBlob(fileInputStream, length);
-                doc.setSignatureContainer(containerData);
+                
+                if (signatureContainer == null) {
+                	signatureContainer = new DocumentFile();
+                	signatureContainer.setContentType("application/octet-stream");
+                	signatureContainer.setDeleted(false);
+                	signatureContainer.setDocument(doc);
+                	signatureContainer.setDocumentFileTypeId(FILETYPE_SIGNATURE_CONTAINER_DRAFT);
+                	signatureContainer.setFileName(Util.convertToLegalFileName(doc.getTitle(), ".ddoc"));
+                	signatureContainer.setFileSizeBytes(length);
+                	doc.getDocumentFiles().add(signatureContainer);
+                }
+                signatureContainer.setFileData(containerData);
+                
                 doc.setLocked(true);
                 doc.setLockingDate(new Date());
 
@@ -2415,10 +2683,12 @@ public class DocumentService {
             tx = session.beginTransaction();
 
             Document doc = (Document) session.get(Document.class, documentId);
+            DocumentFile signatureContainerDraft = findSignatureContainerDraft(doc);
+            DocumentFile signatureContainer = findSignatureContainer(doc);
 
             ConfigManager.init(digidocConfigFile);
             SAXDigiDocFactory factory = new SAXDigiDocFactory();
-            SignedDoc sdoc = factory.readSignedDoc(doc.getSignatureContainer().getBinaryStream());
+            SignedDoc sdoc = factory.readSignedDoc(signatureContainerDraft.getFileData().getBinaryStream());
 
             File signatureFile = new File(signatureFileName);
             if (!signatureFile.exists()) {
@@ -2444,8 +2714,7 @@ public class DocumentService {
 
             Signature sig = null;
             for (int i = 0; i < sdoc.countSignatures(); i++) {
-                String signerPersonalCode = SignedDoc.getSubjectPersonalCode(sdoc.getSignature(i).getLastCertValue()
-                        .getCert());
+                String signerPersonalCode = SignedDoc.getSubjectPersonalCode(sdoc.getSignature(i).getLastCertValue().getCert());
                 if (requestPersonalCode.endsWith(signerPersonalCode)) {
                     sig = sdoc.getSignature(i);
                     break;
@@ -2472,37 +2741,62 @@ public class DocumentService {
                 // Blob containerData = Hibernate.createBlob(fileInputStream,
                 // length, session);
                 Blob containerData = Hibernate.createBlob(fileInputStream, length);
-                doc.setSignatureContainer(containerData);
+                
+                boolean wasSignedBefore = true;
+                if (signatureContainer == null) {
+                	wasSignedBefore = false;
+                	signatureContainer = new DocumentFile();
+                	signatureContainer.setContentType("application/octet-stream");
+                	signatureContainer.setDeleted(false);
+                	signatureContainer.setDocument(doc);
+                	signatureContainer.setDocumentFileTypeId(FILETYPE_SIGNATURE_CONTAINER);
+                	signatureContainer.setFileName(Util.convertToLegalFileName(doc.getTitle(), "ddoc"));
+                	signatureContainer.setFileSizeBytes(length);
+                	doc.getDocumentFiles().add(signatureContainer);
+                }
+                signatureContainer.setFileData(containerData);
+                doc.setSigned(true);
+                
+                // Remove container draft
+                doc.getDocumentFiles().remove(signatureContainerDraft);
+                signatureContainerDraft.setDocument(null);
 
                 // Update document
                 session.update(doc);
 
                 // Add signature metadata to signature table
-                ee.adit.dao.pojo.Signature aditSig = new ee.adit.dao.pojo.Signature();
-                if (sig.getSignedProperties() != null) {
-                    if (sig.getSignedProperties().getSignatureProductionPlace() != null) {
-                        ee.sk.digidoc.SignatureProductionPlace location = sig.getSignedProperties()
-                                .getSignatureProductionPlace();
-                        aditSig.setCity(location.getCity());
-                        aditSig.setCountry(location.getCountryName());
-                        aditSig.setCounty(location.getStateOrProvince());
-                        aditSig.setPostIndex(location.getPostalCode());
-                    }
-                    if ((sig.getSignedProperties().countClaimedRoles() > 0) && (sig.getSignedProperties().getClaimedRole(0) != null)) {
-                        aditSig.setSignerRole(sig.getSignedProperties().getClaimedRole(0));
-                    }
-                    aditSig.setSigningDate(sig.getSignedProperties().getSigningTime());
-                }
-                aditSig.setDocument(doc);
-                
-                CertValue signerCertValue = sig.getCertValueOfType(CertValue.CERTVAL_TYPE_SIGNER);
-                if ((signerCertValue != null) && (signerCertValue.getCert() != null)) {
-                    X509Certificate cert = signerCertValue.getCert();
-                    aditSig.setSignerCode(SignedDoc.getSubjectPersonalCode(cert));
-                    aditSig.setSignerName(SignedDoc.getSubjectLastName(cert) + ", " + SignedDoc.getSubjectFirstName(cert));
-                }
+                ee.adit.dao.pojo.Signature aditSig = convertDigiDocSignatureToLocalSignature(sig);
                 aditSig.setUserCode(requestPersonalCode);
+                
+                aditSig.setDocument(doc);
                 session.save(aditSig);
+                
+                // Remove file contents and calculate offsets
+                if (!wasSignedBefore) {
+	                Hashtable<String, StartEndOffsetPair> offsetData = SimplifiedDigiDocParser.findDigiDocDataFileOffsets(containerFileName);
+	                for (DocumentFile file : doc.getDocumentFiles()) {
+	                	if ((file != null) && ((file.getDeleted() == null) || !file.getDeleted())
+	                		&& (file.getDocumentFileTypeId() == FILETYPE_DOCUMENT_FILE)
+	                		&& !Util.isNullOrEmpty(file.getDdocDataFileId())
+	                		&& offsetData.containsKey(file.getDdocDataFileId())) {
+	                		
+	                		StartEndOffsetPair offsets = offsetData.get(file.getDdocDataFileId());
+	                		
+	                		String resultMsg = documentFileDAO.removeSignedFileContents(
+	                			doc.getId(), file.getId(), offsets.getStart(), offsets.getEnd());
+	                		
+	                		if ("file_data_already_moved".equalsIgnoreCase(resultMsg)) {
+	                			throw new Exception("Cannot remove signed file contents because file contents have already been moved!");
+	                		} else if ("file_is_deleted".equalsIgnoreCase(resultMsg)) {
+	                			throw new Exception("Cannot remove signed file contents because file is deleted!");
+	                		} else if ("file_does_not_belong_to_document".equalsIgnoreCase(resultMsg)) {
+	                			throw new Exception("Cannot remove signed file contents because file does not belong to current document!");
+	                		} else if ("file_does_not_exist".equalsIgnoreCase(resultMsg)) {
+	                			throw new Exception("Cannot remove signed file contents because file does not exist!");
+	                		}
+	                	}
+	                }
+                }
             } else {
                 throw new Exception("Could not find pending signature given by user: " + requestPersonalCode);
             }
@@ -2517,6 +2811,92 @@ public class DocumentService {
                 session.close();
             }
         }
+    }
+    
+    public ee.adit.dao.pojo.Signature convertDigiDocSignatureToLocalSignature(Signature digiDocSignature) {
+    	ee.adit.dao.pojo.Signature result = new ee.adit.dao.pojo.Signature();
+    	
+        if (digiDocSignature.getSignedProperties() != null) {
+            if (digiDocSignature.getSignedProperties().getSignatureProductionPlace() != null) {
+                ee.sk.digidoc.SignatureProductionPlace location = digiDocSignature.getSignedProperties().getSignatureProductionPlace();
+                result.setCity(location.getCity());
+                result.setCountry(location.getCountryName());
+                result.setCounty(location.getStateOrProvince());
+                result.setPostIndex(location.getPostalCode());
+            }
+            if ((digiDocSignature.getSignedProperties().countClaimedRoles() > 0) && (digiDocSignature.getSignedProperties().getClaimedRole(0) != null)) {
+                result.setSignerRole(digiDocSignature.getSignedProperties().getClaimedRole(0));
+            }
+            result.setSigningDate(digiDocSignature.getSignedProperties().getSigningTime());
+        }
+        
+        CertValue signerCertificate = digiDocSignature.getCertValueOfType(CertValue.CERTVAL_TYPE_SIGNER);
+        if ((signerCertificate != null) && (signerCertificate.getCert() != null)) {
+            X509Certificate cert = signerCertificate.getCert();
+            result.setSignerCode(SignedDoc.getSubjectPersonalCode(cert));
+            result.setSignerName(SignedDoc.getSubjectLastName(cert) + ", " + SignedDoc.getSubjectFirstName(cert));
+            
+            // Add reference to ADIT user if signer happens to be registered user
+            String signerCode = result.getSignerCode();
+            String signerCountryCode = getSubjectCountryCode(cert);
+            if (!Util.isNullOrEmpty(signerCode) && !Util.isNullOrEmpty(signerCountryCode)) {
+            	String signerCodeWithCountryPrefix = (signerCode.startsWith(signerCountryCode)) ? signerCode : signerCountryCode + signerCode;
+            	AditUser user = this.getAditUserDAO().getUserByID(signerCodeWithCountryPrefix);
+	            if (user != null) {
+	            	result.setUserCode(signerCodeWithCountryPrefix);
+	            }
+            }
+        }
+        
+    	return result;
+    }
+    
+    private DocumentFile findSignatureContainer(Document doc) {
+    	DocumentFile result = null;
+    	
+    	if ((doc != null) && doc.getSigned() && (doc.getDocumentFiles() != null)) {
+    		for (DocumentFile file : doc.getDocumentFiles()) {
+    			if (file.getDocumentFileTypeId() == FILETYPE_SIGNATURE_CONTAINER) {
+    				result = file;
+    				break;
+    			}
+    		}
+    	}
+    	
+    	return result;
+    }
+    
+    private DocumentFile findSignatureContainerDraft(Document doc) {
+    	DocumentFile result = null;
+    	
+    	if ((doc != null) && (doc.getDocumentFiles() != null)) {
+    		for (DocumentFile file : doc.getDocumentFiles()) {
+    			if (file.getDocumentFileTypeId() == FILETYPE_SIGNATURE_CONTAINER_DRAFT) {
+    				result = file;
+    				break;
+    			}
+    		}
+    	}
+    	
+    	return result;
+    }
+    
+    private String getSubjectCountryCode(X509Certificate cert) {
+        String result = null;
+        String dn = cert.getSubjectDN().getName();
+        int idx1 = dn.indexOf("C=");
+        if (idx1 != -1) {
+            idx1 += 2;
+            while (idx1 < dn.length()-1 && !Character.isLetter(dn.charAt(idx1))) {
+                idx1++;
+            }
+            int idx2 = idx1;
+            while (idx2 < dn.length()-1 && dn.charAt(idx2) != ',' && dn.charAt(idx2) != '/') {
+                idx2++;
+            }
+            result = dn.substring(idx1, idx2);            
+        }
+        return result;
     }
 
     public MessageSource getMessageSource() {

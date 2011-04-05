@@ -193,7 +193,14 @@ public class ModifyStatusEndpoint extends AbstractAditBaseEndpoint {
             // b) document is sent or shared to user
             boolean saveDocument = false;
             if (doc.getCreatorCode().equalsIgnoreCase(userCode)) {
-                doc.setDocumentWfStatusId(request.getDocumentStatusId());
+                // Check whether the document is marked as invisible to owner
+                if ((doc.getInvisibleToOwner() != null) && doc.getInvisibleToOwner()) {
+                    AditCodedException aditCodedException = new AditCodedException("document.deleted");
+                    aditCodedException.setParameters(new Object[] {documentId.toString() });
+                    throw aditCodedException;
+                }
+            	
+            	doc.setDocumentWfStatusId(request.getDocumentStatusId());
                 doc.setLastModifiedDate(new Date());
                 saveDocument = true;
             } else {
@@ -202,7 +209,14 @@ public class ModifyStatusEndpoint extends AbstractAditBaseEndpoint {
                     while (it.hasNext()) {
                         DocumentSharing sharing = it.next();
                         if (sharing.getUserCode().equalsIgnoreCase(userCode)) {
-                            sharing.setDocumentWfStatus(request.getDocumentStatusId());
+                            // Check whether the document is marked as deleted by recipient
+                            if ((sharing.getDeleted() != null) && sharing.getDeleted()) {
+                                AditCodedException aditCodedException = new AditCodedException("document.deleted");
+                                aditCodedException.setParameters(new Object[] {documentId.toString() });
+                                throw aditCodedException;
+                            }
+                        	
+                        	sharing.setDocumentWfStatus(request.getDocumentStatusId());
                             sharing.setLastAccessDate(new Date());
                             saveDocument = true;
                             break;

@@ -37,5 +37,8 @@
         <property name="lastAccessDate" type="timestamp">
             <column name="LAST_ACCESS_DATE" length="7" />
         </property>
+        <property name="deleted" type="java.lang.Boolean">
+            <column name="DELETED" precision="1" scale="0" />
+        </property>
     </class>
 </hibernate-mapping>

@@ -70,6 +70,9 @@
         <property name="deleted" type="java.lang.Boolean">
             <column name="DELETED" precision="1" scale="0" />
         </property>
+        <property name="invisibleToOwner" type="java.lang.Boolean">
+            <column name="INVISIBLE_TO_OWNER" precision="1" scale="0" />
+        </property>
         <property name="signatureContainer" type="blob">
             <column name="SIGNATURE_CONTAINER" />
         </property>

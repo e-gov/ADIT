@@ -1,12 +1,16 @@
 package ee.adit.pojo;
 
-public class OutputDocumentFile {
+public class OutputDocumentFile implements Comparable<OutputDocumentFile> {
     private Long id;
     private String name;
     private String contentType;
     private String description;
     private Long sizeBytes;
     private String sysTempFile;
+    private String fileType;
+    private String ddocDataFileId;
+    private Long ddocDataFileStartOffset;
+    private Long ddocDataFileEndOffset;
 
     public Long getId() {
         return id;
@@ -56,22 +60,47 @@ public class OutputDocumentFile {
         this.sizeBytes = sizeBytes;
     }
 
-    /*
-     * public byte[] getData() { byte[] result = new byte[]{};
-     * 
-     * if ((this.tmpFileName == null) || (this.tmpFileName.length() < 1)) {
-     * return result; }
-     * 
-     * if (!(new File(this.tmpFileName)).exists()) { return result; }
-     * 
-     * FileInputStream inStream = null; try { inStream = new
-     * FileInputStream(this.tmpFileName); result = new byte[(int)(new
-     * File(this.tmpFileName)).length()]; inStream.read(result); } catch
-     * (IOException ex) {
-     * 
-     * } finally { if (inStream != null) { try { inStream.close(); } catch
-     * (Exception ex) {} inStream = null; } }
-     * 
-     * return result; }
-     */
+	public String getFileType() {
+		return fileType;
+	}
+
+	public void setFileType(String fileType) {
+		this.fileType = fileType;
+	}
+	
+	public String getDdocDataFileId() {
+		return ddocDataFileId;
+	}
+
+	public void setDdocDataFileId(String ddocDataFileId) {
+		this.ddocDataFileId = ddocDataFileId;
+	}
+
+	public Long getDdocDataFileStartOffset() {
+		return ddocDataFileStartOffset;
+	}
+
+	public void setDdocDataFileStartOffset(Long ddocDataFileStartOffset) {
+		this.ddocDataFileStartOffset = ddocDataFileStartOffset;
+	}
+
+	public Long getDdocDataFileEndOffset() {
+		return ddocDataFileEndOffset;
+	}
+
+	public void setDdocDataFileEndOffset(Long ddocDataFileEndOffset) {
+		this.ddocDataFileEndOffset = ddocDataFileEndOffset;
+	}
+
+	/**
+	 * Compares {@link OutputDocumentFile} instances by DigiDoc DataFile start offset.
+	 */
+    public int compareTo(OutputDocumentFile compareObject) {
+        if (getDdocDataFileStartOffset() < compareObject.getDdocDataFileStartOffset())
+            return -1;
+        else if (getDdocDataFileStartOffset() == compareObject.getDdocDataFileStartOffset())
+            return 0;
+        else
+            return 1;
+    }
 }

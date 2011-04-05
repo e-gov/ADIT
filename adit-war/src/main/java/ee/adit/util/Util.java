@@ -16,9 +16,12 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.lang.reflect.Field;
+import java.security.MessageDigest;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
@@ -44,7 +47,6 @@ import org.apache.log4j.Logger;
 import org.castor.core.util.Base64Decoder;
 import org.castor.core.util.Base64Encoder;
 
-import ee.adit.dao.pojo.Document;
 import ee.adit.exception.AditInternalException;
 
 /**
@@ -1109,7 +1111,7 @@ public final class Util {
     public static void safeCloseWriter(Writer w) {
         if (w != null) {
             try {
-                w.flush();
+            	w.flush();
                 w.close();
             } catch (Exception ex) {
                 logger.error("Exception: ", ex);
@@ -1397,5 +1399,58 @@ public final class Util {
     		}
     	}
     	return found;
+    }
+    
+    public static String getFileExtension(String fileName) {
+    	String result = null;
+    	
+    	if (!isNullOrEmpty(fileName)) {
+    		int extensionStart = fileName.lastIndexOf(".") + 1;
+    		if ((extensionStart > 0) && (extensionStart < fileName.length())) {
+    			result = fileName.substring(extensionStart);
+    		}
+    	}
+    	
+    	return result;
+    }
+
+    public static byte[] calculateMd5Checksum(String filename) throws Exception {
+    	MessageDigest digest = MessageDigest.getInstance("MD5");
+    	InputStream fileStream = null;
+    	
+    	try {
+	    	fileStream = new FileInputStream(filename);
+	    	int len;
+	    	byte[] buffer = new byte[1024];
+	    	while ((len = fileStream.read(buffer)) > 0) {
+	    		digest.update(buffer, 0, len);
+	    	}
+    	} finally {
+    		safeCloseStream(fileStream);
+    	}
+    	return digest.digest();
+	}
+    
+    public static String convertToLegalFileName(String namePart, String extension) {
+    	int maxLength = 240;
+    	List<Character> illegalChars = Arrays.asList(new Character[] { '/', '\n', '\r', '\t', '\0', '\f', '`', '?', '*', '\\', '<', '>', '|', '\"', ':' });
+    	StringBuilder result = new StringBuilder(maxLength + 10);
+    	
+    	if (!isNullOrEmpty(namePart)) {
+	    	for (int i = 0; (i < namePart.length()) && (result.length() < maxLength); i++) {
+	    		Character currentChar = namePart.charAt(i);
+	    		if (!illegalChars.contains(currentChar)) {
+	    			result.append(currentChar);
+	    		}
+	    	}
+    	} else {
+    		result.append("document");
+    	}
+    	
+    	if (!isNullOrEmpty(extension)) {
+    		result.append(".").append(extension);
+    	}
+    	
+    	return result.toString();
     }
 }

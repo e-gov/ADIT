@@ -56,6 +56,7 @@ import ee.adit.pojo.OutputDocumentFilesList;
 import ee.adit.pojo.SaveItemInternalResult;
 import ee.adit.service.DocumentService;
 import ee.adit.service.MessageService;
+import ee.adit.util.SimplifiedDigiDocParser;
 import ee.adit.util.Util;
 
 /**
@@ -414,7 +415,7 @@ public class DocumentDAO extends HibernateDaoSupport {
                 public Object doInHibernate(Session session) throws HibernateException, SQLException {
                     Document doc = (Document) session.get(Document.class, documentId);
 
-                    int itemIndex = 0;
+                    /*int itemIndex = 0;
                     Iterator it = doc.getDocumentFiles().iterator();
                     while (it.hasNext()) {
                         DocumentFile docFile = (DocumentFile) it.next();
@@ -434,56 +435,59 @@ public class DocumentDAO extends HibernateDaoSupport {
                                 // amounts of binary data in server
                                 // memory.
                                 if (includeFileContents) {
-                                    itemIndex++;
-                                    String outputFileName = Util.generateRandomFileNameWithoutExtension();
-                                    outputFileName = temporaryFilesDir + File.separator + outputFileName + "_"
-                                            + itemIndex + "_GDFv1.adit";
-                                    InputStream blobDataStream = null;
-                                    FileOutputStream fileOutputStream = null;
-                                    try {
-                                        byte[] buffer = new byte[10240];
-                                        int len = 0;
-                                        Blob fileData = docFile.getFileData();
-                                        if (fileData == null) {
-                                            throw new IOException("File blob data not initialized.");
-                                        }
-                                        blobDataStream = fileData.getBinaryStream();
-                                        fileOutputStream = new FileOutputStream(outputFileName);
-                                        while ((len = blobDataStream.read(buffer)) > 0) {
-                                            fileOutputStream.write(buffer, 0, len);
-                                        }
-                                    } catch (IOException ex) {
-                                        throw new HibernateException(ex);
-                                    } finally {
-                                        try {
-                                            if (blobDataStream != null) {
-                                                blobDataStream.close();
-                                            }
-                                            blobDataStream = null;
-                                        } catch (Exception ex) {
-                                            logger.error("Exception: ", ex);
-                                        }
-
-                                        try {
-                                            if (fileOutputStream != null) {
-                                                fileOutputStream.close();
-                                            }
-                                            fileOutputStream = null;
-                                        } catch (Exception ex) {
-                                            logger.error("Exception: ", ex);
-                                        }
-                                    }
-
-                                    // Base64 encode file
-                                    try {
-                                        f.setSysTempFile(Util.base64EncodeFile(outputFileName, temporaryFilesDir));
-                                    } catch (IOException ex) {
-                                        throw new HibernateException(ex);
-                                    }
+                                    // NB! doc.getSigned() can be NULL
+                                	if ((doc.getSigned() != true) || (docFile.getDocumentFileTypeId() != DocumentService.FILETYPE_DOCUMENT_FILE)) { 
+	                                	itemIndex++;
+	                                    String outputFileName = Util.generateRandomFileNameWithoutExtension();
+	                                    outputFileName = temporaryFilesDir + File.separator + outputFileName + "_" + itemIndex + "_GDFv1.adit";
+	
+	                                    InputStream blobDataStream = null;
+	                                    FileOutputStream fileOutputStream = null;
+	                                    try {
+	                                        byte[] buffer = new byte[10240];
+	                                        int len = 0;
+	                                        Blob fileData = docFile.getFileData();
+	                                        if (fileData == null) {
+	                                            throw new IOException("File blob data not initialized.");
+	                                        }
+	                                        blobDataStream = fileData.getBinaryStream();
+	                                        fileOutputStream = new FileOutputStream(outputFileName);
+	                                        while ((len = blobDataStream.read(buffer)) > 0) {
+	                                            fileOutputStream.write(buffer, 0, len);
+	                                        }
+	                                    } catch (IOException ex) {
+	                                        throw new HibernateException(ex);
+	                                    } finally {
+	                                        try {
+	                                            if (blobDataStream != null) {
+	                                                blobDataStream.close();
+	                                            }
+	                                            blobDataStream = null;
+	                                        } catch (Exception ex) {
+	                                            logger.error("Exception: ", ex);
+	                                        }
+	
+	                                        try {
+	                                            if (fileOutputStream != null) {
+	                                                fileOutputStream.close();
+	                                            }
+	                                            fileOutputStream = null;
+	                                        } catch (Exception ex) {
+	                                            logger.error("Exception: ", ex);
+	                                        }
+	                                    }
+	
+	                                    // Base64 encode file
+	                                    try {
+	                                        f.setSysTempFile(Util.base64EncodeFile(outputFileName, temporaryFilesDir));
+	                                    } catch (IOException ex) {
+	                                        throw new HibernateException(ex);
+	                                    }
+                                	}
                                 }
                             }
                         }
-                    }
+                    }*/
 
                     return dbDocumentToOutputDocument(doc, fileIdList, includeSignatures, includeSharings,
                             includeFileContents, temporaryFilesDir, filesNotFoundMessageBase, currentRequestUserCode, documentRetentionDeadlineDays);
@@ -535,7 +539,8 @@ public class DocumentDAO extends HibernateDaoSupport {
             internalIdList.addAll(fileIdList);
 
             for (DocumentFile docFile : filesList) {
-                if (!docFile.getDeleted() && internalIdList.contains((Long) docFile.getId())) {
+                if (((docFile.getDeleted() == null) || !docFile.getDeleted())
+                	&& internalIdList.contains((Long) docFile.getId())) {
                     internalIdList.remove((Long) docFile.getId());
                 }
             }
@@ -558,9 +563,14 @@ public class DocumentDAO extends HibernateDaoSupport {
         }
 
         int itemIndex = 0;
+        DocumentFile signatureContainerFile = null;
         for (DocumentFile docFile : filesList) {
-            if (!docFile.getDeleted()) {
-                if ((fileIdList == null) || fileIdList.isEmpty() || fileIdList.contains(docFile.getId())) {
+            if ((docFile.getDeleted() == null) || !docFile.getDeleted()) {
+                if (docFile.getDocumentFileTypeId() == DocumentService.FILETYPE_SIGNATURE_CONTAINER) {
+                	signatureContainerFile = docFile;
+                }
+            	
+            	if ((fileIdList == null) || fileIdList.isEmpty() || fileIdList.contains(docFile.getId())) {
                     OutputDocumentFile f = new OutputDocumentFile();
                     f.setContentType(docFile.getContentType());
                     f.setDescription(docFile.getDescription());
@@ -572,54 +582,67 @@ public class DocumentDAO extends HibernateDaoSupport {
                     // This is necessary to avoid storing potentially large
                     // amounts of binary data in server memory.
                     if (includeFileContents) {
-                        itemIndex++;
-                        String outputFileName = Util.generateRandomFileNameWithoutExtension();
-                        outputFileName = temporaryFilesDir + File.separator + outputFileName + "_" + itemIndex
-                                + "_GDFv1.adit";
-                        InputStream blobDataStream = null;
-                        FileOutputStream fileOutputStream = null;
-                        try {
-                            byte[] buffer = new byte[10240];
-                            int len = 0;
-                            blobDataStream = docFile.getFileData().getBinaryStream();
-                            fileOutputStream = new FileOutputStream(outputFileName);
-                            while ((len = blobDataStream.read(buffer)) > 0) {
-                                fileOutputStream.write(buffer, 0, len);
-                                totalBytes += len;
-                            }
-                        } catch (IOException ex) {
-                            throw new HibernateException(ex);
-                        } finally {
-                            try {
-                                if (blobDataStream != null) {
-                                    blobDataStream.close();
-                                }
-                                blobDataStream = null;
-                            } catch (Exception ex) {
-                                logger.error("Exception: ", ex);
-                            }
-
-                            try {
-                                if (fileOutputStream != null) {
-                                    fileOutputStream.close();
-                                }
-                                fileOutputStream = null;
-                            } catch (Exception ex) {
-                                logger.error("Exception: ", ex);
-                            }
-                        }
-
-                        // Base64 encode file
-                        try {
-                            f.setSysTempFile(Util.base64EncodeFile(outputFileName, temporaryFilesDir));
-                        } catch (IOException ex) {
-                            throw new HibernateException(ex);
-                        }
+                        // NB! doc.getSigned() can be NULL
+                    	if ((doc.getSigned() != true) || (docFile.getDocumentFileTypeId() != DocumentService.FILETYPE_DOCUMENT_FILE)) { 
+	                        itemIndex++;
+	                        String outputFileName = Util.generateRandomFileNameWithoutExtension();
+	                        outputFileName = temporaryFilesDir + File.separator + outputFileName + "_" + itemIndex
+	                                + "_GDFv1.adit";
+	                        InputStream blobDataStream = null;
+	                        FileOutputStream fileOutputStream = null;
+	                        try {
+	                            byte[] buffer = new byte[10240];
+	                            int len = 0;
+	                            blobDataStream = docFile.getFileData().getBinaryStream();
+	                            fileOutputStream = new FileOutputStream(outputFileName);
+	                            while ((len = blobDataStream.read(buffer)) > 0) {
+	                                fileOutputStream.write(buffer, 0, len);
+	                                totalBytes += len;
+	                            }
+	                        } catch (IOException ex) {
+	                            throw new HibernateException(ex);
+	                        } finally {
+	                            try {
+	                                if (blobDataStream != null) {
+	                                    blobDataStream.close();
+	                                }
+	                                blobDataStream = null;
+	                            } catch (Exception ex) {
+	                                logger.error("Exception: ", ex);
+	                            }
+	
+	                            try {
+	                                if (fileOutputStream != null) {
+	                                    fileOutputStream.close();
+	                                }
+	                                fileOutputStream = null;
+	                            } catch (Exception ex) {
+	                                logger.error("Exception: ", ex);
+	                            }
+	                        }
+	
+	                        // Base64 encode file
+	                        try {
+	                            f.setSysTempFile(Util.base64EncodeFile(outputFileName, temporaryFilesDir));
+	                        } catch (IOException ex) {
+	                            throw new HibernateException(ex);
+	                        }
+	                    }
+	
+	                    outputFilesList.add(f);
                     }
-
-                    outputFilesList.add(f);
                 }
             }
+        }
+        
+        if (includeFileContents && (doc.getSigned() == true) && (signatureContainerFile != null)) {
+        	try {
+	        	SimplifiedDigiDocParser.extractFileContentsFromDdoc(
+	        		signatureContainerFile.getFileData().getBinaryStream(),
+	        		outputFilesList, temporaryFilesDir);
+        	} catch (IOException ex) {
+                 throw new HibernateException(ex);
+        	}
         }
 
         OutputDocumentFilesList filesListWrapper = new OutputDocumentFilesList();

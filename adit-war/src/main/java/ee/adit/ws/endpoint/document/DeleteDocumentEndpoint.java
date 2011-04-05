@@ -109,8 +109,7 @@ public class DeleteDocumentEndpoint extends AbstractAditBaseEndpoint {
                 try {
                     xroadRequestUser = this.getUserService().getUserByID(header.getIsikukood());
                 } catch (Exception ex) {
-                    logger
-                            .debug("Error when attempting to find local user matchinig the person that executed a company request.");
+                    logger.debug("Error when attempting to find local user matchinig the person that executed a company request.");
                 }
             }
 
@@ -142,8 +141,7 @@ public class DeleteDocumentEndpoint extends AbstractAditBaseEndpoint {
 
             // Set response messages
             response.setSuccess(new Success(true));
-            messages
-                    .setMessage(this.getMessageService().getMessages("request.deleteDocument.success", new Object[] {}));
+            messages.setMessage(this.getMessageService().getMessages("request.deleteDocument.success", new Object[] {}));
             response.setMessages(messages);
 
             String additionalMessage = this.getMessageService().getMessage("request.deleteDocument.success",

@@ -1373,6 +1373,29 @@
             types out of ADIT namespace.
         -->
         <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="">
+			<xs:complexType name="message">
+				<xs:annotation>
+					<xs:documentation xml:lang="ee">Teade</xs:documentation>
+					<xs:documentation xml:lang="en">Message</xs:documentation>
+				</xs:annotation>
+				<xs:simpleContent>
+					<xs:extension base="string">
+						<xs:attribute name="lang" type="string" />
+					</xs:extension>
+				</xs:simpleContent>
+			</xs:complexType>
+
+			<xs:complexType name="arrayOfMessage">
+				<xs:annotation>
+					<xs:documentation xml:lang="ee">Teadete massiiv</xs:documentation>
+					<xs:documentation xml:lang="en">Array of messages</xs:documentation>
+				</xs:annotation>
+				<xs:sequence>
+					<xs:element maxOccurs="unbounded" minOccurs="0" name="message" type="message" />
+				</xs:sequence>
+			</xs:complexType>
+			
+			
 			<!-- getJoined attachments -->
             <xs:element name="getJoinedResponseAttachmentV1" type="getJoinedResponseAttachmentV1Type" />
 			<xs:complexType name="getJoinedResponseAttachmentV1Type">
@@ -1502,6 +1525,12 @@
 							<xs:documentation xml:lang="en">Usercode</xs:documentation>
 						</xs:annotation>
 					</xs:element>
+					<xs:element name="name" type="xs:string">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Kasutaja nimi</xs:documentation>
+							<xs:documentation xml:lang="en">Name of user</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="has_joined" type="xs:boolean">
 						<xs:annotation>
 							<xs:documentation xml:lang="ee">Näitab, kas kasutaja on
@@ -1550,6 +1579,7 @@
 								DVK to exchange documents</xs:documentation>
 						</xs:annotation>
 					</xs:element>
+					<xs:element name="messages" type="tns:arrayOfMessage" />
 				</xs:sequence>
 			</xs:complexType>
 
@@ -2030,6 +2060,12 @@
 							<xs:documentation xml:lang="en">Predicted document deleting date</xs:documentation>
 						</xs:annotation>
 					</xs:element>
+					<xs:element name="signed" type="xs:boolean">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Näitab, kas dokumenti on allkirjastatud</xs:documentation>
+							<xs:documentation xml:lang="en">Indicates if the document has been signed</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="signatures" type="documentSignatureListV1Type">
 						<xs:annotation>
 							<xs:documentation xml:lang="ee">Dokumendi allkirjade andmed</xs:documentation>
@@ -2104,6 +2140,12 @@
 						<xs:annotation>
 							<xs:documentation xml:lang="ee">Allkirjastamise kuupäev ja kellaaeg</xs:documentation>
 							<xs:documentation xml:lang="en">Signing date and time</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="user_code" type="xs:string">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Allkirja andnud ADIT kasutaja kood</xs:documentation>
+							<xs:documentation xml:lang="en">Code of ADIT user, who gave this sgnature</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 				</xs:all>

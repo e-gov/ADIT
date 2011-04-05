@@ -194,14 +194,28 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
             // b) document is sent or shared to user for signing
             boolean isOwner = false;
             if (doc.getCreatorCode().equalsIgnoreCase(userCode)) {
-                isOwner = true;
+                // Check whether the document is marked as invisible to owner
+                if ((doc.getInvisibleToOwner() != null) && doc.getInvisibleToOwner()) {
+                    AditCodedException aditCodedException = new AditCodedException("document.deleted");
+                    aditCodedException.setParameters(new Object[] {documentId.toString() });
+                    throw aditCodedException;
+                }
+            	
+            	isOwner = true;
             } else {
                 if ((doc.getDocumentSharings() != null) && (!doc.getDocumentSharings().isEmpty())) {
                     Iterator<DocumentSharing> it = doc.getDocumentSharings().iterator();
                     while (it.hasNext()) {
                         DocumentSharing sharing = it.next();
                         if (sharing.getUserCode().equalsIgnoreCase(userCode)
-                                && DocumentService.SHARINGTYPE_SIGN.equalsIgnoreCase(sharing.getDocumentSharingType())) {
+                            && DocumentService.SHARINGTYPE_SIGN.equalsIgnoreCase(sharing.getDocumentSharingType())) {
+                            // Check whether the document is marked as deleted by recipient
+                            if ((sharing.getDeleted() != null) && sharing.getDeleted()) {
+                                AditCodedException aditCodedException = new AditCodedException("document.deleted");
+                                aditCodedException.setParameters(new Object[] {documentId.toString() });
+                                throw aditCodedException;
+                            }
+                        	
                             isOwner = true;
                             break;
                         }
@@ -233,14 +247,12 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
                 logger.debug("Attachment unzipped to temporary file: " + certFile);
 
                 if (certFile == null) {
-                    AditCodedException aditCodedException = new AditCodedException(
-                            "request.prepareSignature.missingCertificate");
+                    AditCodedException aditCodedException = new AditCodedException("request.prepareSignature.missingCertificate");
                     aditCodedException.setParameters(new Object[] {});
                     throw aditCodedException;
                 }
 
-                InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream(
-                        getDigidocConfigurationFile());
+                InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream(getDigidocConfigurationFile());
 
                 String jdigidocCfgTmpFile = Util.createTemporaryFile(input, getConfiguration().getTempDir());
                 logger.info("JDigidoc.cfg file created as a temporary file: '" + jdigidocCfgTmpFile + "'");

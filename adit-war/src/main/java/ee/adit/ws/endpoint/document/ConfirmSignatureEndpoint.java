@@ -154,7 +154,6 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
 
             // Check whether the document is marked as deleted
             if ((doc.getDeleted() != null) && doc.getDeleted()) {
-                logger.debug("Requested document is deleted. Document ID: " + request.getDocumentId());
                 AditCodedException aditCodedException = new AditCodedException("document.deleted");
                 aditCodedException.setParameters(new Object[] {request.getDocumentId().toString() });
                 throw aditCodedException;
@@ -181,6 +180,13 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
             // b) document is sent or shared to user
             boolean isOwner = false;
             if (doc.getCreatorCode().equalsIgnoreCase(userCode)) {
+                // Check whether the document is marked as invisible to owner
+                if ((doc.getInvisibleToOwner() != null) && doc.getInvisibleToOwner()) {
+                    AditCodedException aditCodedException = new AditCodedException("document.deleted");
+                    aditCodedException.setParameters(new Object[] {documentId.toString() });
+                    throw aditCodedException;
+                }
+            	
                 isOwner = true;
             } else {
                 if ((doc.getDocumentSharings() != null) && (!doc.getDocumentSharings().isEmpty())) {
@@ -188,6 +194,13 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
                     while (it.hasNext()) {
                         DocumentSharing sharing = it.next();
                         if (sharing.getUserCode().equalsIgnoreCase(userCode)) {
+                            // Check whether the document is marked as deleted by recipient
+                            if ((sharing.getDeleted() != null) && sharing.getDeleted()) {
+                                AditCodedException aditCodedException = new AditCodedException("document.deleted");
+                                aditCodedException.setParameters(new Object[] {documentId.toString() });
+                                throw aditCodedException;
+                            }
+                        	
                             isOwner = true;
                             break;
                         }
@@ -196,7 +209,7 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
             }
 
             if (isOwner) {
-                // Get user signature from attachment
+            	// Get user signature from attachment
                 String signatureFile = null;
 
                 String attachmentID = null;

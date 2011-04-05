@@ -34,7 +34,8 @@ public class Document implements java.io.Serializable {
     private Boolean deflated;
     private Date deflateDate;
     private Boolean deleted;
-    private Blob signatureContainer;
+    private Boolean invisibleToOwner;
+    private Boolean signed;
     private Set<Document> documents = new HashSet<Document>(0);
     private Set<DocumentFile> documentFiles = new HashSet<DocumentFile>(0);
     private Set<Signature> signatures = new HashSet<Signature>(0);
@@ -55,8 +56,9 @@ public class Document implements java.io.Serializable {
             String creatorName, String creatorUserCode, String creatorUserName, Date creationDate,
             String remoteApplication, Date lastModifiedDate, Long documentDvkStatusId, Long dvkId,
             Long documentWfStatusId, Boolean locked, Date lockingDate, Boolean signable, Boolean deflated,
-            Date deflateDate, Boolean deleted, Blob signatureContainer, Set<Document> documents, Set<DocumentFile> documentFiles,
-            Set<Signature> signatures, Set<DocumentHistory> documentHistories, Set<DocumentSharing> documentSharings) {
+            Date deflateDate, Boolean deleted, Boolean invisibleToOwner, Boolean signed,
+            Set<Document> documents, Set<DocumentFile> documentFiles, Set<Signature> signatures,
+            Set<DocumentHistory> documentHistories, Set<DocumentSharing> documentSharings) {
         this.id = id;
         this.documentType = documentType;
         this.document = document;
@@ -78,7 +80,8 @@ public class Document implements java.io.Serializable {
         this.deflated = deflated;
         this.deflateDate = deflateDate;
         this.deleted = deleted;
-        this.signatureContainer = signatureContainer;
+        this.invisibleToOwner = invisibleToOwner;
+        this.signed = signed;
         this.documents = documents;
         this.documentFiles = documentFiles;
         this.signatures = signatures;
@@ -254,12 +257,20 @@ public class Document implements java.io.Serializable {
         this.deleted = deleted;
     }
 
-    public Blob getSignatureContainer() {
-        return this.signatureContainer;
+    public Boolean getInvisibleToOwner() {
+		return invisibleToOwner;
+	}
+
+	public void setInvisibleToOwner(Boolean invisibleToOwner) {
+		this.invisibleToOwner = invisibleToOwner;
+	}
+
+	public Boolean getSigned() {
+        return this.signed;
     }
 
-    public void setSignatureContainer(Blob signatureContainer) {
-        this.signatureContainer = signatureContainer;
+    public void setSigned(Boolean signed) {
+        this.signed = signed;
     }
 
     public Set<Document> getDocuments() {

@@ -4,6 +4,7 @@ package ee.adit.dao.pojo;
 
 import java.sql.Blob;
 
+import ee.adit.service.DocumentService;
 import ee.adit.util.Util;
 
 /**
@@ -20,6 +21,11 @@ public class DocumentFile implements java.io.Serializable {
     private Blob fileData;
     private Long fileSizeBytes;
     private Boolean deleted;
+    private long documentFileTypeId = DocumentService.FILETYPE_DOCUMENT_FILE;
+    private String ddocDataFileId;
+    private Long ddocDataFileStartOffset;
+    private Long ddocDataFileEndOffset;
+    private Boolean fileDataInDdoc;
 
     public DocumentFile() {
     }
@@ -31,7 +37,8 @@ public class DocumentFile implements java.io.Serializable {
     }
 
     public DocumentFile(long id, Document document, String fileName, String contentType, String description,
-            Blob fileData, Long fileSizeBytes, Boolean deleted) {
+            Blob fileData, Long fileSizeBytes, Boolean deleted, long documentFileTypeId, String ddocDataFileId,
+            Long ddocDataFileStartOffset, Long ddocDataFileEndOffset, Boolean fileDataInDdoc) {
         this.id = id;
         this.document = document;
         this.fileName = fileName;
@@ -40,6 +47,11 @@ public class DocumentFile implements java.io.Serializable {
         this.fileData = fileData;
         this.fileSizeBytes = fileSizeBytes;
         this.deleted = deleted;
+        this.documentFileTypeId = documentFileTypeId;
+        this.ddocDataFileId = ddocDataFileId;
+        this.ddocDataFileStartOffset = ddocDataFileStartOffset;
+        this.ddocDataFileEndOffset = ddocDataFileEndOffset;
+        this.fileDataInDdoc = fileDataInDdoc;
     }
 
     public long getId() {
@@ -115,4 +127,44 @@ public class DocumentFile implements java.io.Serializable {
     public void setDeleted(Boolean deleted) {
         this.deleted = deleted;
     }
+
+	public long getDocumentFileTypeId() {
+		return documentFileTypeId;
+	}
+
+	public void setDocumentFileTypeId(long documentFileTypeId) {
+		this.documentFileTypeId = documentFileTypeId;
+	}
+
+	public String getDdocDataFileId() {
+		return ddocDataFileId;
+	}
+
+	public void setDdocDataFileId(String ddocDataFileId) {
+		this.ddocDataFileId = ddocDataFileId;
+	}
+
+	public Long getDdocDataFileStartOffset() {
+		return ddocDataFileStartOffset;
+	}
+
+	public void setDdocDataFileStartOffset(Long ddocDataFileStartOffset) {
+		this.ddocDataFileStartOffset = ddocDataFileStartOffset;
+	}
+
+	public Long getDdocDataFileEndOffset() {
+		return ddocDataFileEndOffset;
+	}
+
+	public void setDdocDataFileEndOffset(Long ddocDataFileEndOffset) {
+		this.ddocDataFileEndOffset = ddocDataFileEndOffset;
+	}
+
+	public Boolean getFileDataInDdoc() {
+		return fileDataInDdoc;
+	}
+
+	public void setFileDataInDdoc(Boolean fileDataInDdoc) {
+		this.fileDataInDdoc = fileDataInDdoc;
+	}
 }

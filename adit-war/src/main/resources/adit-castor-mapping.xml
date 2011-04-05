@@ -142,6 +142,9 @@
  		<field name="userCode" type="java.lang.String">
 			<bind-xml name="code" />
 		</field>
+ 		<field name="name" type="java.lang.String">
+			<bind-xml name="name" />
+		</field>
 		<field name="hasJoined" type="boolean">
 			<bind-xml name="has_joined" />
 		</field>
@@ -159,6 +162,9 @@
 		</field>
 		<field name="usesDVK" type="boolean">
 			<bind-xml name="uses_dvk" />
+		</field>
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
+			<bind-xml name="messages" />
 		</field>
  	</class>
  	
@@ -296,6 +302,9 @@
 		</field>
 		<field name="signingDate" type="java.util.Date">
 			<bind-xml name="signing_date"/>
+		</field>
+		<field name="userCode" type="java.lang.String">
+			<bind-xml name="user_code"/>
 		</field>
 	</class>
 
@@ -442,6 +451,9 @@
 		</field>
 		<field name="removeDate" type="org.exolab.castor.types.Date">
 			<bind-xml name="remove_date"/>
+		</field>
+		<field name="signed" type="java.lang.Boolean">
+			<bind-xml name="signed"/>
 		</field>
 		<field name="signatures" type="ee.adit.pojo.DocumentSignatureList">
 			<bind-xml name="signatures" />

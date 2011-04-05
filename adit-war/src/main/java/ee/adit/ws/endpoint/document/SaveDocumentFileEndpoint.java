@@ -1,6 +1,7 @@
 package ee.adit.ws.endpoint.document;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.Locale;
@@ -52,6 +53,8 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
     private UserService userService;
 
     private DocumentService documentService;
+    
+    private String digidocConfigurationFile;
 
     @Override
     protected Object invokeInternal(Object requestObject, int version) throws Exception {
@@ -79,7 +82,7 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
         String additionalInformationForLog = null;
         Long documentId = null;
         boolean updatedExistingFile = false;
-        long documentFileID = 0;
+        long documentFileId = 0;
 
         try {
             logger.debug("saveDocumentFile.v1 invoked.");
@@ -113,8 +116,7 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
             // andmeid muuta
             int accessLevel = this.getUserService().getAccessLevel(applicationName);
             if (accessLevel != 2) {
-                AditCodedException aditCodedException = new AditCodedException(
-                        "application.insufficientPrivileges.write");
+                AditCodedException aditCodedException = new AditCodedException("application.insufficientPrivileges.write");
                 aditCodedException.setParameters(new Object[] {applicationName });
                 throw aditCodedException;
             }
@@ -136,8 +138,7 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
                 try {
                     xroadRequestUser = this.getUserService().getUserByID(header.getIsikukood());
                 } catch (Exception ex) {
-                    logger
-                            .debug("Error when attempting to find local user matchinig the person that executed a company request.");
+                    logger.debug("Error when attempting to find local user matchinig the person that executed a company request.");
                 }
             }
 
@@ -204,6 +205,13 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
             // b) document is sent or shared to user
             boolean isOwner = false;
             if (doc.getCreatorCode().equalsIgnoreCase(userCode)) {
+                // Check whether the document is marked as invisible to owner
+                if ((doc.getInvisibleToOwner() != null) && doc.getInvisibleToOwner()) {
+                    AditCodedException aditCodedException = new AditCodedException("document.deleted");
+                    aditCodedException.setParameters(new Object[] {documentId.toString() });
+                    throw aditCodedException;
+                }
+            	
                 isOwner = true;
             } else {
                 if ((doc.getDocumentSharings() != null) && (!doc.getDocumentSharings().isEmpty())) {
@@ -211,6 +219,13 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
                     while (it.hasNext()) {
                         DocumentSharing sharing = (DocumentSharing) it.next();
                         if (sharing.getUserCode().equalsIgnoreCase(userCode)) {
+                            // Check whether the document is marked as deleted by recipient
+                            if ((sharing.getDeleted() != null) && sharing.getDeleted()) {
+                                AditCodedException aditCodedException = new AditCodedException("document.deleted");
+                                aditCodedException.setParameters(new Object[] {documentId.toString() });
+                                throw aditCodedException;
+                            }
+                        	
                             isOwner = true;
                             break;
                         }
@@ -267,12 +282,18 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
                 if (unmarshalledObject instanceof SaveDocumentFileRequestAttachment) {
                     OutputDocumentFile docFile = ((SaveDocumentFileRequestAttachment) unmarshalledObject).getFile();
                     updatedExistingFile = ((docFile.getId() != null) && (docFile.getId() > 0));
-                    documentFileID = (docFile.getId() == null) ? 0L : docFile.getId();
+                    documentFileId = (docFile.getId() == null) ? 0L : docFile.getId();
+                    
+                    InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream(getDigidocConfigurationFile());
+                    String jdigidocCfgTmpFile = Util.createTemporaryFile(input, getConfiguration().getTempDir());
+                    
                     SaveItemInternalResult saveResult = this.getDocumentService().saveDocumentFile(doc.getId(),
-                            docFile, remainingDiskQuota, this.getConfiguration().getTempDir());
+                            docFile, remainingDiskQuota, this.getConfiguration().getTempDir(), jdigidocCfgTmpFile,
+                            user, xroadRequestUser, header);
+                    
                     if (saveResult.isSuccess()) {
                         long fileId = saveResult.getItemId();
-                        documentFileID = fileId;
+                        documentFileId = fileId;
                         logger.debug("File saved with ID: " + fileId);
                         response.setFileId(fileId);
                     } else {
@@ -296,7 +317,7 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
             DocumentHistory historyEvent = new DocumentHistory(
                     (updatedExistingFile ? DocumentService.HISTORY_TYPE_MODIFY_FILE : DocumentService.HISTORY_TYPE_ADD_FILE),
                     documentId, requestDate.getTime(), user, xroadRequestUser, header);
-            historyEvent.setDescription(DocumentService.DOCUMENT_HISTORY_DESCRIPTION_MODIFYFILE + documentFileID);
+            historyEvent.setDescription(DocumentService.DOCUMENT_HISTORY_DESCRIPTION_MODIFYFILE + documentFileId);
             this.getDocumentService().getDocumentHistoryDAO().save(historyEvent);
 
             // Set response messages
@@ -451,5 +472,13 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 
     public void setDocumentService(DocumentService documentService) {
         this.documentService = documentService;
+    }
+    
+    public String getDigidocConfigurationFile() {
+        return digidocConfigurationFile;
+    }
+
+    public void setDigidocConfigurationFile(String digidocConfigurationFile) {
+        this.digidocConfigurationFile = digidocConfigurationFile;
     }
 }

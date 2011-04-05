@@ -233,6 +233,9 @@
 		<property name="documentService" ref="documentService"/>
 		<property name="messageService" ref="messageService"/>
 		<property name="monitorService" ref="monitorService"/>
+		
+		<!-- NB! Value is case sensitive -->
+		<property name="digidocConfigurationFile" value="jdigidoc.cfg" />
 	</bean>
 	
 	<bean id="SaveDocumentFileEndpoint" class="ee.adit.ws.endpoint.document.SaveDocumentFileEndpoint">
@@ -245,6 +248,9 @@
 		<property name="documentService" ref="documentService"/>
 		<property name="messageService" ref="messageService"/>
 		<property name="monitorService" ref="monitorService"/>
+		
+		<!-- NB! Value is case sensitive -->
+		<property name="digidocConfigurationFile" value="jdigidoc.cfg" />
 	</bean>
 	
 	<bean id="SendDocumentEndpoint" class="ee.adit.ws.endpoint.document.SendDocumentEndpoint">

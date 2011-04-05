@@ -163,6 +163,13 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
                         // b) on päringu käivitanud kasutajale välja jagatud
                         boolean userIsDocOwner = false;
                         if (doc.getCreatorCode().equalsIgnoreCase(userCode)) {
+                            // Check whether the document is marked as invisible to owner
+                            if ((doc.getInvisibleToOwner() != null) && doc.getInvisibleToOwner()) {
+                                AditCodedException aditCodedException = new AditCodedException("document.deleted");
+                                aditCodedException.setParameters(new Object[] {documentId.toString() });
+                                throw aditCodedException;
+                            }
+                        	
                             userIsDocOwner = true;
                         } else {
                             if ((doc.getDocumentSharings() != null) && (!doc.getDocumentSharings().isEmpty())) {
@@ -170,7 +177,14 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
                                 while (it.hasNext()) {
                                     DocumentSharing sharing = it.next();
                                     if (sharing.getUserCode().equalsIgnoreCase(userCode)) {
-                                        userIsDocOwner = true;
+                                        // Check whether the document is marked as deleted by recipient
+                                        if ((sharing.getDeleted() != null) && sharing.getDeleted()) {
+                                            AditCodedException aditCodedException = new AditCodedException("document.deleted");
+                                            aditCodedException.setParameters(new Object[] {documentId.toString() });
+                                            throw aditCodedException;
+                                        }
+                                    	
+                                    	userIsDocOwner = true;
 
                                         if (sharing.getLastAccessDate() == null) {
                                             sharing.setLastAccessDate(new Date());

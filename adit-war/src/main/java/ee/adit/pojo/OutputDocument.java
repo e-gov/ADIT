@@ -1,7 +1,6 @@
 package ee.adit.pojo;
 
 import java.util.Date;
-import java.util.List;
 
 public class OutputDocument {
     private Long id;
@@ -29,6 +28,7 @@ public class OutputDocument {
     private Boolean deflated;
     private Date deflatingDate;
     private org.exolab.castor.types.Date removeDate;
+    private Boolean signed;
     private DocumentSignatureList signatures;
     private DocumentSendingData sentTo;
     private DocumentSharingData sharedTo;
@@ -232,6 +232,14 @@ public class OutputDocument {
 
 	public void setRemoveDate(org.exolab.castor.types.Date removeDate) {
 		this.removeDate = removeDate;
+	}
+
+	public Boolean getSigned() {
+		return signed;
+	}
+
+	public void setSigned(Boolean signed) {
+		this.signed = signed;
 	}
 
 	public DocumentSignatureList getSignatures() {

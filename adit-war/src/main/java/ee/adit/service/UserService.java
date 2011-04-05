@@ -31,6 +31,7 @@ import ee.adit.dao.pojo.UserNotificationId;
 import ee.adit.dao.pojo.Usertype;
 import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditInternalException;
+import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.ArrayOfNotification;
 import ee.adit.pojo.GetUserInfoRequestAttachmentUserList;
 import ee.adit.pojo.GetUserInfoResponseAttachmentUser;
@@ -416,6 +417,7 @@ public class UserService {
 
             // Construct the holder object
             result.setUserCode(userCode);
+            result.setName(user.getFullName());
             result.setHasJoined(hasJoined);
             result.setFreeSpace(unusedSpace);
             result.setUsedSpace(usedSpace);

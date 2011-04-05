@@ -164,6 +164,7 @@ adit-war/sql/testdata/adit_user.dml.sql -text
 adit-war/sql/testdata/create_tablespaces.sql -text
 adit-war/sql/testdata/remote_application.dml.sql -text
 adit-war/sql/updates/1_0_17/update_1_0_17.sql -text
+adit-war/sql/updates/1_0_23/update_1_0_23.sql -text
 adit-war/sql/updates/1_0_8/update_1_0_8.sql -text
 adit-war/sql/usertype.dml.sql -text
 adit-war/src/main/java/ee/adit/dao/AccessRestrictionDAO.java -text
@@ -360,11 +361,14 @@ adit-war/src/main/java/ee/adit/util/CustomXTeeMessageCallback.java -text
 adit-war/src/main/java/ee/adit/util/CustomXTeeResponseSanitizerInterceptor.java -text
 adit-war/src/main/java/ee/adit/util/CustomXTeeServiceConfiguration.java -text
 adit-war/src/main/java/ee/adit/util/DVKUserSyncResult.java -text
+adit-war/src/main/java/ee/adit/util/DigiDocExtractionResult.java -text
 adit-war/src/main/java/ee/adit/util/FileSplitResult.java -text
 adit-war/src/main/java/ee/adit/util/MonitorConfiguration.java -text
 adit-war/src/main/java/ee/adit/util/MonitorResult.java -text
 adit-war/src/main/java/ee/adit/util/NagiosLogger.java -text
 adit-war/src/main/java/ee/adit/util/SchedulerSoapArrayInterceptor.java -text
+adit-war/src/main/java/ee/adit/util/SimplifiedDigiDocParser.java -text
+adit-war/src/main/java/ee/adit/util/StartEndOffsetPair.java -text
 adit-war/src/main/java/ee/adit/util/TemporaryFolderCleanerJob.java -text
 adit-war/src/main/java/ee/adit/util/Util.java -text
 adit-war/src/main/java/ee/adit/util/XRoadQueryName.java -text
@@ -490,6 +494,10 @@ adit-war/src/main/webapp/META-INF/weblogic-application.xml -text
 adit-war/src/main/webapp/WEB-INF/web.xml -text
 adit-war/src/main/webapp/index.jsp -text
 adit-war/src/main/webapp/monitor.jsp -text
+adit-war/src/test/java/ee/adit/test/util/SimplifiedDigiDocParserTest.java -text
+adit-war/src/test/java/ee/adit/test/util/UtilTest.java -text
+adit-war/src/test/resources/ValidDigiDoc_3Files_NoSignatures.ddoc -text
+adit-war/src/test/resources/ValidDigiDoc_NoFiles_NoSignatures.ddoc -text
 doc/adit_kasutusjuhend.odt -text
 doc/adit_kirjeldus.odt -text
 doc/adit_paigaldusjuhend.odt -text

@@ -20,6 +20,7 @@ public class DocumentSharing implements java.io.Serializable {
     private String taskDescription;
     private Date creationDate;
     private Date lastAccessDate;
+    private Boolean deleted;
 
     public DocumentSharing() {
     }
@@ -33,7 +34,7 @@ public class DocumentSharing implements java.io.Serializable {
 
     public DocumentSharing(Long id, String documentSharingType, Long documentDvkStatus, Long documentWfStatus,
             long documentId, String userCode, String userName, String taskDescription, Date creationDate,
-            Date lastAccessDate) {
+            Date lastAccessDate, Boolean deleted) {
         this.id = id;
         this.documentSharingType = documentSharingType;
         this.documentDvkStatus = documentDvkStatus;
@@ -44,6 +45,7 @@ public class DocumentSharing implements java.io.Serializable {
         this.taskDescription = taskDescription;
         this.creationDate = creationDate;
         this.lastAccessDate = lastAccessDate;
+        this.deleted = deleted;
     }
 
     public Long getId() {
@@ -125,5 +127,13 @@ public class DocumentSharing implements java.io.Serializable {
     public void setLastAccessDate(Date lastAccessDate) {
         this.lastAccessDate = lastAccessDate;
     }
+
+	public Boolean getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
+	}
 
 }

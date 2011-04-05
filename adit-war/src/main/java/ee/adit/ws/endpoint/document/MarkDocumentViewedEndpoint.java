@@ -164,6 +164,13 @@ public class MarkDocumentViewedEndpoint extends AbstractAditBaseEndpoint {
                         // b) document is sent or shared to user
                         boolean userIsDocOwner = false;
                         if (doc.getCreatorCode().equalsIgnoreCase(userCode)) {
+                            // Check whether the document is marked as invisible to owner
+                            if ((doc.getInvisibleToOwner() != null) && doc.getInvisibleToOwner()) {
+                                AditCodedException aditCodedException = new AditCodedException("document.deleted");
+                                aditCodedException.setParameters(new Object[] {documentId.toString() });
+                                throw aditCodedException;
+                            }
+                        	
                             userIsDocOwner = true;
                         } else {
                             if ((doc.getDocumentSharings() != null) && (!doc.getDocumentSharings().isEmpty())) {
@@ -171,6 +178,13 @@ public class MarkDocumentViewedEndpoint extends AbstractAditBaseEndpoint {
                                 while (it.hasNext()) {
                                     DocumentSharing sharing = it.next();
                                     if (sharing.getUserCode().equalsIgnoreCase(userCode)) {
+                                        // Check whether the document is marked as deleted by recipient
+                                        if ((sharing.getDeleted() != null) && sharing.getDeleted()) {
+                                            AditCodedException aditCodedException = new AditCodedException("document.deleted");
+                                            aditCodedException.setParameters(new Object[] {documentId.toString() });
+                                            throw aditCodedException;
+                                        }
+                                    	
                                         userIsDocOwner = true;
 
                                         if (sharing.getLastAccessDate() == null) {
@@ -187,7 +201,7 @@ public class MarkDocumentViewedEndpoint extends AbstractAditBaseEndpoint {
                         // Kui kasutaja tohib dokumendile ligi pääseda, siis
                         // tagastame failid
                         if (userIsDocOwner) {
-                            // If document has not been viewed by current user
+                        	// If document has not been viewed by current user
                             // before then mark it viewed.
                             boolean isViewed = false;
                             if ((doc.getDocumentHistories() != null) && (!doc.getDocumentHistories().isEmpty())) {

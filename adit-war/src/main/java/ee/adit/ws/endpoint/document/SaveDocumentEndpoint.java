@@ -1,6 +1,7 @@
 package ee.adit.ws.endpoint.document;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.Locale;
@@ -49,6 +50,8 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
     private UserService userService;
     
     private DocumentService documentService;
+    
+    private String digidocConfigurationFile;
 
     @Override
     protected Object invokeInternal(Object requestObject, int version) throws Exception {
@@ -126,8 +129,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
                 try {
                     xroadRequestUser = this.getUserService().getUserByID(header.getIsikukood());
                 } catch (Exception ex) {
-                    logger
-                            .debug("Error when attempting to find local user matchinig the person that executed a company request.");
+                    logger.debug("Error when attempting to find local user matchinig the person that executed a company request.");
                 }
             }
 
@@ -213,6 +215,9 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
                         creatorUserCode = header.getIsikukood();
                     }
 
+                    InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream(getDigidocConfigurationFile());
+                    String jdigidocCfgTmpFile = Util.createTemporaryFile(input, getConfiguration().getTempDir());
+                    
                     if (document.getId() != null && document.getId() != 0) {
                         updatedExistingDocument = true;
 
@@ -226,7 +231,8 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
                         // Document to database
                         SaveItemInternalResult saveResult = this.getDocumentService().save(document,
                                 user.getUserCode(), applicationName, remainingDiskQuota, creatorUserCode,
-                                creatorUserName, user.getFullName());
+                                creatorUserName, user.getFullName(), jdigidocCfgTmpFile,
+                                user, xroadRequestUser, header);
                         if (saveResult.isSuccess()) {
                             documentId = saveResult.getItemId();
                             logger.debug("Document saved with ID: " + documentId.toString());
@@ -257,7 +263,8 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
                         // Document to database
                         SaveItemInternalResult saveResult = this.getDocumentService().save(document,
                                 user.getUserCode(), applicationName, remainingDiskQuota, creatorUserCode,
-                                creatorUserName, user.getFullName());
+                                creatorUserName, user.getFullName(), jdigidocCfgTmpFile,
+                                user, xroadRequestUser, header);
                         if (saveResult.isSuccess()) {
                             documentId = saveResult.getItemId();
                             logger.debug("Document saved with ID: " + documentId.toString());
@@ -438,6 +445,9 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
         if ((existingDoc.getDeleted() != null) && existingDoc.getDeleted()) {
             throw new AditCodedException("request.saveDocument.document.deleted");
         }
+        if ((existingDoc.getInvisibleToOwner() != null) && existingDoc.getInvisibleToOwner()) {
+            throw new AditCodedException("request.saveDocument.document.deleted");
+        }
     }
 
     public UserService getUserService() {
@@ -456,4 +466,11 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
         this.documentService = documentService;
     }
 
+    public String getDigidocConfigurationFile() {
+        return digidocConfigurationFile;
+    }
+
+    public void setDigidocConfigurationFile(String digidocConfigurationFile) {
+        this.digidocConfigurationFile = digidocConfigurationFile;
+    }
 }

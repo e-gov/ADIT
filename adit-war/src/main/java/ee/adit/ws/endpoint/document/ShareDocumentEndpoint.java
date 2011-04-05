@@ -193,6 +193,13 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
                 aditCodedException.setParameters(new Object[] {request.getDocumentId().toString(), userCode });
                 throw aditCodedException;
             }
+            
+            // Check whether the document is marked as invisible to owner
+            if ((doc.getInvisibleToOwner() != null) && doc.getInvisibleToOwner()) {
+                AditCodedException aditCodedException = new AditCodedException("document.deleted");
+                aditCodedException.setParameters(new Object[] {documentId.toString() });
+                throw aditCodedException;
+            }
 
             // All checks are successfully passed
             boolean saveDocument = false;

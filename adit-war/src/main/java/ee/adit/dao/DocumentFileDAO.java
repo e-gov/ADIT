@@ -30,7 +30,12 @@ public class DocumentFileDAO extends HibernateDaoSupport {
      * @param markDeleted mark document deleted
      * @return deflation result code
      */
-    public String deflateDocumentFile(final long documentId, final long fileId, final boolean markDeleted) {
+    public String deflateDocumentFile(
+    		final long documentId,
+    		final long fileId,
+    		final boolean markDeleted,
+    		final boolean failIfSignature) {
+    	
         logger.debug("deflateDocumentFile starting...");
         DocumentFileDeflateResult result = (DocumentFileDeflateResult) getHibernateTemplate().execute(
                 new HibernateCallback() {
@@ -39,6 +44,7 @@ public class DocumentFileDAO extends HibernateDaoSupport {
                         q.setLong("documentId", documentId);
                         q.setLong("fileId", fileId);
                         q.setBoolean("markDeleted", markDeleted);
+                        q.setBoolean("failIfSignature", failIfSignature);
 
                         logger.debug("Executing stored procedure DEFLATE_FILE");
                         return q.uniqueResult();
@@ -46,6 +52,32 @@ public class DocumentFileDAO extends HibernateDaoSupport {
                 });
 
         logger.debug("File deflation result code is: " + result.getResultCode());
+
+        return result.getResultCode();
+    }
+
+    public String removeSignedFileContents(
+    	final long documentId,
+    	final long fileId,
+    	final long dataStartOffset,
+    	final long dataEndOffset) {
+        
+    	logger.debug("removeSignedFileContents starting...");
+        DocumentFileDeflateResult result = (DocumentFileDeflateResult) getHibernateTemplate().execute(
+            new HibernateCallback() {
+                public Object doInHibernate(Session session) throws HibernateException, SQLException {
+                    Query q = session.getNamedQuery("REMOVE_SIGNED_FILE_CONTENTS");
+                    q.setLong("documentId", documentId);
+                    q.setLong("fileId", fileId);
+                    q.setLong("ddocStartOffset", dataStartOffset);
+                    q.setLong("ddocEndOffset", dataEndOffset);
+
+                    logger.debug("Executing stored procedure REMOVE_SIGNED_FILE_CONTENTS");
+                    return q.uniqueResult();
+                }
+            });
+
+        logger.debug("REMOVE_SIGNED_FILE_CONTENTS result code is: " + result.getResultCode());
 
         return result.getResultCode();
     }

@@ -118,8 +118,7 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
                 try {
                     xroadRequestUser = this.getUserService().getUserByID(header.getIsikukood());
                 } catch (Exception ex) {
-                    logger
-                            .debug("Error when attempting to find local user matchinig the person that executed a company request.");
+                    logger.debug("Error when attempting to find local user matchinig the person that executed a company request.");
                 }
             }
 
@@ -173,6 +172,13 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
                         + ", User ID: " + userCode);
                 AditCodedException aditCodedException = new AditCodedException("document.doesNotBelongToUser");
                 aditCodedException.setParameters(new Object[] {request.getDocumentId().toString(), userCode });
+                throw aditCodedException;
+            }
+            
+            // Check whether the document is marked as invisible to owner
+            if ((doc.getInvisibleToOwner() != null) && doc.getInvisibleToOwner()) {
+                AditCodedException aditCodedException = new AditCodedException("document.deleted");
+                aditCodedException.setParameters(new Object[] {request.getDocumentId().toString() });
                 throw aditCodedException;
             }
 
@@ -315,9 +321,7 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
             }
 
             additionalInformationForLog = errorMessage;
-            super
-                    .logError(request.getDocumentId(), requestDate.getTime(), LogService.ERROR_LOG_LEVEL_ERROR,
-                            errorMessage);
+            super.logError(request.getDocumentId(), requestDate.getTime(), LogService.ERROR_LOG_LEVEL_ERROR, errorMessage);
 
             logger.debug("Adding exception messages to response object.");
             response.setMessages(arrayOfMessage);

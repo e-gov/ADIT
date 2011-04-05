@@ -26,8 +26,14 @@
 		<property name="jobClass" value="ee.adit.dvk.ReceiveJob" />
 		<property name="jobDataAsMap">
 			<map>
+				<entry key="configuration">
+					<ref bean="configuration" />
+				</entry>
 				<entry key="documentService">
 					<ref bean="documentService" />
+				</entry>
+				<entry key="digidocConfigurationFile">
+					<value>jdigidoc.cfg</value>
 				</entry>
 			</map>
 		</property>

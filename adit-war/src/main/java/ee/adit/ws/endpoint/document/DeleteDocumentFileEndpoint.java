@@ -148,6 +148,13 @@ public class DeleteDocumentFileEndpoint extends AbstractAditBaseEndpoint {
                         aditCodedException.setParameters(new Object[] {documentId.toString() });
                         throw aditCodedException;
                     }
+                    
+                    // Check whether the document is marked as invisible to owner
+                    if ((doc.getInvisibleToOwner() != null) && doc.getInvisibleToOwner()) {
+                        AditCodedException aditCodedException = new AditCodedException("document.deleted");
+                        aditCodedException.setParameters(new Object[] {documentId.toString() });
+                        throw aditCodedException;
+                    }
 
                     // Make sure that the document is not locked
                     // NB! doc.getLocked() can be NULL
@@ -159,7 +166,7 @@ public class DeleteDocumentFileEndpoint extends AbstractAditBaseEndpoint {
                     }
 
                     String resultCode = this.documentService.deflateDocumentFile(request.getDocumentId(), request
-                            .getFileId(), true);
+                            .getFileId(), true, true);
                     if (resultCode.equalsIgnoreCase("already_deleted")) {
                         AditCodedException aditCodedException = new AditCodedException("file.isDeleted");
                         aditCodedException.setParameters(new Object[] {new Long(request.getFileId()).toString() });
@@ -172,6 +179,10 @@ public class DeleteDocumentFileEndpoint extends AbstractAditBaseEndpoint {
                         AditCodedException aditCodedException = new AditCodedException("file.doesNotBelongToDocument");
                         aditCodedException.setParameters(new Object[] {new Long(request.getFileId()).toString(),
                                 new Long(request.getDocumentId()).toString() });
+                        throw aditCodedException;
+                    } else if (resultCode.equalsIgnoreCase("cannot_delete_signature_container")) {
+                        AditCodedException aditCodedException = new AditCodedException("file.nonExistent");
+                        aditCodedException.setParameters(new Object[] {new Long(request.getFileId()).toString() });
                         throw aditCodedException;
                     }
                 } else {

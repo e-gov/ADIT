@@ -166,6 +166,13 @@ public class GetDocumentHistoryEndpoint extends AbstractAditBaseEndpoint {
             // b) document is sent or shared to user
             boolean docBelongsToUser = false;
             if (doc.getCreatorCode().equalsIgnoreCase(userCode)) {
+                // Check whether the document is marked as invisible to owner
+                if ((doc.getInvisibleToOwner() != null) && doc.getInvisibleToOwner()) {
+                    AditCodedException aditCodedException = new AditCodedException("document.deleted");
+                    aditCodedException.setParameters(new Object[] {documentId.toString() });
+                    throw aditCodedException;
+                }
+            	
                 docBelongsToUser = true;
             } else {
                 if ((doc.getDocumentSharings() != null) && (!doc.getDocumentSharings().isEmpty())) {
@@ -173,7 +180,14 @@ public class GetDocumentHistoryEndpoint extends AbstractAditBaseEndpoint {
                     while (it.hasNext()) {
                         DocumentSharing sharing = it.next();
                         if (sharing.getUserCode().equalsIgnoreCase(userCode)) {
-                            docBelongsToUser = true;
+                            // Check whether the document is marked as deleted by recipient
+                            if ((sharing.getDeleted() != null) && sharing.getDeleted()) {
+                                AditCodedException aditCodedException = new AditCodedException("document.deleted");
+                                aditCodedException.setParameters(new Object[] {documentId.toString() });
+                                throw aditCodedException;
+                            }
+                        	
+                        	docBelongsToUser = true;
                             break;
                         }
                     }

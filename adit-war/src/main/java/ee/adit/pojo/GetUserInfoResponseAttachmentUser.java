@@ -3,18 +3,14 @@ package ee.adit.pojo;
 public class GetUserInfoResponseAttachmentUser {
 
     private String userCode;
-
+    private String name;
     private boolean hasJoined;
-
     private Long freeSpace;
-
     private Long usedSpace;
-
     private boolean canRead;
-
     private boolean canWrite;
-
     private boolean usesDVK;
+    private ArrayOfMessage messages;
 
     public String getUserCode() {
         return userCode;
@@ -24,7 +20,15 @@ public class GetUserInfoResponseAttachmentUser {
         this.userCode = userCode;
     }
 
-    public boolean isHasJoined() {
+    public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public boolean isHasJoined() {
         return hasJoined;
     }
 
@@ -72,4 +76,11 @@ public class GetUserInfoResponseAttachmentUser {
         this.usesDVK = usesDVK;
     }
 
+	public ArrayOfMessage getMessages() {
+		return messages;
+	}
+
+	public void setMessages(ArrayOfMessage messages) {
+		this.messages = messages;
+	}
 }
