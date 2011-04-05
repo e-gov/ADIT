@@ -494,18 +494,17 @@ public class DocumentService {
             final String creatorUserCode,
             final String creatorUserName,
             final String creatorName,
-            final String digidocConfigFile,
-            final AditUser currentUser,
-            final AditUser personWhoExecutedRequest,
-            final CustomXTeeHeader requestXroadHeader)
+            final String digidocConfigFile)
             throws FileNotFoundException {
         
     	final DocumentDAO docDao = this.getDocumentDAO();
 
         return (SaveItemInternalResult) this.getDocumentDAO().getHibernateTemplate().execute(new HibernateCallback() {
             public Object doInHibernate(Session session) throws HibernateException, SQLException {
-                Date creationDate = new Date();
+                boolean involvedSignatureContainerExtraction = false;
+            	Date creationDate = new Date();
                 Document document = new Document();
+                
                 if ((attachmentDocument.getId() != null) && (attachmentDocument.getId() > 0)) {
                     document = (Document) session.get(Document.class, attachmentDocument.getId());
                     logger.debug("Document file count: " + document.getDocumentFiles().size());
@@ -545,14 +544,8 @@ public class DocumentService {
                     	if (extractionResult.isSuccess()) {
                     		file.setFileType(FILETYPE_NAME_SIGNATURE_CONTAINER);
                     		document.setSigned(true);
+                    		involvedSignatureContainerExtraction = true;
                     		
-                            DocumentHistory historyEvent = new DocumentHistory(
-                           		 HISTORY_TYPE_EXTRACT_FILE, document.getId(),
-                           		 Calendar.getInstance().getTime(), currentUser,
-                           		 personWhoExecutedRequest, requestXroadHeader);
-                            historyEvent.setDescription(DOCUMENT_HISTORY_DESCRIPTION_EXTRACT_FILE);
-                            document.getDocumentHistories().add(historyEvent);
-                    		 
                     		for (int i = 0; i < extractionResult.getFiles().size(); i++) {
                     			DocumentFile df = extractionResult.getFiles().get(i);
                     			df.setDocument(document);
@@ -569,7 +562,9 @@ public class DocumentService {
                 }
 
                 try {
-                    return docDao.save(document, attachmentDocument.getFiles(), remainingDiskQuota, session);
+                	SaveItemInternalResult result = docDao.save(document, attachmentDocument.getFiles(), remainingDiskQuota, session);
+                	result.setInvolvedSignatureContainerExtraction(involvedSignatureContainerExtraction);
+                	return result;
                 } catch (Exception e) {
                     throw new HibernateException(e);
                 }
@@ -595,10 +590,7 @@ public class DocumentService {
     		final OutputDocumentFile file,
             final long remainingDiskQuota,
             final String temporaryFilesDir,
-            final String digidocConfigFile,
-            final AditUser currentUser,
-            final AditUser personWhoExecutedRequest,
-            final CustomXTeeHeader requestXroadHeader) {
+            final String digidocConfigFile) {
         
     	final DocumentDAO docDao = this.getDocumentDAO();
 
@@ -630,18 +622,13 @@ public class DocumentService {
                 // If first added file happens to be a DigiDoc container then
                 // extract files and signatures from container. Otherwise add
                 // container as a regular file.
+                boolean involvedSignatureContainerExtraction = false;
                 if ((maxId <= 0) && "ddoc".equalsIgnoreCase(extension)) {
                 	 DigiDocExtractionResult extractionResult = extractDigiDocContainer(file.getSysTempFile(), digidocConfigFile);
                 	 if (extractionResult.isSuccess()) {
                 		 file.setFileType(FILETYPE_NAME_SIGNATURE_CONTAINER);
                 		 filesList.add(file);
-                		 
-                         DocumentHistory historyEvent = new DocumentHistory(
-                        		 HISTORY_TYPE_EXTRACT_FILE, document.getId(),
-                        		 Calendar.getInstance().getTime(), currentUser,
-                        		 personWhoExecutedRequest, requestXroadHeader);
-                         historyEvent.setDescription(DOCUMENT_HISTORY_DESCRIPTION_EXTRACT_FILE);
-                         document.getDocumentHistories().add(historyEvent);
+                		 involvedSignatureContainerExtraction = true;
                 		 
                 		 for (int i = 0; i < extractionResult.getFiles().size(); i++) {
                 			 DocumentFile df = extractionResult.getFiles().get(i);
@@ -686,6 +673,7 @@ public class DocumentService {
                     }
                 }
                 result.setItemId(fileId);
+                result.setInvolvedSignatureContainerExtraction(involvedSignatureContainerExtraction);
 
                 return result;
             }
@@ -1254,6 +1242,7 @@ public class DocumentService {
                                         List<OutputDocumentFile> tempDocuments = this.getDocumentOutputFiles(dvkContainer);
                                         
                                         // Digital signature extraction
+                                        boolean involvedSignatureContainerExtraction = false;
                                         if ((tempDocuments != null) && (tempDocuments.size() == 1)) {
                                         	OutputDocumentFile file = tempDocuments.get(0);
                                             String extension = Util.getFileExtension(file.getName()); 
@@ -1266,17 +1255,7 @@ public class DocumentService {
                                             	if (extractionResult.isSuccess()) {
                                             		file.setFileType(FILETYPE_NAME_SIGNATURE_CONTAINER);
                                             		aditDocument.setSigned(true);
-                                            		
-                                            		CustomXTeeHeader dummyHeader = new CustomXTeeHeader();
-                                            		dummyHeader.addElement(CustomXTeeHeader.ISIKUKOOD, user.getUserCode());
-                                            		dummyHeader.addElement(CustomXTeeHeader.INFOSYSTEEM, "");
-                                            		
-                                                    DocumentHistory historyEvent = new DocumentHistory(
-                                                   		 HISTORY_TYPE_EXTRACT_FILE, aditDocument.getId(),
-                                                   		 Calendar.getInstance().getTime(), user,
-                                                   		 user, dummyHeader);
-                                                    historyEvent.setDescription(DOCUMENT_HISTORY_DESCRIPTION_EXTRACT_FILE);
-                                                    aditDocument.getDocumentHistories().add(historyEvent);
+                                            		involvedSignatureContainerExtraction = true;
                                             		 
                                             		for (int i = 0; i < extractionResult.getFiles().size(); i++) {
                                             			DocumentFile df = extractionResult.getFiles().get(i);
@@ -1322,6 +1301,20 @@ public class DocumentService {
                                                 logger.info("Document saved to ADIT database. ID: "
                                                         + saveResult.getItemId());
 
+                                                // Add signature container extraction history event
+                                                if (involvedSignatureContainerExtraction) {
+	                                        		CustomXTeeHeader dummyHeader = new CustomXTeeHeader();
+	                                        		dummyHeader.addElement(CustomXTeeHeader.ISIKUKOOD, user.getUserCode());
+	                                        		dummyHeader.addElement(CustomXTeeHeader.INFOSYSTEEM, "");
+	                                        		
+	                                                DocumentHistory historyEvent = new DocumentHistory(
+	                                               		 HISTORY_TYPE_EXTRACT_FILE, saveResult.getItemId(),
+	                                               		 Calendar.getInstance().getTime(), user,
+	                                               		 user, dummyHeader);
+	                                                historyEvent.setDescription(DOCUMENT_HISTORY_DESCRIPTION_EXTRACT_FILE);
+	                                                this.getDocumentHistoryDAO().save(historyEvent);
+                                                }
+                                                
                                                 // Update user quota limit
                                                 Long usedDiskQuota = user.getDiskQuotaUsed();
                                                 if (usedDiskQuota == null) {
@@ -2854,7 +2847,7 @@ public class DocumentService {
     private DocumentFile findSignatureContainer(Document doc) {
     	DocumentFile result = null;
     	
-    	if ((doc != null) && doc.getSigned() && (doc.getDocumentFiles() != null)) {
+    	if ((doc != null) && (doc.getSigned() == true) && (doc.getDocumentFiles() != null)) {
     		for (DocumentFile file : doc.getDocumentFiles()) {
     			if (file.getDocumentFileTypeId() == FILETYPE_SIGNATURE_CONTAINER) {
     				result = file;

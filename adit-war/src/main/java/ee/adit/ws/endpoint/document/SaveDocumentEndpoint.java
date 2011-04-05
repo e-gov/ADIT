@@ -192,6 +192,8 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
                 throw aditCodedException;
             }
 
+            boolean involvedSignatureContainerExtraction = false;
+            
             // Check if the marshalling result is what we expected
             if (unmarshalledObject != null) {
                 logger.debug("XML unmarshalled to type: " + unmarshalledObject.getClass());
@@ -231,8 +233,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
                         // Document to database
                         SaveItemInternalResult saveResult = this.getDocumentService().save(document,
                                 user.getUserCode(), applicationName, remainingDiskQuota, creatorUserCode,
-                                creatorUserName, user.getFullName(), jdigidocCfgTmpFile,
-                                user, xroadRequestUser, header);
+                                creatorUserName, user.getFullName(), jdigidocCfgTmpFile);
                         if (saveResult.isSuccess()) {
                             documentId = saveResult.getItemId();
                             logger.debug("Document saved with ID: " + documentId.toString());
@@ -246,7 +247,8 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
                             }
                             user.setDiskQuotaUsed(usedDiskQuota + saveResult.getAddedFilesSize());
                             this.getUserService().getAditUserDAO().saveOrUpdate(user);
-
+                            
+                            involvedSignatureContainerExtraction = saveResult.isInvolvedSignatureContainerExtraction();
                         } else {
                             if ((saveResult.getMessages() != null) && (saveResult.getMessages().size() > 0)) {
                                 AditMultipleException aditMultipleException = new AditMultipleException(
@@ -263,8 +265,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
                         // Document to database
                         SaveItemInternalResult saveResult = this.getDocumentService().save(document,
                                 user.getUserCode(), applicationName, remainingDiskQuota, creatorUserCode,
-                                creatorUserName, user.getFullName(), jdigidocCfgTmpFile,
-                                user, xroadRequestUser, header);
+                                creatorUserName, user.getFullName(), jdigidocCfgTmpFile);
                         if (saveResult.isSuccess()) {
                             documentId = saveResult.getItemId();
                             logger.debug("Document saved with ID: " + documentId.toString());
@@ -279,6 +280,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
                             user.setDiskQuotaUsed(usedDiskQuota + saveResult.getAddedFilesSize());
                             this.getUserService().getAditUserDAO().saveOrUpdate(user);
 
+                            involvedSignatureContainerExtraction = saveResult.isInvolvedSignatureContainerExtraction();
                         } else {
                             if ((saveResult.getMessages() != null) && (saveResult.getMessages().size() > 0)) {
                                 AditMultipleException aditMultipleException = new AditMultipleException(
@@ -299,6 +301,14 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
                 throw new AditInternalException("Unmarshalling failed for XML in file: " + xmlFile);
             }
 
+            if (involvedSignatureContainerExtraction) {
+                DocumentHistory signatureContainerExtractionEvent = new DocumentHistory(
+             		 DocumentService.HISTORY_TYPE_EXTRACT_FILE, documentId,
+             		 requestDate.getTime(), user, xroadRequestUser, header);
+               signatureContainerExtractionEvent.setDescription(DocumentService.DOCUMENT_HISTORY_DESCRIPTION_EXTRACT_FILE);
+               this.getDocumentService().getDocumentHistoryDAO().save(signatureContainerExtractionEvent);
+            }
+            
             // If saving was successful then add history event
             DocumentHistory historyEvent = new DocumentHistory(
                     (updatedExistingDocument ? DocumentService.HISTORY_TYPE_MODIFY : DocumentService.HISTORY_TYPE_CREATE),
@@ -308,7 +318,6 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
             } else {
                 historyEvent.setDescription(DocumentService.DOCUMENT_HISTORY_DESCRIPTION_CREATE);
             }
-
             this.getDocumentService().getDocumentHistoryDAO().save(historyEvent);
 
             // Set response messages

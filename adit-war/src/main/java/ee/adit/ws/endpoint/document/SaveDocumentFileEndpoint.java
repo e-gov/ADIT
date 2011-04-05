@@ -276,6 +276,8 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
             // Unmarshal the XML from the temporary file
             Object unmarshalledObject = unMarshal(xmlFile);
 
+            boolean involvedSignatureContainerExtraction = false;
+            
             // Check if the marshalling result is what we expected
             if (unmarshalledObject != null) {
                 logger.debug("XML unmarshalled to type: " + unmarshalledObject.getClass());
@@ -288,14 +290,14 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
                     String jdigidocCfgTmpFile = Util.createTemporaryFile(input, getConfiguration().getTempDir());
                     
                     SaveItemInternalResult saveResult = this.getDocumentService().saveDocumentFile(doc.getId(),
-                            docFile, remainingDiskQuota, this.getConfiguration().getTempDir(), jdigidocCfgTmpFile,
-                            user, xroadRequestUser, header);
+                            docFile, remainingDiskQuota, this.getConfiguration().getTempDir(), jdigidocCfgTmpFile);
                     
                     if (saveResult.isSuccess()) {
                         long fileId = saveResult.getItemId();
                         documentFileId = fileId;
                         logger.debug("File saved with ID: " + fileId);
                         response.setFileId(fileId);
+                        involvedSignatureContainerExtraction = saveResult.isInvolvedSignatureContainerExtraction();
                     } else {
                         if ((saveResult.getMessages() != null) && (saveResult.getMessages().size() > 0)) {
                             AditMultipleException aditMultipleException = new AditMultipleException("MultiException");
@@ -313,6 +315,14 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
                 throw new AditInternalException("Unmarshalling failed for XML in file: " + xmlFile);
             }
 
+            if (involvedSignatureContainerExtraction) {
+                DocumentHistory signatureContainerExtractionEvent = new DocumentHistory(
+             		 DocumentService.HISTORY_TYPE_EXTRACT_FILE, documentId,
+             		 requestDate.getTime(), user, xroadRequestUser, header);
+               signatureContainerExtractionEvent.setDescription(DocumentService.DOCUMENT_HISTORY_DESCRIPTION_EXTRACT_FILE);
+               this.getDocumentService().getDocumentHistoryDAO().save(signatureContainerExtractionEvent);
+            }
+            
             // If saving was successful then add history event
             DocumentHistory historyEvent = new DocumentHistory(
                     (updatedExistingFile ? DocumentService.HISTORY_TYPE_MODIFY_FILE : DocumentService.HISTORY_TYPE_ADD_FILE),

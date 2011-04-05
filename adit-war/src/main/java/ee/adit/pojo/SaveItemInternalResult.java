@@ -7,13 +7,15 @@ public class SaveItemInternalResult {
     private boolean success;
     private long itemId;
     private List<Message> messages;
-
     private long addedFilesSize;
+    private boolean involvedSignatureContainerExtraction;
 
     public SaveItemInternalResult() {
         this.success = false;
-        this.itemId = 0;
+        this.itemId = 0L;
         this.messages = new ArrayList<Message>();
+        this.addedFilesSize = 0L;
+        this.involvedSignatureContainerExtraction = false;
     }
 
     public boolean isSuccess() {
@@ -47,4 +49,13 @@ public class SaveItemInternalResult {
     public void setAddedFilesSize(long addedFilesSize) {
         this.addedFilesSize = addedFilesSize;
     }
+    
+    public boolean isInvolvedSignatureContainerExtraction() {
+		return involvedSignatureContainerExtraction;
+	}
+
+	public void setInvolvedSignatureContainerExtraction(
+			boolean involvedSignatureContainerExtraction) {
+		this.involvedSignatureContainerExtraction = involvedSignatureContainerExtraction;
+	}
 }
