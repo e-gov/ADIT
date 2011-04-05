@@ -133,6 +133,8 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 	                                ArrayOfMessage defaultMessages = new ArrayOfMessage();
 	                                defaultMessages.setMessage(this.getMessageService().getMessages(defaultException));
 	                                resultUser.setMessages(defaultMessages);
+                                } else {
+                                	resultUser.setMessages(new ArrayOfMessage());
                                 }
                             }
                             
