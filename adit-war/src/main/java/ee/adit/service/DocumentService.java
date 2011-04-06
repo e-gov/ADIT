@@ -2721,7 +2721,8 @@ public class DocumentService {
             }
 
             if (sig != null) {
-                sig.setSignatureValue(sigValue);
+                logger.info("Signature HEX value: " + Util.convertToHexString(sigValue));
+            	sig.setSignatureValue(sigValue);
                 sig.getConfirmation();
 
                 // Save container to file.
