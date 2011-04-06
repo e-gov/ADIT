@@ -215,7 +215,7 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
                 } else if (!recipient.getActive()) {
                     statusMessages.setMessage(this.getMessageService().getMessages(
                             "request.shareDocument.recipientStatus.recipient.inactive", new Object[] {}));
-                } else if (sharingExists(doc.getDocumentSharings(), recipientCode)) {
+                } else if (DocumentService.documentSharingExists(doc.getDocumentSharings(), recipientCode)) {
                     statusMessages
                             .setMessage(this.getMessageService().getMessages(
                                     "request.shareDocument.recipientStatus.alreadySharedToUser",
@@ -374,25 +374,6 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
         arrayOfMessage.getMessage().add(new Message("en", ex.getMessage()));
         response.setMessages(arrayOfMessage);
         return response;
-    }
-
-    @SuppressWarnings("unchecked")
-    private boolean sharingExists(Set documentSharings, String userCode) {
-        boolean result = false;
-        if ((documentSharings != null) && (!documentSharings.isEmpty())) {
-            Iterator it = documentSharings.iterator();
-            while (it.hasNext()) {
-                DocumentSharing sharing = (DocumentSharing) it.next();
-                if (userCode.equalsIgnoreCase(sharing.getUserCode())
-                        && (sharing.getDocumentSharingType().equalsIgnoreCase(DocumentService.SHARINGTYPE_SHARE) || sharing
-                                .getDocumentSharingType().equalsIgnoreCase(DocumentService.SHARINGTYPE_SIGN))) {
-                    result = true;
-                    break;
-                }
-            }
-        }
-
-        return result;
     }
 
     /**

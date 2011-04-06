@@ -195,7 +195,7 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 
                     // Check if the user is registered
                     AditUser recipient = this.getUserService().getUserByID(recipientCode);
-
+                    
                     if (recipient == null || !recipient.getActive()) {
                         logger.error("User is not registered or inactive.");
                         String messageCode = "user.nonExistent";
@@ -225,6 +225,21 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
                             additionalInformationForLog = additionalInformationForLog + ", ";
                         }
                         additionalInformationForLog = additionalInformationForLog + localErrorMessage + recipientCode + " ";
+                    } else if (DocumentService.documentSendingExists(doc.getDocumentSharings(), recipientCode)) {
+                        recipientStatus.setSuccess(false);
+                        List<Message> errorMessages = this.getMessageService().getMessages("request.sendDocument.recipientStatus.alreadySentToUser", new Object[] {recipientCode });
+                        ArrayOfMessage recipientMessages = new ArrayOfMessage();
+                        recipientMessages.setMessage(errorMessages);
+                        recipientStatus.setMessages(recipientMessages);
+                        success = false;
+
+                        String localErrorMessage = "Document has already been sent to user: ";
+                        super.logError(request.getDocumentId(), requestDate.getTime(), LogService.ERROR_LOG_LEVEL_ERROR,
+                                LogService.REQUEST_LOG_FAIL + localErrorMessage + recipientCode);
+                        if (additionalInformationForLog != null && !additionalInformationForLog.trim().equals("")) {
+                            additionalInformationForLog += ", ";
+                        }
+                        additionalInformationForLog += localErrorMessage + recipientCode + " ";
                     } else {
                         try {
                             // Lock the document

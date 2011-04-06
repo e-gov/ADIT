@@ -2917,6 +2917,44 @@ public class DocumentService {
     	
     	return result;
     }
+    
+    public static boolean documentSharingExists(Set documentSharings, String userCode) {
+        boolean result = false;
+        
+        if ((documentSharings != null) && (!documentSharings.isEmpty())) {
+            Iterator it = documentSharings.iterator();
+            while (it.hasNext()) {
+                DocumentSharing sharing = (DocumentSharing) it.next();
+                if (userCode.equalsIgnoreCase(sharing.getUserCode())
+                        && (sharing.getDocumentSharingType().equalsIgnoreCase(DocumentService.SHARINGTYPE_SHARE) || sharing
+                                .getDocumentSharingType().equalsIgnoreCase(DocumentService.SHARINGTYPE_SIGN))) {
+                    result = true;
+                    break;
+                }
+            }
+        }
+
+        return result;
+    }
+    
+    public static boolean documentSendingExists(Set documentSharings, String userCode) {
+        boolean result = false;
+        
+        if ((documentSharings != null) && (!documentSharings.isEmpty())) {
+            Iterator it = documentSharings.iterator();
+            while (it.hasNext()) {
+                DocumentSharing sharing = (DocumentSharing) it.next();
+                if (userCode.equalsIgnoreCase(sharing.getUserCode())
+                    && (sharing.getDocumentSharingType().equalsIgnoreCase(DocumentService.SHARINGTYPE_SEND_ADIT)
+                    || sharing.getDocumentSharingType().equalsIgnoreCase(DocumentService.SHARINGTYPE_SEND_DVK))) {
+                    result = true;
+                    break;
+                }
+            }
+        }
+
+        return result;
+    }
 
     public MessageSource getMessageSource() {
         return messageSource;
