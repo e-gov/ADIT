@@ -2723,18 +2723,14 @@ public class DocumentService {
             }
 
             if (sig != null) {
-                logger.info("Signature base64 value from client: " + Util.base64encode(sigValue));
+                sig.setOrigContent(null);
             	sig.setSignatureValue(sigValue);
-            	logger.info("Signature base64 value after adding to signature: " + Util.base64encode(sig.getSignatureValue().getValue()));
                 sig.getConfirmation();
-                logger.info("Signature base64 value after confirmation: " + Util.base64encode(sig.getSignatureValue().getValue()));
 
                 // Save container to file.
                 String containerFileName = Util.generateRandomFileNameWithoutExtension();
                 containerFileName = temporaryFilesDir + File.separator + containerFileName + "_CSv1.adit";
-                logger.info("Signature base64 value before file write: " + Util.base64encode(sig.getSignatureValue().getValue()));
                 sdoc.writeToFile(new File(containerFileName));
-                logger.info("Signature base64 value after file write: " + Util.base64encode(sig.getSignatureValue().getValue()));
 
                 // Add signature container to document table
                 FileInputStream fileInputStream = null;
