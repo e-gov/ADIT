@@ -15,7 +15,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import ee.adit.dao.DocumentDAO;
 import ee.adit.pojo.OutputDocumentFile;
 
 public class SimplifiedDigiDocParser {
@@ -159,7 +158,7 @@ public class SimplifiedDigiDocParser {
 	                file.setSysTempFile(outputFileName);
 	                
 	                // Lets trust database values instead of decoding base64 data
-	                totalBytesExtracted += file.getSizeBytes();
+	                totalBytesExtracted += (file.getSizeBytes() == null) ? 0L : file.getSizeBytes();
                 }
 	    	}    	
         } finally {
