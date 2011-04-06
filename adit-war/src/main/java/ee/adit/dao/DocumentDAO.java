@@ -604,23 +604,10 @@ public class DocumentDAO extends HibernateDaoSupport {
 	                        } catch (IOException ex) {
 	                            throw new HibernateException(ex);
 	                        } finally {
-	                            try {
-	                                if (blobDataStream != null) {
-	                                    blobDataStream.close();
-	                                }
-	                                blobDataStream = null;
-	                            } catch (Exception ex) {
-	                                logger.error("Exception: ", ex);
-	                            }
-	
-	                            try {
-	                                if (fileOutputStream != null) {
-	                                    fileOutputStream.close();
-	                                }
-	                                fileOutputStream = null;
-	                            } catch (Exception ex) {
-	                                logger.error("Exception: ", ex);
-	                            }
+	                        	Util.safeCloseStream(blobDataStream);
+	                        	Util.safeCloseStream(fileOutputStream);
+	                        	blobDataStream = null;
+	                        	fileOutputStream = null;
 	                        }
 	
 	                        // Base64 encode file
@@ -630,16 +617,17 @@ public class DocumentDAO extends HibernateDaoSupport {
 	                            throw new HibernateException(ex);
 	                        }
 	                    }
-	
-	                    outputFilesList.add(f);
                     }
+                    
+                    outputFilesList.add(f);
                 }
             }
         }
         
         if (includeFileContents && (doc.getSigned() != null) && doc.getSigned() && (signatureContainerFile != null)) {
         	try {
-	        	SimplifiedDigiDocParser.extractFileContentsFromDdoc(
+	        	logger.info("Attempting to read file contents from ddoc");
+        		SimplifiedDigiDocParser.extractFileContentsFromDdoc(
 	        		signatureContainerFile.getFileData().getBinaryStream(),
 	        		outputFilesList, temporaryFilesDir);
         	} catch (IOException ex) {
@@ -676,6 +664,7 @@ public class DocumentDAO extends HibernateDaoSupport {
                     outSig.setState(sig.getCounty());
                     outSig.setZip(sig.getPostIndex());
                     outSig.setSigningDate(sig.getSigningDate());
+                    outSig.setUserCode(sig.getUserCode());
                     docSignatures.getSignatures().add(outSig);
                 }
             }

@@ -124,7 +124,7 @@ public class SimplifiedDigiDocParser {
         BufferedWriter bufferedWriter = null;
         
         try {
-            textReader = new InputStreamReader(ddocContainerAsStream, "UTF-8");
+        	textReader = new InputStreamReader(ddocContainerAsStream, "UTF-8");
             bufferedReader = new BufferedReader(textReader);
         	
         	long currentOffset = 0;

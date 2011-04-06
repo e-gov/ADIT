@@ -2879,7 +2879,9 @@ public class DocumentService {
     private String getSubjectCountryCode(X509Certificate cert) {
         String result = null;
         String dn = cert.getSubjectDN().getName();
+        logger.info("Finding signer country code. Cert subject DN is: " + dn);
         int idx1 = dn.indexOf("C=");
+        logger.info("Finding signer country code. Country part start index: " + idx1);
         if (idx1 != -1) {
             idx1 += 2;
             while (idx1 < dn.length()-1 && !Character.isLetter(dn.charAt(idx1))) {
@@ -2889,7 +2891,8 @@ public class DocumentService {
             while (idx2 < dn.length()-1 && dn.charAt(idx2) != ',' && dn.charAt(idx2) != '/') {
                 idx2++;
             }
-            result = dn.substring(idx1, idx2);            
+            result = dn.substring(idx1, idx2);
+            logger.info("Finding signer country code. Country code: " + result);
         }
         return result;
     }
