@@ -90,6 +90,18 @@ public final class Util {
     public static String base64encode(String string) throws UnsupportedEncodingException {
         return new String(Base64Encoder.encode(string.getBytes("UTF-8")));
     }
+    
+    /**
+     * Base64 encodes the specified byte array.
+     * 
+     * @param data
+     *            byte array to be encoded
+     * @return the base64 encoded string
+     * @throws UnsupportedEncodingException
+     */
+    public static String base64encode(byte[] data) throws UnsupportedEncodingException {
+        return new String(Base64Encoder.encode(data));
+    }
 
     /**
      * Base64 decodes the specified string.
