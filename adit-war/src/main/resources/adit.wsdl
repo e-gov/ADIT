@@ -166,6 +166,27 @@
 					</element>
 				</sequence>
 			</complexType>
+			
+			<complexType name="arrayOfFileType">
+				<xs:annotation>
+					<xs:documentation xml:lang="ee">Faili tüüpide massiiv</xs:documentation>
+					<xs:documentation xml:lang="en">Array of file types</xs:documentation>
+				</xs:annotation>
+				<sequence>
+					<element maxOccurs="unbounded" minOccurs="0" name="file_type">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Faili tüüp</xs:documentation>
+							<xs:documentation xml:lang="en">File type</xs:documentation>
+						</xs:annotation>
+						<simpleType>
+							<restriction base="string">
+								<enumeration value="document_file"/>
+								<enumeration value="signature_container"/>
+							</restriction>
+						</simpleType>
+					</element>
+				</sequence>
+			</complexType>
 
 			<complexType name="arrayOfDocumentDvkStatus">
 				<xs:annotation>
@@ -595,6 +616,7 @@
 						</xs:annotation>
 					</element>
 					<element name="document_types" type="tns:arrayOfDocumentType" />
+					<element name="file_types" type="tns:arrayOfFileType" />
 					<element name="document_dvk_statuses" type="tns:arrayOfDocumentDvkStatus" />
 					<element name="document_workflow_statuses" type="tns:arrayOfDocumentWorkflowStatus" />
 					<element name="has_been_viewed" type="boolean">
@@ -732,6 +754,7 @@
 								the files is returned</xs:documentation>
 						</xs:annotation>
 					</element>
+					<element name="file_types" type="tns:arrayOfFileType" />
 				</sequence>
 			</complexType>
 			<complexType name="getDocumentResponse">
@@ -2243,8 +2266,8 @@
 					</xs:element>
 					<xs:element name="file_type" type="xs:string">
 						<xs:annotation>
-							<xs:documentation xml:lang="ee">Faili suurus baitides</xs:documentation>
-							<xs:documentation xml:lang="en">File size in bytes</xs:documentation>
+							<xs:documentation xml:lang="ee">Faili tüüp</xs:documentation>
+							<xs:documentation xml:lang="en">File type</xs:documentation>
 						</xs:annotation>
 						<xs:simpleType>
 							<xs:restriction base="xs:string">

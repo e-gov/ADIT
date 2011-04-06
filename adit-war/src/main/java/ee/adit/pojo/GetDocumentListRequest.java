@@ -7,8 +7,6 @@
 
 package ee.adit.pojo;
 
-import java.util.Date;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -29,6 +27,7 @@ import javax.xml.bind.annotation.XmlType;
  *       &lt;sequence>
  *         &lt;element name="folder" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="document_types" type="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}ArrayOfDocumentType"/>
+ *         &lt;element name="file_types" type="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}ArrayOfFileType"/>
  *         &lt;element name="document_dvk_statuses" type="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}ArrayOfDocumentDvkStatus"/>
  *         &lt;element name="document_workflow_statuses" type="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}ArrayOfDocumentWorkflowStatus"/>
  *         &lt;element name="has_been_viewed" type="{http://www.w3.org/2001/XMLSchema}boolean"/>
@@ -50,7 +49,7 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "GetDocumentListRequest", propOrder = {"folder", "documentTypes", "documentDvkStatuses",
+@XmlType(name = "GetDocumentListRequest", propOrder = {"folder", "documentTypes", "fileTypes", "documentDvkStatuses",
         "documentWorkflowStatuses", "hasBeenViewed", "isDeflated", "creatorApplications", "searchPhrase",
         "periodStart", "periodEnd", "maxResults", "startIndex", "sortBy", "sortOrder" })
 public class GetDocumentListRequest {
@@ -59,6 +58,8 @@ public class GetDocumentListRequest {
     private String folder;
     @XmlElement(name = "document_types", required = true)
     private ArrayOfDocumentType documentTypes;
+    @XmlElement(name = "file_types")
+    private ArrayOfFileType fileTypes;
     @XmlElement(name = "document_dvk_statuses", required = true)
     private ArrayOfDocumentDvkStatus documentDvkStatuses;
     @XmlElement(name = "document_workflow_statuses", required = true)
@@ -125,6 +126,27 @@ public class GetDocumentListRequest {
      */
     public void setDocumentTypes(ArrayOfDocumentType value) {
         this.documentTypes = value;
+    }
+    
+    /**
+     * Gets the value of the fileTypes property.
+     * 
+     * @return possible object is {@link ArrayOfFileType }
+     * 
+     */
+    public ArrayOfFileType getFileTypes() {
+        return fileTypes;
+    }
+
+    /**
+     * Sets the value of the fileTypes property.
+     * 
+     * @param value
+     *            allowed object is {@link ArrayOfFileType }
+     * 
+     */
+    public void setFileTypes(ArrayOfFileType value) {
+        this.fileTypes = value;
     }
 
     /**

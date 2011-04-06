@@ -481,6 +481,9 @@
 		<field name="documentTypes" type="ee.adit.pojo.ArrayOfDocumentType">
 			<bind-xml name="document_types" location="keha" />
 		</field>
+		<field name="fileTypes" type="ee.adit.pojo.ArrayOfFileType">
+			<bind-xml name="file_types" location="keha" />
+		</field>
 		<field name="documentDvkStatuses" type="ee.adit.pojo.ArrayOfDocumentDvkStatus">
 			<bind-xml name="document_dvk_statuses" location="keha" />
 		</field>
@@ -557,6 +560,9 @@
 		</field>
 		<field name="includeFileContents" type="java.lang.Boolean">
 			<bind-xml name="include_file_contents" location="keha" />
+		</field>
+		<field name="fileTypes" type="ee.adit.pojo.ArrayOfFileType">
+			<bind-xml name="file_types" location="keha" />
 		</field>
 	</class>
 	

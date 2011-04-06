@@ -27,6 +27,7 @@ import javax.xml.bind.annotation.XmlType;
  *       &lt;sequence>
  *         &lt;element name="document_id" type="{http://www.w3.org/2001/XMLSchema}integer"/>
  *         &lt;element name="include_file_contents" type="{http://www.w3.org/2001/XMLSchema}boolean"/>
+ *         &lt;element name="file_types" type="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}ArrayOfFileType"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -36,13 +37,15 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "GetDocumentRequest", propOrder = {"documentId", "includeFileContents" })
+@XmlType(name = "GetDocumentRequest", propOrder = {"documentId", "includeFileContents", "fileTypes" })
 public class GetDocumentRequest {
 
     @XmlElement(name = "document_id", required = true)
     private Long documentId;
     @XmlElement(name = "include_file_contents")
     private Boolean includeFileContents;
+    @XmlElement(name = "file_types")
+    private ArrayOfFileType fileTypes;
 
     /**
      * Gets the value of the documentId property.
@@ -76,4 +79,24 @@ public class GetDocumentRequest {
         this.includeFileContents = value;
     }
 
+    /**
+     * Gets the value of the fileTypes property.
+     * 
+     * @return possible object is {@link ArrayOfFileType }
+     * 
+     */
+    public ArrayOfFileType getFileTypes() {
+        return fileTypes;
+    }
+
+    /**
+     * Sets the value of the fileTypes property.
+     * 
+     * @param value
+     *            allowed object is {@link ArrayOfFileType }
+     * 
+     */
+    public void setFileTypes(ArrayOfFileType value) {
+        this.fileTypes = value;
+    }
 }

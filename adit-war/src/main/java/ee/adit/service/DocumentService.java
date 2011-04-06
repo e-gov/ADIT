@@ -66,6 +66,7 @@ import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.dao.pojo.DocumentType;
 import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditInternalException;
+import ee.adit.pojo.ArrayOfFileType;
 import ee.adit.pojo.OutputDocumentFile;
 import ee.adit.pojo.PrepareSignatureInternalResult;
 import ee.adit.pojo.SaveDocumentRequestAttachment;
@@ -80,6 +81,7 @@ import ee.sk.digidoc.CertValue;
 import ee.sk.digidoc.DataFile;
 import ee.sk.digidoc.Signature;
 import ee.sk.digidoc.SignatureProductionPlace;
+import ee.sk.digidoc.SignatureValue;
 import ee.sk.digidoc.SignedDoc;
 import ee.sk.digidoc.factory.SAXDigiDocFactory;
 import ee.sk.utils.ConfigManager;
@@ -2722,8 +2724,10 @@ public class DocumentService {
 
             if (sig != null) {
                 logger.info("Signature HEX value: " + Util.convertToHexString(sigValue));
-                sig.getSignatureValue().setValue(sigValue);
-            	//sig.setSignatureValue(sigValue);
+                SignatureValue newSignatureValue = new SignatureValue();
+                newSignatureValue.setId(sig.getSignatureValue().getId());
+                newSignatureValue.setValue(sigValue);
+                sig.setSignatureValue(newSignatureValue);
                 sig.getConfirmation();
 
                 // Save container to file.
@@ -2959,6 +2963,14 @@ public class DocumentService {
         }
 
         return result;
+    }
+    
+    public static boolean fileIsOfRequestedType(long fileTypeId, ArrayOfFileType requestedTypes) {
+    	String fileTypeName = resolveFileTypeName(fileTypeId);
+    	return ((requestedTypes == null)
+    		|| (requestedTypes.getFileType() == null)
+			|| (requestedTypes.getFileType().size() < 1)
+			|| (requestedTypes.getFileType().contains(fileTypeName)));
     }
 
     public MessageSource getMessageSource() {

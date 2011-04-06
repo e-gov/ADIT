@@ -43,6 +43,7 @@ import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditException;
 import ee.adit.exception.AditInternalException;
+import ee.adit.pojo.ArrayOfFileType;
 import ee.adit.pojo.DocumentSendingData;
 import ee.adit.pojo.DocumentSendingRecipient;
 import ee.adit.pojo.DocumentSharingData;
@@ -362,7 +363,7 @@ public class DocumentDAO extends HibernateDaoSupport {
                     List<Document> docList = criteria.list();
 
                     for (Document doc : docList) {
-                        OutputDocument resultDoc = dbDocumentToOutputDocument(doc, null, true, true, false,
+                        OutputDocument resultDoc = dbDocumentToOutputDocument(doc, null, true, true, false, param.getFileTypes(),
                                 temporaryFilesDir, filesNotFoundMessageBase, currentRequestUserCode, documentRetentionDeadlineDays);
                         innerResult.getDocumentList().add(resultDoc);
                     }
@@ -397,7 +398,7 @@ public class DocumentDAO extends HibernateDaoSupport {
      */
     public OutputDocument getDocumentWithFiles(final long documentId, final List<Long> fileIdList,
             final boolean includeSignatures, final boolean includeSharings, final boolean includeFileContents,
-            final String temporaryFilesDir, final String filesNotFoundMessageBase,
+            final ArrayOfFileType fileTypes, final String temporaryFilesDir, final String filesNotFoundMessageBase,
             final String currentRequestUserCode, final Long documentRetentionDeadlineDays)
             throws Exception {
         if (documentId <= 0) {
@@ -490,7 +491,8 @@ public class DocumentDAO extends HibernateDaoSupport {
                     }*/
 
                     return dbDocumentToOutputDocument(doc, fileIdList, includeSignatures, includeSharings,
-                            includeFileContents, temporaryFilesDir, filesNotFoundMessageBase, currentRequestUserCode, documentRetentionDeadlineDays);
+                            includeFileContents, fileTypes, temporaryFilesDir, filesNotFoundMessageBase,
+                            currentRequestUserCode, documentRetentionDeadlineDays);
                 }
             });
         } catch (DataAccessException ex) {
@@ -524,7 +526,7 @@ public class DocumentDAO extends HibernateDaoSupport {
      */
     private OutputDocument dbDocumentToOutputDocument(Document doc, final List<Long> fileIdList,
             final boolean includeSignatures, final boolean includeSharings, final boolean includeFileContents,
-            final String temporaryFilesDir, final String filesNotFoundMessageBase,
+            final ArrayOfFileType fileTypes, final String temporaryFilesDir, final String filesNotFoundMessageBase,
             final String currentRequestUserCode, final Long documentRetentionDeadlineDays)
             throws SQLException {
 
@@ -572,8 +574,10 @@ public class DocumentDAO extends HibernateDaoSupport {
                 	signatureContainerFile = docFile;
                 }
             	
-            	if ((fileIdList == null) || fileIdList.isEmpty() || fileIdList.contains(docFile.getId())) {
-                    OutputDocumentFile f = new OutputDocumentFile();
+            	if (((fileIdList == null) || fileIdList.isEmpty() || fileIdList.contains(docFile.getId()))
+            		&& DocumentService.fileIsOfRequestedType(docFile.getDocumentFileTypeId(), fileTypes)) {
+
+            		OutputDocumentFile f = new OutputDocumentFile();
                     f.setContentType(docFile.getContentType());
                     f.setDescription(docFile.getDescription());
                     f.setId(docFile.getId());
