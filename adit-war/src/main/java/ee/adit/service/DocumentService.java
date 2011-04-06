@@ -539,7 +539,7 @@ public class DocumentService {
                     // If first added file happens to be a DigiDoc container then
                     // extract files and signatures from container. Otherwise add
                     // container as a regular file.
-                    if ((file.getId() <= 0) && "ddoc".equalsIgnoreCase(extension)) {
+                    if (((file.getId() == null) || (file.getId() <= 0)) && "ddoc".equalsIgnoreCase(extension)) {
                     	DigiDocExtractionResult extractionResult = extractDigiDocContainer(file.getSysTempFile(), digidocConfigFile);
                     	if (extractionResult.isSuccess()) {
                     		file.setFileType(FILETYPE_NAME_SIGNATURE_CONTAINER);
@@ -1252,7 +1252,7 @@ public class DocumentService {
                                             // If first added file happens to be a DigiDoc container then
                                             // extract files and signatures from container. Otherwise add
                                             // container as a regular file.
-                                            if ((file.getId() <= 0) && "ddoc".equalsIgnoreCase(extension)) {
+                                            if (((file.getId() == null) || (file.getId() <= 0)) && "ddoc".equalsIgnoreCase(extension)) {
                                             	DigiDocExtractionResult extractionResult = extractDigiDocContainer(file.getSysTempFile(), digidocConfigFile);
                                             	if (extractionResult.isSuccess()) {
                                             		file.setFileType(FILETYPE_NAME_SIGNATURE_CONTAINER);
