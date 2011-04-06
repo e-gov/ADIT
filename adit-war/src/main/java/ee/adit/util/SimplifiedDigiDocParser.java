@@ -103,6 +103,8 @@ public class SimplifiedDigiDocParser {
 		List<OutputDocumentFile> files,
 		final String temporaryFilesDir) throws IOException {
     	
+    	logger.info("Files count: " + files.size());
+    	
     	// Make sure that offsets are not null so that sorting in next
     	// step would have more reliable input data.
     	for (OutputDocumentFile file : files) {
@@ -129,6 +131,7 @@ public class SimplifiedDigiDocParser {
         	
         	long currentOffset = 0;
 	    	for (OutputDocumentFile file : files) {
+	    		logger.info("File ID: " + file.getId());
                 if (file.getDdocDataFileStartOffset() > 0L) {
 		    		logger.info("Extracting file contents from signature container. File ID: " + file.getId());
                 	

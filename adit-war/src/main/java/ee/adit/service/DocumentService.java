@@ -2883,7 +2883,7 @@ public class DocumentService {
         int idx1 = dn.indexOf("C=");
         logger.info("Finding signer country code. Country part start index: " + idx1);
         if (idx1 != -1) {
-            idx1 += 2;
+            idx1++;
             while (idx1 < dn.length()-1 && !Character.isLetter(dn.charAt(idx1))) {
                 idx1++;
             }
