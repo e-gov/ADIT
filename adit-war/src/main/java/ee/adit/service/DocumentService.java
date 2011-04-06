@@ -317,9 +317,9 @@ public class DocumentService {
      */
     public static final String DOCUMENT_HISTORY_DESCRIPTION_EXTRACT_FILE = "Files extracted from digital signature container";
     
-	public static final int FILETYPE_DOCUMENT_FILE = 1;
-	public static final int FILETYPE_SIGNATURE_CONTAINER = 2;
-	public static final int FILETYPE_SIGNATURE_CONTAINER_DRAFT = 3;
+	public static final long FILETYPE_DOCUMENT_FILE = 1L;
+	public static final long FILETYPE_SIGNATURE_CONTAINER = 2L;
+	public static final long FILETYPE_SIGNATURE_CONTAINER_DRAFT = 3L;
 	public static final String FILETYPE_NAME_DOCUMENT_FILE = "document_file";
 	public static final String FILETYPE_NAME_SIGNATURE_CONTAINER = "signature_container";
 	public static final String FILETYPE_NAME_SIGNATURE_CONTAINER_DRAFT = "signature_container_draft";
@@ -971,8 +971,8 @@ public class DocumentService {
                 while (aditFilesIterator.hasNext()) {
                     DocumentFile f = (DocumentFile) aditFilesIterator.next();
                     
-                    if (((document.getSigned() == true) && (f.getDocumentFileTypeId() == FILETYPE_SIGNATURE_CONTAINER))
-                    	|| ((document.getSigned() != true) && (f.getDocumentFileTypeId() == FILETYPE_DOCUMENT_FILE))) {
+                    if (((document.getSigned() != null) && document.getSigned() && (f.getDocumentFileTypeId() == FILETYPE_SIGNATURE_CONTAINER))
+                    	|| (((document.getSigned() == null) || !document.getSigned()) && (f.getDocumentFileTypeId() == FILETYPE_DOCUMENT_FILE))) {
 	                    Fail dvkFile = new Fail();
 	
 	                    logger.debug("FileName: " + f.getFileName());
@@ -2847,7 +2847,7 @@ public class DocumentService {
     private DocumentFile findSignatureContainer(Document doc) {
     	DocumentFile result = null;
     	
-    	if ((doc != null) && (doc.getSigned() == true) && (doc.getDocumentFiles() != null)) {
+    	if ((doc != null) && (doc.getSigned() != null) && doc.getSigned() && (doc.getDocumentFiles() != null)) {
     		for (DocumentFile file : doc.getDocumentFiles()) {
     			if (file.getDocumentFileTypeId() == FILETYPE_SIGNATURE_CONTAINER) {
     				result = file;
