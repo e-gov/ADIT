@@ -580,6 +580,10 @@ public class DocumentDAO extends HibernateDaoSupport {
                     f.setName(docFile.getFileName());
                     f.setSizeBytes(docFile.getFileSizeBytes());
                     f.setFileType(DocumentService.resolveFileTypeName(docFile.getDocumentFileTypeId()));
+                    
+                    f.setDdocDataFileId(docFile.getDdocDataFileId());
+                    f.setDdocDataFileStartOffset(docFile.getDdocDataFileStartOffset());
+                    f.setDdocDataFileEndOffset(docFile.getDdocDataFileEndOffset());
 
                     // Read file data from BLOB and write it to temporary file.
                     // This is necessary to avoid storing potentially large
@@ -626,8 +630,7 @@ public class DocumentDAO extends HibernateDaoSupport {
         
         if (includeFileContents && (doc.getSigned() != null) && doc.getSigned() && (signatureContainerFile != null)) {
         	try {
-	        	logger.info("Attempting to read file contents from ddoc");
-        		SimplifiedDigiDocParser.extractFileContentsFromDdoc(
+        		totalBytes += SimplifiedDigiDocParser.extractFileContentsFromDdoc(
 	        		signatureContainerFile.getFileData().getBinaryStream(),
 	        		outputFilesList, temporaryFilesDir);
         	} catch (IOException ex) {

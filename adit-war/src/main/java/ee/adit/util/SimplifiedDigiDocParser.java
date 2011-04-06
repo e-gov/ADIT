@@ -98,12 +98,12 @@ public class SimplifiedDigiDocParser {
         return result;
     }
     
-    public static void extractFileContentsFromDdoc(
+    public static long extractFileContentsFromDdoc(
 		InputStream ddocContainerAsStream,
 		List<OutputDocumentFile> files,
 		final String temporaryFilesDir) throws IOException {
     	
-    	logger.info("Files count: " + files.size());
+    	long totalBytesExtracted = 0L;
     	
     	// Make sure that offsets are not null so that sorting in next
     	// step would have more reliable input data.
@@ -131,10 +131,7 @@ public class SimplifiedDigiDocParser {
         	
         	long currentOffset = 0;
 	    	for (OutputDocumentFile file : files) {
-	    		logger.info("File ID: " + file.getId());
                 if (file.getDdocDataFileStartOffset() > 0L) {
-		    		logger.info("Extracting file contents from signature container. File ID: " + file.getId());
-                	
 		    		String outputFileName = Util.generateRandomFileNameWithoutExtension();
 	                outputFileName = temporaryFilesDir + File.separator + outputFileName + "_" + file.getId() + ".adit";
 		    		
@@ -160,7 +157,9 @@ public class SimplifiedDigiDocParser {
 	                Util.safeCloseStream(outStream);
 	                
 	                file.setSysTempFile(outputFileName);
-	                logger.info("File contnts extracted into file: " + outputFileName);
+	                
+	                // Lets trust database values instead of decoding base64 data
+	                totalBytesExtracted += file.getSizeBytes();
                 }
 	    	}    	
         } finally {
@@ -175,5 +174,7 @@ public class SimplifiedDigiDocParser {
             textWriter = null;
             bufferedWriter = null;
         }
+        
+        return totalBytesExtracted;
     }
 }
