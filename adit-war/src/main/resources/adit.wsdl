@@ -2241,6 +2241,18 @@
 							<xs:documentation xml:lang="en">File data</xs:documentation>
 						</xs:annotation>
 					</xs:element>
+					<xs:element name="file_type" type="xs:string">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Faili suurus baitides</xs:documentation>
+							<xs:documentation xml:lang="en">File size in bytes</xs:documentation>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="document_file"/>
+								<xs:enumeration value="signature_container"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
 				</xs:sequence>
 			</xs:complexType>
 			
