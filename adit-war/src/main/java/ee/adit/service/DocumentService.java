@@ -2464,7 +2464,7 @@ public class DocumentService {
                 
                 // Find signature container (if exists)
                 DocumentFile signatureContainer = findSignatureContainerDraft(doc);
-                if (signatureContainer == null) {
+                if ((signatureContainer == null) || (signatureContainer.getFileData() == null)) {
                 	signatureContainer = findSignatureContainer(doc);
                 }
 
@@ -2680,6 +2680,10 @@ public class DocumentService {
             Document doc = (Document) session.get(Document.class, documentId);
             DocumentFile signatureContainerDraft = findSignatureContainerDraft(doc);
             DocumentFile signatureContainer = findSignatureContainer(doc);
+            
+            if ((signatureContainerDraft == null) || (signatureContainerDraft.getFileData() == null)) {
+            	throw new HibernateException("Cannot comfirm signature because no unconfirmed signatures exist!");
+            }
 
             ConfigManager.init(digidocConfigFile);
             SAXDigiDocFactory factory = new SAXDigiDocFactory();
@@ -2752,9 +2756,8 @@ public class DocumentService {
                 signatureContainer.setFileData(containerData);
                 doc.setSigned(true);
                 
-                // Remove container draft
-                doc.getDocumentFiles().remove(signatureContainerDraft);
-                signatureContainerDraft.setDocument(null);
+                // Remove container draft contents
+                signatureContainerDraft.setFileData(null);
 
                 // Update document
                 session.update(doc);
