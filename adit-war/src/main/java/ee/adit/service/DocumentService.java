@@ -728,10 +728,12 @@ public class DocumentService {
 	                }
 	                
 	                int signaturesCount = ddocContainer.countSignatures();
+	                logger.info("Extracted file contains "+ signaturesCount +" signatures.");
 	                if (signaturesCount > 0) {
 	                	for (int i = 0; i < signaturesCount; i++) {
 	                		Signature ddocSignature = ddocContainer.getSignature(i);
 	                        ee.adit.dao.pojo.Signature localSignature = convertDigiDocSignatureToLocalSignature(ddocSignature);
+	                        logger.info("Extracted signature of " + localSignature.getSignerName());
 	                        result.getSignatures().add(localSignature);
 	                	}
 	                }
@@ -2612,7 +2614,7 @@ public class DocumentService {
                 	signatureContainer.setDeleted(false);
                 	signatureContainer.setDocument(doc);
                 	signatureContainer.setDocumentFileTypeId(FILETYPE_SIGNATURE_CONTAINER_DRAFT);
-                	signatureContainer.setFileName(Util.convertToLegalFileName(doc.getTitle(), ".ddoc"));
+                	signatureContainer.setFileName(Util.convertToLegalFileName(doc.getTitle(), "ddoc"));
                 	signatureContainer.setFileSizeBytes(length);
                 	doc.getDocumentFiles().add(signatureContainer);
                 }
@@ -2890,6 +2892,30 @@ public class DocumentService {
             result = dn.substring(idx1, idx2);            
         }
         return result;
+    }
+    
+    public static long resolveFileTypeId(String fileTypeName) {
+    	long result = FILETYPE_DOCUMENT_FILE;
+    	
+    	if (FILETYPE_NAME_SIGNATURE_CONTAINER.equalsIgnoreCase(fileTypeName)) {
+    		result = FILETYPE_SIGNATURE_CONTAINER;
+    	} else if (FILETYPE_NAME_SIGNATURE_CONTAINER_DRAFT.equalsIgnoreCase(fileTypeName)) {
+    		result = FILETYPE_SIGNATURE_CONTAINER_DRAFT;
+    	}
+    	
+    	return result;
+    }
+    
+    public static String resolveFileTypeName(Long fileTypeId) {
+    	String result = FILETYPE_NAME_DOCUMENT_FILE;
+    	
+    	if (FILETYPE_SIGNATURE_CONTAINER == fileTypeId) {
+    		result = FILETYPE_NAME_SIGNATURE_CONTAINER;
+    	} else if (FILETYPE_SIGNATURE_CONTAINER_DRAFT == fileTypeId) {
+    		result = FILETYPE_NAME_SIGNATURE_CONTAINER_DRAFT;
+    	}
+    	
+    	return result;
     }
 
     public MessageSource getMessageSource() {

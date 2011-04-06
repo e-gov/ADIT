@@ -565,8 +565,10 @@ public class DocumentDAO extends HibernateDaoSupport {
         int itemIndex = 0;
         DocumentFile signatureContainerFile = null;
         for (DocumentFile docFile : filesList) {
-            if ((docFile.getDeleted() == null) || !docFile.getDeleted()) {
-                if (docFile.getDocumentFileTypeId() == DocumentService.FILETYPE_SIGNATURE_CONTAINER) {
+            if (((docFile.getDeleted() == null) || !docFile.getDeleted())
+            	&& (docFile.getDocumentFileTypeId() != DocumentService.FILETYPE_SIGNATURE_CONTAINER_DRAFT)) {
+                
+            	if (docFile.getDocumentFileTypeId() == DocumentService.FILETYPE_SIGNATURE_CONTAINER) {
                 	signatureContainerFile = docFile;
                 }
             	
@@ -577,6 +579,7 @@ public class DocumentDAO extends HibernateDaoSupport {
                     f.setId(docFile.getId());
                     f.setName(docFile.getFileName());
                     f.setSizeBytes(docFile.getFileSizeBytes());
+                    f.setFileType(DocumentService.resolveFileTypeName(docFile.getDocumentFileTypeId()));
 
                     // Read file data from BLOB and write it to temporary file.
                     // This is necessary to avoid storing potentially large
@@ -984,6 +987,9 @@ public class DocumentDAO extends HibernateDaoSupport {
                         filesTotalSize = filesTotalSize + length;
                     }
 
+                    documentFile.setFileDataInDdoc((attachmentFile.getDdocDataFileStartOffset() != null) && (attachmentFile.getDdocDataFileStartOffset() > 0));
+                    documentFile.setDocumentFileTypeId(DocumentService.resolveFileTypeId(attachmentFile.getFileType()));
+                    
                     documentFile.setContentType(attachmentFile.getContentType());
                     documentFile.setDeleted(false);
                     documentFile.setDescription(attachmentFile.getDescription());
