@@ -88,7 +88,7 @@
             </key>
             <one-to-many class="ee.adit.dao.pojo.DocumentFile" />
         </set>
-        <set name="signatures" inverse="true" lazy="true" table="SIGNATURE" fetch="select">
+        <set name="signatures" inverse="true" lazy="true" table="SIGNATURE" fetch="select" cascade="save-update">
             <key>
                 <column name="DOCUMENT_ID" precision="12" scale="0" not-null="true" />
             </key>

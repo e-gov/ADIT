@@ -13,10 +13,14 @@ import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
+import ee.adit.dao.DocumentDAO;
 import ee.adit.pojo.OutputDocumentFile;
 
 public class SimplifiedDigiDocParser {
-
+	private static Logger logger = Logger.getLogger(SimplifiedDigiDocParser.class);
+	
 	public static Hashtable<String, StartEndOffsetPair> findDigiDocDataFileOffsets(String pathToDigiDoc) throws IOException {
 		Hashtable<String, StartEndOffsetPair> result = new Hashtable<String, StartEndOffsetPair>();
 		
@@ -126,6 +130,8 @@ public class SimplifiedDigiDocParser {
         	long currentOffset = 0;
 	    	for (OutputDocumentFile file : files) {
                 if (file.getDdocDataFileStartOffset() > 0L) {
+		    		logger.info("Extracting file contents from signature container. File ID: " + file.getId());
+                	
 		    		String outputFileName = Util.generateRandomFileNameWithoutExtension();
 	                outputFileName = temporaryFilesDir + File.separator + outputFileName + "_" + file.getId() + ".adit";
 		    		
@@ -151,6 +157,7 @@ public class SimplifiedDigiDocParser {
 	                Util.safeCloseStream(outStream);
 	                
 	                file.setSysTempFile(outputFileName);
+	                logger.info("File contnts extracted into file: " + outputFileName);
                 }
 	    	}    	
         } finally {
