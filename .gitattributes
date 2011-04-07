@@ -498,6 +498,7 @@ adit-war/src/main/webapp/monitor.jsp -text
 adit-war/src/test/java/ee/adit/test/service/DocumentServiceTest.java -text
 adit-war/src/test/java/ee/adit/test/util/SimplifiedDigiDocParserTest.java -text
 adit-war/src/test/java/ee/adit/test/util/UtilTest.java -text
+adit-war/src/test/resources/ValidDigiDoc_2Files_1Signature.ddoc -text
 adit-war/src/test/resources/ValidDigiDoc_3Files_NoSignatures.ddoc -text
 adit-war/src/test/resources/ValidDigiDoc_NoFiles_NoSignatures.ddoc -text
 doc/adit_kasutusjuhend.odt -text
