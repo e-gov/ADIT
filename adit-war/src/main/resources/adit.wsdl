@@ -2264,7 +2264,7 @@
 							<xs:documentation xml:lang="en">File data</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="file_type" type="xs:string">
+					<xs:element name="file_type">
 						<xs:annotation>
 							<xs:documentation xml:lang="ee">Faili tüüp</xs:documentation>
 							<xs:documentation xml:lang="en">File type</xs:documentation>
