@@ -647,6 +647,25 @@ public class DocumentDAO extends HibernateDaoSupport {
         	}
         }
         
+        if (includeFileContents
+        	&& !resultContainsSignatureContainer
+        	&& (fileTypes != null)
+        	&& (fileTypes.getFileType() != null)
+        	&& (fileTypes.getFileType().size() > 0)
+        	&& (fileTypes.getFileType().contains(DocumentService.FILETYPE_NAME_SIGNATURE_CONTAINER))) {
+        	
+        	try {
+	        	OutputDocumentFile dummyContainer = 
+	        		DocumentService.createSignatureContainerFromDocumentFiles(
+	        			doc, digidocConfigFile, temporaryFilesDir);
+	        	outputFilesList.add(dummyContainer);
+	        	totalBytes += (dummyContainer.getSizeBytes() == null) ? 0L : dummyContainer.getSizeBytes();
+        	} catch (Exception ex) {
+                throw new HibernateException(ex);
+        	}
+        }
+
+        
         OutputDocumentFilesList filesListWrapper = new OutputDocumentFilesList();
         filesListWrapper.setFiles(outputFilesList);
         filesListWrapper.setTotalFiles(outputFilesList.size());
