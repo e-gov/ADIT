@@ -410,6 +410,11 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
         logger.debug("-------- GetDocumentRequest -------");
         logger.debug("Document ID: " + String.valueOf(request.getDocumentId()));
         logger.debug("Include file contents: " + String.valueOf(request.isIncludeFileContents()));
+        if ((request.getFileTypes() != null) && (request.getFileTypes().getFileType() != null)) {
+        	for (String fileType : request.getFileTypes().getFileType()) {
+        		logger.debug("Requested file type: " + fileType);
+        	}
+        }
         logger.debug("-----------------------------------");
     }
 

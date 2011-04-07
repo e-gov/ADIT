@@ -272,6 +272,11 @@ public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
                 logger.debug("Document type: " + documentType);
             }
         }
+        if ((request.getFileTypes() != null) && (request.getFileTypes().getFileType() != null)) {
+        	for (String fileType : request.getFileTypes().getFileType()) {
+        		logger.debug("File type: " + fileType);
+        	}
+        }
         if ((request.getDocumentDvkStatuses() != null) && (request.getDocumentDvkStatuses().getStatusId() != null)
                 && !request.getDocumentDvkStatuses().getStatusId().isEmpty()) {
             for (Long dvkStatus : request.getDocumentDvkStatuses().getStatusId()) {

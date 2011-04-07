@@ -2464,20 +2464,40 @@ public class DocumentService {
                 // Load document
                 Document doc = (Document) session.get(Document.class, documentId);
                 
+                // TODO: Olemasoleva drafti uuesti kasutamine
+                
                 // Find signature container (if exists)
-                DocumentFile signatureContainer = findSignatureContainerDraft(doc);
-                if ((signatureContainer == null) || (signatureContainer.getFileData() == null)) {
-                	signatureContainer = findSignatureContainer(doc);
+                boolean usingExistingDraft = false;
+                boolean readExistingContainer = false;
+                DocumentFile signatureContainerDraft = findSignatureContainerDraft(doc);
+                DocumentFile signatureContainer = findSignatureContainer(doc);
+                
+                if ((signatureContainerDraft != null) && (signatureContainerDraft.getFileData() != null)) {
+                	usingExistingDraft = true;
+                	readExistingContainer = true;
+                } else if ((signatureContainer != null) && (signatureContainer.getFileData() != null)) {
+                	readExistingContainer = true;
                 }
 
                 SignedDoc sdoc = null;
-                if (signatureContainer == null) {
+                if (!readExistingContainer) {
                     logger.debug("Creating new signature container.");
                     sdoc = new SignedDoc(SignedDoc.FORMAT_DIGIDOC_XML, SignedDoc.VERSION_1_3);
                 } else {
                     logger.debug("Loading existing signature container");
                     SAXDigiDocFactory factory = new SAXDigiDocFactory();
-                    sdoc = factory.readSignedDoc(signatureContainer.getFileData().getBinaryStream());
+                    
+                    InputStream containerAsStream = null;
+                    try {
+                    	if (usingExistingDraft) {
+                    		containerAsStream = signatureContainerDraft.getFileData().getBinaryStream();
+                    	} else {
+                    		containerAsStream = signatureContainer.getFileData().getBinaryStream();
+                    	}
+                    	sdoc = factory.readSignedDoc(containerAsStream);
+                    } finally {
+                    	Util.safeCloseStream(containerAsStream);
+                    }
 
                     // Make sure that document is not already signed
                     // by the same person.
@@ -2508,6 +2528,11 @@ public class DocumentService {
                     // lets remove the users earlier signature.
                     if (removeSignatureAtIndex >= 0) {
                     	sdoc.removeSignature(removeSignatureAtIndex);
+                    } else if (usingExistingDraft) {
+                    	// If someone else has a pending signature then lets break
+                    	// signing until the other person has completed his/her
+                    	// signing process.
+                    	throw new AditCodedException("request.prepareSignature.documentIsBeingSignedByAnotherUser");
                     }
                 }
 
@@ -2587,7 +2612,7 @@ public class DocumentService {
 
                 // Create a dummy signature.
                 // Otherwise it will not be possible to save signature container
-                byte[] dummySignature = new byte[128];
+                byte[] dummySignature = new byte[SignatureValue.SIGNATURE_VALUE_LENGTH];
                 for (int i = 0; i < dummySignature.length; i++) {
                     dummySignature[i] = 0;
                 }
@@ -2610,17 +2635,17 @@ public class DocumentService {
                 // length, session);
                 Blob containerData = Hibernate.createBlob(fileInputStream, length);
                 
-                if (signatureContainer == null) {
-                	signatureContainer = new DocumentFile();
-                	signatureContainer.setContentType("application/octet-stream");
-                	signatureContainer.setDeleted(false);
-                	signatureContainer.setDocument(doc);
-                	signatureContainer.setDocumentFileTypeId(FILETYPE_SIGNATURE_CONTAINER_DRAFT);
-                	signatureContainer.setFileName(Util.convertToLegalFileName(doc.getTitle(), "ddoc"));
-                	signatureContainer.setFileSizeBytes(length);
-                	doc.getDocumentFiles().add(signatureContainer);
+                if (signatureContainerDraft == null) {
+                	signatureContainerDraft = new DocumentFile();
+                	signatureContainerDraft.setContentType("application/octet-stream");
+                	signatureContainerDraft.setDeleted(false);
+                	signatureContainerDraft.setDocument(doc);
+                	signatureContainerDraft.setDocumentFileTypeId(FILETYPE_SIGNATURE_CONTAINER_DRAFT);
+                	signatureContainerDraft.setFileName(Util.convertToLegalFileName(doc.getTitle(), "ddoc"));
+                	signatureContainerDraft.setFileSizeBytes(length);
+                	doc.getDocumentFiles().add(signatureContainerDraft);
                 }
-                signatureContainer.setFileData(containerData);
+                signatureContainerDraft.setFileData(containerData);
                 
                 doc.setLocked(true);
                 doc.setLockingDate(new Date());
