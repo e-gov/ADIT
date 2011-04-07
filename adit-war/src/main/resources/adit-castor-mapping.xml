@@ -1094,6 +1094,12 @@
 		</field>
 	</class>
 	
+	<class name="ee.adit.pojo.ArrayOfFileType">
+		<field name="fileType" type="java.lang.String" collection="arraylist">
+			<bind-xml name="file_type" />
+		</field>
+	</class>
+	
 	<class name="ee.adit.pojo.ArrayOfDocumentDvkStatus">
 		<field name="statusId" type="java.lang.Long" collection="arraylist">
 			<bind-xml name="status_id" />
