@@ -2687,15 +2687,17 @@ public class DocumentService {
      *            Absolute path to file containing users signature
      * @param requestPersonalCode
      *            Personal ID code of the person who executed current request
+     * @param currentUserCode
+     *            Code of active user (person or organization)
      * @param digidocConfigFile
-     *            Absolute path to digidoc configuration file
+     *            Absolute path to DigiDoc configuration file
      * @param temporaryFilesDir
      *            Absolute path to applications temporary files directory
      * @throws Exception
      */
     public void confirmSignature(final long documentId, final String signatureFileName,
-            final String requestPersonalCode, final String digidocConfigFile, final String temporaryFilesDir)
-            throws Exception {
+            final String requestPersonalCode, final String currentUserCode,
+            final String digidocConfigFile, final String temporaryFilesDir) throws Exception {
 
         Session session = null;
         Transaction tx = null;
@@ -2792,7 +2794,7 @@ public class DocumentService {
 
                 // Add signature metadata to signature table
                 ee.adit.dao.pojo.Signature aditSig = convertDigiDocSignatureToLocalSignature(sig);
-                aditSig.setUserCode(requestPersonalCode);
+                aditSig.setUserCode(currentUserCode);
                 
                 aditSig.setDocument(doc);
                 session.save(aditSig);

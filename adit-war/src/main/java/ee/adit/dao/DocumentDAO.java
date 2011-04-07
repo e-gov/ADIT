@@ -120,6 +120,7 @@ public class DocumentDAO extends HibernateDaoSupport {
                     if (!Util.isNullOrEmpty(param.getFolder())) {
                         if (param.getFolder().equalsIgnoreCase("local")) {
                             criteria.add(Restrictions.eq("creatorCode", userCode));
+                            criteria.add(Restrictions.or(Restrictions.isNull("invisibleToOwner"), Restrictions.eq("invisibleToOwner", false)));
                             criteria.add(Restrictions.or(Restrictions.isNull("documentSharings"), Restrictions.isEmpty("documentSharings")));
                         } else if (param.getFolder().equalsIgnoreCase("incoming")) {
                             // "Incoming" means that:
@@ -127,10 +128,11 @@ public class DocumentDAO extends HibernateDaoSupport {
                             // - document has been shared to user
                             criteria.add(Restrictions.ne("creatorCode", userCode));
                             DetachedCriteria sharedToMeSubquery = DetachedCriteria.forClass(Document.class, "doc1")
-                                    .createCriteria("documentSharings", "sh1").add(
-                                            Restrictions.eq("userCode", userCode)).add(
-                                            Property.forName("doc.id").eqProperty("doc1.id")).setProjection(
-                                            Projections.id());
+	                            .createCriteria("documentSharings", "sh1")
+	                            .add(Restrictions.eq("userCode", userCode))
+	                            .add(Restrictions.or(Restrictions.isNull("deleted"), Restrictions.eq("deleted", false)))
+                                .add(Property.forName("doc.id").eqProperty("doc1.id"))
+                                .setProjection(Projections.id());
                             criteria.add(Subqueries.exists(sharedToMeSubquery));
                         } else if (param.getFolder().equalsIgnoreCase("outgoing")) {
                             // "Outgoing" means that:
@@ -138,6 +140,7 @@ public class DocumentDAO extends HibernateDaoSupport {
                             // - and document has been sent or shared to
                             // someone else
                             criteria.add(Restrictions.eq("creatorCode", userCode));
+                            criteria.add(Restrictions.or(Restrictions.isNull("invisibleToOwner"), Restrictions.eq("invisibleToOwner", false)));
                             criteria.add(Restrictions.isNotNull("documentSharings"));
                             criteria.add(Restrictions.isNotEmpty("documentSharings"));
                         } else {
@@ -146,21 +149,27 @@ public class DocumentDAO extends HibernateDaoSupport {
                             DetachedCriteria sharedToMeSubquery = DetachedCriteria.forClass(Document.class, "doc1")
                                     .createCriteria("documentSharings", "sh1")
                                     .add(Restrictions.eq("userCode", userCode))
+                                    .add(Restrictions.or(Restrictions.isNull("deleted"), Restrictions.eq("deleted", false)))
                                     .add(Property.forName("doc.id").eqProperty("doc1.id"))
                                     .setProjection(Projections.id());
                             criteria.add(Restrictions.or(
+                            	Restrictions.and(
                             		Restrictions.eq("creatorCode", userCode),
-                            		Subqueries.exists(sharedToMeSubquery)));
+                            		Restrictions.or(Restrictions.isNull("invisibleToOwner"), Restrictions.eq("invisibleToOwner", false))),
+                            	Subqueries.exists(sharedToMeSubquery)));
                         }
                     } else {
                     	// If no folder is specified then return all documents accessible to given user.
                     	DetachedCriteria sharedToMeSubquery = DetachedCriteria.forClass(Document.class, "doc1")
 	                        .createCriteria("documentSharings", "sh1")
 	                        .add(Restrictions.eq("userCode", userCode))
+	                        .add(Restrictions.or(Restrictions.isNull("deleted"), Restrictions.eq("deleted", false)))
 	                        .add(Property.forName("doc.id").eqProperty("doc1.id"))
 	                        .setProjection(Projections.id());
                         criteria.add(Restrictions.or(
-	                		Restrictions.eq("creatorCode", userCode),
+                        	Restrictions.and(
+                        		Restrictions.eq("creatorCode", userCode),
+                        		Restrictions.or(Restrictions.isNull("invisibleToOwner"), Restrictions.eq("invisibleToOwner", false))),
 	                		Subqueries.exists(sharedToMeSubquery)));
                     }
 
@@ -658,8 +667,9 @@ public class DocumentDAO extends HibernateDaoSupport {
 	        	OutputDocumentFile dummyContainer = 
 	        		DocumentService.createSignatureContainerFromDocumentFiles(
 	        			doc, digidocConfigFile, temporaryFilesDir);
-	        	outputFilesList.add(dummyContainer);
+	        	dummyContainer.setSysTempFile(Util.base64EncodeFile(dummyContainer.getSysTempFile(), temporaryFilesDir));
 	        	totalBytes += (dummyContainer.getSizeBytes() == null) ? 0L : dummyContainer.getSizeBytes();
+	        	outputFilesList.add(dummyContainer);
         	} catch (Exception ex) {
                 throw new HibernateException(ex);
         	}
@@ -716,7 +726,7 @@ public class DocumentDAO extends HibernateDaoSupport {
                     DocumentSharing sharing = (DocumentSharing) it.next();
 
                     if ((sharing.getDocumentSharingType().equalsIgnoreCase(DocumentService.SHARINGTYPE_SHARE))
-                            || (sharing.getDocumentSharingType().equalsIgnoreCase(DocumentService.SHARINGTYPE_SIGN))) {
+                        || (sharing.getDocumentSharingType().equalsIgnoreCase(DocumentService.SHARINGTYPE_SIGN))) {
 
                         DocumentSharingRecipient rec = new DocumentSharingRecipient();
                         rec.setCode(sharing.getUserCode());
