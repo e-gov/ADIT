@@ -1,5 +1,6 @@
 package ee.adit.ws.endpoint.document;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -47,11 +48,11 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
     private static Logger logger = Logger.getLogger(GetDocumentEndpoint.class);
 
     private UserService userService;
-
     private DocumentService documentService;
-
     private ScheduleClient scheduleClient;
+    private String digidocConfigurationFile;
 
+    
     @Override
     protected Object invokeInternal(Object requestObject, int version) throws Exception {
         logger.debug("getDocument invoked. Version: " + version);
@@ -198,12 +199,37 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
                                     Locale.ENGLISH), user.getUserCode(), getConfiguration().getDocumentRetentionDeadlineDays());
 
                             if (resultDoc != null) {
+                            	boolean resultContainsSignatureContainer = false;
+                            	
                                 // Remember file IDs for logging later on.
                                 List<OutputDocumentFile> docFiles = resultDoc.getFiles().getFiles();
                                 if ((docFiles != null) && (docFiles.size() > 0)) {
                                     for (OutputDocumentFile file : docFiles) {
                                         fileIdList.add(file.getId());
+                                        if (DocumentService.FILETYPE_NAME_SIGNATURE_CONTAINER.equalsIgnoreCase(file.getFileType())) {
+                                        	resultContainsSignatureContainer = true;
+                                        }
                                     }
+                                }
+                                
+                                if (includeFileContents
+                                	&& !resultContainsSignatureContainer
+                                	&& (request.getFileTypes() != null)
+                                	&& (request.getFileTypes().getFileType() != null)
+                                	&& (request.getFileTypes().getFileType().size() > 0)
+                                	&& (request.getFileTypes().getFileType().contains(DocumentService.FILETYPE_NAME_SIGNATURE_CONTAINER))) {
+                                	
+                                    InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream(getDigidocConfigurationFile());
+                                    String jdigidocCfgTmpFile = Util.createTemporaryFile(input, getConfiguration().getTempDir());
+                                	
+                                	OutputDocumentFile dummyContainer = 
+                                		this.getDocumentService().createSignatureContainerFromDocumentFiles(
+                                			doc, jdigidocCfgTmpFile, this.getConfiguration().getTempDir());
+                                	resultDoc.getFiles().getFiles().add(dummyContainer);
+                                	resultDoc.getFiles().setTotalFiles(request.getFileTypes().getFileType().size());
+                                	resultDoc.getFiles().setTotalBytes((resultDoc.getFiles().getTotalBytes() == null)
+                            			? dummyContainer.getSizeBytes()
+                            			: resultDoc.getFiles().getTotalBytes() + dummyContainer.getSizeBytes());
                                 }
 
                                 // 1. Convert java list to XML string and output
@@ -440,5 +466,13 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
 
     public void setDocumentService(DocumentService documentService) {
         this.documentService = documentService;
+    }
+    
+    public String getDigidocConfigurationFile() {
+        return digidocConfigurationFile;
+    }
+
+    public void setDigidocConfigurationFile(String digidocConfigurationFile) {
+        this.digidocConfigurationFile = digidocConfigurationFile;
     }
 }

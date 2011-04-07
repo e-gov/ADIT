@@ -238,9 +238,7 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
                     throw aditCodedException;
                 }
 
-                InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream(
-                        getDigidocConfigurationFile());
-
+                InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream(getDigidocConfigurationFile());
                 String jdigidocCfgTmpFile = Util.createTemporaryFile(input, getConfiguration().getTempDir());
                 logger.info("JDigidoc.cfg file created as a temporary file: '" + jdigidocCfgTmpFile + "'");
 

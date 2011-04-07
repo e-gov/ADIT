@@ -79,6 +79,7 @@ import ee.adit.util.StartEndOffsetPair;
 import ee.adit.util.Util;
 import ee.sk.digidoc.CertValue;
 import ee.sk.digidoc.DataFile;
+import ee.sk.digidoc.DigiDocException;
 import ee.sk.digidoc.Signature;
 import ee.sk.digidoc.SignatureProductionPlace;
 import ee.sk.digidoc.SignatureValue;
@@ -2464,8 +2465,6 @@ public class DocumentService {
                 // Load document
                 Document doc = (Document) session.get(Document.class, documentId);
                 
-                // TODO: Olemasoleva drafti uuesti kasutamine
-                
                 // Find signature container (if exists)
                 boolean usingExistingDraft = false;
                 boolean readExistingContainer = false;
@@ -2642,9 +2641,9 @@ public class DocumentService {
                 	signatureContainerDraft.setDocument(doc);
                 	signatureContainerDraft.setDocumentFileTypeId(FILETYPE_SIGNATURE_CONTAINER_DRAFT);
                 	signatureContainerDraft.setFileName(Util.convertToLegalFileName(doc.getTitle(), "ddoc"));
-                	signatureContainerDraft.setFileSizeBytes(length);
                 	doc.getDocumentFiles().add(signatureContainerDraft);
                 }
+                signatureContainerDraft.setFileSizeBytes(length);
                 signatureContainerDraft.setFileData(containerData);
                 
                 doc.setLocked(true);
@@ -2778,14 +2777,15 @@ public class DocumentService {
                 	signatureContainer.setDocument(doc);
                 	signatureContainer.setDocumentFileTypeId(FILETYPE_SIGNATURE_CONTAINER);
                 	signatureContainer.setFileName(Util.convertToLegalFileName(doc.getTitle(), "ddoc"));
-                	signatureContainer.setFileSizeBytes(length);
                 	doc.getDocumentFiles().add(signatureContainer);
                 }
+                signatureContainer.setFileSizeBytes(length);
                 signatureContainer.setFileData(containerData);
                 doc.setSigned(true);
                 
                 // Remove container draft contents
                 signatureContainerDraft.setFileData(null);
+                signatureContainerDraft.setFileSizeBytes(0L);
 
                 // Update document
                 session.update(doc);
@@ -2837,6 +2837,70 @@ public class DocumentService {
                 session.close();
             }
         }
+    }
+    
+    public OutputDocumentFile createSignatureContainerFromDocumentFiles(
+    	final Document doc,
+    	final String digidocConfigFile,
+    	final String temporaryFilesDir) throws DigiDocException, SQLException, IOException {
+    	
+    	ConfigManager.init(digidocConfigFile);
+    	SignedDoc sdoc = new SignedDoc(SignedDoc.FORMAT_DIGIDOC_XML, SignedDoc.VERSION_1_3);
+
+    	// Create unique subdirectory for files
+        File uniqueDir = new File(temporaryFilesDir + File.separator + doc.getId());
+        int uniqueCounter = 0;
+        while (uniqueDir.exists()) {
+            uniqueDir = new File(temporaryFilesDir + File.separator + doc.getId() + "_" + (++uniqueCounter));
+        }
+        uniqueDir.mkdir();
+
+        List<DocumentFile> filesList = new ArrayList<DocumentFile>(doc.getDocumentFiles());
+        for (DocumentFile docFile : filesList) {
+            if (((docFile.getDeleted() == null) || !docFile.getDeleted())
+            	&& (docFile.getDocumentFileTypeId() == FILETYPE_DOCUMENT_FILE)){
+                
+            	String outputFileName = uniqueDir.getAbsolutePath() + File.separator + docFile.getFileName();
+
+                InputStream blobDataStream = null;
+                FileOutputStream fileOutputStream = null;
+                try {
+                    blobDataStream = docFile.getFileData().getBinaryStream();
+                    fileOutputStream = new FileOutputStream(outputFileName);
+                	
+                	byte[] buffer = new byte[10240];
+                    int len = 0;
+                    while ((len = blobDataStream.read(buffer)) > 0) {
+                        fileOutputStream.write(buffer, 0, len);
+                    }
+                } finally {
+                    Util.safeCloseStream(blobDataStream);
+                    Util.safeCloseStream(fileOutputStream);
+                }
+
+                // Add file to signature container
+                sdoc.addDataFile(new File(outputFileName), docFile.getContentType(), DataFile.CONTENT_EMBEDDED_BASE64);
+            }
+        }
+        
+        // Save container to file.
+        String containerFileName = Util.generateRandomFileNameWithoutExtension();
+        containerFileName = temporaryFilesDir + File.separator + containerFileName + ".adit";
+        uniqueCounter = 0;
+        while (new File(containerFileName).exists()) {
+        	containerFileName = temporaryFilesDir + File.separator + containerFileName + uniqueCounter + ".adit";
+        }
+        sdoc.writeToFile(new File(containerFileName));
+        long length = (new File(containerFileName)).length();
+        
+        OutputDocumentFile result = new OutputDocumentFile();
+        result.setContentType("application/octet-stream");
+        result.setName(Util.convertToLegalFileName(doc.getTitle(), "ddoc"));
+        result.setFileType(FILETYPE_NAME_SIGNATURE_CONTAINER);
+        result.setSizeBytes(length);
+        result.setSysTempFile(containerFileName);
+        
+        return result;
     }
     
     public ee.adit.dao.pojo.Signature convertDigiDocSignatureToLocalSignature(Signature digiDocSignature) {
