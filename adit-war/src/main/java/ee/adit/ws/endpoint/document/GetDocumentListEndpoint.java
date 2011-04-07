@@ -1,5 +1,6 @@
 package ee.adit.ws.endpoint.document;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -42,9 +43,10 @@ public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
     private static Logger logger = Logger.getLogger(GetDocumentListEndpoint.class);
 
     private UserService userService;
-    
     private DocumentService documentService;
+    private String digidocConfigurationFile;
 
+    
     @Override
     protected Object invokeInternal(Object requestObject, int version) throws Exception {
         logger.debug("getDocumentList invoked. Version: " + version);
@@ -134,10 +136,13 @@ public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
                 throw aditCodedException;
             }
 
+            InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream(getDigidocConfigurationFile());
+            String jdigidocCfgTmpFile = Util.createTemporaryFile(input, getConfiguration().getTempDir());
+            
             GetDocumentListResponseAttachment att = this.documentService.getDocumentDAO().getDocumentSearchResult(
                     request, userCode, this.getConfiguration().getTempDir(),
                     this.getMessageSource().getMessage("files.nonExistentOrDeleted", new Object[] {}, Locale.ENGLISH),
-                    user.getUserCode(), getConfiguration().getDocumentRetentionDeadlineDays());
+                    user.getUserCode(), getConfiguration().getDocumentRetentionDeadlineDays(), jdigidocCfgTmpFile);
 
             if (att != null) {
                 // Remember document ID-s for logging
@@ -317,5 +322,13 @@ public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
 
     public void setDocumentService(DocumentService documentService) {
         this.documentService = documentService;
+    }
+    
+    public String getDigidocConfigurationFile() {
+        return digidocConfigurationFile;
+    }
+
+    public void setDigidocConfigurationFile(String digidocConfigurationFile) {
+        this.digidocConfigurationFile = digidocConfigurationFile;
     }
 }

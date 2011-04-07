@@ -186,6 +186,9 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
                         // Kui kasutaja tohib dokumendile ligi pääseda, siis
                         // tagastame dokumendi
                         if (userIsDocOwner) {
+                            InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream(getDigidocConfigurationFile());
+                            String jdigidocCfgTmpFile = Util.createTemporaryFile(input, getConfiguration().getTempDir());
+                        	
                         	includeFileContents = (request.isIncludeFileContents() == null) ? false : request.isIncludeFileContents();
                             OutputDocument resultDoc = this.documentService.getDocumentDAO().getDocumentWithFiles(
                                     doc.getId(),
@@ -196,7 +199,8 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
                                     request.getFileTypes(),
                                     this.getConfiguration().getTempDir(),
                                     this.getMessageSource().getMessage("files.nonExistentOrDeleted", new Object[] {},
-                                    Locale.ENGLISH), user.getUserCode(), getConfiguration().getDocumentRetentionDeadlineDays());
+                                    Locale.ENGLISH), user.getUserCode(), getConfiguration().getDocumentRetentionDeadlineDays(),
+                                    jdigidocCfgTmpFile);
 
                             if (resultDoc != null) {
                             	boolean resultContainsSignatureContainer = false;
@@ -212,26 +216,6 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
                                     }
                                 }
                                 
-                                if (includeFileContents
-                                	&& !resultContainsSignatureContainer
-                                	&& (request.getFileTypes() != null)
-                                	&& (request.getFileTypes().getFileType() != null)
-                                	&& (request.getFileTypes().getFileType().size() > 0)
-                                	&& (request.getFileTypes().getFileType().contains(DocumentService.FILETYPE_NAME_SIGNATURE_CONTAINER))) {
-                                	
-                                    InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream(getDigidocConfigurationFile());
-                                    String jdigidocCfgTmpFile = Util.createTemporaryFile(input, getConfiguration().getTempDir());
-                                	
-                                	OutputDocumentFile dummyContainer = 
-                                		this.getDocumentService().createSignatureContainerFromDocumentFiles(
-                                			doc, jdigidocCfgTmpFile, this.getConfiguration().getTempDir());
-                                	resultDoc.getFiles().getFiles().add(dummyContainer);
-                                	resultDoc.getFiles().setTotalFiles(request.getFileTypes().getFileType().size());
-                                	resultDoc.getFiles().setTotalBytes((resultDoc.getFiles().getTotalBytes() == null)
-                            			? dummyContainer.getSizeBytes()
-                            			: resultDoc.getFiles().getTotalBytes() + dummyContainer.getSizeBytes());
-                                }
-
                                 // 1. Convert java list to XML string and output
                                 // to file
                                 GetDocumentResponseAttachment attachment = new GetDocumentResponseAttachment();

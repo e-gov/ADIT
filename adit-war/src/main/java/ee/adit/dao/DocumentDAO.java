@@ -100,7 +100,7 @@ public class DocumentDAO extends HibernateDaoSupport {
     @SuppressWarnings("unchecked")
     public GetDocumentListResponseAttachment getDocumentSearchResult(final GetDocumentListRequest param,
             final String userCode, final String temporaryFilesDir, final String filesNotFoundMessageBase,
-            final String currentRequestUserCode, final Long documentRetentionDeadlineDays) {
+            final String currentRequestUserCode, final Long documentRetentionDeadlineDays, final String digidocConfigFile) {
 
         GetDocumentListResponseAttachment result = null;
 
@@ -364,7 +364,8 @@ public class DocumentDAO extends HibernateDaoSupport {
 
                     for (Document doc : docList) {
                         OutputDocument resultDoc = dbDocumentToOutputDocument(doc, null, true, true, false, param.getFileTypes(),
-                                temporaryFilesDir, filesNotFoundMessageBase, currentRequestUserCode, documentRetentionDeadlineDays);
+                                temporaryFilesDir, filesNotFoundMessageBase, currentRequestUserCode, documentRetentionDeadlineDays,
+                                digidocConfigFile);
                         innerResult.getDocumentList().add(resultDoc);
                     }
 
@@ -399,7 +400,7 @@ public class DocumentDAO extends HibernateDaoSupport {
     public OutputDocument getDocumentWithFiles(final long documentId, final List<Long> fileIdList,
             final boolean includeSignatures, final boolean includeSharings, final boolean includeFileContents,
             final ArrayOfFileType fileTypes, final String temporaryFilesDir, final String filesNotFoundMessageBase,
-            final String currentRequestUserCode, final Long documentRetentionDeadlineDays)
+            final String currentRequestUserCode, final Long documentRetentionDeadlineDays, final String digidocConfigFile)
             throws Exception {
         if (documentId <= 0) {
             throw new IllegalArgumentException("Document ID must be a positive integer. Currently supplied ID was "
@@ -492,7 +493,7 @@ public class DocumentDAO extends HibernateDaoSupport {
 
                     return dbDocumentToOutputDocument(doc, fileIdList, includeSignatures, includeSharings,
                             includeFileContents, fileTypes, temporaryFilesDir, filesNotFoundMessageBase,
-                            currentRequestUserCode, documentRetentionDeadlineDays);
+                            currentRequestUserCode, documentRetentionDeadlineDays, digidocConfigFile);
                 }
             });
         } catch (DataAccessException ex) {
@@ -527,7 +528,7 @@ public class DocumentDAO extends HibernateDaoSupport {
     private OutputDocument dbDocumentToOutputDocument(Document doc, final List<Long> fileIdList,
             final boolean includeSignatures, final boolean includeSharings, final boolean includeFileContents,
             final ArrayOfFileType fileTypes, final String temporaryFilesDir, final String filesNotFoundMessageBase,
-            final String currentRequestUserCode, final Long documentRetentionDeadlineDays)
+            final String currentRequestUserCode, final Long documentRetentionDeadlineDays, final String digidocConfigFile)
             throws SQLException {
 
         long totalBytes = 0;
@@ -566,6 +567,7 @@ public class DocumentDAO extends HibernateDaoSupport {
 
         int itemIndex = 0;
         DocumentFile signatureContainerFile = null;
+        boolean resultContainsSignatureContainer = false; 
         for (DocumentFile docFile : filesList) {
             if (((docFile.getDeleted() == null) || !docFile.getDeleted())
             	&& (docFile.getDocumentFileTypeId() != DocumentService.FILETYPE_SIGNATURE_CONTAINER_DRAFT)) {
@@ -628,6 +630,9 @@ public class DocumentDAO extends HibernateDaoSupport {
                     }
                     
                     outputFilesList.add(f);
+                	if (docFile.getDocumentFileTypeId() == DocumentService.FILETYPE_SIGNATURE_CONTAINER) {
+                		resultContainsSignatureContainer = true;
+                    }
                 }
             }
         }
@@ -641,7 +646,7 @@ public class DocumentDAO extends HibernateDaoSupport {
                  throw new HibernateException(ex);
         	}
         }
-
+        
         OutputDocumentFilesList filesListWrapper = new OutputDocumentFilesList();
         filesListWrapper.setFiles(outputFilesList);
         filesListWrapper.setTotalFiles(outputFilesList.size());

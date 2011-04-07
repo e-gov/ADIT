@@ -2839,7 +2839,7 @@ public class DocumentService {
         }
     }
     
-    public OutputDocumentFile createSignatureContainerFromDocumentFiles(
+    public static OutputDocumentFile createSignatureContainerFromDocumentFiles(
     	final Document doc,
     	final String digidocConfigFile,
     	final String temporaryFilesDir) throws DigiDocException, SQLException, IOException {
