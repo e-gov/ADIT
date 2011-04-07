@@ -4,13 +4,13 @@
 	<groupId>ee</groupId>
 	<artifactId>adit-war</artifactId>
 	<packaging>war</packaging>
-	<version>1.0.22</version>
+	<version>1.0.23</version>
 	<name>ADIT Web Application</name>
 
 	<parent>
 		<groupId>ee</groupId>
 		<artifactId>adit</artifactId>
-		<version>1.0.22</version>
+		<version>1.0.23</version>
 	</parent>
 
 	<properties>
@@ -352,11 +352,21 @@
 			<systemPath>${basedir}/lib/saaj-impl.jar</systemPath>
 		</dependency>
 
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.0</version>
+			<type>jar</type>
+			<scope>test</scope>
+			<optional>true</optional>
+		</dependency>
 	</dependencies>
 
 	<build>
 		<finalName>adit-${version}</finalName>
 		<sourceDirectory>src/main/java</sourceDirectory>
+		<testSourceDirectory>src/test/java</testSourceDirectory>
+		<testOutputDirectory>target/test-classes</testOutputDirectory>
 		<resources>
 			<resource>
 				<directory>src/main/resources/castor-mapping</directory>

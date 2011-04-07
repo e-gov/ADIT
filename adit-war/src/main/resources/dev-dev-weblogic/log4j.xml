@@ -45,13 +45,12 @@
     </appender>
     
     <logger name="ee.adit.ws">
-    	<level value="info"></level>
+    	<level value="debug"></level>
     	<appender-ref ref="file" />
     </logger>
     
     <logger name="ee.adit.util">
     	<level value="info"></level>
-    	<appender-ref ref="file" />
     	<appender-ref ref="stdout" />
     </logger>
     
