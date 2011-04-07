@@ -1106,7 +1106,7 @@ public final class Util {
             try {
                 r.close();
             } catch (Exception ex) {
-                logger.error("Exception: ", ex);
+                // This exception is intentionally discarded
             } finally {
                 r = null;
             }
@@ -1126,7 +1126,7 @@ public final class Util {
             	w.flush();
                 w.close();
             } catch (Exception ex) {
-                logger.error("Exception: ", ex);
+                // This exception is intentionally discarded
             } finally {
                 w = null;
             }
@@ -1145,7 +1145,7 @@ public final class Util {
             try {
                 s.close();
             } catch (Exception ex) {
-                logger.error("Exception: ", ex);
+                // This exception is intentionally discarded
             } finally {
                 s = null;
             }
@@ -1164,7 +1164,7 @@ public final class Util {
             try {
                 s.close();
             } catch (Exception ex) {
-                logger.error("Exception: ", ex);
+                // This exception is intentionally discarded
             } finally {
                 s = null;
             }
