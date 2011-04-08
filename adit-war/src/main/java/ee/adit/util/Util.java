@@ -1433,6 +1433,8 @@ public final class Util {
     		int extensionStart = fileName.lastIndexOf(".");
     		if ((extensionStart > 0) && (extensionStart < fileName.length())) {
     			result = fileName.substring(0, extensionStart);
+    		} else if (extensionStart < 0) {
+    			result = fileName;
     		}
     	}
     	
