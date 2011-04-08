@@ -24,6 +24,11 @@ public class MessageService {
     private static Logger logger = Logger.getLogger(MessageService.class);
 
     /**
+     * Error code for generic errors
+     */
+    public static final String GENERIC_ERROR_CODE = "service.error";
+    
+    /**
      * Configuration
      */
     private Configuration configuration;

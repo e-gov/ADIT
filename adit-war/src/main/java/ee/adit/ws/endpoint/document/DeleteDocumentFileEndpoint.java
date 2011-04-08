@@ -18,6 +18,7 @@ import ee.adit.pojo.Message;
 import ee.adit.pojo.Success;
 import ee.adit.service.DocumentService;
 import ee.adit.service.LogService;
+import ee.adit.service.MessageService;
 import ee.adit.service.UserService;
 import ee.adit.util.CustomXTeeHeader;
 import ee.adit.util.Util;
@@ -226,7 +227,7 @@ public class DeleteDocumentFileEndpoint extends AbstractAditBaseEndpoint {
                         ((AditCodedException) e).getParameters(), Locale.ENGLISH);
                 errorMessage = "ERROR: " + errorMessage;
             } else {
-                arrayOfMessage.getMessage().add(new Message("en", "Service error"));
+            	arrayOfMessage.setMessage(this.getMessageService().getMessages(MessageService.GENERIC_ERROR_CODE, new Object[]{}));
                 errorMessage = "ERROR: " + e.getMessage();
             }
 

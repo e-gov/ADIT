@@ -17,6 +17,7 @@ import ee.adit.pojo.EmailAddress;
 import ee.adit.pojo.GetNotificationsResponse;
 import ee.adit.pojo.Message;
 import ee.adit.service.LogService;
+import ee.adit.service.MessageService;
 import ee.adit.service.UserService;
 import ee.adit.stateportal.NotificationStatus;
 import ee.adit.stateportal.StatePortalClient;
@@ -172,7 +173,7 @@ public class GetNotificationsEndpoint extends AbstractAditBaseEndpoint {
                 arrayOfMessage.getMessage().add(new Message("en", e.getMessage()));
                 errorMessage = "ERROR: " + e.getMessage();
             } else {
-                arrayOfMessage.getMessage().add(new Message("en", "Service error"));
+            	arrayOfMessage.setMessage(this.getMessageService().getMessages(MessageService.GENERIC_ERROR_CODE, new Object[]{}));
                 errorMessage = "ERROR: " + e.getMessage();
             }
 
