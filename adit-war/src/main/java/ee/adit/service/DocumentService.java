@@ -2914,6 +2914,7 @@ public class DocumentService {
     
     public static OutputDocumentFile createZipArchiveFromDocumentFiles(
     	final Document doc,
+    	final List<OutputDocumentFile> filesList,
     	final String temporaryFilesDir) throws SQLException, IOException {
     	
     	// Create unique subdirectory for files
@@ -2934,8 +2935,8 @@ public class DocumentService {
         
         FileOutputStream archiveStream = null;
         ZipOutputStream zipStream = null;
-        InputStream blobDataStream = null;
-        BufferedInputStream bufferedBlobStream = null;
+        FileInputStream fileInputStream = null;
+        BufferedInputStream bufferedFileStream = null;
 
         try {
             archiveStream = new FileOutputStream(archiveFileName);
@@ -2943,17 +2944,15 @@ public class DocumentService {
             byte data[] = new byte[1024];
 
             List<String> usedEntryNames = new ArrayList<String>();
-            List<DocumentFile> filesList = new ArrayList<DocumentFile>(doc.getDocumentFiles());
-            for (DocumentFile docFile : filesList) {
-                if (((docFile.getDeleted() == null) || !docFile.getDeleted())
-                	&& (docFile.getDocumentFileTypeId() == FILETYPE_DOCUMENT_FILE)){
+            for (OutputDocumentFile docFile : filesList) {
+                if (FILETYPE_NAME_DOCUMENT_FILE.equalsIgnoreCase(docFile.getFileType())) {
                     
                 	try {
-                        blobDataStream = docFile.getFileData().getBinaryStream();
-                        bufferedBlobStream = new BufferedInputStream(blobDataStream, data.length);
+                        fileInputStream = new FileInputStream(Util.base64DecodeFile(docFile.getSysTempFile(), temporaryFilesDir));
+                        bufferedFileStream = new BufferedInputStream(fileInputStream, data.length);
                         
-                        String extension = Util.getFileExtension(docFile.getFileName());
-                        String fileNameWithoutExtension = Util.getFileNameWithoutExtension(docFile.getFileName());
+                        String extension = Util.getFileExtension(docFile.getName());
+                        String fileNameWithoutExtension = Util.getFileNameWithoutExtension(docFile.getName());
                         String entryName = Util.convertToLegalFileName(fileNameWithoutExtension, extension, null);
                         
                         uniqueCounter = 0;
@@ -2967,12 +2966,12 @@ public class DocumentService {
                         usedEntryNames.add(entryName);
                        
                         int readLength;
-                        while((readLength = bufferedBlobStream.read(data, 0, data.length)) != -1) {
+                        while((readLength = bufferedFileStream.read(data, 0, data.length)) != -1) {
                            zipStream.write(data, 0, readLength);
                         }
                     } finally {
-                        Util.safeCloseStream(bufferedBlobStream);
-                        Util.safeCloseStream(blobDataStream);
+                        Util.safeCloseStream(bufferedFileStream);
+                        Util.safeCloseStream(fileInputStream);
                     }
                 }
             }

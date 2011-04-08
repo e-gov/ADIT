@@ -578,6 +578,11 @@ public class DocumentDAO extends HibernateDaoSupport {
             }
         }
 
+        
+        boolean buildZipArchive = (includeFileContents && (fileTypes != null)
+            && (fileTypes.getFileType() != null) && (fileTypes.getFileType().size() > 0)
+            && (fileTypes.getFileType().contains(DocumentService.FILETYPE_NAME_ZIP_ARCHIVE)));
+        
         int itemIndex = 0;
         DocumentFile signatureContainerFile = null;
         boolean resultContainsSignatureContainer = false; 
@@ -589,9 +594,11 @@ public class DocumentDAO extends HibernateDaoSupport {
                 	signatureContainerFile = docFile;
                 }
             	
-            	if (((fileIdList == null) || fileIdList.isEmpty() || fileIdList.contains(docFile.getId()))
-            		&& DocumentService.fileIsOfRequestedType(docFile.getDocumentFileTypeId(), fileTypes)) {
-
+            	boolean fileMatchesRequestedId = (fileIdList == null) || fileIdList.isEmpty() || fileIdList.contains(docFile.getId());
+            	boolean fileTypeWasRequested = DocumentService.fileIsOfRequestedType(docFile.getDocumentFileTypeId(), fileTypes);
+            	boolean fileIsNeededForZipArchive = buildZipArchive && (docFile.getDocumentFileTypeId() == DocumentService.FILETYPE_DOCUMENT_FILE);
+            	
+            	if ((fileMatchesRequestedId && fileTypeWasRequested) || fileIsNeededForZipArchive) {
             		OutputDocumentFile f = new OutputDocumentFile();
                     f.setContentType(docFile.getContentType());
                     f.setDescription(docFile.getDescription());
@@ -682,15 +689,22 @@ public class DocumentDAO extends HibernateDaoSupport {
         }
 
         // Add ZIP archive containing all document files (if ZIP archive was requested)
-        if (includeFileContents
-        	&& (fileTypes != null)
-        	&& (fileTypes.getFileType() != null)
-        	&& (fileTypes.getFileType().size() > 0)
-        	&& (fileTypes.getFileType().contains(DocumentService.FILETYPE_NAME_ZIP_ARCHIVE))) {
-        	
+        if (buildZipArchive) {
         	try {
-	        	OutputDocumentFile zipArchive = DocumentService.createZipArchiveFromDocumentFiles(doc, temporaryFilesDir);
+	        	OutputDocumentFile zipArchive = DocumentService.createZipArchiveFromDocumentFiles(doc, outputFilesList, temporaryFilesDir);
 	        	zipArchive.setSysTempFile(Util.base64EncodeFile(zipArchive.getSysTempFile(), temporaryFilesDir));
+	        	
+	        	// Remove from output files that were not requested but were
+	        	// required for building ZIP archive
+	        	totalBytes = 0L;
+	        	for (int i = outputFilesList.size()-1; i >= 0; i--) {
+	        		if (!DocumentService.fileIsOfRequestedType(DocumentService.resolveFileTypeId(outputFilesList.get(i).getFileType()), fileTypes)) {
+	        			outputFilesList.remove(i);
+	        		} else {
+	        			totalBytes += outputFilesList.get(i).getSizeBytes();
+	        		}
+	        	}
+	        	
 	        	totalBytes += (zipArchive.getSizeBytes() == null) ? 0L : zipArchive.getSizeBytes();
 	        	outputFilesList.add(zipArchive);
         	} catch (Exception ex) {
