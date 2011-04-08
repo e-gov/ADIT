@@ -67,7 +67,7 @@ public class GetDocumentListRequest {
     @XmlElement(name = "has_been_viewed")
     private Boolean hasBeenViewed;
     @XmlElement(name = "is_deflated")
-    private boolean isDeflated;
+    private Boolean isDeflated;
     @XmlElement(name = "creator_applications", required = true)
     private ArrayOfCreatorApplication creatorApplications;
     @XmlElement(name = "search_phrase", required = true)
@@ -211,7 +211,7 @@ public class GetDocumentListRequest {
      * Gets the value of the isDeflated property.
      * 
      */
-    public boolean isIsDeflated() {
+    public Boolean isIsDeflated() {
         return isDeflated;
     }
 
@@ -219,7 +219,7 @@ public class GetDocumentListRequest {
      * Sets the value of the isDeflated property.
      * 
      */
-    public void setIsDeflated(boolean value) {
+    public void setIsDeflated(Boolean value) {
         this.isDeflated = value;
     }
 

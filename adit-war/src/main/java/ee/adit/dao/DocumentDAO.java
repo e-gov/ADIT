@@ -231,8 +231,12 @@ public class DocumentDAO extends HibernateDaoSupport {
                     }
 
                     // Include deflated documents
-                    if (!param.isIsDeflated()) {
-                        criteria.add(Restrictions.or(Restrictions.isNull("deflated"), Restrictions.eq("deflated", false)));
+                    if (param.isIsDeflated() != null) {
+	                    if (param.isIsDeflated()) {
+	                    	criteria.add(Restrictions.eq("deflated", true));
+	                    }else {
+	                        criteria.add(Restrictions.or(Restrictions.isNull("deflated"), Restrictions.eq("deflated", false)));
+	                    }
                     }
 
                     // Creator application
