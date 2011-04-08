@@ -2959,7 +2959,7 @@ public class DocumentService {
                         uniqueCounter = 0;
                         while (usedEntryNames.contains(entryName)) {
                         	uniqueCounter++;
-                        	entryName = Util.convertToLegalFileName(fileNameWithoutExtension + uniqueCounter, extension, String.valueOf(uniqueCounter));
+                        	entryName = Util.convertToLegalFileName(fileNameWithoutExtension, extension, String.valueOf(uniqueCounter));
                         }
                         
                         ZipEntry entry = new ZipEntry(entryName);
