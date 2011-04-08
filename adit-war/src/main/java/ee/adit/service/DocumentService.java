@@ -2942,6 +2942,7 @@ public class DocumentService {
             zipStream = new ZipOutputStream(new BufferedOutputStream(archiveStream));
             byte data[] = new byte[1024];
 
+            List<String> usedEntryNames = new ArrayList<String>();
             List<DocumentFile> filesList = new ArrayList<DocumentFile>(doc.getDocumentFiles());
             for (DocumentFile docFile : filesList) {
                 if (((docFile.getDeleted() == null) || !docFile.getDeleted())
@@ -2953,10 +2954,18 @@ public class DocumentService {
                         
                         String extension = Util.getFileExtension(docFile.getFileName());
                         String fileNameWithoutExtension = Util.getFileNameWithoutExtension(docFile.getFileName());
+                        String entryName = Util.convertToLegalFileName(fileNameWithoutExtension, extension);
                         
-                        ZipEntry entry = new ZipEntry(Util.convertToLegalFileName(fileNameWithoutExtension, extension));
+                        uniqueCounter = 0;
+                        while (usedEntryNames.contains(entryName)) {
+                        	uniqueCounter++;
+                        	entryName = Util.convertToLegalFileName(fileNameWithoutExtension + uniqueCounter, extension);
+                        }
+                        
+                        ZipEntry entry = new ZipEntry(entryName);
                         zipStream.putNextEntry(entry);
-                        
+                        usedEntryNames.add(entryName);
+                       
                         int readLength;
                         while((readLength = bufferedBlobStream.read(data, 0, data.length)) != -1) {
                            zipStream.write(data, 0, readLength);
