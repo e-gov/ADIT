@@ -91,6 +91,11 @@ import ee.sk.digidoc.SignedDoc;
 import ee.sk.digidoc.factory.SAXDigiDocFactory;
 import ee.sk.utils.ConfigManager;
 
+import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
+import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
+import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
+
+
 /**
  * Implements business logic for document processing. Provides methods for
  * processing documents (saving, retrieving, performing checks, etc.). Where
@@ -2943,19 +2948,22 @@ public class DocumentService {
         }
         
         FileOutputStream archiveStream = null;
-        ZipOutputStream zipStream = null;
+        ZipArchiveOutputStream zipStream = null;
         FileInputStream fileInputStream = null;
         BufferedInputStream bufferedFileStream = null;
 
         try {
             archiveStream = new FileOutputStream(archiveFileName);
-            zipStream = new ZipOutputStream(new BufferedOutputStream(archiveStream));
+            zipStream = new ZipArchiveOutputStream(new BufferedOutputStream(archiveStream));
+            zipStream.setEncoding("UTF-8");
+            zipStream.setFallbackToUTF8(true);
+            zipStream.setUseLanguageEncodingFlag(true);
+            zipStream.setCreateUnicodeExtraFields(ZipArchiveOutputStream.UnicodeExtraFieldPolicy.ALWAYS); 
+            
             byte data[] = new byte[1024];
-
             List<String> usedEntryNames = new ArrayList<String>();
             for (OutputDocumentFile docFile : filesList) {
                 if (FILETYPE_NAME_DOCUMENT_FILE.equalsIgnoreCase(docFile.getFileType())) {
-                    
                 	try {
                         fileInputStream = new FileInputStream(Util.base64DecodeFile(docFile.getSysTempFile(), temporaryFilesDir));
                         bufferedFileStream = new BufferedInputStream(fileInputStream, data.length);
@@ -2970,20 +2978,24 @@ public class DocumentService {
                         	entryName = Util.convertToLegalFileName(fileNameWithoutExtension, extension, String.valueOf(uniqueCounter));
                         }
                         
-                        ZipEntry entry = new ZipEntry(entryName);
-                        zipStream.putNextEntry(entry);
+                        ZipArchiveEntry entry = new ZipArchiveEntry(entryName);
+                        zipStream.putArchiveEntry(entry);
                         usedEntryNames.add(entryName);
                        
                         int readLength;
                         while((readLength = bufferedFileStream.read(data, 0, data.length)) != -1) {
                            zipStream.write(data, 0, readLength);
                         }
+                        
+                        zipStream.closeArchiveEntry();
                     } finally {
                         Util.safeCloseStream(bufferedFileStream);
                         Util.safeCloseStream(fileInputStream);
                     }
                 }
             }
+            
+            zipStream.finish();
         } finally {
             Util.safeCloseStream(zipStream);
             Util.safeCloseStream(archiveStream);
