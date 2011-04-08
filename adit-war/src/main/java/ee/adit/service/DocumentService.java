@@ -2955,7 +2955,7 @@ public class DocumentService {
         try {
             archiveStream = new FileOutputStream(archiveFileName);
             zipStream = new ZipArchiveOutputStream(new BufferedOutputStream(archiveStream));
-            zipStream.setEncoding("Cp1257");
+            zipStream.setEncoding("UTF-16");
             zipStream.setFallbackToUTF8(true);
             zipStream.setUseLanguageEncodingFlag(true);
             zipStream.setCreateUnicodeExtraFields(ZipArchiveOutputStream.UnicodeExtraFieldPolicy.ALWAYS); 
