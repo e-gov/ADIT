@@ -81,7 +81,7 @@ public class DocumentFile implements java.io.Serializable {
     public String getContentType() {
         // Prevent content type from being empty
         if (Util.isNullOrEmpty(this.contentType)) {
-        	this.contentType = "application/octet-stream";
+        	this.contentType = DocumentService.UNKNOWN_MIME_TYPE;
         }
     	
     	return this.contentType;
@@ -92,7 +92,7 @@ public class DocumentFile implements java.io.Serializable {
         
         // Prevent content type from being empty
         if (Util.isNullOrEmpty(this.contentType)) {
-        	this.contentType = "application/octet-stream";
+        	this.contentType = DocumentService.UNKNOWN_MIME_TYPE;
         }
     }
 

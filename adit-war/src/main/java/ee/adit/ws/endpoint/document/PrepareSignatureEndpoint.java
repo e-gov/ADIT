@@ -254,9 +254,8 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
                 }
 
                 InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream(getDigidocConfigurationFile());
-
                 String jdigidocCfgTmpFile = Util.createTemporaryFile(input, getConfiguration().getTempDir());
-                logger.info("JDigidoc.cfg file created as a temporary file: '" + jdigidocCfgTmpFile + "'");
+                logger.debug("JDigidoc.cfg file created as a temporary file: '" + jdigidocCfgTmpFile + "'");
 
                 PrepareSignatureInternalResult sigResult = this.documentService.prepareSignature(doc.getId(), request
                         .getManifest(), request.getCountry(), request.getState(), request.getCity(), request.getZip(),

@@ -102,6 +102,11 @@ import ee.sk.utils.ConfigManager;
 public class DocumentService {
 
     /**
+     * Default MIME type to be used if MIME type cannot be determined
+     */
+	public static final String UNKNOWN_MIME_TYPE = "application/octet-stream";
+	
+	/**
      * Document sharing type code - sign
      */
     public static final String SHARINGTYPE_SIGN = "sign";
@@ -2642,7 +2647,7 @@ public class DocumentService {
                 
                 if (signatureContainerDraft == null) {
                 	signatureContainerDraft = new DocumentFile();
-                	signatureContainerDraft.setContentType("application/octet-stream");
+                	signatureContainerDraft.setContentType(UNKNOWN_MIME_TYPE);
                 	signatureContainerDraft.setDeleted(false);
                 	signatureContainerDraft.setDocument(doc);
                 	signatureContainerDraft.setDocumentFileTypeId(FILETYPE_SIGNATURE_CONTAINER_DRAFT);
@@ -2716,7 +2721,9 @@ public class DocumentService {
             DocumentFile signatureContainer = findSignatureContainer(doc);
             
             if ((signatureContainerDraft == null) || (signatureContainerDraft.getFileData() == null)) {
-            	throw new HibernateException("Cannot comfirm signature because no unconfirmed signatures exist!");
+                AditCodedException aditCodedException = new AditCodedException("request.confirmSignature.signatureNotPrepared");
+                aditCodedException.setParameters(new Object[] {});
+                throw aditCodedException;
             }
 
             ConfigManager.init(digidocConfigFile);
@@ -2725,7 +2732,9 @@ public class DocumentService {
 
             File signatureFile = new File(signatureFileName);
             if (!signatureFile.exists()) {
-                throw new HibernateException("Signature file does not exist!");
+                AditCodedException aditCodedException = new AditCodedException("request.confirmSignature.missingSignature");
+                aditCodedException.setParameters(new Object[] {});
+                throw aditCodedException;
             }
 
             byte[] sigValue = new byte[(int) signatureFile.length()];
@@ -2734,15 +2743,13 @@ public class DocumentService {
                 fs = new FileInputStream(signatureFileName);
                 fs.read(sigValue, 0, sigValue.length);
             } catch (IOException ex) {
-                throw new HibernateException(ex);
+                logger.error(ex);
+            	AditCodedException aditCodedException = new AditCodedException("request.confirmSignature.errorReadingSignatureFile");
+                aditCodedException.setParameters(new Object[] {});
+                throw aditCodedException;
             } finally {
-                if (fs != null) {
-                    try {
-                        fs.close();
-                    } catch (Exception ex1) {
-                        logger.error("Exception: ", ex1);
-                    }
-                }
+                Util.safeCloseStream(fs);
+                fs = null;
             }
 
             Signature sig = null;
@@ -2780,7 +2787,7 @@ public class DocumentService {
                 if (signatureContainer == null) {
                 	wasSignedBefore = false;
                 	signatureContainer = new DocumentFile();
-                	signatureContainer.setContentType("application/octet-stream");
+                	signatureContainer.setContentType(UNKNOWN_MIME_TYPE);
                 	signatureContainer.setDeleted(false);
                 	signatureContainer.setDocument(doc);
                 	signatureContainer.setDocumentFileTypeId(FILETYPE_SIGNATURE_CONTAINER);
@@ -2833,7 +2840,9 @@ public class DocumentService {
 	                }
                 }
             } else {
-                throw new Exception("Could not find pending signature given by user: " + requestPersonalCode);
+                AditCodedException aditCodedException = new AditCodedException("request.confirmSignature.signatureNotPrepared");
+                aditCodedException.setParameters(new Object[] {});
+                throw aditCodedException;
             }
             tx.commit();
         } catch (Exception ex) {
@@ -2903,7 +2912,7 @@ public class DocumentService {
         long length = (new File(containerFileName)).length();
         
         OutputDocumentFile result = new OutputDocumentFile();
-        result.setContentType("application/octet-stream");
+        result.setContentType(UNKNOWN_MIME_TYPE);
         result.setName(Util.convertToLegalFileName(doc.getTitle(), "ddoc", null));
         result.setFileType(FILETYPE_NAME_SIGNATURE_CONTAINER);
         result.setSizeBytes(length);

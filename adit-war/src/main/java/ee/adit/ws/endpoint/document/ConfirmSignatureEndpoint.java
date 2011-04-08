@@ -241,7 +241,6 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
 
                 InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream(getDigidocConfigurationFile());
                 String jdigidocCfgTmpFile = Util.createTemporaryFile(input, getConfiguration().getTempDir());
-                logger.info("JDigidoc.cfg file created as a temporary file: '" + jdigidocCfgTmpFile + "'");
 
                 this.documentService.confirmSignature(doc.getId(), signatureFile, header.getIsikukood(),
                         user, jdigidocCfgTmpFile, this.getConfiguration().getTempDir());
@@ -252,8 +251,7 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
                 if (!user.getUserCode().equalsIgnoreCase(doc.getCreatorCode())) {
                     AditUser docCreator = this.getUserService().getUserByID(doc.getCreatorCode());
                     if ((docCreator != null)
-                            && (userService.findNotification(docCreator.getUserNotifications(),
-                                    ScheduleClient.NOTIFICATION_TYPE_SIGN) != null)) {
+                        && (userService.findNotification(docCreator.getUserNotifications(), ScheduleClient.NOTIFICATION_TYPE_SIGN) != null)) {
                         getScheduleClient().addEvent(
                                 docCreator,
                                 this.getMessageSource().getMessage("scheduler.message.sign",

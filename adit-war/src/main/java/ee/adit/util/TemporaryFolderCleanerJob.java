@@ -36,7 +36,7 @@ public class TemporaryFolderCleanerJob extends QuartzJobBean {
      */
     @Override
     protected void executeInternal(JobExecutionContext ctx) throws JobExecutionException {
-        logger.info("Starting to delete temporary files...");
+        logger.debug("Starting to delete temporary files...");
         int deletedCount = 0;
 
         try {
@@ -70,8 +70,11 @@ public class TemporaryFolderCleanerJob extends QuartzJobBean {
             logger.error("Error deleting temporary files: ", e);
         }
 
-        logger.info("Number of temporary files deleted: " + deletedCount);
-
+        if (deletedCount > 0) {
+        	logger.info("Number of temporary files deleted: " + deletedCount);
+        } else {
+        	logger.debug("No temporary files were deleted.");
+        }
     }
 
     /**
