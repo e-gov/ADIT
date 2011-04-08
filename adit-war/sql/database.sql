@@ -21,175 +21,188 @@ COMMENT ON COLUMN &&ADIT_SCHEMA..ACCESS_RESTRICTION.restriction         IS 'Type
 CREATE TABLE &&ADIT_SCHEMA..ADIT_LOG
 (
 	ID                             NUMBER(18) NOT NULL,
-	table_name                     VARCHAR2(50),    /* Muutunud väärtuse tabeli nimi */
-	column_name                    VARCHAR2(50),    /* Muutunud väärtuse tabeli veeru nimi */
-	old_value                      VARCHAR2(4000),    /* Vana väärtus */
-	new_value                      VARCHAR2(4000),    /* Uus väärtus */
-	log_date                       DATE,    /* Muudatuse aeg */
-	primary_key_value			   VARCHAR2(100), 	/* Primaarvõtme väärtus */
-	remote_application_short_name  VARCHAR2(50),    /* Infosüsteem, kes antud muudatuse välja kutsus. */
-	xtee_user_code                 VARCHAR2(50),    /* X-tee päringu isikukood */
-	xtee_institution_code          VARCHAR2(50),    /* X-tee päringu ettevõtte registrikood */
-	db_user                        VARCHAR2(50)    /* Andmebaasikasutaja nimi. */
+	table_name                     VARCHAR2(50),	/* Name of table in which data was modified */
+	column_name                    VARCHAR2(50),    /* Name of column in which data was modified */
+	old_value                      VARCHAR2(4000),	/* Old value */
+	new_value                      VARCHAR2(4000),	/* New value */
+	log_date                       DATE,			/* Date and time the data was modified */
+	primary_key_value			   VARCHAR2(100),	/* Primary key value of changed record */
+	remote_application_short_name  VARCHAR2(50),	/* Application that modified data */
+	xtee_user_code                 VARCHAR2(50),	/* Personal ID code from X-Road request */
+	xtee_institution_code          VARCHAR2(50),	/* Organization code from X-Road request */
+	db_user                        VARCHAR2(50)		/* Database user name */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
-COMMENT ON TABLE &&ADIT_SCHEMA..ADIT_LOG IS 'Andmed kõikide andmebaasis tehtud muudatuste kohta. Välja arvatud tabeli DOCUMENT_FILES veeru FILE_DATA muudatused.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_LOG.table_name                     IS 'Muutunud väärtuse tabeli nimi';
-COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_LOG.column_name                    IS 'Muutunud väärtuse tabeli veeru nimi';
-COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_LOG.old_value                      IS 'Vana väärtus';
-COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_LOG.new_value                      IS 'Uus väärtus';
-COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_LOG.log_date                       IS 'Muudatuse aeg';
-COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_LOG.remote_application_short_name  IS 'Infosüsteem, kes antud muudatuse välja kutsus.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_LOG.xtee_user_code                 IS 'X-tee päringu isikukood';
-COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_LOG.xtee_institution_code          IS 'X-tee päringu ettevõtte registrikood';
-COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_LOG.db_user                        IS 'Andmebaasikasutaja nimi.';
+COMMENT ON TABLE &&ADIT_SCHEMA..ADIT_LOG IS 'Contains log of all data changes in database (except FILE_DATA column in DOCUMENT_FILES table).';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_LOG.table_name                     IS 'Name of table in which data was modified';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_LOG.column_name                    IS 'Name of column in which data was modified';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_LOG.old_value                      IS 'Old value';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_LOG.new_value                      IS 'New value';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_LOG.log_date                       IS 'Date and time the data was modified';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_LOG.primary_key_value              IS 'Primary key value of changed record';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_LOG.remote_application_short_name  IS 'Application that modified data';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_LOG.xtee_user_code                 IS 'Personal ID code from X-Road request';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_LOG.xtee_institution_code          IS 'Organization code from X-Road request';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_LOG.db_user                        IS 'Database user name';
 
 CREATE TABLE &&ADIT_SCHEMA..ADIT_USER
 (
-	user_code                   VARCHAR2(50) NOT NULL,    /* Kasutaja isiku või registrikood koos riigitunnusega. Nt. "EE38407089945". */
-	full_name                   VARCHAR2(255),    /* Kasutaja täispikk nimi. */
-	usertype                    VARCHAR2(50) NOT NULL,    /* Viide kasutaja tüübile. */
-	active                      NUMBER(1) DEFAULT 1,    /* Näitab, kas tegemist on aktiivse kasutajaga. "1" - aktiivne", "0" - mitteaktiivne. */
-	dvk_org_code                VARCHAR2(50),    /* Kui kasutaja kasutab dokumentide saatmiseks ja vastuvõtmiseks DVK-d, siis on see väli täidetud. Väljale kirjutatakse kasutaja DVK asutuse registrikood. */
-	dvk_subdivision_short_name  VARCHAR2(50),    /* Kui kasutaja kasutab dokumentide saatmiseks ja vastuvõtmiseks DVK-d, siis on see väli täidetud juhul kui asutusel on DVK-s registreeritud vastav allüksus. Väljale kirjutatakse kasutaja DVK asutuse allüksuse lühinimi. */
-	dvk_occupation_short_name   VARCHAR2(50),    /* Kui kasutaja kasutab dokumentide saatmiseks ja vastuvõtmiseks DVK-d, siis on see väli täidetud juhul kui asutusel on DVK-s registreeritud vastav ametikoht. Väljale kirjutatakse kasutaja DVK asutuse ametikoha lühinimi. */
-	disk_quota                  NUMBER(18),    /* Kasutaja failide mahupiirang baitides. Kasutajale määratud mahupiirang omab prioriteeti kasutajatüübi mahupiirangu üle. */
-	deactivation_date			DATE	/* Kasutajakonto kustutamise / deaktiveerimise kellaaeg ja kuupäev */
+	user_code                   VARCHAR2(50) NOT NULL,	/* Users personal ID code or registry code including country prefix. For example "EE38407089945". */
+	full_name                   VARCHAR2(255),			/* Users full name */
+	usertype                    VARCHAR2(50) NOT NULL,	/* Reference to user type */
+	active                      NUMBER(1) DEFAULT 1,	/* Indicates wheather or not the user is active. "1" = active, "0" = inactive. */
+	dvk_org_code                VARCHAR2(50),			/* This column contains a value only if user uses DEC to send and receive documents. Contains registry code of usesrs DEC organization. */
+	dvk_subdivision_short_name  VARCHAR2(50),			/* This column contains a value only if user uses DEC to send and receive documents. Contains short name of users DEC subdivision. */
+	dvk_occupation_short_name   VARCHAR2(50),			/* This column contains a value only if user uses DEC to send and receive documents. Contains short name of users DEC occupation. */
+	disk_quota                  NUMBER(18),				/* User disk quota in bytes. Disk quota configured here overrides disk quota values configured on user type or application levels. */
+	deactivation_date			DATE					/* Date and time when user account was deactivated */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
-COMMENT ON TABLE &&ADIT_SCHEMA..ADIT_USER IS 'Kasutaja andmed. Kasutaja on alati isik, kelle määrab üheselt isikukood. Isik võib süsteemis esindada kas iseennast või asutust.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_USER.user_code                   IS 'Kasutaja isiku või registrikood koos riigitunnusega. Nt. "EE38407089945".';
-COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_USER.full_name                   IS 'Kasutaja täispikk nimi.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_USER.usertype                    IS 'Viide kasutaja tüübile.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_USER.active                      IS 'Näitab, kas tegemist on aktiivse kasutajaga. "1" - aktiivne", "0" - mitteaktiivne.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_USER.dvk_org_code                IS 'Kui kasutaja kasutab dokumentide saatmiseks ja vastuvõtmiseks DVK-d, siis on see väli täidetud. Väljale kirjutatakse kasutaja DVK asutuse registrikood.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_USER.dvk_subdivision_short_name  IS 'Kui kasutaja kasutab dokumentide saatmiseks ja vastuvõtmiseks DVK-d, siis on see väli täidetud juhul kui asutusel on DVK-s registreeritud vastav allüksus. Väljale kirjutatakse kasutaja DVK asutuse allüksuse lühinimi.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_USER.dvk_occupation_short_name   IS 'Kui kasutaja kasutab dokumentide saatmiseks ja vastuvõtmiseks DVK-d, siis on see väli täidetud juhul kui asutusel on DVK-s registreeritud vastav ametikoht. Väljale kirjutatakse kasutaja DVK asutuse ametikoha lühinimi.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_USER.disk_quota                  IS 'Kasutaja failide mahupiirang baitides. Kasutajale määratud mahupiirang omab prioriteeti kasutajatüübi mahupiirangu üle.';
+COMMENT ON TABLE &&ADIT_SCHEMA..ADIT_USER IS 'User account data. User account can belong to a person (identified by personal ID code) or to an organization (identified by registry code).';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_USER.user_code                   IS 'Users personal ID code or registry code including country prefix. For example "EE38407089945".';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_USER.full_name                   IS 'Users full name';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_USER.usertype                    IS 'Reference to user type';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_USER.active                      IS 'Indicates wheather or not the user is active. "1" = active, "0" = inactive.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_USER.dvk_org_code                IS 'This column contains a value only if user uses DEC to send and receive documents. Contains registry code of usesrs DEC organization.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_USER.dvk_subdivision_short_name  IS 'This column contains a value only if user uses DEC to send and receive documents. Contains short name of users DEC subdivision.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_USER.dvk_occupation_short_name   IS 'This column contains a value only if user uses DEC to send and receive documents. Contains short name of users DEC occupation.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_USER.disk_quota                  IS 'User disk quota in bytes. Disk quota configured here overrides disk quota values configured on user type or application levels.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_USER.deactivation_date           IS 'Date and time when user account was deactivated';
 
 CREATE TABLE &&ADIT_SCHEMA..DOCUMENT
 (
-	ID                      NUMBER(12) NOT NULL,    /* Unikaalne identifikaator */
-	guid                    VARCHAR2(50),    /* Dokumendi globaalselt unikaalne identifikaator. Kui dokument võetakse vastu DVK-st, siis tuleb ka GUID sealt. Kui dokument luuakse ADIT-is, siis genereerib ADIT ise GUID. */
-	title                   VARCHAR2(255),    /* Dokumendi pealkiri. */
-	type                    VARCHAR2(50) NOT NULL,    /* Viide dokumendi tüübi lühinimele. */
-	creator_code            VARCHAR2(50) NOT NULL,    /* Dokumendi looja isikukood. */
-	creator_name            VARCHAR2(255) NULL,    /* Dokumendi looja nimi (loomise hetke seisuga) */
-	creator_user_code       VARCHAR2(50) NULL,    /* Dokumendi loonud isiku isikukood (juhul, kui dokument kuulub asutusele). */
-	creator_user_name       VARCHAR2(255) NULL,    /* Dokumendi loonud isiku nimi (juhul, kui dokument kuulub asutusele; loomise hetke seisuga) */
-	creation_date           DATE,    /* Dokumendi loomise kuupäev ja kellaaeg */
-	remote_application      VARCHAR2(50),    /* Viide päringu välja kutsunud infosüsteemi lühinimele. */
-	last_modified_date      DATE,    /* Viimase muudatuse kuupäev ja kellaaeg. */
-	document_dvk_status_id  NUMBER(12),    /* Kui dokument on saadetud üle DVK või võetud vastu DVK-st, siis kirjutatakse siia väljale dokumendi DVK staatuse idenfitikaator */
-	dvk_id                  NUMBER(12),    /* Kui tegemist on DVK-st tulnud dokumendiga, siis kirjutatakse siia dokumendile DVK poolt antud ID */
-	document_wf_status_id   NUMBER(12),    /* Viide dokumendi töövoo staatusele. */
-	parent_id               NUMBER(12),    /* Kui on tegemist alamdokumendiga, siis viide nn peadokumendile */
-	locked                  NUMBER(1) DEFAULT 0,    /* Näitab, kas dokument on "lukustatud". "1" - lukus, "0" - lukustamata. */
-	locking_date            DATE,    /* Lukustamise kuupäev ja kellaaeg */
-	signable                NUMBER(1) DEFAULT 0,    /* Näitab, kas dokument on allkirjastatav. */
-	deflated                NUMBER(1) DEFAULT 0,    /* Näitab, kas dokument on arhiveeritud. "1" - arhiveeritud, "0" - ei ole arhiveeritud */
-	deflate_date            DATE,    /* Arhiveerimise kuupäev ja kellaaeg. */
-	deleted                 NUMBER(1),    /* Näitab, kas dokument on kustutatud. "1" - kustutatud, "0" - kustutamata. */
-	signature_container		BLOB	/* Digitaalallkirja konteiner (ddoc või bdoc fail) */
+	ID                      NUMBER(12) NOT NULL,        /* Unique identifier */
+	guid                    VARCHAR2(50),               /* Documents globally unique identifier. If document was received from DEC then GUID comes from DEC. If document is created in ADIT then GUID will be generated by ADIT. */
+	title                   VARCHAR2(255),              /* Document title */
+	type                    VARCHAR2(50) NOT NULL,		/* Short name of document type */
+	creator_code            VARCHAR2(50) NOT NULL,      /* Personal ID code or registry code of document creator */
+	creator_name            VARCHAR2(255) NULL,         /* Document creators name (as it was when document was created) */
+	creator_user_code       VARCHAR2(50) NULL,          /* Personal ID code of document creator (if document creator is an organization) */
+	creator_user_name       VARCHAR2(255) NULL,         /* Name of the person who created this document (if document creator is an organization) */
+	creation_date           DATE,                       /* Document creation date and time */
+	remote_application      VARCHAR2(50),               /* Short name of application that was used to add this document */
+	last_modified_date      DATE,                       /* Date and time of last modification */
+	document_dvk_status_id  NUMBER(12),                 /* DEC status identifier if document is received or sent using DEC */
+	dvk_id                  NUMBER(12),                 /* DEC identifier if document was received from DEC */
+	document_wf_status_id   NUMBER(12),                 /* Document workflow status ID */
+	parent_id               NUMBER(12),                 /* Original document ID. Is used to reference the original document if for example current document is a new version of existing document. */
+	locked                  NUMBER(1) DEFAULT 0,        /* Indicates if this document is locked (cannot be modified). "1" = locked, "0" = not locked. */
+	locking_date            DATE,                       /* Date and time of locking */
+	signable                NUMBER(1) DEFAULT 0,        /* Indicates if this document can be signed. "1" = can be signed, "0" = cannot be signed. */
+	deflated                NUMBER(1) DEFAULT 0,        /* Indicates if this document is deflated (file contents removed). "1" = deflated, "0" = not deflated. */
+	deflate_date            DATE,                       /* Date and time of deflation */
+	deleted                 NUMBER(1),                  /* Indicates if this document is deleted. "1" = deleted, "0" = not deleted. */
+	invisible_to_owner		NUMBER(1,0) NULL,           /* Indicates if this document has been made invisible to its owner. Is used when document has been sent to someone else and owner wants to delete it from his/her own view. */
+	signed					NUMBER(1,0) NULL            /* Indicates if this document has been signed. */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
-COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT IS 'Dokumendi andmed.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.ID                      IS 'Unikaalne identifikaator';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.guid                    IS 'Dokumendi globaalselt unikaalne identifikaator. Kui dokument võetakse vastu DVK-st, siis tuleb ka GUID sealt. Kui dokument luuakse ADIT-is, siis genereerib ADIT ise GUID.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.title                   IS 'Dokumendi pealkiri.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.type                    IS 'Viide dokumendi tüübi lühinimele.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.creator_code            IS 'Dokumendi looja isikukood.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.creator_name            IS 'Dokumendi looja nimi (loomise hetke seisuga)';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.creator_user_code       IS 'Dokumendi loonud isiku isikukood (juhul, kui dokument kuulub asutusele).';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.creator_user_name       IS 'Dokumendi loonud isiku nimi (juhul, kui dokument kuulub asutusele; loomise hetke seisuga)';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.creation_date           IS 'Dokumendi loomise kuupäev ja kellaaeg';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.remote_application      IS 'Viide päringu välja kutsunud infosüsteemi lühinimele.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.last_modified_date      IS 'Viimase muudatuse kuupäev ja kellaaeg.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.document_dvk_status_id  IS 'Kui dokument on saadetud üle DVK või võetud vastu DVK-st, siis kirjutatakse siia väljale dokumendi DVK staatuse idenfitikaator';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.dvk_id                  IS 'Kui tegemist on DVK-st tulnud dokumendiga, siis kirjutatakse siia dokumendile DVK poolt antud ID';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.document_wf_status_id   IS 'Viide dokumendi töövoo staatusele.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.parent_id               IS 'Kui on tegemist alamdokumendiga, siis viide nn peadokumendile';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.locked                  IS 'Näitab, kas dokument on "lukustatud". "1" - lukus, "0" - lukustamata.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.locking_date            IS 'Lukustamise kuupäev ja kellaaeg';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.signable                IS 'Näitab, kas dokument on allkirjastatav.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.deflated                IS 'Näitab, kas dokument on arhiveeritud. "1" - arhiveeritud, "0" - ei ole arhiveeritud';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.deflate_date            IS 'Arhiveerimise kuupäev ja kellaaeg.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.deleted                 IS 'Näitab, kas dokument on kustutatud. "1" - kustutatud, "0" - kustutamata.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.signature_container     IS 'Digitaalallkirja konteiner (ddoc või bdoc fail)';
+COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT IS 'Document data';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.ID                      IS 'Unique identifier';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.guid                    IS 'Documents globally unique identifier. If document was received from DEC then GUID comes from DEC. If document is created in ADIT then GUID will be generated by ADIT.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.title                   IS 'Document title';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.type                    IS 'Short name of document type';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.creator_code            IS 'Personal ID code or registry code of document creator';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.creator_name            IS 'Document creators name (as it was when document was created)';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.creator_user_code       IS 'Personal ID code of document creator (if document creator is an organization)';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.creator_user_name       IS 'Name of the person who created this document (if document creator is an organization)';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.creation_date           IS 'Document creation date and time';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.remote_application      IS 'Short name of application that was used to add this document';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.last_modified_date      IS 'Date and time of last modification';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.document_dvk_status_id  IS 'DEC status identifier if document is received or sent using DEC';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.dvk_id                  IS 'DEC identifier if document was received from DEC';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.document_wf_status_id   IS 'Document workflow status ID';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.parent_id               IS 'Original document ID. Is used to reference the original document if for example current document is a new version of existing document.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.locked                  IS 'Indicates if this document is locked (cannot be modified). "1" = locked, "0" = not locked.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.locking_date            IS 'Date and time of locking';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.signable                IS 'Indicates if this document can be signed. "1" = can be signed, "0" = cannot be signed.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.deflated                IS 'Indicates if this document is deflated (file contents removed). "1" = deflated, "0" = not deflated.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.deflate_date            IS 'Date and time of deflation';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.deleted                 IS 'Indicates if this document is deleted. "1" = deleted, "0" = not deleted.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.invisible_to_owner      IS 'Indicates if this document has been made invisible to its owner. Is used when document has been sent to someone else and owner wants to delete it from his/her own view.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.signed                  IS 'Indicates if this document has been signed.';
+
 
 CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_DVK_STATUS
 (
-	ID           NUMBER(12) NOT NULL,    /* DVK staatuse unikaalne identifikaator */
-	description  VARCHAR2(4000)    /* DVK staatuse kirjeldus */
+	ID           NUMBER(12) NOT NULL,                   /* Unique identifier of DEC status */
+	description  VARCHAR2(4000)                         /* Status description */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
-COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_DVK_STATUS IS 'Dokumendi DVK staatused (kattuvad DVK staatustega). Staatused on järgmised: 
- 1. Puudub (100) 2. Saatmisel (101) 3. Saadetud (102) 4. Katkestatud (103)';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_DVK_STATUS.ID           IS 'DVK staatuse unikaalne identifikaator';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_DVK_STATUS.description  IS 'DVK staatuse kirjeldus';
+COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_DVK_STATUS IS 'Document DEC status list (same values as in DEC). There are following statuses: 100 = Not set, 101 = Sending, 102 = Sent, 103 = Canceled';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_DVK_STATUS.ID           IS 'Unique identifier of DEC status';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_DVK_STATUS.description  IS 'Status description';
 
 CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_FILE
 (
-	ID               NUMBER(12) NOT NULL,    /* Unikaalne identifikaator */
-	document_id      NUMBER(12) NOT NULL,    /* Viide dokumendi ID-le */
-	file_name        VARCHAR2(255) NOT NULL,    /* Faili nimi. (Nt. "avaldus.doc") */
-	content_type     VARCHAR2(255),    /* Faili MIME tüüp. (Nt. "application/rtf") */
-	description      VARCHAR2(4000),    /* Faili kirjeldus. */
-	file_data        BLOB,    /* Faili sisu binaarkujul */
-	file_size_bytes  NUMBER(38),    /* Faili suurus baitides */
-	deleted          NUMBER(1) DEFAULT 0 /* Kas antud fail on kustutatud */
+	ID               			NUMBER(12) NOT NULL,               /* Unique identifier */
+	document_id      			NUMBER(12) NOT NULL,               /* ID of document this file belongs to */
+	file_name        			VARCHAR2(255) NOT NULL,            /* File name */
+	content_type     			VARCHAR2(255),                     /* MIME type of file */
+	description      			VARCHAR2(4000),                    /* File description */
+	file_data        			BLOB,                              /* File contents (binary data) */
+	file_size_bytes  			NUMBER(38),                        /* File size in bytes */
+	deleted          			NUMBER(1) DEFAULT 0,               /* Indicates if this file is deleted (contents removed) */
+	document_file_type_id		NUMBER(18) DEFAULT (1) NOT NULL,   /* File type ID */
+	file_data_in_ddoc			NUMBER(1,0) NULL,                  /* Shows whether or not file contents should be aquired from signature container */
+	ddoc_datafile_id			VARCHAR(5) NULL,                   /* ID of corresponding DataFile in signature container */
+	ddoc_datafile_start_offset 	NUMBER(18) NULL,                   /* First character index of current file in corresponding signature container */
+	ddoc_datafile_end_offset 	NUMBER(18) NULL                    /* Last character index of current file in corresponding signature container */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
-COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_FILE IS 'Dokumendi juurde kuuluvate failide andmed.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.ID               IS 'Unikaalne identifikaator';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.document_id      IS 'Viide dokumendi ID-le';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.file_name        IS 'Faili nimi. (Nt. "avaldus.doc")';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.content_type     IS 'Faili MIME tüüp. (Nt. "application/rtf")';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.description      IS 'Faili kirjeldus.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.file_data        IS 'Faili sisu binaarkujul';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.file_size_bytes  IS 'Faili suurus baitides';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.deleted          IS 'Kas antud fail on kustutatud';
+COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_FILE 								IS 'Document files';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.ID               			IS 'Unique identifier';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.document_id      			IS 'ID of document this file belongs to';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.file_name        			IS 'File name';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.content_type     			IS 'MIME type of file';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.description      			IS 'File description';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.file_data        			IS 'File contents (binary data)';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.file_size_bytes  			IS 'File size in bytes';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.deleted          			IS 'Indicates if this file is deleted (contents removed)';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.document_file_type_id 		IS 'File type ID';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.file_data_in_ddoc 			IS 'Shows whether or not file contents should be aquired from signature container';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.ddoc_datafile_id 			IS 'ID of corresponding DataFile in signature container';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.ddoc_datafile_start_offset 	IS 'First character index of current file in corresponding signature container';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.ddoc_datafile_end_offset 	IS 'Last character index of current file in corresponding signature container';
 
 CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_HISTORY
 (
-	ID                     NUMBER(12) NOT NULL,    /* Unikaalne identifikaator */
-	document_id            NUMBER(12) NOT NULL,    /* Viide dokumendile, millega ajalookirje on seotud */
-	document_history_type  VARCHAR2(50),    /* Viide dokumendi ajaloo tüübile. */
-	description            VARCHAR2(4000),    /* Toimingu täpsem kirjeldus, kui vajalik. */
-	event_date             DATE,    /* Tegevuse kuupäev ja kelaaaeg */
-	user_code              VARCHAR2(50),    /* Tegevuse läbi viinud kasutaja kood. Viide kasutajale. */
-	user_name              VARCHAR2(255),    /* Tegevuse läbi viinud kasutaja nimi (tegevuse toimumise hetke seisuga). */
-	remote_application     VARCHAR2(50),    /* Viide välisele infosüsteemile (välise infosüsteemi lühinimi), mis antud toimingu välja kutsus. */
-	notification_status    VARCHAR2(50),    /* Teavituse saatmise staatus. Kui teavistus on saatmata, siis "SAADA", kui saadetud, siis "SAADETUD". Kui teavitust ei ole vaja saata, siis väli tühi (NULL). */
-	xtee_notification_id   VARCHAR2(50),    /* Teavituskalendri X-tee teenuselt saadud teavituse ID. See väli täidetakse juhul kui teavituse saatmine teavituskalendrile õnnestus. */
-	xtee_user_code         VARCHAR2(50),    /* X-tee kasutaja isikukood, kes tegevuse käivitas. See on vajalik selleks, et asutuse dokumentide puhul teada, milline konkreetne isik tegevuse läbi viis. */
-	xtee_user_name         VARCHAR2(255)    /* X-tee kasutaja nimi (kui oli võimalik tuvastada) */
+	ID                     NUMBER(12) NOT NULL,         /* Unique identifier */
+	document_id            NUMBER(12) NOT NULL,         /* ID of related document */
+	document_history_type  VARCHAR2(50),                /* Short name of history type */
+	description            VARCHAR2(4000),              /* Detailed description of document history event */
+	event_date             DATE,                        /* Date and time of history event */
+	user_code              VARCHAR2(50),                /* Personal ID code or registry code of user who performed the action */
+	user_name              VARCHAR2(255),               /* Name of user who performed the action (at the moment of perforing the action). */
+	remote_application     VARCHAR2(50),                /* Short name of application that was used to perform the action */
+	notification_status    VARCHAR2(50),                /* Notification sending status. If notification is not sent then "SAADA", if notification is sent then "SAADETUD". If no notification has to be sent then empty (NULL). */
+	xtee_notification_id   VARCHAR2(50),                /* Notification ID from notification calendar (teavituskalender) X-Road database. This column has a value only if notification was successfully sent to notification calendar. */
+	xtee_user_code         VARCHAR2(50),                /* Personal ID code of person who executed the X-Road request. It is intended to identify the person who performed the action if the action was performed under organization account. */
+	xtee_user_name         VARCHAR2(255)                /* Personal ID code of person who executed the X-Road request (if it waspossible to find out the name) */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
-COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_HISTORY IS 'Dokumendi ajalookirjed. Kirje tekib siis, kui dokumendiga viiakse läbi toiming. Tabel koondab endasse dokumendiga teostatud toimingute ajaloo.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY.ID                     IS 'Unikaalne identifikaator';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY.document_id            IS 'Viide dokumendile, millega ajalookirje on seotud';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY.document_history_type  IS 'Viide dokumendi ajaloo tüübile.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY.description            IS 'Toimingu täpsem kirjeldus, kui vajalik.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY.event_date             IS 'Tegevuse kuupäev ja kelaaaeg';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY.user_code              IS 'Tegevuse läbi viinud isiku kood. Viide kasutajale.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY.user_name              IS 'Tegevuse läbi viinud kasutaja nimi (tegevuse toimumise hetke seisuga).';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY.remote_application     IS 'Viide välisele infosüsteemile (välise infosüsteemi lühinimi), mis antud toimingu välja kutsus.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY.notification_status    IS 'Teavituse saatmise staatus. Kui teavistus on saatmata, siis "SAADA", kui saadetud, siis "SAADETUD". Kui teavitust ei ole vaja saata, siis väli tühi (NULL).';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY.xtee_notification_id   IS 'Teavituskalendri X-tee teenuselt saadud teavituse ID. See väli täidetakse juhul kui teavituse saatmine teavituskalendrile õnnestus.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY.xtee_user_code         IS 'X-tee kasutaja isikukood, kes tegevuse käivitas. See on vajalik selleks, et asutuse dokumentide puhul teada, milline konkreetne isik tegevuse läbi viis.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY.xtee_user_name         IS 'X-tee kasutaja nimi (kui oli võimalik tuvastada)';
+COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_HISTORY                         IS 'Document history. History records will be created when some action is performed on a document.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY.ID                     IS 'Unique identifier';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY.document_id            IS 'ID of related document';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY.document_history_type  IS 'Short name of history type';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY.description            IS 'Detailed description of document history event';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY.event_date             IS 'Date and time of history event';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY.user_code              IS 'Personal ID code or registry code of user who performed the action';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY.user_name              IS 'Name of user who performed the action (at the moment of perforing the action).';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY.remote_application     IS 'Short name of application that was used to perform the action';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY.notification_status    IS 'Notification sending status. If notification is not sent then "SAADA", if notification is sent then "SAADETUD". If no notification has to be sent then empty (NULL).';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY.xtee_notification_id   IS 'Notification ID from notification calendar (teavituskalender) X-Road database. This column has a value only if notification was successfully sent to notification calendar.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY.xtee_user_code         IS 'Personal ID code of person who executed the X-Road request. It is intended to identify the person who performed the action if the action was performed under organization account.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY.xtee_user_name         IS 'Personal ID code of person who executed the X-Road request (if it waspossible to find out the name)';
 
 CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_HISTORY_TYPE
 (
-	short_name   VARCHAR2(50) NOT NULL,    /* Ajalookirje tüübi nimi. Nt. "esmane loomine" või "dokumendi muutmine". */
-	description  VARCHAR2(4000)    /* Ajalookirje tüübi kirjeldus. */
+	short_name   VARCHAR2(50) NOT NULL,                 /* Name of history event type. e.g. "esmane loomine" or "dokumendi muutmine". */
+	description  VARCHAR2(4000)                         /* Description of history event type */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
-COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_HISTORY_TYPE IS 'Dokumendi ajalookirjete tüübid. Ajalookirjete tüübid on näiteks "esmane loomine", "dokumendi muutmine" jne. (täpsemalt on kirjeldatud dokumentatsioonis). Ajalookirjete tüübid on järgmised: 
- 1. Esmane loomine 2. Dokumendi muutmine 3. Dokumendi faili lisamine 4. Dokumendi faili muutmine 5. Dokumendi faili kustutamine 6. Staatuse muutmine 7. Saatmine 8. Jagamine 9. Lukustamine 10. Arhiveerimine 11. Dokumendi digitaalne allkirjastamine 12. Kustutamine';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY_TYPE.short_name   IS 'Ajalookirje tüübi nimi. Nt. "esmane loomine" või "dokumendi muutmine".';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY_TYPE.description  IS 'Ajalookirje tüübi kirjeldus.';
+COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_HISTORY_TYPE               IS 'History event types';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY_TYPE.short_name   IS 'Name of history event type. e.g. "esmane loomine" or "dokumendi muutmine".';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY_TYPE.description  IS 'Description of history event type.';
 
 CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING
 (
@@ -366,7 +379,8 @@ CREATE TABLE &&ADIT_SCHEMA..SIGNATURE
 	post_index      VARCHAR2(50),    /* Allkirja metaandmed - indeks */
 	signer_code		VARCHAR2(20),    /* Allkirja metaandmed - allkirjastaja isikukood */
 	signer_name		VARCHAR2(255),   /* Allkirja metaandmed - allkirjastaja nimi */
-	signing_date    DATE				/* Allkirja andmise kuupäev ja kellaaeg */
+	signing_date    DATE,				/* Allkirja andmise kuupäev ja kellaaeg */
+	user_name		VARCHAR2(255) NULL
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
 COMMENT ON TABLE &&ADIT_SCHEMA..SIGNATURE IS 'Allkirjade tabel.';
@@ -382,6 +396,7 @@ COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.post_index      IS 'Allkirja metaandm
 COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.signer_code     IS 'Allkirja metaandmed - allkirjastaja isikukood';
 COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.signer_name     IS 'Allkirja metaandmed - allkirjastaja nimi';
 COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.signing_date    IS 'Allkirja andmise kuupäev ja kellaaeg';
+COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.user_name       IS 'Name of ADIT user who gave this signature';
 
 CREATE TABLE &&ADIT_SCHEMA..USER_NOTIFICATION
 (
@@ -428,6 +443,15 @@ COMMENT ON COLUMN &&ADIT_SCHEMA..NOTIFICATION.notification_type IS 'Teavituse t�
 COMMENT ON COLUMN &&ADIT_SCHEMA..NOTIFICATION.notification_text IS 'Teavituse sisu';
 COMMENT ON COLUMN &&ADIT_SCHEMA..NOTIFICATION.notification_id IS 'Teavituse ID teavituskalendris';
 COMMENT ON COLUMN &&ADIT_SCHEMA..NOTIFICATION.notification_sending_date IS 'Teavituse teavituskalendrisse edastamise aeg';
+
+
+CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_FILE_TYPE
+(
+	ID                  NUMBER(18) NOT NULL,	
+	DESCRIPTION			VARCHAR2(100) NOT NULL		/* Description of file type */
+) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
+
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE_TYPE.description IS 'Description of file type';
 
 
 /* Create Primary Key Constraints */
@@ -738,11 +762,85 @@ grant execute on dbms_crypto to &&ADIT_SCHEMA;
 
 -- Stored procedure for doing file deflation directly in database
 create or replace
+procedure &&ADIT_SCHEMA..REMOVE_SIGNED_FILE_CONTENTS(
+    result_rc out sys_refcursor,
+    document_id in number,
+    file_id in number,
+    ddoc_start_offset in number,
+    ddoc_end_offset in number
+)
+as
+item_count number(10,0) := 0;
+begin
+    select  count(*)
+    into    item_count
+    from    document_file
+    where   document_file.id = REMOVE_SIGNED_FILE_CONTENTS.file_id;
+    
+    if (item_count > 0) then
+            select  count(*)
+            into    item_count
+            from    document_file
+            where   document_file.id = REMOVE_SIGNED_FILE_CONTENTS.file_id
+                    and document_file.document_id = REMOVE_SIGNED_FILE_CONTENTS.document_id;
+            
+            if (item_count > 0) then
+                select  count(*)
+                into    item_count
+                from    document_file
+                where   document_file.id = REMOVE_SIGNED_FILE_CONTENTS.file_id
+                        and nvl(document_file.deleted, 0) = 0;
+                
+                if (item_count > 0) then
+                    select  count(*)
+                    into    item_count
+                    from    document_file
+                    where   document_file.id = REMOVE_SIGNED_FILE_CONTENTS.file_id
+                            and nvl(document_file.file_data_in_ddoc, 0) = 0;
+                
+                    if (item_count > 0) then
+	                    -- Calculate MD5 hash
+	                    update  document_file
+	                    set	    file_data = dbms_crypto.hash(nvl(file_data, empty_blob()), 2),
+	                            ddoc_datafile_start_offset = REMOVE_SIGNED_FILE_CONTENTS.ddoc_start_offset,
+	                            ddoc_datafile_end_offset = REMOVE_SIGNED_FILE_CONTENTS.ddoc_end_offset,
+	                            file_data_in_ddoc = 1
+	                    where   id = REMOVE_SIGNED_FILE_CONTENTS.file_id;
+	                    
+	                    open result_rc for
+	                    select  'ok' as result_code
+	                    from    dual;
+	                else
+	                    open result_rc for
+	                    select  'file_data_already_moved' as result_code
+	                    from    dual;
+	                end if;
+                else
+                    open result_rc for
+                    select  'file_is_deleted' as result_code
+                    from    dual;
+                end if;
+            else
+                open result_rc for
+                select  'file_does_not_belong_to_document' as result_code
+                from    dual;
+            end if;
+    else
+        open result_rc for
+        select  'file_does_not_exist' as result_code
+        from    dual;
+    end if;
+end;
+/
+
+-- Stored procedure for doing file deflation directly in database
+create or replace
 procedure &&ADIT_SCHEMA..DEFLATE_FILE(
     result_rc out sys_refcursor,
     document_id in number,
     file_id in number,
-    mark_deleted in number
+    mark_deleted in number,
+    fail_if_signature in number
 )
 as
 item_count number(10,0) := 0;
@@ -767,15 +865,27 @@ begin
                         and nvl(document_file.deleted, 0) = 0;
                 
                 if (item_count > 0) then
-                    -- Calculate MD5 hash
-                    update	document_file
-                    set		  file_data = dbms_crypto.hash(nvl(file_data, empty_blob()), 2),
-                            deleted = (case when DEFLATE_FILE.mark_deleted = 1 then 1 else document_file.deleted end)
-                    where   id = DEFLATE_FILE.file_id;
-                    
-                    open result_rc for
-                    select  'ok' as result_code
-                    from    dual;
+	                select  count(*)
+	                into    item_count
+	                from    document_file
+	                where   document_file.id = DEFLATE_FILE.file_id
+	                        and nvl(document_file.document_file_type_id, 1) > 1;
+                
+	                if ((item_count = 0) or (DEFLATE_FILE.fail_if_signature <> 1)) then
+	                	-- Calculate MD5 hash
+	                    update	document_file
+	                    set	    file_data = dbms_crypto.hash(nvl(file_data, empty_blob()), 2),
+	                            deleted = (case when DEFLATE_FILE.mark_deleted = 1 then 1 else document_file.deleted end)
+	                    where   id = DEFLATE_FILE.file_id;
+	                    
+	                    open result_rc for
+	                    select  'ok' as result_code
+	                    from    dual;
+                    else
+	                    open result_rc for
+	                    select  'cannot_delete_signature_container' as result_code
+	                    from    dual;
+                    end if;
                 else
                     open result_rc for
                     select  'already_deleted' as result_code

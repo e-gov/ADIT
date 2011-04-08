@@ -120,3 +120,10 @@ INSERT INTO &&ADIT_SCHEMA..document_history_type(
 	'Dokumendi lukust vabastamine'
 );
 
+INSERT INTO &&ADIT_SCHEMA..document_history_type(
+	short_name,
+	description
+) VALUES (
+	'extract_file',
+	'Digitaalallkirja konteineri lahtipakkimine'
+);
