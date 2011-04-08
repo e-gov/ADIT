@@ -1458,7 +1458,7 @@ public final class Util {
     	return digest.digest();
 	}
     
-    public static String convertToLegalFileName(String namePart, String extension) {
+    public static String convertToLegalFileName(String namePart, String extension, String uniqueCounter) {
     	int maxLength = 240;
     	List<Character> illegalChars = Arrays.asList(new Character[] { '/', '\n', '\r', '\t', '\0', '\f', '`', '?', '*', '\\', '<', '>', '|', '\"', ':' });
     	StringBuilder result = new StringBuilder(maxLength + 10);
@@ -1472,6 +1472,10 @@ public final class Util {
 	    	}
     	} else {
     		result.append("document");
+    	}
+    	
+    	if (!isNullOrEmpty(uniqueCounter)) {
+    		result.append(uniqueCounter);
     	}
     	
     	if (!isNullOrEmpty(extension)) {

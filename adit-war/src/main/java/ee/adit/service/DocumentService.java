@@ -2646,7 +2646,7 @@ public class DocumentService {
                 	signatureContainerDraft.setDeleted(false);
                 	signatureContainerDraft.setDocument(doc);
                 	signatureContainerDraft.setDocumentFileTypeId(FILETYPE_SIGNATURE_CONTAINER_DRAFT);
-                	signatureContainerDraft.setFileName(Util.convertToLegalFileName(doc.getTitle(), "ddoc"));
+                	signatureContainerDraft.setFileName(Util.convertToLegalFileName(doc.getTitle(), "ddoc", null));
                 	doc.getDocumentFiles().add(signatureContainerDraft);
                 }
                 signatureContainerDraft.setFileSizeBytes(length);
@@ -2784,7 +2784,7 @@ public class DocumentService {
                 	signatureContainer.setDeleted(false);
                 	signatureContainer.setDocument(doc);
                 	signatureContainer.setDocumentFileTypeId(FILETYPE_SIGNATURE_CONTAINER);
-                	signatureContainer.setFileName(Util.convertToLegalFileName(doc.getTitle(), "ddoc"));
+                	signatureContainer.setFileName(Util.convertToLegalFileName(doc.getTitle(), "ddoc", null));
                 	doc.getDocumentFiles().add(signatureContainer);
                 }
                 signatureContainer.setFileSizeBytes(length);
@@ -2904,7 +2904,7 @@ public class DocumentService {
         
         OutputDocumentFile result = new OutputDocumentFile();
         result.setContentType("application/octet-stream");
-        result.setName(Util.convertToLegalFileName(doc.getTitle(), "ddoc"));
+        result.setName(Util.convertToLegalFileName(doc.getTitle(), "ddoc", null));
         result.setFileType(FILETYPE_NAME_SIGNATURE_CONTAINER);
         result.setSizeBytes(length);
         result.setSysTempFile(containerFileName);
@@ -2954,12 +2954,12 @@ public class DocumentService {
                         
                         String extension = Util.getFileExtension(docFile.getFileName());
                         String fileNameWithoutExtension = Util.getFileNameWithoutExtension(docFile.getFileName());
-                        String entryName = Util.convertToLegalFileName(fileNameWithoutExtension, extension);
+                        String entryName = Util.convertToLegalFileName(fileNameWithoutExtension, extension, null);
                         
                         uniqueCounter = 0;
                         while (usedEntryNames.contains(entryName)) {
                         	uniqueCounter++;
-                        	entryName = Util.convertToLegalFileName(fileNameWithoutExtension + uniqueCounter, extension);
+                        	entryName = Util.convertToLegalFileName(fileNameWithoutExtension + uniqueCounter, extension, String.valueOf(uniqueCounter));
                         }
                         
                         ZipEntry entry = new ZipEntry(entryName);
@@ -2985,7 +2985,7 @@ public class DocumentService {
         
         OutputDocumentFile result = new OutputDocumentFile();
         result.setContentType("application/zip");
-        result.setName(Util.convertToLegalFileName(doc.getTitle(), "zip"));
+        result.setName(Util.convertToLegalFileName(doc.getTitle(), "zip", null));
         result.setFileType(FILETYPE_NAME_ZIP_ARCHIVE);
         result.setSizeBytes(length);
         result.setSysTempFile(archiveFileName);
