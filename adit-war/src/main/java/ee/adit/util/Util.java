@@ -1425,6 +1425,19 @@ public final class Util {
     	
     	return result;
     }
+    
+    public static String getFileNameWithoutExtension(String fileName) {
+    	String result = null;
+    	
+    	if (!isNullOrEmpty(fileName)) {
+    		int extensionStart = fileName.lastIndexOf(".");
+    		if ((extensionStart > 0) && (extensionStart < fileName.length())) {
+    			result = fileName.substring(0, extensionStart);
+    		}
+    	}
+    	
+    	return result;
+    }
 
     public static byte[] calculateMd5Checksum(String filename) throws Exception {
     	MessageDigest digest = MessageDigest.getInstance("MD5");

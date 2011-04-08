@@ -1,5 +1,7 @@
 package ee.adit.service;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,6 +25,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import org.apache.fop.apps.MimeConstants;
 import org.apache.log4j.Logger;
@@ -323,9 +327,11 @@ public class DocumentService {
 	public static final long FILETYPE_DOCUMENT_FILE = 1L;
 	public static final long FILETYPE_SIGNATURE_CONTAINER = 2L;
 	public static final long FILETYPE_SIGNATURE_CONTAINER_DRAFT = 3L;
+	public static final long FILETYPE_ZIP_ARCHIVE = 4L;
 	public static final String FILETYPE_NAME_DOCUMENT_FILE = "document_file";
 	public static final String FILETYPE_NAME_SIGNATURE_CONTAINER = "signature_container";
 	public static final String FILETYPE_NAME_SIGNATURE_CONTAINER_DRAFT = "signature_container_draft";
+	public static final String FILETYPE_NAME_ZIP_ARCHIVE = "zip_archive";
 
     private static Logger logger = Logger.getLogger(UserService.class);
 
@@ -2696,7 +2702,7 @@ public class DocumentService {
      * @throws Exception
      */
     public void confirmSignature(final long documentId, final String signatureFileName,
-            final String requestPersonalCode, final String currentUserCode,
+            final String requestPersonalCode, final AditUser currentUser,
             final String digidocConfigFile, final String temporaryFilesDir) throws Exception {
 
         Session session = null;
@@ -2794,7 +2800,8 @@ public class DocumentService {
 
                 // Add signature metadata to signature table
                 ee.adit.dao.pojo.Signature aditSig = convertDigiDocSignatureToLocalSignature(sig);
-                aditSig.setUserCode(currentUserCode);
+                aditSig.setUserCode(currentUser.getUserCode());
+                aditSig.setUserName(currentUser.getFullName());
                 
                 aditSig.setDocument(doc);
                 session.save(aditSig);
@@ -2905,6 +2912,78 @@ public class DocumentService {
         return result;
     }
     
+    public static OutputDocumentFile createZipArchiveFromDocumentFiles(
+    	final Document doc,
+    	final String temporaryFilesDir) throws SQLException, IOException {
+    	
+    	// Create unique subdirectory for files
+        File uniqueDir = new File(temporaryFilesDir + File.separator + doc.getId());
+        int uniqueCounter = 0;
+        while (uniqueDir.exists()) {
+            uniqueDir = new File(temporaryFilesDir + File.separator + doc.getId() + "_" + (++uniqueCounter));
+        }
+        uniqueDir.mkdir();
+        
+        // Create name for ZIP archive
+        String archiveFileName = Util.generateRandomFileNameWithoutExtension();
+        archiveFileName = temporaryFilesDir + File.separator + archiveFileName + ".adit";
+        uniqueCounter = 0;
+        while (new File(archiveFileName).exists()) {
+        	archiveFileName = temporaryFilesDir + File.separator + archiveFileName + uniqueCounter + ".adit";
+        }
+        
+        FileOutputStream archiveStream = null;
+        ZipOutputStream zipStream = null;
+        InputStream blobDataStream = null;
+        BufferedInputStream bufferedBlobStream = null;
+
+        try {
+            archiveStream = new FileOutputStream(archiveFileName);
+            zipStream = new ZipOutputStream(new BufferedOutputStream(archiveStream));
+            byte data[] = new byte[1024];
+
+            List<DocumentFile> filesList = new ArrayList<DocumentFile>(doc.getDocumentFiles());
+            for (DocumentFile docFile : filesList) {
+                if (((docFile.getDeleted() == null) || !docFile.getDeleted())
+                	&& (docFile.getDocumentFileTypeId() == FILETYPE_DOCUMENT_FILE)){
+                    
+                	try {
+                        blobDataStream = docFile.getFileData().getBinaryStream();
+                        bufferedBlobStream = new BufferedInputStream(blobDataStream, data.length);
+                        
+                        String extension = Util.getFileExtension(docFile.getFileName());
+                        String fileNameWithoutExtension = Util.getFileNameWithoutExtension(docFile.getFileName());
+                        
+                        ZipEntry entry = new ZipEntry(Util.convertToLegalFileName(fileNameWithoutExtension, extension));
+                        zipStream.putNextEntry(entry);
+                        
+                        int readLength;
+                        while((readLength = bufferedBlobStream.read(data, 0, data.length)) != -1) {
+                           zipStream.write(data, 0, readLength);
+                        }
+                    } finally {
+                        Util.safeCloseStream(bufferedBlobStream);
+                        Util.safeCloseStream(blobDataStream);
+                    }
+                }
+            }
+        } finally {
+            Util.safeCloseStream(zipStream);
+            Util.safeCloseStream(archiveStream);
+        }
+        
+        long length = (new File(archiveFileName)).length();
+        
+        OutputDocumentFile result = new OutputDocumentFile();
+        result.setContentType("application/zip");
+        result.setName(Util.convertToLegalFileName(doc.getTitle(), "zip"));
+        result.setFileType(FILETYPE_NAME_ZIP_ARCHIVE);
+        result.setSizeBytes(length);
+        result.setSysTempFile(archiveFileName);
+        
+        return result;
+    }
+    
     public ee.adit.dao.pojo.Signature convertDigiDocSignatureToLocalSignature(Signature digiDocSignature) {
     	ee.adit.dao.pojo.Signature result = new ee.adit.dao.pojo.Signature();
     	
@@ -2935,7 +3014,8 @@ public class DocumentService {
             	String signerCodeWithCountryPrefix = (signerCode.startsWith(signerCountryCode)) ? signerCode : signerCountryCode + signerCode;
             	AditUser user = this.getAditUserDAO().getUserByID(signerCodeWithCountryPrefix);
 	            if (user != null) {
-	            	result.setUserCode(signerCodeWithCountryPrefix);
+	            	result.setUserCode(user.getUserCode());
+	            	result.setUserCode(user.getFullName());
 	            }
             }
         }

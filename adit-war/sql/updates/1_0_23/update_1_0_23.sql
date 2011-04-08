@@ -38,6 +38,10 @@ COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.ddoc_datafile_start_offset IS 'Fi
 ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_FILE ADD (ddoc_datafile_end_offset NUMBER(18) NULL);
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.ddoc_datafile_end_offset IS 'Last character index of current file in corresponding signature container';
 
+ALTER TABLE &&ADIT_SCHEMA..SIGNATURE ADD (user_name VARCHAR2(255) NULL);
+COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.user_name IS 'Name of ADIT user who gave this signature';
+
+
 INSERT INTO &&ADIT_SCHEMA..document_history_type(
 	short_name,
 	description

@@ -43,5 +43,8 @@
         <property name="signingDate" type="timestamp">
             <column name="SIGNING_DATE" length="7" />
         </property>
+        <property name="userName" type="string">
+            <column name="USER_NAME" />
+        </property>
     </class>
 </hibernate-mapping>

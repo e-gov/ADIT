@@ -22,6 +22,7 @@ public class Signature implements java.io.Serializable {
     private String signerCode;
     private String signerName;
     private Date signingDate;
+    private String userName;
 
     public Signature() {
     }
@@ -32,7 +33,8 @@ public class Signature implements java.io.Serializable {
     }
 
     public Signature(long id, Document document, String userCode, String signerRole, String resolution, String country,
-            String county, String city, String postIndex, String signerCode, String signerName, Date signingDate) {
+            String county, String city, String postIndex, String signerCode, String signerName, Date signingDate,
+            String userName) {
         this.id = id;
         this.document = document;
         this.userCode = userCode;
@@ -45,6 +47,7 @@ public class Signature implements java.io.Serializable {
         this.signerCode = signerCode;
         this.signerName = signerName;
         this.signingDate = signingDate;
+        this.userName = userName;
     }
 
     public long getId() {
@@ -141,5 +144,13 @@ public class Signature implements java.io.Serializable {
 
 	public void setSigningDate(Date signingDate) {
 		this.signingDate = signingDate;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 }

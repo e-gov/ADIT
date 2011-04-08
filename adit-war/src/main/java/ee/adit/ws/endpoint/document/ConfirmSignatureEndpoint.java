@@ -243,7 +243,7 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
                 logger.info("JDigidoc.cfg file created as a temporary file: '" + jdigidocCfgTmpFile + "'");
 
                 this.documentService.confirmSignature(doc.getId(), signatureFile, header.getIsikukood(),
-                        user.getUserCode(), jdigidocCfgTmpFile, this.getConfiguration().getTempDir());
+                        user, jdigidocCfgTmpFile, this.getConfiguration().getTempDir());
 
                 // Send scheduler notification to document owner.
                 // Notification does not need to be sent if user signed

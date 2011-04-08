@@ -656,6 +656,8 @@ public class DocumentDAO extends HibernateDaoSupport {
         	}
         }
         
+        // Add unsigned DDOC container containing all document files
+        // (if DDOC container was requested and document is not signed)
         if (includeFileContents
         	&& !resultContainsSignatureContainer
         	&& (fileTypes != null)
@@ -675,6 +677,22 @@ public class DocumentDAO extends HibernateDaoSupport {
         	}
         }
 
+        // Add ZIP archive containing all document files (if ZIP archive was requested)
+        if (includeFileContents
+        	&& (fileTypes != null)
+        	&& (fileTypes.getFileType() != null)
+        	&& (fileTypes.getFileType().size() > 0)
+        	&& (fileTypes.getFileType().contains(DocumentService.FILETYPE_NAME_ZIP_ARCHIVE))) {
+        	
+        	try {
+	        	OutputDocumentFile zipArchive = DocumentService.createZipArchiveFromDocumentFiles(doc, temporaryFilesDir);
+	        	zipArchive.setSysTempFile(Util.base64EncodeFile(zipArchive.getSysTempFile(), temporaryFilesDir));
+	        	totalBytes += (zipArchive.getSizeBytes() == null) ? 0L : zipArchive.getSizeBytes();
+	        	outputFilesList.add(zipArchive);
+        	} catch (Exception ex) {
+                throw new HibernateException(ex);
+        	}
+        }
         
         OutputDocumentFilesList filesListWrapper = new OutputDocumentFilesList();
         filesListWrapper.setFiles(outputFilesList);
@@ -706,6 +724,7 @@ public class DocumentDAO extends HibernateDaoSupport {
                     outSig.setZip(sig.getPostIndex());
                     outSig.setSigningDate(sig.getSigningDate());
                     outSig.setUserCode(sig.getUserCode());
+                    outSig.setUserName(sig.getUserName());
                     docSignatures.getSignatures().add(outSig);
                 }
             }

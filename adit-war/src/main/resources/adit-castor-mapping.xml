@@ -309,6 +309,9 @@
 		<field name="userCode" type="java.lang.String">
 			<bind-xml name="user_code"/>
 		</field>
+		<field name="userName" type="java.lang.String">
+			<bind-xml name="user_name"/>
+		</field>
 	</class>
 
  	<class name="ee.adit.pojo.DocumentSharingData">

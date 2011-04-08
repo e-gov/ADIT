@@ -12,6 +12,7 @@ public class Signature {
     private String zip;
     private Date signingDate;
     private String userCode;
+    private String userName;
 
     public String getSignerCode() {
         return signerCode;
@@ -83,5 +84,13 @@ public class Signature {
 
 	public void setUserCode(String userCode) {
 		this.userCode = userCode;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 }

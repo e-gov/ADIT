@@ -121,8 +121,7 @@ public class DeflateDocumentEndpoint extends AbstractAditBaseEndpoint {
                 try {
                     xroadRequestUser = this.getUserService().getUserByID(header.getIsikukood());
                 } catch (Exception ex) {
-                    logger
-                            .debug("Error when attempting to find local user matchinig the person that executed a company request.");
+                    logger.debug("Error when attempting to find local user matchinig the person that executed a company request.");
                 }
             }
 
