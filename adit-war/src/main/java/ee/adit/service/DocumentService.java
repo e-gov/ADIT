@@ -2955,10 +2955,10 @@ public class DocumentService {
         try {
             archiveStream = new FileOutputStream(archiveFileName);
             zipStream = new ZipArchiveOutputStream(new BufferedOutputStream(archiveStream));
-            zipStream.setEncoding("UTF-8");
-            //zipStream.setFallbackToUTF8(true);
-            //zipStream.setUseLanguageEncodingFlag(true);
-            //zipStream.setCreateUnicodeExtraFields(ZipArchiveOutputStream.UnicodeExtraFieldPolicy.ALWAYS); 
+            zipStream.setEncoding("Cp775");
+            zipStream.setFallbackToUTF8(true);
+            zipStream.setUseLanguageEncodingFlag(true);
+            zipStream.setCreateUnicodeExtraFields(ZipArchiveOutputStream.UnicodeExtraFieldPolicy.ALWAYS); 
             
             byte data[] = new byte[1024];
             List<String> usedEntryNames = new ArrayList<String>();
