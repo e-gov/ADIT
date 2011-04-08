@@ -1,10 +1,10 @@
 ALTER TABLE &&ADIT_SCHEMA..DOCUMENT DROP COLUMN signature_container;
 
 ALTER TABLE &&ADIT_SCHEMA..DOCUMENT ADD (invisible_to_owner NUMBER(1,0) NULL);
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.invisible_to_owner IS 'Document has been made invisible to its owner. Is used when document has been sent to someone else and owner wants to delete it from his/her own view.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.invisible_to_owner IS 'Indicates if this document has been made invisible to its owner. Is used when document has been sent to someone else and owner wants to delete it from his/her own view.';
 
 ALTER TABLE &&ADIT_SCHEMA..DOCUMENT ADD (signed NUMBER(1,0) NULL);
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.signed IS 'Document has been signed.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.signed IS 'Indicates if this document has been signed.';
 
 ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING ADD (deleted NUMBER(1,0) NULL);
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.deleted IS 'Document has been deleted by the user to whom it was sent.';
