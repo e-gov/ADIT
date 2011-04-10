@@ -353,6 +353,14 @@
 		</dependency>
 
 		<dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-compress</artifactId>
+		    <version>1.1</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/commons-compress-1.1.jar</systemPath>
+		</dependency>
+
+		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.0</version>
