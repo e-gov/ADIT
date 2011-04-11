@@ -206,64 +206,61 @@ COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY_TYPE.description  IS 'Descript
 
 CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING
 (
-	ID                NUMBER(12) NOT NULL,    /* Unikaalne identifikaator */
-	document_id       NUMBER(12) NOT NULL,    /* Viide dokumendile */
-	user_code         VARCHAR2(50) NOT NULL,    /* Viide kasutajale (isikukood), kellele dokument jagati */
-	user_name		  VARCHAR2(255) NULL,		/* Kasutaja nimi (jagamise hetke seisuga) */
-	sharing_type      VARCHAR2(50) NOT NULL,    /* Viide dokumendi jagamise tüübile. Viidatakse kasutades dokumendi tüübi lühinime. */
-	task_description  VARCHAR2(4000),    /* Jagamise eesmärk. Toiming, mida jagamise adressaat peaks dokumendiga tegema. */
-	creation_date     DATE,    /* Jagamise kuupäev ja kellaaeg */
-	dvk_status_id     NUMBER(12),    /* Dokumendi DVK staatuse ID. Näitab, millises staatuses on jagatud dokument adressaadi DVK-s. */
-	wf_status_id      NUMBER(12),    /* Töövoo staatuse ID */
-	last_access_date  DATE    /* Kuupäev ja kellaaeg, millal viimati jagatud dokumendi andmeid vaadati. */
+	ID                NUMBER(12) NOT NULL,
+	document_id       NUMBER(12) NOT NULL,				/* Reference to the document that was shared or sent */
+	user_code         VARCHAR2(50) NOT NULL,    		/* Referente to user (user code) to whom the document was shared or sent */
+	user_name		  VARCHAR2(255) NULL,				/* Name of the user (as it was at the moment of sharing) */
+	sharing_type      VARCHAR2(50) NOT NULL,    		/* Short name of sharing type */
+	task_description  VARCHAR2(4000),    				/* Purpose of sharing (what the other user should do with this document) */
+	creation_date     DATE,    							/* Date and time of sharing */
+	dvk_status_id     NUMBER(12),    					/* DEC status ID of document. Is used when document has been sent using DEC */
+	wf_status_id      NUMBER(12),    					/* Workflow status ID. Is used for feedback from recipient to sender. */
+	last_access_date  DATE    							/* Date and time the document was last accessed by recipient. */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
-COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING IS 'Dokumendi jagamise andmed.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.ID                IS 'Unikaalne identifikaator';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.document_id       IS 'Viide dokumendile';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.user_code         IS 'Viide kasutajale (isikukood), kellele dokument jagati';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.user_name         IS 'Kasutaja nimi (jagamise hetke seisuga)';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.sharing_type      IS 'Viide dokumendi jagamise tüübile. Viidatakse kasutades dokumendi tüübi lühinime.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.task_description  IS 'Jagamise eesmärk. Toiming, mida jagamise adressaat peaks dokumendiga tegema.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.creation_date     IS 'Jagamise kuupäev ja kellaaeg';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.dvk_status_id     IS 'Dokumendi DVK staatuse ID. Näitab, millises staatuses on jagatud dokument adressaadi DVK-s.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.wf_status_id      IS 'Töövoo staatuse ID';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.last_access_date  IS 'Kuupäev ja kellaaeg, millal viimati jagatud dokumendi andmeid vaadati.';
+COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING					IS 'Document sharing data';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.ID                IS 'Unique identifier';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.document_id       IS 'Reference to the document that was shared or sent';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.user_code         IS 'Referente to user (user code) to whom the document was shared or sent';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.user_name         IS 'Name of the user (as it was at the moment of sharing)';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.sharing_type      IS 'Short name of sharing type';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.task_description  IS 'Purpose of sharing (what the other user should do with this document)';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.creation_date     IS 'Date and time of sharing';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.dvk_status_id     IS 'DEC status ID of document. Is used when document has been sent using DEC';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.wf_status_id      IS 'Workflow status ID. Is used for feedback from recipient to sender.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.last_access_date  IS 'Date and time the document was last accessed by recipient.';
 
 CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING_TYPE
 (
-	short_name   VARCHAR2(50) NOT NULL,    /* Dokumendi jagamise tüübi lühinimi. (Nt. "sending", "sharing"). Lühinimed on inglisekeelsed. */
-	description  VARCHAR2(4000)    /* Dokumendi jagamise tüübi kirjeldus. */
+	short_name   VARCHAR2(50) NOT NULL,					/* Short name of sharing type */
+	description  VARCHAR2(4000)    						/* Description of sharing type */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
-COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING_TYPE IS 'Dokumendi jagamise tüübid: 
- 1. Allkirjastamine 2. Jagamine 3. DVK Saatmine 4. ADIT Saatmine';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING_TYPE.short_name   IS 'Dokumendi jagamise tüübi lühinimi. (Nt. "sending", "sharing"). Lühinimed on inglisekeelsed.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING_TYPE.description  IS 'Dokumendi jagamise tüübi kirjeldus.';
+COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING_TYPE				IS 'List of sharing types';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING_TYPE.short_name   IS 'Short name of sharing type';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING_TYPE.description  IS 'Description of sharing type';
 
 CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_TYPE
 (
-	short_name   VARCHAR2(50) NOT NULL,    /* Dokumendi tüübi lühinimi. */
-	description  VARCHAR2(4000)    /* Dokumendi tüübi kirjeldus. */
+	short_name   VARCHAR2(50) NOT NULL,    				/* Short name of document type */
+	description  VARCHAR2(4000)    						/* Description of document type */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
-COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_TYPE IS 'Dokumendi tüüpide kirjeldused. Neid liike lisandub töö käigus, kuid esialgselt on olemas: 
- 1. Kiri (letter) 2. Avaldus / Taotlus (application)';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_TYPE.short_name   IS 'Dokumendi tüübi lühinimi.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_TYPE.description  IS 'Dokumendi tüübi kirjeldus.';
+COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_TYPE				IS 'List of possible document types';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_TYPE.short_name   IS 'Short name of document type';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_TYPE.description  IS 'Description of document type';
 
 CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_WF_STATUS
 (
-	ID           NUMBER(12) NOT NULL,    /* Unikaalne identifikaator */
-	description  VARCHAR2(4000),    /* Töövoo staatuse kirjeldus */
-	name         VARCHAR2(50)    /* Dokumendi töövoo staatuse nimetus. */
+	ID           NUMBER(12) NOT NULL,    				/* Unique identifier of workflow status */
+	description  VARCHAR2(4000),    					/* Description of workflow status */
+	name         VARCHAR2(50)    						/* Name of workflow status */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
-COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_WF_STATUS IS 'Töövoo staatused. Staatused on järgmised: 
- 1. Puudub (lokaalse faili puhul) 2. Dokumente on puudu 3. Järjekorras 4. Ootel 5. Lõpetatud 6. Tagasi lükatud 7. Teha 8. Töötlemisel 9. Aktsepteeritud (võetud töösse) 10. Salvestatud 11. Arhiveeritud 12. Saadetud';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_WF_STATUS.ID           IS 'Unikaalne identifikaator';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_WF_STATUS.description  IS 'Töövoo staatuse kirjeldus';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_WF_STATUS.name         IS 'Dokumendi töövoo staatuse nimetus.';
+COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_WF_STATUS				 IS 'List of possible workflow statuses';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_WF_STATUS.ID           IS 'Unique identifier of workflow status';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_WF_STATUS.description  IS 'Description of workflow status';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_WF_STATUS.name         IS 'Name of workflow status';
 
 CREATE TABLE &&ADIT_SCHEMA..DOWNLOAD_REQUEST_LOG
 (
@@ -276,95 +273,94 @@ CREATE TABLE &&ADIT_SCHEMA..DOWNLOAD_REQUEST_LOG
 	organization_code              VARCHAR2(50)
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
-COMMENT ON TABLE &&ADIT_SCHEMA..DOWNLOAD_REQUEST_LOG IS 'Allalaadimispäringute logi. Siia tabelisse kirjutatakse andmed juhul kui käivitatakse üks järgmistest päringutest: 
- - getDocument (juhul kui päringu parameetri "kas tagastada ka failide sisu" väärtuseks on "jah") - getDocumentFile';
+COMMENT ON TABLE &&ADIT_SCHEMA..DOWNLOAD_REQUEST_LOG IS 'Log of file download requests. Log entries are added 
+here if one of following requests are executed: getDocument (if file contents were requested), getDocumentFile';
 
 CREATE TABLE &&ADIT_SCHEMA..ERROR_LOG
 (
 	ID                             NUMBER(18) NOT NULL,
-	document_id                    NUMBER(12),    /* Dokument, mille töötlemisel või millega seotud tegevuse ebaõnnestumisel viga tekkis. */
-	error_date                     DATE,    /* Vea tekkimise aeg */
-	remote_application_short_name  VARCHAR2(50),    /* Päringu teinud infosüsteemi lühinimi. */
-	user_code                      VARCHAR2(50),    /* Päringuga seotud isiku kood */
-	action_name                    VARCHAR2(255),    /* Päringu või toimingu nimi, mille täitmisel viga ilmnes. */
-	error_level                    VARCHAR2(50),    /* Vea raskusaste (FATAL, ERROR, WARNING) */
-	error_message                  VARCHAR2(4000)    /* Veateate sisu */
+	document_id                    NUMBER(12),    			/* ID of document that was requested or is elsehow related to failed request */
+	error_date                     DATE,    				/* Date and time when the error occured */
+	remote_application_short_name  VARCHAR2(50),    		/* Short name of application that executed the request */
+	user_code                      VARCHAR2(50),    		/* Code of user who executed the request */
+	action_name                    VARCHAR2(255),    		/* Name of failed request */
+	error_level                    VARCHAR2(50),    		/* Error level (FATAL, ERROR, WARNING) */
+	error_message                  VARCHAR2(4000)    		/* Error message */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
-COMMENT ON COLUMN &&ADIT_SCHEMA..ERROR_LOG.document_id                    IS 'Dokument, mille töötlemisel või millega seotud tegevuse ebaõnnestumisel viga tekkis.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..ERROR_LOG.error_date                     IS 'Vea tekkimise aeg';
-COMMENT ON COLUMN &&ADIT_SCHEMA..ERROR_LOG.remote_application_short_name  IS 'Päringu teinud infosüsteemi lühinimi.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..ERROR_LOG.user_code                      IS 'Päringuga seotud isiku kood';
-COMMENT ON COLUMN &&ADIT_SCHEMA..ERROR_LOG.action_name                    IS 'Päringu või toimingu nimi, mille täitmisel viga ilmnes.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..ERROR_LOG.error_level                    IS 'Vea raskusaste (FATAL, ERROR, WARNING)';
-COMMENT ON COLUMN &&ADIT_SCHEMA..ERROR_LOG.error_message                  IS 'Veateate sisu';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ERROR_LOG.document_id                    IS 'ID of document that was requested or is elsehow related to failed request';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ERROR_LOG.error_date                     IS 'Date and time when the error occured';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ERROR_LOG.remote_application_short_name  IS 'Short name of application that executed the request';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ERROR_LOG.user_code                      IS 'Code of user who executed the request';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ERROR_LOG.action_name                    IS 'Name of failed request';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ERROR_LOG.error_level                    IS 'Error level (FATAL, ERROR, WARNING)';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ERROR_LOG.error_message                  IS 'Error message';
 
 CREATE TABLE &&ADIT_SCHEMA..METADATA_REQUEST_LOG
 (
 	ID                             NUMBER(18) NOT NULL,
-	document_id                    NUMBER(12) NOT NULL,    /* Dokumendi ID, mida vaadati. */
-	request_date                   DATE,    /* Päringu tegemise aeg. */
-	remote_application_short_name  VARCHAR2(50),    /* Päringu teinud infosüsteemi lühinimi. */
-	user_code                      VARCHAR2(50),    /* Isik, kelle nimel päring tehti (kas eraisikuna või juriidilise isiku esindajana) */
-	organization_code              VARCHAR2(50)    /* Juriidilise isiku registrikood */
+	document_id                    NUMBER(12) NOT NULL,    	/* ID of document that was viewed */
+	request_date                   DATE,    				/* Date and time of request execution */
+	remote_application_short_name  VARCHAR2(50),    		/* Short name of application that executed the request */
+	user_code                      VARCHAR2(50),    		/* Code of person who executed the request */
+	organization_code              VARCHAR2(50)    			/* Code of organization that executed the request */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
-COMMENT ON TABLE &&ADIT_SCHEMA..METADATA_REQUEST_LOG IS 'Dokumendi ja metaandmete päringute logi. Andmed kirjutatakse siia tabelisse juhul kui käivitatakse üks järgmistest päringutest: 
- - getDocumentList - getDocument';
-COMMENT ON COLUMN &&ADIT_SCHEMA..METADATA_REQUEST_LOG.document_id                    IS 'Dokumendi ID, mida vaadati.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..METADATA_REQUEST_LOG.request_date                   IS 'Päringu tegemise aeg.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..METADATA_REQUEST_LOG.remote_application_short_name  IS 'Päringu teinud infosüsteemi lühinimi.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..METADATA_REQUEST_LOG.user_code                      IS 'Isik, kelle nimel päring tehti (kas eraisikuna või juriidilise isiku esindajana)';
-COMMENT ON COLUMN &&ADIT_SCHEMA..METADATA_REQUEST_LOG.organization_code              IS 'Juriidilise isiku registrikood';
+COMMENT ON TABLE &&ADIT_SCHEMA..METADATA_REQUEST_LOG								 IS 'Log of requests that return only document metadata.
+Execution of following requests is logged here: getDocumentList, getDocument';
+COMMENT ON COLUMN &&ADIT_SCHEMA..METADATA_REQUEST_LOG.document_id                    IS 'ID of document that was viewed';
+COMMENT ON COLUMN &&ADIT_SCHEMA..METADATA_REQUEST_LOG.request_date                   IS 'Date and time of request execution';
+COMMENT ON COLUMN &&ADIT_SCHEMA..METADATA_REQUEST_LOG.remote_application_short_name  IS 'Short name of application that executed the request';
+COMMENT ON COLUMN &&ADIT_SCHEMA..METADATA_REQUEST_LOG.user_code                      IS 'Code of person who executed the request';
+COMMENT ON COLUMN &&ADIT_SCHEMA..METADATA_REQUEST_LOG.organization_code              IS 'Code of organization that executed the request';
 
 CREATE TABLE &&ADIT_SCHEMA..NOTIFICATION_TYPE
 (
-	short_name   VARCHAR2(50) NOT NULL,    /* Teavituse tüübi lühinimi */
-	description  VARCHAR2(4000)    /* Teavituse tüübi kirjeldus. */
+	short_name   VARCHAR2(50) NOT NULL,    			/* Short name of notification type */
+	description  VARCHAR2(4000)    					/* Description of notification type */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
-COMMENT ON TABLE &&ADIT_SCHEMA..NOTIFICATION_TYPE IS 'Teavituste tüüpide andmed. Teavituse tübid on järgmised: 
- 1. Saatmine (send) 2. Jagamine (share) 3. Vaatamine (view) 4. Muutmine (modify) 5. Allkirjastamine (sign)';
-COMMENT ON COLUMN &&ADIT_SCHEMA..NOTIFICATION_TYPE.short_name   IS 'Teavituse tüübi lühinimi';
-COMMENT ON COLUMN &&ADIT_SCHEMA..NOTIFICATION_TYPE.description  IS 'Teavituse tüübi kirjeldus.';
+COMMENT ON TABLE &&ADIT_SCHEMA..NOTIFICATION_TYPE				IS 'List of possible notification types';
+COMMENT ON COLUMN &&ADIT_SCHEMA..NOTIFICATION_TYPE.short_name   IS 'Short name of notification type';
+COMMENT ON COLUMN &&ADIT_SCHEMA..NOTIFICATION_TYPE.description  IS 'Description of notification type';
 
 CREATE TABLE &&ADIT_SCHEMA..REMOTE_APPLICATION
 (
-	short_name         VARCHAR2(50) NOT NULL,    /* Infosüsteemi lühinimi */
-	name               VARCHAR2(50),    /* Infosüsteemi täispikk nimi */
-	organization_code  VARCHAR2(50) NOT NULL,    /* Infosüsteemi omaniku (asutuse) registrikood */
-	can_read           NUMBER(1) DEFAULT 0,    /* Näitab, kas infosüsteemil on üleüldine õigus rakenduse abil andmeid lugeda. */
-	can_write          NUMBER(1) DEFAULT 0    /* Näitab, kas infosüsteemil on üleüldine õigus rakenduse abil andmeid muuta. */
+	short_name         VARCHAR2(50) NOT NULL,    	/* Short name of application */
+	name               VARCHAR2(50),    			/* Full name of application */
+	organization_code  VARCHAR2(50) NOT NULL,    	/* Registry code of organization that is responsible for this application */
+	can_read           NUMBER(1) DEFAULT 0,    		/* Indicates whether or not this application is allowed to read data */
+	can_write          NUMBER(1) DEFAULT 0    		/* Indicates whether or not this application is allowed to modify data */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
-COMMENT ON TABLE &&ADIT_SCHEMA..REMOTE_APPLICATION IS 'Välised infosüsteemid.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..REMOTE_APPLICATION.short_name         IS 'Infosüsteemi lühinimi';
-COMMENT ON COLUMN &&ADIT_SCHEMA..REMOTE_APPLICATION.name               IS 'Infosüsteemi täispikk nimi';
-COMMENT ON COLUMN &&ADIT_SCHEMA..REMOTE_APPLICATION.organization_code  IS 'Infosüsteemi omaniku (asutuse) registrikood';
-COMMENT ON COLUMN &&ADIT_SCHEMA..REMOTE_APPLICATION.can_read           IS 'Näitab, kas infosüsteemil on üleüldine õigus rakenduse abil andmeid lugeda.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..REMOTE_APPLICATION.can_write          IS 'Näitab, kas infosüsteemil on üleüldine õigus rakenduse abil andmeid muuta.';
+COMMENT ON TABLE &&ADIT_SCHEMA..REMOTE_APPLICATION					   IS 'List of possible applications (portals) that use this database';
+COMMENT ON COLUMN &&ADIT_SCHEMA..REMOTE_APPLICATION.short_name         IS 'Short name of application';
+COMMENT ON COLUMN &&ADIT_SCHEMA..REMOTE_APPLICATION.name               IS 'Full name of application';
+COMMENT ON COLUMN &&ADIT_SCHEMA..REMOTE_APPLICATION.organization_code  IS 'Registry code of organization that is responsible for this application';
+COMMENT ON COLUMN &&ADIT_SCHEMA..REMOTE_APPLICATION.can_read           IS 'Indicates whether or not this application is allowed to read data';
+COMMENT ON COLUMN &&ADIT_SCHEMA..REMOTE_APPLICATION.can_write          IS 'Indicates whether or not this application is allowed to modify data';
 
 CREATE TABLE &&ADIT_SCHEMA..REQUEST_LOG
 (
 	ID                             NUMBER(18) NOT NULL,
-	request                        VARCHAR2(50),    /* Päringu nimi. Nt. "shareDocument" */
-	document_id                    NUMBER(12),    /* Dokumendi ID, millega tegevus läbi viidi */
-	request_date                   DATE,    /* Päringu tegemise aeg */
-	remote_application_short_name  VARCHAR2(50),    /* Päringu teinud infosüsteemi lühinimi */
-	user_code                      VARCHAR2(50),    /* Isik, kelle nimel päring tehti (kas eraisikuna või juriidilise isiku esindajana) */
-	organization_code              VARCHAR2(50),    /* Juriidilise isiku registrikood */
-	additional_information         VARCHAR2(4000)    /* Lisainfo päringu kohta. Nt. "saveDocumentFile" päringu puhul kirjutatakse siia ka manuse ID. */
+	request                        VARCHAR2(50),		/* Name of request (e.g. shareDocument) */
+	document_id                    NUMBER(12),    		/* ID of document that was involved in this request */
+	request_date                   DATE,    			/* Date and time of request execution */
+	remote_application_short_name  VARCHAR2(50),    	/* Short name of application that executed this request */
+	user_code                      VARCHAR2(50),    	/* Code of person who executed this request */
+	organization_code              VARCHAR2(50),    	/* Code of organization that executed this request */
+	additional_information         VARCHAR2(4000)    	/* Additional information about request. For example - in case of "saveDocumentFile" request SOAP attachment ID will be added here. */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
-COMMENT ON TABLE &&ADIT_SCHEMA..REQUEST_LOG IS 'Päringute tehtud muudatuste logi. Andmed kirjutatakse sellesse tabelisse juhul, kui käivitati üks järgmistest päringutest: 
- - saveDocument - saveDocumentFile - deleteDocumentFile - archieveDocument - deleteDocument - getDocumentHistory - sendDocument - shareDocument - unShareDocument - markDocumentViewed - prepareSignature - giveSiganture - modifyStatus';
-COMMENT ON COLUMN &&ADIT_SCHEMA..REQUEST_LOG.request                        IS 'Päringu nimi. Nt. "shareDocument"';
-COMMENT ON COLUMN &&ADIT_SCHEMA..REQUEST_LOG.document_id                    IS 'Dokumendi ID, millega tegevus läbi viidi';
-COMMENT ON COLUMN &&ADIT_SCHEMA..REQUEST_LOG.request_date                   IS 'Päringu tegemise aeg';
-COMMENT ON COLUMN &&ADIT_SCHEMA..REQUEST_LOG.remote_application_short_name  IS 'Päringu teinud infosüsteemi lühinimi';
-COMMENT ON COLUMN &&ADIT_SCHEMA..REQUEST_LOG.user_code                      IS 'Isik, kelle nimel päring tehti (kas eraisikuna või juriidilise isiku esindajana)';
-COMMENT ON COLUMN &&ADIT_SCHEMA..REQUEST_LOG.organization_code              IS 'Juriidilise isiku registrikood';
-COMMENT ON COLUMN &&ADIT_SCHEMA..REQUEST_LOG.additional_information         IS 'Lisainfo päringu kohta. Nt. "saveDocumentFile" päringu puhul kirjutatakse siia ka manuse ID.';
+COMMENT ON TABLE &&ADIT_SCHEMA..REQUEST_LOG									IS 'Log of requests that are used to modify data.
+This table contains log entries about following requests: saveDocument, saveDocumentFile, deleteDocumentFile, archieveDocument, deleteDocument, getDocumentHistory, sendDocument, shareDocument, unShareDocument, markDocumentViewed, prepareSignature, confirmSiganture, modifyStatus';
+COMMENT ON COLUMN &&ADIT_SCHEMA..REQUEST_LOG.request                        IS 'Name of request (e.g. shareDocument)';
+COMMENT ON COLUMN &&ADIT_SCHEMA..REQUEST_LOG.document_id                    IS 'ID of document that was involved in this request';
+COMMENT ON COLUMN &&ADIT_SCHEMA..REQUEST_LOG.request_date                   IS 'Date and time of request execution';
+COMMENT ON COLUMN &&ADIT_SCHEMA..REQUEST_LOG.remote_application_short_name  IS 'Short name of application that executed this request';
+COMMENT ON COLUMN &&ADIT_SCHEMA..REQUEST_LOG.user_code                      IS 'Code of person who executed this request';
+COMMENT ON COLUMN &&ADIT_SCHEMA..REQUEST_LOG.organization_code              IS 'Code of organization that executed this request';
+COMMENT ON COLUMN &&ADIT_SCHEMA..REQUEST_LOG.additional_information         IS 'Additional information about request. For example - in case of "saveDocumentFile" request SOAP attachment ID will be added here.';
 
 CREATE TABLE &&ADIT_SCHEMA..SIGNATURE
 (
