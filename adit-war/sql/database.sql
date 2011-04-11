@@ -7,33 +7,33 @@
 /* Create Tables */
 CREATE TABLE &&ADIT_SCHEMA..ACCESS_RESTRICTION
 (
-	ID                  NUMBER(18) NOT NULL,	
-	remote_application  VARCHAR2(50) NOT NULL,  /* Short name of remote application that uses ADIT for datastore. */
-	user_code           VARCHAR2(50) NOT NULL,  /* Personal ID Code of user. */
-	restriction         VARCHAR2(50)    		/* Type of restriction to be applied. "WRITE" - user/application cannot add, update or delete data; "READ" - user/application cannot read, add, update or delete any data. */
+    ID                  NUMBER(18) NOT NULL,
+    remote_application  VARCHAR2(50) NOT NULL,                 /* Short name of remote application that uses ADIT for datastore. */
+    user_code           VARCHAR2(50) NOT NULL,                 /* Personal ID Code of user. */
+    restriction         VARCHAR2(50)                           /* Type of restriction to be applied. "WRITE" - user/application cannot add, update or delete data; "READ" - user/application cannot read, add, update or delete any data. */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
-COMMENT ON TABLE &&ADIT_SCHEMA..ACCESS_RESTRICTION IS 'Access restrictions for user-application combination. Infosüsteemidele saab määrata piiranguid kasutajate nimel tegevuste läbi viimiseks rakenduses.';
+COMMENT ON TABLE &&ADIT_SCHEMA..ACCESS_RESTRICTION                      IS 'Access restrictions for user-application combination. Infosüsteemidele saab määrata piiranguid kasutajate nimel tegevuste läbi viimiseks rakenduses.';
 COMMENT ON COLUMN &&ADIT_SCHEMA..ACCESS_RESTRICTION.remote_application  IS 'Short name of remote application that uses ADIT for datastore.';
 COMMENT ON COLUMN &&ADIT_SCHEMA..ACCESS_RESTRICTION.user_code           IS 'Personal ID Code of user.';
 COMMENT ON COLUMN &&ADIT_SCHEMA..ACCESS_RESTRICTION.restriction         IS 'Type of restriction to be applied. "WRITE" - user/application cannot add, update or delete data; "READ" - user/application cannot read, add, update or delete any data.';
 
 CREATE TABLE &&ADIT_SCHEMA..ADIT_LOG
 (
-	ID                             NUMBER(18) NOT NULL,
-	table_name                     VARCHAR2(50),	/* Name of table in which data was modified */
-	column_name                    VARCHAR2(50),    /* Name of column in which data was modified */
-	old_value                      VARCHAR2(4000),	/* Old value */
-	new_value                      VARCHAR2(4000),	/* New value */
-	log_date                       DATE,			/* Date and time the data was modified */
-	primary_key_value			   VARCHAR2(100),	/* Primary key value of changed record */
-	remote_application_short_name  VARCHAR2(50),	/* Application that modified data */
-	xtee_user_code                 VARCHAR2(50),	/* Personal ID code from X-Road request */
-	xtee_institution_code          VARCHAR2(50),	/* Organization code from X-Road request */
-	db_user                        VARCHAR2(50)		/* Database user name */
+    ID                             NUMBER(18) NOT NULL,
+    table_name                     VARCHAR2(50),               /* Name of table in which data was modified */
+    column_name                    VARCHAR2(50),               /* Name of column in which data was modified */
+    old_value                      VARCHAR2(4000),             /* Old value */
+    new_value                      VARCHAR2(4000),             /* New value */
+    log_date                       DATE,                       /* Date and time the data was modified */
+    primary_key_value              VARCHAR2(100),              /* Primary key value of changed record */
+    remote_application_short_name  VARCHAR2(50),               /* Application that modified data */
+    xtee_user_code                 VARCHAR2(50),               /* Personal ID code from X-Road request */
+    xtee_institution_code          VARCHAR2(50),               /* Organization code from X-Road request */
+    db_user                        VARCHAR2(50)                /* Database user name */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
-COMMENT ON TABLE &&ADIT_SCHEMA..ADIT_LOG IS 'Contains log of all data changes in database (except FILE_DATA column in DOCUMENT_FILES table).';
+COMMENT ON TABLE &&ADIT_SCHEMA..ADIT_LOG                                 IS 'Contains log of all data changes in database (except FILE_DATA column in DOCUMENT_FILES table).';
 COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_LOG.table_name                     IS 'Name of table in which data was modified';
 COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_LOG.column_name                    IS 'Name of column in which data was modified';
 COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_LOG.old_value                      IS 'Old value';
@@ -47,18 +47,18 @@ COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_LOG.db_user                        IS 'Dat
 
 CREATE TABLE &&ADIT_SCHEMA..ADIT_USER
 (
-	user_code                   VARCHAR2(50) NOT NULL,	/* Users personal ID code or registry code including country prefix. For example "EE38407089945". */
-	full_name                   VARCHAR2(255),			/* Users full name */
-	usertype                    VARCHAR2(50) NOT NULL,	/* Reference to user type */
-	active                      NUMBER(1) DEFAULT 1,	/* Indicates wheather or not the user is active. "1" = active, "0" = inactive. */
-	dvk_org_code                VARCHAR2(50),			/* This column contains a value only if user uses DEC to send and receive documents. Contains registry code of usesrs DEC organization. */
-	dvk_subdivision_short_name  VARCHAR2(50),			/* This column contains a value only if user uses DEC to send and receive documents. Contains short name of users DEC subdivision. */
-	dvk_occupation_short_name   VARCHAR2(50),			/* This column contains a value only if user uses DEC to send and receive documents. Contains short name of users DEC occupation. */
-	disk_quota                  NUMBER(18),				/* User disk quota in bytes. Disk quota configured here overrides disk quota values configured on user type or application levels. */
-	deactivation_date			DATE					/* Date and time when user account was deactivated */
+    user_code                   VARCHAR2(50) NOT NULL,         /* Users personal ID code or registry code including country prefix. For example "EE38407089945". */
+    full_name                   VARCHAR2(255),                 /* Users full name */
+    usertype                    VARCHAR2(50) NOT NULL,         /* Reference to user type */
+    active                      NUMBER(1) DEFAULT 1,           /* Indicates wheather or not the user is active. "1" = active, "0" = inactive. */
+    dvk_org_code                VARCHAR2(50),                  /* This column contains a value only if user uses DEC to send and receive documents. Contains registry code of usesrs DEC organization. */
+    dvk_subdivision_short_name  VARCHAR2(50),                  /* This column contains a value only if user uses DEC to send and receive documents. Contains short name of users DEC subdivision. */
+    dvk_occupation_short_name   VARCHAR2(50),                  /* This column contains a value only if user uses DEC to send and receive documents. Contains short name of users DEC occupation. */
+    disk_quota                  NUMBER(18),                    /* User disk quota in bytes. Disk quota configured here overrides disk quota values configured on user type or application levels. */
+    deactivation_date           DATE                           /* Date and time when user account was deactivated */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
-COMMENT ON TABLE &&ADIT_SCHEMA..ADIT_USER IS 'User account data. User account can belong to a person (identified by personal ID code) or to an organization (identified by registry code).';
+COMMENT ON TABLE &&ADIT_SCHEMA..ADIT_USER                              IS 'User account data. User account can belong to a person (identified by personal ID code) or to an organization (identified by registry code).';
 COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_USER.user_code                   IS 'Users personal ID code or registry code including country prefix. For example "EE38407089945".';
 COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_USER.full_name                   IS 'Users full name';
 COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_USER.usertype                    IS 'Reference to user type';
@@ -71,32 +71,32 @@ COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_USER.deactivation_date           IS 'Date 
 
 CREATE TABLE &&ADIT_SCHEMA..DOCUMENT
 (
-	ID                      NUMBER(12) NOT NULL,        /* Unique identifier */
-	guid                    VARCHAR2(50),               /* Documents globally unique identifier. If document was received from DEC then GUID comes from DEC. If document is created in ADIT then GUID will be generated by ADIT. */
-	title                   VARCHAR2(255),              /* Document title */
-	type                    VARCHAR2(50) NOT NULL,		/* Short name of document type */
-	creator_code            VARCHAR2(50) NOT NULL,      /* Personal ID code or registry code of document creator */
-	creator_name            VARCHAR2(255) NULL,         /* Document creators name (as it was when document was created) */
-	creator_user_code       VARCHAR2(50) NULL,          /* Personal ID code of document creator (if document creator is an organization) */
-	creator_user_name       VARCHAR2(255) NULL,         /* Name of the person who created this document (if document creator is an organization) */
-	creation_date           DATE,                       /* Document creation date and time */
-	remote_application      VARCHAR2(50),               /* Short name of application that was used to add this document */
-	last_modified_date      DATE,                       /* Date and time of last modification */
-	document_dvk_status_id  NUMBER(12),                 /* DEC status identifier if document is received or sent using DEC */
-	dvk_id                  NUMBER(12),                 /* DEC identifier if document was received from DEC */
-	document_wf_status_id   NUMBER(12),                 /* Document workflow status ID */
-	parent_id               NUMBER(12),                 /* Original document ID. Is used to reference the original document if for example current document is a new version of existing document. */
-	locked                  NUMBER(1) DEFAULT 0,        /* Indicates if this document is locked (cannot be modified). "1" = locked, "0" = not locked. */
-	locking_date            DATE,                       /* Date and time of locking */
-	signable                NUMBER(1) DEFAULT 0,        /* Indicates if this document can be signed. "1" = can be signed, "0" = cannot be signed. */
-	deflated                NUMBER(1) DEFAULT 0,        /* Indicates if this document is deflated (file contents removed). "1" = deflated, "0" = not deflated. */
-	deflate_date            DATE,                       /* Date and time of deflation */
-	deleted                 NUMBER(1),                  /* Indicates if this document is deleted. "1" = deleted, "0" = not deleted. */
-	invisible_to_owner		NUMBER(1,0) NULL,           /* Indicates if this document has been made invisible to its owner. Is used when document has been sent to someone else and owner wants to delete it from his/her own view. */
-	signed					NUMBER(1,0) NULL            /* Indicates if this document has been signed. */
+    ID                      NUMBER(12) NOT NULL,        /* Unique identifier */
+    guid                    VARCHAR2(50),               /* Documents globally unique identifier. If document was received from DEC then GUID comes from DEC. If document is created in ADIT then GUID will be generated by ADIT. */
+    title                   VARCHAR2(255),              /* Document title */
+    type                    VARCHAR2(50) NOT NULL,      /* Short name of document type */
+    creator_code            VARCHAR2(50) NOT NULL,      /* Personal ID code or registry code of document creator */
+    creator_name            VARCHAR2(255) NULL,         /* Document creators name (as it was when document was created) */
+    creator_user_code       VARCHAR2(50) NULL,          /* Personal ID code of document creator (if document creator is an organization) */
+    creator_user_name       VARCHAR2(255) NULL,         /* Name of the person who created this document (if document creator is an organization) */
+    creation_date           DATE,                       /* Document creation date and time */
+    remote_application      VARCHAR2(50),               /* Short name of application that was used to add this document */
+    last_modified_date      DATE,                       /* Date and time of last modification */
+    document_dvk_status_id  NUMBER(12),                 /* DEC status identifier if document is received or sent using DEC */
+    dvk_id                  NUMBER(12),                 /* DEC identifier if document was received from DEC */
+    document_wf_status_id   NUMBER(12),                 /* Document workflow status ID */
+    parent_id               NUMBER(12),                 /* Original document ID. Is used to reference the original document if for example current document is a new version of existing document. */
+    locked                  NUMBER(1) DEFAULT 0,        /* Indicates if this document is locked (cannot be modified). "1" = locked, "0" = not locked. */
+    locking_date            DATE,                       /* Date and time of locking */
+    signable                NUMBER(1) DEFAULT 0,        /* Indicates if this document can be signed. "1" = can be signed, "0" = cannot be signed. */
+    deflated                NUMBER(1) DEFAULT 0,        /* Indicates if this document is deflated (file contents removed). "1" = deflated, "0" = not deflated. */
+    deflate_date            DATE,                       /* Date and time of deflation */
+    deleted                 NUMBER(1),                  /* Indicates if this document is deleted. "1" = deleted, "0" = not deleted. */
+    invisible_to_owner      NUMBER(1,0) NULL,           /* Indicates if this document has been made invisible to its owner. Is used when document has been sent to someone else and owner wants to delete it from his/her own view. */
+    signed                  NUMBER(1,0) NULL            /* Indicates if this document has been signed. */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
-COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT IS 'Document data';
+COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT                          IS 'Document data';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.ID                      IS 'Unique identifier';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.guid                    IS 'Documents globally unique identifier. If document was received from DEC then GUID comes from DEC. If document is created in ADIT then GUID will be generated by ADIT.';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.title                   IS 'Document title';
@@ -124,8 +124,8 @@ COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.signed                  IS 'Indicates 
 
 CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_DVK_STATUS
 (
-	ID           NUMBER(12) NOT NULL,                   /* Unique identifier of DEC status */
-	description  VARCHAR2(4000)                         /* Status description */
+    ID           NUMBER(12) NOT NULL,                   /* Unique identifier of DEC status */
+    description  VARCHAR2(4000)                         /* Status description */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
 COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_DVK_STATUS IS 'Document DEC status list (same values as in DEC). There are following statuses: 100 = Not set, 101 = Sending, 102 = Sent, 103 = Canceled';
@@ -134,50 +134,50 @@ COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_DVK_STATUS.description  IS 'Status des
 
 CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_FILE
 (
-	ID               			NUMBER(12) NOT NULL,               /* Unique identifier */
-	document_id      			NUMBER(12) NOT NULL,               /* ID of document this file belongs to */
-	file_name        			VARCHAR2(255) NOT NULL,            /* File name */
-	content_type     			VARCHAR2(255),                     /* MIME type of file */
-	description      			VARCHAR2(4000),                    /* File description */
-	file_data        			BLOB,                              /* File contents (binary data) */
-	file_size_bytes  			NUMBER(38),                        /* File size in bytes */
-	deleted          			NUMBER(1) DEFAULT 0,               /* Indicates if this file is deleted (contents removed) */
-	document_file_type_id		NUMBER(18) DEFAULT (1) NOT NULL,   /* File type ID */
-	file_data_in_ddoc			NUMBER(1,0) NULL,                  /* Shows whether or not file contents should be aquired from signature container */
-	ddoc_datafile_id			VARCHAR(5) NULL,                   /* ID of corresponding DataFile in signature container */
-	ddoc_datafile_start_offset 	NUMBER(18) NULL,                   /* First character index of current file in corresponding signature container */
-	ddoc_datafile_end_offset 	NUMBER(18) NULL                    /* Last character index of current file in corresponding signature container */
+    ID                           NUMBER(12) NOT NULL,               /* Unique identifier */
+    document_id                  NUMBER(12) NOT NULL,               /* ID of document this file belongs to */
+    file_name                    VARCHAR2(255) NOT NULL,            /* File name */
+    content_type                 VARCHAR2(255),                     /* MIME type of file */
+    description                  VARCHAR2(4000),                    /* File description */
+    file_data                    BLOB,                              /* File contents (binary data) */
+    file_size_bytes              NUMBER(38),                        /* File size in bytes */
+    deleted                      NUMBER(1) DEFAULT 0,               /* Indicates if this file is deleted (contents removed) */
+    document_file_type_id        NUMBER(18) DEFAULT (1) NOT NULL,   /* File type ID */
+    file_data_in_ddoc            NUMBER(1,0) NULL,                  /* Shows whether or not file contents should be aquired from signature container */
+    ddoc_datafile_id             VARCHAR(5) NULL,                   /* ID of corresponding DataFile in signature container */
+    ddoc_datafile_start_offset   NUMBER(18) NULL,                   /* First character index of current file in corresponding signature container */
+    ddoc_datafile_end_offset     NUMBER(18) NULL                    /* Last character index of current file in corresponding signature container */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
-COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_FILE 								IS 'Document files';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.ID               			IS 'Unique identifier';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.document_id      			IS 'ID of document this file belongs to';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.file_name        			IS 'File name';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.content_type     			IS 'MIME type of file';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.description      			IS 'File description';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.file_data        			IS 'File contents (binary data)';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.file_size_bytes  			IS 'File size in bytes';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.deleted          			IS 'Indicates if this file is deleted (contents removed)';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.document_file_type_id 		IS 'File type ID';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.file_data_in_ddoc 			IS 'Shows whether or not file contents should be aquired from signature container';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.ddoc_datafile_id 			IS 'ID of corresponding DataFile in signature container';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.ddoc_datafile_start_offset 	IS 'First character index of current file in corresponding signature container';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.ddoc_datafile_end_offset 	IS 'Last character index of current file in corresponding signature container';
+COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_FILE                               IS 'Document files';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.ID                           IS 'Unique identifier';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.document_id                  IS 'ID of document this file belongs to';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.file_name                    IS 'File name';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.content_type                 IS 'MIME type of file';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.description                  IS 'File description';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.file_data                    IS 'File contents (binary data)';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.file_size_bytes              IS 'File size in bytes';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.deleted                      IS 'Indicates if this file is deleted (contents removed)';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.document_file_type_id        IS 'File type ID';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.file_data_in_ddoc            IS 'Shows whether or not file contents should be aquired from signature container';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.ddoc_datafile_id             IS 'ID of corresponding DataFile in signature container';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.ddoc_datafile_start_offset   IS 'First character index of current file in corresponding signature container';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.ddoc_datafile_end_offset     IS 'Last character index of current file in corresponding signature container';
 
 CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_HISTORY
 (
-	ID                     NUMBER(12) NOT NULL,         /* Unique identifier */
-	document_id            NUMBER(12) NOT NULL,         /* ID of related document */
-	document_history_type  VARCHAR2(50),                /* Short name of history type */
-	description            VARCHAR2(4000),              /* Detailed description of document history event */
-	event_date             DATE,                        /* Date and time of history event */
-	user_code              VARCHAR2(50),                /* Personal ID code or registry code of user who performed the action */
-	user_name              VARCHAR2(255),               /* Name of user who performed the action (at the moment of perforing the action). */
-	remote_application     VARCHAR2(50),                /* Short name of application that was used to perform the action */
-	notification_status    VARCHAR2(50),                /* Notification sending status. If notification is not sent then "SAADA", if notification is sent then "SAADETUD". If no notification has to be sent then empty (NULL). */
-	xtee_notification_id   VARCHAR2(50),                /* Notification ID from notification calendar (teavituskalender) X-Road database. This column has a value only if notification was successfully sent to notification calendar. */
-	xtee_user_code         VARCHAR2(50),                /* Personal ID code of person who executed the X-Road request. It is intended to identify the person who performed the action if the action was performed under organization account. */
-	xtee_user_name         VARCHAR2(255)                /* Personal ID code of person who executed the X-Road request (if it waspossible to find out the name) */
+    ID                     NUMBER(12) NOT NULL,         /* Unique identifier */
+    document_id            NUMBER(12) NOT NULL,         /* ID of related document */
+    document_history_type  VARCHAR2(50),                /* Short name of history type */
+    description            VARCHAR2(4000),              /* Detailed description of document history event */
+    event_date             DATE,                        /* Date and time of history event */
+    user_code              VARCHAR2(50),                /* Personal ID code or registry code of user who performed the action */
+    user_name              VARCHAR2(255),               /* Name of user who performed the action (at the moment of perforing the action). */
+    remote_application     VARCHAR2(50),                /* Short name of application that was used to perform the action */
+    notification_status    VARCHAR2(50),                /* Notification sending status. If notification is not sent then "SAADA", if notification is sent then "SAADETUD". If no notification has to be sent then empty (NULL). */
+    xtee_notification_id   VARCHAR2(50),                /* Notification ID from notification calendar (teavituskalender) X-Road database. This column has a value only if notification was successfully sent to notification calendar. */
+    xtee_user_code         VARCHAR2(50),                /* Personal ID code of person who executed the X-Road request. It is intended to identify the person who performed the action if the action was performed under organization account. */
+    xtee_user_name         VARCHAR2(255)                /* Personal ID code of person who executed the X-Road request (if it waspossible to find out the name) */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
 COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_HISTORY                         IS 'Document history. History records will be created when some action is performed on a document.';
@@ -196,8 +196,8 @@ COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY.xtee_user_name         IS 'Per
 
 CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_HISTORY_TYPE
 (
-	short_name   VARCHAR2(50) NOT NULL,                 /* Name of history event type. e.g. "esmane loomine" or "dokumendi muutmine". */
-	description  VARCHAR2(4000)                         /* Description of history event type */
+    short_name   VARCHAR2(50) NOT NULL,                 /* Name of history event type. e.g. "esmane loomine" or "dokumendi muutmine". */
+    description  VARCHAR2(4000)                         /* Description of history event type */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
 COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_HISTORY_TYPE               IS 'History event types';
@@ -206,19 +206,19 @@ COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_HISTORY_TYPE.description  IS 'Descript
 
 CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING
 (
-	ID                NUMBER(12) NOT NULL,
-	document_id       NUMBER(12) NOT NULL,				/* Reference to the document that was shared or sent */
-	user_code         VARCHAR2(50) NOT NULL,    		/* Referente to user (user code) to whom the document was shared or sent */
-	user_name		  VARCHAR2(255) NULL,				/* Name of the user (as it was at the moment of sharing) */
-	sharing_type      VARCHAR2(50) NOT NULL,    		/* Short name of sharing type */
-	task_description  VARCHAR2(4000),    				/* Purpose of sharing (what the other user should do with this document) */
-	creation_date     DATE,    							/* Date and time of sharing */
-	dvk_status_id     NUMBER(12),    					/* DEC status ID of document. Is used when document has been sent using DEC */
-	wf_status_id      NUMBER(12),    					/* Workflow status ID. Is used for feedback from recipient to sender. */
-	last_access_date  DATE    							/* Date and time the document was last accessed by recipient. */
+    ID                NUMBER(12) NOT NULL,
+    document_id       NUMBER(12) NOT NULL,         /* Reference to the document that was shared or sent */
+    user_code         VARCHAR2(50) NOT NULL,       /* Referente to user (user code) to whom the document was shared or sent */
+    user_name         VARCHAR2(255) NULL,          /* Name of the user (as it was at the moment of sharing) */
+    sharing_type      VARCHAR2(50) NOT NULL,       /* Short name of sharing type */
+    task_description  VARCHAR2(4000),              /* Purpose of sharing (what the other user should do with this document) */
+    creation_date     DATE,                        /* Date and time of sharing */
+    dvk_status_id     NUMBER(12),                  /* DEC status ID of document. Is used when document has been sent using DEC */
+    wf_status_id      NUMBER(12),                  /* Workflow status ID. Is used for feedback from recipient to sender. */
+    last_access_date  DATE                         /* Date and time the document was last accessed by recipient. */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
-COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING					IS 'Document sharing data';
+COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING                    IS 'Document sharing data';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.ID                IS 'Unique identifier';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.document_id       IS 'Reference to the document that was shared or sent';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.user_code         IS 'Referente to user (user code) to whom the document was shared or sent';
@@ -232,45 +232,45 @@ COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.last_access_date  IS 'Date and
 
 CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING_TYPE
 (
-	short_name   VARCHAR2(50) NOT NULL,					/* Short name of sharing type */
-	description  VARCHAR2(4000)    						/* Description of sharing type */
+    short_name   VARCHAR2(50) NOT NULL,                    /* Short name of sharing type */
+    description  VARCHAR2(4000)                            /* Description of sharing type */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
-COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING_TYPE				IS 'List of sharing types';
+COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING_TYPE               IS 'List of sharing types';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING_TYPE.short_name   IS 'Short name of sharing type';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING_TYPE.description  IS 'Description of sharing type';
 
 CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_TYPE
 (
-	short_name   VARCHAR2(50) NOT NULL,    				/* Short name of document type */
-	description  VARCHAR2(4000)    						/* Description of document type */
+    short_name   VARCHAR2(50) NOT NULL,                    /* Short name of document type */
+    description  VARCHAR2(4000)                            /* Description of document type */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
-COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_TYPE				IS 'List of possible document types';
+COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_TYPE               IS 'List of possible document types';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_TYPE.short_name   IS 'Short name of document type';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_TYPE.description  IS 'Description of document type';
 
 CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_WF_STATUS
 (
-	ID           NUMBER(12) NOT NULL,    				/* Unique identifier of workflow status */
-	description  VARCHAR2(4000),    					/* Description of workflow status */
-	name         VARCHAR2(50)    						/* Name of workflow status */
+    ID           NUMBER(12) NOT NULL,                  /* Unique identifier of workflow status */
+    description  VARCHAR2(4000),                       /* Description of workflow status */
+    name         VARCHAR2(50)                          /* Name of workflow status */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
-COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_WF_STATUS				 IS 'List of possible workflow statuses';
+COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_WF_STATUS               IS 'List of possible workflow statuses';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_WF_STATUS.ID           IS 'Unique identifier of workflow status';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_WF_STATUS.description  IS 'Description of workflow status';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_WF_STATUS.name         IS 'Name of workflow status';
 
 CREATE TABLE &&ADIT_SCHEMA..DOWNLOAD_REQUEST_LOG
 (
-	ID                             NUMBER(18) NOT NULL,
-	document_id                    NUMBER(12),
-	document_file_id               NUMBER(12),
-	request_date                   DATE,
-	remote_application_short_name  VARCHAR2(50),
-	user_code                      VARCHAR2(50),
-	organization_code              VARCHAR2(50)
+    ID                             NUMBER(18) NOT NULL,
+    document_id                    NUMBER(12),
+    document_file_id               NUMBER(12),
+    request_date                   DATE,
+    remote_application_short_name  VARCHAR2(50),
+    user_code                      VARCHAR2(50),
+    organization_code              VARCHAR2(50)
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
 COMMENT ON TABLE &&ADIT_SCHEMA..DOWNLOAD_REQUEST_LOG IS 'Log of file download requests. Log entries are added 
@@ -278,14 +278,14 @@ here if one of following requests are executed: getDocument (if file contents we
 
 CREATE TABLE &&ADIT_SCHEMA..ERROR_LOG
 (
-	ID                             NUMBER(18) NOT NULL,
-	document_id                    NUMBER(12),    			/* ID of document that was requested or is elsehow related to failed request */
-	error_date                     DATE,    				/* Date and time when the error occured */
-	remote_application_short_name  VARCHAR2(50),    		/* Short name of application that executed the request */
-	user_code                      VARCHAR2(50),    		/* Code of user who executed the request */
-	action_name                    VARCHAR2(255),    		/* Name of failed request */
-	error_level                    VARCHAR2(50),    		/* Error level (FATAL, ERROR, WARNING) */
-	error_message                  VARCHAR2(4000)    		/* Error message */
+    ID                             NUMBER(18) NOT NULL,
+    document_id                    NUMBER(12),             /* ID of document that was requested or is elsehow related to failed request */
+    error_date                     DATE,                   /* Date and time when the error occured */
+    remote_application_short_name  VARCHAR2(50),           /* Short name of application that executed the request */
+    user_code                      VARCHAR2(50),           /* Code of user who executed the request */
+    action_name                    VARCHAR2(255),          /* Name of failed request */
+    error_level                    VARCHAR2(50),           /* Error level (FATAL, ERROR, WARNING) */
+    error_message                  VARCHAR2(4000)          /* Error message */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
 COMMENT ON COLUMN &&ADIT_SCHEMA..ERROR_LOG.document_id                    IS 'ID of document that was requested or is elsehow related to failed request';
@@ -298,15 +298,15 @@ COMMENT ON COLUMN &&ADIT_SCHEMA..ERROR_LOG.error_message                  IS 'Er
 
 CREATE TABLE &&ADIT_SCHEMA..METADATA_REQUEST_LOG
 (
-	ID                             NUMBER(18) NOT NULL,
-	document_id                    NUMBER(12) NOT NULL,    	/* ID of document that was viewed */
-	request_date                   DATE,    				/* Date and time of request execution */
-	remote_application_short_name  VARCHAR2(50),    		/* Short name of application that executed the request */
-	user_code                      VARCHAR2(50),    		/* Code of person who executed the request */
-	organization_code              VARCHAR2(50)    			/* Code of organization that executed the request */
+    ID                             NUMBER(18) NOT NULL,
+    document_id                    NUMBER(12) NOT NULL,    /* ID of document that was viewed */
+    request_date                   DATE,                   /* Date and time of request execution */
+    remote_application_short_name  VARCHAR2(50),           /* Short name of application that executed the request */
+    user_code                      VARCHAR2(50),           /* Code of person who executed the request */
+    organization_code              VARCHAR2(50)            /* Code of organization that executed the request */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
-COMMENT ON TABLE &&ADIT_SCHEMA..METADATA_REQUEST_LOG								 IS 'Log of requests that return only document metadata.
+COMMENT ON TABLE &&ADIT_SCHEMA..METADATA_REQUEST_LOG                                 IS 'Log of requests that return only document metadata.
 Execution of following requests is logged here: getDocumentList, getDocument';
 COMMENT ON COLUMN &&ADIT_SCHEMA..METADATA_REQUEST_LOG.document_id                    IS 'ID of document that was viewed';
 COMMENT ON COLUMN &&ADIT_SCHEMA..METADATA_REQUEST_LOG.request_date                   IS 'Date and time of request execution';
@@ -316,24 +316,24 @@ COMMENT ON COLUMN &&ADIT_SCHEMA..METADATA_REQUEST_LOG.organization_code         
 
 CREATE TABLE &&ADIT_SCHEMA..NOTIFICATION_TYPE
 (
-	short_name   VARCHAR2(50) NOT NULL,    			/* Short name of notification type */
-	description  VARCHAR2(4000)    					/* Description of notification type */
+    short_name   VARCHAR2(50) NOT NULL,                /* Short name of notification type */
+    description  VARCHAR2(4000)                        /* Description of notification type */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
-COMMENT ON TABLE &&ADIT_SCHEMA..NOTIFICATION_TYPE				IS 'List of possible notification types';
+COMMENT ON TABLE &&ADIT_SCHEMA..NOTIFICATION_TYPE               IS 'List of possible notification types';
 COMMENT ON COLUMN &&ADIT_SCHEMA..NOTIFICATION_TYPE.short_name   IS 'Short name of notification type';
 COMMENT ON COLUMN &&ADIT_SCHEMA..NOTIFICATION_TYPE.description  IS 'Description of notification type';
 
 CREATE TABLE &&ADIT_SCHEMA..REMOTE_APPLICATION
 (
-	short_name         VARCHAR2(50) NOT NULL,    	/* Short name of application */
-	name               VARCHAR2(50),    			/* Full name of application */
-	organization_code  VARCHAR2(50) NOT NULL,    	/* Registry code of organization that is responsible for this application */
-	can_read           NUMBER(1) DEFAULT 0,    		/* Indicates whether or not this application is allowed to read data */
-	can_write          NUMBER(1) DEFAULT 0    		/* Indicates whether or not this application is allowed to modify data */
+    short_name         VARCHAR2(50) NOT NULL,        /* Short name of application */
+    name               VARCHAR2(50),                 /* Full name of application */
+    organization_code  VARCHAR2(50) NOT NULL,        /* Registry code of organization that is responsible for this application */
+    can_read           NUMBER(1) DEFAULT 0,          /* Indicates whether or not this application is allowed to read data */
+    can_write          NUMBER(1) DEFAULT 0           /* Indicates whether or not this application is allowed to modify data */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
-COMMENT ON TABLE &&ADIT_SCHEMA..REMOTE_APPLICATION					   IS 'List of possible applications (portals) that use this database';
+COMMENT ON TABLE &&ADIT_SCHEMA..REMOTE_APPLICATION                     IS 'List of possible applications (portals) that use this database';
 COMMENT ON COLUMN &&ADIT_SCHEMA..REMOTE_APPLICATION.short_name         IS 'Short name of application';
 COMMENT ON COLUMN &&ADIT_SCHEMA..REMOTE_APPLICATION.name               IS 'Full name of application';
 COMMENT ON COLUMN &&ADIT_SCHEMA..REMOTE_APPLICATION.organization_code  IS 'Registry code of organization that is responsible for this application';
@@ -342,17 +342,17 @@ COMMENT ON COLUMN &&ADIT_SCHEMA..REMOTE_APPLICATION.can_write          IS 'Indic
 
 CREATE TABLE &&ADIT_SCHEMA..REQUEST_LOG
 (
-	ID                             NUMBER(18) NOT NULL,
-	request                        VARCHAR2(50),		/* Name of request (e.g. shareDocument) */
-	document_id                    NUMBER(12),    		/* ID of document that was involved in this request */
-	request_date                   DATE,    			/* Date and time of request execution */
-	remote_application_short_name  VARCHAR2(50),    	/* Short name of application that executed this request */
-	user_code                      VARCHAR2(50),    	/* Code of person who executed this request */
-	organization_code              VARCHAR2(50),    	/* Code of organization that executed this request */
-	additional_information         VARCHAR2(4000)    	/* Additional information about request. For example - in case of "saveDocumentFile" request SOAP attachment ID will be added here. */
+    ID                             NUMBER(18) NOT NULL,
+    request                        VARCHAR2(50),           /* Name of request (e.g. shareDocument) */
+    document_id                    NUMBER(12),             /* ID of document that was involved in this request */
+    request_date                   DATE,                   /* Date and time of request execution */
+    remote_application_short_name  VARCHAR2(50),           /* Short name of application that executed this request */
+    user_code                      VARCHAR2(50),           /* Code of person who executed this request */
+    organization_code              VARCHAR2(50),           /* Code of organization that executed this request */
+    additional_information         VARCHAR2(4000)          /* Additional information about request. For example - in case of "saveDocumentFile" request SOAP attachment ID will be added here. */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
-COMMENT ON TABLE &&ADIT_SCHEMA..REQUEST_LOG									IS 'Log of requests that are used to modify data.
+COMMENT ON TABLE &&ADIT_SCHEMA..REQUEST_LOG                                 IS 'Log of requests that are used to modify data.
 This table contains log entries about following requests: saveDocument, saveDocumentFile, deleteDocumentFile, archieveDocument, deleteDocument, getDocumentHistory, sendDocument, shareDocument, unShareDocument, markDocumentViewed, prepareSignature, confirmSiganture, modifyStatus';
 COMMENT ON COLUMN &&ADIT_SCHEMA..REQUEST_LOG.request                        IS 'Name of request (e.g. shareDocument)';
 COMMENT ON COLUMN &&ADIT_SCHEMA..REQUEST_LOG.document_id                    IS 'ID of document that was involved in this request';
@@ -364,248 +364,247 @@ COMMENT ON COLUMN &&ADIT_SCHEMA..REQUEST_LOG.additional_information         IS '
 
 CREATE TABLE &&ADIT_SCHEMA..SIGNATURE
 (
-	ID              NUMBER(12) NOT NULL,    /* Unikaalne identifikaator. */
-	user_code       VARCHAR2(50),    /* Viide kasutajale, kes allkirja andis. */
-	document_id     NUMBER(12) NOT NULL,    /* Viide dokumendile, millele allkiri anti. */
-	signer_role     VARCHAR2(50),    /* Allkirja metaandmed - roll */
-	resolution      VARCHAR2(100),    /* Allkirja metaandmed - resolutsioon */
-	country         VARCHAR2(100),    /* Allkirja metaandmed - riik */
-	county          VARCHAR2(100),    /* Allkirja metaandmed - maakond */
-	city            VARCHAR2(100),    /* Allkirja metaandmed - linn */
-	post_index      VARCHAR2(50),    /* Allkirja metaandmed - indeks */
-	signer_code		VARCHAR2(20),    /* Allkirja metaandmed - allkirjastaja isikukood */
-	signer_name		VARCHAR2(255),   /* Allkirja metaandmed - allkirjastaja nimi */
-	signing_date    DATE,				/* Allkirja andmise kuupäev ja kellaaeg */
-	user_name		VARCHAR2(255) NULL
+    ID              NUMBER(12) NOT NULL,             /* Unique identifier */
+    user_code       VARCHAR2(50),                    /* Code of user who gave this signature */
+    document_id     NUMBER(12) NOT NULL,             /* ID of document this signature belongs to */
+    signer_role     VARCHAR2(50),                    /* Signers role */
+    resolution      VARCHAR2(100),                   /* Signers resolution */
+    country         VARCHAR2(100),                   /* Signature production place - country */
+    county          VARCHAR2(100),                   /* Signature production place - state/county */
+    city            VARCHAR2(100),                   /* Signature production place - town */
+    post_index      VARCHAR2(50),                    /* Signature production place - post code */
+    signer_code     VARCHAR2(20),                    /* Signers personal ID code */
+    signer_name     VARCHAR2(255),                   /* Signers name */
+    signing_date    DATE,                            /* Date and time of signing */
+    user_name       VARCHAR2(255) NULL               /* Name of ADIT user who gave this signature */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
-COMMENT ON TABLE &&ADIT_SCHEMA..SIGNATURE IS 'Allkirjade tabel.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.ID              IS 'Unikaalne identifikaator.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.user_code       IS 'Viide kasutajale, kes allkirja andis.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.document_id     IS 'Viide dokumendile, millele allkiri anti.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.signer_role     IS 'Allkirja metaandmed - roll';
-COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.resolution      IS 'Allkirja metaandmed - resolutsioon';
-COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.country         IS 'Allkirja metaandmed - riik';
-COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.county          IS 'Allkirja metaandmed - maakond';
-COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.city            IS 'Allkirja metaandmed - linn';
-COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.post_index      IS 'Allkirja metaandmed - indeks';
-COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.signer_code     IS 'Allkirja metaandmed - allkirjastaja isikukood';
-COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.signer_name     IS 'Allkirja metaandmed - allkirjastaja nimi';
-COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.signing_date    IS 'Allkirja andmise kuupäev ja kellaaeg';
+COMMENT ON TABLE &&ADIT_SCHEMA..SIGNATURE                  IS 'Metadata of document signatures';
+COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.ID              IS 'Unique identifier';
+COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.user_code       IS 'Code of user who gave this signature';
+COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.document_id     IS 'ID of document this signature belongs to';
+COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.signer_role     IS 'Signers role';
+COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.resolution      IS 'Signers resolution';
+COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.country         IS 'Signature production place - country';
+COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.county          IS 'Signature production place - state/county';
+COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.city            IS 'Signature production place - town';
+COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.post_index      IS 'Signature production place - post code';
+COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.signer_code     IS 'Signers personal ID code';
+COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.signer_name     IS 'Signers name';
+COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.signing_date    IS 'Date and time of signing';
 COMMENT ON COLUMN &&ADIT_SCHEMA..SIGNATURE.user_name       IS 'Name of ADIT user who gave this signature';
 
 CREATE TABLE &&ADIT_SCHEMA..USER_NOTIFICATION
 (
-	user_code          VARCHAR2(50) NOT NULL,    /* Viide kasutajale (isiku- või registrikood) */
-	notification_type  VARCHAR2(50) NOT NULL    /* Teavituse tüübi lühinimi. */
+    user_code          VARCHAR2(50) NOT NULL,        /* Code of user who ordered this notification */
+    notification_type  VARCHAR2(50) NOT NULL         /* Short name of notification type */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
-COMMENT ON TABLE &&ADIT_SCHEMA..USER_NOTIFICATION IS 'Kasutajate teavituste andmed. Kasutaja saab määrata, kas ta soovib teatud sündmuste toimumisel saada teavitusi. Teavitused edastatakse teavituskalendrile vastavalt selles tabelis olevale seadistusele.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..USER_NOTIFICATION.user_code          IS 'Viide kasutajale (isiku- või registrikood)';
-COMMENT ON COLUMN &&ADIT_SCHEMA..USER_NOTIFICATION.notification_type  IS 'Teavituse tüübi lühinimi.';
+COMMENT ON TABLE &&ADIT_SCHEMA..USER_NOTIFICATION                     IS 'Data about notifications ordered by users. Ordered Notifications will be sent using state portals notification calendar service.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..USER_NOTIFICATION.user_code          IS 'Code of user who ordered this notification';
+COMMENT ON COLUMN &&ADIT_SCHEMA..USER_NOTIFICATION.notification_type  IS 'Short name of notification type';
 
 CREATE TABLE &&ADIT_SCHEMA..USERTYPE
 (
-	short_name   VARCHAR2(50) NOT NULL,    /* Kasutajatüübi lühinimi. */
-	description  VARCHAR2(4000),    /* Kasutajatüübi kirjeldus. */
-	disk_quota   NUMBER(18)    /* Määrab kasutajatüübi vaikimisi kehtiva mahupiirangu baitides. */
+    short_name   VARCHAR2(50) NOT NULL,              /* Short name of user type */
+    description  VARCHAR2(4000),                     /* Description of user type */
+    disk_quota   NUMBER(18)                          /* Default disk quota for this user type (can be overridden in user data) */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
-COMMENT ON TABLE &&ADIT_SCHEMA..USERTYPE IS 'Kasutajatüüpide andmed. Kasutajatüüpe on kolm: 
- 1. Eraisik (person) 2. Ettevõte (company) 3. Asutus (institution)';
-COMMENT ON COLUMN &&ADIT_SCHEMA..USERTYPE.short_name   IS 'Kasutajatüübi lühinimi.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..USERTYPE.description  IS 'Kasutajatüübi kirjeldus.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..USERTYPE.disk_quota   IS 'Määrab kasutajatüübi vaikimisi kehtiva mahupiirangu baitides.';
+COMMENT ON TABLE &&ADIT_SCHEMA..USERTYPE               IS 'List of user types. There are three types of users: person, company and istitution';
+COMMENT ON COLUMN &&ADIT_SCHEMA..USERTYPE.short_name   IS 'Short name of user type';
+COMMENT ON COLUMN &&ADIT_SCHEMA..USERTYPE.description  IS 'Description of user type';
+COMMENT ON COLUMN &&ADIT_SCHEMA..USERTYPE.disk_quota   IS 'Default disk quota for this user type (can be overridden in user data)';
 
 
 CREATE TABLE &&ADIT_SCHEMA..NOTIFICATION
 (
-	ID                             NUMBER(18) NOT NULL,      /* Teavituse unikaalne identifikaator kohalikus andmebaasis */
-	user_code                      VARCHAR2(50),             /* Isiku või asutuse kood, kellele teavitus saadeti */
-	document_id                    NUMBER(12) NOT NULL,      /* Teavitusega seotud dokumendi ID */
-	event_date                     DATE,                     /* Teavitatava sündmuse toimumise kuupäev ja kellaaeg */
-	notification_type              VARCHAR2(50) NOT NULL,    /* Teavituse tüübi lühinimi */
-	notification_text              VARCHAR2(4000),           /* Teavituse sisu */
-	notification_id                NUMBER(12),               /* Teavituse ID teavituskalendris */
-	notification_sending_date      DATE                      /* Teavituse teavituskalendrisse edastamise aeg */
+    ID                             NUMBER(18) NOT NULL,      /* Unique identifier of notification */
+    user_code                      VARCHAR2(50),             /* Code of user the notification was sent to */
+    document_id                    NUMBER(12) NOT NULL,      /* ID of document this notification concerns */
+    event_date                     DATE,                     /* Date and time of event this notification concirns */
+    notification_type              VARCHAR2(50) NOT NULL,    /* Short name of notification type */
+    notification_text              VARCHAR2(4000),           /* Notification text */
+    notification_id                NUMBER(12),               /* ID of this notification in state portals notification calendar */
+    notification_sending_date      DATE                      /* Date and time this notification was sent to state portals notification calendar service */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
-COMMENT ON TABLE &&ADIT_SCHEMA..NOTIFICATION IS 'Teavituskalendri teavitused';
-COMMENT ON COLUMN &&ADIT_SCHEMA..NOTIFICATION.ID IS 'Teavituse unikaalne identifikaator kohalikus andmebaasis';
-COMMENT ON COLUMN &&ADIT_SCHEMA..NOTIFICATION.user_code IS 'Isiku või asutuse kood, kellele teavitus saadeti';
-COMMENT ON COLUMN &&ADIT_SCHEMA..NOTIFICATION.document_id IS 'Teavitusega seotud dokumendi ID';
-COMMENT ON COLUMN &&ADIT_SCHEMA..NOTIFICATION.event_date IS 'Teavitatava sündmuse toimumise kuupäev ja kellaaeg';
-COMMENT ON COLUMN &&ADIT_SCHEMA..NOTIFICATION.notification_type IS 'Teavituse tüübi lühinimi';
-COMMENT ON COLUMN &&ADIT_SCHEMA..NOTIFICATION.notification_text IS 'Teavituse sisu';
-COMMENT ON COLUMN &&ADIT_SCHEMA..NOTIFICATION.notification_id IS 'Teavituse ID teavituskalendris';
-COMMENT ON COLUMN &&ADIT_SCHEMA..NOTIFICATION.notification_sending_date IS 'Teavituse teavituskalendrisse edastamise aeg';
+COMMENT ON TABLE &&ADIT_SCHEMA..NOTIFICATION                               IS 'Notifications for notification calendar';
+COMMENT ON COLUMN &&ADIT_SCHEMA..NOTIFICATION.ID                           IS 'Unique identifier of notification';
+COMMENT ON COLUMN &&ADIT_SCHEMA..NOTIFICATION.user_code                    IS 'Code of user the notification was sent to';
+COMMENT ON COLUMN &&ADIT_SCHEMA..NOTIFICATION.document_id                  IS 'ID of document this notification concerns';
+COMMENT ON COLUMN &&ADIT_SCHEMA..NOTIFICATION.event_date                   IS 'Date and time of event this notification concirns';
+COMMENT ON COLUMN &&ADIT_SCHEMA..NOTIFICATION.notification_type            IS 'Short name of notification type';
+COMMENT ON COLUMN &&ADIT_SCHEMA..NOTIFICATION.notification_text            IS 'Notification text';
+COMMENT ON COLUMN &&ADIT_SCHEMA..NOTIFICATION.notification_id              IS 'ID of this notification in state portals notification calendar';
+COMMENT ON COLUMN &&ADIT_SCHEMA..NOTIFICATION.notification_sending_date    IS 'Date and time this notification was sent to state portals notification calendar service';
 
 
 CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_FILE_TYPE
 (
-	ID                  NUMBER(18) NOT NULL,	
-	DESCRIPTION			VARCHAR2(100) NOT NULL		/* Description of file type */
+    ID                  NUMBER(18) NOT NULL,    
+    DESCRIPTION         VARCHAR2(100) NOT NULL                /* Description of file type */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE_TYPE.description IS 'Description of file type';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE_TYPE.description        IS 'Description of file type';
 
 
 /* Create Primary Key Constraints */
 ALTER TABLE &&ADIT_SCHEMA..ACCESS_RESTRICTION ADD CONSTRAINT PK_ACCESS_RESTRICTIONS 
-	PRIMARY KEY (remote_application, user_code) 
+    PRIMARY KEY (remote_application, user_code) 
  USING INDEX TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 
 ALTER TABLE &&ADIT_SCHEMA..ADIT_LOG ADD CONSTRAINT PK_ADIT_LOG 
-	PRIMARY KEY (ID) 
+    PRIMARY KEY (ID) 
  USING INDEX TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 
 ALTER TABLE &&ADIT_SCHEMA..ADIT_USER ADD CONSTRAINT PK_USERS 
-	PRIMARY KEY (user_code) 
+    PRIMARY KEY (user_code) 
  USING INDEX TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 
 ALTER TABLE &&ADIT_SCHEMA..DOCUMENT ADD CONSTRAINT PK_DOCUMENTS 
-	PRIMARY KEY (ID) 
+    PRIMARY KEY (ID) 
  USING INDEX TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 
 ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_DVK_STATUS ADD CONSTRAINT PK_DOCUMENT_DVK_STATUSES 
-	PRIMARY KEY (ID) 
+    PRIMARY KEY (ID) 
  USING INDEX TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 
 ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_FILE ADD CONSTRAINT PK_DOCUMENT_FILES 
-	PRIMARY KEY (ID) 
+    PRIMARY KEY (ID) 
  USING INDEX TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 
 ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_HISTORY ADD CONSTRAINT PK_DOCUMENT_HISTORY 
-	PRIMARY KEY (ID) 
+    PRIMARY KEY (ID) 
  USING INDEX TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 
 ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_HISTORY_TYPE ADD CONSTRAINT PK_DOCUMENT_HISTORY_TYPE 
-	PRIMARY KEY (short_name) 
+    PRIMARY KEY (short_name) 
  USING INDEX TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 
 ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING ADD CONSTRAINT PK_DOCUMENT_SHARINGS 
-	PRIMARY KEY (ID) 
+    PRIMARY KEY (ID) 
  USING INDEX TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 
 ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING_TYPE ADD CONSTRAINT PK_DOCUMENT_SHARING_TYPES 
-	PRIMARY KEY (short_name) 
+    PRIMARY KEY (short_name) 
  USING INDEX TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 
 ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_TYPE ADD CONSTRAINT PK_DOCUMENT_TYPES 
-	PRIMARY KEY (short_name) 
+    PRIMARY KEY (short_name) 
  USING INDEX TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 
 ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_WF_STATUS ADD CONSTRAINT PK_DOCUMENT_WF_STATUSES 
-	PRIMARY KEY (ID) 
+    PRIMARY KEY (ID) 
  USING INDEX TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 
 ALTER TABLE &&ADIT_SCHEMA..DOWNLOAD_REQUEST_LOG ADD CONSTRAINT PK_DOWNLOAD_REQUEST_LOG 
-	PRIMARY KEY (ID) 
+    PRIMARY KEY (ID) 
  USING INDEX TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 
 ALTER TABLE &&ADIT_SCHEMA..ERROR_LOG ADD CONSTRAINT PK_ERROR_LOG 
-	PRIMARY KEY (ID) 
+    PRIMARY KEY (ID) 
  USING INDEX TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 
 ALTER TABLE &&ADIT_SCHEMA..METADATA_REQUEST_LOG ADD CONSTRAINT PK_METADATA_REQUEST_LOG 
-	PRIMARY KEY (ID) 
+    PRIMARY KEY (ID) 
  USING INDEX TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 
 ALTER TABLE &&ADIT_SCHEMA..NOTIFICATION_TYPE ADD CONSTRAINT PK_NOTIFICATION_TYPES 
-	PRIMARY KEY (short_name) 
+    PRIMARY KEY (short_name) 
  USING INDEX TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 
 ALTER TABLE &&ADIT_SCHEMA..REMOTE_APPLICATION ADD CONSTRAINT PK_REMOTE_APPLICATIONS 
-	PRIMARY KEY (short_name) 
+    PRIMARY KEY (short_name) 
  USING INDEX TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 
 ALTER TABLE &&ADIT_SCHEMA..REQUEST_LOG ADD CONSTRAINT PK_REQUEST_LOG 
-	PRIMARY KEY (ID) 
+    PRIMARY KEY (ID) 
  USING INDEX TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 
 ALTER TABLE &&ADIT_SCHEMA..SIGNATURE ADD CONSTRAINT PK_SIGNATURE 
-	PRIMARY KEY (ID) 
+    PRIMARY KEY (ID) 
  USING INDEX TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 
 ALTER TABLE &&ADIT_SCHEMA..USER_NOTIFICATION ADD CONSTRAINT PK_NOTIFICATIONS 
-	PRIMARY KEY (user_code, notification_type) 
+    PRIMARY KEY (user_code, notification_type) 
  USING INDEX TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 
 ALTER TABLE &&ADIT_SCHEMA..USERTYPE ADD CONSTRAINT PK_USERTYPES 
-	PRIMARY KEY (short_name) 
+    PRIMARY KEY (short_name) 
  USING INDEX TABLESPACE &&ADIT_INDEX_TABLESPACE.;
  
  ALTER TABLE &&ADIT_SCHEMA..NOTIFICATION ADD CONSTRAINT PK_NOTIFICATION 
-	PRIMARY KEY (ID) 
+    PRIMARY KEY (ID) 
  USING INDEX TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 
 /* Create Foreign Key Constraints */
 ALTER TABLE &&ADIT_SCHEMA..ACCESS_RESTRICTION ADD CONSTRAINT remote_application_short_name 
-	FOREIGN KEY (remote_application) REFERENCES &&ADIT_SCHEMA..REMOTE_APPLICATION (short_name);
+    FOREIGN KEY (remote_application) REFERENCES &&ADIT_SCHEMA..REMOTE_APPLICATION (short_name);
 
 ALTER TABLE &&ADIT_SCHEMA..ACCESS_RESTRICTION ADD CONSTRAINT user_code 
-	FOREIGN KEY (user_code) REFERENCES &&ADIT_SCHEMA..ADIT_USER (user_code);
+    FOREIGN KEY (user_code) REFERENCES &&ADIT_SCHEMA..ADIT_USER (user_code);
 
 ALTER TABLE &&ADIT_SCHEMA..ADIT_USER ADD CONSTRAINT usertype_short_name 
-	FOREIGN KEY (usertype) REFERENCES &&ADIT_SCHEMA..USERTYPE (short_name);
+    FOREIGN KEY (usertype) REFERENCES &&ADIT_SCHEMA..USERTYPE (short_name);
 
 ALTER TABLE &&ADIT_SCHEMA..DOCUMENT ADD CONSTRAINT document_dvk_status_id 
-	FOREIGN KEY (document_dvk_status_id) REFERENCES &&ADIT_SCHEMA..DOCUMENT_DVK_STATUS (ID);
+    FOREIGN KEY (document_dvk_status_id) REFERENCES &&ADIT_SCHEMA..DOCUMENT_DVK_STATUS (ID);
 
 ALTER TABLE &&ADIT_SCHEMA..DOCUMENT ADD CONSTRAINT document_type_short_name 
-	FOREIGN KEY (type) REFERENCES &&ADIT_SCHEMA..DOCUMENT_TYPE (short_name);
+    FOREIGN KEY (type) REFERENCES &&ADIT_SCHEMA..DOCUMENT_TYPE (short_name);
 
 ALTER TABLE &&ADIT_SCHEMA..DOCUMENT ADD CONSTRAINT document_workflow_status_id 
-	FOREIGN KEY (document_wf_status_id) REFERENCES &&ADIT_SCHEMA..DOCUMENT_WF_STATUS (ID);
+    FOREIGN KEY (document_wf_status_id) REFERENCES &&ADIT_SCHEMA..DOCUMENT_WF_STATUS (ID);
 
 ALTER TABLE &&ADIT_SCHEMA..DOCUMENT ADD CONSTRAINT parent_document_id 
-	FOREIGN KEY (parent_id) REFERENCES &&ADIT_SCHEMA..DOCUMENT (ID);
+    FOREIGN KEY (parent_id) REFERENCES &&ADIT_SCHEMA..DOCUMENT (ID);
 
 ALTER TABLE &&ADIT_SCHEMA..DOCUMENT ADD CONSTRAINT doc_remote_app_short_name 
-	FOREIGN KEY (remote_application) REFERENCES &&ADIT_SCHEMA..REMOTE_APPLICATION (short_name);
+    FOREIGN KEY (remote_application) REFERENCES &&ADIT_SCHEMA..REMOTE_APPLICATION (short_name);
 
 ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_FILE ADD CONSTRAINT document_id 
-	FOREIGN KEY (document_id) REFERENCES &&ADIT_SCHEMA..DOCUMENT (ID);
+    FOREIGN KEY (document_id) REFERENCES &&ADIT_SCHEMA..DOCUMENT (ID);
 
 ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_HISTORY ADD CONSTRAINT FK_DOCUMENT_HIST_DOCUMENT_HIST 
-	FOREIGN KEY (document_history_type) REFERENCES &&ADIT_SCHEMA..DOCUMENT_HISTORY_TYPE (short_name);
+    FOREIGN KEY (document_history_type) REFERENCES &&ADIT_SCHEMA..DOCUMENT_HISTORY_TYPE (short_name);
 
 ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_HISTORY ADD CONSTRAINT FK_DOCUMENT_HIST_REMOTE_APPLIC 
-	FOREIGN KEY (remote_application) REFERENCES &&ADIT_SCHEMA..REMOTE_APPLICATION (short_name);
+    FOREIGN KEY (remote_application) REFERENCES &&ADIT_SCHEMA..REMOTE_APPLICATION (short_name);
 
 ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_HISTORY ADD CONSTRAINT FK_DOCUMENT_HISTORY_DOCUMENT 
-	FOREIGN KEY (document_id) REFERENCES &&ADIT_SCHEMA..DOCUMENT (ID);
+    FOREIGN KEY (document_id) REFERENCES &&ADIT_SCHEMA..DOCUMENT (ID);
 
 ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_HISTORY ADD CONSTRAINT history_user_code 
-	FOREIGN KEY (user_code) REFERENCES &&ADIT_SCHEMA..ADIT_USER (user_code);
+    FOREIGN KEY (user_code) REFERENCES &&ADIT_SCHEMA..ADIT_USER (user_code);
 
 ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING ADD CONSTRAINT sharing_document_id 
-	FOREIGN KEY (document_id) REFERENCES &&ADIT_SCHEMA..DOCUMENT (ID);
+    FOREIGN KEY (document_id) REFERENCES &&ADIT_SCHEMA..DOCUMENT (ID);
 
 ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING ADD CONSTRAINT dvk_status_id 
-	FOREIGN KEY (dvk_status_id) REFERENCES &&ADIT_SCHEMA..DOCUMENT_DVK_STATUS (ID);
+    FOREIGN KEY (dvk_status_id) REFERENCES &&ADIT_SCHEMA..DOCUMENT_DVK_STATUS (ID);
 
 ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING ADD CONSTRAINT sharing_type_short_name 
-	FOREIGN KEY (sharing_type) REFERENCES &&ADIT_SCHEMA..DOCUMENT_SHARING_TYPE (short_name);
+    FOREIGN KEY (sharing_type) REFERENCES &&ADIT_SCHEMA..DOCUMENT_SHARING_TYPE (short_name);
 
 ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING ADD CONSTRAINT sharing_user_code 
-	FOREIGN KEY (user_code) REFERENCES &&ADIT_SCHEMA..ADIT_USER (user_code);
+    FOREIGN KEY (user_code) REFERENCES &&ADIT_SCHEMA..ADIT_USER (user_code);
 
 ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING ADD CONSTRAINT wf_status_id 
-	FOREIGN KEY (wf_status_id) REFERENCES &&ADIT_SCHEMA..DOCUMENT_WF_STATUS (ID);
+    FOREIGN KEY (wf_status_id) REFERENCES &&ADIT_SCHEMA..DOCUMENT_WF_STATUS (ID);
 
 ALTER TABLE &&ADIT_SCHEMA..SIGNATURE ADD CONSTRAINT FK_SIGNATURE_DOCUMENT 
-	FOREIGN KEY (document_id) REFERENCES &&ADIT_SCHEMA..DOCUMENT (ID);
+    FOREIGN KEY (document_id) REFERENCES &&ADIT_SCHEMA..DOCUMENT (ID);
 
 ALTER TABLE &&ADIT_SCHEMA..SIGNATURE ADD CONSTRAINT FK_SIGNATURE_USER 
-	FOREIGN KEY (user_code) REFERENCES &&ADIT_SCHEMA..ADIT_USER (user_code);
+    FOREIGN KEY (user_code) REFERENCES &&ADIT_SCHEMA..ADIT_USER (user_code);
 
 ALTER TABLE &&ADIT_SCHEMA..USER_NOTIFICATION ADD CONSTRAINT notification_type_short_name 
-	FOREIGN KEY (notification_type) REFERENCES &&ADIT_SCHEMA..NOTIFICATION_TYPE (short_name);
+    FOREIGN KEY (notification_type) REFERENCES &&ADIT_SCHEMA..NOTIFICATION_TYPE (short_name);
 
 ALTER TABLE &&ADIT_SCHEMA..USER_NOTIFICATION ADD CONSTRAINT notification_user_code 
-	FOREIGN KEY (user_code) REFERENCES &&ADIT_SCHEMA..ADIT_USER (user_code);
-	
+    FOREIGN KEY (user_code) REFERENCES &&ADIT_SCHEMA..ADIT_USER (user_code);
+    
 /* Create Triggers */
 CREATE SEQUENCE &&ADIT_SCHEMA..ADIT_LOG_ID_SEQ
 INCREMENT BY 1
@@ -795,22 +794,22 @@ begin
                             and nvl(document_file.file_data_in_ddoc, 0) = 0;
                 
                     if (item_count > 0) then
-	                    -- Calculate MD5 hash
-	                    update  document_file
-	                    set	    file_data = dbms_crypto.hash(nvl(file_data, empty_blob()), 2),
-	                            ddoc_datafile_start_offset = REMOVE_SIGNED_FILE_CONTENTS.ddoc_start_offset,
-	                            ddoc_datafile_end_offset = REMOVE_SIGNED_FILE_CONTENTS.ddoc_end_offset,
-	                            file_data_in_ddoc = 1
-	                    where   id = REMOVE_SIGNED_FILE_CONTENTS.file_id;
-	                    
-	                    open result_rc for
-	                    select  'ok' as result_code
-	                    from    dual;
-	                else
-	                    open result_rc for
-	                    select  'file_data_already_moved' as result_code
-	                    from    dual;
-	                end if;
+                        -- Calculate MD5 hash
+                        update  document_file
+                        set        file_data = dbms_crypto.hash(nvl(file_data, empty_blob()), 2),
+                                ddoc_datafile_start_offset = REMOVE_SIGNED_FILE_CONTENTS.ddoc_start_offset,
+                                ddoc_datafile_end_offset = REMOVE_SIGNED_FILE_CONTENTS.ddoc_end_offset,
+                                file_data_in_ddoc = 1
+                        where   id = REMOVE_SIGNED_FILE_CONTENTS.file_id;
+                        
+                        open result_rc for
+                        select  'ok' as result_code
+                        from    dual;
+                    else
+                        open result_rc for
+                        select  'file_data_already_moved' as result_code
+                        from    dual;
+                    end if;
                 else
                     open result_rc for
                     select  'file_is_deleted' as result_code
@@ -861,26 +860,26 @@ begin
                         and nvl(document_file.deleted, 0) = 0;
                 
                 if (item_count > 0) then
-	                select  count(*)
-	                into    item_count
-	                from    document_file
-	                where   document_file.id = DEFLATE_FILE.file_id
-	                        and nvl(document_file.document_file_type_id, 1) > 1;
+                    select  count(*)
+                    into    item_count
+                    from    document_file
+                    where   document_file.id = DEFLATE_FILE.file_id
+                            and nvl(document_file.document_file_type_id, 1) > 1;
                 
-	                if ((item_count = 0) or (DEFLATE_FILE.fail_if_signature <> 1)) then
-	                	-- Calculate MD5 hash
-	                    update	document_file
-	                    set	    file_data = dbms_crypto.hash(nvl(file_data, empty_blob()), 2),
-	                            deleted = (case when DEFLATE_FILE.mark_deleted = 1 then 1 else document_file.deleted end)
-	                    where   id = DEFLATE_FILE.file_id;
-	                    
-	                    open result_rc for
-	                    select  'ok' as result_code
-	                    from    dual;
+                    if ((item_count = 0) or (DEFLATE_FILE.fail_if_signature <> 1)) then
+                        -- Calculate MD5 hash
+                        update    document_file
+                        set        file_data = dbms_crypto.hash(nvl(file_data, empty_blob()), 2),
+                                deleted = (case when DEFLATE_FILE.mark_deleted = 1 then 1 else document_file.deleted end)
+                        where   id = DEFLATE_FILE.file_id;
+                        
+                        open result_rc for
+                        select  'ok' as result_code
+                        from    dual;
                     else
-	                    open result_rc for
-	                    select  'cannot_delete_signature_container' as result_code
-	                    from    dual;
+                        open result_rc for
+                        select  'cannot_delete_signature_container' as result_code
+                        from    dual;
                     end if;
                 else
                     open result_rc for
