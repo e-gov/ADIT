@@ -2,7 +2,6 @@ package ee.adit.test.util;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -52,17 +51,20 @@ public class SimplifiedDigiDocParserTest extends TestCase {
 			assertNotNull(d0);
 			assertEquals(274, d0.getStart());
 			assertEquals(1145822, d0.getEnd());
+			assertEquals("BA45C8F60456A672E003A875E469D0EB", Util.convertToHexString(d0.getDataMd5Hash()));
 			
 			StartEndOffsetPair d1 = result.get("D1");
 			assertNotNull(d1);
 			assertEquals(1145980, d1.getStart());
 			assertEquals(2203356, d1.getEnd());
+			assertEquals("2B04DF3ECC1D94AFDDFF082D139C6F15", Util.convertToHexString(d1.getDataMd5Hash()));
 			
 			StartEndOffsetPair d2 = result.get("D2");
 			assertNotNull(d2);
 			assertEquals(2203517, d2.getStart());
 			assertEquals(3256838, d2.getEnd());
-		} catch (IOException ex) {
+			assertEquals("9D377B10CE778C4938B3C7E2C63A229A", Util.convertToHexString(d2.getDataMd5Hash()));
+		} catch (Exception ex) {
 			fail(ex.getMessage());
 		}
 	}
@@ -72,7 +74,7 @@ public class SimplifiedDigiDocParserTest extends TestCase {
 		try {
 			Hashtable<String,StartEndOffsetPair> result = SimplifiedDigiDocParser.findDigiDocDataFileOffsets(pathToDigiDoc);
 			assertEquals(0, result.size());
-		} catch (IOException ex) {
+		} catch (Exception ex) {
 			fail(ex.getMessage());
 		}
 	}

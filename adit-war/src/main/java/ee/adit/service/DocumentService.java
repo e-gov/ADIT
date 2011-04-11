@@ -731,15 +731,15 @@ public class DocumentService {
 		                	localFile.setContentType(ddocDataFile.getMimeType());
 		                	localFile.setFileName(ddocDataFile.getFileName());
 		                	localFile.setFileSizeBytes(ddocDataFile.getSize());
-		                	//localFile.setFileData();  // TODO: MD5 hash
 		                	
 		                	StartEndOffsetPair currentFileOffsets = dataFileOffsets.get(ddocDataFile.getId());
 		                	if (currentFileOffsets != null) {
 		                		localFile.setDdocDataFileId(ddocDataFile.getId());
 		                		localFile.setDdocDataFileStartOffset(currentFileOffsets.getStart());
 		                		localFile.setDdocDataFileEndOffset(currentFileOffsets.getEnd());
+		                		localFile.setFileData(Hibernate.createBlob(currentFileOffsets.getDataMd5Hash()));
 		                	} else {
-		                		// TODO: Veateade?
+		                		throw new Exception("Failed to find DataFile offsets for data file " + ddocDataFile.getId());
 		                	}
 		                	
 		                	result.getFiles().add(localFile);

@@ -1,5 +1,6 @@
 package ee.adit.util;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -9,10 +10,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.security.DigestOutputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
 
+import org.apache.commons.codec.binary.Base64OutputStream;
 import org.apache.log4j.Logger;
 
 import ee.adit.pojo.OutputDocumentFile;
@@ -20,12 +25,18 @@ import ee.adit.pojo.OutputDocumentFile;
 public class SimplifiedDigiDocParser {
 	private static Logger logger = Logger.getLogger(SimplifiedDigiDocParser.class);
 	
-	public static Hashtable<String, StartEndOffsetPair> findDigiDocDataFileOffsets(String pathToDigiDoc) throws IOException {
+	public static Hashtable<String, StartEndOffsetPair> findDigiDocDataFileOffsets(String pathToDigiDoc) throws IOException, NoSuchAlgorithmException {
 		Hashtable<String, StartEndOffsetPair> result = new Hashtable<String, StartEndOffsetPair>();
 		
         FileInputStream inStream = null;
         InputStreamReader textReader = null;
         BufferedReader bufferedReader = null;
+        
+        // Helper streams for MD5 hash calculation
+    	MessageDigest md5Digest = null;
+    	BufferedOutputStream dummyFileOutStream = null;
+        DigestOutputStream digestCalculatorStream = null;
+        BufferedOutputStream base64OutputStream = null;
         
         try {
             inStream = new FileInputStream(pathToDigiDoc);
@@ -37,8 +48,10 @@ public class SimplifiedDigiDocParser {
             
             long currentOffset = 0;
             boolean inTag = false;
+            boolean inFileData = false;
             char[] currentChar = new char[1];
             StringBuilder tagText = new StringBuilder(512);
+            
             while (bufferedReader.read(currentChar, 0, currentChar.length) > 0) {
                 currentOffset++; 
             	switch (currentChar[0]) {
@@ -53,8 +66,23 @@ public class SimplifiedDigiDocParser {
                         	pendingDataFileId = getAttributeValueFromTag(tagText.toString(), "Id");
                         	pendingOffsetPair = new StartEndOffsetPair();
                         	pendingOffsetPair.setStart(currentOffset);
+
+                        	inFileData = true;
+                        	md5Digest = MessageDigest.getInstance("MD5");
+                        	String outFileName = pathToDigiDoc + pendingDataFileId; 
+                            dummyFileOutStream = new BufferedOutputStream(new FileOutputStream(outFileName, false));
+                            digestCalculatorStream = new DigestOutputStream(dummyFileOutStream, md5Digest);
+                            base64OutputStream = new BufferedOutputStream(new Base64OutputStream(digestCalculatorStream, false));
                         } else if ("</DataFile>".equalsIgnoreCase(tagText.toString())) {
                         	pendingOffsetPair.setEnd(currentOffset - 11);
+                        	
+                        	inFileData = false;
+                        	try {
+                        		base64OutputStream.close();
+                        		pendingOffsetPair.setDataMd5Hash(digestCalculatorStream.getMessageDigest().digest());
+                        	} catch (Exception ex) {
+                        		logger.warn("Failed closing MD5 digest stream after digest calculation in DigiDoc extraction");
+                        	}
                         	result.put(pendingDataFileId, pendingOffsetPair);
                         }
                         tagText.delete(0, tagText.length());
@@ -62,6 +90,8 @@ public class SimplifiedDigiDocParser {
                     default:
                         if (inTag) {
                             tagText.append(currentChar[0]);
+                        } else if (inFileData) {
+                        	base64OutputStream.write((byte)currentChar[0]);
                         }
                         break;
                 }
