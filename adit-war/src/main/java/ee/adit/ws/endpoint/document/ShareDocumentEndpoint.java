@@ -1,9 +1,7 @@
 package ee.adit.ws.endpoint.document;
 
 import java.util.Calendar;
-import java.util.Iterator;
 import java.util.Locale;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;

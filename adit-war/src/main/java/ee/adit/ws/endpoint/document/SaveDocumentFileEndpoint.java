@@ -194,6 +194,7 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
             }
 
             // Check whether the document is marked as signable
+            // TODO: WTF?
             if ((doc.getSignable() == null) || !doc.getSignable()) {
                 logger.debug("Requested document is not signable. Document ID: " + request.getDocumentId());
                 AditCodedException aditCodedException = new AditCodedException("document.notSignable");

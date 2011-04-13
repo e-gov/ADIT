@@ -232,14 +232,11 @@ public class MarkDocumentViewedEndpoint extends AbstractAditBaseEndpoint {
                                 this.documentService.getDocumentDAO().save(doc, null, Long.MAX_VALUE, null);
                             }
 
-                            // If it was the first time for this particular user
-                            // to
+                            // If it was the first time for this particular user to
                             // view the document then send scheduler
-                            // notification to
-                            // document owner.
+                            // notification to document owner.
                             // Notification does not need to be sent if user
-                            // viewed
-                            // his/her own document.
+                            // viewed his/her own document.
                             if (!user.getUserCode().equalsIgnoreCase(doc.getCreatorCode())) {
                                 AditUser docCreator = this.getUserService().getUserByID(doc.getCreatorCode());
                                 if (!isViewed

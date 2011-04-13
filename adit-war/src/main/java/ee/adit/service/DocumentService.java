@@ -25,8 +25,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 import org.apache.fop.apps.MimeConstants;
 import org.apache.log4j.Logger;
@@ -92,7 +90,6 @@ import ee.sk.digidoc.factory.SAXDigiDocFactory;
 import ee.sk.utils.ConfigManager;
 
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
-import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 
 
@@ -623,10 +620,10 @@ public class DocumentService {
                 // This is useful later to find out which file was added.
                 long maxId = -1;
                 if ((document != null) && (document.getDocumentFiles() != null)) {
-                    Iterator it = document.getDocumentFiles().iterator();
+                    Iterator<DocumentFile> it = document.getDocumentFiles().iterator();
                     if (it != null) {
                         while (it.hasNext()) {
-                            DocumentFile f = (DocumentFile) it.next();
+                            DocumentFile f = it.next();
                             if (f.getId() > maxId) {
                                 maxId = f.getId();
                             }
@@ -679,10 +676,10 @@ public class DocumentService {
                     fileId = file.getId();
                     logger.debug("Existing file saved with ID: " + fileId);
                 } else if ((document != null) && (document.getDocumentFiles() != null)) {
-                    Iterator it = document.getDocumentFiles().iterator();
+                    Iterator<DocumentFile> it = document.getDocumentFiles().iterator();
                     if (it != null) {
                         while (it.hasNext()) {
-                            DocumentFile f = (DocumentFile) it.next();
+                            DocumentFile f = it.next();
                             if (f.getId() > maxId) {
                                 fileId = f.getId();
                                 logger.debug("New file saved with ID: " + fileId);
@@ -982,15 +979,15 @@ public class DocumentService {
 
                 FailideKonteiner failideKonteiner = new FailideKonteiner();
 
-                Set aditFiles = document.getDocumentFiles();
-                List dvkFiles = new ArrayList();
+                Set<DocumentFile> aditFiles = document.getDocumentFiles();
+                List<Fail> dvkFiles = new ArrayList<Fail>();
 
-                Iterator aditFilesIterator = aditFiles.iterator();
+                Iterator<DocumentFile> aditFilesIterator = aditFiles.iterator();
                 short count = 0;
 
                 // Convert the adit file to dvk file
                 while (aditFilesIterator.hasNext()) {
-                    DocumentFile f = (DocumentFile) aditFilesIterator.next();
+                    DocumentFile f = aditFilesIterator.next();
                     
                     if (((document.getSigned() != null) && document.getSigned() && (f.getDocumentFileTypeId() == FILETYPE_SIGNATURE_CONTAINER))
                     	|| (((document.getSigned() == null) || !document.getSigned()) && (f.getDocumentFileTypeId() == FILETYPE_DOCUMENT_FILE))) {
@@ -2193,9 +2190,9 @@ public class DocumentService {
         	// If document has been shared then cancel sharing and delete the document
         	boolean hasBeenSent = false;
         	if (doc.getDocumentSharings() != null) {
-                Iterator it = doc.getDocumentSharings().iterator();
+                Iterator<DocumentSharing> it = doc.getDocumentSharings().iterator();
                 while (it.hasNext()) {
-                    DocumentSharing sharing = (DocumentSharing) it.next();
+                    DocumentSharing sharing = it.next();
                     if (sharing.getDocumentSharingType().equalsIgnoreCase(DocumentService.SHARINGTYPE_SHARE)
                         || sharing.getDocumentSharingType().equalsIgnoreCase(DocumentService.SHARINGTYPE_SIGN)) {
 
@@ -2210,9 +2207,9 @@ public class DocumentService {
             // Replace file contents with MD5 hash of original contents
             if (!hasBeenSent) {
                 if (doc.getDocumentFiles() != null) {
-	            	Iterator it = doc.getDocumentFiles().iterator();
+	            	Iterator<DocumentFile> it = doc.getDocumentFiles().iterator();
 	                while (it.hasNext()) {
-	                    DocumentFile docFile = (DocumentFile) it.next();
+	                    DocumentFile docFile = it.next();
 	
 	                    if ((docFile.getDeleted() == null) || !docFile.getDeleted()) {
 	                        String resultCode = this.deflateDocumentFile(doc.getId(), docFile.getId(), true, false);
@@ -2247,9 +2244,9 @@ public class DocumentService {
             }
         } else if (doc.getDocumentSharings() != null) {
             // Check whether or not the document has been shared to current user
-            Iterator it = doc.getDocumentSharings().iterator();
+            Iterator<DocumentSharing> it = doc.getDocumentSharings().iterator();
             while (it.hasNext()) {
-                DocumentSharing sharing = (DocumentSharing) it.next();
+                DocumentSharing sharing = it.next();
                 if (sharing.getUserCode().equalsIgnoreCase(userCode)) {
                     if (sharing.getDocumentSharingType().equalsIgnoreCase(DocumentService.SHARINGTYPE_SHARE)
                     	|| sharing.getDocumentSharingType().equalsIgnoreCase(DocumentService.SHARINGTYPE_SIGN)) {
@@ -2317,7 +2314,6 @@ public class DocumentService {
      *            Short name of application that executed current request
      * @throws Exception
      */
-    @SuppressWarnings("unchecked")
     @Transactional
     public void deflateDocument(long documentId, String userCode, String applicationName) throws Exception {
         Document doc = this.getDocumentDAO().getDocument(documentId);
@@ -2355,9 +2351,9 @@ public class DocumentService {
         }
 
         // Replace file contents with their MD5 hash codes
-        Iterator it = doc.getDocumentFiles().iterator();
+        Iterator<DocumentFile> it = doc.getDocumentFiles().iterator();
         while (it.hasNext()) {
-            DocumentFile docFile = (DocumentFile) it.next();
+            DocumentFile docFile = it.next();
             
             if ((docFile.getDeleted() == null) || !docFile.getDeleted()) {
 	            String resultCode = deflateDocumentFile(doc.getId(), docFile.getId(), false, false);
@@ -2376,7 +2372,7 @@ public class DocumentService {
             }
         }
 
-        // Mark document as deflated, locked and unsignable
+        // Mark document as deflated, locked and not signable
         doc.setDeflated(true);
         doc.setDeflateDate(new Date());
         doc.setLocked(true);
@@ -2433,7 +2429,7 @@ public class DocumentService {
      * @param certFile
      *            Absolute path to signers signing certificate file
      * @param digidocConfigFile
-     *            Absolute path to digidoc configuration file
+     *            Absolute path to DigiDoc configuration file
      * @param temporaryFilesDir
      *            Absolute path to applications temporary files directory
      * @param xroadUser
@@ -2862,6 +2858,25 @@ public class DocumentService {
         }
     }
     
+    /**
+     * Creates unsigned DDOC container from given documents files
+     * 
+     * @param doc
+     * 		Document the files of which will be added to DDOC container
+     * @param digidocConfigFile
+     * 		Full path to DigiDoc library configuration file
+     * @param temporaryFilesDir
+     * 		Path to directory that is used to store temporary files
+     * @return
+     * 		DDOC container as {@link OutputDocumentFile} instance
+     * @throws DigiDocException
+     * 		Will be thrown if DigiDoc library initialization or container
+     * 		manipulation fails
+     * @throws SQLException
+     * 		Will be thrown if reading file contents from database fails 
+     * @throws IOException
+     * 		Will be thrown if saving DigiDoc container fails
+     */
     public static OutputDocumentFile createSignatureContainerFromDocumentFiles(
     	final Document doc,
     	final String digidocConfigFile,
@@ -2926,10 +2941,24 @@ public class DocumentService {
         return result;
     }
     
+    /**
+     * Creates a ZIP archive from given documents files
+     * 
+     * @param doc
+     * 		Document the files of which will be added to ZIP archive
+     * @param filesList
+     * 		List of files to be added to ZIP archive
+     * @param temporaryFilesDir
+     * 		Path to directory that is used to store temporary files
+     * @return
+     * 		ZIP archive as {@link OutputDocumentFile} instance 	
+     * @throws IOException
+     * 		will be thrown if writing ZIP archive fails for any reason
+     */
     public static OutputDocumentFile createZipArchiveFromDocumentFiles(
     	final Document doc,
     	final List<OutputDocumentFile> filesList,
-    	final String temporaryFilesDir) throws SQLException, IOException {
+    	final String temporaryFilesDir) throws IOException {
     	
     	// Create unique subdirectory for files
         File uniqueDir = new File(temporaryFilesDir + File.separator + doc.getId());
@@ -3013,6 +3042,16 @@ public class DocumentService {
         return result;
     }
     
+    /**
+     * Creates instance of {@link ee.adit.dao.pojo.Signature} and populates it
+     * with data from given DigiDoc Signature object.
+     * 
+     * @param digiDocSignature
+     * 		DigiDoc Signature object
+     * @return
+     * 		Local signature object that can be added to document and saved to
+     * 		database
+     */
     public ee.adit.dao.pojo.Signature convertDigiDocSignatureToLocalSignature(Signature digiDocSignature) {
     	ee.adit.dao.pojo.Signature result = new ee.adit.dao.pojo.Signature();
     	
@@ -3052,6 +3091,15 @@ public class DocumentService {
     	return result;
     }
     
+    /**
+     * Finds signature container from document files list
+     * 
+     * @param doc
+     * 		Document instance
+     * @return
+     * 		Signature container as {@link DocumentFile}. Will return
+     * 		{@code null} if signature container is not found.
+     */
     private DocumentFile findSignatureContainer(Document doc) {
     	DocumentFile result = null;
     	
@@ -3067,6 +3115,15 @@ public class DocumentService {
     	return result;
     }
     
+    /**
+     * Finds signature container draft from document files list
+     * 
+     * @param doc
+     * 		Document instance
+     * @return
+     * 		Signature container draft as {@link DocumentFile}. Will return
+     * 		{@code null} if signature container draft is not found.
+     */
     private DocumentFile findSignatureContainerDraft(Document doc) {
     	DocumentFile result = null;
     	
@@ -3082,24 +3139,43 @@ public class DocumentService {
     	return result;
     }
     
+    /**
+     * Finds certificate subjects country code from X509 certificate
+     * 
+     * @param cert
+     * 		Certificate
+     * @return
+     * 		Country code of certificate subject. Will return {@code null} if
+     * 		country code is not found in subject data. 
+     */
     private String getSubjectCountryCode(X509Certificate cert) {
         String result = null;
-        String dn = cert.getSubjectDN().getName();
-        int idx1 = dn.indexOf("C=");
-        if (idx1 >= 0) {
-            idx1 += 2;
-            while (idx1 < dn.length() && !Character.isLetter(dn.charAt(idx1))) {
-                idx1++;
-            }
-            int idx2 = idx1;
-            while (idx2 < dn.length() && dn.charAt(idx2) != ',' && dn.charAt(idx2) != '/') {
-                idx2++;
-            }
-            result = dn.substring(idx1, idx2);
+        if (cert != null) {
+        	String dn = cert.getSubjectDN().getName();
+	        int idx1 = dn.indexOf("C=");
+	        if (idx1 >= 0) {
+	            idx1 += 2;
+	            while (idx1 < dn.length() && !Character.isLetter(dn.charAt(idx1))) {
+	                idx1++;
+	            }
+	            int idx2 = idx1;
+	            while (idx2 < dn.length() && dn.charAt(idx2) != ',' && dn.charAt(idx2) != '/') {
+	                idx2++;
+	            }
+	            result = dn.substring(idx1, idx2);
+	        }
         }
         return result;
     }
     
+    /**
+     * Translates file type name to file type ID
+     * 
+     * @param fileTypeName
+     * 		Name of file type
+     * @return
+     * 		ID of file type
+     */
     public static long resolveFileTypeId(String fileTypeName) {
     	long result = FILETYPE_DOCUMENT_FILE;
     	
@@ -3112,6 +3188,14 @@ public class DocumentService {
     	return result;
     }
     
+    /**
+     * Translates file type ID to file type name
+     * 
+     * @param fileTypeId
+     * 		ID of file type
+     * @return
+     * 		Name of file type
+     */
     public static String resolveFileTypeName(Long fileTypeId) {
     	String result = FILETYPE_NAME_DOCUMENT_FILE;
     	
@@ -3124,13 +3208,23 @@ public class DocumentService {
     	return result;
     }
     
-    public static boolean documentSharingExists(Set documentSharings, String userCode) {
+    /**
+     * Helper method to determine if document has been shared to given user
+     * 
+     * @param documentSharings
+     * 		List of documents sharing records
+     * @param userCode
+     * 		Code of user
+     * @return
+     * 		{@code true} if document has been shared to given person
+     */
+    public static boolean documentSharingExists(Set<DocumentSharing> documentSharings, String userCode) {
         boolean result = false;
         
         if ((documentSharings != null) && (!documentSharings.isEmpty())) {
-            Iterator it = documentSharings.iterator();
+            Iterator<DocumentSharing> it = documentSharings.iterator();
             while (it.hasNext()) {
-                DocumentSharing sharing = (DocumentSharing) it.next();
+                DocumentSharing sharing = it.next();
                 if (userCode.equalsIgnoreCase(sharing.getUserCode())
                         && (sharing.getDocumentSharingType().equalsIgnoreCase(DocumentService.SHARINGTYPE_SHARE) || sharing
                                 .getDocumentSharingType().equalsIgnoreCase(DocumentService.SHARINGTYPE_SIGN))) {
@@ -3143,13 +3237,23 @@ public class DocumentService {
         return result;
     }
     
-    public static boolean documentSendingExists(Set documentSharings, String userCode) {
+    /**
+     * Helper method to determine if document has been sent to given user
+     * 
+     * @param documentSharings
+     * 		List of documents sharing records
+     * @param userCode
+     * 		Code of user
+     * @return
+     * 		{@code true} if document has been sent to given person
+     */
+    public static boolean documentSendingExists(Set<DocumentSharing> documentSharings, String userCode) {
         boolean result = false;
         
         if ((documentSharings != null) && (!documentSharings.isEmpty())) {
-            Iterator it = documentSharings.iterator();
+            Iterator<DocumentSharing> it = documentSharings.iterator();
             while (it.hasNext()) {
-                DocumentSharing sharing = (DocumentSharing) it.next();
+                DocumentSharing sharing = it.next();
                 if (userCode.equalsIgnoreCase(sharing.getUserCode())
                     && (sharing.getDocumentSharingType().equalsIgnoreCase(DocumentService.SHARINGTYPE_SEND_ADIT)
                     || sharing.getDocumentSharingType().equalsIgnoreCase(DocumentService.SHARINGTYPE_SEND_DVK))) {
@@ -3162,6 +3266,17 @@ public class DocumentService {
         return result;
     }
     
+    /**
+     * Helper method to determine if file with given type ID should be returned
+     * when given list of file types was requested.  
+     * 
+     * @param fileTypeId
+     * 		ID of file type
+     * @param requestedTypes
+     * 		List of file types that were requested by user
+     * @return
+     * 		{@code true} if file having given type ID should be returned
+     */
     public static boolean fileIsOfRequestedType(long fileTypeId, ArrayOfFileType requestedTypes) {
     	String fileTypeName = resolveFileTypeName(fileTypeId);
     	return ((requestedTypes == null)

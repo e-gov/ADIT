@@ -166,7 +166,7 @@ public class ScheduleClient {
      * @param eventType
      *            Name of notifications type in "teavituskalender" database
      * @param eventDate
-     *            Date and time describibg when the notified event occured (for
+     *            Date and time describing when the notified event occurred (for
      *            example, when a document was signed)
      * @param notificationType
      *            Code of notification type in local database. This type is more
@@ -201,7 +201,7 @@ public class ScheduleClient {
      * @param eventType
      *            Name of notifications type in "teavituskalender" database
      * @param eventDate
-     *            Date and time describibg when the notified event occured (for
+     *            Date and time describing when the notified event occurred (for
      *            example, when a document was signed)
      * @param notificationType
      *            Code of notification type in local database. This type is more
@@ -366,7 +366,7 @@ public class ScheduleClient {
      * @param eventType
      *            Name of notifications type in "teavituskalender" database
      * @param eventDate
-     *            Date and time describibg when the notified event occured (for
+     *            Date and time describing when the notified event occurred (for
      *            example, when a document was signed)
      * @param notificationType
      *            Code of notification type in local database. This type is more
@@ -463,7 +463,6 @@ public class ScheduleClient {
                 logger.error("Notifications service returned response: " + response);
 
                 if (response != null) {
-                    if (response != null) {
                         Integer resultEventId = response.getSyndmusId();
                         logger.debug("LisaSyndmus result event ID: "
                                 + ((resultEventId == null) ? "NULL" : resultEventId.toString()));
@@ -477,20 +476,13 @@ public class ScheduleClient {
 
                             if ((resultCode != null) && (resultCode.intValue() == RESULT_OK)) {
                                 eventId = resultEventId.longValue();
-                                logger
-                                        .debug("Successfully added notification to 'teavituskalender' database. Related document ID: "
+                                logger.debug("Successfully added notification to 'teavituskalender' database. Related document ID: "
                                                 + String.valueOf(relatedDocumentId));
                             }
                         } else {
-                            logger
-                                    .error("Error adding notification to 'teavituskalender' database. Response's 'tulemus' part is NULL. Related document ID: "
+                            logger.error("Error adding notification to 'teavituskalender' database. Response's 'tulemus' part is NULL. Related document ID: "
                                             + String.valueOf(relatedDocumentId));
                         }
-                    } else {
-                        logger
-                                .error("Error adding notification to 'teavituskalender' database. Response's 'LisaSyndmusResponse' part is NULL. Related document ID: "
-                                        + String.valueOf(relatedDocumentId));
-                    }
                 } else {
                     throw new AditInternalException(
                             "The 'getDocument' request was not successful: response could not be unmarshalled: unmarshalling returned null.");

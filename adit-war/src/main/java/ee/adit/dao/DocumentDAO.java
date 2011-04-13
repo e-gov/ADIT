@@ -870,7 +870,7 @@ public class DocumentDAO extends HibernateDaoSupport {
         // Has the document been viewed?
         result.setHasBeenViewed(false);
         if (currentRequestUserCode.equalsIgnoreCase(doc.getCreatorCode())) {
-        	result.setHasBeenViewed(true);		// FIXME
+        	result.setHasBeenViewed(true);
         } else {
             if ((doc.getDocumentSharings() != null) && (!doc.getDocumentSharings().isEmpty())) {
                 Iterator it = doc.getDocumentSharings().iterator();
@@ -1093,7 +1093,7 @@ public class DocumentDAO extends HibernateDaoSupport {
     }
 
     /**
-     * Cheks if document exists.
+     * Checks if document exists.
      * 
      * @param document DVK document
      * @param recipient recipient

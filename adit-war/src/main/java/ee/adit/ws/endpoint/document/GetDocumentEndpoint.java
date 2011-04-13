@@ -204,16 +204,11 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
                                     jdigidocCfgTmpFile);
 
                             if (resultDoc != null) {
-                            	boolean resultContainsSignatureContainer = false;
-                            	
                                 // Remember file IDs for logging later on.
                                 List<OutputDocumentFile> docFiles = resultDoc.getFiles().getFiles();
                                 if ((docFiles != null) && (docFiles.size() > 0)) {
                                     for (OutputDocumentFile file : docFiles) {
                                         fileIdList.add(file.getId());
-                                        if (DocumentService.FILETYPE_NAME_SIGNATURE_CONTAINER.equalsIgnoreCase(file.getFileType())) {
-                                        	resultContainsSignatureContainer = true;
-                                        }
                                     }
                                 }
                                 

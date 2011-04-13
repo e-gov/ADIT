@@ -1,5 +1,6 @@
 package ee.adit.util;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -17,6 +18,7 @@ import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.lang.reflect.Field;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -1401,6 +1403,16 @@ public final class Util {
     	return ((stringToEvaluate == null) || stringToEvaluate.isEmpty());
     }
     
+    /**
+     * Determines if given class contains a field with specified name.
+     * 
+     * @param targetClass
+     * 		Class to be examined
+     * @param fieldName
+     * 		Name of field that will be seeked from class
+     * @return
+     * 		{@code true} if given class contains a field with given name.
+     */
     public static boolean classContainsField(Class targetClass, String fieldName) {
     	Field[] declaredFields = targetClass.getDeclaredFields();
     	boolean found = false;
@@ -1413,6 +1425,16 @@ public final class Util {
     	return found;
     }
     
+    /**
+     * Finds extension part of given file name
+     * 
+     * @param fileName
+     * 		File name
+     * @return
+     * 		Extension part of file name (without extension separator ".").
+     * 		Will return {@code null} if file name is empty or does not have
+     *      an extension (e.g. "makefile")
+     */
     public static String getFileExtension(String fileName) {
     	String result = null;
     	
@@ -1426,6 +1448,15 @@ public final class Util {
     	return result;
     }
     
+    /**
+     * Finds part of file name that precedes file extension
+     * 
+     * @param fileName
+     * 		File name without path
+     * @return
+     * 		File name without extension. Will return {@code null} if file name
+     * 		is empty or only consists of extension (e.g. ".svn")
+     */
     public static String getFileNameWithoutExtension(String fileName) {
     	String result = null;
     	
@@ -1441,12 +1472,24 @@ public final class Util {
     	return result;
     }
 
-    public static byte[] calculateMd5Checksum(String filename) throws Exception {
+    /**
+     * Calculates MD5 checksum of given file
+     * 
+     * @param filename
+     * 		Full path to file that will be used for checksum calculation.
+     * @return
+     * 		MD5 chacksum as byte array
+     * @throws NoSuchAlgorithmException
+     * 		will be thrown if MD5 algorithm is not found for some reason
+     * @throws IOException 
+     *		will be thrown if file does not exist or cannot be read 
+     */
+    public static byte[] calculateMd5Checksum(String filename) throws NoSuchAlgorithmException, IOException  {
     	MessageDigest digest = MessageDigest.getInstance("MD5");
-    	InputStream fileStream = null;
+    	BufferedInputStream fileStream = null;
     	
     	try {
-	    	fileStream = new FileInputStream(filename);
+	    	fileStream = new BufferedInputStream(new FileInputStream(filename));
 	    	int len;
 	    	byte[] buffer = new byte[1024];
 	    	while ((len = fileStream.read(buffer)) > 0) {
@@ -1458,6 +1501,20 @@ public final class Util {
     	return digest.digest();
 	}
     
+    /**
+     * Creates a file name that does not include any forbidden characters.
+     * 
+     * @param namePart
+     * 		Name part of file name
+     * @param extension
+     * 		Extension part of file name
+     * @param uniqueCounter
+     * 		Text or number that will be appended to file name (after name part)
+     * 		to avoid possible file name collisions (e.g. multiple files having
+     *      same name in .zip archive)
+     * @return
+     * 		file name that should not cause problems to common operating systems
+     */
     public static String convertToLegalFileName(String namePart, String extension, String uniqueCounter) {
     	int maxLength = 240;
     	List<Character> illegalChars = Arrays.asList(new Character[] { '/', '\n', '\r', '\t', '\0', '\f', '`', '?', '*', '\\', '<', '>', '|', '\"', ':' });

@@ -59,7 +59,6 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
      *            Request body object
      * @return Response body object
      */
-    @SuppressWarnings("unchecked")
     protected Object v1(Object requestObject) {
         UnShareDocumentResponse response = new UnShareDocumentResponse();
         ArrayOfMessage messages = new ArrayOfMessage();
