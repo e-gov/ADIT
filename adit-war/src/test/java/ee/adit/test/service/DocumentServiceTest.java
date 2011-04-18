@@ -14,9 +14,7 @@ import junit.framework.TestCase;
  *
  * @generatedBy CodePro at 7.04.11 11:32
  *
- * @author Jaak
- *
- * @version $Revision$
+ * @author Jaak Lember, Interinx, jaak@interinx.com
  */
 public class DocumentServiceTest extends TestCase {
 

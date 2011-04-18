@@ -22,9 +22,7 @@ import junit.framework.TestCase;
  *
  * @generatedBy CodePro at 31.03.11 15:01
  *
- * @author Jaak
- *
- * @version $Revision$
+ * @author Jaak Lember, Interinx, jaak@interinx.com
  */
 public class SimplifiedDigiDocParserTest extends TestCase {
 

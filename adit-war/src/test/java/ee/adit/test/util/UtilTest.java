@@ -11,9 +11,7 @@ import junit.framework.TestCase;
  *
  * @generatedBy CodePro at 31.03.11 17:36
  *
- * @author Jaak
- *
- * @version $Revision$
+ * @author Jaak Lember, Interinx, jaak@interinx.com
  */
 public class UtilTest extends TestCase {
 
