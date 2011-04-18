@@ -34,6 +34,7 @@ import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.ArrayOfMessageMonitor;
 import ee.adit.pojo.GetDocumentRequestMonitor;
+import ee.adit.pojo.GetDocumentResponseAttachment;
 import ee.adit.pojo.GetDocumentResponseMonitor;
 import ee.adit.pojo.GetUserInfoRequestAttachmentUserList;
 import ee.adit.pojo.GetUserInfoRequestMonitor;
@@ -665,8 +666,7 @@ public class MonitorService {
                             && response.getMessages().getMessage().size() > 0) {
                         responseErrorMessage = response.getMessages().getMessage().get(0);
                     }
-                    throw new AditInternalException("The 'getDocument' request was not successful: "
-                            + responseErrorMessage);
+                    throw new AditInternalException("The 'getDocument' request was not successful: " + responseErrorMessage);
                 }
             } else {
                 throw new AditInternalException(
@@ -678,7 +678,10 @@ public class MonitorService {
             if (interceptor.getTmpFile() != null) {
                 logger.info("Attachment saved to temporary file: " + interceptor.getTmpFile());
                 Source unmarshalSource = new SAXSource(new InputSource(new FileInputStream(interceptor.getTmpFile())));
-                document = (OutputDocument) getUnmarshaller().unmarshal(unmarshalSource);
+                GetDocumentResponseAttachment attachment = (GetDocumentResponseAttachment) getUnmarshaller().unmarshal(unmarshalSource);
+                if (attachment != null) {
+                	document = attachment.getDocument();
+                }
             } else {
                 throw new AditInternalException("Response message interceptor could not extract the attachment.");
             }
@@ -740,7 +743,6 @@ public class MonitorService {
         }
 
         return result;
-
     }
 
     /**
