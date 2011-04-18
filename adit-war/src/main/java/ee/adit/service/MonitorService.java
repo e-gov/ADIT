@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -322,8 +323,9 @@ public class MonitorService {
 
         // 2. Check DVK response message stylesheet
         try {
+            InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream(this.getConfiguration().getDvkResponseMessageStylesheet());
+            String styleSheet = Util.createTemporaryFile(input, this.getConfiguration().getTempDir());
 
-            String styleSheet = this.getConfiguration().getDvkResponseMessageStylesheet();
             File styleSheetFile = new File(styleSheet);
             if (!styleSheetFile.exists()) {
                 throw new Exception("File does not exist: " + styleSheet);

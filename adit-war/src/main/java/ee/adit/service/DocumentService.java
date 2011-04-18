@@ -1803,7 +1803,10 @@ public class DocumentService {
             ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xml.getBytes("UTF-8"));
             String xmlTempFile = Util.createTemporaryFile(byteArrayInputStream, this.getConfiguration().getTempDir());
             String outputXslFoFile = Util.generateRandomFileName();
-            Util.applyXSLT(xmlTempFile, this.getConfiguration().getDvkResponseMessageStylesheet(), outputXslFoFile);
+            
+            InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream(this.getConfiguration().getDvkResponseMessageStylesheet());
+            String styleSheet = Util.createTemporaryFile(input, this.getConfiguration().getTempDir());
+            Util.applyXSLT(xmlTempFile, styleSheet, outputXslFoFile);
 
             // 3. Transform to PDF
             String outputPDFFile = Util.generateRandomFileName();
