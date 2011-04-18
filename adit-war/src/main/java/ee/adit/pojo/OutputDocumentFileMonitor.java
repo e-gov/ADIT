@@ -7,6 +7,7 @@ public class OutputDocumentFileMonitor {
     private String contentType;
     private String description;
     private Long sizeBytes;
+    private String fileType;
     private String data;
 
     public Long getId() {
@@ -48,6 +49,14 @@ public class OutputDocumentFileMonitor {
     public void setSizeBytes(Long sizeBytes) {
         this.sizeBytes = sizeBytes;
     }
+    
+	public String getFileType() {
+		return fileType;
+	}
+
+	public void setFileType(String fileType) {
+		this.fileType = fileType;
+	}
 
     public String getData() {
         return data;
