@@ -79,111 +79,123 @@ public class SimplifiedDigiDocParserTest extends TestCase {
 		}
 	}
 	
-	/*public void testExtractFileContentsFromDdoc_3Files() {
+	public void testExtractFileContentsFromDdoc_3Files() {
 		String pathToDigiDoc = (new File("target/test-classes/ValidDigiDoc_3Files_NoSignatures.ddoc")).getAbsolutePath();
-		String temporaryFilesDir = "c:\\temp";
-		List<OutputDocumentFile> files = new ArrayList<OutputDocumentFile>();
-		
-		OutputDocumentFile f0 = new OutputDocumentFile();
-		f0.setId(0L);
-		f0.setFileType(DocumentService.FILETYPE_NAME_DOCUMENT_FILE);
-		f0.setDdocDataFileId("D0");
-		f0.setDdocDataFileStartOffset(274L);
-		f0.setDdocDataFileEndOffset(1145822L);
-		
-		OutputDocumentFile f1 = new OutputDocumentFile();
-		f1.setId(1L);
-		f1.setFileType(DocumentService.FILETYPE_NAME_DOCUMENT_FILE);
-		f1.setDdocDataFileId("D1");
-		f1.setDdocDataFileStartOffset(1145980L);
-		f1.setDdocDataFileEndOffset(2203356L);
-		
-		OutputDocumentFile f2 = new OutputDocumentFile();
-		f2.setId(2L);
-		f2.setFileType(DocumentService.FILETYPE_NAME_DOCUMENT_FILE);
-		f2.setDdocDataFileId("D2");
-		f2.setDdocDataFileStartOffset(2203517L);
-		f2.setDdocDataFileEndOffset(3256838L);
-		
-		files.add(f0);
-		files.add(f1);
-		files.add(f2);
-		
-		InputStream ddocContainerAsStream = null;
-		try {
-			ddocContainerAsStream = new FileInputStream(pathToDigiDoc);
-			SimplifiedDigiDocParser.extractFileContentsFromDdoc(ddocContainerAsStream, files, temporaryFilesDir);
+		String temporaryFilesDir = System.getProperty("java.io.tmpdir");
+		if (!Util.isNullOrEmpty(temporaryFilesDir) && (new File(temporaryFilesDir)).exists()) {
+			List<OutputDocumentFile> files = new ArrayList<OutputDocumentFile>();
 			
-			assertNotNull(files.get(0).getSysTempFile());
-			assertNotNull(files.get(1).getSysTempFile());
-			assertNotNull(files.get(2).getSysTempFile());
+			OutputDocumentFile f0 = new OutputDocumentFile();
+			f0.setId(0L);
+			f0.setFileType(DocumentService.FILETYPE_NAME_DOCUMENT_FILE);
+			f0.setDdocDataFileId("D0");
+			f0.setDdocDataFileStartOffset(274L);
+			f0.setDdocDataFileEndOffset(1145822L);
 			
-			String digest0 = Util.convertToHexString(Util.calculateMd5Checksum(files.get(0).getSysTempFile()));
-			String digest1 = Util.convertToHexString(Util.calculateMd5Checksum(files.get(1).getSysTempFile()));
-			String digest2 = Util.convertToHexString(Util.calculateMd5Checksum(files.get(2).getSysTempFile()));
+			OutputDocumentFile f1 = new OutputDocumentFile();
+			f1.setId(1L);
+			f1.setFileType(DocumentService.FILETYPE_NAME_DOCUMENT_FILE);
+			f1.setDdocDataFileId("D1");
+			f1.setDdocDataFileStartOffset(1145980L);
+			f1.setDdocDataFileEndOffset(2203356L);
 			
-			assertEquals("6933218FA1EF33877128DD745066A847", digest0);
-			assertEquals("E042E04EE0642F06420F18831E7491D6", digest1);
-			assertEquals("F0C9D0AAF8F78E700AB728C0E7B1C1B2", digest2);
-		} catch (Exception ex) {
-			fail(ex.getMessage());
-		} finally {
-			Util.safeCloseStream(ddocContainerAsStream);
+			OutputDocumentFile f2 = new OutputDocumentFile();
+			f2.setId(2L);
+			f2.setFileType(DocumentService.FILETYPE_NAME_DOCUMENT_FILE);
+			f2.setDdocDataFileId("D2");
+			f2.setDdocDataFileStartOffset(2203517L);
+			f2.setDdocDataFileEndOffset(3256838L);
+			
+			files.add(f0);
+			files.add(f1);
+			files.add(f2);
+			
+			InputStream ddocContainerAsStream = null;
+			try {
+				ddocContainerAsStream = new FileInputStream(pathToDigiDoc);
+				SimplifiedDigiDocParser.extractFileContentsFromDdoc(ddocContainerAsStream, files, temporaryFilesDir);
+				
+				assertNotNull(files.get(0).getSysTempFile());
+				assertNotNull(files.get(1).getSysTempFile());
+				assertNotNull(files.get(2).getSysTempFile());
+				
+				String digest0 = Util.convertToHexString(Util.calculateMd5Checksum(files.get(0).getSysTempFile()));
+				String digest1 = Util.convertToHexString(Util.calculateMd5Checksum(files.get(1).getSysTempFile()));
+				String digest2 = Util.convertToHexString(Util.calculateMd5Checksum(files.get(2).getSysTempFile()));
+				
+				assertEquals("6933218FA1EF33877128DD745066A847", digest0);
+				assertEquals("E042E04EE0642F06420F18831E7491D6", digest1);
+				assertEquals("F0C9D0AAF8F78E700AB728C0E7B1C1B2", digest2);
+			} catch (Exception ex) {
+				fail(ex.getMessage());
+			} finally {
+				Util.safeCloseStream(ddocContainerAsStream);
+			}
+		} else {
+			// If temporary folder cannot be found for some reason then succeed
+			// by default to avoid blocking compilation
+			assertTrue(true);
 		}
 	}
 	
 	public void testExtractFileContentsFromDdoc_3FilesReversed() {
 		String pathToDigiDoc = (new File("target/test-classes/ValidDigiDoc_3Files_NoSignatures.ddoc")).getAbsolutePath();
-		String temporaryFilesDir = "c:\\temp";
-		List<OutputDocumentFile> files = new ArrayList<OutputDocumentFile>();
-		
-		OutputDocumentFile f0 = new OutputDocumentFile();
-		f0.setId(0L);
-		f0.setFileType(DocumentService.FILETYPE_NAME_DOCUMENT_FILE);
-		f0.setDdocDataFileId("D0");
-		f0.setDdocDataFileStartOffset(274L);
-		f0.setDdocDataFileEndOffset(1145822L);
-		
-		OutputDocumentFile f1 = new OutputDocumentFile();
-		f1.setId(1L);
-		f1.setFileType(DocumentService.FILETYPE_NAME_DOCUMENT_FILE);
-		f1.setDdocDataFileId("D1");
-		f1.setDdocDataFileStartOffset(1145980L);
-		f1.setDdocDataFileEndOffset(2203356L);
-		
-		OutputDocumentFile f2 = new OutputDocumentFile();
-		f2.setId(2L);
-		f2.setFileType(DocumentService.FILETYPE_NAME_DOCUMENT_FILE);
-		f2.setDdocDataFileId("D2");
-		f2.setDdocDataFileStartOffset(2203517L);
-		f2.setDdocDataFileEndOffset(3256838L);
-		
-		files.add(f2);
-		files.add(f1);
-		files.add(f0);
-		
-		InputStream ddocContainerAsStream = null;
-		try {
-			ddocContainerAsStream = new FileInputStream(pathToDigiDoc);
-			SimplifiedDigiDocParser.extractFileContentsFromDdoc(ddocContainerAsStream, files, temporaryFilesDir);
+		String temporaryFilesDir = System.getProperty("java.io.tmpdir");
+		if (!Util.isNullOrEmpty(temporaryFilesDir) && (new File(temporaryFilesDir)).exists()) {
+			List<OutputDocumentFile> files = new ArrayList<OutputDocumentFile>();
 			
-			assertNotNull(files.get(0).getSysTempFile());
-			assertNotNull(files.get(1).getSysTempFile());
-			assertNotNull(files.get(2).getSysTempFile());
+			OutputDocumentFile f0 = new OutputDocumentFile();
+			f0.setId(0L);
+			f0.setFileType(DocumentService.FILETYPE_NAME_DOCUMENT_FILE);
+			f0.setDdocDataFileId("D0");
+			f0.setDdocDataFileStartOffset(274L);
+			f0.setDdocDataFileEndOffset(1145822L);
 			
-			String digest0 = Util.convertToHexString(Util.calculateMd5Checksum(files.get(0).getSysTempFile()));
-			String digest1 = Util.convertToHexString(Util.calculateMd5Checksum(files.get(1).getSysTempFile()));
-			String digest2 = Util.convertToHexString(Util.calculateMd5Checksum(files.get(2).getSysTempFile()));
+			OutputDocumentFile f1 = new OutputDocumentFile();
+			f1.setId(1L);
+			f1.setFileType(DocumentService.FILETYPE_NAME_DOCUMENT_FILE);
+			f1.setDdocDataFileId("D1");
+			f1.setDdocDataFileStartOffset(1145980L);
+			f1.setDdocDataFileEndOffset(2203356L);
 			
-			assertEquals("6933218FA1EF33877128DD745066A847", digest0);
-			assertEquals("E042E04EE0642F06420F18831E7491D6", digest1);
-			assertEquals("F0C9D0AAF8F78E700AB728C0E7B1C1B2", digest2);
-		} catch (Exception ex) {
-			fail(ex.getMessage());
-		} finally {
-			Util.safeCloseStream(ddocContainerAsStream);
+			OutputDocumentFile f2 = new OutputDocumentFile();
+			f2.setId(2L);
+			f2.setFileType(DocumentService.FILETYPE_NAME_DOCUMENT_FILE);
+			f2.setDdocDataFileId("D2");
+			f2.setDdocDataFileStartOffset(2203517L);
+			f2.setDdocDataFileEndOffset(3256838L);
+			
+			files.add(f2);
+			files.add(f1);
+			files.add(f0);
+			
+			InputStream ddocContainerAsStream = null;
+			try {
+				ddocContainerAsStream = new FileInputStream(pathToDigiDoc);
+				SimplifiedDigiDocParser.extractFileContentsFromDdoc(ddocContainerAsStream, files, temporaryFilesDir);
+				
+				assertNotNull(files.get(0).getSysTempFile());
+				assertNotNull(files.get(1).getSysTempFile());
+				assertNotNull(files.get(2).getSysTempFile());
+				
+				String digest0 = Util.convertToHexString(Util.calculateMd5Checksum(files.get(0).getSysTempFile()));
+				String digest1 = Util.convertToHexString(Util.calculateMd5Checksum(files.get(1).getSysTempFile()));
+				String digest2 = Util.convertToHexString(Util.calculateMd5Checksum(files.get(2).getSysTempFile()));
+				
+				assertEquals("6933218FA1EF33877128DD745066A847", digest0);
+				assertEquals("E042E04EE0642F06420F18831E7491D6", digest1);
+				assertEquals("F0C9D0AAF8F78E700AB728C0E7B1C1B2", digest2);
+			} catch (Exception ex) {
+				fail(ex.getMessage());
+			} finally {
+				Util.safeCloseStream(ddocContainerAsStream);
+			}
+		} else {
+			// If temporary folder cannot be found for some reason then succeed
+			// by default to avoid blocking compilation
+			assertTrue(true);
 		}
-	}*/
+	}
 }
 
 /*$CPS$ This comment was generated by CodePro. Do not edit it.
