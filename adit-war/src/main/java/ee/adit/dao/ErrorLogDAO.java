@@ -51,7 +51,8 @@ public class ErrorLogDAO extends HibernateDaoSupport {
     /**
      * Fetch error log by date and level.
      * 
-     * @param comparisonDate comparison date
+     * @param comparisonDate
+     * 		Oldest allowed date since when errors will be requested
      * @param level log level
      * @return list of log entries
      */
@@ -61,17 +62,17 @@ public class ErrorLogDAO extends HibernateDaoSupport {
         // FATAL
         if (LogService.ERROR_LOG_LEVEL_FATAL.equalsIgnoreCase(level)) {
             sql = "select count(*) from ErrorLog where (errorLevel = '" + LogService.ERROR_LOG_LEVEL_FATAL
-                    + "') and errorDate <= :comparisonDate";
+                    + "') and errorDate >= :comparisonDate";
         } else if (LogService.ERROR_LOG_LEVEL_ERROR.equalsIgnoreCase(level)) {
             sql = "select count(*) from ErrorLog where (errorLevel = '" + LogService.ERROR_LOG_LEVEL_FATAL
-                    + "' or errorLevel = '" + LogService.ERROR_LOG_LEVEL_ERROR + "') and errorDate <= :comparisonDate";
+                    + "' or errorLevel = '" + LogService.ERROR_LOG_LEVEL_ERROR + "') and errorDate >= :comparisonDate";
         } else if (LogService.ERROR_LOG_LEVEL_WARN.equalsIgnoreCase(level)) {
             sql = "select count(*) from ErrorLog where (errorLevel = '" + LogService.ERROR_LOG_LEVEL_FATAL
                     + "' or errorLevel = '" + LogService.ERROR_LOG_LEVEL_ERROR + "' or errorLevel = '"
-                    + LogService.ERROR_LOG_LEVEL_WARN + "') and errorDate <= :comparisonDate";
+                    + LogService.ERROR_LOG_LEVEL_WARN + "') and errorDate >= :comparisonDate";
         } else {
             sql = "select count(*) from ErrorLog where (errorLevel = '" + LogService.ERROR_LOG_LEVEL_FATAL
-                    + "') and errorDate <= :comparisonDate";
+                    + "') and errorDate >= :comparisonDate";
         }
 
         Long result = 0L;
