@@ -5,7 +5,7 @@
   
   <module>
     <web>
-      <web-uri>adit-1.0.23.war</web-uri>
+      <web-uri>adit-1.0.24.war</web-uri>
       <context-root>adit</context-root>
     </web>
   </module>
