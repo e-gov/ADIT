@@ -15,6 +15,7 @@
 		<property name="requestLogDAO" ref="requestLogDAO" />
 		<property name="errorLogDAO" ref="errorLogDAO" />
 		<property name="downloadRequestLogDAO" ref="downloadRequestLogDAO" />
+		<property name="metadataRequestLogDAO" ref="metadataRequestLogDAO" />
 	</bean>
 
 	<bean id="userService" class="ee.adit.service.UserService">

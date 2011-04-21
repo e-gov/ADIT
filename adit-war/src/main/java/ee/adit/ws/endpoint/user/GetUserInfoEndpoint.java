@@ -125,7 +125,7 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
                             // Add default ADIT error messages for non-existent users.
                             // This is useful for front-end applications so they do not
                             // need to have their own error messages for ADIT events.
-                            List<GetUserInfoResponseAttachmentUser> userInfoList = this.getUserService().getUserInfo(userList);
+                            List<GetUserInfoResponseAttachmentUser> userInfoList = this.getUserService().getUserInfo(userList, this.getConfiguration().getGlobalDiskQuota());
                             for (GetUserInfoResponseAttachmentUser resultUser : userInfoList) {
                                 if (!resultUser.isHasJoined()) {
 	                            	AditCodedException defaultException = new AditCodedException("user.nonExistent");

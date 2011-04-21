@@ -21,6 +21,10 @@
 	<bean id="downloadRequestLogDAO" class="ee.adit.dao.DownloadRequestLogDAO">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
+	
+	<bean id="metadataRequestLogDAO" class="ee.adit.dao.MetadataRequestLogDAO">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
 
 	<bean id="notificationDAO" class="ee.adit.dao.NotificationDAO">
 		<property name="sessionFactory" ref="sessionFactory" />

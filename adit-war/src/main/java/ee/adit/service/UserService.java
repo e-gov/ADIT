@@ -36,6 +36,7 @@ import ee.adit.pojo.GetUserInfoRequestAttachmentUserList;
 import ee.adit.pojo.GetUserInfoResponseAttachmentUser;
 import ee.adit.pojo.Notification;
 import ee.adit.util.DVKUserSyncResult;
+import ee.adit.util.Util;
 
 /**
  * Provides services for manipulating and retrieving user data.
@@ -340,16 +341,20 @@ public class UserService {
      * Retrieves user information.
      * 
      * @param userList
-     *            userlist
+     * 		List of users requested
+     * @param globalDiskQuota
+     * 		Application global disk quota
      * @return list of users information
      */
-    public List<GetUserInfoResponseAttachmentUser> getUserInfo(GetUserInfoRequestAttachmentUserList userList) {
+    public List<GetUserInfoResponseAttachmentUser> getUserInfo(
+    		GetUserInfoRequestAttachmentUserList userList,
+    		Long globalDiskQuota) {
         List<GetUserInfoResponseAttachmentUser> result = new ArrayList<GetUserInfoResponseAttachmentUser>();
 
         List<String> userCodes = userList.getCodes();
 
         for (String userCode : userCodes) {
-            GetUserInfoResponseAttachmentUser userInfo = getUserInfo(userCode);
+            GetUserInfoResponseAttachmentUser userInfo = getUserInfo(userCode, globalDiskQuota);
             result.add(userInfo);
         }
 
@@ -363,13 +368,14 @@ public class UserService {
      *            user code
      * @return user information
      */
-    public GetUserInfoResponseAttachmentUser getUserInfo(String userCode) {
+    public GetUserInfoResponseAttachmentUser getUserInfo(String userCode, Long globalDiskQuota) {
 
         GetUserInfoResponseAttachmentUser result = new GetUserInfoResponseAttachmentUser();
 
         AditUser user = this.getAditUserDAO().getUserByID(userCode);
 
-        Long diskquota = null;
+        long globalDiskQuotaAsValueType = (globalDiskQuota == null) ? 0L : globalDiskQuota.longValue();
+        long userTotalDiskQuota = 0L;
         long usedSpace;
         Long unusedSpace = null;
         boolean usesDVK = false;
@@ -386,30 +392,16 @@ public class UserService {
             }
             hasJoined = user.getActive();
 
-            usedSpace = this.getAditUserDAO().getUsedSpaceForUser(userCode);
-            logger.debug("Information for user (" + userCode + "): ");
-            logger.debug("UsedSpace for user: " + usedSpace);
+            // Get total disk quota for current user
+            userTotalDiskQuota = getTotalDiskQuota(user, globalDiskQuotaAsValueType);
+            
+            // Get space used by current user
+            usedSpace = (user.getDiskQuotaUsed() == null) ? 0L : user.getDiskQuotaUsed().longValue();  
 
-            if (user.getDiskQuota() != null && user.getDiskQuota() > 0) {
-                // Disk quota defined in user table
-                user.getDiskQuota();
-            } else {
-                // User disk quota not defined in user table - check user type
-                // for quota
-                Usertype usertype = this.getUsertypeDAO().getUsertype(user);
-                if (usertype != null && usertype.getDiskQuota() != null) {
-                    diskquota = usertype.getDiskQuota();
-                }
-            }
+            // Calculate free space available to current user
+            unusedSpace = userTotalDiskQuota - usedSpace;
 
-            if (diskquota != null) {
-                // Calculate the unused space for this user
-                unusedSpace = diskquota.longValue() - usedSpace;
-            } else {
-                throw new AditInternalException("User disk quota not defined by user/usertype data.");
-            }
-
-            if (user.getDvkOrgCode() != null && !"".equalsIgnoreCase(user.getDvkOrgCode().trim())) {
+            if (!Util.isNullOrEmpty(user.getDvkOrgCode())) {
                 usesDVK = true;
                 canWrite = false;
             }
@@ -423,7 +415,6 @@ public class UserService {
             result.setCanRead(canRead);
             result.setCanWrite(canWrite);
             result.setUsesDVK(usesDVK);
-
         } else {
             result.setUserCode(userCode);
             // User has not joined the service
@@ -431,7 +422,6 @@ public class UserService {
         }
 
         return result;
-
     }
 
     /**
@@ -484,12 +474,12 @@ public class UserService {
     public long getTotalDiskQuota(AditUser user, long globalDiskQuota) {
         long result = 0;
 
-        if (user.getDiskQuota() != null) {
+        if ((user.getDiskQuota() != null) && (user.getDiskQuota() > 0)) {
             result = user.getDiskQuota();
         } else {
             Usertype usertype = this.getUsertypeDAO().getUsertype(user);
             if (usertype != null) {
-                if (usertype.getDiskQuota() != null) {
+                if ((usertype.getDiskQuota() != null) && (usertype.getDiskQuota() > 0)) {
                     result = usertype.getDiskQuota();
                 } else {
                     result = globalDiskQuota;
