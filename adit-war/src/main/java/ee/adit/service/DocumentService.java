@@ -3086,7 +3086,7 @@ public class DocumentService {
             	AditUser user = this.getAditUserDAO().getUserByID(signerCodeWithCountryPrefix);
 	            if (user != null) {
 	            	result.setUserCode(user.getUserCode());
-	            	result.setUserCode(user.getFullName());
+	            	result.setUserName(user.getFullName());
 	            }
             }
         }

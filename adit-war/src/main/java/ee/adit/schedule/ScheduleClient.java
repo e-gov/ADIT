@@ -277,38 +277,34 @@ public class ScheduleClient {
                                     + ((resultEventId == null) ? "NULL" : resultEventId.toString()));
 
                             if (ret.getLisaSyndmusResponse().getKeha().getTulemus() != null) {
-                                BigInteger resultCode = ret.getLisaSyndmusResponse().getKeha().getTulemus()
-                                        .getTulemuseKood();
-                                String resultMessage = ret.getLisaSyndmusResponse().getKeha().getTulemus()
-                                        .getTulemuseTekst();
+                                BigInteger resultCode = ret.getLisaSyndmusResponse().getKeha().getTulemus().getTulemuseKood();
+                                String resultMessage = ret.getLisaSyndmusResponse().getKeha().getTulemus().getTulemuseTekst();
                                 logger.debug("LisaSyndmus result code: "
                                         + ((resultCode == null) ? "NULL" : resultCode.toString()));
                                 logger.debug("LisaSyndmus result message: " + resultMessage);
 
                                 if ((resultCode != null) && (resultCode.intValue() == RESULT_OK)) {
                                     eventId = resultEventId.longValue();
-                                    logger
-                                            .debug("Successfully added notification to 'teavituskalender' database. Related document ID: "
-                                                    + String.valueOf(relatedDocumentId));
+                                    logger.debug("Successfully added notification to 'teavituskalender' database. Related document ID: "
+                                    	+ String.valueOf(relatedDocumentId));
+                                } else {
+                                	logger.error("Error adding notification to 'teavituskalender' database. Result code: "
+                                		+ String.valueOf(resultCode) + ", event ID: " + String.valueOf(resultEventId));
                                 }
                             } else {
-                                logger
-                                        .error("Error adding notification to 'teavituskalender' database. Response's 'tulemus' part is NULL. Related document ID: "
-                                                + String.valueOf(relatedDocumentId));
+                                logger.error("Error adding notification to 'teavituskalender' database. Response's 'tulemus' part is NULL. Related document ID: "
+                                	+ String.valueOf(relatedDocumentId));
                             }
                         } else {
-                            logger
-                                    .error("Error adding notification to 'teavituskalender' database. Response's 'keha' part is NULL. Related document ID: "
-                                            + String.valueOf(relatedDocumentId));
+                            logger.error("Error adding notification to 'teavituskalender' database. Response's 'keha' part is NULL. Related document ID: "
+                            	+ String.valueOf(relatedDocumentId));
                         }
                     } else {
-                        logger
-                                .error("Error adding notification to 'teavituskalender' database. Response's 'LisaSyndmusResponse' part is NULL. Related document ID: "
+                        logger.error("Error adding notification to 'teavituskalender' database. Response's 'LisaSyndmusResponse' part is NULL. Related document ID: "
                                         + String.valueOf(relatedDocumentId));
                     }
                 } else {
-                    logger
-                            .error("Error adding notification to 'teavituskalender' database. Response document is NULL. Related document ID: "
+                    logger.error("Error adding notification to 'teavituskalender' database. Response document is NULL. Related document ID: "
                                     + String.valueOf(relatedDocumentId));
                 }
             } finally {
