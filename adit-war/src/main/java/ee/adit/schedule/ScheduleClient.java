@@ -289,7 +289,7 @@ public class ScheduleClient {
                                     	+ String.valueOf(relatedDocumentId));
                                 } else {
                                 	logger.error("Error adding notification to 'teavituskalender' database. Result code: "
-                                		+ String.valueOf(resultCode) + ", event ID: " + String.valueOf(resultEventId));
+                                		+ String.valueOf(resultCode) + ", result message: "+ resultMessage +", event ID: " + String.valueOf(resultEventId));
                                 }
                             } else {
                                 logger.error("Error adding notification to 'teavituskalender' database. Response's 'tulemus' part is NULL. Related document ID: "
