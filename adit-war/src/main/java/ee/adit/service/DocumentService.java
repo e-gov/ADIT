@@ -731,6 +731,7 @@ public class DocumentService {
 		                	
 		                	StartEndOffsetPair currentFileOffsets = dataFileOffsets.get(ddocDataFile.getId());
 		                	if (currentFileOffsets != null) {
+		                		localFile.setFileDataInDdoc(true);
 		                		localFile.setDdocDataFileId(ddocDataFile.getId());
 		                		localFile.setDdocDataFileStartOffset(currentFileOffsets.getStart());
 		                		localFile.setDdocDataFileEndOffset(currentFileOffsets.getEnd());
@@ -1304,9 +1305,9 @@ public class DocumentService {
                                             // with the same GUID or DVK ID.
                                             if (this.getDocumentDAO().checkIfDocumentExists(dvkDocument, recipient)) {
                                                 throw new AditInternalException(
-                                                        "Document already sent to user. DVK ID: "
-                                                                + dvkDocument.getDhlId() + ", recipient: "
-                                                                + recipient.getIsikukood().trim());
+                                                    "Document already sent to user. DVK ID: "
+                                                            + dvkDocument.getDhlId() + ", recipient: "
+                                                            + recipient.getIsikukood().trim());
                                             }
 
                                             // Save document
