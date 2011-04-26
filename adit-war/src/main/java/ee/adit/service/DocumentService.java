@@ -773,13 +773,15 @@ public class DocumentService {
 	                	}
 	                }
 	                result.setSuccess(true);
+    			} catch (AditCodedException ex) {
+    				throw ex;
     			} catch (DigiDocException ex) {
                     logger.error(ex);
     				AditCodedException aditCodedException = new AditCodedException("digidoc.extract.incorrectContainer");
                     aditCodedException.setParameters(new Object[] {});
                     throw aditCodedException;
-    			} catch (Exception ex1) {
-                    logger.error(ex1);
+    			} catch (Exception ex) {
+                    logger.error(ex);
     				AditCodedException aditCodedException = new AditCodedException("digidoc.extract.genericException");
                     aditCodedException.setParameters(new Object[] {});
                     throw aditCodedException;
