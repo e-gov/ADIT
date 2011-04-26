@@ -511,12 +511,12 @@ public class DocumentService {
             final String creatorUserName,
             final String creatorName,
             final String digidocConfigFile)
-            throws FileNotFoundException {
+            throws FileNotFoundException, AditCodedException {
         
     	final DocumentDAO docDao = this.getDocumentDAO();
 
         return (SaveItemInternalResult) this.getDocumentDAO().getHibernateTemplate().execute(new HibernateCallback() {
-            public Object doInHibernate(Session session) throws HibernateException, SQLException {
+            public Object doInHibernate(Session session) throws HibernateException, SQLException, AditCodedException {
                 boolean involvedSignatureContainerExtraction = false;
             	Date creationDate = new Date();
                 Document document = new Document();
@@ -559,7 +559,7 @@ public class DocumentService {
                     	DigiDocExtractionResult extractionResult = extractDigiDocContainer(file.getSysTempFile(), digidocConfigFile);
                     	if (extractionResult.isSuccess()) {
                     		file.setFileType(FILETYPE_NAME_SIGNATURE_CONTAINER);
-                    		document.setSigned(true);
+                    		document.setSigned((extractionResult.getSignatures() != null) && (extractionResult.getSignatures().size() > 0));
                     		involvedSignatureContainerExtraction = true;
                     		
                     		for (int i = 0; i < extractionResult.getFiles().size(); i++) {
@@ -606,12 +606,12 @@ public class DocumentService {
     		final OutputDocumentFile file,
             final long remainingDiskQuota,
             final String temporaryFilesDir,
-            final String digidocConfigFile) {
+            final String digidocConfigFile) throws HibernateException, SQLException, AditCodedException {
         
     	final DocumentDAO docDao = this.getDocumentDAO();
 
         return (SaveItemInternalResult) this.getDocumentDAO().getHibernateTemplate().execute(new HibernateCallback() {
-            public Object doInHibernate(Session session) throws HibernateException, SQLException {
+            public Object doInHibernate(Session session) throws HibernateException, SQLException, AditCodedException {
                 SaveItemInternalResult result = new SaveItemInternalResult();
                 
                 Document document = (Document) session.get(Document.class, documentId);
@@ -707,7 +707,9 @@ public class DocumentService {
      * 		File and signature meta-data wrapped into
      * 		{@link DigiDocExtractionResult} object.
      */
-    private DigiDocExtractionResult extractDigiDocContainer(final String pathToContainer, final String digidocConfigFile) {
+    private DigiDocExtractionResult extractDigiDocContainer(final String pathToContainer, final String digidocConfigFile)
+    	throws AditCodedException {
+    	
     	DigiDocExtractionResult result = new DigiDocExtractionResult();
     	
     	if (!Util.isNullOrEmpty(pathToContainer)) {
@@ -737,7 +739,10 @@ public class DocumentService {
 		                		localFile.setDdocDataFileEndOffset(currentFileOffsets.getEnd());
 		                		localFile.setFileData(Hibernate.createBlob(currentFileOffsets.getDataMd5Hash()));
 		                	} else {
-		                		throw new Exception("Failed to find DataFile offsets for data file " + ddocDataFile.getId());
+		                		logger.error("Failed to find DataFile offsets for data file " + ddocDataFile.getId());
+		                		AditCodedException aditCodedException = new AditCodedException("digidoc.extract.genericException");
+		                        aditCodedException.setParameters(new Object[] {});
+		                        throw aditCodedException;
 		                	}
 		                	
 		                	result.getFiles().add(localFile);
@@ -749,23 +754,47 @@ public class DocumentService {
 	                if (signaturesCount > 0) {
 	                	for (int i = 0; i < signaturesCount; i++) {
 	                		Signature ddocSignature = ddocContainer.getSignature(i);
-	                        ee.adit.dao.pojo.Signature localSignature = convertDigiDocSignatureToLocalSignature(ddocSignature);
-	                        logger.info("Extracted signature of " + localSignature.getSignerName());
-	                        result.getSignatures().add(localSignature);
+	                		
+	                		// Convert DigiDoc signature to local signature
+	                		ee.adit.dao.pojo.Signature localSignature = convertDigiDocSignatureToLocalSignature(ddocSignature);
+	                		logger.info("Extracted signature of " + localSignature.getSignerName());
+	                		
+	                		// Verify the signature
+	                		ArrayList verificationErrors = ddocSignature.verify(ddocContainer, true, true);
+	                        
+	                		if ((verificationErrors == null) || (verificationErrors.size() < 1)) {
+		                        result.getSignatures().add(localSignature);
+	                		} else {
+	                            logger.error("Signature given by "+ localSignature.getSignerName() +" was found to be invalid.");
+	                			AditCodedException aditCodedException = new AditCodedException("digidoc.extract.invalidSignature");
+	                            aditCodedException.setParameters(new Object[] {localSignature.getSignerName()});
+	                            throw aditCodedException;
+	                		}
 	                	}
 	                }
 	                result.setSuccess(true);
-    			} catch (Exception ex) {
-    				logger.error(ex);
-    				result.setSuccess(false);
-    				result.getFiles().clear();
-    				result.getSignatures().clear();
+    			} catch (DigiDocException ex) {
+                    logger.error(ex);
+    				AditCodedException aditCodedException = new AditCodedException("digidoc.extract.incorrectContainer");
+                    aditCodedException.setParameters(new Object[] {});
+                    throw aditCodedException;
+    			} catch (Exception ex1) {
+                    logger.error(ex1);
+    				AditCodedException aditCodedException = new AditCodedException("digidoc.extract.genericException");
+                    aditCodedException.setParameters(new Object[] {});
+                    throw aditCodedException;
     			}
     		} else {
-    			logger.warn("DigiDoc container extraction failed because container file \""+ pathToContainer +"\" does not exist!");
+    			logger.error("DigiDoc container extraction failed because container file \""+ pathToContainer +"\" does not exist!");
+    			AditCodedException aditCodedException = new AditCodedException("digidoc.extract.genericException");
+                aditCodedException.setParameters(new Object[] {});
+                throw aditCodedException;
     		}
     	} else {
-    		logger.warn("DigiDoc container extraction failed because container file was not supplied!");
+    		logger.error("DigiDoc container extraction failed because container file was not supplied!");
+    		AditCodedException aditCodedException = new AditCodedException("digidoc.extract.genericException");
+            aditCodedException.setParameters(new Object[] {});
+            throw aditCodedException;
     	}
     	
     	return result;
@@ -1273,7 +1302,7 @@ public class DocumentService {
                                             	DigiDocExtractionResult extractionResult = extractDigiDocContainer(file.getSysTempFile(), digidocConfigFile);
                                             	if (extractionResult.isSuccess()) {
                                             		file.setFileType(FILETYPE_NAME_SIGNATURE_CONTAINER);
-                                            		aditDocument.setSigned(true);
+                                            		aditDocument.setSigned((extractionResult.getSignatures() != null) && (extractionResult.getSignatures().size() > 0));
                                             		involvedSignatureContainerExtraction = true;
                                             		 
                                             		for (int i = 0; i < extractionResult.getFiles().size(); i++) {
@@ -1388,6 +1417,8 @@ public class DocumentService {
             } else {
                 logger.info("No incoming messages found in DVK Client database.");
             }
+        } catch (AditCodedException ex) {
+        	throw ex;
         } catch (Exception e) {
             throw new AditInternalException("Error while receiving documents from DVK Client database: ", e);
         }
