@@ -1,6 +1,7 @@
 package ee.adit.ws.endpoint.document;
 
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
@@ -283,14 +284,14 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
                     if ((status != null) && status.isSuccess()) {
                         AditUser recipient = this.getUserService().getUserByID(status.getCode());
                         if ((recipient != null)
-                                && (userService.findNotification(recipient.getUserNotifications(),
-                                        ScheduleClient.NOTIFICATION_TYPE_SHARE) != null)) {
-                            getScheduleClient().addEvent(
-                                    recipient,
-                                    this.getMessageSource().getMessage("scheduler.message.share",
-                                            new Object[] {doc.getTitle(), userCode }, Locale.ENGLISH),
-                                    this.getConfiguration().getSchedulerEventTypeName(), requestDate,
-                                    ScheduleClient.NOTIFICATION_TYPE_SHARE, doc.getId(), this.userService);
+                        	&& (userService.findNotification(recipient.getUserNotifications(), ScheduleClient.NOTIFICATION_TYPE_SHARE) != null)) {
+                            
+                        	List<Message> messageInAllKnownLanguages = this.getMessageService().getMessages("scheduler.message.share", new Object[] {doc.getTitle(), userCode});
+                        	String eventText = Util.joinMessages(messageInAllKnownLanguages, "<br/>");
+                        	
+                        	getScheduleClient().addEvent(recipient, eventText,
+                                this.getConfiguration().getSchedulerEventTypeName(), requestDate,
+                                ScheduleClient.NOTIFICATION_TYPE_SHARE, doc.getId(), this.userService);
                         }
                     }
                 }

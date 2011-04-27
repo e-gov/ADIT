@@ -3,6 +3,7 @@ package ee.adit.ws.endpoint.document;
 import java.io.InputStream;
 import java.util.Calendar;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
@@ -252,12 +253,14 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
                     AditUser docCreator = this.getUserService().getUserByID(doc.getCreatorCode());
                     if ((docCreator != null)
                         && (userService.findNotification(docCreator.getUserNotifications(), ScheduleClient.NOTIFICATION_TYPE_SIGN) != null)) {
-                        getScheduleClient().addEvent(
-                                docCreator,
-                                this.getMessageSource().getMessage("scheduler.message.sign",
-                                        new Object[] {doc.getTitle(), docCreator.getUserCode() }, Locale.ENGLISH),
-                                this.getConfiguration().getSchedulerEventTypeName(), requestDate,
-                                ScheduleClient.NOTIFICATION_TYPE_SIGN, doc.getId(), this.userService);
+                        
+                    	List<Message> messageInAllKnownLanguages = this.getMessageService().getMessages("scheduler.message.sign", new Object[] {doc.getTitle(), docCreator.getUserCode()});
+                    	String eventText = Util.joinMessages(messageInAllKnownLanguages, "<br/>");
+                    	
+                    	getScheduleClient().addEvent(
+                            docCreator, eventText,
+                            this.getConfiguration().getSchedulerEventTypeName(), requestDate,
+                            ScheduleClient.NOTIFICATION_TYPE_SIGN, doc.getId(), this.userService);
                     }
                 }
             } else {

@@ -3,6 +3,7 @@ package ee.adit.ws.endpoint.document;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
@@ -240,16 +241,17 @@ public class MarkDocumentViewedEndpoint extends AbstractAditBaseEndpoint {
                             if (!user.getUserCode().equalsIgnoreCase(doc.getCreatorCode())) {
                                 AditUser docCreator = this.getUserService().getUserByID(doc.getCreatorCode());
                                 if (!isViewed
-                                        && (docCreator != null)
-                                        && (userService.findNotification(docCreator.getUserNotifications(),
-                                                ScheduleClient.NOTIFICATION_TYPE_VIEW) != null)) {
+                                    && (docCreator != null)
+                                    && (userService.findNotification(docCreator.getUserNotifications(),
+                                            ScheduleClient.NOTIFICATION_TYPE_VIEW) != null)) {
+                                	
+                                	List<Message> messageInAllKnownLanguages = this.getMessageService().getMessages("scheduler.message.view", new Object[] {doc.getTitle(), xroadRequestUser.getUserCode()});
+                                	String eventText = Util.joinMessages(messageInAllKnownLanguages, "<br/>");
+                                	
                                     getScheduleClient().addEvent(
-                                            docCreator,
-                                            this.getMessageSource().getMessage("scheduler.message.view",
-                                                    new Object[] {doc.getTitle(), xroadRequestUser.getUserCode() },
-                                                    Locale.ENGLISH),
-                                            this.getConfiguration().getSchedulerEventTypeName(), requestDate,
-                                            ScheduleClient.NOTIFICATION_TYPE_VIEW, doc.getId(), this.userService);
+                                        docCreator, eventText,
+                                        this.getConfiguration().getSchedulerEventTypeName(), requestDate,
+                                        ScheduleClient.NOTIFICATION_TYPE_VIEW, doc.getId(), this.userService);
                                 }
                             }
                         } else {

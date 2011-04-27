@@ -207,7 +207,7 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
             }
 
             if ((doc.getDocumentSharings() != null) && (!doc.getDocumentSharings().isEmpty())) {
-                Iterator it = doc.getDocumentSharings().iterator();
+                Iterator<DocumentSharing> it = doc.getDocumentSharings().iterator();
                 while (it.hasNext()) {
                     DocumentSharing sharing = (DocumentSharing) it.next();
                     if ((request.getRecipientList() == null) || (request.getRecipientList().getCode() == null)
@@ -308,14 +308,16 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
                     if ((status != null) && status.isSuccess()) {
                         AditUser recipient = this.getUserService().getUserByID(status.getCode());
                         if ((recipient != null)
-                                && (userService.findNotification(recipient.getUserNotifications(),
-                                        ScheduleClient.NOTIFICATION_TYPE_SHARE) != null)) {
+                            && (userService.findNotification(recipient.getUserNotifications(),
+                                    ScheduleClient.NOTIFICATION_TYPE_SHARE) != null)) {
+                        	
+                        	List<Message> messageInAllKnownLanguages = this.getMessageService().getMessages("scheduler.message.unShare", new Object[] {userCode, doc.getTitle()});
+                        	String eventText = Util.joinMessages(messageInAllKnownLanguages, "<br/>");
+                        	
                             getScheduleClient().addEvent(
-                                    recipient,
-                                    this.getMessageSource().getMessage("scheduler.message.unShare",
-                                            new Object[] {userCode, doc.getTitle() }, Locale.ENGLISH),
-                                    this.getConfiguration().getSchedulerEventTypeName(), requestDate,
-                                    ScheduleClient.NOTIFICATION_TYPE_SHARE, doc.getId(), this.userService);
+                                recipient, eventText,
+                                this.getConfiguration().getSchedulerEventTypeName(), requestDate,
+                                ScheduleClient.NOTIFICATION_TYPE_SHARE, doc.getId(), this.userService);
                         }
                     }
                 }

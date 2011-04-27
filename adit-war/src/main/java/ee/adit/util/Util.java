@@ -23,6 +23,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.StringTokenizer;
@@ -50,6 +51,7 @@ import org.castor.core.util.Base64Decoder;
 import org.castor.core.util.Base64Encoder;
 
 import ee.adit.exception.AditInternalException;
+import ee.adit.pojo.Message;
 
 /**
  * Class providing static utility / helper methods.
@@ -1540,5 +1542,31 @@ public final class Util {
     	}
     	
     	return result.toString();
+    }
+    
+    public static String join(List<? extends CharSequence> s, String delimiter) {
+    	StringBuilder buffer = new StringBuilder();
+    	Iterator<? extends CharSequence> iter = s.iterator();
+    	if (iter.hasNext()) {
+    	    buffer.append(iter.next());
+    	    while (iter.hasNext()) {
+	    		buffer.append(delimiter);
+	    		buffer.append(iter.next());
+    	    }
+    	}
+    	return buffer.toString();
+    }
+    
+    public static String joinMessages(List<Message> messages, String delimiter) {
+    	StringBuilder buffer = new StringBuilder();
+    	Iterator<Message> iter = messages.iterator();
+    	if (iter.hasNext()) {
+    	    buffer.append(iter.next());
+    	    while (iter.hasNext()) {
+	    		buffer.append(delimiter);
+	    		buffer.append(iter.next().getValue());
+    	    }
+    	}
+    	return buffer.toString();
     }
 }

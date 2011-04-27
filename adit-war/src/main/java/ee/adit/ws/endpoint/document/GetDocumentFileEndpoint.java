@@ -282,16 +282,17 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
                                 if (!user.getUserCode().equalsIgnoreCase(doc.getCreatorCode())) {
                                     AditUser docCreator = this.getUserService().getUserByID(doc.getCreatorCode());
                                     if (!isViewed
-                                            && (docCreator != null)
-                                            && (userService.findNotification(docCreator.getUserNotifications(),
-                                                    ScheduleClient.NOTIFICATION_TYPE_VIEW) != null)) {
+                                        && (docCreator != null)
+                                        && (userService.findNotification(docCreator.getUserNotifications(),
+                                                ScheduleClient.NOTIFICATION_TYPE_VIEW) != null)) {
+                                    	
+                                    	List<Message> messageInAllKnownLanguages = this.getMessageService().getMessages("scheduler.message.view", new Object[] {doc.getTitle(), user.getUserCode()});
+                                    	String eventText = Util.joinMessages(messageInAllKnownLanguages, "<br/>");
+                                    	
                                         getScheduleClient().addEvent(
-                                                docCreator,
-                                                this.getMessageSource().getMessage("scheduler.message.view",
-                                                        new Object[] {doc.getTitle(), user.getUserCode() },
-                                                        Locale.ENGLISH),
-                                                this.getConfiguration().getSchedulerEventTypeName(), requestDate,
-                                                ScheduleClient.NOTIFICATION_TYPE_VIEW, doc.getId(), this.userService);
+                                            docCreator, eventText,
+                                            this.getConfiguration().getSchedulerEventTypeName(), requestDate,
+                                            ScheduleClient.NOTIFICATION_TYPE_VIEW, doc.getId(), this.userService);
                                     }
                                 }
                             } else {

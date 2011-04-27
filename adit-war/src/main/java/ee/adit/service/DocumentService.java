@@ -643,6 +643,7 @@ public class DocumentService {
                 	 DigiDocExtractionResult extractionResult = extractDigiDocContainer(file.getSysTempFile(), digidocConfigFile);
                 	 if (extractionResult.isSuccess()) {
                 		 file.setFileType(FILETYPE_NAME_SIGNATURE_CONTAINER);
+                		 document.setSigned((extractionResult.getSignatures() != null) && (extractionResult.getSignatures().size() > 0));
                 		 filesList.add(file);
                 		 involvedSignatureContainerExtraction = true;
                 		 
