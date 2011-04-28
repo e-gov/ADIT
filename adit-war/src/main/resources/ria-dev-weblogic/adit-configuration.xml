@@ -26,8 +26,9 @@
 		
 		<property name="locales">
 			<list>
-				<value>en_us</value>
 				<value>et_ee</value>
+				<value>en_us</value>
+				<value>ru_ru</value>
 			</list>
 		</property>
 		<property name="dvkOrgCode" value="70000007" />
@@ -48,7 +49,7 @@
 		<property name="documentSaveInterval" value="60000" />
 		<property name="documentSendToDvkInterval" value="60000" />
 		<property name="documentSendToAditInterval" value="60000" />
-		<property name="notificationSendInterval" value="60000" />
+		<property name="notificationSendInterval" value="900000" />
 		<property name="errorInterval" value="60000" />
 		<property name="errorLevel" value="FATAL" />
 	</bean>

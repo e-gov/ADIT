@@ -253,9 +253,12 @@ public class ScheduleClient {
             keha.setLopp(eventDate);
             
             // Start and end times of notification displaying
-            Calendar displayEndDate = eventDate;
+            Calendar displayStartDate = Calendar.getInstance();
+            displayStartDate.set(eventDate.get(Calendar.YEAR), eventDate.get(Calendar.MONTH), eventDate.get(Calendar.DAY_OF_MONTH));
+            Calendar displayEndDate = Calendar.getInstance();
+            displayEndDate.set(eventDate.get(Calendar.YEAR), eventDate.get(Calendar.MONTH), eventDate.get(Calendar.DAY_OF_MONTH));
             displayEndDate.add(Calendar.DAY_OF_MONTH, 7);
-            keha.setTeavitusAlgus(eventDate);
+            keha.setTeavitusAlgus(displayStartDate);
             keha.setTeavitusLopp(displayEndDate);
 
             ClassPathXmlApplicationContext ctx = null;

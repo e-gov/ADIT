@@ -25,8 +25,9 @@
 		
 		<property name="locales">
 			<list>
-				<value>en_us</value>
 				<value>et_ee</value>
+				<value>en_us</value>
+				<value>ru_ru</value>
 			</list>
 		</property>
 		<property name="dvkOrgCode" value="10425769" />
