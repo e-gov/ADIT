@@ -1027,7 +1027,8 @@ public class MonitorService {
             if (unsentNotificationCount > 0) {
                 throw new AditInternalException("Number of notifications not sent in time: " + unsentNotificationCount);
             } else {
-                success = true;
+                logger.info("No waiting notifications older than " + comparisonDate + " were found.");
+            	success = true;
             }
 
             Date end = new Date();
