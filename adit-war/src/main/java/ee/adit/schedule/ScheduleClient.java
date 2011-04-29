@@ -8,6 +8,7 @@ import java.util.Calendar;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.log4j.Logger;
+import org.apache.xmlbeans.GDateBuilder;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
@@ -255,11 +256,17 @@ public class ScheduleClient {
             // Start and end times of notification displaying
             Calendar displayStartDate = Calendar.getInstance();
             displayStartDate.set(eventDate.get(Calendar.YEAR), eventDate.get(Calendar.MONTH), eventDate.get(Calendar.DAY_OF_MONTH));
+            GDateBuilder displayStartDateWithoutTimeZone = new GDateBuilder(displayStartDate);
+            displayStartDateWithoutTimeZone.clearTimeZone();
+            
             Calendar displayEndDate = Calendar.getInstance();
             displayEndDate.set(eventDate.get(Calendar.YEAR), eventDate.get(Calendar.MONTH), eventDate.get(Calendar.DAY_OF_MONTH));
             displayEndDate.add(Calendar.DAY_OF_MONTH, 7);
-            keha.setTeavitusAlgus(displayStartDate);
-            keha.setTeavitusLopp(displayEndDate);
+            GDateBuilder displayEndDateWithoutTimeZone = new GDateBuilder(displayEndDate);
+            displayEndDateWithoutTimeZone.clearTimeZone();
+            
+            keha.setTeavitusAlgus(displayStartDateWithoutTimeZone.getCalendar());
+            keha.setTeavitusLopp(displayEndDateWithoutTimeZone.getCalendar());
 
             ClassPathXmlApplicationContext ctx = null;
             try {
