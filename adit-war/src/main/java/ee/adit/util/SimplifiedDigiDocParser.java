@@ -28,7 +28,13 @@ import ee.adit.pojo.OutputDocumentFile;
  * 
  * @author Jaak Lember, Interinx, jaak@interinx.com
  */
-public class SimplifiedDigiDocParser {
+public final class SimplifiedDigiDocParser {
+	/**
+	 * Default constructor.
+	 */
+	private SimplifiedDigiDocParser() {
+	}
+	
 	private static Logger logger = Logger.getLogger(SimplifiedDigiDocParser.class);
 	
 	/**

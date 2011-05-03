@@ -39,6 +39,9 @@ public class CustomXTeeConsumer {
 
     /**
      * Sets the central class for client-side Web services.
+     * 
+     * @param webServiceTemplate
+     *     Web service template
      */
     public void setWebServiceTemplate(WebServiceTemplate webServiceTemplate) {
         this.webServiceTemplate = webServiceTemplate;
@@ -48,6 +51,9 @@ public class CustomXTeeConsumer {
      * Sets the factory that is used to produce
      * <code>WebServiceMessageCallback</code> when web service invocation is
      * made.
+     * 
+     * @param msgCallbackFactory
+     *     Message callback factory
      */
     public void setMsgCallbackFactory(CustomMessageCallbackFactory msgCallbackFactory) {
         this.msgCallbackFactory = msgCallbackFactory;
@@ -57,7 +63,8 @@ public class CustomXTeeConsumer {
      * Sets service configurator, which overrides values taken from spring
      * configuration if possible.
      * 
-     * @param serviceConfiguration
+     * @param serviceConfigurator
+     *     Service configuration as {@link XTeeServiceConfiguration} object
      */
     public void setServiceConfiguration(XTeeServiceConfiguration serviceConfigurator) {
         this.serviceConfiguration = serviceConfigurator;
@@ -82,6 +89,7 @@ public class CustomXTeeConsumer {
     /**
      * Send request.
      * 
+     * @param <T> type
      * @param t request
      * @return response
      */
@@ -92,8 +100,10 @@ public class CustomXTeeConsumer {
     /**
      * Send request.
      * 
-     * @param request
+     * @param <T> type
+     * @param t request
      * @param attachments
+     *     request attachments
      * @return response
      */
     public <T> Object sendRequest(T t, Collection<XTeeAttachment> attachments) {
@@ -103,6 +113,7 @@ public class CustomXTeeConsumer {
     /**
      * Send request.
      * 
+     * @param <T> type
      * @param t request
      * @param xteeServiceConfigurator service configuration
      * @return response
@@ -114,6 +125,7 @@ public class CustomXTeeConsumer {
     /**
      * Send request.
      * 
+     * @param <T> type
      * @param t request
      * @param xteeServiceConfigurator service configuration
      * @param attachments attachments
@@ -127,6 +139,7 @@ public class CustomXTeeConsumer {
     /**
      * Send request.
      * 
+     * @param <T> type
      * @param t request
      * @param xteeServiceConfigurator service configuration
      * @param attachments attachments

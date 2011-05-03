@@ -109,21 +109,13 @@ public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
             }
 
             // Kontrollime, kas päringus märgitud isik on teenuse kasutaja
-            String userCode = ((this.getHeader().getAllasutus() != null) && (this.getHeader().getAllasutus().length() > 0)) ? this
-                    .getHeader().getAllasutus()
-                    : this.getHeader().getIsikukood();
-            AditUser user = this.getUserService().getUserByID(userCode);
-            if (user == null) {
-                AditCodedException aditCodedException = new AditCodedException("user.nonExistent");
-                aditCodedException.setParameters(new Object[] {userCode });
-                throw aditCodedException;
-            }
+            AditUser user = Util.getAditUserFromXroadHeader(this.getHeader(), this.getUserService());
 
             // Kontrollime, et kasutajakonto ligipääs poleks peatatud (kasutaja
             // lahkunud)
             if ((user.getActive() == null) || !user.getActive()) {
                 AditCodedException aditCodedException = new AditCodedException("user.inactive");
-                aditCodedException.setParameters(new Object[] {userCode });
+                aditCodedException.setParameters(new Object[] {user.getUserCode() });
                 throw aditCodedException;
             }
 
@@ -133,7 +125,7 @@ public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
             if (applicationAccessLevelForUser < 1) {
                 AditCodedException aditCodedException = new AditCodedException(
                         "application.insufficientPrivileges.forUser.read");
-                aditCodedException.setParameters(new Object[] {applicationName, user.getUserCode() });
+                aditCodedException.setParameters(new Object[] {applicationName, user.getUserCode()});
                 throw aditCodedException;
             }
 
@@ -141,7 +133,7 @@ public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
             String jdigidocCfgTmpFile = Util.createTemporaryFile(input, getConfiguration().getTempDir());
             
             GetDocumentListResponseAttachment att = this.documentService.getDocumentDAO().getDocumentSearchResult(
-                    request, userCode, this.getConfiguration().getTempDir(),
+                    request, user.getUserCode(), this.getConfiguration().getTempDir(),
                     this.getMessageSource().getMessage("files.nonExistentOrDeleted", new Object[] {}, Locale.ENGLISH),
                     user.getUserCode(), getConfiguration().getDocumentRetentionDeadlineDays(), jdigidocCfgTmpFile);
 
@@ -173,7 +165,7 @@ public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
 	            messages.setMessage(this.getMessageService().getMessages("request.getDocumentList.success", new Object[] {}));
 	            response.setMessages(messages);
             } else {
-	            messages.setMessage(this.getMessageService().getMessages("request.getDocumentList.noDocumentsFound", new Object[] {userCode}));
+	            messages.setMessage(this.getMessageService().getMessages("request.getDocumentList.noDocumentsFound", new Object[] {user.getUserCode()}));
 	            response.setMessages(messages);
             }
 
@@ -181,7 +173,7 @@ public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
 	            String additionalMessage = this.getMessageService().getMessage("request.getDocumentList.success", new Object[] {}, Locale.ENGLISH);
 	            additionalInformationForLog = LogService.REQUEST_LOG_SUCCESS + ": " + additionalMessage;
             } else {
-	            String additionalMessage = this.getMessageService().getMessage("request.getDocumentList.noDocumentsFound", new Object[] {userCode}, Locale.ENGLISH);
+	            String additionalMessage = this.getMessageService().getMessage("request.getDocumentList.noDocumentsFound", new Object[] {user.getUserCode()}, Locale.ENGLISH);
 	            additionalInformationForLog = LogService.REQUEST_LOG_SUCCESS + ": " + additionalMessage;            	
             }
 

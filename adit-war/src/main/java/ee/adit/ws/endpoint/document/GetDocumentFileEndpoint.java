@@ -124,21 +124,13 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
             }
 
             // Kontrollime, kas päringus märgitud isik on teenuse kasutaja
-            String userCode = ((this.getHeader().getAllasutus() != null) && (this.getHeader().getAllasutus().length() > 0)) ? this
-                    .getHeader().getAllasutus()
-                    : this.getHeader().getIsikukood();
-            AditUser user = this.getUserService().getUserByID(userCode);
-            if (user == null) {
-                AditCodedException exception = new AditCodedException("user.nonExistent");
-                exception.setParameters(new Object[] {userCode });
-                throw exception;
-            }
+            AditUser user = Util.getAditUserFromXroadHeader(this.getHeader(), this.getUserService());
 
             // Kontrollime, et kasutajakonto ligipääs poleks peatatud (kasutaja
             // lahkunud)
             if ((user.getActive() == null) || !user.getActive()) {
                 AditCodedException exception = new AditCodedException("user.inactive");
-                exception.setParameters(new Object[] {userCode });
+                exception.setParameters(new Object[] {user.getUserCode()});
                 throw exception;
             }
 
@@ -163,7 +155,7 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
                         // a) kuulub päringu käivitanud kasutajale
                         // b) on päringu käivitanud kasutajale välja jagatud
                         boolean userIsDocOwner = false;
-                        if (doc.getCreatorCode().equalsIgnoreCase(userCode)) {
+                        if (doc.getCreatorCode().equalsIgnoreCase(user.getUserCode())) {
                             // Check whether the document is marked as invisible to owner
                             if ((doc.getInvisibleToOwner() != null) && doc.getInvisibleToOwner()) {
                                 AditCodedException aditCodedException = new AditCodedException("document.deleted");
@@ -177,7 +169,7 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
                                 Iterator<DocumentSharing> it = doc.getDocumentSharings().iterator();
                                 while (it.hasNext()) {
                                     DocumentSharing sharing = it.next();
-                                    if (sharing.getUserCode().equalsIgnoreCase(userCode)) {
+                                    if (sharing.getUserCode().equalsIgnoreCase(user.getUserCode())) {
                                         // Check whether the document is marked as deleted by recipient
                                         if ((sharing.getDeleted() != null) && sharing.getDeleted()) {
                                             AditCodedException aditCodedException = new AditCodedException("document.deleted");
@@ -248,7 +240,7 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
                                         DocumentHistory event = it.next();
                                         if (event.getDocumentHistoryType().equalsIgnoreCase(
                                                 DocumentService.HISTORY_TYPE_MARK_VIEWED)
-                                                && event.getUserCode().equalsIgnoreCase(userCode)) {
+                                                && event.getUserCode().equalsIgnoreCase(user.getUserCode())) {
                                             isViewed = true;
                                             break;
                                         }
@@ -262,7 +254,7 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
                                     historyEvent.setDocumentId(doc.getId());
                                     historyEvent.setDocumentHistoryType(DocumentService.HISTORY_TYPE_MARK_VIEWED);
                                     historyEvent.setEventDate(new Date());
-                                    historyEvent.setUserCode(userCode);
+                                    historyEvent.setUserCode(user.getUserCode());
                                     doc.getDocumentHistories().add(historyEvent);
                                     saveDocument = true;
                                 }
@@ -300,9 +292,9 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
                             }
                         } else {
                             logger.debug("Requested document does not belong to user. Document ID: "
-                                    + request.getDocumentId() + ", User ID: " + userCode);
+                                    + request.getDocumentId() + ", User ID: " + user.getUserCode());
                             AditCodedException exception = new AditCodedException("document.doesNotBelongToUser");
-                            exception.setParameters(new Object[] {request.getDocumentId().toString(), userCode });
+                            exception.setParameters(new Object[] {request.getDocumentId().toString(), user.getUserCode()});
                             throw exception;
                         }
                     } else {

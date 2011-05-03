@@ -114,32 +114,14 @@ public class MarkDocumentViewedEndpoint extends AbstractAditBaseEndpoint {
             }
 
             // Kontrollime, kas päringus märgitud isik on teenuse kasutaja
-            String userCode = ((this.getHeader().getAllasutus() != null) && (this.getHeader().getAllasutus().length() > 0)) ? this
-                    .getHeader().getAllasutus()
-                    : this.getHeader().getIsikukood();
-            AditUser user = this.getUserService().getUserByID(userCode);
-            if (user == null) {
-                AditCodedException aditCodedException = new AditCodedException("user.nonExistent");
-                aditCodedException.setParameters(new Object[] {userCode });
-                throw aditCodedException;
-            }
-            AditUser xroadRequestUser = null;
-            if (user.getUsertype().getShortName().equalsIgnoreCase("person")) {
-                xroadRequestUser = user;
-            } else {
-                try {
-                    xroadRequestUser = this.getUserService().getUserByID(header.getIsikukood());
-                } catch (Exception ex) {
-                    logger
-                            .debug("Error when attempting to find local user matchinig the person that executed a company request.");
-                }
-            }
+            AditUser user = Util.getAditUserFromXroadHeader(this.getHeader(), this.getUserService());
+            AditUser xroadRequestUser = Util.getXroadUserFromXroadHeader(user, this.getHeader(), this.getUserService());
 
             // Kontrollime, et kasutajakonto ligipääs poleks peatatud (kasutaja
             // lahkunud)
             if ((user.getActive() == null) || !user.getActive()) {
                 AditCodedException aditCodedException = new AditCodedException("user.inactive");
-                aditCodedException.setParameters(new Object[] {userCode });
+                aditCodedException.setParameters(new Object[] {user.getUserCode()});
                 throw aditCodedException;
             }
 
@@ -165,7 +147,7 @@ public class MarkDocumentViewedEndpoint extends AbstractAditBaseEndpoint {
                         // a) document belongs to user
                         // b) document is sent or shared to user
                         boolean userIsDocOwner = false;
-                        if (doc.getCreatorCode().equalsIgnoreCase(userCode)) {
+                        if (doc.getCreatorCode().equalsIgnoreCase(user.getUserCode())) {
                             // Check whether the document is marked as invisible to owner
                             if ((doc.getInvisibleToOwner() != null) && doc.getInvisibleToOwner()) {
                                 AditCodedException aditCodedException = new AditCodedException("document.deleted");
@@ -179,7 +161,7 @@ public class MarkDocumentViewedEndpoint extends AbstractAditBaseEndpoint {
                                 Iterator<DocumentSharing> it = doc.getDocumentSharings().iterator();
                                 while (it.hasNext()) {
                                     DocumentSharing sharing = it.next();
-                                    if (sharing.getUserCode().equalsIgnoreCase(userCode)) {
+                                    if (sharing.getUserCode().equalsIgnoreCase(user.getUserCode())) {
                                         // Check whether the document is marked as deleted by recipient
                                         if ((sharing.getDeleted() != null) && sharing.getDeleted()) {
                                             AditCodedException aditCodedException = new AditCodedException("document.deleted");
@@ -212,7 +194,7 @@ public class MarkDocumentViewedEndpoint extends AbstractAditBaseEndpoint {
                                     DocumentHistory event = it.next();
                                     if (event.getDocumentHistoryType().equalsIgnoreCase(
                                             DocumentService.HISTORY_TYPE_MARK_VIEWED)
-                                            && event.getUserCode().equalsIgnoreCase(userCode)) {
+                                            && event.getUserCode().equalsIgnoreCase(user.getUserCode())) {
                                         isViewed = true;
                                         break;
                                     }
@@ -256,11 +238,11 @@ public class MarkDocumentViewedEndpoint extends AbstractAditBaseEndpoint {
                             }
                         } else {
                             logger.debug("Requested document does not belong to user. Document ID: "
-                                    + request.getDocumentId() + ", User ID: " + userCode);
+                                    + request.getDocumentId() + ", User ID: " + user.getUserCode());
                             AditCodedException aditCodedException = new AditCodedException(
                                     "document.doesNotBelongToUser");
                             aditCodedException
-                                    .setParameters(new Object[] {request.getDocumentId().toString(), userCode });
+                                    .setParameters(new Object[] {request.getDocumentId().toString(), user.getUserCode()});
                             throw aditCodedException;
                         }
                     } else {

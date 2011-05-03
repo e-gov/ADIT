@@ -93,63 +93,11 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
             // Check header for required fields
             checkHeader(header);
 
-            // Check whether or not the application that executed
-            // current query is registered.
-            boolean applicationRegistered = this.getUserService().isApplicationRegistered(applicationName);
-            if (!applicationRegistered) {
-                AditCodedException aditCodedException = new AditCodedException("application.notRegistered");
-                aditCodedException.setParameters(new Object[] {applicationName });
-                throw aditCodedException;
-            }
-
-            // Check whether or not the application is allowed
-            // to view or modify data.
-            int accessLevel = this.getUserService().getAccessLevel(applicationName);
-            if (accessLevel != 2) {
-                AditCodedException aditCodedException = new AditCodedException(
-                        "application.insufficientPrivileges.write");
-                aditCodedException.setParameters(new Object[] {applicationName });
-                throw aditCodedException;
-            }
-
-            // Check whether or not the user who executed
-            // current query is registered.
-            String userCode = ((this.getHeader().getAllasutus() != null) && (this.getHeader().getAllasutus().length() > 0)) ? this
-                    .getHeader().getAllasutus()
-                    : this.getHeader().getIsikukood();
-            AditUser user = this.getUserService().getUserByID(userCode);
-            if (user == null) {
-                AditCodedException aditCodedException = new AditCodedException("user.nonExistent");
-                aditCodedException.setParameters(new Object[] {userCode });
-                throw aditCodedException;
-            }
-            AditUser xroadRequestUser = null;
-            if (user.getUsertype().getShortName().equalsIgnoreCase("person")) {
-                xroadRequestUser = user;
-            } else {
-                try {
-                    xroadRequestUser = this.getUserService().getUserByID(header.getIsikukood());
-                } catch (Exception ex) {
-                    logger.debug("Error when attempting to find local user matchinig the person that executed a company request.");
-                }
-            }
-
-            // Check whether or not the user is active (account not deleted)
-            if ((user.getActive() == null) || !user.getActive()) {
-                AditCodedException aditCodedException = new AditCodedException("user.inactive");
-                aditCodedException.setParameters(new Object[] {userCode });
-                throw aditCodedException;
-            }
-
-            // Check whether or not the application has rights to
-            // modify current user's data.
-            int applicationAccessLevelForUser = userService.getAccessLevelForUser(applicationName, user);
-            if (applicationAccessLevelForUser != 2) {
-                AditCodedException aditCodedException = new AditCodedException(
-                        "application.insufficientPrivileges.forUser.write");
-                aditCodedException.setParameters(new Object[] {applicationName, user.getUserCode() });
-                throw aditCodedException;
-            }
+            // Check whether or not the user who executed current query is registered.
+            AditUser user = Util.getAditUserFromXroadHeader(this.getHeader(), this.getUserService());
+            AditUser xroadRequestUser = Util.getXroadUserFromXroadHeader(user, this.getHeader(), this.getUserService());
+            
+            checkRights(request, applicationName, user);
 
             String attachmentID = null;
             // Check if the attachment ID is specified
@@ -427,6 +375,55 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
         return response;
     }
 
+    /**
+     * Checks users rights for document.
+     * 
+     * @param request
+     *     Current request
+     * @param applicationName
+     *     Name of application that was used to execute current request
+     * @param user
+     *     User who executed current request
+     */
+    private void checkRights(
+    	final SaveDocumentRequest request, final String applicationName,
+    	final AditUser user) {
+    	
+        // Check whether or not the application that executed
+        // current query is registered.
+        boolean applicationRegistered = this.getUserService().isApplicationRegistered(applicationName);
+        if (!applicationRegistered) {
+            AditCodedException aditCodedException = new AditCodedException("application.notRegistered");
+            aditCodedException.setParameters(new Object[] {applicationName });
+            throw aditCodedException;
+        }
+
+        // Check whether or not the application is allowed
+        // to view or modify data.
+        int accessLevel = this.getUserService().getAccessLevel(applicationName);
+        if (accessLevel != 2) {
+            AditCodedException aditCodedException = new AditCodedException("application.insufficientPrivileges.write");
+            aditCodedException.setParameters(new Object[] {applicationName });
+            throw aditCodedException;
+        }
+
+        // Check whether or not the user is active (account not deleted)
+        if ((user.getActive() == null) || !user.getActive()) {
+            AditCodedException aditCodedException = new AditCodedException("user.inactive");
+            aditCodedException.setParameters(new Object[] {user.getUserCode()});
+            throw aditCodedException;
+        }
+
+        // Check whether or not the application has rights to
+        // modify current user's data.
+        int applicationAccessLevelForUser = userService.getAccessLevelForUser(applicationName, user);
+        if (applicationAccessLevelForUser != 2) {
+            AditCodedException aditCodedException = new AditCodedException("application.insufficientPrivileges.forUser.write");
+            aditCodedException.setParameters(new Object[] {applicationName, user.getUserCode() });
+            throw aditCodedException;
+        }
+    }
+    
     /**
      * Checks the specified document data and throws an error if data is
      * incorrect.

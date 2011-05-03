@@ -51,8 +51,11 @@ import org.apache.log4j.Logger;
 import org.castor.core.util.Base64Decoder;
 import org.castor.core.util.Base64Encoder;
 
+import ee.adit.dao.pojo.AditUser;
+import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.Message;
+import ee.adit.service.UserService;
 
 /**
  * Class providing static utility / helper methods.
@@ -61,7 +64,12 @@ import ee.adit.pojo.Message;
  * @author Jaak Lember, Interinx, jaak@interinx.com
  */
 public final class Util {
-
+	/**
+	 * Default constructor.
+	 */
+	private Util() {
+	}
+	
     /**
      * X-Tee namespace URI.
      */
@@ -1613,5 +1621,60 @@ public final class Util {
     	}
 	    
     	return result;
+    }
+    
+    /**
+     * Gets current user based on data from X-Road headers.
+     * 
+     * @param header
+     *     X-Road header
+     * @param userService
+     *     Instance of user service
+     * @return
+     *     Current user
+     */
+    public static AditUser getAditUserFromXroadHeader(
+    	final CustomXTeeHeader header, final UserService userService) {
+        
+    	String userCode = isNullOrEmpty(header.getAllasutus()) ? header.getAllasutus() : header.getIsikukood();
+        AditUser user = userService.getUserByID(userCode);
+        if (user == null) {
+            logger.error("User is not registered. User code: " + userCode);
+            AditCodedException aditCodedException = new AditCodedException("user.nonExistent");
+            aditCodedException.setParameters(new Object[] {userCode });
+            throw aditCodedException;
+        }
+        
+        return user;
+    }
+    
+    /**
+     * Gets user account of the person who executed current request (even if
+     * request was executed using organization account).
+     * 
+     * @param currentUser
+     *     Current user (may me an organization account)
+     * @param header
+     *     X-Road header
+     * @param userService
+     *     Instance of user service
+     * @return
+     *     Account of person who executed current request
+     */
+    public static AditUser getXroadUserFromXroadHeader(
+    	final AditUser currentUser, final CustomXTeeHeader header,
+    	final UserService userService) {
+        
+    	AditUser xroadRequestUser = null;
+        if (currentUser.getUsertype().getShortName().equalsIgnoreCase("person")) {
+            xroadRequestUser = currentUser;
+        } else {
+            try {
+                xroadRequestUser = userService.getUserByID(header.getIsikukood());
+            } catch (Exception ex) {
+                logger.debug("Error when attempting to find local user matchinig the person that executed a company request.");
+            }
+        }
+        return xroadRequestUser;
     }
 }

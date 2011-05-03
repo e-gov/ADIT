@@ -109,33 +109,9 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
             this.getUserService().checkApplicationReadPrivilege(applicationName);
 
             // Kontrollime, kas päringus märgitud isik on teenuse kasutaja
-            String userCode = ((this.getHeader().getAllasutus() != null) && (this.getHeader().getAllasutus().length() > 0)) ? this
-                    .getHeader().getAllasutus()
-                    : this.getHeader().getIsikukood();
-            AditUser user = this.getUserService().getUserByID(userCode);
-            if (user == null) {
-                AditCodedException aditCodedException = new AditCodedException("user.nonExistent");
-                aditCodedException.setParameters(new Object[] {userCode });
-                throw aditCodedException;
-            }
+            AditUser user = Util.getAditUserFromXroadHeader(this.getHeader(), this.getUserService());
 
-            // Kontrollime, et kasutajakonto ligipääs poleks peatatud (kasutaja
-            // lahkunud)
-            if ((user.getActive() == null) || !user.getActive()) {
-                AditCodedException aditCodedException = new AditCodedException("user.inactive");
-                aditCodedException.setParameters(new Object[] {userCode });
-                throw aditCodedException;
-            }
-
-            // Check whether or not the application has rights to
-            // read current user's data.
-            int applicationAccessLevelForUser = userService.getAccessLevelForUser(applicationName, user);
-            if (applicationAccessLevelForUser < 1) {
-                AditCodedException aditCodedException = new AditCodedException(
-                        "application.insufficientPrivileges.forUser.read");
-                aditCodedException.setParameters(new Object[] {applicationName, user.getUserCode() });
-                throw aditCodedException;
-            }
+            checkRights(request, applicationName, user);
 
             Document doc = this.documentService.getDocumentDAO().getDocument(request.getDocumentId());
 
@@ -149,7 +125,7 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
                         // a) kuulub päringu käivitanud kasutajale
                         // b) on päringu käivitanud kasutajale välja jagatud
                         boolean userIsDocOwner = false;
-                        if (doc.getCreatorCode().equalsIgnoreCase(userCode)) {
+                        if (doc.getCreatorCode().equalsIgnoreCase(user.getUserCode())) {
                             // Check whether the document is marked as invisible to owner
                             if ((doc.getInvisibleToOwner() != null) && doc.getInvisibleToOwner()) {
                                 AditCodedException aditCodedException = new AditCodedException("document.deleted");
@@ -163,7 +139,7 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
                                 Iterator<DocumentSharing> it = doc.getDocumentSharings().iterator();
                                 while (it.hasNext()) {
                                     DocumentSharing sharing = it.next();
-                                    if (sharing.getUserCode().equalsIgnoreCase(userCode)) {
+                                    if (sharing.getUserCode().equalsIgnoreCase(user.getUserCode())) {
                                         // Check whether the document is marked as deleted by recipient
                                         if ((sharing.getDeleted() != null) && sharing.getDeleted()) {
                                             AditCodedException aditCodedException = new AditCodedException("document.deleted");
@@ -192,16 +168,12 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
                         	
                         	includeFileContents = (request.isIncludeFileContents() == null) ? false : request.isIncludeFileContents();
                             OutputDocument resultDoc = this.documentService.getDocumentDAO().getDocumentWithFiles(
-                                    doc.getId(),
-                                    null,
-                                    true,
-                                    true,
-                                    includeFileContents,
-                                    request.getFileTypes(),
-                                    this.getConfiguration().getTempDir(),
-                                    this.getMessageSource().getMessage("files.nonExistentOrDeleted", new Object[] {},
-                                    Locale.ENGLISH), user.getUserCode(), getConfiguration().getDocumentRetentionDeadlineDays(),
-                                    jdigidocCfgTmpFile);
+                                doc.getId(), null, true, true, includeFileContents,
+                                request.getFileTypes(),
+                                this.getConfiguration().getTempDir(),
+                                this.getMessageSource().getMessage("files.nonExistentOrDeleted", new Object[] {},
+                                Locale.ENGLISH), user.getUserCode(), getConfiguration().getDocumentRetentionDeadlineDays(),
+                                jdigidocCfgTmpFile);
 
                             if (resultDoc != null) {
                                 // Remember file IDs for logging later on.
@@ -219,9 +191,8 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
                                 String xmlFile = marshal(attachment);
                                 Util.joinSplitXML(xmlFile, "data");
 
-                                // 2. GZip the temporary file
-                                // Base64 encoding will be done at SOAP envelope
-                                // level
+                                // 2. GZip the temporary file Base64 encoding
+                                // will be done at SOAP envelope level
                                 String gzipFileName = Util.gzipFile(xmlFile, this.getConfiguration().getTempDir());
 
                                 // 3. Add as an attachment
@@ -239,7 +210,7 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
                                         DocumentHistory event = it.next();
                                         if (event.getDocumentHistoryType().equalsIgnoreCase(
                                                 DocumentService.HISTORY_TYPE_MARK_VIEWED)
-                                                && event.getUserCode().equalsIgnoreCase(userCode)) {
+                                                && event.getUserCode().equalsIgnoreCase(user.getUserCode())) {
                                             isViewed = true;
                                             break;
                                         }
@@ -253,7 +224,7 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
                                     historyEvent.setDocumentId(doc.getId());
                                     historyEvent.setDocumentHistoryType(DocumentService.HISTORY_TYPE_MARK_VIEWED);
                                     historyEvent.setEventDate(new Date());
-                                    historyEvent.setUserCode(userCode);
+                                    historyEvent.setUserCode(user.getUserCode());
                                     doc.getDocumentHistories().add(historyEvent);
                                     saveDocument = true;
                                 }
@@ -263,18 +234,15 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
                                 }
 
                                 // If it was the first time for this particular
-                                // user to
-                                // view the document then send scheduler
-                                // notification to
-                                // document owner.
+                                // user to view the document then send scheduler
+                                // notification to document owner.
                                 // Notification does not need to be sent if user
-                                // viewed
-                                // his/her own document.
+                                // viewed his/her own document.
                                 if (!user.getUserCode().equalsIgnoreCase(doc.getCreatorCode())) {
                                     AditUser docCreator = this.getUserService().getUserByID(doc.getCreatorCode());
                                     if (!isViewed && (docCreator != null)
-                                            && (userService.findNotification(docCreator.getUserNotifications(),
-                                                    ScheduleClient.NOTIFICATION_TYPE_VIEW) != null)) {
+                                        && (userService.findNotification(docCreator.getUserNotifications(),
+                                        ScheduleClient.NOTIFICATION_TYPE_VIEW) != null)) {
                                         
                                     	List<Message> messageInAllKnownLanguages = this.getMessageService().getMessages("scheduler.message.view", new Object[] {doc.getTitle(), user.getUserCode()});
                                     	String eventText = Util.joinMessages(messageInAllKnownLanguages, "<br/>");
@@ -290,18 +258,15 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
                             }
                         } else {
                             logger.debug("Requested document does not belong to user. Document ID: "
-                                    + request.getDocumentId() + ", User ID: " + userCode);
-                            AditCodedException aditCodedException = new AditCodedException(
-                                    "document.doesNotBelongToUser");
-                            aditCodedException
-                                    .setParameters(new Object[] {request.getDocumentId().toString(), userCode });
+                                    + request.getDocumentId() + ", User ID: " + user.getUserCode());
+                            AditCodedException aditCodedException = new AditCodedException("document.doesNotBelongToUser");
+                            aditCodedException.setParameters(new Object[] {request.getDocumentId().toString(), user.getUserCode()});
                             throw aditCodedException;
                         }
                     } else {
                         logger.debug("Requested document is deflated. Document ID: " + request.getDocumentId());
                         AditCodedException aditCodedException = new AditCodedException("document.deflated");
-                        aditCodedException.setParameters(new Object[] {Util.dateToEstonianDateString(doc
-                                .getDeflateDate()) });
+                        aditCodedException.setParameters(new Object[] {Util.dateToEstonianDateString(doc.getDeflateDate()) });
                         throw aditCodedException;
                     }
                 } else {
@@ -382,6 +347,38 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
         arrayOfMessage.getMessage().add(new Message("en", ex.getMessage()));
         response.setMessages(arrayOfMessage);
         return response;
+    }
+    
+    /**
+     * Checks users rights for document.
+     * 
+     * @param request
+     *     Current request
+     * @param applicationName
+     *     Name of application that was used to execute current request
+     * @param user
+     *     User who executed current request
+     */
+    private void checkRights(
+    	final GetDocumentRequest request, final String applicationName,
+    	final AditUser user) {
+    	
+        // Kontrollime, et kasutajakonto ligipääs poleks peatatud (kasutaja
+        // lahkunud)
+        if ((user.getActive() == null) || !user.getActive()) {
+            AditCodedException aditCodedException = new AditCodedException("user.inactive");
+            aditCodedException.setParameters(new Object[] {user.getUserCode()});
+            throw aditCodedException;
+        }
+
+        // Check whether or not the application has rights to
+        // read current user's data.
+        int applicationAccessLevelForUser = userService.getAccessLevelForUser(applicationName, user);
+        if (applicationAccessLevelForUser < 1) {
+            AditCodedException aditCodedException = new AditCodedException("application.insufficientPrivileges.forUser.read");
+            aditCodedException.setParameters(new Object[] {applicationName, user.getUserCode() });
+            throw aditCodedException;
+        }
     }
 
     /**

@@ -215,8 +215,8 @@ public class ScheduleClient {
             LisaSyndmus req = doc.addNewLisaSyndmus();
             LisaSyndmusDocument.LisaSyndmus.Keha keha = req.addNewKeha();
 
-            // Event is not visible to ADIT system user in portal.
-            keha.setNahtavOmanikule(false);
+            // Event is visible to ADIT system user in portal.
+            keha.setNahtavOmanikule(true);
 
             keha.setKirjeldus(eventText);
             keha.setTahtsus(Tahtsus.KESKMINE);

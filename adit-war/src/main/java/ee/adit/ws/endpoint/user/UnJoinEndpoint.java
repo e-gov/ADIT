@@ -85,50 +85,40 @@ public class UnJoinEndpoint extends AbstractAditBaseEndpoint {
                 if (accessLevel == 2) {
 
                     // Kontrollime, kas päringu käivitanud kasutaja eksisteerib
-                    String userCode = ((this.getHeader().getAllasutus() != null) && (this.getHeader().getAllasutus().length() > 0)) ? this
-                            .getHeader().getAllasutus()
-                            : this.getHeader().getIsikukood();
-                    AditUser aditUser = this.getUserService().getUserByID(userCode);
+                    AditUser aditUser = Util.getAditUserFromXroadHeader(this.getHeader(), this.getUserService());
 
-                    if (aditUser != null) {
+                    // Kontrollime, kas infosüsteem tohib antud kasutaja
+                    // andmeid muuta
+                    int applicationAccessLevelForUser = userService
+                            .getAccessLevelForUser(applicationName, aditUser);
 
-                        // Kontrollime, kas infosüsteem tohib antud kasutaja
-                        // andmeid muuta
-                        int applicationAccessLevelForUser = userService
-                                .getAccessLevelForUser(applicationName, aditUser);
+                    if (applicationAccessLevelForUser == 2) {
+                        logger.info("Deactivating user.");
 
-                        if (applicationAccessLevelForUser == 2) {
-                            logger.info("Deactivating user.");
+                        // Kontrollime, kas kasutaja on aktiivne
+                        if (aditUser.getActive()) {
+                            // Märgime kasutaja lahkunuks
+                            this.getUserService().deactivateUser(aditUser);
+                            logger.info("User (" + aditUser.getUserCode() + ") deactivated.");
+                            response.setSuccess(new Success(true));
+                            messages.setMessage(this.getMessageService().getMessages("request.unJoin.success",
+                                    new Object[] {aditUser.getUserCode() }));
 
-                            // Kontrollime, kas kasutaja on aktiivne
-                            if (aditUser.getActive()) {
-                                // Märgime kasutaja lahkunuks
-                                this.getUserService().deactivateUser(aditUser);
-                                logger.info("User (" + aditUser.getUserCode() + ") deactivated.");
-                                response.setSuccess(new Success(true));
-                                messages.setMessage(this.getMessageService().getMessages("request.unJoin.success",
-                                        new Object[] {aditUser.getUserCode() }));
+                            String additionalMessage = this.getMessageService().getMessage(
+                                    "request.unJoin.success", new Object[] {aditUser.getUserCode() },
+                                    Locale.ENGLISH);
+                            additionalInformationForLog = LogService.REQUEST_LOG_SUCCESS + ": " + additionalMessage;
 
-                                String additionalMessage = this.getMessageService().getMessage(
-                                        "request.unJoin.success", new Object[] {aditUser.getUserCode() },
-                                        Locale.ENGLISH);
-                                additionalInformationForLog = LogService.REQUEST_LOG_SUCCESS + ": " + additionalMessage;
-
-                            } else {
-                                AditCodedException aditCodedException = new AditCodedException(
-                                        "request.unJoin.alreadyUnJoined");
-                                aditCodedException.setParameters(new Object[] {aditUser.getUserCode() });
-                                throw aditCodedException;
-                            }
                         } else {
                             AditCodedException aditCodedException = new AditCodedException(
-                                    "application.insufficientPrivileges.forUser.write");
-                            aditCodedException.setParameters(new Object[] {applicationName, aditUser.getUserCode() });
+                                    "request.unJoin.alreadyUnJoined");
+                            aditCodedException.setParameters(new Object[] {aditUser.getUserCode() });
                             throw aditCodedException;
                         }
                     } else {
-                        AditCodedException aditCodedException = new AditCodedException("user.nonExistent");
-                        aditCodedException.setParameters(new Object[] {userCode});
+                        AditCodedException aditCodedException = new AditCodedException(
+                                "application.insufficientPrivileges.forUser.write");
+                        aditCodedException.setParameters(new Object[] {applicationName, aditUser.getUserCode() });
                         throw aditCodedException;
                     }
                 } else {

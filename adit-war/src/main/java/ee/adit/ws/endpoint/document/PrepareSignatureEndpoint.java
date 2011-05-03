@@ -93,185 +93,53 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
             // Check request body
             checkRequest(request);
 
-            // Kontrollime, kas päringu käivitanud infosüsteem on ADITis
-            // registreeritud
-            boolean applicationRegistered = this.getUserService().isApplicationRegistered(applicationName);
-            if (!applicationRegistered) {
-                AditCodedException aditCodedException = new AditCodedException("application.notRegistered");
-                aditCodedException.setParameters(new Object[] {applicationName });
-                throw aditCodedException;
-            }
-
-            // Kontrollime, kas päringu käivitanud infosüsteem tohib
-            // andmeid muuta
-            int accessLevel = this.getUserService().getAccessLevel(applicationName);
-            if (accessLevel != 2) {
-                AditCodedException aditCodedException = new AditCodedException(
-                        "application.insufficientPrivileges.write");
-                aditCodedException.setParameters(new Object[] {applicationName });
-                throw aditCodedException;
-            }
-
             // Kontrollime, kas päringus märgitud isik on teenuse kasutaja
-            String userCode = ((this.getHeader().getAllasutus() != null) && (this.getHeader().getAllasutus().length() > 0)) ? this
-                    .getHeader().getAllasutus()
-                    : this.getHeader().getIsikukood();
-            AditUser user = this.getUserService().getUserByID(userCode);
-            if (user == null) {
-                AditCodedException aditCodedException = new AditCodedException("user.nonExistent");
-                aditCodedException.setParameters(new Object[] {userCode });
-                throw aditCodedException;
-            }
-            AditUser xroadRequestUser = null;
-            if (user.getUsertype().getShortName().equalsIgnoreCase("person")) {
-                xroadRequestUser = user;
+            AditUser user = Util.getAditUserFromXroadHeader(this.getHeader(), this.getUserService());
+            AditUser xroadRequestUser = Util.getXroadUserFromXroadHeader(user, this.getHeader(), this.getUserService());
+            
+            Document doc = checkRightsAndGetDocument(request, applicationName, user);
+            boolean documentIsAlreadyLocked = (doc.getLocked() == null) ? false : doc.getLocked();
+            
+            // Get user certificate from attachment
+            String certFile = null;
+
+            String attachmentID = null;
+            // Check if the attachment ID is specified
+            if (request.getSignerCertificate() != null && request.getSignerCertificate().getHref() != null
+                    && !request.getSignerCertificate().getHref().trim().equals("")) {
+                attachmentID = Util.extractContentID(request.getSignerCertificate().getHref());
             } else {
-                try {
-                    xroadRequestUser = this.getUserService().getUserByID(header.getIsikukood());
-                } catch (Exception ex) {
-                    logger
-                            .debug("Error when attempting to find local user matchinig the person that executed a company request.");
-                }
+                throw new AditCodedException("request.saveDocument.attachment.id.notSpecified");
             }
 
-            // Kontrollime, et kasutajakonto ligipääs poleks peatatud (kasutaja
-            // lahkunud)
-            if ((user.getActive() == null) || !user.getActive()) {
-                AditCodedException aditCodedException = new AditCodedException("user.inactive");
-                aditCodedException.setParameters(new Object[] {userCode });
-                throw aditCodedException;
-            }
+            // All primary checks passed.
+            logger.debug("Processing attachment with id: '" + attachmentID + "'");
+            // Extract the SOAP message to a temporary file
+            String base64EncodedFile = extractAttachmentXML(this.getRequestMessage(), attachmentID);
 
-            // Check whether or not the application has rights to
-            // modify current user's data.
-            int applicationAccessLevelForUser = userService.getAccessLevelForUser(applicationName, user);
-            if (applicationAccessLevelForUser != 2) {
-                AditCodedException aditCodedException = new AditCodedException(
-                        "application.insufficientPrivileges.forUser.write");
-                aditCodedException.setParameters(new Object[] {applicationName, user.getUserCode() });
-                throw aditCodedException;
-            }
+            // Base64 decode and unzip the temporary file
+            certFile = Util.base64DecodeAndUnzip(base64EncodedFile, this.getConfiguration().getTempDir(), this
+                    .getConfiguration().getDeleteTemporaryFilesAsBoolean());
+            logger.debug("Attachment unzipped to temporary file: " + certFile);
 
-            // Now it is safe to load the document from database
-            // (and even necessary to do all the document-specific checks)
-            Document doc = this.documentService.getDocumentDAO().getDocument(request.getDocumentId());
-
-            // Check whether the document exists
-            if (doc == null) {
-                logger.debug("Requested document does not exist. Document ID: " + request.getDocumentId());
-                AditCodedException aditCodedException = new AditCodedException("document.nonExistent");
-                aditCodedException.setParameters(new Object[] {request.getDocumentId().toString() });
-                throw aditCodedException;
-            }
-
-            // Check whether the document is marked as deleted
-            if ((doc.getDeleted() != null) && doc.getDeleted()) {
-                logger.debug("Requested document is deleted. Document ID: " + request.getDocumentId());
-                AditCodedException aditCodedException = new AditCodedException("document.deleted");
-                aditCodedException.setParameters(new Object[] {request.getDocumentId().toString() });
-                throw aditCodedException;
-            }
-
-            // Check whether the document is marked as deflated
-            if ((doc.getDeflated() != null) && doc.getDeflated()) {
-                logger.debug("Requested document is deflated. Document ID: " + request.getDocumentId());
-                AditCodedException aditCodedException = new AditCodedException("document.deflated");
-                aditCodedException.setParameters(new Object[] {Util.dateToEstonianDateString(doc.getDeflateDate()) });
-                throw aditCodedException;
-            }
-
-            // Check whether the document is marked as signable
-            if ((doc.getSignable() == null) || !doc.getSignable()) {
-                logger.debug("Requested document is not signable. Document ID: " + request.getDocumentId());
-                AditCodedException aditCodedException = new AditCodedException("document.notSignable");
+            if (certFile == null) {
+                AditCodedException aditCodedException = new AditCodedException("request.prepareSignature.missingCertificate");
                 aditCodedException.setParameters(new Object[] {});
                 throw aditCodedException;
             }
 
-            boolean documentIsAlreadyLocked = (doc.getLocked() == null) ? false : doc.getLocked();
-            
-            // Document can be signed only if:
-            // a) document belongs to user
-            // b) document is sent or shared to user for signing
-            boolean isOwner = false;
-            if (doc.getCreatorCode().equalsIgnoreCase(userCode)) {
-                // Check whether the document is marked as invisible to owner
-                if ((doc.getInvisibleToOwner() != null) && doc.getInvisibleToOwner()) {
-                    AditCodedException aditCodedException = new AditCodedException("document.deleted");
-                    aditCodedException.setParameters(new Object[] {documentId.toString() });
-                    throw aditCodedException;
-                }
-            	
-            	isOwner = true;
+            InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream(getDigidocConfigurationFile());
+            String jdigidocCfgTmpFile = Util.createTemporaryFile(input, getConfiguration().getTempDir());
+            logger.debug("JDigidoc.cfg file created as a temporary file: '" + jdigidocCfgTmpFile + "'");
+
+            PrepareSignatureInternalResult sigResult = this.documentService.prepareSignature(doc.getId(), request
+                    .getManifest(), request.getCountry(), request.getState(), request.getCity(), request.getZip(),
+                    certFile, jdigidocCfgTmpFile, this.getConfiguration().getTempDir(), xroadRequestUser);
+
+            if (sigResult.isSuccess()) {
+                response.setSignatureHash(sigResult.getSignatureHash());
             } else {
-                if ((doc.getDocumentSharings() != null) && (!doc.getDocumentSharings().isEmpty())) {
-                    Iterator<DocumentSharing> it = doc.getDocumentSharings().iterator();
-                    while (it.hasNext()) {
-                        DocumentSharing sharing = it.next();
-                        if (sharing.getUserCode().equalsIgnoreCase(userCode)
-                            && DocumentService.SHARINGTYPE_SIGN.equalsIgnoreCase(sharing.getDocumentSharingType())) {
-                            // Check whether the document is marked as deleted by recipient
-                            if ((sharing.getDeleted() != null) && sharing.getDeleted()) {
-                                AditCodedException aditCodedException = new AditCodedException("document.deleted");
-                                aditCodedException.setParameters(new Object[] {documentId.toString() });
-                                throw aditCodedException;
-                            }
-                        	
-                            isOwner = true;
-                            break;
-                        }
-                    }
-                }
-            }
-
-            if (isOwner) {
-                // Get user certificate from attachment
-                String certFile = null;
-
-                String attachmentID = null;
-                // Check if the attachment ID is specified
-                if (request.getSignerCertificate() != null && request.getSignerCertificate().getHref() != null
-                        && !request.getSignerCertificate().getHref().trim().equals("")) {
-                    attachmentID = Util.extractContentID(request.getSignerCertificate().getHref());
-                } else {
-                    throw new AditCodedException("request.saveDocument.attachment.id.notSpecified");
-                }
-
-                // All primary checks passed.
-                logger.debug("Processing attachment with id: '" + attachmentID + "'");
-                // Extract the SOAP message to a temporary file
-                String base64EncodedFile = extractAttachmentXML(this.getRequestMessage(), attachmentID);
-
-                // Base64 decode and unzip the temporary file
-                certFile = Util.base64DecodeAndUnzip(base64EncodedFile, this.getConfiguration().getTempDir(), this
-                        .getConfiguration().getDeleteTemporaryFilesAsBoolean());
-                logger.debug("Attachment unzipped to temporary file: " + certFile);
-
-                if (certFile == null) {
-                    AditCodedException aditCodedException = new AditCodedException("request.prepareSignature.missingCertificate");
-                    aditCodedException.setParameters(new Object[] {});
-                    throw aditCodedException;
-                }
-
-                InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream(getDigidocConfigurationFile());
-                String jdigidocCfgTmpFile = Util.createTemporaryFile(input, getConfiguration().getTempDir());
-                logger.debug("JDigidoc.cfg file created as a temporary file: '" + jdigidocCfgTmpFile + "'");
-
-                PrepareSignatureInternalResult sigResult = this.documentService.prepareSignature(doc.getId(), request
-                        .getManifest(), request.getCountry(), request.getState(), request.getCity(), request.getZip(),
-                        certFile, jdigidocCfgTmpFile, this.getConfiguration().getTempDir(), xroadRequestUser);
-
-                if (sigResult.isSuccess()) {
-                    response.setSignatureHash(sigResult.getSignatureHash());
-                } else {
-                    AditCodedException aditCodedException = new AditCodedException(sigResult.getErrorCode());
-                    throw aditCodedException;
-                }
-            } else {
-                logger.debug("Requested document does not belong to user. Document ID: " + request.getDocumentId()
-                        + ", User ID: " + userCode);
-                AditCodedException aditCodedException = new AditCodedException("document.doesNotBelongToUser");
-                aditCodedException.setParameters(new Object[] {request.getDocumentId().toString(), userCode });
+                AditCodedException aditCodedException = new AditCodedException(sigResult.getErrorCode());
                 throw aditCodedException;
             }
 
@@ -335,6 +203,139 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
         arrayOfMessage.getMessage().add(new Message("en", ex.getMessage()));
         response.setMessages(arrayOfMessage);
         return response;
+    }
+    
+    /**
+     * Checks users rights for document.
+     * 
+     * @param request
+     *     Current request
+     * @param applicationName
+     *     Name of application that was used to execute current request
+     * @param user
+     *     User who executed current request
+     * @return
+     *     Requested document if user has necessary rights for it (or
+     *     {@code null} otherwise).
+     */
+    private Document checkRightsAndGetDocument(
+    	final PrepareSignatureRequest request, final String applicationName,
+    	final AditUser user) {
+    	
+        // Kontrollime, kas päringu käivitanud infosüsteem on ADITis
+        // registreeritud
+        boolean applicationRegistered = this.getUserService().isApplicationRegistered(applicationName);
+        if (!applicationRegistered) {
+            AditCodedException aditCodedException = new AditCodedException("application.notRegistered");
+            aditCodedException.setParameters(new Object[] {applicationName });
+            throw aditCodedException;
+        }
+
+        // Kontrollime, kas päringu käivitanud infosüsteem tohib
+        // andmeid muuta
+        int accessLevel = this.getUserService().getAccessLevel(applicationName);
+        if (accessLevel != 2) {
+            AditCodedException aditCodedException = new AditCodedException("application.insufficientPrivileges.write");
+            aditCodedException.setParameters(new Object[] {applicationName });
+            throw aditCodedException;
+        }
+
+        // Kontrollime, et kasutajakonto ligipääs poleks peatatud (kasutaja
+        // lahkunud)
+        if ((user.getActive() == null) || !user.getActive()) {
+            AditCodedException aditCodedException = new AditCodedException("user.inactive");
+            aditCodedException.setParameters(new Object[] {user.getUserCode()});
+            throw aditCodedException;
+        }
+
+        // Check whether or not the application has rights to
+        // modify current user's data.
+        int applicationAccessLevelForUser = userService.getAccessLevelForUser(applicationName, user);
+        if (applicationAccessLevelForUser != 2) {
+            AditCodedException aditCodedException = new AditCodedException("application.insufficientPrivileges.forUser.write");
+            aditCodedException.setParameters(new Object[] {applicationName, user.getUserCode() });
+            throw aditCodedException;
+        }
+
+        // Now it is safe to load the document from database
+        // (and even necessary to do all the document-specific checks)
+        Document doc = this.documentService.getDocumentDAO().getDocument(request.getDocumentId());
+
+        // Check whether the document exists
+        if (doc == null) {
+            logger.debug("Requested document does not exist. Document ID: " + request.getDocumentId());
+            AditCodedException aditCodedException = new AditCodedException("document.nonExistent");
+            aditCodedException.setParameters(new Object[] {request.getDocumentId().toString() });
+            throw aditCodedException;
+        }
+
+        // Check whether the document is marked as deleted
+        if ((doc.getDeleted() != null) && doc.getDeleted()) {
+            logger.debug("Requested document is deleted. Document ID: " + request.getDocumentId());
+            AditCodedException aditCodedException = new AditCodedException("document.deleted");
+            aditCodedException.setParameters(new Object[] {request.getDocumentId().toString() });
+            throw aditCodedException;
+        }
+
+        // Check whether the document is marked as deflated
+        if ((doc.getDeflated() != null) && doc.getDeflated()) {
+            logger.debug("Requested document is deflated. Document ID: " + request.getDocumentId());
+            AditCodedException aditCodedException = new AditCodedException("document.deflated");
+            aditCodedException.setParameters(new Object[] {Util.dateToEstonianDateString(doc.getDeflateDate()) });
+            throw aditCodedException;
+        }
+
+        // Check whether the document is marked as signable
+        if ((doc.getSignable() == null) || !doc.getSignable()) {
+            logger.debug("Requested document is not signable. Document ID: " + request.getDocumentId());
+            AditCodedException aditCodedException = new AditCodedException("document.notSignable");
+            aditCodedException.setParameters(new Object[] {});
+            throw aditCodedException;
+        }
+        
+        // Document can be signed only if:
+        // a) document belongs to user
+        // b) document is sent or shared to user for signing
+        boolean isOwner = false;
+        if (doc.getCreatorCode().equalsIgnoreCase(user.getUserCode())) {
+            // Check whether the document is marked as invisible to owner
+            if ((doc.getInvisibleToOwner() != null) && doc.getInvisibleToOwner()) {
+                AditCodedException aditCodedException = new AditCodedException("document.deleted");
+                aditCodedException.setParameters(new Object[] {doc.getId()});
+                throw aditCodedException;
+            }
+        	
+        	isOwner = true;
+        } else {
+            if ((doc.getDocumentSharings() != null) && (!doc.getDocumentSharings().isEmpty())) {
+                Iterator<DocumentSharing> it = doc.getDocumentSharings().iterator();
+                while (it.hasNext()) {
+                    DocumentSharing sharing = it.next();
+                    if (sharing.getUserCode().equalsIgnoreCase(user.getUserCode())
+                        && DocumentService.SHARINGTYPE_SIGN.equalsIgnoreCase(sharing.getDocumentSharingType())) {
+                        // Check whether the document is marked as deleted by recipient
+                        if ((sharing.getDeleted() != null) && sharing.getDeleted()) {
+                            AditCodedException aditCodedException = new AditCodedException("document.deleted");
+                            aditCodedException.setParameters(new Object[] {doc.getId()});
+                            throw aditCodedException;
+                        }
+                    	
+                        isOwner = true;
+                        break;
+                    }
+                }
+            }
+        }
+        
+        if (!isOwner) {
+            logger.debug("Requested document does not belong to user. Document ID: " + request.getDocumentId()
+                    + ", User ID: " + user.getUserCode());
+            AditCodedException aditCodedException = new AditCodedException("document.doesNotBelongToUser");
+            aditCodedException.setParameters(new Object[] {request.getDocumentId().toString(), user.getUserCode()});
+            throw aditCodedException;
+        }
+        
+        return doc;
     }
 
     /**

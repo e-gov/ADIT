@@ -284,7 +284,7 @@ public class SchedulerSoapArrayInterceptor implements ClientInterceptor {
                 return "";
             }
 
-            DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
             String result = format.format(date);
             return result;
         } catch (Exception ex) {

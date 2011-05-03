@@ -98,108 +98,11 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
             // Check request body
             checkRequest(request);
 
-            // Kontrollime, kas päringu käivitanud infosüsteem on ADITis
-            // registreeritud
-            boolean applicationRegistered = this.getUserService().isApplicationRegistered(applicationName);
-            if (!applicationRegistered) {
-                AditCodedException aditCodedException = new AditCodedException("application.notRegistered");
-                aditCodedException.setParameters(new Object[] {applicationName });
-                throw aditCodedException;
-            }
-
-            // Kontrollime, kas päringu käivitanud infosüsteem tohib
-            // andmeid näha
-            int accessLevel = this.getUserService().getAccessLevel(applicationName);
-            if (accessLevel < 1) {
-                AditCodedException aditCodedException = new AditCodedException(
-                        "application.insufficientPrivileges.read");
-                aditCodedException.setParameters(new Object[] {applicationName });
-                throw aditCodedException;
-            }
-
             // Kontrollime, kas päringus märgitud isik on teenuse kasutaja
-            String userCode = ((this.getHeader().getAllasutus() != null) && (this.getHeader().getAllasutus().length() > 0)) ? this
-                    .getHeader().getAllasutus()
-                    : this.getHeader().getIsikukood();
-            AditUser user = this.getUserService().getUserByID(userCode);
-            if (user == null) {
-                AditCodedException aditCodedException = new AditCodedException("user.nonExistent");
-                aditCodedException.setParameters(new Object[] {userCode });
-                throw aditCodedException;
-            }
-            AditUser xroadRequestUser = null;
-            if (user.getUsertype().getShortName().equalsIgnoreCase("person")) {
-                xroadRequestUser = user;
-            } else {
-                try {
-                    xroadRequestUser = this.getUserService().getUserByID(header.getIsikukood());
-                } catch (Exception ex) {
-                    logger
-                            .debug("Error when attempting to find local user matchinig the person that executed a company request.");
-                }
-            }
-
-            // Kontrollime, et kasutajakonto ligipääs poleks peatatud (kasutaja
-            // lahkunud)
-            if ((user.getActive() == null) || !user.getActive()) {
-                AditCodedException aditCodedException = new AditCodedException("user.inactive");
-                aditCodedException.setParameters(new Object[] {userCode });
-                throw aditCodedException;
-            }
-
-            // Check whether or not the application has rights to
-            // read current user's data.
-            int applicationAccessLevelForUser = userService.getAccessLevelForUser(applicationName, user);
-            if (applicationAccessLevelForUser < 1) {
-                AditCodedException aditCodedException = new AditCodedException(
-                        "application.insufficientPrivileges.forUser.read");
-                aditCodedException.setParameters(new Object[] {applicationName, user.getUserCode() });
-                throw aditCodedException;
-            }
-
-            // Now it is safe to load the document from database
-            // (and even necessary to do all the document-specific checks)
-            Document doc = this.documentService.getDocumentDAO().getDocument(request.getDocumentId());
-
-            // Check whether the document exists
-            if (doc == null) {
-                logger.debug("Requested document does not exist. Document ID: " + request.getDocumentId());
-                AditCodedException aditCodedException = new AditCodedException("document.nonExistent");
-                aditCodedException.setParameters(new Object[] {request.getDocumentId().toString() });
-                throw aditCodedException;
-            }
-
-            // Check whether the document is marked as deleted
-            if ((doc.getDeleted() != null) && doc.getDeleted()) {
-                logger.debug("Requested document is deleted. Document ID: " + request.getDocumentId());
-                AditCodedException aditCodedException = new AditCodedException("document.deleted");
-                aditCodedException.setParameters(new Object[] {request.getDocumentId().toString() });
-                throw aditCodedException;
-            }
-
-            // Check whether the document is marked as deflated
-            if ((doc.getDeflated() != null) && doc.getDeflated()) {
-                logger.debug("Requested document is deflated. Document ID: " + request.getDocumentId());
-                AditCodedException aditCodedException = new AditCodedException("document.deflated");
-                aditCodedException.setParameters(new Object[] {Util.dateToEstonianDateString(doc.getDeflateDate()) });
-                throw aditCodedException;
-            }
-
-            // Check whether the document belongs to user
-            if (!doc.getCreatorCode().equalsIgnoreCase(userCode)) {
-                logger.debug("Requested document does not belong to user. Document ID: " + request.getDocumentId()
-                        + ", User ID: " + userCode);
-                AditCodedException aditCodedException = new AditCodedException("document.doesNotBelongToUser");
-                aditCodedException.setParameters(new Object[] {request.getDocumentId().toString(), userCode });
-                throw aditCodedException;
-            }
+            AditUser user = Util.getAditUserFromXroadHeader(this.getHeader(), this.getUserService());
+            AditUser xroadRequestUser = Util.getXroadUserFromXroadHeader(user, this.getHeader(), this.getUserService());
             
-            // Check whether the document is marked as invisible to owner
-            if ((doc.getInvisibleToOwner() != null) && doc.getInvisibleToOwner()) {
-                AditCodedException aditCodedException = new AditCodedException("document.deleted");
-                aditCodedException.setParameters(new Object[] {documentId.toString() });
-                throw aditCodedException;
-            }
+            Document doc = checkRightsAndGetDocument(request, applicationName, user);
 
             // All checks are successfully passed
             boolean saveDocument = false;
@@ -286,7 +189,7 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
                         if ((recipient != null)
                         	&& (userService.findNotification(recipient.getUserNotifications(), ScheduleClient.NOTIFICATION_TYPE_SHARE) != null)) {
                             
-                        	List<Message> messageInAllKnownLanguages = this.getMessageService().getMessages("scheduler.message.share", new Object[] {doc.getTitle(), userCode});
+                        	List<Message> messageInAllKnownLanguages = this.getMessageService().getMessages("scheduler.message.share", new Object[] {doc.getTitle(), user.getUserCode()});
                         	String eventText = Util.joinMessages(messageInAllKnownLanguages, "<br/>");
                         	
                         	getScheduleClient().addEvent(recipient, eventText,
@@ -301,7 +204,7 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 
                 AditCodedException aditCodedException = new AditCodedException(
                         "request.shareDocument.recipients.noneSucceeded");
-                aditCodedException.setParameters(new Object[] {request.getDocumentId().toString(), userCode });
+                aditCodedException.setParameters(new Object[] {request.getDocumentId().toString(), user.getUserCode()});
                 throw aditCodedException;
             }
 
@@ -376,6 +279,105 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
         return response;
     }
 
+    /**
+     * Checks users rights for document.
+     * 
+     * @param request
+     *     Current request
+     * @param applicationName
+     *     Name of application that was used to execute current request
+     * @param user
+     *     User who executed current request
+     * @return
+     *     Requested document if user has necessary rights for it (or
+     *     {@code null} otherwise).
+     */
+    private Document checkRightsAndGetDocument(
+    	final ShareDocumentRequest request, final String applicationName,
+    	final AditUser user) {
+    	
+        // Kontrollime, kas päringu käivitanud infosüsteem on ADITis
+        // registreeritud
+        boolean applicationRegistered = this.getUserService().isApplicationRegistered(applicationName);
+        if (!applicationRegistered) {
+            AditCodedException aditCodedException = new AditCodedException("application.notRegistered");
+            aditCodedException.setParameters(new Object[] {applicationName });
+            throw aditCodedException;
+        }
+
+        // Kontrollime, kas päringu käivitanud infosüsteem tohib
+        // andmeid näha
+        int accessLevel = this.getUserService().getAccessLevel(applicationName);
+        if (accessLevel < 1) {
+            AditCodedException aditCodedException = new AditCodedException("application.insufficientPrivileges.read");
+            aditCodedException.setParameters(new Object[] {applicationName });
+            throw aditCodedException;
+        }
+
+        // Kontrollime, et kasutajakonto ligipääs poleks peatatud (kasutaja
+        // lahkunud)
+        if ((user.getActive() == null) || !user.getActive()) {
+            AditCodedException aditCodedException = new AditCodedException("user.inactive");
+            aditCodedException.setParameters(new Object[] {user.getUserCode()});
+            throw aditCodedException;
+        }
+
+        // Check whether or not the application has rights to
+        // read current user's data.
+        int applicationAccessLevelForUser = userService.getAccessLevelForUser(applicationName, user);
+        if (applicationAccessLevelForUser < 1) {
+            AditCodedException aditCodedException = new AditCodedException("application.insufficientPrivileges.forUser.read");
+            aditCodedException.setParameters(new Object[] {applicationName, user.getUserCode() });
+            throw aditCodedException;
+        }
+
+        // Now it is safe to load the document from database
+        // (and even necessary to do all the document-specific checks)
+        Document doc = this.documentService.getDocumentDAO().getDocument(request.getDocumentId());
+
+        // Check whether the document exists
+        if (doc == null) {
+            logger.debug("Requested document does not exist. Document ID: " + request.getDocumentId());
+            AditCodedException aditCodedException = new AditCodedException("document.nonExistent");
+            aditCodedException.setParameters(new Object[] {request.getDocumentId().toString() });
+            throw aditCodedException;
+        }
+
+        // Check whether the document is marked as deleted
+        if ((doc.getDeleted() != null) && doc.getDeleted()) {
+            logger.debug("Requested document is deleted. Document ID: " + request.getDocumentId());
+            AditCodedException aditCodedException = new AditCodedException("document.deleted");
+            aditCodedException.setParameters(new Object[] {request.getDocumentId().toString() });
+            throw aditCodedException;
+        }
+
+        // Check whether the document is marked as deflated
+        if ((doc.getDeflated() != null) && doc.getDeflated()) {
+            logger.debug("Requested document is deflated. Document ID: " + request.getDocumentId());
+            AditCodedException aditCodedException = new AditCodedException("document.deflated");
+            aditCodedException.setParameters(new Object[] {Util.dateToEstonianDateString(doc.getDeflateDate()) });
+            throw aditCodedException;
+        }
+
+        // Check whether the document belongs to user
+        if (!doc.getCreatorCode().equalsIgnoreCase(user.getUserCode())) {
+            logger.debug("Requested document does not belong to user. Document ID: " + request.getDocumentId()
+                    + ", User ID: " + user.getUserCode());
+            AditCodedException aditCodedException = new AditCodedException("document.doesNotBelongToUser");
+            aditCodedException.setParameters(new Object[] {request.getDocumentId().toString(), user.getUserCode()});
+            throw aditCodedException;
+        }
+        
+        // Check whether the document is marked as invisible to owner
+        if ((doc.getInvisibleToOwner() != null) && doc.getInvisibleToOwner()) {
+            AditCodedException aditCodedException = new AditCodedException("document.deleted");
+            aditCodedException.setParameters(new Object[] {doc.getId()});
+            throw aditCodedException;
+        }
+        
+        return doc;
+    }
+    	
     /**
      * Validates request body and makes sure that all required fields exist and
      * are not empty. <br>

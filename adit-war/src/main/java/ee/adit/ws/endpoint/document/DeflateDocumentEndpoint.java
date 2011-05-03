@@ -106,31 +106,14 @@ public class DeflateDocumentEndpoint extends AbstractAditBaseEndpoint {
             }
 
             // Kontrollime, kas päringus märgitud isik on teenuse kasutaja
-            String userCode = ((this.getHeader().getAllasutus() != null) && (this.getHeader().getAllasutus().length() > 0)) ? this
-                    .getHeader().getAllasutus()
-                    : this.getHeader().getIsikukood();
-            AditUser user = this.getUserService().getUserByID(userCode);
-            if (user == null) {
-                AditCodedException aditCodedException = new AditCodedException("user.nonExistent");
-                aditCodedException.setParameters(new Object[] {userCode });
-                throw aditCodedException;
-            }
-            AditUser xroadRequestUser = null;
-            if (user.getUsertype().getShortName().equalsIgnoreCase("person")) {
-                xroadRequestUser = user;
-            } else {
-                try {
-                    xroadRequestUser = this.getUserService().getUserByID(header.getIsikukood());
-                } catch (Exception ex) {
-                    logger.debug("Error when attempting to find local user matchinig the person that executed a company request.");
-                }
-            }
+            AditUser user = Util.getAditUserFromXroadHeader(this.getHeader(), this.getUserService());
+            AditUser xroadRequestUser = Util.getXroadUserFromXroadHeader(user, this.getHeader(), this.getUserService());
 
             // Kontrollime, et kasutajakonto ligipääs poleks peatatud (kasutaja
             // lahkunud)
             if ((user.getActive() == null) || !user.getActive()) {
                 AditCodedException aditCodedException = new AditCodedException("user.inactive");
-                aditCodedException.setParameters(new Object[] {userCode });
+                aditCodedException.setParameters(new Object[] {user.getUserCode()});
                 throw aditCodedException;
             }
 
@@ -144,7 +127,7 @@ public class DeflateDocumentEndpoint extends AbstractAditBaseEndpoint {
                 throw aditCodedException;
             }
 
-            this.getDocumentService().deflateDocument(request.getDocumentId(), userCode, applicationName);
+            this.getDocumentService().deflateDocument(request.getDocumentId(), user.getUserCode(), applicationName);
 
             // If deflation was successful then add history events
             // for deflation and locking.
