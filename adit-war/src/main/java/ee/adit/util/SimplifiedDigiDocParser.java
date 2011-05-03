@@ -22,10 +22,28 @@ import org.apache.log4j.Logger;
 
 import ee.adit.pojo.OutputDocumentFile;
 
+/**
+ * Class containing methods for DigiDoc file manipulation (mainly for
+ * data file extraction and finding offsets of data file contents).
+ * 
+ * @author Jaak Lember, Interinx, jaak@interinx.com
+ */
 public class SimplifiedDigiDocParser {
 	private static Logger logger = Logger.getLogger(SimplifiedDigiDocParser.class);
 	
-	public static Hashtable<String, StartEndOffsetPair> findDigiDocDataFileOffsets(String pathToDigiDoc) throws IOException, NoSuchAlgorithmException {
+	/**
+	 * Finds offsets of all data files in specified DigiDoc container.
+	 * 
+	 * @param pathToDigiDoc
+	 *     Full path to DigiDoc container
+	 * @return
+	 *     Hashtable containing data file offsets
+	 * @throws IOException
+	 * @throws NoSuchAlgorithmException
+	 */
+	public static Hashtable<String, StartEndOffsetPair> findDigiDocDataFileOffsets(
+		String pathToDigiDoc) throws IOException, NoSuchAlgorithmException {
+
 		Hashtable<String, StartEndOffsetPair> result = new Hashtable<String, StartEndOffsetPair>();
 		
         FileInputStream inStream = null;
@@ -91,7 +109,7 @@ public class SimplifiedDigiDocParser {
                         if (inTag) {
                             tagText.append(currentChar[0]);
                         } else if (inFileData) {
-                        	base64OutputStream.write((byte)currentChar[0]);
+                        	base64OutputStream.write((byte) currentChar[0]);
                         }
                         break;
                 }
@@ -109,6 +127,16 @@ public class SimplifiedDigiDocParser {
 		return result;
 	}
 	
+	/**
+	 * Gets XML attribute value.
+	 * 
+	 * @param tag
+	 *     XML tag as String
+	 * @param attributeName
+	 *     Attribute name
+	 * @return
+	 *     Value of specified attribute
+	 */
     private static String getAttributeValueFromTag(String tag, String attributeName) {
         String result = "";
 
@@ -127,6 +155,19 @@ public class SimplifiedDigiDocParser {
         return result;
     }
     
+    /**
+     * Extracts file contents from DigiDoc container.
+     *  
+     * @param ddocContainerAsStream
+     *     DigiDoc container as {@link InputStream}
+     * @param files
+     *     Files to be extracted
+     * @param temporaryFilesDir
+     *     Path of applications temporary files folder
+     * @return
+     *     Total bytes extracted
+     * @throws IOException
+     */
     public static long extractFileContentsFromDdoc(
 		InputStream ddocContainerAsStream,
 		List<OutputDocumentFile> files,

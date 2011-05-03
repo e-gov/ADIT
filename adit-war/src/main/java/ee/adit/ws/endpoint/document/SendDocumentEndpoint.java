@@ -364,9 +364,9 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
         if (request != null) {
             if (request.getDocumentId() <= 0) {
                 throw new AditCodedException("request.body.undefined.documentId");
-            } else if ((request.getRecipientList() == null) ||
-            	(request.getRecipientList().getCode() == null) ||
-            	request.getRecipientList().getCode().isEmpty()) {
+            } else if ((request.getRecipientList() == null)
+            	|| (request.getRecipientList().getCode() == null)
+            	|| request.getRecipientList().getCode().isEmpty()) {
             	throw new AditCodedException("request.sendDocument.recipients.unspecified");
             }
         } else {

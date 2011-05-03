@@ -61,20 +61,18 @@ import ee.adit.pojo.Message;
  */
 public final class Util {
 
-    private Util() { }
-    
     /**
-     * X-Tee namespace URI
+     * X-Tee namespace URI.
      */
     public static final String XTEE_NAMESPACE = "http://x-tee.riik.ee/xsd/xtee.xsd";
 
     /**
-     * Log4J logger
+     * Log4J logger.
      */
     private static Logger logger = Logger.getLogger(Util.class);
 
     /**
-     * Default file extension for temporary files
+     * Default file extension for temporary files.
      */
     public static final String ADIT_FILE_EXTENSION = ".adit";
 
@@ -414,9 +412,6 @@ public final class Util {
      *            absolute path to the file to be processed
      * @param tempDir
      *            directory where to put the result and any temporary files
-     * @param deleteTemporaryFiles
-     *            parameter specifying if temporary files are to be deleted
-     *            immediately after work is complete
      * @return absolute path to the result file
      * @throws IOException
      */
@@ -519,7 +514,7 @@ public final class Util {
     }
 
     /**
-     * Prints the X-Tee header to log
+     * Prints the X-Tee header to log.
      * 
      * @param header
      *            X-Tee header
@@ -547,14 +542,14 @@ public final class Util {
      * @return HEX string
      */
     public static String convertToHexString(final byte[] byteArray) {
-		final String HEXES = "0123456789ABCDEF";
+		final String hexes = "0123456789ABCDEF";
 		if (byteArray == null) {
 			return null;
 		}
 		final StringBuilder hex = new StringBuilder(2 * byteArray.length);
 		for (final byte b : byteArray) {
-			hex.append(HEXES.charAt((b & 0xF0) >> 4)).append(
-					HEXES.charAt((b & 0x0F)));
+			hex.append(hexes.charAt((b & 0xF0) >> 4)).append(
+					hexes.charAt((b & 0x0F)));
 		}
 		return hex.toString();
     }
@@ -666,7 +661,7 @@ public final class Util {
     /**
      * Converts a date to XML format (only date part is returned).
      * 
-     * @param date
+     * @param date date
      * @return date in XML format
      */
     public static String dateToXMLDatePart(Date date) {
@@ -677,8 +672,8 @@ public final class Util {
     /**
      * Converts an XML date to Date.
      * 
-     * @param date
-     *            in XML format
+     * @param xmlDate
+     *     date in XML format
      * @return date
      * @throws ParseException
      */
@@ -688,10 +683,12 @@ public final class Util {
     }
 
     /**
-     * Converts a date to the estonian format (dd.MM.yyyy HH:mm)
+     * Converts a date to the estonian format (dd.MM.yyyy HH:mm).
      * 
      * @param date
-     * @return string representation of the date in "dd.MM.yyyy HH:mm" format
+     *     date to be converted
+     * @return
+     *     string representation of the date in "dd.MM.yyyy HH:mm" format
      */
     public static String dateToEstonianDateString(Date date) {
         if (date == null) {
@@ -1289,7 +1286,7 @@ public final class Util {
     }
 
     /**
-     * Extract content ID from string
+     * Extract content ID from string.
      * 
      * @param conentIDString string containing the content ID
      * @return content ID
@@ -1312,7 +1309,7 @@ public final class Util {
     }
 
     /**
-     * Strip content ID - remove "<", ">"
+     * Strip content ID - remove "<", ">".
      * 
      * @param contentID content ID string
      * @return stripped content ID
@@ -1328,7 +1325,7 @@ public final class Util {
     }
 
     /**
-     * Convert file to byte array
+     * Convert file to byte array.
      * 
      * @param file file
      * @return byte array
@@ -1357,7 +1354,7 @@ public final class Util {
     }
 
     /**
-     * Get file content as string
+     * Get file content as string.
      * 
      * @param f file
      * @return file content
@@ -1368,7 +1365,7 @@ public final class Util {
     }
 
     /**
-     * Remove country prefix from string
+     * Remove country prefix from string.
      * 
      * @param code user code
      * @return user code without country prefix
@@ -1382,7 +1379,7 @@ public final class Util {
     }
 
     /**
-     * Add country prefix
+     * Add country prefix.
      * 
      * @param code user code
      * @param prefix country prefix
@@ -1428,7 +1425,7 @@ public final class Util {
     }
     
     /**
-     * Finds extension part of given file name
+     * Finds extension part of given file name.
      * 
      * @param fileName
      * 		File name
@@ -1451,7 +1448,7 @@ public final class Util {
     }
     
     /**
-     * Finds part of file name that precedes file extension
+     * Finds part of file name that precedes file extension.
      * 
      * @param fileName
      * 		File name without path
@@ -1475,7 +1472,7 @@ public final class Util {
     }
 
     /**
-     * Calculates MD5 checksum of given file
+     * Calculates MD5 checksum of given file.
      * 
      * @param filename
      * 		Full path to file that will be used for checksum calculation.
@@ -1519,7 +1516,7 @@ public final class Util {
      */
     public static String convertToLegalFileName(String namePart, String extension, String uniqueCounter) {
     	int maxLength = 240;
-    	List<Character> illegalChars = Arrays.asList(new Character[] { '/', '\n', '\r', '\t', '\0', '\f', '`', '?', '*', '\\', '<', '>', '|', '\"', ':' });
+    	List<Character> illegalChars = Arrays.asList(new Character[] {'/', '\n', '\r', '\t', '\0', '\f', '`', '?', '*', '\\', '<', '>', '|', '\"', ':'});
     	StringBuilder result = new StringBuilder(maxLength + 10);
     	
     	if (!isNullOrEmpty(namePart)) {
@@ -1544,6 +1541,16 @@ public final class Util {
     	return result.toString();
     }
     
+    /**
+     * Joins list of strings to a single string (separated by specified delimiter).
+     * 
+     * @param s
+     *     List of strings
+     * @param delimiter
+     *     Item delimiter in resulting string
+     * @return
+     *     String consisting of list items
+     */
     public static String join(List<? extends CharSequence> s, String delimiter) {
     	StringBuilder buffer = new StringBuilder();
     	Iterator<? extends CharSequence> iter = s.iterator();
@@ -1557,6 +1564,17 @@ public final class Util {
     	return buffer.toString();
     }
     
+    /**
+     * Joins list of {@link Message} objects to a single string consisting
+     * of message values (separated by specified delimiter).
+     * 
+     * @param messages
+     *     List of messages
+     * @param delimiter
+     *     Item delimiter in resulting string
+     * @return
+     *     String consisting of message values
+     */
     public static String joinMessages(List<Message> messages, String delimiter) {
     	StringBuilder buffer = new StringBuilder();
     	Iterator<Message> iter = messages.iterator();

@@ -314,15 +314,17 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
      * Gets user service.
      * 
      * @return
+     *     User service
      */
     public UserService getUserService() {
         return userService;
     }
 
     /**
-     * Sets user service
+     * Sets user service.
      * 
      * @param userService
+     *     User service
      */
     public void setUserService(UserService userService) {
         this.userService = userService;

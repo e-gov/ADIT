@@ -87,10 +87,8 @@ public class DocumentSharingDAO extends HibernateDaoSupport {
                 + " and creationDate < :comparisonDate";
 
         Session session = null;
-        Transaction transaction = null;
         try {
             session = this.getSessionFactory().openSession();
-            transaction = session.beginTransaction();
             Query query = session.createQuery(sql);
             query.setParameter("comparisonDate", creationDateComparison);
             result = query.list();

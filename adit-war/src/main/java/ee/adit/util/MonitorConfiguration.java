@@ -96,7 +96,7 @@ public class MonitorConfiguration {
     }
 
     /**
-     * Remote application name
+     * Remote application name.
      * @return remote application name
      */
     public String getRemoteApplicationShortName() {
@@ -226,6 +226,7 @@ public class MonitorConfiguration {
     /**
      * Get notification send interval.
      * @return
+     *     Notification send interval in milliseconds
      */
     public Long getNotificationSendInterval() {
         return notificationSendInterval;

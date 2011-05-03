@@ -66,27 +66,27 @@ public class UserService {
     private DvkDAO dvkDAO;
 
     /**
-     * Usertype PERSON
+     * Usertype PERSON.
      */
     public static final String USERTYPE_PERSON = "PERSON";
     
     /**
-     * Usertype INSTITUTION
+     * Usertype INSTITUTION.
      */
     public static final String USERTYPE_INSTITUTION = "INSTITUTION";
     
     /**
-     * Usertype COMPANY
+     * Usertype COMPANY.
      */
     public static final String USERTYPE_COMPANY = "COMPANY";
 
     /**
-     * Usertype WRITE
+     * Usertype WRITE.
      */
     public static final String ACCESS_RESTRICTION_WRITE = "WRITE";
     
     /**
-     * Usertype READ
+     * Usertype READ.
      */
     public static final String ACCESS_RESTRICTION_READ = "READ";
 
@@ -120,10 +120,10 @@ public class UserService {
      * Determines the access level for this application:<br>
      * 0 - no access<br>
      * 1 - read access<br>
-     * 2 - write acces (full access)
+     * 2 - write access (full access).
      * 
      * @param remoteApplicationShortName
-     *            Short name of application that executed curent request
+     *            Short name of application that executed current request
      * @return Access level for specified application
      */
     public int getAccessLevel(String remoteApplicationShortName) {
@@ -145,7 +145,7 @@ public class UserService {
      * Determines the level of access on user for this application:<br>
      * 0 - no access<br>
      * 1 - read access<br>
-     * 2 - write acces (full access)
+     * 2 - write access (full access).
      * 
      * @param remoteApplicationShortName
      *            Short name of application that executed current request.
@@ -365,7 +365,9 @@ public class UserService {
      * Gets user info for a single user.
      * 
      * @param userCode
-     *            user code
+     *     user code
+     * @param globalDiskQuota
+     *     Global disk quota from application configuration
      * @return user information
      */
     public GetUserInfoResponseAttachmentUser getUserInfo(String userCode, Long globalDiskQuota) {
@@ -428,6 +430,7 @@ public class UserService {
      * Deactivates user.
      * 
      * @param user
+     *     User to be deactivated
      */
     public void deactivateUser(AditUser user) {
         user.setActive(false);
@@ -439,9 +442,11 @@ public class UserService {
      * Retrieves the remaining disk quota for the specified user.
      * 
      * @param user
+     *     User whose disk quota will be checked
      * @param globalDiskQuota
-     *            global disk quota
+     *     Global disk quota
      * @return
+     *     Remaining disk quota of specified user (in bytes)
      */
     public long getRemainingDiskQuota(AditUser user, long globalDiskQuota) {
         if (user != null) {
@@ -467,9 +472,11 @@ public class UserService {
      * Determines the disk quota for the user specified.
      * 
      * @param user
+     *     User whose disk quota will be checked
      * @param globalDiskQuota
-     *            global disk quota
+     *     Global disk quota
      * @return
+     *     Total disk quota of specified user (in bytes)
      */
     public long getTotalDiskQuota(AditUser user, long globalDiskQuota) {
         long result = 0;
@@ -613,6 +620,7 @@ public class UserService {
      * @param notificationSendingDate
      *            sending date for this notification
      * @return
+     *     Notification ID
      */
     public long addNotification(long id, long documentId, String notificationType, String userCode, Date eventDate,
             String notificationText, Long notificationId, Date notificationSendingDate) {
@@ -639,6 +647,7 @@ public class UserService {
      * Retrieves usertypes list.
      * 
      * @return
+     *     List of user types
      */
     public List<Usertype> listUsertypes() {
         try {
@@ -653,6 +662,7 @@ public class UserService {
      * Retrieves the usertypes list and converts it to a string.
      * 
      * @return
+     *     List of user types as string (separated by "/")
      */
     public String getUsertypesString() {
         List<Usertype> usertypes = this.listUsertypes();
@@ -677,6 +687,7 @@ public class UserService {
      * Retrieves notification types and returns them as a string.
      * 
      * @return
+     *     List of notification types as string (separated by "/")
      */
     public String getNotificationTypesString() {
         List<NotificationType> notificationTypes = this.getNotificationTypeDAO().getNotificationTypeList();
@@ -716,8 +727,10 @@ public class UserService {
     /**
      * Checks if application has the overall 'write' privilege.
      * 
-     * @param applicationName remote application name
-     * @throws if application does not have the 'write' privilege.
+     * @param applicationName
+     *     Remote application name
+     * @throws AditCodedException
+     *     If application does not have the 'write' privilege.
      */
     public void checkApplicationWritePrivilege(String applicationName) throws AditCodedException {
         int accessLevel = getAccessLevel(applicationName);
@@ -731,8 +744,10 @@ public class UserService {
     /**
      * Checks if application has the overall 'read' privilege.
      * 
-     * @param applicationName remote application name
-     * @throws if application does not have the 'read' privilege.
+     * @param applicationName
+     *     Remote application name
+     * @throws AditCodedException
+     *     If application does not have the 'read' privilege.
      */
     public void checkApplicationReadPrivilege(String applicationName) throws AditCodedException {
         int accessLevel = getAccessLevel(applicationName);

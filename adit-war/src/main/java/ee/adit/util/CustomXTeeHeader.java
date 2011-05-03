@@ -15,7 +15,7 @@ public class CustomXTeeHeader extends XTeeHeader {
     private static final long serialVersionUID = 1L;
 
     /**
-     * The default namespace prefix used for ADIT namespace
+     * The default namespace prefix used for ADIT namespace.
      */
     public static final String ADIT_NS_PREFIX = "adit";
 
@@ -26,12 +26,12 @@ public class CustomXTeeHeader extends XTeeHeader {
 
     /**
      * ADIT specific SOAP header "infosysteem" that specifies the
-     * remote_application invoking the web-service
+     * remote_application invoking the web-service.
      */
     public static final QName INFOSYSTEEM = new QName(ADIT_NS_URI, "infosysteem");
 
     /**
-     * Retieves the value of the {@code INFOSYSTEEM} SOAP header
+     * Retieves the value of the {@code INFOSYSTEEM} SOAP header.
      * 
      * @return Value of {@code INFOSYSTEEM} SOAP header
      */

@@ -29,12 +29,12 @@ public final class StatePortalClient {
     private static Logger logger = Logger.getLogger(StatePortalClient.class);
     
     /**
-     * Result code OK
+     * Result code OK.
      */
     private static final int RESULT_OK = 0;
 
     /**
-     * Default constructors
+     * Default constructors.
      */
     private StatePortalClient() { }
     

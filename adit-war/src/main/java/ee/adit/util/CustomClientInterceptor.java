@@ -19,17 +19,17 @@ import org.springframework.ws.soap.saaj.SaajSoapMessage;
 public class CustomClientInterceptor implements ClientInterceptor {
 
     /**
-     * Log4J logger
+     * Log4J logger.
      */
     private static Logger logger = Logger.getLogger(CustomClientInterceptor.class);
 
     /**
-     * Temporary file address
+     * Temporary file address.
      */
     private String tmpFile;
 
     /**
-     * Configuration
+     * Configuration.
      */
     private Configuration configuration;
 
@@ -79,7 +79,7 @@ public class CustomClientInterceptor implements ClientInterceptor {
     }
 
     /**
-     * Get temporary file location
+     * Get temporary file location.
      * @return temporary file location
      */
     public String getTmpFile() {
@@ -87,7 +87,7 @@ public class CustomClientInterceptor implements ClientInterceptor {
     }
 
     /**
-     * Set temporary file location
+     * Set temporary file location.
      * @param tmpFile temporary file location
      */
     public void setTmpFile(String tmpFile) {
@@ -95,7 +95,7 @@ public class CustomClientInterceptor implements ClientInterceptor {
     }
 
     /**
-     * Get configuration
+     * Get configuration.
      * @return configuration
      */
     public Configuration getConfiguration() {
@@ -103,7 +103,7 @@ public class CustomClientInterceptor implements ClientInterceptor {
     }
 
     /**
-     * Set configuration
+     * Set configuration.
      * @param configuration configuration
      */
     public void setConfiguration(Configuration configuration) {

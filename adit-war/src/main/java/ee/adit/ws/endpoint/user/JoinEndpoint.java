@@ -256,18 +256,19 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
     }
 
     /**
-     * Gets user service
+     * Gets user service.
      * 
-     * @return
+     * @return User service
      */
     public UserService getUserService() {
         return userService;
     }
 
     /**
-     * Sets user service
+     * Sets user service.
      * 
      * @param userService
+     *     User service
      */
     public void setUserService(UserService userService) {
         this.userService = userService;

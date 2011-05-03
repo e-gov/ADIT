@@ -25,22 +25,22 @@ import ee.adit.util.MonitorResult;
 public class MonitorController extends AbstractController {
 
     /**
-     * Log4J logger
+     * Log4J logger.
      */
     private static Logger logger = Logger.getLogger(MonitorController.class);
 
     /**
-     * Monitor service
+     * Monitor service.
      */
     private MonitorService monitorService;
 
     /**
-     * Configuration
+     * Configuration.
      */
     private Configuration configuration;
 
     /**
-     * Default constructor
+     * Default constructor.
      */
     public MonitorController() {
         logger.info("MONITORCONTROLLER created.");

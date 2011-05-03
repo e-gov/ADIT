@@ -94,6 +94,11 @@ public class DocumentDAO extends HibernateDaoSupport {
      * @param temporaryFilesDir temporary directory
      * @param filesNotFoundMessageBase exception message base
      * @param currentRequestUserCode user code (the user that activated the request)
+     * @param documentRetentionDeadlineDays
+     * 		Document retention deadline from application configuration. Will be
+     * 		used to calculate estimated remove date of document.
+     * @param digidocConfigFile
+     *     Full path to DigiDoc library configuration file.
      * 
      * @return document list
      */
@@ -234,7 +239,7 @@ public class DocumentDAO extends HibernateDaoSupport {
                     if (param.isIsDeflated() != null) {
 	                    if (param.isIsDeflated()) {
 	                    	criteria.add(Restrictions.eq("deflated", true));
-	                    }else {
+	                    } else {
 	                        criteria.add(Restrictions.or(Restrictions.isNull("deflated"), Restrictions.eq("deflated", false)));
 	                    }
                     }
@@ -403,9 +408,15 @@ public class DocumentDAO extends HibernateDaoSupport {
      * @param includeSignatures do signatures have to be included in the result
      * @param includeSharings do sharings have to be included in the result
      * @param includeFileContents do file contents have to be included in the result
+     * @param fileTypes List of file types requested
      * @param temporaryFilesDir temporary directory
      * @param filesNotFoundMessageBase exception message base
      * @param currentRequestUserCode user code (the user that activated the request)
+     * @param documentRetentionDeadlineDays
+     * 		Document retention deadline from application configuration. Will be
+     * 		used to calculate estimated remove date of document.
+     * @param digidocConfigFile
+     *     Full path to DigiDoc library configuration file.
      * 
      * @return document
      * @throws Exception if any sort of exception occurred
@@ -453,12 +464,15 @@ public class DocumentDAO extends HibernateDaoSupport {
      * @param includeSignatures do signatures have to be included in the result
      * @param includeSharings do sharings have to be included in the result
      * @param includeFileContents do file contents have to be included in the result
+     * @param fileTypes List of file types requested
      * @param temporaryFilesDir temporary directory
      * @param filesNotFoundMessageBase exception message base
      * @param currentRequestUserCode user code (the user that activated the request)
      * @param documentRetentionDeadlineDays
      * 		Document retention deadline from application configuration. Will be
      * 		used to calculate estimated remove date of document.
+     * @param digidocConfigFile
+     *     Full path to DigiDoc library configuration file.
      * 
      * @return document in output format
      * @throws SQLException
@@ -494,9 +508,6 @@ public class DocumentDAO extends HibernateDaoSupport {
                     idListString += " " + id;
                 }
                 idListString = idListString.trim().replaceAll(" ", ",");
-                // throw new SQLException(new
-                // AditException(filesNotFoundMessageBase + " " +
-                // idListString));
                 AditCodedException aditCodedException = new AditCodedException("files.nonExistentOrDeleted");
                 aditCodedException.setParameters(new Object[] {idListString });
                 throw aditCodedException;
@@ -622,7 +633,7 @@ public class DocumentDAO extends HibernateDaoSupport {
 	        	// Remove from output files that were not requested but were
 	        	// required for building ZIP archive
 	        	totalBytes = 0L;
-	        	for (int i = outputFilesList.size()-1; i >= 0; i--) {
+	        	for (int i = outputFilesList.size() - 1; i >= 0; i--) {
 	        		if (!DocumentService.fileIsOfRequestedType(DocumentService.resolveFileTypeId(outputFilesList.get(i).getFileType()), fileTypes)) {
 	        			outputFilesList.remove(i);
 	        		} else {
@@ -719,7 +730,7 @@ public class DocumentDAO extends HibernateDaoSupport {
                         if ((sendingDateCheck != null) && (sharing.getCreationDate() != null)) {
                         	long diffInMs = sharing.getCreationDate().getTime() - sendingDateCheck.getTime();
                         	if (Math.abs(diffInMs) > (60L * 1000L)) {
-                        		logger.warn("Document "+ doc.getId() +" has multiple sendings with sending times varying more than 1 minute.");
+                        		logger.warn("Document " + doc.getId() + " has multiple sendings with sending times varying more than 1 minute.");
                         	}
                         }
                         if (sharing.getCreationDate() != null) {
@@ -783,8 +794,8 @@ public class DocumentDAO extends HibernateDaoSupport {
         }
         
         // Document folder
-        if (currentRequestUserCode.equalsIgnoreCase(doc.getCreatorCode()) &&
-        	((doc.getDocumentSharings() == null) || doc.getDocumentSharings().isEmpty())) {
+        if (currentRequestUserCode.equalsIgnoreCase(doc.getCreatorCode())
+        	&& ((doc.getDocumentSharings() == null) || doc.getDocumentSharings().isEmpty())) {
         	result.setFolder("local");
         } else if (currentRequestUserCode.equalsIgnoreCase(doc.getCreatorCode())) {
         	result.setFolder("outgoing");
@@ -1127,15 +1138,23 @@ public class DocumentDAO extends HibernateDaoSupport {
         this.messageService = messageService;
     }
     
-    
+    /**
+     * Translates XML (WSDL) name of document field to database name of that
+     * field.
+     * 
+     * @param xmlName
+     *     Field name in XML (WSDL)
+     * @return
+     *     Field name in database
+     */
     private String documentFieldXmlNameToDbName(String xmlName) {
     	if ("document_type".equalsIgnoreCase(xmlName)) {
     		return "documentType";
-    	} else if("last_modified".equalsIgnoreCase(xmlName)) {
+    	} else if ("last_modified".equalsIgnoreCase(xmlName)) {
     		return "lastModifiedDate";
-    	}  else if("dvk_id".equalsIgnoreCase(xmlName)) {
+    	}  else if ("dvk_id".equalsIgnoreCase(xmlName)) {
     		return "dvkId";
-    	}  else if("created".equalsIgnoreCase(xmlName)) {
+    	}  else if ("created".equalsIgnoreCase(xmlName)) {
     		return "creationDate";
     	} else {
     		return xmlName.toLowerCase();

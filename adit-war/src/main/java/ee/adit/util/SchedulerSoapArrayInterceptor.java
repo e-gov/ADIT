@@ -49,7 +49,7 @@ public class SchedulerSoapArrayInterceptor implements ClientInterceptor {
     public static final String NS_SOAPENC = "http://schemas.xmlsoap.org/soap/encoding/";
 
     /**
-     * Handle fault
+     * Handle fault.
      * @param mc message context
      * @return success
      */

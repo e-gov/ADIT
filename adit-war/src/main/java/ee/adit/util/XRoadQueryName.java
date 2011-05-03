@@ -10,17 +10,17 @@ package ee.adit.util;
 public class XRoadQueryName {
 
     /**
-     * Query name
+     * Query name.
      */
     private String name;
 
     /**
-     * Query version
+     * Query version.
      */
     private int version;
 
     /**
-     * Retrieves the query name
+     * Retrieves the query name.
      * 
      * @return Query name
      */
@@ -29,7 +29,7 @@ public class XRoadQueryName {
     }
 
     /**
-     * Sets the query name
+     * Sets the query name.
      * 
      * @param name
      *            Query name
@@ -39,7 +39,7 @@ public class XRoadQueryName {
     }
 
     /**
-     * Retrieves the query version
+     * Retrieves the query version.
      * 
      * @return Query version
      */
@@ -48,7 +48,7 @@ public class XRoadQueryName {
     }
 
     /**
-     * Sets the query version
+     * Sets the query version.
      * 
      * @param version
      *            Query version

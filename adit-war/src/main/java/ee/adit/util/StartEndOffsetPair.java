@@ -1,5 +1,10 @@
 package ee.adit.util;
 
+/**
+ * Class for storing offsets and hash of portions of data from other data files.
+ * 
+ * @author Jaak Lember, Interinx, jaak@interinx.com
+ */
 public class StartEndOffsetPair {
 	private long start;
 	private long end;

@@ -104,57 +104,57 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 public class DocumentService {
 
     /**
-     * Default MIME type to be used if MIME type cannot be determined
+     * Default MIME type to be used if MIME type cannot be determined.
      */
 	public static final String UNKNOWN_MIME_TYPE = "application/octet-stream";
 	
 	/**
-     * Document sharing type code - sign
+     * Document sharing type code - sign.
      */
     public static final String SHARINGTYPE_SIGN = "sign";
 
     /**
-     * Document sharing type code - share
+     * Document sharing type code - share.
      */
     public static final String SHARINGTYPE_SHARE = "share";
 
     /**
-     * Document sharing type code - send using DVK
+     * Document sharing type code - send using DVK.
      */
     public static final String SHARINGTYPE_SEND_DVK = "send_dvk";
 
     /**
-     * Document sharing type code - send using ADIT
+     * Document sharing type code - send using ADIT.
      */
     public static final String SHARINGTYPE_SEND_ADIT = "send_adit";
 
     /**
-     * Document DVK status - missing
+     * Document DVK status - missing.
      */
     public static final Long DVK_STATUS_MISSING = new Long(0);
 
     /**
-     * Document DVK status - waiting
+     * Document DVK status - waiting.
      */
     public static final Long DVK_STATUS_WAITING = new Long(1);
 
     /**
-     * Document DVK status - sending
+     * Document DVK status - sending.
      */
     public static final Long DVK_STATUS_SENDING = new Long(2);
 
     /**
-     * Document DVK status - sent
+     * Document DVK status - sent.
      */
     public static final Long DVK_STATUS_SENT = new Long(3);
 
     /**
-     * Document DVK status - aborted
+     * Document DVK status - aborted.
      */
     public static final Long DVK_STATUS_ABORTED = new Long(4);
 
     /**
-     * Document DVK status - received
+     * Document DVK status - received.
      */
     public static final Long DVK_STATUS_RECEIVED = new Long(5);
 
@@ -171,163 +171,163 @@ public class DocumentService {
     public static final String DVKBLOBMESSAGE_DELETE = "DELETED BY ADIT";
 
     /**
-     * Document history type code - create
+     * Document history type code - create.
      */
     public static final String HISTORY_TYPE_CREATE = "create";
 
     /**
-     * Document history type code - modify
+     * Document history type code - modify.
      */
     public static final String HISTORY_TYPE_MODIFY = "modify";
 
     /**
-     * Document history type code - add file
+     * Document history type code - add file.
      */
     public static final String HISTORY_TYPE_ADD_FILE = "add_file";
 
     /**
-     * Document history type code - modify file
+     * Document history type code - modify file.
      */
     public static final String HISTORY_TYPE_MODIFY_FILE = "modify_file";
 
     /**
-     * Document history type code - delete file
+     * Document history type code - delete file.
      */
     public static final String HISTORY_TYPE_DELETE_FILE = "delete_file";
 
     /**
-     * Document history type code - modify status
+     * Document history type code - modify status.
      */
     public static final String HISTORY_TYPE_MODIFY_STATUS = "modify_status";
 
     /**
-     * Document history type code - send
+     * Document history type code - send.
      */
     public static final String HISTORY_TYPE_SEND = "send";
 
     /**
-     * Document history type code - share
+     * Document history type code - share.
      */
     public static final String HISTORY_TYPE_SHARE = "share";
 
     /**
-     * Document history type code - unshare
+     * Document history type code - unshare.
      */
     public static final String HISTORY_TYPE_UNSHARE = "unshare";
 
     /**
-     * Document history type code - lock
+     * Document history type code - lock.
      */
     public static final String HISTORY_TYPE_LOCK = "lock";
 
     /**
-     * Document history type code - unlock
+     * Document history type code - unlock.
      */
     public static final String HISTORY_TYPE_UNLOCK = "unlock";
 
     /**
-     * Document history type code - deflate
+     * Document history type code - deflate.
      */
     public static final String HISTORY_TYPE_DEFLATE = "deflate";
 
     /**
-     * Document history type code - sign
+     * Document history type code - sign.
      */
     public static final String HISTORY_TYPE_SIGN = "sign";
 
     /**
-     * Document history type code - delete
+     * Document history type code - delete.
      */
     public static final String HISTORY_TYPE_DELETE = "delete";
 
     /**
-     * Document history type code - mark viewed
+     * Document history type code - mark viewed.
      */
     public static final String HISTORY_TYPE_MARK_VIEWED = "mark_viewed";
     
     /**
-     * Document history type code - extract file
+     * Document history type code - extract file.
      */
     public static final String HISTORY_TYPE_EXTRACT_FILE = "extract_file";
 
     /**
-     * DVK container version used when sending documents using DVK
+     * DVK container version used when sending documents using DVK.
      */
     public static final int DVK_CONTAINER_VERSION = 2;
 
     /**
-     * DVK response message title
+     * DVK response message title.
      */
     public static final String DVK_ERROR_RESPONSE_MESSAGE_TITLE = "ADIT vastuskiri";
 
     /**
-     * DVK response message file name
+     * DVK response message file name.
      */
     public static final String DVK_ERROR_RESPONSE_MESSAGE_FILENAME = "ADIT_vastuskiri.pdf";
 
     /**
-     * Document type - letter
+     * Document type - letter.
      */
     public static final String DOCTYPE_LETTER = "letter";
 
     /**
-     * Document type - application
+     * Document type - application.
      */
     public static final String DOCTYPE_APPLICATION = "application";
 
     /**
-     * DVK receive fail reason - user does not exist
+     * DVK receive fail reason - user does not exist.
      */
     public static final Integer DVK_RECEIVE_FAIL_REASON_USER_DOES_NOT_EXIST = 1;
 
     /**
-     * DVK receive fail reason - user uses DVK to exchange documents
+     * DVK receive fail reason - user uses DVK to exchange documents.
      */
     public static final Integer DVK_RECEIVE_FAIL_REASON_USER_USES_DVK = 2;
 
     // Document history description literals
     /**
-     * Document history description - CREATE
+     * Document history description - CREATE.
      */
     public static final String DOCUMENT_HISTORY_DESCRIPTION_CREATE = "Document created";
     
     /**
-     * Document history description - LOCK
+     * Document history description - LOCK.
      */
     public static final String DOCUMENT_HISTORY_DESCRIPTION_LOCK = "Document locked";
     
     /**
-     * Document history description - DEFLATE
+     * Document history description - DEFLATE.
      */
     public static final String DOCUMENT_HISTORY_DESCRIPTION_DEFLATE = "Document deflated";
     
     /**
-     * Document history description - DELETE
+     * Document history description - DELETE.
      */
     public static final String DOCUMENT_HISTORY_DESCRIPTION_DELETE = "Document deleted";
     
     /**
-     * Document history description - DELETE FILE
+     * Document history description - DELETE FILE.
      */
     public static final String DOCUMENT_HISTORY_DESCRIPTION_DELETEFILE = "Document file deleted. ID: ";
     
     /**
-     * Document history description - MODIFY STATUS
+     * Document history description - MODIFY STATUS.
      */
     public static final String DOCUMENT_HISTORY_DESCRIPTION_MODIFYSTATUS = "Document status modified to: ";
     
     /**
-     * Document history description - MODIFY
+     * Document history description - MODIFY.
      */
     public static final String DOCUMENT_HISTORY_DESCRIPTION_MODIFY = "Document modified";
     
     /**
-     * Document history description - MODIFY FILE
+     * Document history description - MODIFY FILE.
      */
     public static final String DOCUMENT_HISTORY_DESCRIPTION_MODIFYFILE = "Document file modified. ID: ";
     
     /**
-     * Document history type code - extract file
+     * Document history type code - extract file.
      */
     public static final String DOCUMENT_HISTORY_DESCRIPTION_EXTRACT_FILE = "Files extracted from digital signature container";
     
@@ -476,6 +476,7 @@ public class DocumentService {
      * @param fileId
      *            file ID
      * @param markDeleted
+     *     Add "deleted" flag to specified file
      * @param failIfSignature
      * 		If true then method will throw an error while attempting to delete
      * 		digital signature container.
@@ -489,15 +490,21 @@ public class DocumentService {
      * Saves a document using the request attachment.
      * 
      * @param attachmentDocument
-     *            document as an attachment
+     *     document as an attachment
      * @param creatorCode
-     *            document creator code
+     *     document creator code
      * @param remoteApplication
-     *            remote application name
+     *     remote application name
      * @param remainingDiskQuota
-     *            disk quota remaining for this user
+     *     Disk quota remaining for this user
+     * @param creatorUserCode
+     *     Personal ID code of person who executed document save request
+     * @param creatorUserName
+     *     Name of person who executed document save request
      * @param creatorName
-     *            The code of the user that saves the document (present time name)
+     *     The code of the user that saves the document (present time name)
+     * @param digidocConfigFile
+     *     Full path to DigiDoc library configuration file.
      * @return save result
      * @throws FileNotFoundException
      */
@@ -592,13 +599,15 @@ public class DocumentService {
      * Saves document file to database.
      * 
      * @param documentId
-     *            Document ID
+     *     Document ID
      * @param file
-     *            File as {@link OutputDocumentFile} object
+     *     File as {@link OutputDocumentFile} object
      * @param remainingDiskQuota
-     *            Remaining disk quota of current user (in bytes)
+     *     Remaining disk quota of current user (in bytes)
      * @param temporaryFilesDir
-     *            Absolute path to temporary files directory
+     *     Absolute path to temporary files directory
+     * @param digidocConfigFile
+     *     Full path to DigiDoc library configuration file.
      * @return Result of save as {@link SaveItemInternalResult} object.
      */
     public SaveItemInternalResult saveDocumentFile(
@@ -751,7 +760,7 @@ public class DocumentService {
 	                }
 	                
 	                int signaturesCount = ddocContainer.countSignatures();
-	                logger.info("Extracted file contains "+ signaturesCount +" signatures.");
+	                logger.info("Extracted file contains " + signaturesCount + " signatures.");
 	                if (signaturesCount > 0) {
 	                	for (int i = 0; i < signaturesCount; i++) {
 	                		Signature ddocSignature = ddocContainer.getSignature(i);
@@ -766,7 +775,7 @@ public class DocumentService {
 	                		if ((verificationErrors == null) || (verificationErrors.size() < 1)) {
 		                        result.getSignatures().add(localSignature);
 	                		} else {
-	                            logger.error("Signature given by "+ localSignature.getSignerName() +" was found to be invalid.");
+	                            logger.error("Signature given by " + localSignature.getSignerName() + " was found to be invalid.");
 	                			AditCodedException aditCodedException = new AditCodedException("digidoc.extract.invalidSignature");
 	                            aditCodedException.setParameters(new Object[] {localSignature.getSignerName()});
 	                            throw aditCodedException;
@@ -788,7 +797,7 @@ public class DocumentService {
                     throw aditCodedException;
     			}
     		} else {
-    			logger.error("DigiDoc container extraction failed because container file \""+ pathToContainer +"\" does not exist!");
+    			logger.error("DigiDoc container extraction failed because container file \"" + pathToContainer + "\" does not exist!");
     			AditCodedException aditCodedException = new AditCodedException("digidoc.extract.genericException");
                 aditCodedException.setParameters(new Object[] {});
                 throw aditCodedException;
@@ -1204,6 +1213,9 @@ public class DocumentService {
      * RECIPIENT_STATUS_ID). The situation where two recipients from the same
      * institution receive the same document, is not allowed (or at least DVK
      * stores only one status ID for this document).
+     * 
+     * @param digidocConfigFile
+     *     Full path to DigiDoc library configuration file.
      * 
      * @return the number of documents received
      */
@@ -1700,7 +1712,7 @@ public class DocumentService {
     }
 
     /**
-     * Deletes documents from DVK, that have the status 'sent'
+     * Deletes documents from DVK, that have the status 'sent'.
      * 
      * @return Number of documents deleted
      * @throws Exception
@@ -1753,7 +1765,7 @@ public class DocumentService {
      * Deletes received documents from DVK client database. Deleting means the
      * DVK container XML is deleted (not the document metadata).
      * 
-     * @return
+     * @return Number of affected documents
      * @throws Exception
      */
     public int deleteReceivedDocumentsFromDVK() throws Exception {
@@ -1775,6 +1787,7 @@ public class DocumentService {
                     PojoMessage dvkDocument = dvkDocumentsIterator.next();
                     deleteDVKDocument(dvkDocument, dvkSession);
                     logger.info("Document deleted from DVK. DHL_ID: " + dvkDocument.getDhlId());
+                    result++;
                 }
                 transaction.commit();
 
@@ -1797,7 +1810,7 @@ public class DocumentService {
 
     /**
      * Deletes the messages content (data) and updates 'faultCode' to 'NO_FAULT:
-     * DELETED BY ADIT'
+     * DELETED BY ADIT'.
      * 
      * @param message
      *            DVK document to be deleted.
@@ -2737,8 +2750,8 @@ public class DocumentService {
      *            Absolute path to file containing users signature
      * @param requestPersonalCode
      *            Personal ID code of the person who executed current request
-     * @param currentUserCode
-     *            Code of active user (person or organization)
+     * @param currentUser
+     *            Active user (person or organization)
      * @param digidocConfigFile
      *            Absolute path to DigiDoc configuration file
      * @param temporaryFilesDir
@@ -2897,7 +2910,7 @@ public class DocumentService {
     }
     
     /**
-     * Creates unsigned DDOC container from given documents files
+     * Creates unsigned DDOC container from given documents files.
      * 
      * @param doc
      * 		Document the files of which will be added to DDOC container
@@ -2934,7 +2947,7 @@ public class DocumentService {
         List<DocumentFile> filesList = new ArrayList<DocumentFile>(doc.getDocumentFiles());
         for (DocumentFile docFile : filesList) {
             if (((docFile.getDeleted() == null) || !docFile.getDeleted())
-            	&& (docFile.getDocumentFileTypeId() == FILETYPE_DOCUMENT_FILE)){
+            	&& (docFile.getDocumentFileTypeId() == FILETYPE_DOCUMENT_FILE)) {
                 
             	String outputFileName = uniqueDir.getAbsolutePath() + File.separator + docFile.getFileName();
 
@@ -2980,7 +2993,7 @@ public class DocumentService {
     }
     
     /**
-     * Creates a ZIP archive from given documents files
+     * Creates a ZIP archive from given documents files.
      * 
      * @param doc
      * 		Document the files of which will be added to ZIP archive
@@ -3027,7 +3040,7 @@ public class DocumentService {
             zipStream.setUseLanguageEncodingFlag(true);
             zipStream.setCreateUnicodeExtraFields(ZipArchiveOutputStream.UnicodeExtraFieldPolicy.ALWAYS); 
             
-            byte data[] = new byte[1024];
+            byte[] data = new byte[1024];
             List<String> usedEntryNames = new ArrayList<String>();
             for (OutputDocumentFile docFile : filesList) {
                 if (FILETYPE_NAME_DOCUMENT_FILE.equalsIgnoreCase(docFile.getFileType())) {
@@ -3050,7 +3063,7 @@ public class DocumentService {
                         usedEntryNames.add(entryName);
                        
                         int readLength;
-                        while((readLength = bufferedFileStream.read(data, 0, data.length)) != -1) {
+                        while ((readLength = bufferedFileStream.read(data, 0, data.length)) != -1) {
                            zipStream.write(data, 0, readLength);
                         }
                         
@@ -3130,7 +3143,7 @@ public class DocumentService {
     }
     
     /**
-     * Finds signature container from document files list
+     * Finds signature container from document files list.
      * 
      * @param doc
      * 		Document instance
@@ -3154,7 +3167,7 @@ public class DocumentService {
     }
     
     /**
-     * Finds signature container draft from document files list
+     * Finds signature container draft from document files list.
      * 
      * @param doc
      * 		Document instance
@@ -3178,7 +3191,7 @@ public class DocumentService {
     }
     
     /**
-     * Finds certificate subjects country code from X509 certificate
+     * Finds certificate subjects country code from X509 certificate.
      * 
      * @param cert
      * 		Certificate
@@ -3207,7 +3220,7 @@ public class DocumentService {
     }
     
     /**
-     * Translates file type name to file type ID
+     * Translates file type name to file type ID.
      * 
      * @param fileTypeName
      * 		Name of file type
@@ -3227,7 +3240,7 @@ public class DocumentService {
     }
     
     /**
-     * Translates file type ID to file type name
+     * Translates file type ID to file type name.
      * 
      * @param fileTypeId
      * 		ID of file type
@@ -3247,7 +3260,7 @@ public class DocumentService {
     }
     
     /**
-     * Helper method to determine if document has been shared to given user
+     * Helper method to determine if document has been shared to given user.
      * 
      * @param documentSharings
      * 		List of documents sharing records
@@ -3276,7 +3289,7 @@ public class DocumentService {
     }
     
     /**
-     * Helper method to determine if document has been sent to given user
+     * Helper method to determine if document has been sent to given user.
      * 
      * @param documentSharings
      * 		List of documents sharing records

@@ -13,7 +13,7 @@ import java.util.List;
 public class Configuration {
 
     /**
-     * Specifies the maximum result size of the getJoined query
+     * Specifies the maximum result size of the getJoined query.
      */
     private BigInteger getJoinedMaxResults;
 
@@ -61,22 +61,22 @@ public class Configuration {
     private List<String> locales;
 
     /**
-     * DVK org code
+     * DVK org code.
      */
     private String dvkOrgCode;
 
     /**
-     * XTee institution code
+     * XTee institution code.
      */
     private String xteeInstitution;
 
     /**
-     * XTee security server
+     * XTee security server.
      */
     private String xteeSecurityServer;
 
     /**
-     * XTee user code
+     * XTee user code.
      */
     private String xteeIdCode;
 
@@ -113,7 +113,7 @@ public class Configuration {
     }
 
     /**
-     * Retrieves the value for deleting temporary files as a boolean
+     * Retrieves the value for deleting temporary files as a boolean.
      * 
      * @return true, if temporary files are to be deleted
      */

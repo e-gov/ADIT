@@ -28,6 +28,9 @@ public class DocumentFileDAO extends HibernateDaoSupport {
      * @param documentId document ID
      * @param fileId document file ID
      * @param markDeleted mark document deleted
+     * @param failIfSignature
+     *     Should the method return an error message if someone attempts to
+     *     deflate a signature container.
      * @return deflation result code
      */
     public String deflateDocumentFile(
@@ -56,6 +59,21 @@ public class DocumentFileDAO extends HibernateDaoSupport {
         return result.getResultCode();
     }
 
+    /**
+     * Replaces file contents in database with MD5 hash. Also saves offset
+     * markers of file contents in signature container.
+     * 
+     * @param documentId
+     *     ID of affected document
+     * @param fileId
+     *     ID of affected file
+     * @param dataStartOffset
+     *     Start offset of data file contents in signature container
+     * @param dataEndOffset
+     *     End offset of data file contents in signature container
+     * @return
+     *     Result code
+     */
     public String removeSignedFileContents(
     	final long documentId,
     	final long fileId,

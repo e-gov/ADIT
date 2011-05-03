@@ -18,27 +18,27 @@ import ee.webmedia.xtee.client.service.XTeeServiceConfiguration;
 public class CustomXTeeConsumer {
 
     /**
-     * Log4J logger
+     * Log4J logger.
      */
     private static Logger logger = Logger.getLogger(CustomXTeeConsumer.class);
 
     /**
-     * Web-service template
+     * Web-service template.
      */
     private WebServiceTemplate webServiceTemplate;
     
     /**
-     * Message callback factory
+     * Message callback factory.
      */
     private CustomMessageCallbackFactory msgCallbackFactory;
     
     /**
-     * Service configuration
+     * Service configuration.
      */
     private XTeeServiceConfiguration serviceConfiguration;
 
     /**
-     * Sets the central class for client-side Web services
+     * Sets the central class for client-side Web services.
      */
     public void setWebServiceTemplate(WebServiceTemplate webServiceTemplate) {
         this.webServiceTemplate = webServiceTemplate;
@@ -64,7 +64,7 @@ public class CustomXTeeConsumer {
     }
 
     /**
-     * Get service configuration
+     * Get service configuration.
      * @return service configuration
      */
     public XTeeServiceConfiguration getServiceConfiguration() {
@@ -72,7 +72,7 @@ public class CustomXTeeConsumer {
     }
 
     /**
-     * Get web-service template
+     * Get web-service template.
      * @return web-service template
      */
     public WebServiceTemplate getWebServiceTemplate() {
@@ -90,7 +90,7 @@ public class CustomXTeeConsumer {
     }
 
     /**
-     * Send request
+     * Send request.
      * 
      * @param request
      * @param attachments
@@ -101,7 +101,7 @@ public class CustomXTeeConsumer {
     }
 
     /**
-     * Send request
+     * Send request.
      * 
      * @param t request
      * @param xteeServiceConfigurator service configuration
@@ -112,7 +112,7 @@ public class CustomXTeeConsumer {
     }
 
     /**
-     * Send request
+     * Send request.
      * 
      * @param t request
      * @param xteeServiceConfigurator service configuration
@@ -125,7 +125,7 @@ public class CustomXTeeConsumer {
     }
 
     /**
-     * Send request
+     * Send request.
      * 
      * @param t request
      * @param xteeServiceConfigurator service configuration
@@ -140,7 +140,7 @@ public class CustomXTeeConsumer {
     }
 
     /**
-     * Get current message callback factory
+     * Get current message callback factory.
      * 
      * @return message callback factory
      */

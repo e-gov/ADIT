@@ -27,27 +27,27 @@ import ee.webmedia.xtee.client.service.XTeeAttachment;
 public class CustomXTeeMessageCallback implements WebServiceMessageCallback {
 
     /**
-     * Log4J logger
+     * Log4J logger.
      */
     private static Logger logger = Logger.getLogger(CustomXTeeMessageCallback.class);
 
     /**
-     * Random generator
+     * Random generator.
      */
     private Random random = new Random(System.currentTimeMillis());
 
     /**
-     * Service configuration
+     * Service configuration.
      */
     private CustomXTeeServiceConfiguration serviceConfigurator;
     
     /**
-     * Attachments
+     * Attachments.
      */
     private Collection<XTeeAttachment> attachments;
 
     /**
-     * Constructor
+     * Constructor.
      * 
      * @param serviceConfigurator service configuration
      * @param attachments attachments
@@ -60,7 +60,7 @@ public class CustomXTeeMessageCallback implements WebServiceMessageCallback {
     }
 
     /**
-     * Process message
+     * Process message.
      * 
      * @param message message
      */
@@ -84,7 +84,7 @@ public class CustomXTeeMessageCallback implements WebServiceMessageCallback {
     }
 
     /**
-     * Add XTee specific header elements to SOAP envelope
+     * Add XTee specific header elements to SOAP envelope.
      * 
      * @param env SOAP envelope
      * @throws SOAPException
@@ -132,7 +132,7 @@ public class CustomXTeeMessageCallback implements WebServiceMessageCallback {
     }
 
     /**
-     * Sets envelope namespaces to SOAP envelope
+     * Sets envelope namespaces to SOAP envelope.
      * 
      * @param env SOAP envelope
      */

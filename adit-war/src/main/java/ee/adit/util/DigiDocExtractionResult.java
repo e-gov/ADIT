@@ -6,6 +6,12 @@ import java.util.List;
 import ee.adit.dao.pojo.DocumentFile;
 import ee.adit.dao.pojo.Signature;
 
+/**
+ * Class for storing data about files and signatures extracted from a
+ * DigiDoc container.
+ * 
+ * @author Jaak Lember, Interinx, jaak@interinx.com
+ */
 public class DigiDocExtractionResult {
 	private boolean success;
 	private List<DocumentFile> files;
@@ -30,6 +36,9 @@ public class DigiDocExtractionResult {
 		this.signatures = signatures;
 	}
 	
+	/**
+	 * Default constructor.
+	 */
 	public DigiDocExtractionResult() {
 		this.success = false;
 		this.files = new ArrayList<DocumentFile>();

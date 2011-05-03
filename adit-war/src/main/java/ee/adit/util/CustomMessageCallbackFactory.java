@@ -19,12 +19,12 @@ import ee.webmedia.xtee.client.service.XTeeServiceConfiguration;
 public class CustomMessageCallbackFactory implements XTeeMessageCallbackFactory {
 
     /**
-     * Log4J logger
+     * Log4J logger.
      */
     private static Logger logger = Logger.getLogger(CustomMessageCallbackFactory.class);
 
     /**
-     * Creates a new WebServiceMessageCallback
+     * Creates a new WebServiceMessageCallback.
      * 
      * @param conf XTee service configuration
      * @param attachments message attachments

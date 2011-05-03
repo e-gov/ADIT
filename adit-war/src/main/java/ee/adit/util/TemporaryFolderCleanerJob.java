@@ -20,7 +20,7 @@ import org.springframework.scheduling.quartz.QuartzJobBean;
  */
 public class TemporaryFolderCleanerJob extends QuartzJobBean {
     /**
-     * Log4j logger
+     * Log4j logger.
      */
     private static Logger logger = Logger.getLogger(TemporaryFolderCleanerJob.class);
 
@@ -71,9 +71,9 @@ public class TemporaryFolderCleanerJob extends QuartzJobBean {
         }
 
         if (deletedCount > 0) {
-        	logger.info("Number of temporary files deleted: " + deletedCount);
+            logger.info("Number of temporary files deleted: " + deletedCount);
         } else {
-        	logger.debug("No temporary files were deleted.");
+            logger.debug("No temporary files were deleted.");
         }
     }
 

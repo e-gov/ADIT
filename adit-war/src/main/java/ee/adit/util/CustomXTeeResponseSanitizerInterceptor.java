@@ -33,12 +33,12 @@ import ee.webmedia.xtee.client.exception.XTeeException;
 public class CustomXTeeResponseSanitizerInterceptor implements ClientInterceptor {
 
     /**
-     * Log4J logger
+     * Log4J logger.
      */
     private static Logger logger = Logger.getLogger(CustomXTeeResponseSanitizerInterceptor.class);
 
     /**
-     * Handle fault
+     * Handle fault.
      * 
      * @param context message context
      * @return success
@@ -48,17 +48,17 @@ public class CustomXTeeResponseSanitizerInterceptor implements ClientInterceptor
     }
 
     /**
-     * Handle request
+     * Handle request.
      * 
      * @param context message context
-     * @response success
+     * @return success
      */
     public boolean handleRequest(MessageContext context) throws WebServiceClientException {
         return true;
     }
 
     /**
-     * Handle response
+     * Handle response.
      * 
      * @param mc message context
      * @return success
@@ -105,7 +105,7 @@ public class CustomXTeeResponseSanitizerInterceptor implements ClientInterceptor
     }
 
     /**
-     * Remove namespace prefixes from SOAP body
+     * Remove namespace prefixes from SOAP body.
      * 
      * @param body SOAP body
      * @throws ParserConfigurationException
