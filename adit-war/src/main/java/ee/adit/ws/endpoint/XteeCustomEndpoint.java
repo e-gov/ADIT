@@ -99,7 +99,6 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
      * @throws Exception
      *             if an exception occurs while processing the request.
      */
-    @SuppressWarnings("unchecked")
     public final void invoke(MessageContext messageContext) throws Exception {
 
         try {
@@ -263,13 +262,12 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
      *            query document
      * @param respMessage
      *            response message
-     * @param requestMessage
+     * @param reqMessage
      *            request message
      * @param operationNode
      *            X-Tee specific operation node
      * @throws Exception
      */
-    @SuppressWarnings("unchecked")
     private void getResponse(CustomXTeeHeader header, Document query, SOAPMessage respMessage,
             SOAPMessage reqMessage, Document operationNode) throws Exception {
         SOAPElement teenusElement = createXteeMessageStructure(reqMessage, respMessage);
@@ -301,7 +299,7 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
      * Creates X-Tee specific structure for SOAP message: adds MIME headers,
      * base namespaces.
      * 
-     * @param requestMessage
+     * @param reqMessage
      *            request SOAP message
      * @param respMessage
      *            response SOAP message
@@ -371,18 +369,29 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
     /**
      * If true, request will be processed like meta-request (example of the
      * meta-query is <code>listMethods</code>).
+     * 
+     * @param metaService
+     *     Indicates if current request is a meta-request.
      */
     public void setMetaService(boolean metaService) {
         this.metaService = metaService;
     }
 
-    /** Returns <code>true</code>, if this is a meta service. */
+    /**
+     * Returns <code>true</code>, if this is a meta service.
+     * 
+     * @return
+     *     Is the current request a meta-request?
+     */
     public boolean isMetaService() {
         return metaService;
     }
 
     /**
      * Sets the property to ignore SOAP attachment headers.
+     * 
+     * @param ignoreAttachmentHeaders
+     *     Indicates if SOAP attachment headers should be ignored.
      */
     public void setIgnoreAttachmentHeaders(boolean ignoreAttachmentHeaders) {
         this.ignoreAttachmentHeaders = ignoreAttachmentHeaders;
@@ -438,14 +447,14 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 
     /**
      * Method which must implement the service logic, receives
-     * <code>requestKeha</code>, <code>responseKeha<code>
-     * and <code>CustomXTeeHeader</code>
+     * <code>requestKeha</code>, <code>responseElement</code>
+     * and <code>CustomXTeeHeader</code>.
      * 
      * @param requestKeha
      *            query body
-     * @param responseKeha
+     * @param responseElement
      *            response body
-     * @param xteeHeader
+     * @param xTeeHeader
      *            query header
      */
     protected abstract void invokeInternal(Document requestKeha, Element responseElement, CustomXTeeHeader xTeeHeader)

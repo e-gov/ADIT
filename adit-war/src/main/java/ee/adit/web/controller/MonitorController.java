@@ -214,7 +214,7 @@ public class MonitorController extends AbstractController {
     }
 
     /**
-     * Get monitor service
+     * Get monitor service.
      * @return monitor service
      */
     public MonitorService getMonitorService() {
@@ -222,7 +222,7 @@ public class MonitorController extends AbstractController {
     }
 
     /**
-     * Set monitor service
+     * Set monitor service.
      * @param monitorService monitor service
      */
     public void setMonitorService(MonitorService monitorService) {
@@ -231,7 +231,7 @@ public class MonitorController extends AbstractController {
     }
 
     /**
-     * Get configuration
+     * Get configuration.
      * @return configuration
      */
     public Configuration getConfiguration() {
@@ -240,7 +240,7 @@ public class MonitorController extends AbstractController {
     }
 
     /**
-     * Set configuration
+     * Set configuration.
      * @param configuration configuration
      */
     public void setConfiguration(Configuration configuration) {

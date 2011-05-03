@@ -31,7 +31,7 @@ public class AditEndpointMapping extends AbstractQNameEndpointMapping {
     private static Logger logger = Logger.getLogger(AditEndpointMapping.class);
 
     /**
-     * The name of the SOAP header that specifies the X-Tee request name
+     * The name of the SOAP header that specifies the X-Tee request name.
      */
     private static final String XTEE_REQUEST_NAME_HEADER = "nimi";
 

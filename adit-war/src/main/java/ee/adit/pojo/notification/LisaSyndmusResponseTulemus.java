@@ -1,5 +1,11 @@
 package ee.adit.pojo.notification;
 
+/**
+ * Result class for notification calendar (teavituskalender) response.
+ * 
+ * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
+ * @author Jaak Lember, Interinx, jaak@interinx.com
+ */
 public class LisaSyndmusResponseTulemus {
 
     private Integer tulemuseKood;

@@ -48,6 +48,9 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
      */
     private static Logger logger = Logger.getLogger(AbstractAditBaseEndpoint.class);
 
+    /**
+     * Name of applications default namespace.
+     */
     public static final String DEFAULT_NAMESPACE = "ametlikud-dokumendid";
 
     /**
@@ -409,7 +412,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
      * Throws a {@link AditCodedException} if any of required fields are missing
      * or empty.
      * 
-     * @param header
+     * @param headerParam
      *            SOAP message header part as {@link CustomXTeeHeader}
      * @throws AditCodedException
      *             Exception describing which required field is missing or empty
@@ -591,7 +594,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
     }
 
     /**
-     * Get monitor service
+     * Get monitor service.
      * @return monitor service
      */
     public MonitorService getMonitorService() {
@@ -599,7 +602,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
     }
 
     /**
-     * Set monitor service
+     * Set monitor service.
      * @param monitorService monitor service
      */
     public void setMonitorService(MonitorService monitorService) {

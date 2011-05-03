@@ -13,7 +13,7 @@ import ee.adit.pojo.ListMethodsResponse;
 public class ListMethodsEndpoint extends AbstractAditBaseEndpoint {
 
     /**
-     * Invocation method (entry point)
+     * Invocation method (entry point).
      * 
      * @param requestObject
      *            request object (not used)
@@ -28,6 +28,9 @@ public class ListMethodsEndpoint extends AbstractAditBaseEndpoint {
 
     /**
      * Gets the response object if an exception occurs.
+     * @param ex
+     *     Exception that occurred
+     * @return response object
      */
     @Override
     protected Object getResultForGenericException(Exception ex) {
