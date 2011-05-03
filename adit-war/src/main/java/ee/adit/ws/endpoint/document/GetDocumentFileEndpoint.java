@@ -388,6 +388,18 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
         return response;
     }
 
+    /**
+     * Writes response attachment to file.
+     * 
+     * @param filesList
+     *     List of files to be returned in response attachment
+     * @return
+     * 		Full path to file the response was written to
+     * @throws XmlMappingException
+     * @throws IOException
+     * @throws ParserConfigurationException
+     * @throws TransformerException
+     */
     private String outputToFile(List<OutputDocumentFile> filesList) throws XmlMappingException, IOException,
             ParserConfigurationException, TransformerException {
         GetDocumentFileResponseAttachment attachment = new GetDocumentFileResponseAttachment();

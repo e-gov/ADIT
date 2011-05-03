@@ -331,13 +331,44 @@ public class DocumentService {
      */
     public static final String DOCUMENT_HISTORY_DESCRIPTION_EXTRACT_FILE = "Files extracted from digital signature container";
     
+    /**
+     * ID of file type "document file".
+     */
 	public static final long FILETYPE_DOCUMENT_FILE = 1L;
+	
+    /**
+     * ID of file type "signature container".
+     */
 	public static final long FILETYPE_SIGNATURE_CONTAINER = 2L;
+	
+    /**
+     * ID of file type "signature container draft".
+     */
 	public static final long FILETYPE_SIGNATURE_CONTAINER_DRAFT = 3L;
+	
+    /**
+     * ID of file type "zip archive".
+     */
 	public static final long FILETYPE_ZIP_ARCHIVE = 4L;
+	
+    /**
+     * Name of file type "document file".
+     */
 	public static final String FILETYPE_NAME_DOCUMENT_FILE = "document_file";
+	
+    /**
+     * Name of file type "signature container".
+     */
 	public static final String FILETYPE_NAME_SIGNATURE_CONTAINER = "signature_container";
+	
+    /**
+     * Name of file type "signature container draft".
+     */
 	public static final String FILETYPE_NAME_SIGNATURE_CONTAINER_DRAFT = "signature_container_draft";
+	
+    /**
+     * Name of file type "zip archive".
+     */
 	public static final String FILETYPE_NAME_ZIP_ARCHIVE = "zip_archive";
 
     private static Logger logger = Logger.getLogger(UserService.class);
@@ -909,6 +940,8 @@ public class DocumentService {
      *            X-Tee user name
      * @param description
      *            event description
+     * @param userName
+     *            user name - the user that caused this event
      */
     public void addHistoryEvent(String applicationName, Document doc, String userCode, String historyType,
             String xteeUserCode, String xteeUserName, String description, String userName) {
@@ -919,6 +952,7 @@ public class DocumentService {
         documentHistory.setDocumentHistoryType(historyType);
         documentHistory.setEventDate(new Date());
         documentHistory.setUserCode(userCode);
+        documentHistory.setUserName(userName);
         documentHistory.setXteeUserCode(xteeUserCode);
         documentHistory.setXteeUserName(xteeUserName);
         documentHistory.setDescription(description);

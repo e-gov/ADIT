@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
@@ -1586,5 +1587,31 @@ public final class Util {
     	    }
     	}
     	return buffer.toString();
+    }
+    
+    /**
+     * Finds a message by locale from message list.
+     * 
+     * @param messages
+     *     List of messages
+     * @param locale
+     *     Locale name
+     * @return
+     *     Message matching the given locale
+     */
+    public static Message getMessageByLocale(List<Message> messages, Locale locale) {
+    	Message result = null;
+
+    	if ((messages != null) && (locale != null) && !isNullOrEmpty(locale.getCountry())) {
+	    	Iterator<Message> iter = messages.iterator();
+		    while (iter.hasNext()) {
+		    	Message msg = iter.next();
+		    	if (locale.getCountry().equalsIgnoreCase(msg.getLang())) {
+		    		result = msg;
+		    	}
+		    }
+    	}
+	    
+    	return result;
     }
 }

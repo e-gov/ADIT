@@ -346,7 +346,10 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
                 AditMultipleException aditMultipleException = (AditMultipleException) e;
                 arrayOfMessage.setMessage(aditMultipleException.getMessages());
                 if (aditMultipleException.getMessages() != null && aditMultipleException.getMessages().size() > 0) {
-                    errorMessage = "ERROR: " + aditMultipleException.getMessages().get(0).getValue();
+                    Message englishMessage = Util.getMessageByLocale(aditMultipleException.getMessages(), Locale.ENGLISH);
+                    if (englishMessage != null) {
+                    	errorMessage = "ERROR: " + englishMessage.getValue();
+                    }
                 }
             } else if (e instanceof AditException) {
                 logger.debug("Adding exception message to response object.");
@@ -425,11 +428,13 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
     }
 
     /**
-     * Checks the specified document data and throws an error if data not
-     * correct.
+     * Checks the specified document data and throws an error if data is
+     * incorrect.
      * 
      * @param existingDoc
+     *     Document to be checked
      * @param userCode
+     *     Code of user who executed saveDocument request
      * @throws AditException
      */
     protected void runExistingDocumentChecks(Document existingDoc, String userCode) throws AditCodedException {

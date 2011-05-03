@@ -193,11 +193,10 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
                 throw aditCodedException;
             }
 
-            // Check whether the document is marked as signable
-            // TODO: WTF?
-            if ((doc.getSignable() == null) || !doc.getSignable()) {
-                logger.debug("Requested document is not signable. Document ID: " + request.getDocumentId());
-                AditCodedException aditCodedException = new AditCodedException("document.notSignable");
+            // Check whether the document is locked
+            if ((doc.getLocked() == null) || !doc.getLocked()) {
+                logger.debug("Requested document is locked. Document ID: " + request.getDocumentId());
+                AditCodedException aditCodedException = new AditCodedException("request.saveDocumentFile.document.locked");
                 aditCodedException.setParameters(new Object[] {});
                 throw aditCodedException;
             }
@@ -358,7 +357,10 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
                 AditMultipleException aditMultipleException = (AditMultipleException) e;
                 arrayOfMessage.setMessage(aditMultipleException.getMessages());
                 if (aditMultipleException.getMessages() != null && aditMultipleException.getMessages().size() > 0) {
-                    errorMessage = "ERROR: " + aditMultipleException.getMessages().get(0).getValue();
+                	Message englishMessage = Util.getMessageByLocale(aditMultipleException.getMessages(), Locale.ENGLISH);
+                	if (englishMessage != null) {
+                		errorMessage = "ERROR: " + englishMessage.getValue();
+                	}
                 }
             } else if (e instanceof AditException) {
                 logger.debug("Adding exception message to response object.");
