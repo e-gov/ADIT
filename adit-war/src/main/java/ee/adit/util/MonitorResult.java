@@ -4,50 +4,50 @@ import java.util.List;
 
 /**
  * Monitor result holder class.
- *  
+ *
  * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
  * @author Jaak Lember, Interinx, jaak@interinx.com
- * 
+ *
  */
 public class MonitorResult {
 
     /**
-     * Component
+     * Component.
      */
     private String component;
 
     /**
-     * Test successful
+     * Test successful.
      */
     private boolean success;
 
     /**
-     * Exception list
+     * Exception list.
      */
     private List<String> exceptions;
 
     /**
-     * Operation duration
+     * Operation duration.
      */
     private double duration;
 
     /**
-     * Operation duration as a string
+     * Operation duration as a string.
      */
     private String durationString;
-    
+
     /**
-     * Exception as a string
+     * Exception as a string.
      */
     private String exceptionString;
 
     /**
-     * Status string
+     * Status string.
      */
     private String statusString;
 
     /**
-     * Get component
+     * Get component.
      * @return component
      */
     public String getComponent() {
@@ -55,7 +55,7 @@ public class MonitorResult {
     }
 
     /**
-     * Set component
+     * Set component.
      * @param component component
      */
     public void setComponent(String component) {
@@ -63,7 +63,7 @@ public class MonitorResult {
     }
 
     /**
-     * Get exceptions
+     * Get exceptions.
      * @return exceptions
      */
     public List<String> getExceptions() {
@@ -71,7 +71,7 @@ public class MonitorResult {
     }
 
     /**
-     * Set exceptions
+     * Set exceptions.
      * @param exceptions exceptions
      */
     public void setExceptions(List<String> exceptions) {
@@ -79,7 +79,7 @@ public class MonitorResult {
     }
 
     /**
-     * Get duration
+     * Get duration.
      * @return duration
      */
     public double getDuration() {
@@ -87,7 +87,7 @@ public class MonitorResult {
     }
 
     /**
-     * Set duration
+     * Set duration.
      * @param duration duration
      */
     public void setDuration(double duration) {
@@ -95,7 +95,7 @@ public class MonitorResult {
     }
 
     /**
-     * Is success
+     * Is success.
      * @return success
      */
     public boolean isSuccess() {
@@ -103,7 +103,7 @@ public class MonitorResult {
     }
 
     /**
-     * Set success
+     * Set success.
      * @param success success
      */
     public void setSuccess(boolean success) {
@@ -111,7 +111,7 @@ public class MonitorResult {
     }
 
     /**
-     * Get duration string
+     * Get duration string.
      * @return duration string
      */
     public String getDurationString() {
@@ -119,7 +119,7 @@ public class MonitorResult {
     }
 
     /**
-     * Set duration string
+     * Set duration string.
      * @param durationString duration string
      */
     public void setDurationString(String durationString) {
@@ -127,7 +127,7 @@ public class MonitorResult {
     }
 
     /**
-     * Get exception string
+     * Get exception string.
      * @return exception string
      */
     public String getExceptionString() {
@@ -135,7 +135,7 @@ public class MonitorResult {
     }
 
     /**
-     * Set exception string
+     * Set exception string.
      * @param exceptionString exception string
      */
     public void setExceptionString(String exceptionString) {
@@ -143,7 +143,7 @@ public class MonitorResult {
     }
 
     /**
-     * Get status string
+     * Get status string.
      * @return status string
      */
     public String getStatusString() {
@@ -151,7 +151,7 @@ public class MonitorResult {
     }
 
     /**
-     * Set status string
+     * Set status string.
      * @param statusString status string
      */
     public void setStatusString(String statusString) {

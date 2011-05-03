@@ -9,22 +9,22 @@ package ee.adit.util;
 public class DVKUserSyncResult {
 
     /**
-     * Number of new users added
+     * Number of new users added.
      */
     private int added;
 
     /**
-     * Number of users modified
+     * Number of users modified.
      */
     private int modified;
 
     /**
-     * Number of users deleted / deactivated
+     * Number of users deleted / deactivated.
      */
     private int deactivated;
 
     /**
-     * Default constructor
+     * Default constructor.
      */
     public DVKUserSyncResult() {
         this.setAdded(0);
@@ -33,7 +33,7 @@ public class DVKUserSyncResult {
     }
 
     /**
-     * Retrieves the number of users added
+     * Retrieves the number of users added.
      * 
      * @return Number of users added
      */
@@ -42,7 +42,7 @@ public class DVKUserSyncResult {
     }
 
     /**
-     * Sets the number of users added
+     * Sets the number of users added.
      * 
      * @param added
      *            Number of users added
@@ -52,7 +52,7 @@ public class DVKUserSyncResult {
     }
 
     /**
-     * Retrieves the number of users modified
+     * Retrieves the number of users modified.
      * 
      * @return Number of users modified
      */
@@ -61,7 +61,7 @@ public class DVKUserSyncResult {
     }
 
     /**
-     * Sets the number of users modified
+     * Sets the number of users modified.
      * 
      * @param modified
      *            Number of users modified
@@ -71,7 +71,7 @@ public class DVKUserSyncResult {
     }
 
     /**
-     * Retrieves the number of users deactivated
+     * Retrieves the number of users deactivated.
      * 
      * @return Number of users deleted/deactivated
      */
@@ -80,7 +80,7 @@ public class DVKUserSyncResult {
     }
 
     /**
-     * Sets the number of users deleted / deactivated
+     * Sets the number of users deleted / deactivated.
      * 
      * @param deactivated
      *            Number of users deleted/deactivated

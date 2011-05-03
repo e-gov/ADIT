@@ -12,12 +12,12 @@ import org.apache.log4j.Logger;
 public class NagiosLogger {
 
     /**
-     * Log4J logger
+     * Log4J logger.
      */
     private static Logger logger = Logger.getLogger(NagiosLogger.class);
 
     /**
-     * Log message
+     * Log message.
      * @param message log message
      */
     public void log(String message) {
@@ -25,7 +25,7 @@ public class NagiosLogger {
     }
 
     /**
-     * Log message with cause
+     * Log message with cause.
      * 
      * @param message message
      * @param e cause

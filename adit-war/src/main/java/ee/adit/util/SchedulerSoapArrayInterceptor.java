@@ -29,22 +29,22 @@ import org.w3c.dom.NodeList;
 public class SchedulerSoapArrayInterceptor implements ClientInterceptor {
     
     /**
-     * Log4J logger
+     * Log4J logger.
      */
     private static Logger logger = Logger.getLogger(SchedulerSoapArrayInterceptor.class);
     
     /**
-     * Notification calendar namespace
+     * Notification calendar namespace.
      */
     public static final String NS_TK = "http://producers.teavituskalender.xtee.riik.ee/producer/teavituskalender";
     
     /**
-     * XML Schema namespace
+     * XML Schema namespace.
      */
     public static final String NS_XSI = "http://www.w3.org/2001/XMLSchema-instance";
     
     /**
-     * SOAP Encoding namespace 
+     * SOAP Encoding namespace .
      */
     public static final String NS_SOAPENC = "http://schemas.xmlsoap.org/soap/encoding/";
 
@@ -58,7 +58,7 @@ public class SchedulerSoapArrayInterceptor implements ClientInterceptor {
     }
     
     /**
-     * Handle request
+     * Handle request.
      * 
      * @param mc message context
      * @return success
@@ -76,7 +76,7 @@ public class SchedulerSoapArrayInterceptor implements ClientInterceptor {
     }
 
     /**
-     * Handle response
+     * Handle response.
      * @param mc message context
      * @return success
      */
@@ -85,7 +85,7 @@ public class SchedulerSoapArrayInterceptor implements ClientInterceptor {
     }
 
     /**
-     * Add SOAP encoding attributes
+     * Add SOAP encoding attributes.
      * 
      * @param msg SOAP message
      * @throws SOAPException
@@ -194,7 +194,7 @@ public class SchedulerSoapArrayInterceptor implements ClientInterceptor {
     }
 
     /**
-     * Reformat dates in XML
+     * Reformat dates in XML.
      * 
      * @param xroadKehaElement XTee body element
      * @param tagName tag name
@@ -214,7 +214,7 @@ public class SchedulerSoapArrayInterceptor implements ClientInterceptor {
     }
 
     /**
-     * Get date from XML date string
+     * Get date from XML date string.
      * 
      * @param xmlDate XML date string
      * @return date
@@ -273,7 +273,7 @@ public class SchedulerSoapArrayInterceptor implements ClientInterceptor {
     }
 
     /**
-     * Format date to XML date string
+     * Format date to XML date string.
      * 
      * @param date date
      * @return XML date string

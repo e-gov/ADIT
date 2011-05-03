@@ -10,77 +10,77 @@ package ee.adit.util;
 public class MonitorConfiguration {
 
     /**
-     * ADIT web-service URL
+     * ADIT web-service URL.
      */
     private String aditServiceUrl;
 
     /**
-     * Remote application name used for testing
+     * Remote application name used for testing.
      */
     private String remoteApplicationShortName;
 
     /**
-     * XTee user code used for testing
+     * XTee user code used for testing.
      */
     private String userCode;
 
     /**
-     * XTee Institution code
+     * XTee Institution code.
      */
     private String institutionCode;
 
     /**
-     * Test document ID
+     * Test document ID.
      */
     private Long testDocumentId;
 
     /**
-     * DVK test document ID
+     * DVK test document ID.
      */
     private Long dvkTestDocumentID;
 
     /**
-     * Test document file ID
+     * Test document file ID.
      */
     private Long testDocumentFileId;
 
     /**
-     * Test user code
+     * Test user code.
      */
     private String testUserCode;
 
     /**
-     * Document save check interval
+     * Document save check interval.
      */
     private Long documentSaveInterval;
 
     /**
-     * Document send to DVK check interval
+     * Document send to DVK check interval.
      */
     private Long documentSendToDvkInterval;
 
     /**
-     * Document send to ADIT check interval
+     * Document send to ADIT check interval.
      */
     private Long documentSendToAditInterval;
 
     /**
-     * Notification send interval
+     * Notification send interval.
      */
     private Long notificationSendInterval;
 
     /**
-     * Check error interval
+     * Check error interval.
      */
     private Long errorInterval;
 
     /**
-     * Check error level
+     * Check error level.
      */
     private String errorLevel;
 
     /**
-     * Get ADIT web-service URL 
+     * Get ADIT web-service URL.
      * @return ADIT web-service URL
      */
     public String getAditServiceUrl() {
@@ -88,7 +88,7 @@ public class MonitorConfiguration {
     }
 
     /**
-     * Set ADIT web-service URL
+     * Set ADIT web-service URL.
      * @param aditServiceUrl ADIT web-service URL
      */
     public void setAditServiceUrl(String aditServiceUrl) {
@@ -104,7 +104,7 @@ public class MonitorConfiguration {
     }
 
     /**
-     * Remote application name
+     * Remote application name.
      * @param remoteApplicationShortName remote application name
      */
     public void setRemoteApplicationShortName(String remoteApplicationShortName) {
@@ -112,7 +112,7 @@ public class MonitorConfiguration {
     }
 
     /**
-     * Get user code
+     * Get user code.
      * @return user code
      */
     public String getUserCode() {
@@ -120,7 +120,7 @@ public class MonitorConfiguration {
     }
 
     /**
-     * Set user code
+     * Set user code.
      * @param userCode user code
      */
     public void setUserCode(String userCode) {
@@ -128,7 +128,7 @@ public class MonitorConfiguration {
     }
 
     /**
-     * Get test document ID
+     * Get test document ID.
      * @return test document ID
      */
     public Long getTestDocumentId() {
@@ -136,7 +136,7 @@ public class MonitorConfiguration {
     }
 
     /**
-     * Set test document ID
+     * Set test document ID.
      * @param testDocumentId test document ID
      */
     public void setTestDocumentId(Long testDocumentId) {
@@ -144,7 +144,7 @@ public class MonitorConfiguration {
     }
 
     /**
-     * Get test document file ID
+     * Get test document file ID.
      * @return test document file ID
      */
     public Long getTestDocumentFileId() {
@@ -152,7 +152,7 @@ public class MonitorConfiguration {
     }
 
     /**
-     * Set test document file ID
+     * Set test document file ID.
      * @param testDocumentFileId test document file ID
      */
     public void setTestDocumentFileId(Long testDocumentFileId) {
@@ -160,7 +160,7 @@ public class MonitorConfiguration {
     }
 
     /**
-     * Get test user code
+     * Get test user code.
      * @return test user code
      */
     public String getTestUserCode() {
@@ -168,7 +168,7 @@ public class MonitorConfiguration {
     }
 
     /**
-     * Set test user code
+     * Set test user code.
      * @param testUserCode test user code
      */
     public void setTestUserCode(String testUserCode) {
@@ -176,7 +176,7 @@ public class MonitorConfiguration {
     }
 
     /**
-     * Get document save interval
+     * Get document save interval.
      * @return document save interval
      */
     public Long getDocumentSaveInterval() {
@@ -184,7 +184,7 @@ public class MonitorConfiguration {
     }
 
     /**
-     * Set document save interval
+     * Set document save interval.
      * @param documentSaveInterval document save interval
      */
     public void setDocumentSaveInterval(Long documentSaveInterval) {
@@ -192,7 +192,7 @@ public class MonitorConfiguration {
     }
 
     /**
-     * Get document send to DVK interval
+     * Get document send to DVK interval.
      * @return document send to DVK interval
      */
     public Long getDocumentSendToDvkInterval() {
@@ -200,7 +200,7 @@ public class MonitorConfiguration {
     }
 
     /**
-     * Set document send to DVK interval
+     * Set document send to DVK interval.
      * @param documentSendToDvkInterval document send to DVK interval
      */
     public void setDocumentSendToDvkInterval(Long documentSendToDvkInterval) {
@@ -208,7 +208,7 @@ public class MonitorConfiguration {
     }
 
     /**
-     * Get document send to ADIT interval
+     * Get document send to ADIT interval.
      * @return document send to ADIT interval
      */
     public Long getDocumentSendToAditInterval() {
@@ -216,7 +216,7 @@ public class MonitorConfiguration {
     }
 
     /**
-     * Set document send to ADIT interval
+     * Set document send to ADIT interval.
      * @param documentSendToAditInterval document send to ADIT interval
      */
     public void setDocumentSendToAditInterval(Long documentSendToAditInterval) {
@@ -224,7 +224,7 @@ public class MonitorConfiguration {
     }
 
     /**
-     * Get notification send interval
+     * Get notification send interval.
      * @return
      */
     public Long getNotificationSendInterval() {
@@ -232,7 +232,7 @@ public class MonitorConfiguration {
     }
 
     /**
-     * Set notification send interval
+     * Set notification send interval.
      * @param notificationSendInterval notification send interval
      */
     public void setNotificationSendInterval(Long notificationSendInterval) {
@@ -240,7 +240,7 @@ public class MonitorConfiguration {
     }
 
     /**
-     * Get error inverval
+     * Get error inverval.
      * @return error inverval
      */
     public Long getErrorInterval() {
@@ -248,7 +248,7 @@ public class MonitorConfiguration {
     }
 
     /**
-     * Set error inverval
+     * Set error inverval.
      * @param errorInterval error inverval
      */
     public void setErrorInterval(Long errorInterval) {
@@ -256,7 +256,7 @@ public class MonitorConfiguration {
     }
 
     /**
-     * Get DVK test document ID
+     * Get DVK test document ID.
      * @return DVK test document ID
      */
     public Long getDvkTestDocumentID() {
@@ -264,7 +264,7 @@ public class MonitorConfiguration {
     }
 
     /**
-     * Set DVK test document ID
+     * Set DVK test document ID.
      * @param dvkTestDocumentID DVK test document ID
      */
     public void setDvkTestDocumentID(Long dvkTestDocumentID) {
@@ -272,7 +272,7 @@ public class MonitorConfiguration {
     }
 
     /**
-     * Get institution code
+     * Get institution code.
      * @return institution code
      */
     public String getInstitutionCode() {
@@ -280,7 +280,7 @@ public class MonitorConfiguration {
     }
 
     /**
-     * Set institution code
+     * Set institution code.
      * @param institutionCode institution code
      */
     public void setInstitutionCode(String institutionCode) {
@@ -288,7 +288,7 @@ public class MonitorConfiguration {
     }
 
     /**
-     * Get error level
+     * Get error level.
      * @return error level
      */
     public String getErrorLevel() {
@@ -296,7 +296,7 @@ public class MonitorConfiguration {
     }
 
     /**
-     * Set error level
+     * Set error level.
      * @param errorLevel error level
      */
     public void setErrorLevel(String errorLevel) {

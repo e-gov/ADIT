@@ -14,18 +14,18 @@ import java.util.List;
 public class FileSplitResult {
 
     /**
-     * The main file (from where the file data is removed)
+     * The main file (from where the file data is removed).
      */
     private String mainFile;
 
     /**
      * The subfiles (file data is removed from the main file and put into a
-     * subfile)
+     * subfile).
      */
     private List<String> subFiles;
 
     /**
-     * Default constructor
+     * Default constructor.
      */
     public FileSplitResult() {
         mainFile = "";
@@ -35,7 +35,7 @@ public class FileSplitResult {
     /**
      * Retrieves the main file.<br>
      * Main file is the file what is left of original file after requested parts
-     * of it were removed and saved as separate files ().
+     * of it were removed and saved as separate files.
      * 
      * @return Absolute path of main file
      */
@@ -56,7 +56,7 @@ public class FileSplitResult {
     }
 
     /**
-     * Retrieves the subfiles list
+     * Retrieves the subfiles list.
      * 
      * @return List of files created as a result of file splitting
      */
@@ -65,7 +65,7 @@ public class FileSplitResult {
     }
 
     /**
-     * Sets the subfiles list
+     * Sets the subfiles list.
      * 
      * @param subFiles
      *            List of files created as a result of file splitting

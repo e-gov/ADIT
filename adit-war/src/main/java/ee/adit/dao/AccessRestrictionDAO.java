@@ -25,12 +25,11 @@ public class AccessRestrictionDAO extends HibernateDaoSupport {
      * @return list of access restrictions, null if none found
      */
     @SuppressWarnings("unchecked")
-    public List<AccessRestriction> getAccessRestrictionsForUser(AditUser aditUser) {
+    public List<AccessRestriction> getAccessRestrictionsForUser(final AditUser aditUser) {
         List<AccessRestriction> result = null;
 
         try {
-            logger
-                    .debug("Finding access restrictions for user: " + aditUser.getUserCode() + ", "
+            logger.debug("Finding access restrictions for user: " + aditUser.getUserCode() + ", "
                             + aditUser.getFullName());
             result = this.getHibernateTemplate().find(
                     "from AccessRestriction accessRestriction where accessRestriction.aditUser = ?", aditUser);

@@ -73,57 +73,57 @@ import ee.webmedia.xtee.client.service.XTeeAttachment;
 public class MonitorService {
 
     /**
-     * Status OK
+     * Status OK.
      */
     public static final String OK = "OK";
     
     /**
-     * Status FAIL
+     * Status FAIL.
      */
     public static final String FAIL = "FAIL";
     
     /**
-     * Milliseconds
+     * Milliseconds.
      */
     public static final String MS = "ms";
     
     /**
-     * Seconds
+     * Seconds.
      */
     public static final String SECONDS = "seconds";
 
     /**
-     * Component ADIT_DB_CONNECTION
+     * Component ADIT_DB_CONNECTION.
      */
     private static final String ADIT_DB_CONNECTION = "ADIT_DB_CONNECTION";
     
     /**
-     * Component ADIT_DB_CONNECTION_READ
+     * Component ADIT_DB_CONNECTION_READ.
      */
     private static final String ADIT_DB_CONNECTION_READ = "ADIT_DB_CONNECTION_READ";
     
     /**
-     * Component ADIT_DB_CONNECTION_WRITE
+     * Component ADIT_DB_CONNECTION_WRITE.
      */
     private static final String ADIT_DB_CONNECTION_WRITE = "ADIT_DB_CONNECTION_WRITE";
 
     /**
-     * Component ADIT_UK_CONNECTION
+     * Component ADIT_UK_CONNECTION.
      */
     private static final String ADIT_UK_CONNECTION = "ADIT_UK_CONNECTION";
     
     /**
-     * Component ADIT_UK_CONNECTION_READ
+     * Component ADIT_UK_CONNECTION_READ.
      */
     private static final String ADIT_UK_CONNECTION_READ = "ADIT_UK_CONNECTION_READ";
     
     /**
-     * Component ADIT_UK_CONNECTION_WRITE
+     * Component ADIT_UK_CONNECTION_WRITE.
      */
     private static final String ADIT_UK_CONNECTION_WRITE = "ADIT_UK_CONNECTION_WRITE";
 
     /**
-     * Component ADIT_APP
+     * Component ADIT_APP.
      */
     private static final String ADIT_APP = "ADIT_APP";
 
@@ -1049,7 +1049,7 @@ public class MonitorService {
     }
 
     /**
-     * Check error log
+     * Check error log.
      * 
      * @return test result
      */
