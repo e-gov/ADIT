@@ -1258,7 +1258,6 @@ public class DocumentService {
         int result = 0;
 
         try {
-
             // Fetch all incoming documents from DVK Client database which have
             // the required status - "sending" (recipient_status_id = "101" or
             // "1");
@@ -1294,168 +1293,168 @@ public class DocumentService {
                             // the field <isikukood> in the DVK container,
                             // regardless if it is actually a person or an
                             // institution / company.
-                            if (recipient.getRegNr() != null && !recipient.getRegNr().equalsIgnoreCase("")) {
-                                if (recipient.getIsikukood() != null && !recipient.getIsikukood().equals("")) {
-                                    // The recipient is specified - check if
-                                    // it's a DVK user
+                            if (!Util.isNullOrEmpty(recipient.getRegNr())
+                            	&& !Util.isNullOrEmpty(recipient.getIsikukood())) {
+                                // The recipient is specified - check if it's a DVK user
+                            	String personalIdCodeWithCountryPrefix = recipient.getIsikukood().trim();
+                            	if (!personalIdCodeWithCountryPrefix.startsWith("EE")) {
+                            		personalIdCodeWithCountryPrefix = "EE" + personalIdCodeWithCountryPrefix;
+                            	}
+                            	
+                                logger.debug("Getting AditUser by personal code: " + personalIdCodeWithCountryPrefix);
+                                AditUser user = this.getAditUserDAO().getUserByID(personalIdCodeWithCountryPrefix);
 
-                                    logger.debug("Getting AditUser by personal code: " + recipient.getIsikukood().trim());
-                                    AditUser user = this.getAditUserDAO().getUserByID(recipient.getIsikukood().trim());
+                                if (user != null && user.getActive()) {
+                                    // Check if user uses DVK
+                                    if (!Util.isNullOrEmpty(user.getDvkOrgCode())) {
+                                        // The user uses DVK - this is not allowed.
+                                    	// Users that use DVK have to exchange
+                                        // documents with other users that
+                                        // use DVK, over DVK.
+                                        this.composeErrorResponse(DocumentService.DVK_RECEIVE_FAIL_REASON_USER_USES_DVK,
+                                                dvkContainer, recipient.getIsikukood().trim(), dvkDocument
+                                                        .getReceivedDate(), recipient.getNimi());
+                                        throw new AditInternalException("User uses DVK - not allowed.");
+                                    }
 
-                                    if (user != null && user.getActive()) {
+                                    logger.debug("Constructing ADIT message");
+                                    // Add document for this recipient to
+                                    // ADIT database
+                                    Document aditDocument = new Document();
+                                    aditDocument.setCreationDate(new Date());
+                                    aditDocument.setDocumentDvkStatusId(DVK_STATUS_SENT);
+                                    aditDocument.setDvkId(dvkDocument.getDhlId());
+                                    aditDocument.setGuid(dvkDocument.getDhlGuid());
+                                    aditDocument.setLocked(true);
+                                    aditDocument.setLockingDate(new Date());
+                                    aditDocument.setSignable(true);
+                                    aditDocument.setTitle(dvkDocument.getTitle());
+                                    aditDocument.setDocumentType(DOCTYPE_LETTER);
 
-                                        // Check if user uses DVK
-                                        if (user.getDvkOrgCode() != null && !user.getDvkOrgCode().equalsIgnoreCase("")) {
-                                            // The user uses DVK - this is not
-                                            // allowed. Users that use DVK have
-                                            // to exchange
-                                            // documents with other users that
-                                            // use DVK, over DVK.
-                                            this.composeErrorResponse(DocumentService.DVK_RECEIVE_FAIL_REASON_USER_USES_DVK,
-                                                    dvkContainer, recipient.getIsikukood().trim(), dvkDocument
-                                                            .getReceivedDate(), recipient.getNimi());
-                                            throw new AditInternalException("User uses DVK - not allowed.");
-                                        }
+                                    // The creator is the recipient
+                                    aditDocument.setCreatorCode(user.getUserCode());
+                                    aditDocument.setCreatorName(user.getFullName());
 
-                                        logger.debug("Constructing ADIT message");
-                                        // Add document for this recipient to
-                                        // ADIT database
-                                        Document aditDocument = new Document();
-                                        aditDocument.setCreationDate(new Date());
-                                        aditDocument.setDocumentDvkStatusId(DVK_STATUS_SENT);
-                                        aditDocument.setDvkId(dvkDocument.getDhlId());
-                                        aditDocument.setGuid(dvkDocument.getDhlGuid());
-                                        aditDocument.setLocked(true);
-                                        aditDocument.setLockingDate(new Date());
-                                        aditDocument.setSignable(true);
-                                        aditDocument.setTitle(dvkDocument.getTitle());
-                                        aditDocument.setDocumentType(DOCTYPE_LETTER);
-
-                                        // The creator is the recipient
-                                        aditDocument.setCreatorCode(user.getUserCode());
-                                        aditDocument.setCreatorName(user.getFullName());
-
-                                        // Get document files from DVK container
-                                        List<OutputDocumentFile> tempDocuments = this.getDocumentOutputFiles(dvkContainer);
+                                    // Get document files from DVK container
+                                    List<OutputDocumentFile> tempDocuments = this.getDocumentOutputFiles(dvkContainer);
+                                    
+                                    // Digital signature extraction
+                                    boolean involvedSignatureContainerExtraction = false;
+                                    if ((tempDocuments != null) && (tempDocuments.size() == 1)) {
+                                    	OutputDocumentFile file = tempDocuments.get(0);
+                                        String extension = Util.getFileExtension(file.getName()); 
                                         
-                                        // Digital signature extraction
-                                        boolean involvedSignatureContainerExtraction = false;
-                                        if ((tempDocuments != null) && (tempDocuments.size() == 1)) {
-                                        	OutputDocumentFile file = tempDocuments.get(0);
-                                            String extension = Util.getFileExtension(file.getName()); 
-                                            
-                                            // If first added file happens to be a DigiDoc container then
-                                            // extract files and signatures from container. Otherwise add
-                                            // container as a regular file.
-                                            if (((file.getId() == null) || (file.getId() <= 0)) && "ddoc".equalsIgnoreCase(extension)) {
-                                            	DigiDocExtractionResult extractionResult = extractDigiDocContainer(file.getSysTempFile(), digidocConfigFile);
-                                            	if (extractionResult.isSuccess()) {
-                                            		file.setFileType(FILETYPE_NAME_SIGNATURE_CONTAINER);
-                                            		aditDocument.setSigned((extractionResult.getSignatures() != null) && (extractionResult.getSignatures().size() > 0));
-                                            		involvedSignatureContainerExtraction = true;
-                                            		 
-                                            		for (int i = 0; i < extractionResult.getFiles().size(); i++) {
-                                            			DocumentFile df = extractionResult.getFiles().get(i);
-                                            			df.setDocument(aditDocument);
-                                            			aditDocument.getDocumentFiles().add(df);
-                                            		}
-                                                     
-                                            		for (int i = 0; i < extractionResult.getSignatures().size(); i++) {
-                                            			ee.adit.dao.pojo.Signature sig = extractionResult.getSignatures().get(i);
-                                            			sig.setDocument(aditDocument);
-                                            			aditDocument.getSignatures().add(sig);
-                                            		}
-                                            	}
-                                            }
+                                        // If first added file happens to be a DigiDoc container then
+                                        // extract files and signatures from container. Otherwise add
+                                        // container as a regular file.
+                                        if (((file.getId() == null) || (file.getId() <= 0)) && "ddoc".equalsIgnoreCase(extension)) {
+                                        	DigiDocExtractionResult extractionResult = extractDigiDocContainer(file.getSysTempFile(), digidocConfigFile);
+                                        	if (extractionResult.isSuccess()) {
+                                        		file.setFileType(FILETYPE_NAME_SIGNATURE_CONTAINER);
+                                        		aditDocument.setSigned((extractionResult.getSignatures() != null) && (extractionResult.getSignatures().size() > 0));
+                                        		involvedSignatureContainerExtraction = true;
+                                        		 
+                                        		for (int i = 0; i < extractionResult.getFiles().size(); i++) {
+                                        			DocumentFile df = extractionResult.getFiles().get(i);
+                                        			df.setDocument(aditDocument);
+                                        			aditDocument.getDocumentFiles().add(df);
+                                        		}
+                                                 
+                                        		for (int i = 0; i < extractionResult.getSignatures().size(); i++) {
+                                        			ee.adit.dao.pojo.Signature sig = extractionResult.getSignatures().get(i);
+                                        			sig.setDocument(aditDocument);
+                                        			aditDocument.getSignatures().add(sig);
+                                        		}
+                                        	}
+                                        }
+                                    }
+
+                                    Session aditSession = null;
+                                    Transaction aditTransaction = null;
+                                    try {
+
+                                        // Save the document
+                                        aditSession = this.getDocumentDAO().getSessionFactory().openSession();
+                                        aditTransaction = aditSession.beginTransaction();
+
+                                        // Before we save the document to
+                                        // ADIT, check if the recipient has
+                                        // already received a document
+                                        // with the same GUID or DVK ID.
+                                        if (this.getDocumentDAO().checkIfDocumentExists(dvkDocument, recipient)) {
+                                            throw new AditInternalException(
+                                                "Document already sent to user. DVK ID: "
+                                                        + dvkDocument.getDhlId() + ", recipient: "
+                                                        + recipient.getIsikukood().trim());
                                         }
 
-                                        Session aditSession = null;
-                                        Transaction aditTransaction = null;
-                                        try {
+                                        // Save document
+                                        SaveItemInternalResult saveResult = this.getDocumentDAO().save(
+                                                aditDocument, tempDocuments, Long.MAX_VALUE, aditSession);
+                                        if (saveResult == null) {
+                                            throw new AditInternalException("Document saving failed!");
+                                        }
+                                        if (saveResult.isSuccess()) {
+                                            logger.info("Document saved to ADIT database. ID: "
+                                                    + saveResult.getItemId());
 
-                                            // Save the document
-                                            aditSession = this.getDocumentDAO().getSessionFactory().openSession();
-                                            aditTransaction = aditSession.beginTransaction();
-
-                                            // Before we save the document to
-                                            // ADIT, check if the recipient has
-                                            // already received a document
-                                            // with the same GUID or DVK ID.
-                                            if (this.getDocumentDAO().checkIfDocumentExists(dvkDocument, recipient)) {
-                                                throw new AditInternalException(
-                                                    "Document already sent to user. DVK ID: "
-                                                            + dvkDocument.getDhlId() + ", recipient: "
-                                                            + recipient.getIsikukood().trim());
+                                            // Add signature container extraction history event
+                                            if (involvedSignatureContainerExtraction) {
+                                        		CustomXTeeHeader dummyHeader = new CustomXTeeHeader();
+                                        		dummyHeader.addElement(CustomXTeeHeader.ISIKUKOOD, user.getUserCode());
+                                        		dummyHeader.addElement(CustomXTeeHeader.INFOSYSTEEM, "");
+                                        		
+                                                DocumentHistory historyEvent = new DocumentHistory(
+                                               		 HISTORY_TYPE_EXTRACT_FILE, saveResult.getItemId(),
+                                               		 Calendar.getInstance().getTime(), user,
+                                               		 user, dummyHeader);
+                                                historyEvent.setDescription(DOCUMENT_HISTORY_DESCRIPTION_EXTRACT_FILE);
+                                                this.getDocumentHistoryDAO().save(historyEvent);
                                             }
+                                            
+                                            // Update user quota limit
+                                            Long usedDiskQuota = user.getDiskQuotaUsed();
+                                            if (usedDiskQuota == null) {
+                                            	usedDiskQuota = 0L;
+                                            }
+                                            user.setDiskQuotaUsed(usedDiskQuota + saveResult.getAddedFilesSize());
+                                            this.getAditUserDAO().saveOrUpdate(user);
 
-                                            // Save document
-                                            SaveItemInternalResult saveResult = this.getDocumentDAO().save(
-                                                    aditDocument, tempDocuments, Long.MAX_VALUE, aditSession);
-                                            if (saveResult == null) {
+                                        } else {
+                                            if ((saveResult.getMessages() != null)
+                                                    && (saveResult.getMessages().size() > 0)) {
+                                                throw new AditInternalException(saveResult.getMessages().get(0)
+                                                        .getValue());
+                                            } else {
                                                 throw new AditInternalException("Document saving failed!");
                                             }
-                                            if (saveResult.isSuccess()) {
-                                                logger.info("Document saved to ADIT database. ID: "
-                                                        + saveResult.getItemId());
-
-                                                // Add signature container extraction history event
-                                                if (involvedSignatureContainerExtraction) {
-	                                        		CustomXTeeHeader dummyHeader = new CustomXTeeHeader();
-	                                        		dummyHeader.addElement(CustomXTeeHeader.ISIKUKOOD, user.getUserCode());
-	                                        		dummyHeader.addElement(CustomXTeeHeader.INFOSYSTEEM, "");
-	                                        		
-	                                                DocumentHistory historyEvent = new DocumentHistory(
-	                                               		 HISTORY_TYPE_EXTRACT_FILE, saveResult.getItemId(),
-	                                               		 Calendar.getInstance().getTime(), user,
-	                                               		 user, dummyHeader);
-	                                                historyEvent.setDescription(DOCUMENT_HISTORY_DESCRIPTION_EXTRACT_FILE);
-	                                                this.getDocumentHistoryDAO().save(historyEvent);
-                                                }
-                                                
-                                                // Update user quota limit
-                                                Long usedDiskQuota = user.getDiskQuotaUsed();
-                                                if (usedDiskQuota == null) {
-                                                	usedDiskQuota = 0L;
-                                                }
-                                                user.setDiskQuotaUsed(usedDiskQuota + saveResult.getAddedFilesSize());
-                                                this.getAditUserDAO().saveOrUpdate(user);
-
-                                            } else {
-                                                if ((saveResult.getMessages() != null)
-                                                        && (saveResult.getMessages().size() > 0)) {
-                                                    throw new AditInternalException(saveResult.getMessages().get(0)
-                                                            .getValue());
-                                                } else {
-                                                    throw new AditInternalException("Document saving failed!");
-                                                }
-                                            }
-
-                                            // Update document status to "sent"
-                                            // (recipient_status_id = "102") in
-                                            // DVK Client database
-                                            dvkDocument.setRecipientStatusId(DVK_STATUS_RECEIVED);
-                                            this.getDvkDAO().updateDocument(dvkDocument);
-
-                                            // Finally commit
-                                            aditTransaction.commit();
-
-                                        } catch (Exception e) {
-                                            logger.debug("Error saving document to ADIT database: ", e);
-                                            if (aditTransaction != null) {
-                                                aditTransaction.rollback();
-                                            }
-                                        } finally {
-                                            if (aditSession != null) {
-                                                aditSession.close();
-                                            }
                                         }
-                                    } else {
-                                        logger.error("User not found. Personal code: " + recipient.getIsikukood().trim());
-                                        this.composeErrorResponse(
-                                                DocumentService.DVK_RECEIVE_FAIL_REASON_USER_DOES_NOT_EXIST, dvkContainer,
-                                                recipient.getIsikukood().trim(), dvkDocument.getReceivedDate(),
-                                                recipient.getNimi());
+
+                                        // Update document status to "sent"
+                                        // (recipient_status_id = "102") in
+                                        // DVK Client database
+                                        dvkDocument.setRecipientStatusId(DVK_STATUS_RECEIVED);
+                                        this.getDvkDAO().updateDocument(dvkDocument);
+
+                                        // Finally commit
+                                        aditTransaction.commit();
+
+                                    } catch (Exception e) {
+                                        logger.debug("Error saving document to ADIT database: ", e);
+                                        if (aditTransaction != null) {
+                                            aditTransaction.rollback();
+                                        }
+                                    } finally {
+                                        if (aditSession != null) {
+                                            aditSession.close();
+                                        }
                                     }
+                                } else {
+                                    logger.error("User not found. Personal code: " + recipient.getIsikukood().trim());
+                                    this.composeErrorResponse(
+                                            DocumentService.DVK_RECEIVE_FAIL_REASON_USER_DOES_NOT_EXIST, dvkContainer,
+                                            recipient.getIsikukood().trim(), dvkDocument.getReceivedDate(),
+                                            recipient.getNimi());
                                 }
                             }
                         }
