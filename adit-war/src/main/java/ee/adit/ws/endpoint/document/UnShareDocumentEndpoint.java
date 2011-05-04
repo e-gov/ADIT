@@ -181,8 +181,8 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
                             xroadRequestUser, header));
 
             if (saveDocument) {
-                // If all sharings are removed then remove locking
-                if (doc.getDocumentSharings().isEmpty()) {
+                // If all sharings are removed and not signed then remove locking
+                if (doc.getDocumentSharings().isEmpty() && ((doc.getSigned() == null) || !doc.getSigned())) {
                     doc.setLocked(false);
                     doc.setLockingDate(null);
 

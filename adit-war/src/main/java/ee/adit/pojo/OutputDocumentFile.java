@@ -94,13 +94,23 @@ public class OutputDocumentFile implements Comparable<OutputDocumentFile> {
 
 	/**
 	 * Compares {@link OutputDocumentFile} instances by DigiDoc DataFile start offset.
+	 * @param compareObject
+	 *     {@link OutputDocumentFile} that will be compared to current instance
+	 * @return
+	 *     -1 if DigiDoc start offset of current instance is smaller<br/>
+	 *     0 if start offsets are equal<br/>
+	 *     1 if DigiDoc start offset of current instance is bigger.
 	 */
     public int compareTo(OutputDocumentFile compareObject) {
-        if (getDdocDataFileStartOffset() < compareObject.getDdocDataFileStartOffset())
+        long currentStart = (getDdocDataFileStartOffset() == null) ? 0L : getDdocDataFileStartOffset().longValue();
+        long compareToStart = (compareObject.getDdocDataFileStartOffset() == null) ? 0L : compareObject.getDdocDataFileStartOffset().longValue();
+    	
+    	if (currentStart < compareToStart) {
             return -1;
-        else if (getDdocDataFileStartOffset() == compareObject.getDdocDataFileStartOffset())
+        } else if (currentStart == compareToStart) {
             return 0;
-        else
+        } else {
             return 1;
+        }
     }
 }

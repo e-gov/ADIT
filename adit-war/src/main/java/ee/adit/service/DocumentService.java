@@ -3166,19 +3166,22 @@ public class DocumentService {
         CertValue signerCertificate = digiDocSignature.getCertValueOfType(CertValue.CERTVAL_TYPE_SIGNER);
         if ((signerCertificate != null) && (signerCertificate.getCert() != null)) {
             X509Certificate cert = signerCertificate.getCert();
-            result.setSignerCode(SignedDoc.getSubjectPersonalCode(cert));
+            
+            String signerCode = SignedDoc.getSubjectPersonalCode(cert);
+            String signerCountryCode = getSubjectCountryCode(cert);
+            String signerCodeWithCountryPrefix = "EE" + signerCode;
+            if (!Util.isNullOrEmpty(signerCode) && !Util.isNullOrEmpty(signerCountryCode)) {
+            	signerCodeWithCountryPrefix = (signerCode.startsWith(signerCountryCode)) ? signerCode : signerCountryCode + signerCode;
+            }
+            
+            result.setSignerCode(signerCodeWithCountryPrefix);
             result.setSignerName(SignedDoc.getSubjectLastName(cert) + ", " + SignedDoc.getSubjectFirstName(cert));
             
             // Add reference to ADIT user if signer happens to be registered user
-            String signerCode = result.getSignerCode();
-            String signerCountryCode = getSubjectCountryCode(cert);
-            if (!Util.isNullOrEmpty(signerCode) && !Util.isNullOrEmpty(signerCountryCode)) {
-            	String signerCodeWithCountryPrefix = (signerCode.startsWith(signerCountryCode)) ? signerCode : signerCountryCode + signerCode;
-            	AditUser user = this.getAditUserDAO().getUserByID(signerCodeWithCountryPrefix);
-	            if (user != null) {
-	            	result.setUserCode(user.getUserCode());
-	            	result.setUserName(user.getFullName());
-	            }
+        	AditUser user = this.getAditUserDAO().getUserByID(signerCodeWithCountryPrefix);
+            if (user != null) {
+            	result.setUserCode(user.getUserCode());
+            	result.setUserName(user.getFullName());
             }
         }
         

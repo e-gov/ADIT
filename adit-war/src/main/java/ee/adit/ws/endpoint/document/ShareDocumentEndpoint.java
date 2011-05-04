@@ -144,9 +144,8 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 
                     isSuccess = true;
                     saveDocument = true;
-                    statusMessages.setMessage(this.getMessageService().getMessages(
-                            "request.shareDocument.recipientStatus.success", new Object[] {}));
-                    if (additionalInformationForLog != null && additionalInformationForLog.trim() != "") {
+                    statusMessages.setMessage(this.getMessageService().getMessages("request.shareDocument.recipientStatus.success", new Object[] {}));
+                    if (!Util.isNullOrEmpty(additionalInformationForLog)) {
                         additionalInformationForLog = additionalInformationForLog + ",";
                     }
                     additionalInformationForLog = additionalInformationForLog + " shared to: " + recipientCode;

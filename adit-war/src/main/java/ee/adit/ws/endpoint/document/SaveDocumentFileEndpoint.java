@@ -369,7 +369,7 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
         if (doc == null) {
             logger.debug("Requested document does not exist. Document ID: " + request.getDocumentId());
             AditCodedException aditCodedException = new AditCodedException("document.nonExistent");
-            aditCodedException.setParameters(new Object[] {request.getDocumentId().toString() });
+            aditCodedException.setParameters(new Object[] {request.getDocumentId().toString()});
             throw aditCodedException;
         }
 
@@ -377,7 +377,7 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
         if ((doc.getDeleted() != null) && doc.getDeleted()) {
             logger.debug("Requested document is deleted. Document ID: " + request.getDocumentId());
             AditCodedException aditCodedException = new AditCodedException("document.deleted");
-            aditCodedException.setParameters(new Object[] {request.getDocumentId().toString() });
+            aditCodedException.setParameters(new Object[] {request.getDocumentId().toString()});
             throw aditCodedException;
         }
 
@@ -393,7 +393,7 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
         if ((doc.getLocked() == null) || !doc.getLocked()) {
             logger.debug("Requested document is locked. Document ID: " + request.getDocumentId());
             AditCodedException aditCodedException = new AditCodedException("request.saveDocumentFile.document.locked");
-            aditCodedException.setParameters(new Object[] {});
+            aditCodedException.setParameters(new Object[] {request.getDocumentId().toString()});
             throw aditCodedException;
         }
 

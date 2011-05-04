@@ -107,8 +107,8 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
      * @throws Exception
      */
     @Override
-    protected void invokeInternal(Document requestKeha, Element responseElement, CustomXTeeHeader xteeHeader)
-            throws Exception {
+    protected void invokeInternal(Document requestKeha, Element responseElement,
+    	CustomXTeeHeader xteeHeader) throws Exception {
 
         logger.debug("AbstractAditBaseEndpoint invoked");
         Object responseObject = null;
@@ -168,11 +168,11 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
         }
 
         if (responseObject != null) {
-            // Marshall the response object
+            // Marshal the response object
             DOMResult reponseObjectResult = new DOMResult(responseElement);
             this.getMarshaller().marshal(responseObject, reponseObjectResult);
 
-            // Add the reponse DOM tree as a child element to the responseKeha
+            // Add the response DOM tree as a child element to the responseKeha
             // element
             responseElement = (Element) reponseObjectResult.getNode();
         } else {
