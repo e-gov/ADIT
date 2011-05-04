@@ -111,174 +111,150 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
             // Kontrollime, kas päringus märgitud isik on teenuse kasutaja
             AditUser user = Util.getAditUserFromXroadHeader(this.getHeader(), this.getUserService());
 
-            checkRights(request, applicationName, user);
+            Document doc = checkRightsAndGetDocument(request, applicationName, user);
 
-            Document doc = this.documentService.getDocumentDAO().getDocument(request.getDocumentId());
+            boolean saveDocument = false;
 
-            // Kontrollime, kas ID-le vastav dokument on olemas
-            if (doc != null) {
-                if ((doc.getDeleted() == null) || (!doc.getDeleted())) {
-                    if ((doc.getDeflated() == null) || (!doc.getDeflated())) {
-                        boolean saveDocument = false;
-
-                        // Dokumenti saab alla laadida, kui dokument:
-                        // a) kuulub päringu käivitanud kasutajale
-                        // b) on päringu käivitanud kasutajale välja jagatud
-                        boolean userIsDocOwner = false;
-                        if (doc.getCreatorCode().equalsIgnoreCase(user.getUserCode())) {
-                            // Check whether the document is marked as invisible to owner
-                            if ((doc.getInvisibleToOwner() != null) && doc.getInvisibleToOwner()) {
+            // Dokumenti saab alla laadida, kui dokument:
+            // a) kuulub päringu käivitanud kasutajale
+            // b) on päringu käivitanud kasutajale välja jagatud
+            boolean userIsDocOwner = false;
+            if (doc.getCreatorCode().equalsIgnoreCase(user.getUserCode())) {
+                // Check whether the document is marked as invisible to owner
+                if ((doc.getInvisibleToOwner() != null) && doc.getInvisibleToOwner()) {
+                    AditCodedException aditCodedException = new AditCodedException("document.deleted");
+                    aditCodedException.setParameters(new Object[] {documentId.toString() });
+                    throw aditCodedException;
+                }
+            	
+            	userIsDocOwner = true;
+            } else {
+                if ((doc.getDocumentSharings() != null) && (!doc.getDocumentSharings().isEmpty())) {
+                    Iterator<DocumentSharing> it = doc.getDocumentSharings().iterator();
+                    while (it.hasNext()) {
+                        DocumentSharing sharing = it.next();
+                        if (sharing.getUserCode().equalsIgnoreCase(user.getUserCode())) {
+                            // Check whether the document is marked as deleted by recipient
+                            if ((sharing.getDeleted() != null) && sharing.getDeleted()) {
                                 AditCodedException aditCodedException = new AditCodedException("document.deleted");
                                 aditCodedException.setParameters(new Object[] {documentId.toString() });
                                 throw aditCodedException;
                             }
                         	
-                        	userIsDocOwner = true;
-                        } else {
-                            if ((doc.getDocumentSharings() != null) && (!doc.getDocumentSharings().isEmpty())) {
-                                Iterator<DocumentSharing> it = doc.getDocumentSharings().iterator();
-                                while (it.hasNext()) {
-                                    DocumentSharing sharing = it.next();
-                                    if (sharing.getUserCode().equalsIgnoreCase(user.getUserCode())) {
-                                        // Check whether the document is marked as deleted by recipient
-                                        if ((sharing.getDeleted() != null) && sharing.getDeleted()) {
-                                            AditCodedException aditCodedException = new AditCodedException("document.deleted");
-                                            aditCodedException.setParameters(new Object[] {documentId.toString() });
-                                            throw aditCodedException;
-                                        }
-                                    	
-                                        userIsDocOwner = true;
+                            userIsDocOwner = true;
 
-                                        if (sharing.getLastAccessDate() == null) {
-                                            sharing.setLastAccessDate(new Date());
-                                            saveDocument = true;
-                                        }
+                            if (sharing.getLastAccessDate() == null) {
+                                sharing.setLastAccessDate(new Date());
+                                saveDocument = true;
+                            }
 
-                                        break;
-                                    }
-                                }
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // Kui kasutaja tohib dokumendile ligi pääseda, siis
+            // tagastame dokumendi
+            if (userIsDocOwner) {
+                InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream(getDigidocConfigurationFile());
+                String jdigidocCfgTmpFile = Util.createTemporaryFile(input, getConfiguration().getTempDir());
+            	
+            	includeFileContents = (request.isIncludeFileContents() == null) ? false : request.isIncludeFileContents();
+                OutputDocument resultDoc = this.documentService.getDocumentDAO().getDocumentWithFiles(
+                    doc.getId(), null, true, true, includeFileContents,
+                    request.getFileTypes(),
+                    this.getConfiguration().getTempDir(),
+                    this.getMessageSource().getMessage("files.nonExistentOrDeleted", new Object[] {},
+                    Locale.ENGLISH), user.getUserCode(), getConfiguration().getDocumentRetentionDeadlineDays(),
+                    jdigidocCfgTmpFile);
+
+                if (resultDoc != null) {
+                    // Remember file IDs for logging later on.
+                    List<OutputDocumentFile> docFiles = resultDoc.getFiles().getFiles();
+                    if ((docFiles != null) && (docFiles.size() > 0)) {
+                        for (OutputDocumentFile file : docFiles) {
+                            fileIdList.add(file.getId());
+                        }
+                    }
+                    
+                    // 1. Convert java list to XML string and output
+                    // to file
+                    GetDocumentResponseAttachment attachment = new GetDocumentResponseAttachment();
+                    attachment.setDocument(resultDoc);
+                    String xmlFile = marshal(attachment);
+                    Util.joinSplitXML(xmlFile, "data");
+
+                    // 2. GZip the temporary file Base64 encoding
+                    // will be done at SOAP envelope level
+                    String gzipFileName = Util.gzipFile(xmlFile, this.getConfiguration().getTempDir());
+
+                    // 3. Add as an attachment
+                    String contentID = addAttachment(gzipFileName);
+                    GetDocumentResponseDocument responseDoc = new GetDocumentResponseDocument();
+                    responseDoc.setHref("cid:" + contentID);
+                    response.setDocument(responseDoc);
+
+                    // If document has not been viewed by current
+                    // user before then mark it viewed.
+                    boolean isViewed = false;
+                    if ((doc.getDocumentHistories() != null) && (!doc.getDocumentHistories().isEmpty())) {
+                        Iterator<DocumentHistory> it = doc.getDocumentHistories().iterator();
+                        while (it.hasNext()) {
+                            DocumentHistory event = it.next();
+                            if (event.getDocumentHistoryType().equalsIgnoreCase(
+                                    DocumentService.HISTORY_TYPE_MARK_VIEWED)
+                                    && event.getUserCode().equalsIgnoreCase(user.getUserCode())) {
+                                isViewed = true;
+                                break;
                             }
                         }
+                    }
 
-                        // Kui kasutaja tohib dokumendile ligi pääseda, siis
-                        // tagastame dokumendi
-                        if (userIsDocOwner) {
-                            InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream(getDigidocConfigurationFile());
-                            String jdigidocCfgTmpFile = Util.createTemporaryFile(input, getConfiguration().getTempDir());
+                    if (!isViewed) {
+                        // Add first viewing history event
+                        DocumentHistory historyEvent = new DocumentHistory();
+                        historyEvent.setRemoteApplicationName(applicationName);
+                        historyEvent.setDocumentId(doc.getId());
+                        historyEvent.setDocumentHistoryType(DocumentService.HISTORY_TYPE_MARK_VIEWED);
+                        historyEvent.setEventDate(new Date());
+                        historyEvent.setUserCode(user.getUserCode());
+                        doc.getDocumentHistories().add(historyEvent);
+                        saveDocument = true;
+                    }
+
+                    if (saveDocument) {
+                        this.documentService.getDocumentDAO().save(doc, null, Long.MAX_VALUE, null);
+                    }
+
+                    // If it was the first time for this particular
+                    // user to view the document then send scheduler
+                    // notification to document owner.
+                    // Notification does not need to be sent if user
+                    // viewed his/her own document.
+                    if (!user.getUserCode().equalsIgnoreCase(doc.getCreatorCode())) {
+                        AditUser docCreator = this.getUserService().getUserByID(doc.getCreatorCode());
+                        if (!isViewed && (docCreator != null)
+                            && (userService.findNotification(docCreator.getUserNotifications(),
+                            ScheduleClient.NOTIFICATION_TYPE_VIEW) != null)) {
+                            
+                        	List<Message> messageInAllKnownLanguages = this.getMessageService().getMessages("scheduler.message.view", new Object[] {doc.getTitle(), user.getUserCode()});
+                        	String eventText = Util.joinMessages(messageInAllKnownLanguages, "<br/>");
                         	
-                        	includeFileContents = (request.isIncludeFileContents() == null) ? false : request.isIncludeFileContents();
-                            OutputDocument resultDoc = this.documentService.getDocumentDAO().getDocumentWithFiles(
-                                doc.getId(), null, true, true, includeFileContents,
-                                request.getFileTypes(),
-                                this.getConfiguration().getTempDir(),
-                                this.getMessageSource().getMessage("files.nonExistentOrDeleted", new Object[] {},
-                                Locale.ENGLISH), user.getUserCode(), getConfiguration().getDocumentRetentionDeadlineDays(),
-                                jdigidocCfgTmpFile);
-
-                            if (resultDoc != null) {
-                                // Remember file IDs for logging later on.
-                                List<OutputDocumentFile> docFiles = resultDoc.getFiles().getFiles();
-                                if ((docFiles != null) && (docFiles.size() > 0)) {
-                                    for (OutputDocumentFile file : docFiles) {
-                                        fileIdList.add(file.getId());
-                                    }
-                                }
-                                
-                                // 1. Convert java list to XML string and output
-                                // to file
-                                GetDocumentResponseAttachment attachment = new GetDocumentResponseAttachment();
-                                attachment.setDocument(resultDoc);
-                                String xmlFile = marshal(attachment);
-                                Util.joinSplitXML(xmlFile, "data");
-
-                                // 2. GZip the temporary file Base64 encoding
-                                // will be done at SOAP envelope level
-                                String gzipFileName = Util.gzipFile(xmlFile, this.getConfiguration().getTempDir());
-
-                                // 3. Add as an attachment
-                                String contentID = addAttachment(gzipFileName);
-                                GetDocumentResponseDocument responseDoc = new GetDocumentResponseDocument();
-                                responseDoc.setHref("cid:" + contentID);
-                                response.setDocument(responseDoc);
-
-                                // If document has not been viewed by current
-                                // user before then mark it viewed.
-                                boolean isViewed = false;
-                                if ((doc.getDocumentHistories() != null) && (!doc.getDocumentHistories().isEmpty())) {
-                                    Iterator<DocumentHistory> it = doc.getDocumentHistories().iterator();
-                                    while (it.hasNext()) {
-                                        DocumentHistory event = it.next();
-                                        if (event.getDocumentHistoryType().equalsIgnoreCase(
-                                                DocumentService.HISTORY_TYPE_MARK_VIEWED)
-                                                && event.getUserCode().equalsIgnoreCase(user.getUserCode())) {
-                                            isViewed = true;
-                                            break;
-                                        }
-                                    }
-                                }
-
-                                if (!isViewed) {
-                                    // Add first viewing history event
-                                    DocumentHistory historyEvent = new DocumentHistory();
-                                    historyEvent.setRemoteApplicationName(applicationName);
-                                    historyEvent.setDocumentId(doc.getId());
-                                    historyEvent.setDocumentHistoryType(DocumentService.HISTORY_TYPE_MARK_VIEWED);
-                                    historyEvent.setEventDate(new Date());
-                                    historyEvent.setUserCode(user.getUserCode());
-                                    doc.getDocumentHistories().add(historyEvent);
-                                    saveDocument = true;
-                                }
-
-                                if (saveDocument) {
-                                    this.documentService.getDocumentDAO().save(doc, null, Long.MAX_VALUE, null);
-                                }
-
-                                // If it was the first time for this particular
-                                // user to view the document then send scheduler
-                                // notification to document owner.
-                                // Notification does not need to be sent if user
-                                // viewed his/her own document.
-                                if (!user.getUserCode().equalsIgnoreCase(doc.getCreatorCode())) {
-                                    AditUser docCreator = this.getUserService().getUserByID(doc.getCreatorCode());
-                                    if (!isViewed && (docCreator != null)
-                                        && (userService.findNotification(docCreator.getUserNotifications(),
-                                        ScheduleClient.NOTIFICATION_TYPE_VIEW) != null)) {
-                                        
-                                    	List<Message> messageInAllKnownLanguages = this.getMessageService().getMessages("scheduler.message.view", new Object[] {doc.getTitle(), user.getUserCode()});
-                                    	String eventText = Util.joinMessages(messageInAllKnownLanguages, "<br/>");
-                                    	
-                                    	getScheduleClient().addEvent(
-                                            docCreator, eventText,
-                                            this.getConfiguration().getSchedulerEventTypeName(), requestDate,
-                                            ScheduleClient.NOTIFICATION_TYPE_VIEW, doc.getId(), this.userService);
-                                    }
-                                }
-                            } else {
-                                logger.debug("Document has no files!");
-                            }
-                        } else {
-                            logger.debug("Requested document does not belong to user. Document ID: "
-                                    + request.getDocumentId() + ", User ID: " + user.getUserCode());
-                            AditCodedException aditCodedException = new AditCodedException("document.doesNotBelongToUser");
-                            aditCodedException.setParameters(new Object[] {request.getDocumentId().toString(), user.getUserCode()});
-                            throw aditCodedException;
+                        	getScheduleClient().addEvent(
+                                docCreator, eventText,
+                                this.getConfiguration().getSchedulerEventTypeName(), requestDate,
+                                ScheduleClient.NOTIFICATION_TYPE_VIEW, doc.getId(), this.userService);
                         }
-                    } else {
-                        logger.debug("Requested document is deflated. Document ID: " + request.getDocumentId());
-                        AditCodedException aditCodedException = new AditCodedException("document.deflated");
-                        aditCodedException.setParameters(new Object[] {Util.dateToEstonianDateString(doc.getDeflateDate()) });
-                        throw aditCodedException;
                     }
                 } else {
-                    logger.debug("Requested document is deleted. Document ID: " + request.getDocumentId());
-                    AditCodedException aditCodedException = new AditCodedException("document.deleted");
-                    aditCodedException.setParameters(new Object[] {request.getDocumentId().toString() });
-                    throw aditCodedException;
+                    logger.debug("Document has no files!");
                 }
             } else {
-                logger.debug("Requested document does not exist. Document ID: " + request.getDocumentId());
-                AditCodedException aditCodedException = new AditCodedException("document.nonExistent");
-                aditCodedException.setParameters(new Object[] {request.getDocumentId().toString() });
+                logger.debug("Requested document does not belong to user. Document ID: "
+                        + request.getDocumentId() + ", User ID: " + user.getUserCode());
+                AditCodedException aditCodedException = new AditCodedException("document.doesNotBelongToUser");
+                aditCodedException.setParameters(new Object[] {request.getDocumentId().toString(), user.getUserCode()});
                 throw aditCodedException;
             }
 
@@ -358,8 +334,11 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
      *     Name of application that was used to execute current request
      * @param user
      *     User who executed current request
+     * @return
+     *     Requested document if user has necessary rights for it (or
+     *     {@code null} otherwise).
      */
-    private void checkRights(
+    private Document checkRightsAndGetDocument(
     	final GetDocumentRequest request, final String applicationName,
     	final AditUser user) {
     	
@@ -379,6 +358,36 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
             aditCodedException.setParameters(new Object[] {applicationName, user.getUserCode() });
             throw aditCodedException;
         }
+        
+        // Now it is safe to load the document from database
+        // (and even necessary to do all the document-specific checks)
+        Document doc = this.documentService.getDocumentDAO().getDocument(request.getDocumentId());
+
+        // Check whether the document exists
+        if (doc == null) {
+            logger.debug("Requested document does not exist. Document ID: " + request.getDocumentId());
+            AditCodedException aditCodedException = new AditCodedException("document.nonExistent");
+            aditCodedException.setParameters(new Object[] {request.getDocumentId().toString() });
+            throw aditCodedException;
+        }
+
+        // Check whether the document is marked as deleted
+        if ((doc.getDeleted() != null) && doc.getDeleted()) {
+            logger.debug("Requested document is deleted. Document ID: " + request.getDocumentId());
+            AditCodedException aditCodedException = new AditCodedException("document.deleted");
+            aditCodedException.setParameters(new Object[] {request.getDocumentId().toString() });
+            throw aditCodedException;
+        }
+
+        // Check whether the document is marked as deflated
+        if ((doc.getDeflated() != null) && doc.getDeflated()) {
+            logger.debug("Requested document is deflated. Document ID: " + request.getDocumentId());
+            AditCodedException aditCodedException = new AditCodedException("document.deflated");
+            aditCodedException.setParameters(new Object[] {Util.dateToEstonianDateString(doc.getDeflateDate()) });
+            throw aditCodedException;
+        }
+        
+        return doc;
     }
 
     /**
@@ -391,7 +400,7 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
      * @param request
      *            Request body as {@link GetDocumentRequest} object.
      * @throws AditCodedException
-     *             Exception describing error found in requet body.
+     *             Exception describing error found in request body.
      */
     private void checkRequest(GetDocumentRequest request) throws AditCodedException {
         if (request != null) {

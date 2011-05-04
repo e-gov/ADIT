@@ -181,7 +181,7 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
                             if (additionalInformationForLog != null && additionalInformationForLog.trim() != "") {
                                 additionalInformationForLog = additionalInformationForLog + ",";
                             }
-                            additionalInformationForLog = additionalInformationForLog + " sent to: " + recipientCode;
+                            additionalInformationForLog = additionalInformationForLog + " Document sent to: " + recipientCode;
 
                         } catch (Exception e) {
                             logger.error("Exception while sharing document: ", e);

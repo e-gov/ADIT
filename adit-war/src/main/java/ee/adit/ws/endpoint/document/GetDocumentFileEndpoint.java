@@ -105,216 +105,160 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
             // Check request body
             checkRequest(request);
 
-            // Kontrollime, kas päringu käivitanud infosüsteem on ADITis
-            // registreeritud
-            boolean applicationRegistered = this.getUserService().isApplicationRegistered(applicationName);
-            if (!applicationRegistered) {
-                AditCodedException exception = new AditCodedException("application.notRegistered");
-                exception.setParameters(new Object[] {applicationName });
-                throw exception;
-            }
-
-            // Kontrollime, kas päringu käivitanud infosüsteem tohib
-            // andmeid näha
-            int accessLevel = this.getUserService().getAccessLevel(applicationName);
-            if (accessLevel < 1) {
-                AditCodedException exception = new AditCodedException("application.insufficientPrivileges.read");
-                exception.setParameters(new Object[] {applicationName });
-                throw exception;
-            }
-
             // Kontrollime, kas päringus märgitud isik on teenuse kasutaja
             AditUser user = Util.getAditUserFromXroadHeader(this.getHeader(), this.getUserService());
+            
+            Document doc = checkRightsAndGetDocument(request, applicationName, user);
 
-            // Kontrollime, et kasutajakonto ligipääs poleks peatatud (kasutaja
-            // lahkunud)
-            if ((user.getActive() == null) || !user.getActive()) {
-                AditCodedException exception = new AditCodedException("user.inactive");
-                exception.setParameters(new Object[] {user.getUserCode()});
-                throw exception;
-            }
+            boolean saveDocument = false;
 
-            // Check whether or not the application has rights to
-            // read current user's data.
-            int applicationAccessLevelForUser = userService.getAccessLevelForUser(applicationName, user);
-            if (applicationAccessLevelForUser < 1) {
-                AditCodedException exception = new AditCodedException("application.insufficientPrivileges.forUser.read");
-                exception.setParameters(new Object[] {applicationName, user.getUserCode() });
-                throw exception;
-            }
-
-            Document doc = this.documentService.getDocumentDAO().getDocument(request.getDocumentId());
-
-            // Kontrollime, kas ID-le vastav dokument on olemas
-            if (doc != null) {
-                if ((doc.getDeleted() == null) || (!doc.getDeleted())) {
-                    if ((doc.getDeflated() == null) || (!doc.getDeflated())) {
-                        boolean saveDocument = false;
-
-                        // Dokumendi faile saab alla laadida, kui dokument:
-                        // a) kuulub päringu käivitanud kasutajale
-                        // b) on päringu käivitanud kasutajale välja jagatud
-                        boolean userIsDocOwner = false;
-                        if (doc.getCreatorCode().equalsIgnoreCase(user.getUserCode())) {
-                            // Check whether the document is marked as invisible to owner
-                            if ((doc.getInvisibleToOwner() != null) && doc.getInvisibleToOwner()) {
+            // Dokumendi faile saab alla laadida, kui dokument:
+            // a) kuulub päringu käivitanud kasutajale
+            // b) on päringu käivitanud kasutajale välja jagatud
+            boolean userIsDocOwner = false;
+            if (doc.getCreatorCode().equalsIgnoreCase(user.getUserCode())) {
+                // Check whether the document is marked as invisible to owner
+                if ((doc.getInvisibleToOwner() != null) && doc.getInvisibleToOwner()) {
+                    AditCodedException aditCodedException = new AditCodedException("document.deleted");
+                    aditCodedException.setParameters(new Object[] {documentId.toString() });
+                    throw aditCodedException;
+                }
+            	
+                userIsDocOwner = true;
+            } else {
+                if ((doc.getDocumentSharings() != null) && (!doc.getDocumentSharings().isEmpty())) {
+                    Iterator<DocumentSharing> it = doc.getDocumentSharings().iterator();
+                    while (it.hasNext()) {
+                        DocumentSharing sharing = it.next();
+                        if (sharing.getUserCode().equalsIgnoreCase(user.getUserCode())) {
+                            // Check whether the document is marked as deleted by recipient
+                            if ((sharing.getDeleted() != null) && sharing.getDeleted()) {
                                 AditCodedException aditCodedException = new AditCodedException("document.deleted");
                                 aditCodedException.setParameters(new Object[] {documentId.toString() });
                                 throw aditCodedException;
                             }
                         	
-                            userIsDocOwner = true;
-                        } else {
-                            if ((doc.getDocumentSharings() != null) && (!doc.getDocumentSharings().isEmpty())) {
-                                Iterator<DocumentSharing> it = doc.getDocumentSharings().iterator();
-                                while (it.hasNext()) {
-                                    DocumentSharing sharing = it.next();
-                                    if (sharing.getUserCode().equalsIgnoreCase(user.getUserCode())) {
-                                        // Check whether the document is marked as deleted by recipient
-                                        if ((sharing.getDeleted() != null) && sharing.getDeleted()) {
-                                            AditCodedException aditCodedException = new AditCodedException("document.deleted");
-                                            aditCodedException.setParameters(new Object[] {documentId.toString() });
-                                            throw aditCodedException;
-                                        }
-                                    	
-                                    	userIsDocOwner = true;
+                        	userIsDocOwner = true;
 
-                                        if (sharing.getLastAccessDate() == null) {
-                                            sharing.setLastAccessDate(new Date());
-                                            saveDocument = true;
-                                        }
+                            if (sharing.getLastAccessDate() == null) {
+                                sharing.setLastAccessDate(new Date());
+                                saveDocument = true;
+                            }
 
-                                        break;
-                                    }
-                                }
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // Kui kasutaja tohib dokumendile ligi pääseda, siis
+            // tagastame failid
+            if (userIsDocOwner) {
+                OutputDocument outputDoc = this.documentService.getDocumentDAO().getDocumentWithFiles(
+                        doc.getId(),
+                        request.getFileIdList().getFileId(),
+                        false,
+                        false,
+                        true,
+                        null,
+                        this.getConfiguration().getTempDir(),
+                        this.getMessageSource().getMessage("files.nonExistentOrDeleted", new Object[] {},
+                        Locale.ENGLISH), user.getUserCode(), getConfiguration().getDocumentRetentionDeadlineDays(),
+                        null);
+
+                List<OutputDocumentFile> docFiles = outputDoc.getFiles().getFiles();
+
+                if ((docFiles != null) && (docFiles.size() > 0)) {
+                    logger.debug("Document has " + docFiles.size() + " files.");
+
+                    // Remember file IDs for logging later on.
+                    for (OutputDocumentFile file : docFiles) {
+                        fileIdList.add(file.getId());
+                    }
+
+                    // 1. Convert java list to XML string and output
+                    // to file
+                    String xmlFile = outputToFile(docFiles);
+                    Util.joinSplitXML(xmlFile, "data");
+
+                    // 2. GZip the temporary file
+                    // Base64 encoding will be done at SOAP envelope
+                    // level
+                    String gzipFileName = Util.gzipFile(xmlFile, this.getConfiguration().getTempDir());
+
+                    // 3. Add as an attachment
+                    String contentID = addAttachment(gzipFileName);
+                    GetDocumentFileResponseFiles files = new GetDocumentFileResponseFiles();
+                    files.setHref("cid:" + contentID);
+                    response.setFiles(files);
+
+                    // If document has not been viewed by current
+                    // user before then mark it viewed.
+                    boolean isViewed = false;
+                    if ((doc.getDocumentHistories() != null) && (!doc.getDocumentHistories().isEmpty())) {
+                        Iterator<DocumentHistory> it = doc.getDocumentHistories().iterator();
+                        while (it.hasNext()) {
+                            DocumentHistory event = it.next();
+                            if (event.getDocumentHistoryType().equalsIgnoreCase(
+                                    DocumentService.HISTORY_TYPE_MARK_VIEWED)
+                                    && event.getUserCode().equalsIgnoreCase(user.getUserCode())) {
+                                isViewed = true;
+                                break;
                             }
                         }
+                    }
 
-                        // Kui kasutaja tohib dokumendile ligi pääseda, siis
-                        // tagastame failid
-                        if (userIsDocOwner) {
-                            OutputDocument outputDoc = this.documentService.getDocumentDAO().getDocumentWithFiles(
-                                    doc.getId(),
-                                    request.getFileIdList().getFileId(),
-                                    false,
-                                    false,
-                                    true,
-                                    null,
-                                    this.getConfiguration().getTempDir(),
-                                    this.getMessageSource().getMessage("files.nonExistentOrDeleted", new Object[] {},
-                                    Locale.ENGLISH), user.getUserCode(), getConfiguration().getDocumentRetentionDeadlineDays(),
-                                    null);
+                    if (!isViewed) {
+                        // Add first viewing history event
+                        DocumentHistory historyEvent = new DocumentHistory();
+                        historyEvent.setRemoteApplicationName(applicationName);
+                        historyEvent.setDocumentId(doc.getId());
+                        historyEvent.setDocumentHistoryType(DocumentService.HISTORY_TYPE_MARK_VIEWED);
+                        historyEvent.setEventDate(new Date());
+                        historyEvent.setUserCode(user.getUserCode());
+                        doc.getDocumentHistories().add(historyEvent);
+                        saveDocument = true;
+                    }
 
-                            List<OutputDocumentFile> docFiles = outputDoc.getFiles().getFiles();
+                    if (saveDocument) {
+                        this.documentService.getDocumentDAO().save(doc, null, Long.MAX_VALUE, null);
+                    }
 
-                            if ((docFiles != null) && (docFiles.size() > 0)) {
-                                logger.debug("Document has " + docFiles.size() + " files.");
-
-                                // Remember file IDs for logging later on.
-                                for (OutputDocumentFile file : docFiles) {
-                                    fileIdList.add(file.getId());
-                                }
-
-                                // 1. Convert java list to XML string and output
-                                // to file
-                                String xmlFile = outputToFile(docFiles);
-                                Util.joinSplitXML(xmlFile, "data");
-
-                                // 2. GZip the temporary file
-                                // Base64 encoding will be done at SOAP envelope
-                                // level
-                                String gzipFileName = Util.gzipFile(xmlFile, this.getConfiguration().getTempDir());
-
-                                // 3. Add as an attachment
-                                String contentID = addAttachment(gzipFileName);
-                                GetDocumentFileResponseFiles files = new GetDocumentFileResponseFiles();
-                                files.setHref("cid:" + contentID);
-                                response.setFiles(files);
-
-                                // If document has not been viewed by current
-                                // user before then mark it viewed.
-                                boolean isViewed = false;
-                                if ((doc.getDocumentHistories() != null) && (!doc.getDocumentHistories().isEmpty())) {
-                                    Iterator<DocumentHistory> it = doc.getDocumentHistories().iterator();
-                                    while (it.hasNext()) {
-                                        DocumentHistory event = it.next();
-                                        if (event.getDocumentHistoryType().equalsIgnoreCase(
-                                                DocumentService.HISTORY_TYPE_MARK_VIEWED)
-                                                && event.getUserCode().equalsIgnoreCase(user.getUserCode())) {
-                                            isViewed = true;
-                                            break;
-                                        }
-                                    }
-                                }
-
-                                if (!isViewed) {
-                                    // Add first viewing history event
-                                    DocumentHistory historyEvent = new DocumentHistory();
-                                    historyEvent.setRemoteApplicationName(applicationName);
-                                    historyEvent.setDocumentId(doc.getId());
-                                    historyEvent.setDocumentHistoryType(DocumentService.HISTORY_TYPE_MARK_VIEWED);
-                                    historyEvent.setEventDate(new Date());
-                                    historyEvent.setUserCode(user.getUserCode());
-                                    doc.getDocumentHistories().add(historyEvent);
-                                    saveDocument = true;
-                                }
-
-                                if (saveDocument) {
-                                    this.documentService.getDocumentDAO().save(doc, null, Long.MAX_VALUE, null);
-                                }
-
-                                // If it was the first time for this particular
-                                // user to
-                                // view the document then send scheduler
-                                // notification to
-                                // document owner.
-                                // Notification does not need to be sent if user
-                                // viewed
-                                // his/her own document.
-                                if (!user.getUserCode().equalsIgnoreCase(doc.getCreatorCode())) {
-                                    AditUser docCreator = this.getUserService().getUserByID(doc.getCreatorCode());
-                                    if (!isViewed
-                                        && (docCreator != null)
-                                        && (userService.findNotification(docCreator.getUserNotifications(),
-                                                ScheduleClient.NOTIFICATION_TYPE_VIEW) != null)) {
-                                    	
-                                    	List<Message> messageInAllKnownLanguages = this.getMessageService().getMessages("scheduler.message.view", new Object[] {doc.getTitle(), user.getUserCode()});
-                                    	String eventText = Util.joinMessages(messageInAllKnownLanguages, "<br/>");
-                                    	
-                                        getScheduleClient().addEvent(
-                                            docCreator, eventText,
-                                            this.getConfiguration().getSchedulerEventTypeName(), requestDate,
-                                            ScheduleClient.NOTIFICATION_TYPE_VIEW, doc.getId(), this.userService);
-                                    }
-                                }
-                            } else {
-                                logger.debug("Document has no files!");
-                            }
-                        } else {
-                            logger.debug("Requested document does not belong to user. Document ID: "
-                                    + request.getDocumentId() + ", User ID: " + user.getUserCode());
-                            AditCodedException exception = new AditCodedException("document.doesNotBelongToUser");
-                            exception.setParameters(new Object[] {request.getDocumentId().toString(), user.getUserCode()});
-                            throw exception;
+                    // If it was the first time for this particular
+                    // user to
+                    // view the document then send scheduler
+                    // notification to
+                    // document owner.
+                    // Notification does not need to be sent if user
+                    // viewed
+                    // his/her own document.
+                    if (!user.getUserCode().equalsIgnoreCase(doc.getCreatorCode())) {
+                        AditUser docCreator = this.getUserService().getUserByID(doc.getCreatorCode());
+                        if (!isViewed
+                            && (docCreator != null)
+                            && (userService.findNotification(docCreator.getUserNotifications(),
+                                    ScheduleClient.NOTIFICATION_TYPE_VIEW) != null)) {
+                        	
+                        	List<Message> messageInAllKnownLanguages = this.getMessageService().getMessages("scheduler.message.view", new Object[] {doc.getTitle(), user.getUserCode()});
+                        	String eventText = Util.joinMessages(messageInAllKnownLanguages, "<br/>");
+                        	
+                            getScheduleClient().addEvent(
+                                docCreator, eventText,
+                                this.getConfiguration().getSchedulerEventTypeName(), requestDate,
+                                ScheduleClient.NOTIFICATION_TYPE_VIEW, doc.getId(), this.userService);
                         }
-                    } else {
-                        logger.debug("Requested document is deflated. Document ID: " + request.getDocumentId());
-                        AditCodedException exception = new AditCodedException("document.deflated");
-                        exception.setParameters(new Object[] {Util.dateToEstonianDateString(doc.getDeflateDate()) });
-                        throw exception;
                     }
                 } else {
-                    logger.debug("Requested document is deleted. Document ID: " + request.getDocumentId());
-                    AditCodedException exception = new AditCodedException("document.deleted");
-                    exception.setParameters(new Object[] {request.getDocumentId().toString() });
-                    throw exception;
+                    logger.debug("Document has no files!");
                 }
             } else {
-                logger.debug("Requested document does not exist. Document ID: " + request.getDocumentId());
-                AditCodedException exception = new AditCodedException("document.nonExistent");
-                exception.setParameters(new Object[] {request.getDocumentId().toString() });
+                logger.debug("Requested document does not belong to user. Document ID: "
+                        + request.getDocumentId() + ", User ID: " + user.getUserCode());
+                AditCodedException exception = new AditCodedException("document.doesNotBelongToUser");
+                exception.setParameters(new Object[] {request.getDocumentId().toString(), user.getUserCode()});
                 throw exception;
             }
+
 
             // Set response messages
             response.setSuccess(true);
@@ -378,6 +322,89 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
         arrayOfMessage.getMessage().add(new Message("en", ex.getMessage()));
         response.setMessages(arrayOfMessage);
         return response;
+    }
+    
+    /**
+     * Checks users rights for document.
+     * 
+     * @param request
+     *     Current request
+     * @param applicationName
+     *     Name of application that was used to execute current request
+     * @param user
+     *     User who executed current request
+     * @return
+     *     Requested document if user has necessary rights for it (or
+     *     {@code null} otherwise).
+     */
+    private Document checkRightsAndGetDocument(
+    	final GetDocumentFileRequest request, final String applicationName,
+    	final AditUser user) {
+    	
+        // Kontrollime, kas päringu käivitanud infosüsteem on ADITis
+        // registreeritud
+        boolean applicationRegistered = this.getUserService().isApplicationRegistered(applicationName);
+        if (!applicationRegistered) {
+            AditCodedException exception = new AditCodedException("application.notRegistered");
+            exception.setParameters(new Object[] {applicationName });
+            throw exception;
+        }
+
+        // Kontrollime, kas päringu käivitanud infosüsteem tohib
+        // andmeid näha
+        int accessLevel = this.getUserService().getAccessLevel(applicationName);
+        if (accessLevel < 1) {
+            AditCodedException exception = new AditCodedException("application.insufficientPrivileges.read");
+            exception.setParameters(new Object[] {applicationName });
+            throw exception;
+        }
+
+        // Kontrollime, et kasutajakonto ligipääs poleks peatatud (kasutaja
+        // lahkunud)
+        if ((user.getActive() == null) || !user.getActive()) {
+            AditCodedException exception = new AditCodedException("user.inactive");
+            exception.setParameters(new Object[] {user.getUserCode()});
+            throw exception;
+        }
+
+        // Check whether or not the application has rights to
+        // read current user's data.
+        int applicationAccessLevelForUser = userService.getAccessLevelForUser(applicationName, user);
+        if (applicationAccessLevelForUser < 1) {
+            AditCodedException exception = new AditCodedException("application.insufficientPrivileges.forUser.read");
+            exception.setParameters(new Object[] {applicationName, user.getUserCode() });
+            throw exception;
+        }
+    	
+        // Now it is safe to load the document from database
+        // (and even necessary to do all the document-specific checks)
+        Document doc = this.documentService.getDocumentDAO().getDocument(request.getDocumentId());
+
+        // Check whether the document exists
+        if (doc == null) {
+            logger.debug("Requested document does not exist. Document ID: " + request.getDocumentId());
+            AditCodedException aditCodedException = new AditCodedException("document.nonExistent");
+            aditCodedException.setParameters(new Object[] {request.getDocumentId().toString() });
+            throw aditCodedException;
+        }
+
+        // Check whether the document is marked as deleted
+        if ((doc.getDeleted() != null) && doc.getDeleted()) {
+            logger.debug("Requested document is deleted. Document ID: " + request.getDocumentId());
+            AditCodedException aditCodedException = new AditCodedException("document.deleted");
+            aditCodedException.setParameters(new Object[] {request.getDocumentId().toString() });
+            throw aditCodedException;
+        }
+
+        // Check whether the document is marked as deflated
+        if ((doc.getDeflated() != null) && doc.getDeflated()) {
+            logger.debug("Requested document is deflated. Document ID: " + request.getDocumentId());
+            AditCodedException aditCodedException = new AditCodedException("document.deflated");
+            aditCodedException.setParameters(new Object[] {Util.dateToEstonianDateString(doc.getDeflateDate()) });
+            throw aditCodedException;
+        }
+        
+        return doc;
     }
 
     /**
