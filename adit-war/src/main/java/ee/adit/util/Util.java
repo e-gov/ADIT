@@ -1636,7 +1636,7 @@ public final class Util {
     public static AditUser getAditUserFromXroadHeader(
     	final CustomXTeeHeader header, final UserService userService) {
         
-    	String userCode = isNullOrEmpty(header.getAllasutus()) ? header.getAllasutus() : header.getIsikukood();
+    	String userCode = isNullOrEmpty(header.getAllasutus()) ? header.getIsikukood() : header.getAllasutus();
         AditUser user = userService.getUserByID(userCode);
         if (user == null) {
             logger.error("User is not registered. User code: " + userCode);
@@ -1666,7 +1666,7 @@ public final class Util {
     	final UserService userService) {
         
     	AditUser xroadRequestUser = null;
-        if (currentUser.getUsertype().getShortName().equalsIgnoreCase("person")) {
+        if ("person".equalsIgnoreCase(currentUser.getUsertype().getShortName())) {
             xroadRequestUser = currentUser;
         } else {
             try {
