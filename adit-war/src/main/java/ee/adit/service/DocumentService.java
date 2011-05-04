@@ -2274,8 +2274,10 @@ public class DocumentService {
         	// document as invisible to owner.
         	// If document has been shared then cancel sharing and delete the document
         	boolean hasBeenSent = false;
+        	boolean hasBeenSentToSelfOnly = false;
         	if (doc.getDocumentSharings() != null) {
-                Iterator<DocumentSharing> it = doc.getDocumentSharings().iterator();
+                int numberOfSendRecipients = 0;
+        		Iterator<DocumentSharing> it = doc.getDocumentSharings().iterator();
                 while (it.hasNext()) {
                     DocumentSharing sharing = it.next();
                     if (sharing.getDocumentSharingType().equalsIgnoreCase(DocumentService.SHARINGTYPE_SHARE)
@@ -2285,12 +2287,19 @@ public class DocumentService {
                         sharing.setDocumentId(0);
                     } else {
                     	hasBeenSent = true;
+                    	numberOfSendRecipients++;
+                    	
+                    	if (userCode.equalsIgnoreCase(sharing.getUserCode())) {
+                    		sharing.setDeleted(true);
+                    		hasBeenSentToSelfOnly = true;
+                    	}
                     }
                 }
+                hasBeenSentToSelfOnly = hasBeenSentToSelfOnly && (numberOfSendRecipients == 1);
         	}
         	
             // Replace file contents with MD5 hash of original contents
-            if (!hasBeenSent) {
+            if (!hasBeenSent || hasBeenSentToSelfOnly) {
                 if (doc.getDocumentFiles() != null) {
 	            	Iterator<DocumentFile> it = doc.getDocumentFiles().iterator();
 	                while (it.hasNext()) {
