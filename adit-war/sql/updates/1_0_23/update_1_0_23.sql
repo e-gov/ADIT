@@ -30,7 +30,7 @@ COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.document_file_type_id IS 'File ty
 ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_FILE ADD (file_data_in_ddoc NUMBER(1,0) NULL);
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.file_data_in_ddoc IS 'Shows whether or not file contents should be aquired from signature container';
 
-ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_FILE ADD (ddoc_datafile_id VARCHAR(5) NULL);
+ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_FILE ADD (ddoc_datafile_id VARCHAR2(5) NULL);
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.ddoc_datafile_id IS 'ID of corresponding DataFile in signature container';
 
 ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_FILE ADD (ddoc_datafile_start_offset NUMBER(18) NULL);

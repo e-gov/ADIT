@@ -55,7 +55,8 @@ CREATE TABLE &&ADIT_SCHEMA..ADIT_USER
     dvk_subdivision_short_name  VARCHAR2(50),                  /* This column contains a value only if user uses DEC to send and receive documents. Contains short name of users DEC subdivision. */
     dvk_occupation_short_name   VARCHAR2(50),                  /* This column contains a value only if user uses DEC to send and receive documents. Contains short name of users DEC occupation. */
     disk_quota                  NUMBER(18),                    /* User disk quota in bytes. Disk quota configured here overrides disk quota values configured on user type or application levels. */
-    deactivation_date           DATE                           /* Date and time when user account was deactivated */
+    deactivation_date           DATE,                          /* Date and time when user account was deactivated */
+    disk_quota_used             NUMBER(18,0) DEFAULT 0         /* Total disk space used by current user */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
 COMMENT ON TABLE &&ADIT_SCHEMA..ADIT_USER                              IS 'User account data. User account can belong to a person (identified by personal ID code) or to an organization (identified by registry code).';
@@ -68,6 +69,7 @@ COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_USER.dvk_subdivision_short_name  IS 'This 
 COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_USER.dvk_occupation_short_name   IS 'This column contains a value only if user uses DEC to send and receive documents. Contains short name of users DEC occupation.';
 COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_USER.disk_quota                  IS 'User disk quota in bytes. Disk quota configured here overrides disk quota values configured on user type or application levels.';
 COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_USER.deactivation_date           IS 'Date and time when user account was deactivated';
+COMMENT ON COLUMN &&ADIT_SCHEMA..ADIT_USER.disk_quota_used             IS 'Total disk space used by current user';
 
 CREATE TABLE &&ADIT_SCHEMA..DOCUMENT
 (
@@ -144,7 +146,7 @@ CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_FILE
     deleted                      NUMBER(1) DEFAULT 0,               /* Indicates if this file is deleted (contents removed) */
     document_file_type_id        NUMBER(18) DEFAULT (1) NOT NULL,   /* File type ID */
     file_data_in_ddoc            NUMBER(1,0) NULL,                  /* Shows whether or not file contents should be aquired from signature container */
-    ddoc_datafile_id             VARCHAR(5) NULL,                   /* ID of corresponding DataFile in signature container */
+    ddoc_datafile_id             VARCHAR2(5) NULL,                  /* ID of corresponding DataFile in signature container */
     ddoc_datafile_start_offset   NUMBER(18) NULL,                   /* First character index of current file in corresponding signature container */
     ddoc_datafile_end_offset     NUMBER(18) NULL                    /* Last character index of current file in corresponding signature container */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
@@ -216,6 +218,7 @@ CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING
     dvk_status_id     NUMBER(12),                  /* DEC status ID of document. Is used when document has been sent using DEC */
     wf_status_id      NUMBER(12),                  /* Workflow status ID. Is used for feedback from recipient to sender. */
     last_access_date  DATE                         /* Date and time the document was last accessed by recipient. */
+	deleted           NUMBER(1,0) NULL             /* Document has been deleted by the user to whom it was sent. */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
 COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING                    IS 'Document sharing data';
@@ -229,6 +232,7 @@ COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.creation_date     IS 'Date and
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.dvk_status_id     IS 'DEC status ID of document. Is used when document has been sent using DEC';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.wf_status_id      IS 'Workflow status ID. Is used for feedback from recipient to sender.';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.last_access_date  IS 'Date and time the document was last accessed by recipient.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.deleted           IS 'Document has been deleted by the user to whom it was sent.';
 
 CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING_TYPE
 (
@@ -537,6 +541,10 @@ ALTER TABLE &&ADIT_SCHEMA..USERTYPE ADD CONSTRAINT PK_USERTYPES
  ALTER TABLE &&ADIT_SCHEMA..NOTIFICATION ADD CONSTRAINT PK_NOTIFICATION 
     PRIMARY KEY (ID) 
  USING INDEX TABLESPACE &&ADIT_INDEX_TABLESPACE.;
+ 
+ ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_FILE_TYPE ADD CONSTRAINT PK_DOCUMENT_FILE_TYPE
+    PRIMARY KEY (ID) 
+ USING INDEX TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 
 /* Create Foreign Key Constraints */
 ALTER TABLE &&ADIT_SCHEMA..ACCESS_RESTRICTION ADD CONSTRAINT remote_application_short_name 
@@ -565,6 +573,9 @@ ALTER TABLE &&ADIT_SCHEMA..DOCUMENT ADD CONSTRAINT doc_remote_app_short_name
 
 ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_FILE ADD CONSTRAINT document_id 
     FOREIGN KEY (document_id) REFERENCES &&ADIT_SCHEMA..DOCUMENT (ID);
+
+ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_FILE ADD CONSTRAINT document_file_type_id 
+    FOREIGN KEY (document_file_type_id) REFERENCES &&ADIT_SCHEMA..DOCUMENT_FILE_TYPE (ID);
 
 ALTER TABLE &&ADIT_SCHEMA..DOCUMENT_HISTORY ADD CONSTRAINT FK_DOCUMENT_HIST_DOCUMENT_HIST 
     FOREIGN KEY (document_history_type) REFERENCES &&ADIT_SCHEMA..DOCUMENT_HISTORY_TYPE (short_name);
@@ -604,6 +615,12 @@ ALTER TABLE &&ADIT_SCHEMA..USER_NOTIFICATION ADD CONSTRAINT notification_type_sh
 
 ALTER TABLE &&ADIT_SCHEMA..USER_NOTIFICATION ADD CONSTRAINT notification_user_code 
     FOREIGN KEY (user_code) REFERENCES &&ADIT_SCHEMA..ADIT_USER (user_code);
+
+ALTER TABLE &&ADIT_SCHEMA..NOTIFICATION ADD CONSTRAINT FK_NOTIFICATION_DOCUMENT 
+    FOREIGN KEY (document_id) REFERENCES &&ADIT_SCHEMA..DOCUMENT (ID);
+
+ALTER TABLE &&ADIT_SCHEMA..NOTIFICATION ADD CONSTRAINT FK_NOTIFICATION_NOTIF_TYPE
+    FOREIGN KEY (notification_type) REFERENCES &&ADIT_SCHEMA..NOTIFICATION_TYPE (short_name);
     
 /* Create Triggers */
 CREATE SEQUENCE &&ADIT_SCHEMA..ADIT_LOG_ID_SEQ
