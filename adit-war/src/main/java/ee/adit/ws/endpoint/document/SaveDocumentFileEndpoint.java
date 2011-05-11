@@ -390,7 +390,7 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
         }
 
         // Check whether the document is locked
-        if ((doc.getLocked() == null) || !doc.getLocked()) {
+        if ((doc.getLocked() != null) && doc.getLocked()) {
             logger.debug("Requested document is locked. Document ID: " + request.getDocumentId());
             AditCodedException aditCodedException = new AditCodedException("request.saveDocumentFile.document.locked");
             aditCodedException.setParameters(new Object[] {request.getDocumentId().toString()});
