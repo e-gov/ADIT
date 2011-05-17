@@ -1614,7 +1614,7 @@ public final class Util {
 	    	Iterator<Message> iter = messages.iterator();
 		    while (iter.hasNext()) {
 		    	Message msg = iter.next();
-		    	if (locale.getCountry().equalsIgnoreCase(msg.getLang())) {
+		    	if (locale.getLanguage().equalsIgnoreCase(msg.getLang())) {
 		    		result = msg;
 		    	}
 		    }

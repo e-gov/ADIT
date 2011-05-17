@@ -1,11 +1,14 @@
 package ee.adit.test.util;
 
+import ee.adit.pojo.ArrayOfMessage;
+import ee.adit.pojo.Message;
+import ee.adit.service.MessageService;
 import ee.adit.util.Util;
 import junit.framework.TestCase;
 
 /**
  * The class <code>UtilTest</code> contains tests for the class {@link
- * <code>Util</code>}
+ * <code>Util</code>}.
  *
  * @pattern JUnit Test Case
  *
@@ -16,7 +19,7 @@ import junit.framework.TestCase;
 public class UtilTest extends TestCase {
 
 	/**
-	 * Construct new test instance
+	 * Construct new test instance.
 	 *
 	 * @param name the test name
 	 */
@@ -25,7 +28,7 @@ public class UtilTest extends TestCase {
 	}
 
 	/**
-	 * Run the String getFileExtension(String) method test
+	 * Run the String getFileExtension(String) method test.
 	 */
 	public void testGetFileExtension() {
 		assertNull(Util.getFileExtension(null));

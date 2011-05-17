@@ -313,18 +313,25 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
      * @param additionalInformation
      *            additional information about the request
      */
-    public void logCurrentRequest(Long documentId, Date requestDate, String additionalInformation) {
-        try {
+    public void logCurrentRequest(final Long documentId, final Date requestDate,
+    	final String additionalInformation) {
+        
+    	String logMessage = additionalInformation;
+    	if (!Util.isNullOrEmpty(logMessage)) {
+    		logMessage = logMessage.trim();
+    	}
+    	
+    	try {
             if (this.header != null) {
-                this.logService.addRequestLogEntry(this.header.getNimi(), documentId, requestDate, this.header
-                        .getInfosysteem(), (((this.header.getAllasutus() != null) && (this.header.getAllasutus()
-                        .length() > 0)) ? this.header.getAllasutus() : this.header.getIsikukood()), this.header
-                        .getAsutus(), additionalInformation.trim());
+                this.logService.addRequestLogEntry(this.header.getNimi(),
+                	documentId, requestDate, this.header.getInfosysteem(),
+                	Util.isNullOrEmpty(this.header.getAllasutus()) ? this.header.getIsikukood() : this.header.getAllasutus(),
+                	this.header.getAsutus(), logMessage);
             } else {
                 throw new NullPointerException("Request header not initialized.");
             }
         } catch (Exception ex) {
-            logger.debug("Failed logging request!", ex);
+            logger.error("Failed logging request!", ex);
         }
     }
 
@@ -341,15 +348,15 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
     public void logDownloadRequest(Long documentId, Long fileId, Date requestDate) {
         try {
             if (this.header != null) {
-                this.logService.addDownloadRequestLogEntry(documentId, fileId, requestDate, this.header
-                        .getInfosysteem(), (((this.header.getAllasutus() != null) && (this.header.getAllasutus()
-                        .length() > 0)) ? this.header.getAllasutus() : this.header.getIsikukood()), this.header
-                        .getAsutus());
+                this.logService.addDownloadRequestLogEntry(documentId, fileId,
+                	requestDate, this.header.getInfosysteem(),
+                	Util.isNullOrEmpty(this.header.getAllasutus()) ? this.header.getIsikukood() : this.header.getAllasutus(),
+                	this.header.getAsutus());
             } else {
                 throw new NullPointerException("Request header not initialized.");
             }
         } catch (Exception ex) {
-            logger.debug("Failed logging request!", ex);
+            logger.error("Failed logging request!", ex);
         }
     }
 
@@ -364,19 +371,15 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
     public void logMetadataRequest(Long documentId, Date requestDate) {
         try {
             if (this.header != null) {
-                this.logService
-                        .addMetadataRequestLogEntry(
-                                documentId,
-                                requestDate,
-                                this.header.getInfosysteem(),
-                                (((this.header.getAllasutus() != null) && (this.header.getAllasutus().length() > 0)) ? this.header
-                                        .getAllasutus()
-                                        : this.header.getIsikukood()), this.header.getAsutus());
+                this.logService.addMetadataRequestLogEntry(documentId,
+                    requestDate, this.header.getInfosysteem(),
+                    Util.isNullOrEmpty(this.header.getAllasutus()) ? this.header.getIsikukood() : this.header.getAllasutus(),
+                    this.header.getAsutus());
             } else {
                 throw new NullPointerException("Request header not initialized.");
             }
         } catch (Exception ex) {
-            logger.debug("Failed logging request!", ex);
+            logger.error("Failed logging request!", ex);
         }
     }
 
@@ -392,18 +395,25 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
      * @param errorMessage
      *            error message
      */
-    public void logError(Long documentId, Date errorDate, String level, String errorMessage) {
-        try {
+    public void logError(final Long documentId, final Date errorDate,
+    	final String level, final String errorMessage) {
+        
+    	String logMessage = errorMessage;
+    	if (!Util.isNullOrEmpty(logMessage)) {
+    		logMessage = logMessage.trim();
+    	}
+    	
+    	try {
             if (this.header != null) {
-                this.logService.addErrorLogEntry(this.header.getNimi(), documentId, errorDate, this.header
-                        .getInfosysteem(), (((this.header.getAllasutus() != null) && (this.header.getAllasutus()
-                        .length() > 0)) ? this.header.getAllasutus() : this.header.getIsikukood()), level, errorMessage
-                        .trim());
+                this.logService.addErrorLogEntry(this.header.getNimi(),
+                	documentId, errorDate, this.header.getInfosysteem(),
+                	Util.isNullOrEmpty(this.header.getAllasutus()) ? this.header.getIsikukood() : this.header.getAllasutus(),
+                	level, logMessage);
             } else {
                 throw new NullPointerException("Request header not initialized.");
             }
         } catch (Exception ex) {
-            logger.debug("Failed logging request!", ex);
+            logger.error("Failed logging request!", ex);
         }
     }
 
