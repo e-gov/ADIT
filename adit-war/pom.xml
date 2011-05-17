@@ -15,7 +15,7 @@
 
 	<properties>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		
+
 		<!-- Edit this to match your destination environment -->
 		<!--<resourceDir>ria-dev-weblogic</resourceDir>-->
 		<!--<resourceDir>ria-test-weblogic</resourceDir>-->
@@ -416,6 +416,7 @@
 					<include>DVKresponseMessage.xsl</include>
 					<include>messages_en.properties</include>
 					<include>messages_et.properties</include>
+					<include>messages_ru.properties</include>
 					<include>adit.wsdl</include>
 				</includes>
 			</resource>
@@ -476,7 +477,7 @@
 
 	<reporting>
 		<plugins>
-		
+
 			<!-- CheckStyle -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
