@@ -41,7 +41,7 @@ import ee.webmedia.xtee.annotation.XTeeService;
  * Implementation of "saveDocumentFile" web method (web service request).
  * Contains request input validation, request-specific workflow and response
  * composition.
- * 
+ *
  * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
  * @author Jaak Lember, Interinx, jaak@interinx.com
  */
@@ -54,7 +54,7 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
     private UserService userService;
 
     private DocumentService documentService;
-    
+
     private String digidocConfigurationFile;
 
     @Override
@@ -70,7 +70,7 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 
     /**
      * Executes "V1" version of "saveDocumentFile" request.
-     * 
+     *
      * @param requestObject
      *            Request body object
      * @return Response body object
@@ -107,11 +107,11 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
             // Kontrollime, kas päringus märgitud isik on teenuse kasutaja
             AditUser user = Util.getAditUserFromXroadHeader(this.getHeader(), this.getUserService());
             AditUser xroadRequestUser = Util.getXroadUserFromXroadHeader(user, this.getHeader(), this.getUserService());
-            
+
             // Check user's disk quota
             long remainingDiskQuota = this.getUserService().getRemainingDiskQuota(user,
                     this.getConfiguration().getGlobalDiskQuota());
-            
+
             Document doc = checkRightsAndGetDocument(request, applicationName, user);
 
             String attachmentID = null;
@@ -149,7 +149,7 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
             Object unmarshalledObject = unMarshal(xmlFile);
 
             boolean involvedSignatureContainerExtraction = false;
-            
+
             // Check if the marshalling result is what we expected
             if (unmarshalledObject != null) {
                 logger.debug("XML unmarshalled to type: " + unmarshalledObject.getClass());
@@ -157,13 +157,13 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
                     OutputDocumentFile docFile = ((SaveDocumentFileRequestAttachment) unmarshalledObject).getFile();
                     updatedExistingFile = ((docFile.getId() != null) && (docFile.getId() > 0));
                     documentFileId = (docFile.getId() == null) ? 0L : docFile.getId();
-                    
+
                     InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream(getDigidocConfigurationFile());
                     String jdigidocCfgTmpFile = Util.createTemporaryFile(input, getConfiguration().getTempDir());
-                    
+
                     SaveItemInternalResult saveResult = this.getDocumentService().saveDocumentFile(doc.getId(),
                             docFile, remainingDiskQuota, this.getConfiguration().getTempDir(), jdigidocCfgTmpFile);
-                    
+
                     if (saveResult.isSuccess()) {
                         long fileId = saveResult.getItemId();
                         documentFileId = fileId;
@@ -194,7 +194,7 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
                signatureContainerExtractionEvent.setDescription(DocumentService.DOCUMENT_HISTORY_DESCRIPTION_EXTRACT_FILE);
                this.getDocumentService().getDocumentHistoryDAO().save(signatureContainerExtractionEvent);
             }
-            
+
             // If saving was successful then add history event
             DocumentHistory historyEvent = new DocumentHistory(
                     (updatedExistingFile ? DocumentService.HISTORY_TYPE_MODIFY_FILE : DocumentService.HISTORY_TYPE_ADD_FILE),
@@ -311,7 +311,7 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 
     /**
      * Checks users rights for document.
-     * 
+     *
      * @param request
      *     Current request
      * @param applicationName
@@ -325,7 +325,7 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
     private Document checkRightsAndGetDocument(
     	final SaveDocumentFileRequest request, final String applicationName,
     	final AditUser user) {
-    	
+
         // Kontrollime, kas päringu käivitanud infosüsteem on ADITis
         // registreeritud
         boolean applicationRegistered = this.getUserService().isApplicationRegistered(applicationName);
@@ -393,7 +393,7 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
         if ((doc.getLocked() != null) && doc.getLocked()) {
             logger.debug("Requested document is locked. Document ID: " + request.getDocumentId());
             AditCodedException aditCodedException = new AditCodedException("request.saveDocumentFile.document.locked");
-            aditCodedException.setParameters(new Object[] {request.getDocumentId().toString()});
+            aditCodedException.setParameters(new Object[] {doc.getLockingDate()});
             throw aditCodedException;
         }
 
@@ -408,7 +408,7 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
                 aditCodedException.setParameters(new Object[] {doc.getId()});
                 throw aditCodedException;
             }
-        	
+
             isOwner = true;
         } else {
             if ((doc.getDocumentSharings() != null) && (!doc.getDocumentSharings().isEmpty())) {
@@ -422,7 +422,7 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
                             aditCodedException.setParameters(new Object[] {doc.getId()});
                             throw aditCodedException;
                         }
-                    	
+
                         isOwner = true;
                         break;
                     }
@@ -437,17 +437,17 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
             aditCodedException.setParameters(new Object[] {request.getDocumentId().toString(), user.getUserCode()});
             throw aditCodedException;
         }
-        
+
         return doc;
     }
-    
+
     /**
      * Validates request body and makes sure that all required fields exist and
      * are not empty. <br>
      * <br>
      * Throws {@link AditCodedException} if any errors in request data are
      * found.
-     * 
+     *
      * @param request
      *            Request body as {@link SaveDocumentFileRequest} object.
      * @throws AditCodedException
@@ -465,7 +465,7 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 
     /**
      * Writes request parameters to application DEBUG log.
-     * 
+     *
      * @param request
      *            Request body as {@link SaveDocumentFileRequest} object.
      */
@@ -474,7 +474,7 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
         logger.debug("Document ID: " + request.getDocumentId());
         logger.debug("----------------------------------------");
     }
-    
+
     public UserService getUserService() {
         return userService;
     }
@@ -490,7 +490,7 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
     public void setDocumentService(DocumentService documentService) {
         this.documentService = documentService;
     }
-    
+
     public String getDigidocConfigurationFile() {
         return digidocConfigurationFile;
     }

@@ -38,7 +38,7 @@ import ee.webmedia.xtee.annotation.XTeeService;
 /**
  * Implementation of "saveDocument" web method (web service request). Contains
  * request input validation, request-specific workflow and response composition.
- * 
+ *
  * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
  * @author Jaak Lember, Interinx, jaak@interinx.com
  */
@@ -49,9 +49,9 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
     private static Logger logger = Logger.getLogger(SaveDocumentEndpoint.class);
 
     private UserService userService;
-    
+
     private DocumentService documentService;
-    
+
     private String digidocConfigurationFile;
 
     @Override
@@ -67,7 +67,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 
     /**
      * Executes "V1" version of "saveDocument" request.
-     * 
+     *
      * @param requestObject
      *            Request body object
      * @return Response body object
@@ -96,7 +96,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
             // Check whether or not the user who executed current query is registered.
             AditUser user = Util.getAditUserFromXroadHeader(this.getHeader(), this.getUserService());
             AditUser xroadRequestUser = Util.getXroadUserFromXroadHeader(user, this.getHeader(), this.getUserService());
-            
+
             checkRights(request, applicationName, user);
 
             String attachmentID = null;
@@ -142,7 +142,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
             }
 
             boolean involvedSignatureContainerExtraction = false;
-            
+
             // Check if the marshalling result is what we expected
             if (unmarshalledObject != null) {
                 logger.debug("XML unmarshalled to type: " + unmarshalledObject.getClass());
@@ -168,7 +168,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 
                     InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream(getDigidocConfigurationFile());
                     String jdigidocCfgTmpFile = Util.createTemporaryFile(input, getConfiguration().getTempDir());
-                    
+
                     if (document.getId() != null && document.getId() != 0) {
                         updatedExistingDocument = true;
 
@@ -196,7 +196,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
                             }
                             user.setDiskQuotaUsed(usedDiskQuota + saveResult.getAddedFilesSize());
                             this.getUserService().getAditUserDAO().saveOrUpdate(user);
-                            
+
                             involvedSignatureContainerExtraction = saveResult.isInvolvedSignatureContainerExtraction();
                         } else {
                             if ((saveResult.getMessages() != null) && (saveResult.getMessages().size() > 0)) {
@@ -257,7 +257,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
                signatureContainerExtractionEvent.setDescription(DocumentService.DOCUMENT_HISTORY_DESCRIPTION_EXTRACT_FILE);
                this.getDocumentService().getDocumentHistoryDAO().save(signatureContainerExtractionEvent);
             }
-            
+
             // If saving was successful then add history event
             DocumentHistory historyEvent = new DocumentHistory(
                     (updatedExistingDocument ? DocumentService.HISTORY_TYPE_MODIFY : DocumentService.HISTORY_TYPE_CREATE),
@@ -377,7 +377,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 
     /**
      * Checks users rights for document.
-     * 
+     *
      * @param request
      *     Current request
      * @param applicationName
@@ -388,7 +388,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
     private void checkRights(
     	final SaveDocumentRequest request, final String applicationName,
     	final AditUser user) {
-    	
+
         // Check whether or not the application that executed
         // current query is registered.
         boolean applicationRegistered = this.getUserService().isApplicationRegistered(applicationName);
@@ -423,11 +423,11 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
             throw aditCodedException;
         }
     }
-    
+
     /**
      * Checks the specified document data and throws an error if data is
      * incorrect.
-     * 
+     *
      * @param existingDoc
      *     Document to be checked
      * @param userCode
@@ -445,7 +445,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
         // (i.e. don't remove them).
         if ((existingDoc.getLocked() != null) && existingDoc.getLocked()) {
             AditCodedException aditCodedException = new AditCodedException("request.saveDocument.document.locked");
-            aditCodedException.setParameters(new Object[] {new Long(existingDoc.getId()).toString(), userCode });
+            aditCodedException.setParameters(new Object[] {existingDoc.getLockingDate(), userCode });
             throw aditCodedException;
         }
         if ((existingDoc.getDeflated() != null) && existingDoc.getDeflated()) {

@@ -29,7 +29,7 @@ import ee.webmedia.xtee.annotation.XTeeService;
  * Implementation of "deleteDocumentFile" web method (web service request).
  * Contains request input validation, request-specific workflow and response
  * composition.
- * 
+ *
  * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
  * @author Jaak Lember, Interinx, jaak@interinx.com
  */
@@ -38,9 +38,9 @@ import ee.webmedia.xtee.annotation.XTeeService;
 public class DeleteDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 
     private static Logger logger = Logger.getLogger(DeleteDocumentFileEndpoint.class);
-    
+
     private UserService userService;
-    
+
     private DocumentService documentService;
 
     @Override
@@ -56,7 +56,7 @@ public class DeleteDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 
     /**
      * Executes "V1" version of "deleteDocumentFile" request.
-     * 
+     *
      * @param requestObject
      *            Request body object
      * @return Response body object
@@ -131,7 +131,7 @@ public class DeleteDocumentFileEndpoint extends AbstractAditBaseEndpoint {
                         aditCodedException.setParameters(new Object[] {documentId.toString() });
                         throw aditCodedException;
                     }
-                    
+
                     // Check whether the document is marked as invisible to owner
                     if ((doc.getInvisibleToOwner() != null) && doc.getInvisibleToOwner()) {
                         AditCodedException aditCodedException = new AditCodedException("document.deleted");
@@ -144,7 +144,7 @@ public class DeleteDocumentFileEndpoint extends AbstractAditBaseEndpoint {
                     if ((doc.getLocked() != null) && doc.getLocked()) {
                         AditCodedException aditCodedException = new AditCodedException(
                                 "request.deleteDocumentFile.document.locked");
-                        aditCodedException.setParameters(new Object[] {documentId.toString() });
+                        aditCodedException.setParameters(new Object[] {doc.getLockingDate()});
                         throw aditCodedException;
                     }
 
@@ -242,7 +242,7 @@ public class DeleteDocumentFileEndpoint extends AbstractAditBaseEndpoint {
      * <br>
      * Throws {@link AditCodedException} if any errors in request data are
      * found.
-     * 
+     *
      * @param request
      *            Request body as {@link DeleteDocumentFileRequest} object.
      * @throws AditCodedException
@@ -262,7 +262,7 @@ public class DeleteDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 
     /**
      * Writes request parameters to application DEBUG log.
-     * 
+     *
      * @param request
      *            Request body as {@link DeleteDocumentFileRequest} object.
      */
@@ -272,7 +272,7 @@ public class DeleteDocumentFileEndpoint extends AbstractAditBaseEndpoint {
         logger.debug("File ID: " + String.valueOf(request.getFileId()));
         logger.debug("------------------------------------------");
     }
-    
+
     public UserService getUserService() {
         return userService;
     }
