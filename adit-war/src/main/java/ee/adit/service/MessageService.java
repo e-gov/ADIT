@@ -54,9 +54,11 @@ public class MessageService {
         try {
             Iterator<String> configuredLanguages = this.getConfiguration().getLocales().iterator();
             Locale[] locales = Locale.getAvailableLocales();
+            boolean localeFound = false;
 
             while (configuredLanguages.hasNext()) {
                 String language = configuredLanguages.next();
+                localeFound = false;
 
                 for (int i = 0; i < locales.length; i++) {
                     Locale locale = locales[i];
@@ -65,10 +67,14 @@ public class MessageService {
                         logger.debug("Adding message for language: " + language);
                         String message = this.getMessageSource().getMessage(messageCode, parameters, locale);
                         result.add(new Message(locale.getLanguage(), message));
+                        localeFound = true;
                     }
                 }
-            }
 
+                if (!localeFound) {
+                	logger.error("Application configuration exception: Java VM has not locale \"" + language + "\" installed.");
+                }
+            }
         } catch (Exception e) {
             logger.error("Exception while getting messages for message: " + messageCode, e);
         }
