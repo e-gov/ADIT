@@ -69,7 +69,7 @@
     </logger>
     
     <logger name="ee.adit.dvk">
-    	<level value="INFO"/>
+    	<level value="DEBUG"/>
     	<appender-ref ref="dvk"/>
     	<appender-ref ref="stdout" />    	
     </logger>
