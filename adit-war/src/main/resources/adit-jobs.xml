@@ -113,26 +113,26 @@
 
 	<bean id="dvkSendTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
 		<property name="jobDetail" ref="sendJobDetails" />
-		<property name="startDelay" value="3600000" />
-		<property name="repeatInterval" value="3600000" />
+		<property name="startDelay" value="600000" />
+		<property name="repeatInterval" value="600000" />
 	</bean>
 
 	<bean id="dvkReceiveTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
 		<property name="jobDetail" ref="receiveJobDetails" />
-		<property name="startDelay" value="3600000" />
-		<property name="repeatInterval" value="3600000" />
+		<property name="startDelay" value="600000" />
+		<property name="repeatInterval" value="600000" />
 	</bean>
 
 	<bean id="dvkUpdateStatusTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
 		<property name="jobDetail" ref="updateStatusJobDetails" />
-		<property name="startDelay" value="3600000" />
-		<property name="repeatInterval" value="3600000" />
+		<property name="startDelay" value="600000" />
+		<property name="repeatInterval" value="600000" />
 	</bean>
 
 	<bean id="dvkUpdateStatusToDVKTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
 		<property name="jobDetail" ref="UpdateStatusToDVKJobDetails" />
-		<property name="startDelay" value="3600000" />
-		<property name="repeatInterval" value="3600000" />
+		<property name="startDelay" value="600000" />
+		<property name="repeatInterval" value="600000" />
 	</bean>
 
 	<bean id="notificationTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
@@ -155,8 +155,8 @@
 
 	<bean id="UserSyncJobTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
 		<property name="jobDetail" ref="UserSyncJobDetails" />
-		<property name="startDelay" value="3600000" />
-		<property name="repeatInterval" value="3600000" />
+		<property name="startDelay" value="600000" />
+		<property name="repeatInterval" value="600000" />
 	</bean>
 
 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
