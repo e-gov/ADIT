@@ -14,10 +14,10 @@ import ee.adit.util.Configuration;
 
 /**
  * Provides methods for retrieving messages from Spring {@code MessageSource}.
- * 
+ *
  * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
  * @author Jaak Lember, Interinx, jaak@interinx.com
- * 
+ *
  */
 public class MessageService {
 
@@ -27,7 +27,7 @@ public class MessageService {
      * Error code for generic errors.
      */
     public static final String GENERIC_ERROR_CODE = "service.error";
-    
+
     /**
      * Configuration.
      */
@@ -40,7 +40,7 @@ public class MessageService {
 
     /**
      * Retrieves messages for the specified code.
-     * 
+     *
      * @param messageCode
      *            message code
      * @param parameters
@@ -78,7 +78,7 @@ public class MessageService {
 
     /**
      * Retrieves messages for the specified locale.
-     * 
+     *
      * @param code
      *            message code
      * @param parameters
@@ -93,7 +93,7 @@ public class MessageService {
 
     /**
      * Retrieves messages for the specified {@code AditCodedException}.
-     * 
+     *
      * @param e
      *            exception
      * @return List of {@link Message} objects for given exception. Contains

@@ -59,7 +59,7 @@ import ee.adit.service.UserService;
 
 /**
  * Class providing static utility / helper methods.
- * 
+ *
  * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
  * @author Jaak Lember, Interinx, jaak@interinx.com
  */
@@ -69,7 +69,7 @@ public final class Util {
 	 */
 	private Util() {
 	}
-	
+
     /**
      * X-Tee namespace URI.
      */
@@ -92,7 +92,7 @@ public final class Util {
 
     /**
      * Base64 encodes the specified string.
-     * 
+     *
      * @param string
      *            the string to be encoded
      * @return the base64 encoded string
@@ -101,10 +101,10 @@ public final class Util {
     public static String base64encode(String string) throws UnsupportedEncodingException {
         return new String(Base64Encoder.encode(string.getBytes("UTF-8")));
     }
-    
+
     /**
      * Base64 encodes the specified byte array.
-     * 
+     *
      * @param data
      *            byte array to be encoded
      * @return the base64 encoded string
@@ -116,7 +116,7 @@ public final class Util {
 
     /**
      * Base64 decodes the specified string.
-     * 
+     *
      * @param string
      *            the string to be encoded
      * @return the base64 encoded string
@@ -128,7 +128,7 @@ public final class Util {
 
     /**
      * Generates a random GUID / UUID.
-     * 
+     *
      * @return GUID
      */
     public static String generateGUID() {
@@ -137,7 +137,7 @@ public final class Util {
 
     /**
      * Generates a random file name with an extension.
-     * 
+     *
      * @return file name
      */
     public static String generateRandomFileName() {
@@ -149,7 +149,7 @@ public final class Util {
 
     /**
      * Generate a random file name without an extension.
-     * 
+     *
      * @return file name
      */
     public static String generateRandomFileNameWithoutExtension() {
@@ -158,7 +158,7 @@ public final class Util {
 
     /**
      * Generates a random ID of length {@code RANDOM_ID_LENGTH}.
-     * 
+     *
      * @return the random ID as a string
      */
     public static String generateRandomID() {
@@ -172,7 +172,7 @@ public final class Util {
 
     /**
      * Creates an empty temporary file to given folder.
-     * 
+     *
      * @param itemIndex
      *            Number of current file. Enables to give an index to all files
      *            related to same object etc.
@@ -220,7 +220,7 @@ public final class Util {
 
     /**
      * GZip-s and then Base64 encodes the specified file.
-     * 
+     *
      * @param inputFile
      *            absolute path to the file to be processed
      * @param tempDir
@@ -283,7 +283,7 @@ public final class Util {
 
     /**
      * GZip-s the specified input file.
-     * 
+     *
      * @param inputFile
      *            absolute path to the file to be processed
      * @param tempDir
@@ -326,7 +326,7 @@ public final class Util {
 
     /**
      * Encodes file contents to Base64.
-     * 
+     *
      * @param inputFile
      *            absolute path to the file to be processed
      * @param tempDir
@@ -357,7 +357,7 @@ public final class Util {
 
     /**
      * Base64 decodes and Unzip-s the specified file.
-     * 
+     *
      * @param inputFile
      *            absolute path to the file to be processed
      * @param tempDir
@@ -416,7 +416,7 @@ public final class Util {
 
     /**
      * Base64 decodes and Unzip-s the specified file.
-     * 
+     *
      * @param inputFile
      *            absolute path to the file to be processed
      * @param tempDir
@@ -444,7 +444,7 @@ public final class Util {
 
     /**
      * Base64 decodes a file.
-     * 
+     *
      * @param inputFile
      *            absolute path to the file to be processed
      * @param tempDir
@@ -474,7 +474,7 @@ public final class Util {
 
     /**
      * Creates a temporary file from input stream.
-     * 
+     *
      * @param inputStream
      *            the data stream
      * @param tempDir
@@ -501,7 +501,7 @@ public final class Util {
 
     /**
      * Deletes the file.
-     * 
+     *
      * @param fileName
      *            the absolute path to the file to be deleted
      * @param deleteTemporaryFiles
@@ -524,7 +524,7 @@ public final class Util {
 
     /**
      * Prints the X-Tee header to log.
-     * 
+     *
      * @param header
      *            X-Tee header
      */
@@ -546,7 +546,7 @@ public final class Util {
 
     /**
      * Converts a byte array to a HEX string.
-     * 
+     *
      * @param byteArray the bytes to convert
      * @return HEX string
      */
@@ -565,7 +565,7 @@ public final class Util {
 
     /**
      * Delete a directory and it's contents.
-     * 
+     *
      * @param dir
      *            Directory to be deleted
      * @return Success of deletion (true, if directory was successfully deleted)
@@ -592,7 +592,7 @@ public final class Util {
     /**
      * Transforms XML using XSLT stylesheet and writes the result to the file
      * specified.
-     * 
+     *
      * @param inputXMLFileName
      *            absolute path to XML data file
      * @param inputXSLTFileName
@@ -616,7 +616,7 @@ public final class Util {
 
     /**
      * Generates a PDF using FOP.
-     * 
+     *
      * @param outputFileName
      *            absolute path to the resulting PDF file (including the file
      *            name)
@@ -658,7 +658,7 @@ public final class Util {
 
     /**
      * Converts a date to XML format.
-     * 
+     *
      * @param date date
      * @return date in XML format
      */
@@ -669,7 +669,7 @@ public final class Util {
 
     /**
      * Converts a date to XML format (only date part is returned).
-     * 
+     *
      * @param date date
      * @return date in XML format
      */
@@ -680,7 +680,7 @@ public final class Util {
 
     /**
      * Converts an XML date to Date.
-     * 
+     *
      * @param xmlDate
      *     date in XML format
      * @return date
@@ -693,7 +693,7 @@ public final class Util {
 
     /**
      * Converts a date to the estonian format (dd.MM.yyyy HH:mm).
-     * 
+     *
      * @param date
      *     date to be converted
      * @return
@@ -710,7 +710,7 @@ public final class Util {
     /**
      * Splits out file data from the main XML file. Used for reducing the XML
      * size to be marshalled / unmarshalled.
-     * 
+     *
      * @param xmlFileName
      *            the XML file to be split
      * @param tagLocalName
@@ -959,7 +959,7 @@ public final class Util {
 
     /**
      * Joins a split XML.
-     * 
+     *
      * @param xmlFileName
      *            the main file
      * @param appendTags
@@ -1107,7 +1107,7 @@ public final class Util {
     /**
      * Flushes and closes a Reader. Useful when a reader needs to be closed and
      * no reasonable action could be taken in case of an error.
-     * 
+     *
      * @param r
      *            Reader to be closed
      */
@@ -1126,7 +1126,7 @@ public final class Util {
     /**
      * Flushes and closes a Writer. Useful when a writer needs to be closed and
      * no reasonable action could be taken in case of an error.
-     * 
+     *
      * @param w
      *            Writer to be closed
      */
@@ -1146,7 +1146,7 @@ public final class Util {
     /**
      * Closes an input stream ignoring all errors. Useful when a stream needs to
      * be closed and no reasonable action could be taken in case of an error.
-     * 
+     *
      * @param s
      *            InputStream to be closed
      */
@@ -1165,7 +1165,7 @@ public final class Util {
     /**
      * Closes an output stream ignoring all errors. Useful when a stream needs
      * to be closed and no reasonable action could be taken in case of an error.
-     * 
+     *
      * @param s
      *            OutputStream to be closed
      */
@@ -1183,7 +1183,7 @@ public final class Util {
 
     /**
      * Tries to delete file until success or timeout.
-     * 
+     *
      * @param fileName
      *            the file to delete
      * @param timeoutSeconds
@@ -1209,7 +1209,7 @@ public final class Util {
 
     /**
      * Tries to rename file until success or timeout.
-     * 
+     *
      * @param originalFileName
      *            current file name
      * @param destinationFileName
@@ -1240,7 +1240,7 @@ public final class Util {
     /**
      * Removes country prefix from personal ID code. For example: EE37001010001
      * will be changed to 37001010001
-     * 
+     *
      * @param personalIdCode
      *            Personal ID code with country prefix
      * @return Personal ID code without country prefix
@@ -1261,7 +1261,7 @@ public final class Util {
     /**
      * Extracts the query name from the X-Tee header. The query name must be in
      * the format "[prefix].[queryName].v[versionNumber]"
-     * 
+     *
      * @param fullQueryName
      *            the full query name
      * @return the resulting holder object
@@ -1296,7 +1296,7 @@ public final class Util {
 
     /**
      * Extract content ID from string.
-     * 
+     *
      * @param conentIDString string containing the content ID
      * @return content ID
      */
@@ -1319,7 +1319,7 @@ public final class Util {
 
     /**
      * Strip content ID - remove "<", ">".
-     * 
+     *
      * @param contentID content ID string
      * @return stripped content ID
      */
@@ -1335,7 +1335,7 @@ public final class Util {
 
     /**
      * Convert file to byte array.
-     * 
+     *
      * @param file file
      * @return byte array
      * @throws IOException
@@ -1364,7 +1364,7 @@ public final class Util {
 
     /**
      * Get file content as string.
-     * 
+     *
      * @param f file
      * @return file content
      * @throws IOException
@@ -1375,7 +1375,7 @@ public final class Util {
 
     /**
      * Remove country prefix from string.
-     * 
+     *
      * @param code user code
      * @return user code without country prefix
      */
@@ -1389,7 +1389,7 @@ public final class Util {
 
     /**
      * Add country prefix.
-     * 
+     *
      * @param code user code
      * @param prefix country prefix
      * @return user code with country prefix
@@ -1401,19 +1401,19 @@ public final class Util {
     /**
      * Determines if given String is null or empty (zero length).
      * Whitespace is not treated as empty string.
-     * 
+     *
      * @param stringToEvaluate
      * 		String that will be checked for having NULL or empty value
      * @return
-     * 		true, if input String is NULL or has zero length 
+     * 		true, if input String is NULL or has zero length
      */
     public static boolean isNullOrEmpty(String stringToEvaluate) {
     	return ((stringToEvaluate == null) || stringToEvaluate.isEmpty());
     }
-    
+
     /**
      * Determines if given class contains a field with specified name.
-     * 
+     *
      * @param targetClass
      * 		Class to be examined
      * @param fieldName
@@ -1432,10 +1432,10 @@ public final class Util {
     	}
     	return found;
     }
-    
+
     /**
      * Finds extension part of given file name.
-     * 
+     *
      * @param fileName
      * 		File name
      * @return
@@ -1445,20 +1445,20 @@ public final class Util {
      */
     public static String getFileExtension(String fileName) {
     	String result = null;
-    	
+
     	if (!isNullOrEmpty(fileName)) {
     		int extensionStart = fileName.lastIndexOf(".") + 1;
     		if ((extensionStart > 0) && (extensionStart < fileName.length())) {
     			result = fileName.substring(extensionStart);
     		}
     	}
-    	
+
     	return result;
     }
-    
+
     /**
      * Finds part of file name that precedes file extension.
-     * 
+     *
      * @param fileName
      * 		File name without path
      * @return
@@ -1467,7 +1467,7 @@ public final class Util {
      */
     public static String getFileNameWithoutExtension(String fileName) {
     	String result = null;
-    	
+
     	if (!isNullOrEmpty(fileName)) {
     		int extensionStart = fileName.lastIndexOf(".");
     		if ((extensionStart > 0) && (extensionStart < fileName.length())) {
@@ -1476,26 +1476,26 @@ public final class Util {
     			result = fileName;
     		}
     	}
-    	
+
     	return result;
     }
 
     /**
      * Calculates MD5 checksum of given file.
-     * 
+     *
      * @param filename
      * 		Full path to file that will be used for checksum calculation.
      * @return
      * 		MD5 chacksum as byte array
      * @throws NoSuchAlgorithmException
      * 		will be thrown if MD5 algorithm is not found for some reason
-     * @throws IOException 
-     *		will be thrown if file does not exist or cannot be read 
+     * @throws IOException
+     *		will be thrown if file does not exist or cannot be read
      */
     public static byte[] calculateMd5Checksum(String filename) throws NoSuchAlgorithmException, IOException  {
     	MessageDigest digest = MessageDigest.getInstance("MD5");
     	BufferedInputStream fileStream = null;
-    	
+
     	try {
 	    	fileStream = new BufferedInputStream(new FileInputStream(filename));
 	    	int len;
@@ -1508,10 +1508,10 @@ public final class Util {
     	}
     	return digest.digest();
 	}
-    
+
     /**
      * Creates a file name that does not include any forbidden characters.
-     * 
+     *
      * @param namePart
      * 		Name part of file name
      * @param extension
@@ -1527,7 +1527,7 @@ public final class Util {
     	int maxLength = 240;
     	List<Character> illegalChars = Arrays.asList(new Character[] {'/', '\n', '\r', '\t', '\0', '\f', '`', '?', '*', '\\', '<', '>', '|', '\"', ':'});
     	StringBuilder result = new StringBuilder(maxLength + 10);
-    	
+
     	if (!isNullOrEmpty(namePart)) {
 	    	for (int i = 0; (i < namePart.length()) && (result.length() < maxLength); i++) {
 	    		Character currentChar = namePart.charAt(i);
@@ -1538,21 +1538,21 @@ public final class Util {
     	} else {
     		result.append("document");
     	}
-    	
+
     	if (!isNullOrEmpty(uniqueCounter)) {
     		result.append(uniqueCounter);
     	}
-    	
+
     	if (!isNullOrEmpty(extension)) {
     		result.append(".").append(extension);
     	}
-    	
+
     	return result.toString();
     }
-    
+
     /**
      * Joins list of strings to a single string (separated by specified delimiter).
-     * 
+     *
      * @param s
      *     List of strings
      * @param delimiter
@@ -1572,11 +1572,11 @@ public final class Util {
     	}
     	return buffer.toString();
     }
-    
+
     /**
      * Joins list of {@link Message} objects to a single string consisting
      * of message values (separated by specified delimiter).
-     * 
+     *
      * @param messages
      *     List of messages
      * @param delimiter
@@ -1596,10 +1596,10 @@ public final class Util {
     	}
     	return buffer.toString();
     }
-    
+
     /**
      * Finds a message by locale from message list.
-     * 
+     *
      * @param messages
      *     List of messages
      * @param locale
@@ -1610,7 +1610,7 @@ public final class Util {
     public static Message getMessageByLocale(List<Message> messages, Locale locale) {
     	Message result = null;
 
-    	if ((messages != null) && (locale != null) && !isNullOrEmpty(locale.getCountry())) {
+    	if ((messages != null) && (locale != null) && !isNullOrEmpty(locale.getLanguage())) {
 	    	Iterator<Message> iter = messages.iterator();
 		    while (iter.hasNext()) {
 		    	Message msg = iter.next();
@@ -1619,13 +1619,13 @@ public final class Util {
 		    	}
 		    }
     	}
-	    
+
     	return result;
     }
-    
+
     /**
      * Gets current user based on data from X-Road headers.
-     * 
+     *
      * @param header
      *     X-Road header
      * @param userService
@@ -1635,7 +1635,7 @@ public final class Util {
      */
     public static AditUser getAditUserFromXroadHeader(
     	final CustomXTeeHeader header, final UserService userService) {
-        
+
     	String userCode = isNullOrEmpty(header.getAllasutus()) ? header.getIsikukood() : header.getAllasutus();
         AditUser user = userService.getUserByID(userCode);
         if (user == null) {
@@ -1644,14 +1644,14 @@ public final class Util {
             aditCodedException.setParameters(new Object[] {userCode });
             throw aditCodedException;
         }
-        
+
         return user;
     }
-    
+
     /**
      * Gets user account of the person who executed current request (even if
      * request was executed using organization account).
-     * 
+     *
      * @param currentUser
      *     Current user (may me an organization account)
      * @param header
@@ -1664,7 +1664,7 @@ public final class Util {
     public static AditUser getXroadUserFromXroadHeader(
     	final AditUser currentUser, final CustomXTeeHeader header,
     	final UserService userService) {
-        
+
     	AditUser xroadRequestUser = null;
         if ("person".equalsIgnoreCase(currentUser.getUsertype().getShortName())) {
             xroadRequestUser = currentUser;
