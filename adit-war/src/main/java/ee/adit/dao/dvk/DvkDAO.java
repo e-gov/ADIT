@@ -19,7 +19,7 @@ import ee.adit.service.DocumentService;
 /**
  * DVK data access class. Provides methods for manipulating data in DVK client
  * database.
- * 
+ *
  * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
  */
 public class DvkDAO {
@@ -33,7 +33,7 @@ public class DvkDAO {
 
     /**
      * Retrieves incoming documents list.
-     * 
+     *
      * @return list of messages
      */
     @SuppressWarnings("unchecked")
@@ -42,7 +42,7 @@ public class DvkDAO {
         Session session = this.getSessionFactory().getCurrentSession();
         session.beginTransaction();
         try {
-            final String sql = "from PojoMessage where isIncoming = true and (recipientStatusId = null or recipientStatusId = 0 or recipientStatusId = 101 or recipientStatusId = 1) and dhlMessageId != 9999999999";
+            final String sql = "from PojoMessage where isIncoming = true and (localItemId = null or localItemId = 0) and dhlMessageId != 9999999999";
             result = session.createQuery(sql).list();
         } catch (Exception e) {
             logger.error("Exception while fetching DVK incoming messages: ", e);
@@ -54,7 +54,7 @@ public class DvkDAO {
     /**
      * Retrieves incoming documents list containing documents that do not have
      * any status assigned.
-     * 
+     *
      * @param statusID status id to exclude
      * @return incoming documents without status
      * @throws Exception
@@ -83,7 +83,7 @@ public class DvkDAO {
 
     /**
      * Updates document.
-     * 
+     *
      * @param document document
      * @throws Exception
      */
@@ -109,7 +109,7 @@ public class DvkDAO {
 
     /**
      * Retrieves recipients for the specified DVK message.
-     * 
+     *
      * @param dvkMessageID DVK message ID
      * @param incoming
      *            specifies, if the message should be incoming / outgoing
@@ -146,7 +146,7 @@ public class DvkDAO {
 
     /**
      * Retrieves DVK client settings.
-     * 
+     *
      * @return settings DVK client settings
      */
     public PojoSettings getDVKSettings() {
@@ -164,7 +164,7 @@ public class DvkDAO {
 
     /**
      * Get only documents that have status 'sent' for all message recipients.
-     * 
+     *
      * @return List of documents that have status 'sent' for all message
      *         recipients
      * @throws Exception
@@ -204,7 +204,7 @@ public class DvkDAO {
 
     /**
      * Retrieve all received documents.
-     * 
+     *
      * @return list of documents.
      */
     public List<PojoMessage> getReceivedDocuments() {
@@ -233,7 +233,7 @@ public class DvkDAO {
 
     /**
      * Retrieves DVK users list.
-     * 
+     *
      * @return list of users.
      */
     @SuppressWarnings("unchecked")
@@ -259,7 +259,7 @@ public class DvkDAO {
 
     /**
      * Test document read.
-     * 
+     *
      * @param dhlMessageId DVK message ID
      * @return result document
      */
@@ -285,7 +285,7 @@ public class DvkDAO {
 
     /**
      * Test document read.
-     * 
+     *
      * @param dhlMessageId DVK message ID
      * @return result document
      */
@@ -309,7 +309,7 @@ public class DvkDAO {
 
     /**
      * Retrieves session factory.
-     * 
+     *
      * @return session factory
      */
     public SessionFactory getSessionFactory() {
@@ -318,7 +318,7 @@ public class DvkDAO {
 
     /**
      * Sets session factory.
-     * 
+     *
      * @param sessionFactory session factory
      */
     public void setSessionFactory(SessionFactory sessionFactory) {
@@ -327,7 +327,7 @@ public class DvkDAO {
 
     /**
      * Get only documents that have status 'sent' for all message recipients.
-     * 
+     *
      * @param beginDate time period start date
      * @param endDate time period end date
      * @return List of documents that have status 'sent' for all message
@@ -360,7 +360,7 @@ public class DvkDAO {
 
     /**
      * Fetch received documents from DVK client database.
-     * 
+     *
      * @param comparisonDate comparison date
      * @return list of messages
      * @throws Exception

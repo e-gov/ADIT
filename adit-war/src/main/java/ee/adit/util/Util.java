@@ -127,6 +127,19 @@ public final class Util {
     }
 
     /**
+     * Base64 decodes the specified string.
+     *
+     * @param string
+     *     the string to be encoded
+     * @return
+     *     base64 decoded bytes
+     * @throws UnsupportedEncodingException
+     */
+    public static byte[] base64DecodeToByteArray(String string) throws UnsupportedEncodingException {
+        return Base64Decoder.decode(string);
+    }
+
+    /**
      * Generates a random GUID / UUID.
      *
      * @return GUID
@@ -495,6 +508,31 @@ public final class Util {
 
         fileOutputStream.close();
         inputStream.close();
+
+        return temporaryFile;
+    }
+
+    /**
+     * Creates a temporary from byte array.
+     * @param bytesToWrite
+     *     Bytes to write to temporary file
+     * @param tempDir
+     *     Directory where to put the result and any temporary files
+     * @return
+     *     Absolute path to the result file
+     * @throws IOException
+     */
+    public static String createTemporaryFile(final byte[] bytesToWrite,
+    	final String tempDir) throws IOException {
+        String temporaryFile = tempDir + File.separator + generateRandomFileName();
+
+        OutputStream fileOutputStream = null;
+        try {
+        	fileOutputStream = new BufferedOutputStream(new FileOutputStream(temporaryFile));
+        	fileOutputStream.write(bytesToWrite);
+        } finally {
+        	safeCloseStream(fileOutputStream);
+        }
 
         return temporaryFile;
     }
