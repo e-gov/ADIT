@@ -1435,7 +1435,7 @@ public class DocumentService {
                                             	usedDiskQuota = 0L;
                                             }
                                             user.setDiskQuotaUsed(usedDiskQuota + saveResult.getAddedFilesSize());
-                                            this.getAditUserDAO().saveOrUpdate(user);
+                                            this.getAditUserDAO().saveOrUpdate(user, true);
 
                                         } else {
                                             if ((saveResult.getMessages() != null)
