@@ -1387,12 +1387,12 @@ public class DocumentService {
                                     }
 
                                     Session aditSession = null;
-                                    Transaction aditTransaction = null;
+                                    //Transaction aditTransaction = null;
                                     try {
 
                                         // Save the document
                                         aditSession = this.getDocumentDAO().getSessionFactory().openSession();
-                                        aditTransaction = aditSession.beginTransaction();
+                                        //aditTransaction = aditSession.beginTransaction();
 
                                         // Before we save the document to
                                         // ADIT, check if the recipient has
@@ -1453,13 +1453,13 @@ public class DocumentService {
                                         this.getDvkDAO().updateDocument(dvkDocument);
 
                                         // Finally commit
-                                        aditTransaction.commit();
+                                        //aditTransaction.commit();
 
                                     } catch (Exception e) {
                                         logger.debug("Error saving document to ADIT database: ", e);
-                                        if (aditTransaction != null) {
-                                            aditTransaction.rollback();
-                                        }
+                                        //if (aditTransaction != null) {
+                                        //    aditTransaction.rollback();
+                                        //}
                                     } finally {
                                         if (aditSession != null) {
                                             aditSession.close();
