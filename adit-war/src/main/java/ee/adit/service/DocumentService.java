@@ -1844,8 +1844,7 @@ public class DocumentService {
                             if (!document.getDocumentDvkStatusId().equals(dvkDocument.getRecipientStatusId())) {
 
                                 // If the statuses do not match, update from
-                                // ADIT to
-                                // DVK
+                                // ADIT to DVK
                                 dvkDocument.setRecipientStatusId(document.getDocumentDvkStatusId());
 
                                 // Update DVK document

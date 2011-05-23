@@ -9,6 +9,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import dvk.api.ml.PojoMessage;
 import dvk.api.ml.PojoMessageRecipient;
@@ -22,7 +23,7 @@ import ee.adit.service.DocumentService;
  *
  * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
  */
-public class DvkDAO {
+public class DvkDAO extends HibernateDaoSupport {
 
     private static Logger logger = Logger.getLogger(DvkDAO.class);
 
@@ -89,21 +90,23 @@ public class DvkDAO {
      */
     public void updateDocument(PojoMessage document) throws Exception {
 
-        Session session = this.getSessionFactory().openSession();
-        Transaction transaction = null;
+    	this.getHibernateTemplate().saveOrUpdate(document);
 
-        try {
-            transaction = session.beginTransaction();
-            session.saveOrUpdate(document);
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            throw e;
-        } finally {
-            session.close();
-        }
+//    	Session session = this.getSessionFactory().openSession();
+//        Transaction transaction = null;
+//
+//        try {
+//            transaction = session.beginTransaction();
+//            session.saveOrUpdate(document);
+//            transaction.commit();
+//        } catch (Exception e) {
+//            if (transaction != null) {
+//                transaction.rollback();
+//            }
+//            throw e;
+//        } finally {
+//            session.close();
+//        }
 
     }
 
@@ -307,23 +310,23 @@ public class DvkDAO {
         return result;
     }
 
-    /**
-     * Retrieves session factory.
-     *
-     * @return session factory
-     */
-    public SessionFactory getSessionFactory() {
-        return sessionFactory;
-    }
-
-    /**
-     * Sets session factory.
-     *
-     * @param sessionFactory session factory
-     */
-    public void setSessionFactory(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
+//    /**
+//     * Retrieves session factory.
+//     *
+//     * @return session factory
+//     */
+//    public SessionFactory getSessionFactory() {
+//        return sessionFactory;
+//    }
+//
+//    /**
+//     * Sets session factory.
+//     *
+//     * @param sessionFactory session factory
+//     */
+//    public void setSessionFactory(SessionFactory sessionFactory) {
+//        this.sessionFactory = sessionFactory;
+//    }
 
     /**
      * Get only documents that have status 'sent' for all message recipients.
