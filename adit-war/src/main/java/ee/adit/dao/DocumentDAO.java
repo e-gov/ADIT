@@ -778,13 +778,21 @@ public class DocumentDAO extends HibernateDaoSupport {
 
         // Estimated document remove date
         Date removeDate = null;
-        if ((doc.getLastModifiedDate() != null) && (documentRetentionDeadlineDays != null) && (documentRetentionDeadlineDays > 0)) {
+        if ((documentRetentionDeadlineDays != null) && (documentRetentionDeadlineDays > 0)) {
         	Calendar cal = Calendar.getInstance();
-        	cal.setTime(doc.getLastModifiedDate());
+        	if (doc.getLastModifiedDate() != null) {
+        		cal.setTime(doc.getLastModifiedDate());
+        	} else if (doc.getCreationDate() != null) {
+        		cal.setTime(doc.getCreationDate());
+        	}
         	cal.add(Calendar.DATE, documentRetentionDeadlineDays.intValue());
         	removeDate = cal.getTime();
         }
-        result.setRemoveDate(new org.exolab.castor.types.Date(removeDate));
+        if (removeDate != null) {
+        	result.setRemoveDate(new org.exolab.castor.types.Date(removeDate));
+        } else {
+        	result.setRemoveDate(null);
+        }
 
         // If data about document previous version is present
         // then add it to output

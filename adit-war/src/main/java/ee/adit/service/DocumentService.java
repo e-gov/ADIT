@@ -1339,6 +1339,7 @@ public class DocumentService {
                                     // ADIT database
                                     Document aditDocument = new Document();
                                     aditDocument.setCreationDate(new Date());
+                                    aditDocument.setLastModifiedDate(new Date());
                                     aditDocument.setDocumentDvkStatusId(DVK_STATUS_SENT);
                                     aditDocument.setDvkId(dvkDocument.getDhlId());
                                     aditDocument.setGuid(dvkDocument.getDhlGuid());
