@@ -19,7 +19,7 @@ import ee.adit.util.XRoadQueryName;
 /**
  * Custom web-service endpoint mapping implementation. Maps the incoming SOAP
  * message to one of the endpoints registered in the configuration.
- * 
+ *
  * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
  * @author Jaak Lember, Interinx, jaak@interinx.com
  */
@@ -49,7 +49,7 @@ public class AditEndpointMapping extends AbstractQNameEndpointMapping {
      * message. The SOAP body payload element is compared to the X-Tee specific
      * SOAP header {@code XTEE_REQUEST_NAME_HEADER} and if the names do not
      * match, an {@code AditInternalException} is thrown.
-     * 
+     *
      * @param messageContext
      *            message context
      * @return the qualified name of the SOAP body payload element.
@@ -62,8 +62,18 @@ public class AditEndpointMapping extends AbstractQNameEndpointMapping {
         boolean requestNameHeaderFound = false;
 
         try {
-            QName requestQName = PayloadRootUtils.getPayloadRootQName(messageContext.getRequest().getPayloadSource(),
-                    transformerFactory);
+            if (messageContext == null) {
+            	throw new AditInternalException("Message context is NULL!");
+            }
+            if (messageContext.getRequest() == null) {
+            	throw new AditInternalException("Request is NULL!");
+            }
+            if (messageContext.getRequest().getPayloadSource() == null) {
+            	throw new AditInternalException("Payload source of request is NULL!");
+            }
+
+        	QName requestQName = PayloadRootUtils.getPayloadRootQName(
+                messageContext.getRequest().getPayloadSource(), transformerFactory);
 
             logger.debug("Resolved request payload qualified name: " + requestQName);
 
@@ -73,14 +83,18 @@ public class AditEndpointMapping extends AbstractQNameEndpointMapping {
             if (requestQName != null && "listMethods".equalsIgnoreCase(requestQName.getLocalPart())) {
                 logger.debug("Mapping to listMethods method. Ignoring SOAP headers.");
             } else {
-                Iterator<SoapHeaderElement> soapHeaderIterator = request.getSoapHeader().examineAllHeaderElements();
+                if (request.getSoapHeader() == null) {
+                	throw new AditInternalException("Request has no SOAP headers!");
+                }
+
+            	Iterator<SoapHeaderElement> soapHeaderIterator = request.getSoapHeader().examineAllHeaderElements();
 
                 QName xteeRequestNameHeaderQName = new QName(Util.XTEE_NAMESPACE, XTEE_REQUEST_NAME_HEADER);
 
                 while (soapHeaderIterator.hasNext()) {
                     SoapHeaderElement header = soapHeaderIterator.next();
 
-                    if (xteeRequestNameHeaderQName.equals(header.getName())) {
+                    if ((header != null) && xteeRequestNameHeaderQName.equals(header.getName())) {
                         String requestNameHeaderValue = header.getText();
                         logger.debug("Found X-Road request name header: " + requestNameHeaderValue);
                         requestNameHeaderFound = true;
