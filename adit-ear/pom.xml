@@ -4,18 +4,18 @@
 	<groupId>ee</groupId>
 	<artifactId>adit-ear</artifactId>
 	<packaging>ear</packaging>
-	<version>1.0.26</version>
+	<version>1.0.27</version>
 	<name>ADIT Enterprise Application</name>
 
 	<parent>
 	    <groupId>ee</groupId>
 	    <artifactId>adit</artifactId>
-	    <version>1.0.26</version>
+	    <version>1.0.27</version>
 	</parent>
 
 	<build>
 		<finalName>adit-${version}</finalName>
-		
+
 		<resources>
 			<resource>
 				<directory>src/main/webapp/META-INF</directory>
@@ -33,7 +33,7 @@
 				</includes>
 			</resource>
 		</resources>
-		
+
 		<plugins>
 			<!-- EAR -->
 			<plugin>
