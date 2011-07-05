@@ -1,1 +1,1 @@
-alter table adit_user add (disk_quota_used NUMBER(18,0) DEFAULT 0);
+alter table &&ADIT_SCHEMA..adit_user add (disk_quota_used NUMBER(18,0) DEFAULT 0);
