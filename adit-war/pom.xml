@@ -4,13 +4,13 @@
 	<groupId>ee</groupId>
 	<artifactId>adit-war</artifactId>
 	<packaging>war</packaging>
-	<version>1.0.27</version>
+	<version>1.0.28</version>
 	<name>ADIT Web Application</name>
 
 	<parent>
 		<groupId>ee</groupId>
 		<artifactId>adit</artifactId>
-		<version>1.0.27</version>
+		<version>1.0.28</version>
 	</parent>
 
 	<properties>
@@ -19,6 +19,7 @@
 		<!-- Edit this to match your destination environment -->
 		<!--<resourceDir>ria-dev-weblogic</resourceDir>-->
 		<!--<resourceDir>ria-test-weblogic</resourceDir>-->
+		<!--<resourceDir>ria-live-weblogic</resourceDir>-->
 		<!--<resourceDir>dev-dev-weblogic</resourceDir>-->
 	</properties>
 
