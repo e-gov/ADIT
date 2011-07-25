@@ -35,6 +35,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.cfg.Environment;
 import org.springframework.context.MessageSource;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.orm.hibernate3.HibernateCallback;
@@ -3405,27 +3406,12 @@ public class DocumentService {
 
                 // Remove file contents and calculate offsets
                 if (!wasSignedBefore) {
-	                Hashtable<String, StartEndOffsetPair> offsetData = SimplifiedDigiDocParser.findDigiDocDataFileOffsets(containerFileName);
+	                Hashtable<String, StartEndOffsetPair> fileOffsetsInDdoc =
+	                	SimplifiedDigiDocParser.findDigiDocDataFileOffsets(containerFileName);
+
 	                for (DocumentFile file : doc.getDocumentFiles()) {
-	                	if ((file != null) && ((file.getDeleted() == null) || !file.getDeleted())
-	                		&& (file.getDocumentFileTypeId() == FILETYPE_DOCUMENT_FILE)
-	                		&& !Util.isNullOrEmpty(file.getDdocDataFileId())
-	                		&& offsetData.containsKey(file.getDdocDataFileId())) {
-
-	                		StartEndOffsetPair offsets = offsetData.get(file.getDdocDataFileId());
-
-	                		String resultMsg = documentFileDAO.removeSignedFileContents(
-	                			doc.getId(), file.getId(), offsets.getStart(), offsets.getEnd());
-
-	                		if ("file_data_already_moved".equalsIgnoreCase(resultMsg)) {
-	                			throw new Exception("Cannot remove signed file contents because file contents have already been moved!");
-	                		} else if ("file_is_deleted".equalsIgnoreCase(resultMsg)) {
-	                			throw new Exception("Cannot remove signed file contents because file is deleted!");
-	                		} else if ("file_does_not_belong_to_document".equalsIgnoreCase(resultMsg)) {
-	                			throw new Exception("Cannot remove signed file contents because file does not belong to current document!");
-	                		} else if ("file_does_not_exist".equalsIgnoreCase(resultMsg)) {
-	                			throw new Exception("Cannot remove signed file contents because file does not exist!");
-	                		}
+	                	if (isNecessaryToRemoveFileContentsAfterSigning(file, fileOffsetsInDdoc)) {
+	                		removeFileContents(doc.getId(), file, fileOffsetsInDdoc);
 	                	}
 	                }
                 }
@@ -3445,6 +3431,112 @@ public class DocumentService {
                 session.close();
             }
         }
+    }
+
+    /**
+     * Removes file contents from file record.
+     * After removal file contents can only be found from DigiDoc container,
+     * using file data offset numbers from file record.
+     *
+     * @param documentId
+     * 		ID of document, to which the file belongs to
+     * @param file
+     * 		Document file
+     * @param fileOffsetsInDdoc
+     * 		Table containing start and end markers of all known files in
+     * 		current DigiDoc container
+     * @throws Exception
+     */
+    private void removeFileContents(long documentId, DocumentFile file,
+    	Hashtable<String, StartEndOffsetPair> fileOffsetsInDdoc) throws Exception {
+
+		StartEndOffsetPair offsets = fileOffsetsInDdoc.get(file.getDdocDataFileId());
+
+		String resultMsg = documentFileDAO.removeSignedFileContents(
+			documentId, file.getId(), offsets.getStart(), offsets.getEnd());
+
+		Exception fileContentRemovalException = null;
+		if ("file_data_already_moved".equalsIgnoreCase(resultMsg)) {
+			fileContentRemovalException = new Exception("Cannot remove signed file contents because file contents have already been moved!");
+		} else if ("file_is_deleted".equalsIgnoreCase(resultMsg)) {
+			fileContentRemovalException = new Exception("Cannot remove signed file contents because file is deleted!");
+		} else if ("file_does_not_belong_to_document".equalsIgnoreCase(resultMsg)) {
+			fileContentRemovalException = new Exception("Cannot remove signed file contents because file does not belong to current document!");
+		} else if ("file_does_not_exist".equalsIgnoreCase(resultMsg)) {
+			fileContentRemovalException = new Exception("Cannot remove signed file contents because file does not exist!");
+		}
+
+		if (fileContentRemovalException != null) {
+			logger.error("Failed removing contents of following file:");
+			logger.error("Document ID: " + documentId);
+			logger.error("File ID: " + file.getId());
+			logger.error("File name: " + file.getFileName());
+			logger.error("Is the file deleted? " + file.getDeleted());
+			logger.error("File type ID: " + file.getDocumentFileTypeId());
+			logger.error("DigiDoc DataFile ID: " + file.getDdocDataFileId());
+			logger.error("DigiDoc DataFile start offset: " + file.getDdocDataFileStartOffset());
+			logger.error("DigiDoc DataFile end offset: " + file.getDdocDataFileEndOffset());
+			logger.error("Is file data in DigiDoc container? " + file.getFileDataInDdoc());
+			throw fileContentRemovalException;
+		}
+    }
+
+    /**
+     * Determines if file contents should be removed after document has
+     * been successfully digitally signed.
+     *
+     * @param file
+     * 		File thats properties are examined to determine if content
+     *      removal is necessary (or even possible)
+     * @param fileOffsetsInDdoc
+     * 		Offsets of all known data files in documents DigiDoc container
+     * @return
+     * 		{@code true} if given files contents should be removed after
+     * 		document has been suvvessfully digitally signed
+     */
+    public static boolean isNecessaryToRemoveFileContentsAfterSigning(
+    	DocumentFile file, Hashtable<String, StartEndOffsetPair> fileOffsetsInDdoc) {
+
+    	// Do not allow to delete anything if input parameters are empty.
+    	if ((file == null) || (fileOffsetsInDdoc == null)) {
+    		return false;
+    	}
+
+		// Contents of deleted files are already removed and no attempts
+		// should be made to remove them again.
+		if ((file.getDeleted() != null) && file.getDeleted()) {
+			return false;
+		}
+
+		// Only contents of regular files may be removed (as an opposite to
+		// contents of signature containers).
+		if (file.getDocumentFileTypeId() != FILETYPE_DOCUMENT_FILE) {
+			return false;
+		}
+
+		// File contents should not be removed if we don't know the files
+		// ID in DigiDoc container (and therefore had no clue where to
+		// find the contents after they get removed from file record)
+		if (Util.isNullOrEmpty(file.getDdocDataFileId())) {
+			return false;
+		}
+
+		// It is safe to remove file contents if we know file data offsets
+		// in DigiDoc container.
+		if (!fileOffsetsInDdoc.containsKey(file.getDdocDataFileId())) {
+			return false;
+		}
+
+		// As a precaution - removal of file contents should not be
+		// attempted, should the file data offsets be messed up in some
+		// obvious way.
+		StartEndOffsetPair offsets = fileOffsetsInDdoc.get(file.getDdocDataFileId());
+		if ((offsets == null) || (offsets.getStart() > offsets.getEnd())
+			|| (offsets.getStart() <= 0)) {
+			return false;
+		}
+
+    	return true;
     }
 
     /**
