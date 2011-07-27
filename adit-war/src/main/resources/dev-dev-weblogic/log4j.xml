@@ -1,97 +1,97 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
 <log4j:configuration>
-	
+
  	<appender name="stdout" class="org.apache.log4j.ConsoleAppender">
 	   	<layout class="org.apache.log4j.PatternLayout">
-	    	<param name="ConversionPattern" value="%d{ABSOLUTE}%5p %C:%L - %m%n"/>
+	    	<param name="ConversionPattern" value="%d{ISO8601}%5p %C:%L - %m%n"/>
 		</layout>
     </appender>
-    
+
     <appender name="file" class="org.apache.log4j.DailyRollingFileAppender">
 		<param name="file" value="log/adit/adit.log" />
 		<param name="datePattern" value="'.'yyyy-MM" />
-		<param name="append" value="true" /> 
+		<param name="append" value="true" />
 		<layout class="org.apache.log4j.PatternLayout">
-	    	<param name="ConversionPattern" value="%d{ABSOLUTE}%5p %C:%L - %m%n"/>
+	    	<param name="ConversionPattern" value="%d{ISO8601}%5p %C:%L - %m%n"/>
 		</layout>
     </appender>
-    
+
     <appender name="dvk" class="org.apache.log4j.DailyRollingFileAppender">
 		<param name="file" value="log/adit/adit_dvk.log" />
 		<param name="datePattern" value="'.'yyyy-MM" />
-		<param name="append" value="true" /> 
+		<param name="append" value="true" />
 		<layout class="org.apache.log4j.PatternLayout">
-	    	<param name="ConversionPattern" value="%d{ABSOLUTE}%5p %C:%L - %m%n"/>
+	    	<param name="ConversionPattern" value="%d{ISO8601}%5p %C:%L - %m%n"/>
 		</layout>
     </appender>
-    
+
     <appender name="monitoring" class="org.apache.log4j.DailyRollingFileAppender">
 		<param name="file" value="log/adit/adit_monitoring.log" />
 		<param name="datePattern" value="'.'yyyy-MM" />
-		<param name="append" value="true" /> 
+		<param name="append" value="true" />
 		<layout class="org.apache.log4j.PatternLayout">
-	    	<param name="ConversionPattern" value="%d{ABSOLUTE}%5p %C:%L - %m%n"/>
+	    	<param name="ConversionPattern" value="%d{ISO8601}%5p %C:%L - %m%n"/>
 		</layout>
     </appender>
-    
+
     <appender name="nagios" class="org.apache.log4j.DailyRollingFileAppender">
 		<param name="file" value="log/adit/adit_nagios.log" />
 		<param name="datePattern" value="'.'yyyy-MM" />
-		<param name="append" value="true" /> 
+		<param name="append" value="true" />
 		<layout class="org.apache.log4j.PatternLayout">
-	    	<param name="ConversionPattern" value="%d{ABSOLUTE}%5p %C:%L - %m%n"/>
+	    	<param name="ConversionPattern" value="%d{ISO8601}%5p %C:%L - %m%n"/>
 		</layout>
     </appender>
-    
+
     <logger name="ee.adit.ws">
     	<level value="debug"></level>
     	<appender-ref ref="file" />
     </logger>
-    
+
     <logger name="ee.adit.util">
     	<level value="info"></level>
     	<appender-ref ref="stdout" />
     </logger>
-    
+
     <logger name="ee.adit.dao">
     	<level value="info"></level>
     	<appender-ref ref="file" />
     </logger>
-    
+
     <logger name="ee.adit.service">
     	<level value="info"></level>
     	<appender-ref ref="file" />
     </logger>
-    
+
     <logger name="dvk">
     	<level value="info"></level>
     	<appender-ref ref="file" />
     </logger>
-    
+
     <logger name="ee.adit.dvk">
     	<level value="info"/>
     	<appender-ref ref="dvk"/>
-    	<appender-ref ref="stdout" />    	
+    	<appender-ref ref="stdout" />
     </logger>
-    
+
     <logger name="ee.adit.service.MonitorService">
     	<level value="info"/>
     	<appender-ref ref="monitoring" />
     </logger>
-    
+
     <!-- Nagios output to file -->
     <logger name="ee.adit.util.NagiosLogger">
     	<level value="info"/>
     	<appender-ref ref="nagios"/>
     </logger>
-    
+
     <!-- OTHER FRAMEWORKS -->
     <logger name="org.hibernate">
     	<level value="info"></level>
     	<appender-ref ref="file" />
     </logger>
-     
+
     <logger name="ee.sk.utils.ConfigManager">
     	<level value="INFO"/>
     	<appender-ref ref="file" />
@@ -140,20 +140,20 @@
     	<level value="DEBUG"/>
     	<appender-ref ref="file" />
     </logger>
-    
+
     <logger name="org.springframework">
     	<level value="info"/>
     	<appender-ref ref="file" />
     </logger>
-    
+
     <logger name="org.springframework.orm.hibernate3">
     	<level value="info"/>
     	<appender-ref ref="file" />
     </logger>
-    
+
     <root>
 		<level value="error" />
 		<appender-ref ref="file" />
 	</root>
-	
+
 </log4j:configuration>

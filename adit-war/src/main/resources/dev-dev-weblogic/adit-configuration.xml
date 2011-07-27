@@ -19,10 +19,10 @@
 		<property name="dvkResponseMessageStylesheet" value="DVKresponseMessage.xsl" />
 		<!-- Üldine kettamahu piirang ühe kasutaja kohta baitides -->
 		<property name="globalDiskQuota" value="10240000" />
-		
+
 		<!-- Dokumentide säilitustähtaeg päevades -->
 		<property name="documentRetentionDeadlineDays" value="365"/>
-		
+
 		<property name="locales">
 			<list>
 				<value>et_ee</value>
@@ -31,6 +31,9 @@
 			</list>
 		</property>
 		<property name="dvkOrgCode" value="10425769" />
+
+		<!-- Kinnitamata digiallkirjade säilitustähtaeg sekundites -->
+		<property name="unfinishedSignatureLifetimeSeconds" value="300"/>
 	</bean>
 
 	<bean id="monitorConfiguration" class="ee.adit.util.MonitorConfiguration">
@@ -49,5 +52,5 @@
 		<property name="errorInterval" value="60000" />
 		<property name="errorLevel" value="FATAL" />
 	</bean>
-	
+
 </beans>

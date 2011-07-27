@@ -9,7 +9,7 @@
 						http://www.springframework.org/schema/context/spring-context-2.5.xsd
 						http://www.springframework.org/schema/tx
 						http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
-	
+
 	<!-- Configuration -->
 	<bean id="configuration" class="ee.adit.util.Configuration">
 		<property name="getJoinedMaxResults" value="10"/>
@@ -17,13 +17,13 @@
 		<property name="deleteTemporaryFiles" value="true"/>
 		<property name="schedulerEventTypeName" value="Minu dokumentide teavitus"/>
 		<property name="dvkResponseMessageStylesheet" value="DVKresponseMessage.xsl"/>
-		
+
 		<!-- Üldine kettamahu piirang ühe kasutaja kohta baitides -->
 		<property name="globalDiskQuota" value="10240000"/>
-		
+
 		<!-- Dokumentide säilitustähtaeg päevades -->
 		<property name="documentRetentionDeadlineDays" value="365"/>
-		
+
 		<property name="locales">
 			<list>
 				<value>et_ee</value>
@@ -35,6 +35,9 @@
 		<property name="xteeInstitution" value="70000007" />
 		<property name="xteeSecurityServer" value="http://10.0.1.1/cgi-bin/consumer_proxy" />
 		<property name="xteeIdCode" value="00000000000" />
+
+        <!-- Kinnitamata digiallkirjade säilitustähtaeg sekundites -->
+        <property name="unfinishedSignatureLifetimeSeconds" value="300"/>
 	</bean>
 
 	<bean id="monitorConfiguration" class="ee.adit.util.MonitorConfiguration">
@@ -53,5 +56,5 @@
 		<property name="errorInterval" value="60000" />
 		<property name="errorLevel" value="FATAL" />
 	</bean>
-	
+
 </beans>
