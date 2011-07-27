@@ -35,8 +35,6 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
-import dvk.api.container.v2.Saaja;
-import dvk.api.ml.PojoMessage;
 import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.DocumentFile;
 import ee.adit.dao.pojo.DocumentSharing;
@@ -1012,6 +1010,7 @@ public class DocumentDAO extends HibernateDaoSupport {
                     documentFile.setFileName(attachmentFile.getName());
                     documentFile.setFileSizeBytes(length);
                     documentFile.setDocument(document);
+                    documentFile.setLastModifiedDate(new Date());
                     document.getDocumentFiles().add(documentFile);
                 }
             }

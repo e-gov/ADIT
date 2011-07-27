@@ -1,6 +1,7 @@
 package ee.adit.test.service;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Hashtable;
 
 import javax.activation.FileTypeMap;
@@ -8,6 +9,7 @@ import javax.activation.FileTypeMap;
 import ee.adit.dao.pojo.DocumentFile;
 import ee.adit.pojo.ArrayOfFileType;
 import ee.adit.service.DocumentService;
+import ee.adit.util.Configuration;
 import ee.adit.util.StartEndOffsetPair;
 import junit.framework.TestCase;
 
@@ -267,6 +269,136 @@ public class DocumentServiceTest extends TestCase {
 		fileOffsetsInDdoc.put("D0", offsets);
 
 		assertTrue(DocumentService.isNecessaryToRemoveFileContentsAfterSigning(file, fileOffsetsInDdoc));
+	}
+
+	public void testResolveFileTypeId_TypeNameNull_ExpectDocumentFile() {
+		assertEquals(DocumentService.FILETYPE_DOCUMENT_FILE, DocumentService.resolveFileTypeId(null));
+	}
+
+	public void testResolveFileTypeId_TypeNameEmpty_ExpectDocumentFile() {
+		assertEquals(DocumentService.FILETYPE_DOCUMENT_FILE, DocumentService.resolveFileTypeId(""));
+	}
+
+	public void testResolveFileTypeId_TypeNameUnknown_ExpectDocumentFile() {
+		assertEquals(DocumentService.FILETYPE_DOCUMENT_FILE, DocumentService.resolveFileTypeId("random type name"));
+	}
+
+	public void testResolveFileTypeId_TypeNameDocFile_ExpectDocumentFile() {
+		assertEquals(DocumentService.FILETYPE_DOCUMENT_FILE, DocumentService.resolveFileTypeId(DocumentService.FILETYPE_NAME_DOCUMENT_FILE));
+	}
+
+	public void testResolveFileTypeId_TypeNameDigiDoc_ExpectDigiDoc() {
+		assertEquals(DocumentService.FILETYPE_SIGNATURE_CONTAINER, DocumentService.resolveFileTypeId(DocumentService.FILETYPE_NAME_SIGNATURE_CONTAINER));
+	}
+
+	public void testResolveFileTypeId_TypeNameDigiDocDraft_ExpectDigiDocDraft() {
+		assertEquals(DocumentService.FILETYPE_SIGNATURE_CONTAINER_DRAFT, DocumentService.resolveFileTypeId(DocumentService.FILETYPE_NAME_SIGNATURE_CONTAINER_DRAFT));
+	}
+
+	public void testResolveFileTypeId_TypeNameZipArchive_ExpectZipArchive() {
+		assertEquals(DocumentService.FILETYPE_ZIP_ARCHIVE, DocumentService.resolveFileTypeId(DocumentService.FILETYPE_NAME_ZIP_ARCHIVE));
+	}
+
+	public void testIsSignatureContainerDraftExpired_LifetimeNotSetInConf_ExpectFalse() {
+		Configuration conf = new Configuration();
+		conf.setUnfinishedSignatureLifetimeSeconds(null);
+
+		DocumentService svc = new DocumentService();
+		svc.setConfiguration(conf);
+
+		Calendar cal = Calendar.getInstance();
+		cal.set(1970, Calendar.JANUARY, 1);
+
+		DocumentFile containerDraft = new DocumentFile();
+		containerDraft.setLastModifiedDate(cal.getTime());
+		containerDraft.setDocumentFileTypeId(DocumentService.FILETYPE_SIGNATURE_CONTAINER_DRAFT);
+
+		assertFalse(svc.isSignatureContainerDraftExpired(containerDraft));
+	}
+
+	public void testIsSignatureContainerDraftExpired_LifetimeZeroSetInConf_ExpectFalse() {
+		Configuration conf = new Configuration();
+		conf.setUnfinishedSignatureLifetimeSeconds(0L);
+
+		DocumentService svc = new DocumentService();
+		svc.setConfiguration(conf);
+
+		Calendar cal = Calendar.getInstance();
+		cal.set(1970, Calendar.JANUARY, 1);
+
+		DocumentFile containerDraft = new DocumentFile();
+		containerDraft.setLastModifiedDate(cal.getTime());
+		containerDraft.setDocumentFileTypeId(DocumentService.FILETYPE_SIGNATURE_CONTAINER_DRAFT);
+
+		assertFalse(svc.isSignatureContainerDraftExpired(containerDraft));
+	}
+
+	public void testIsSignatureContainerDraftExpired_LastModifiedInDistantPast_ExpectTrue() {
+		Configuration conf = new Configuration();
+		conf.setUnfinishedSignatureLifetimeSeconds(120L);
+
+		DocumentService svc = new DocumentService();
+		svc.setConfiguration(conf);
+
+		Calendar cal = Calendar.getInstance();
+		cal.set(1970, Calendar.JANUARY, 1);
+
+		DocumentFile containerDraft = new DocumentFile();
+		containerDraft.setLastModifiedDate(cal.getTime());
+		containerDraft.setDocumentFileTypeId(DocumentService.FILETYPE_SIGNATURE_CONTAINER_DRAFT);
+
+		assertTrue(svc.isSignatureContainerDraftExpired(containerDraft));
+	}
+
+	public void testIsSignatureContainerDraftExpired_LastModifiedLessThanLifetimeAgo_ExpectFalse() {
+		Configuration conf = new Configuration();
+		conf.setUnfinishedSignatureLifetimeSeconds(120L);
+
+		DocumentService svc = new DocumentService();
+		svc.setConfiguration(conf);
+
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.SECOND, -10);
+
+		DocumentFile containerDraft = new DocumentFile();
+		containerDraft.setLastModifiedDate(cal.getTime());
+		containerDraft.setDocumentFileTypeId(DocumentService.FILETYPE_SIGNATURE_CONTAINER_DRAFT);
+
+		assertFalse(svc.isSignatureContainerDraftExpired(containerDraft));
+	}
+
+	public void testIsSignatureContainerDraftExpired_LastModifiedMoreThanLifetimeAgo_ExpectTrue() {
+		Configuration conf = new Configuration();
+		conf.setUnfinishedSignatureLifetimeSeconds(120L);
+
+		DocumentService svc = new DocumentService();
+		svc.setConfiguration(conf);
+
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.SECOND, -150);
+
+		DocumentFile containerDraft = new DocumentFile();
+		containerDraft.setLastModifiedDate(cal.getTime());
+		containerDraft.setDocumentFileTypeId(DocumentService.FILETYPE_SIGNATURE_CONTAINER_DRAFT);
+
+		assertTrue(svc.isSignatureContainerDraftExpired(containerDraft));
+	}
+
+	public void testIsSignatureContainerDraftExpired_FileNotContainerDraft_ExpectFalse() {
+		Configuration conf = new Configuration();
+		conf.setUnfinishedSignatureLifetimeSeconds(120L);
+
+		DocumentService svc = new DocumentService();
+		svc.setConfiguration(conf);
+
+		Calendar cal = Calendar.getInstance();
+		cal.set(1970, Calendar.JANUARY, 1);
+
+		DocumentFile containerDraft = new DocumentFile();
+		containerDraft.setLastModifiedDate(cal.getTime());
+		containerDraft.setDocumentFileTypeId(DocumentService.FILETYPE_SIGNATURE_CONTAINER);
+
+		assertFalse(svc.isSignatureContainerDraftExpired(containerDraft));
 	}
 }
 

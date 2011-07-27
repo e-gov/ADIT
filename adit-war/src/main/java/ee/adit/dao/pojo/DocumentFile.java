@@ -3,6 +3,7 @@ package ee.adit.dao.pojo;
 // Generated 21.06.2010 14:02:03 by Hibernate Tools 3.2.4.GA
 
 import java.sql.Blob;
+import java.util.Date;
 
 import ee.adit.service.DocumentService;
 import ee.adit.util.Util;
@@ -26,6 +27,7 @@ public class DocumentFile implements java.io.Serializable {
     private Long ddocDataFileStartOffset;
     private Long ddocDataFileEndOffset;
     private Boolean fileDataInDdoc;
+    private Date lastModifiedDate = new Date();
 
     public DocumentFile() {
     }
@@ -38,7 +40,8 @@ public class DocumentFile implements java.io.Serializable {
 
     public DocumentFile(long id, Document document, String fileName, String contentType, String description,
             Blob fileData, Long fileSizeBytes, Boolean deleted, long documentFileTypeId, String ddocDataFileId,
-            Long ddocDataFileStartOffset, Long ddocDataFileEndOffset, Boolean fileDataInDdoc) {
+            Long ddocDataFileStartOffset, Long ddocDataFileEndOffset, Boolean fileDataInDdoc,
+            Date lastModifiedDate) {
         this.id = id;
         this.document = document;
         this.fileName = fileName;
@@ -52,6 +55,7 @@ public class DocumentFile implements java.io.Serializable {
         this.ddocDataFileStartOffset = ddocDataFileStartOffset;
         this.ddocDataFileEndOffset = ddocDataFileEndOffset;
         this.fileDataInDdoc = fileDataInDdoc;
+        this.lastModifiedDate = lastModifiedDate;
     }
 
     public long getId() {
@@ -83,13 +87,13 @@ public class DocumentFile implements java.io.Serializable {
         if (Util.isNullOrEmpty(this.contentType)) {
         	this.contentType = DocumentService.UNKNOWN_MIME_TYPE;
         }
-    	
+
     	return this.contentType;
     }
 
     public void setContentType(String contentType) {
         this.contentType = contentType;
-        
+
         // Prevent content type from being empty
         if (Util.isNullOrEmpty(this.contentType)) {
         	this.contentType = DocumentService.UNKNOWN_MIME_TYPE;
@@ -166,5 +170,13 @@ public class DocumentFile implements java.io.Serializable {
 
 	public void setFileDataInDdoc(Boolean fileDataInDdoc) {
 		this.fileDataInDdoc = fileDataInDdoc;
+	}
+
+	public Date getLastModifiedDate() {
+		return lastModifiedDate;
+	}
+
+	public void setLastModifiedDate(Date lastModifiedDate) {
+		this.lastModifiedDate = lastModifiedDate;
 	}
 }

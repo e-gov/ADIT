@@ -13,7 +13,7 @@ import ee.adit.exception.AditInternalException;
 /**
  * Usertype data access class. Provides methods for retrieving and manipulating
  * usertype log data.
- * 
+ *
  * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
  * @author Jaak Lember, Interinx, jaak@interinx.com
  */
@@ -23,7 +23,7 @@ public class UsertypeDAO extends HibernateDaoSupport {
 
     /**
      * Fetch usertype by short name.
-     * 
+     *
      * @param userTypeShortName usertype short name
      * @return usertype
      */
@@ -33,7 +33,7 @@ public class UsertypeDAO extends HibernateDaoSupport {
 
     /**
      * Fetch usertype for user.
-     * 
+     *
      * @param user user
      * @return usertype
      */
@@ -60,7 +60,7 @@ public class UsertypeDAO extends HibernateDaoSupport {
 
     /**
      * Fetch usertype list.
-     * 
+     *
      * @return list of all usertypes
      */
     @SuppressWarnings("unchecked")
@@ -72,7 +72,7 @@ public class UsertypeDAO extends HibernateDaoSupport {
             return session.createQuery(sql).list();
         } finally {
             if (session != null) {
-                session.clear();
+                session.close();
             }
         }
     }

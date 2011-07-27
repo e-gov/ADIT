@@ -148,7 +148,8 @@ CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_FILE
     file_data_in_ddoc            NUMBER(1,0) NULL,                  /* Shows whether or not file contents should be aquired from signature container */
     ddoc_datafile_id             VARCHAR2(5) NULL,                  /* ID of corresponding DataFile in signature container */
     ddoc_datafile_start_offset   NUMBER(18) NULL,                   /* First character index of current file in corresponding signature container */
-    ddoc_datafile_end_offset     NUMBER(18) NULL                    /* Last character index of current file in corresponding signature container */
+    ddoc_datafile_end_offset     NUMBER(18) NULL,                   /* Last character index of current file in corresponding signature container */
+    last_modified_date           DATE                               /* Date and time of last modification */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
 COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_FILE                               IS 'Document files';
@@ -165,6 +166,7 @@ COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.file_data_in_ddoc            IS '
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.ddoc_datafile_id             IS 'ID of corresponding DataFile in signature container';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.ddoc_datafile_start_offset   IS 'First character index of current file in corresponding signature container';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.ddoc_datafile_end_offset     IS 'Last character index of current file in corresponding signature container';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.last_modified_date           IS 'Date and time of last modification';
 
 CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_HISTORY
 (

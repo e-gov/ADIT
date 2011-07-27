@@ -22,6 +22,7 @@ import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -1714,5 +1715,27 @@ public final class Util {
             }
         }
         return xroadRequestUser;
+    }
+
+    /**
+     * Calculates difference of two dates in milliseconds.
+     *
+     * @param earlierDate
+     * 		Earlier date
+     * @param laterDate
+     * 		Later date
+     * @return
+     * 		Difference of given dates in milliseconds
+     */
+    public static long getDateDiffInMilliseconds(Date earlierDate, Date laterDate) {
+    	if ((earlierDate == null) || (laterDate == null)) {
+    		return Long.MIN_VALUE;
+    	}
+
+    	Calendar earlierCal = Calendar.getInstance();
+    	Calendar laterCal = Calendar.getInstance();
+    	earlierCal.setTime(earlierDate);
+    	laterCal.setTime(laterDate);
+    	return laterCal.getTimeInMillis() - earlierCal.getTimeInMillis();
     }
 }

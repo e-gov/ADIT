@@ -46,6 +46,9 @@
         <property name="fileDataInDdoc" type="java.lang.Boolean">
             <column name="FILE_DATA_IN_DDOC" precision="1" scale="0" />
         </property>
+        <property name="lastModifiedDate" type="timestamp">
+            <column name="LAST_MODIFIED_DATE" length="7" />
+        </property>
     </class>
 	<sql-query name="DEFLATE_FILE" callable="true">
 		<return class="ee.adit.dao.pojo.DocumentFileDeflateResult">

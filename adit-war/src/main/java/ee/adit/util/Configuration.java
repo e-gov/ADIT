@@ -79,6 +79,11 @@ public class Configuration {
      * XTee user code.
      */
     private String xteeIdCode;
+    
+    /**
+     * Lifetime of digital signatures that have been prepared but not confirmed.
+     */
+    private Long unfinishedSignatureLifetimeSeconds;
 
     public List<String> getLocales() {
         return locales;
@@ -190,5 +195,14 @@ public class Configuration {
     public void setXteeIdCode(String xteeIdCode) {
         this.xteeIdCode = xteeIdCode;
     }
+
+	public Long getUnfinishedSignatureLifetimeSeconds() {
+		return unfinishedSignatureLifetimeSeconds;
+	}
+
+	public void setUnfinishedSignatureLifetimeSeconds(
+			Long unfinishedSignatureLifetimeSeconds) {
+		this.unfinishedSignatureLifetimeSeconds = unfinishedSignatureLifetimeSeconds;
+	}
 
 }
