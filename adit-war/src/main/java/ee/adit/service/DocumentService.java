@@ -3000,7 +3000,6 @@ public class DocumentService {
 	            this.getAditUserDAO().saveOrUpdate(user, true);
             }
         }
-
     }
 
     /**
@@ -3128,7 +3127,7 @@ public class DocumentService {
                     	// signing until the other person has completed his/her
                     	// signing process.
                     	long containerDraftRemainingLifetime = getContainerDraftRemainingLifetimeSeconds(signatureContainerDraft);
-                    	if (containerDraftRemainingLifetime > 0L) {
+                    	if (containerDraftRemainingLifetime <= 0L) {
                     		throw new AditCodedException("request.prepareSignature.documentIsBeingSignedByAnotherUser");
                     	} else {
 	                        AditCodedException aditCodedException = new AditCodedException("request.prepareSignature.documentIsBeingSignedByAnotherUser.withEstimate");
@@ -3164,7 +3163,7 @@ public class DocumentService {
 
 	                List<DocumentFile> filesList = new ArrayList<DocumentFile>(doc.getDocumentFiles());
 	                for (DocumentFile docFile : filesList) {
-	                    if ((docFile.getDeleted() == null) || !docFile.getDeleted()) {
+	                    if (isPossibleToSignFile(docFile)) {
 	                        String outputFileName = uniqueDir.getAbsolutePath() + File.separator + docFile.getFileName();
 
 	                        InputStream blobDataStream = null;
@@ -3190,7 +3189,7 @@ public class DocumentService {
 	                                }
 	                                blobDataStream = null;
 	                            } catch (Exception ex) {
-	                                logger.error("Exception: ", ex);
+	                                logger.error("Error closing BLOB data stream.", ex);
 	                            }
 
 	                            try {
@@ -3199,7 +3198,7 @@ public class DocumentService {
 	                                }
 	                                fileOutputStream = null;
 	                            } catch (Exception ex) {
-	                                logger.error("Exception: ", ex);
+	                                logger.error("Error closing file output stream.", ex);
 	                            }
 	                        }
 
@@ -3280,6 +3279,30 @@ public class DocumentService {
     }
 
     /**
+     * Detects if given file can be signed.
+     *
+     * @param file
+     * 		File to be checked
+     * @return
+     * 		{@code true} if given container can be signed
+     */
+    public boolean isPossibleToSignFile(DocumentFile file) {
+    	if (file == null) {
+    		return false;
+    	}
+
+    	if (file.getDocumentFileTypeId() != FILETYPE_DOCUMENT_FILE) {
+    		return false;
+    	}
+
+    	if ((file.getDeleted() != null) && file.getDeleted()) {
+    		return false;
+    	}
+
+    	return true;
+    }
+
+    /**
      * Returns remaining lifetime of given signature container draft in seconds.
      *
      * @param containerDraft
@@ -3307,7 +3330,7 @@ public class DocumentService {
      * @param containerDraft
      * 		Signature container draft
      * @return
-     * 		{@code true} if given container ios expired
+     * 		{@code true} if given container is expired
      */
     public boolean isSignatureContainerDraftExpired(DocumentFile containerDraft) {
     	long containerAgeInSeconds = Util.getDateDiffInMilliseconds(containerDraft.getLastModifiedDate(), new Date()) / 1000L;
