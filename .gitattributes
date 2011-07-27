@@ -167,6 +167,7 @@ adit-war/sql/testdata/create_tablespaces.sql -text
 adit-war/sql/testdata/remote_application.dml.sql -text
 adit-war/sql/updates/1_0_17/update_1_0_17.sql -text
 adit-war/sql/updates/1_0_23/update_1_0_23.sql -text
+adit-war/sql/updates/1_0_29/dvk_client_trigger_fix.sql -text
 adit-war/sql/updates/1_0_29/update_1_0_29.sql -text
 adit-war/sql/updates/1_0_8/update_1_0_8.sql -text
 adit-war/sql/usertype.dml.sql -text
