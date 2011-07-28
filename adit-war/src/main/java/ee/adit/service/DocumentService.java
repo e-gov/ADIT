@@ -3130,9 +3130,18 @@ public class DocumentService {
                     	if (containerDraftRemainingLifetime <= 0L) {
                     		throw new AditCodedException("request.prepareSignature.documentIsBeingSignedByAnotherUser");
                     	} else {
-	                        AditCodedException aditCodedException = new AditCodedException("request.prepareSignature.documentIsBeingSignedByAnotherUser.withEstimate");
-	                        aditCodedException.setParameters(new Object[] {containerDraftRemainingLifetime});
-	                        throw aditCodedException;
+	                        if (containerDraftRemainingLifetime > 60) {
+	                    		long minutes = (long) Math.floor((double) containerDraftRemainingLifetime / 60);
+	                    		long seconds = (containerDraftRemainingLifetime - (minutes * 60L));
+
+	                        	AditCodedException aditCodedException = new AditCodedException("request.prepareSignature.documentIsBeingSignedByAnotherUser.withEstimate");
+		                        aditCodedException.setParameters(new Object[] {minutes, seconds});
+		                        throw aditCodedException;
+	                        } else {
+	                    		AditCodedException aditCodedException = new AditCodedException("request.prepareSignature.documentIsBeingSignedByAnotherUser.withEstimateSecondsOnly");
+		                        aditCodedException.setParameters(new Object[] {containerDraftRemainingLifetime});
+		                        throw aditCodedException;
+	                        }
                     	}
                     }
                 }
