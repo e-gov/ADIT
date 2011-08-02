@@ -993,8 +993,8 @@ public class DocumentService {
 	        session = this.getDocumentDAO().getSessionFactory().openSession();
 
 	        Query query = session.createQuery(sqlQuery);
-	        //List<Document> documents = query.list();
-	        Set<Document> documents = new HashSet<Document>(query.list());
+	        List<Document> documents = query.list();
+	        //Set<Document> documents = new HashSet<Document>(query.list());
 
 	        logger.info(documents.size() + " documents need to be sent to DVK.");
 
@@ -1181,7 +1181,7 @@ public class DocumentService {
 
 	                try {
 	                    // Select the record for update
-	                    PojoMessage dvkMessageToUpdate = (PojoMessage) dvkSession2.load(PojoMessage.class, dvkMessageID, LockOptions.UPGRADE);
+	                    PojoMessage dvkMessageToUpdate = (PojoMessage) dvkSession2.load(PojoMessage.class, dvkMessageID, LockMode.UPGRADE);
 
 	                    // Write the DVK Container to temporary file
 	                    String temporaryFile = this.getConfiguration().getTempDir() + File.separator
