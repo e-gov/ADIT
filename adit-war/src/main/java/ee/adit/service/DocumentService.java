@@ -1164,8 +1164,7 @@ public class DocumentService {
 	                    }
 
 	                    logger.debug("DVK Message saved to client database. GUID: " + dvkMessage.getDhlGuid());
-	                    //dvkTransaction.commit();
-
+	                    dvkTransaction.commit();
 	                } catch (Exception e) {
 	                    dvkTransaction.rollback();
 	                    throw new DataRetrievalFailureException("Error while adding message to DVK Client database: ", e);
@@ -1176,6 +1175,7 @@ public class DocumentService {
 	                }
 
 	                // Update CLOB
+	                /*
 	                Session dvkSession2 = sessionFactory.openSession();
 	                Transaction dvkTransaction2 = dvkSession2.beginTransaction();
 
@@ -1258,6 +1258,7 @@ public class DocumentService {
 	                        dvkSession2.close();
 	                    }
 	                }
+	                */
 	            } catch (Exception e) {
 	                throw new AditInternalException("Error while sending documents to DVK Client database: ", e);
 	            }
