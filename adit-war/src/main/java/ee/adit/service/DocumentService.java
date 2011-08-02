@@ -29,6 +29,7 @@ import java.util.UUID;
 
 import org.apache.fop.apps.MimeConstants;
 import org.apache.log4j.Logger;
+import org.hibernate.FlushMode;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.LockMode;
@@ -1119,6 +1120,7 @@ public class DocumentService {
 	                SessionFactory sessionFactory = this.getDvkDAO().getSessionFactory();
 	                Long dvkMessageID = null;
 	                Session dvkSession = sessionFactory.openSession();
+	                dvkSession.setFlushMode(FlushMode.COMMIT);
 	                Transaction dvkTransaction = dvkSession.beginTransaction();
 
 	                logger.info("DVK session flush mode: " + dvkSession.getFlushMode().toString());
@@ -1151,7 +1153,7 @@ public class DocumentService {
 	                    }
 
 	                    // Insert data as stream
-	                    Clob clob = Hibernate.createClob(" ");
+	                    Clob clob = Hibernate.createClob(" ", dvkSession);
 	                    dvkMessage.setData(clob);
 
 	                    logger.debug("Saving document to DVK database");
@@ -1178,6 +1180,7 @@ public class DocumentService {
 
 	                // Update CLOB
 	                Session dvkSession2 = sessionFactory.openSession();
+	                dvkSession2.setFlushMode(FlushMode.COMMIT);
 	                Transaction dvkTransaction2 = dvkSession2.beginTransaction();
 
 	                try {
@@ -1232,6 +1235,7 @@ public class DocumentService {
 
 	                    // Remove the document with empty clob from the database
 	                    Session dvkSession3 = sessionFactory.openSession();
+	                    dvkSession3.setFlushMode(FlushMode.COMMIT);
 	                    Transaction dvkTransaction3 = dvkSession3.beginTransaction();
 	                    try {
 	                        logger.debug("Starting to delete document from DVK Client database: " + dvkMessageID);
