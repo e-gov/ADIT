@@ -271,6 +271,23 @@ public class DocumentServiceTest extends TestCase {
 		assertTrue(DocumentService.isNecessaryToRemoveFileContentsAfterSigning(file, fileOffsetsInDdoc));
 	}
 
+	public void testIsNecessaryToRemoveFileContentsAfterSigning_OffsetsAlreadySet_ExpectFalse() {
+		DocumentFile file = new DocumentFile();
+		file.setDocumentFileTypeId(DocumentService.FILETYPE_DOCUMENT_FILE);
+		file.setDdocDataFileId("D0");
+		file.setDeleted(false);
+		file.setDdocDataFileStartOffset(100L);
+		file.setDdocDataFileEndOffset(200L);
+
+		Hashtable<String, StartEndOffsetPair> fileOffsetsInDdoc = new Hashtable<String, StartEndOffsetPair>();
+		StartEndOffsetPair offsets = new StartEndOffsetPair();
+		offsets.setStart(100);
+		offsets.setEnd(200);
+		fileOffsetsInDdoc.put("D0", offsets);
+
+		assertFalse(DocumentService.isNecessaryToRemoveFileContentsAfterSigning(file, fileOffsetsInDdoc));
+	}
+
 	public void testResolveFileTypeId_TypeNameNull_ExpectDocumentFile() {
 		assertEquals(DocumentService.FILETYPE_DOCUMENT_FILE, DocumentService.resolveFileTypeId(null));
 	}

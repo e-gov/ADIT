@@ -3634,6 +3634,13 @@ public class DocumentService {
 			return false;
 		}
 
+		// File contents should not be removed if file data offsets
+		// are already set (indicating that contents have already been removed).
+		if (((file.getDdocDataFileStartOffset() != null) && (file.getDdocDataFileStartOffset() > 0L))
+			|| ((file.getDdocDataFileEndOffset() != null) && (file.getDdocDataFileEndOffset() > 0L))) {
+			return false;
+		}
+
 		// It is safe to remove file contents if we know file data offsets
 		// in DigiDoc container.
 		if (!fileOffsetsInDdoc.containsKey(file.getDdocDataFileId())) {
@@ -3900,7 +3907,7 @@ public class DocumentService {
     private DocumentFile findSignatureContainer(Document doc) {
     	DocumentFile result = null;
 
-    	if ((doc != null) && (doc.getSigned() != null) && doc.getSigned() && (doc.getDocumentFiles() != null)) {
+    	if ((doc != null) && (doc.getDocumentFiles() != null)) {
     		for (DocumentFile file : doc.getDocumentFiles()) {
     			if (file.getDocumentFileTypeId() == FILETYPE_SIGNATURE_CONTAINER) {
     				result = file;
