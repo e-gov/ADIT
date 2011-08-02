@@ -9,7 +9,7 @@
 						http://www.springframework.org/schema/context/spring-context-2.5.xsd
 						http://www.springframework.org/schema/tx
 						http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
-		
+
 	<bean id="aditDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
 		<property name="jndiName" value="jdbc/adit" />
 	</bean>
@@ -78,8 +78,8 @@
 				<prop key="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</prop>
 				<prop key="hibernate.cache.provider_class">org.hibernate.cache.NoCacheProvider</prop>
 				<prop key="hibernate.current_session_context_class">org.hibernate.context.JTASessionContext</prop>
-				<prop key="hibernate.transaction.manager_lookup_class">org.hibernate.transaction.WeblogicTransactionManagerLookup
-				</prop>
+				<prop key="hibernate.transaction.manager_lookup_class">org.hibernate.transaction.WeblogicTransactionManagerLookup</prop>
+                <prop key=”hibernate.connection.autocommit”>false</prop>
 			</props>
 		</property>
 	</bean>
@@ -93,5 +93,5 @@
 		annotations
 	-->
 	<tx:annotation-driven transaction-manager="transactionManager" />
-						
+
 </beans>
