@@ -1164,7 +1164,7 @@ public class DocumentService {
 	                    }
 
 	                    logger.debug("DVK Message saved to client database. GUID: " + dvkMessage.getDhlGuid());
-	                    dvkTransaction.commit();
+	                    //dvkTransaction.commit();
 
 	                } catch (Exception e) {
 	                    dvkTransaction.rollback();
