@@ -20,6 +20,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
@@ -992,9 +993,10 @@ public class DocumentService {
 	        session = this.getDocumentDAO().getSessionFactory().openSession();
 
 	        Query query = session.createQuery(sqlQuery);
-	        List<Document> documents = query.list();
+	        //List<Document> documents = query.list();
+	        Set<Document> documents = new HashSet<Document>(query.list());
 
-	        logger.debug("Documents fetched successfully (" + documents.size() + ")");
+	        logger.info(documents.size() + " documents need to be sent to DVK.");
 
 	        Iterator<Document> i = documents.iterator();
 
@@ -1050,8 +1052,13 @@ public class DocumentService {
 
 	                        Saaja saaja = new Saaja();
 	                        saaja.setRegNr(recipient.getDvkOrgCode());
-	                        saaja.setIsikukood(recipient.getUserCode());
-	                        saaja.setNimi(recipient.getFullName());
+
+	                        if ("person".equalsIgnoreCase(recipient.getUsertype().getShortName())) {
+	                        	saaja.setNimi(recipient.getFullName());
+	                        	saaja.setIsikukood(recipient.getUserCode());
+	                        } else {
+	                        	saaja.setAsutuseNimi(recipient.getFullName());
+	                        }
 
 	                        if (saajad.isEmpty()) {
 	                        	firstRecipient = saaja;
