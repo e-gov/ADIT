@@ -1121,6 +1121,8 @@ public class DocumentService {
 	                Session dvkSession = sessionFactory.openSession();
 	                Transaction dvkTransaction = dvkSession.beginTransaction();
 
+	                logger.info("DVK session flush mode: " + dvkSession.getFlushMode().toString());
+
 	                try {
 	                    PojoMessage dvkMessage = new PojoMessage();
 	                    dvkMessage.setIsIncoming(false);
@@ -1149,7 +1151,7 @@ public class DocumentService {
 	                    }
 
 	                    // Insert data as stream
-	                    Clob clob = Hibernate.createClob(" ", dvkSession);
+	                    Clob clob = Hibernate.createClob(" ");
 	                    dvkMessage.setData(clob);
 
 	                    logger.debug("Saving document to DVK database");
@@ -1175,7 +1177,6 @@ public class DocumentService {
 	                }
 
 	                // Update CLOB
-
 	                Session dvkSession2 = sessionFactory.openSession();
 	                Transaction dvkTransaction2 = dvkSession2.beginTransaction();
 
