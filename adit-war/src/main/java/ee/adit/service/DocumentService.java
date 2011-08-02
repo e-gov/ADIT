@@ -1175,7 +1175,7 @@ public class DocumentService {
 	                }
 
 	                // Update CLOB
-	                /*
+
 	                Session dvkSession2 = sessionFactory.openSession();
 	                Transaction dvkTransaction2 = dvkSession2.beginTransaction();
 
@@ -1258,7 +1258,6 @@ public class DocumentService {
 	                        dvkSession2.close();
 	                    }
 	                }
-	                */
 	            } catch (Exception e) {
 	                throw new AditInternalException("Error while sending documents to DVK Client database: ", e);
 	            }
