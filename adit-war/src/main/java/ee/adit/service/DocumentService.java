@@ -1181,7 +1181,7 @@ public class DocumentService {
 
 	                try {
 	                    // Select the record for update
-	                    PojoMessage dvkMessageToUpdate = (PojoMessage) dvkSession2.load(PojoMessage.class, dvkMessageID, LockMode.UPGRADE);
+	                    PojoMessage dvkMessageToUpdate = (PojoMessage) dvkSession2.load(PojoMessage.class, dvkMessageID, LockOptions.UPGRADE);
 
 	                    // Write the DVK Container to temporary file
 	                    String temporaryFile = this.getConfiguration().getTempDir() + File.separator
