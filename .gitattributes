@@ -480,6 +480,7 @@ adit-war/src/main/resources/hbm/Notification.hbm.xml -text
 adit-war/src/main/resources/hbm/NotificationType.hbm.xml -text
 adit-war/src/main/resources/hbm/RemoteApplication.hbm.xml -text
 adit-war/src/main/resources/hbm/RequestLog.hbm.xml -text
+adit-war/src/main/resources/hbm/SetJobRunningStatusResult.hbm.xml -text
 adit-war/src/main/resources/hbm/Signature.hbm.xml -text
 adit-war/src/main/resources/hbm/UserNotification.hbm.xml -text
 adit-war/src/main/resources/hbm/Usertype.hbm.xml -text
