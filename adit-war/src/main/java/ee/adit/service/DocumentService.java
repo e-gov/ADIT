@@ -1411,11 +1411,11 @@ public class DocumentService {
 		                        	logger.warn(ex.getMessage(), ex);
 		                        }
 
-		                        try {
+		                        /*try {
 		                        	(new File(base64EncodedFile)).delete();
 		                        } catch (Exception ex) {
 		                        	logger.warn(ex.getMessage(), ex);
-		                        }
+		                        }*/
 		                    } catch (Exception e) {
 		                        throw new HibernateException("Unable to create temporary file: ", e);
 		                    }
