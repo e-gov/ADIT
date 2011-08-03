@@ -272,7 +272,7 @@ public final class Util {
         logger.debug("Encoding zip file to Base64: Output file: " + zipOutFileName);
         in = new FileInputStream(zipOutFileName);
         FileOutputStream b64out = new FileOutputStream(resultFileName, false);
-        Base64OutputStream b64outStream = new Base64OutputStream(b64out);
+        Base64OutputStream b64outStream = new Base64OutputStream(b64out, true, 64, "\n".getBytes("UTF-8"));
         byte[] b = new byte[66000];
         while ((len = in.read(b)) > 0) {
             b64outStream.write(b, 0, len);
@@ -356,7 +356,7 @@ public final class Util {
         logger.debug("Encoding file to Base64: Output file: " + inputFile);
         FileInputStream in = new FileInputStream(inputFile);
         FileOutputStream b64out = new FileOutputStream(resultFileName, false);
-        Base64OutputStream b64outStream = new Base64OutputStream(b64out);
+        Base64OutputStream b64outStream = new Base64OutputStream(b64out, true, 64, "\n".getBytes("UTF-8"));
         byte[] b = new byte[66000];
         int len = 0;
         while ((len = in.read(b)) > 0) {
