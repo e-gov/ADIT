@@ -977,8 +977,7 @@ public class DocumentService {
      *
      * @return number of documents sent to DVK
      */
-    @SuppressWarnings("unchecked")
-    public int sendDocumentsToDVK() {
+    public int sendDocumentsToDVKWithContainerVersion2() {
         int result = 0;
         Session session = null;
 
@@ -1114,6 +1113,324 @@ public class DocumentService {
 	                failideKonteiner.setKokku(count);
 	                failideKonteiner.setFailid(dvkFiles);
 	                dvkContainer.setFailideKonteiner(failideKonteiner);
+
+	                // Save document to DVK Client database
+
+	                SessionFactory sessionFactory = this.getDvkDAO().getSessionFactory();
+	                Long dvkMessageID = null;
+	                Session dvkSession = sessionFactory.openSession();
+	                dvkSession.setFlushMode(FlushMode.COMMIT);
+	                Transaction dvkTransaction = dvkSession.beginTransaction();
+
+	                logger.info("DVK session flush mode: " + dvkSession.getFlushMode().toString());
+
+	                try {
+	                    PojoMessage dvkMessage = new PojoMessage();
+	                    dvkMessage.setIsIncoming(false);
+	                    dvkMessage.setDhlFolderName("/");
+	                    dvkMessage.setLocalItemId(document.getId());
+	                    dvkMessage.setTitle(document.getTitle());
+	                    dvkMessage.setDhlGuid(document.getGuid());
+	                    dvkMessage.setSendingStatusId(DocumentService.DVK_STATUS_WAITING);
+
+	                    // Get sender org code
+	                    String documentOwnerCode = document.getCreatorCode();
+	                    AditUser documentOwner = (AditUser) session.get(AditUser.class, documentOwnerCode);
+	                    dvkMessage.setSenderOrgCode(documentOwner.getDvkOrgCode());
+	                    dvkMessage.setSenderPersonCode(documentOwner.getUserCode());
+	                    dvkMessage.setSenderName(documentOwner.getFullName());
+
+	                    // Add first recipient data
+	                    if (firstRecipient != null) {
+	                    	dvkMessage.setRecipientOrgCode(firstRecipient.getRegNr());
+	                    	dvkMessage.setRecipientPersonCode(firstRecipient.getIsikukood());
+	                    	if (Util.isNullOrEmpty(firstRecipient.getIsikukood())) {
+	                    		dvkMessage.setRecipientOrgName(firstRecipient.getNimi());
+	                    	} else {
+	                    		dvkMessage.setRecipientName(firstRecipient.getNimi());
+	                    	}
+	                    }
+
+	                    // Insert data as stream
+	                    Clob clob = Hibernate.createClob(" ", dvkSession);
+	                    dvkMessage.setData(clob);
+
+	                    logger.debug("Saving document to DVK database");
+	                    dvkMessageID = (Long) dvkSession.save(dvkMessage);
+
+	                    if (dvkMessageID == null || dvkMessageID.longValue() == 0) {
+	                        logger.error("Error while saving outgoing message to DVK database - no ID returned by save method.");
+	                        throw new DataRetrievalFailureException(
+	                                "Error while saving outgoing message to DVK database - no ID returned by save method.");
+	                    } else {
+	                        logger.info("Outgoing message saved to DVK database. ID: " + dvkMessageID);
+	                    }
+
+	                    logger.debug("DVK Message saved to client database. GUID: " + dvkMessage.getDhlGuid());
+	                    dvkTransaction.commit();
+	                } catch (Exception e) {
+	                    dvkTransaction.rollback();
+	                    throw new DataRetrievalFailureException("Error while adding message to DVK Client database: ", e);
+	                } finally {
+	                    if (dvkSession != null) {
+	                        dvkSession.close();
+	                    }
+	                }
+
+	                // Update CLOB
+	                Session dvkSession2 = sessionFactory.openSession();
+	                dvkSession2.setFlushMode(FlushMode.COMMIT);
+	                Transaction dvkTransaction2 = dvkSession2.beginTransaction();
+
+	                try {
+	                    // Select the record for update
+	                    PojoMessage dvkMessageToUpdate = (PojoMessage) dvkSession2.load(PojoMessage.class, dvkMessageID, LockOptions.UPGRADE);
+
+	                    // Write the DVK Container to temporary file
+	                    String temporaryFile = this.getConfiguration().getTempDir() + File.separator
+	                            + Util.generateRandomFileName();
+	                    dvkContainer.save2File(temporaryFile);
+
+	                    // Write the temporary file to the database
+	                    InputStream is = new FileInputStream(temporaryFile);
+	                    Writer clobWriter = dvkMessageToUpdate.getData().setCharacterStream(1);
+
+	                    byte[] buf = new byte[1024];
+	                    int len;
+	                    while ((len = is.read(buf)) > 0) {
+	                        clobWriter.write(new String(buf, 0, len, "UTF-8"));
+	                    }
+	                    is.close();
+	                    clobWriter.close();
+
+	                    // Commit to DVK database
+	                    dvkTransaction2.commit();
+
+	                    // Save the document DVK_ID to ADIT database
+	                    document.setDvkId(dvkMessageID);
+	                    session.saveOrUpdate(document);
+
+	                    logger.debug("Starting to update document sharings");
+	                    Transaction aditTransaction = session.beginTransaction();
+	                    // Update document sharings status
+	                    Iterator<DocumentSharing> documentSharingUpdateIterator = document.getDocumentSharings().iterator();
+	                    while (documentSharingUpdateIterator.hasNext()) {
+	                        DocumentSharing documentSharing = documentSharingUpdateIterator.next();
+	                        if (DocumentService.SHARINGTYPE_SEND_DVK.equalsIgnoreCase(documentSharing
+	                                .getDocumentSharingType())) {
+	                            documentSharing.setDocumentDvkStatus(DVK_STATUS_SENDING);
+	                            // documentSharing.setDvkSendDate(new Date());
+	                            session.saveOrUpdate(documentSharing);
+	                            logger.debug("DocumentSharing status updated to: '" + DVK_STATUS_SENDING + "'.");
+	                        }
+	                    }
+
+	                    aditTransaction.commit();
+
+	                    result++;
+
+	                } catch (Exception e) {
+	                    dvkTransaction2.rollback();
+
+	                    // Remove the document with empty clob from the database
+	                    Session dvkSession3 = sessionFactory.openSession();
+	                    dvkSession3.setFlushMode(FlushMode.COMMIT);
+	                    Transaction dvkTransaction3 = dvkSession3.beginTransaction();
+	                    try {
+	                        logger.debug("Starting to delete document from DVK Client database: " + dvkMessageID);
+	                        PojoMessage dvkMessageToDelete = (PojoMessage) dvkSession3
+	                                .load(PojoMessage.class, dvkMessageID);
+	                        if (dvkMessageToDelete == null) {
+	                            logger.warn("DVK message to delete is not initialized.");
+	                        }
+	                        dvkSession3.delete(dvkMessageToDelete);
+	                        dvkTransaction3.commit();
+	                        logger.info("Empty DVK document deleted from DVK Client database. ID: " + dvkMessageID);
+	                    } catch (Exception dvkException) {
+	                        dvkTransaction3.rollback();
+	                        logger.error("Error deleting document from DVK database: ", dvkException);
+	                    } finally {
+	                        if (dvkSession3 != null) {
+	                            dvkSession3.close();
+	                        }
+	                    }
+
+	                    throw new DataRetrievalFailureException(
+	                            "Error while adding message to DVK Client database (CLOB update): ", e);
+	                } finally {
+	                    if (dvkSession2 != null) {
+	                        dvkSession2.close();
+	                    }
+	                }
+	            } catch (Exception e) {
+	                throw new AditInternalException("Error while sending documents to DVK Client database: ", e);
+	            }
+	        }
+        } finally {
+	        if ((session != null) && session.isOpen()) {
+	            session.close();
+	        }
+        }
+
+        return result;
+    }
+
+    /**
+     * Fetches all the documents that are to be sent to DVK. The DVK documents
+     * are recognized by the following: <br />
+     * 1. The document has at least one DocumentSharing associated with it <br />
+     * 2. That DocumentSharing must have the "documentSharingType" equal to
+     * "send_dvk" <br />
+     * 3. That DocumentSharing must have the "documentDvkStatus" not initialized
+     * or set to "100"
+     *
+     * @return number of documents sent to DVK
+     */
+    public int sendDocumentsToDVK() {
+        int result = 0;
+        Session session = null;
+
+        try {
+	        final String sqlQuery = "select doc from Document doc, DocumentSharing docSharing where docSharing.documentSharingType = 'send_dvk' and (docSharing.documentDvkStatus is null or docSharing.documentDvkStatus = "
+	                + DocumentService.DVK_STATUS_MISSING + ") and docSharing.documentId = doc.id";
+
+	        final String tempDir = this.getConfiguration().getTempDir();
+
+	        logger.info("Starting to send documents to DVK. Using org.code '" + this.getConfiguration().getDvkOrgCode() + "'");
+
+	        logger.debug("Fetching documents for sending to DVK...");
+	        session = this.getDocumentDAO().getSessionFactory().openSession();
+
+	        Query query = session.createQuery(sqlQuery);
+	        List<Document> documents = query.list();
+
+	        logger.info(documents.size() + " documents need to be sent to DVK.");
+
+	        Iterator<Document> i = documents.iterator();
+
+	        while (i.hasNext()) {
+
+	            try {
+
+	                Document document = i.next();
+
+	                ContainerVer1 dvkContainer = new ContainerVer1();
+	                dvkContainer.setVersion(1);
+
+	                dvk.api.container.v1.Metainfo metainfo = new dvk.api.container.v1.Metainfo();
+
+	                dvk.api.container.v1.MetaManual metaManual = new dvk.api.container.v1.MetaManual();
+	                metaManual.setAutoriIsikukood(null);
+	                metaManual.setAutoriKontakt(null);
+	                metaManual.setAutoriNimi(null);
+	                metaManual.setAutoriOsakond(null);
+	                metaManual.setKoostajaDokumendityyp(document.getDocumentType());
+	                metaManual.setKoostajaDokumendinimi(document.getTitle());
+
+	                metainfo.setMetaManual(metaManual);
+	                dvkContainer.setMetainfo(metainfo);
+
+	                // Transport information
+	                dvk.api.container.v1.Transport transport = new dvk.api.container.v1.Transport();
+	                List<dvk.api.container.v1.Saaja> saajad = new ArrayList<dvk.api.container.v1.Saaja>();
+	                List<dvk.api.container.v1.Saatja> saatjad = new ArrayList<dvk.api.container.v1.Saatja>();
+	                dvk.api.container.v1.Saatja saatja = new dvk.api.container.v1.Saatja();
+	                saatja.setRegNr(Util.removeCountryPrefix(getConfiguration().getDvkOrgCode()));
+	                saatja.setIsikukood(Util.removeCountryPrefix(document.getCreatorCode()));
+	                saatjad.add(saatja);
+	                transport.setSaatjad(saatjad);
+
+	                Iterator<DocumentSharing> documentSharings = document.getDocumentSharings().iterator();
+
+	                dvk.api.container.v1.Saaja firstRecipient = null;
+	                while (documentSharings.hasNext()) {
+	                    DocumentSharing documentSharing = documentSharings.next();
+
+	                    if (DocumentService.SHARINGTYPE_SEND_DVK.equalsIgnoreCase(documentSharing.getDocumentSharingType())
+	                            && (DocumentService.DVK_STATUS_WAITING.equals(documentSharing.getDocumentDvkStatus())
+	                                    || DocumentService.DVK_STATUS_MISSING.equals(documentSharing.getDocumentDvkStatus()) || documentSharing
+	                                    .getDocumentDvkStatus() == null)) {
+
+	                        AditUser recipient = this.getAditUserDAO().getUserByID(documentSharing.getUserCode());
+
+	                        dvk.api.container.v1.Saaja saaja = new dvk.api.container.v1.Saaja();
+	                        saaja.setRegNr(recipient.getDvkOrgCode());
+
+	                        if ("person".equalsIgnoreCase(recipient.getUsertype().getShortName())) {
+	                        	saaja.setNimi(recipient.getFullName());
+	                        	saaja.setIsikukood(recipient.getUserCode());
+	                        } else {
+	                        	saaja.setAsutuseNimi(recipient.getFullName());
+	                        }
+
+	                        if (saajad.isEmpty()) {
+	                        	firstRecipient = saaja;
+	                        }
+
+	                        saajad.add(saaja);
+	                    }
+
+	                }
+
+	                transport.setSaajad(saajad);
+	                dvkContainer.setTransport(transport);
+
+	                dvk.api.container.v1.SignedDoc failideKonteiner = new dvk.api.container.v1.SignedDoc();
+
+	                Set<DocumentFile> aditFiles = document.getDocumentFiles();
+	                List<dvk.api.container.v1.DataFile> dvkFiles = new ArrayList<dvk.api.container.v1.DataFile>();
+
+	                Iterator<DocumentFile> aditFilesIterator = aditFiles.iterator();
+	                short count = 0;
+
+	                // Convert the adit file to dvk file
+	                while (aditFilesIterator.hasNext()) {
+	                    DocumentFile f = aditFilesIterator.next();
+
+	                    if (((document.getSigned() != null) && document.getSigned() && (f.getDocumentFileTypeId() == FILETYPE_SIGNATURE_CONTAINER))
+	                    	|| (((document.getSigned() == null) || !document.getSigned()) && (f.getDocumentFileTypeId() == FILETYPE_DOCUMENT_FILE))) {
+	                    	dvk.api.container.v1.DataFile dvkFile = new dvk.api.container.v1.DataFile();
+
+		                    logger.debug("FileName: " + f.getFileName());
+
+		                    // Create a temporary file from the ADIT file and
+		                    // add a reference to the DVK file
+		                    try {
+		                    	InputStream inputStream = f.getFileData().getBinaryStream();
+
+		                    	String binaryContentsFile = Util.createTemporaryFile(inputStream, tempDir);
+		                        String base64EncodedFile = Util.base64EncodeFile(binaryContentsFile, tempDir);
+		                        String base64ContentsAsString = Util.getFileContents(new File(base64EncodedFile));
+
+		                        dvkFile.setFileBase64Content(base64ContentsAsString);
+		                        dvkFiles.add(dvkFile);
+
+		                        try {
+		                        	(new File(binaryContentsFile)).delete();
+		                        } catch (Exception ex) {
+		                        	logger.warn(ex.getMessage(), ex);
+		                        }
+
+		                        try {
+		                        	(new File(base64EncodedFile)).delete();
+		                        } catch (Exception ex) {
+		                        	logger.warn(ex.getMessage(), ex);
+		                        }
+		                    } catch (Exception e) {
+		                        throw new HibernateException("Unable to create temporary file: ", e);
+		                    }
+
+		                    dvkFile.setDdocNamespace("http://www.sk.ee/DigiDoc/v1.3.0#");
+		                    dvkFile.setFileContentType("EMBEDDED_BASE64");
+		                    dvkFile.setFileId("D" + (dvkFiles.size() - 1));
+		                    dvkFile.setFileName(f.getFileName());
+		                    dvkFile.setFileSize(String.valueOf(f.getFileSizeBytes()));
+		                    dvkFile.setFileMimeType(f.getContentType());
+	                    }
+	                }
+
+	                failideKonteiner.setDataFiles(dvkFiles);
+	                dvkContainer.setSignedDoc(failideKonteiner);
 
 	                // Save document to DVK Client database
 

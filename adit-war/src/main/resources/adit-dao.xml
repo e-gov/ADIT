@@ -9,7 +9,7 @@
 						http://www.springframework.org/schema/context/spring-context-2.5.xsd
 						http://www.springframework.org/schema/tx
 						http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
-		
+
 	<bean id="requestLogDAO" class="ee.adit.dao.RequestLogDAO">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
@@ -21,7 +21,7 @@
 	<bean id="downloadRequestLogDAO" class="ee.adit.dao.DownloadRequestLogDAO">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
-	
+
 	<bean id="metadataRequestLogDAO" class="ee.adit.dao.MetadataRequestLogDAO">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
@@ -76,8 +76,11 @@
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
+    <bean id="maintenanceJobDAO" class="ee.adit.dao.MaintenanceJobDAO">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
 	<bean id="dvkDAO" class="ee.adit.dao.dvk.DvkDAO">
 		<property name="sessionFactory" ref="dvkSessionFactory" />
 	</bean>
-						
 </beans>

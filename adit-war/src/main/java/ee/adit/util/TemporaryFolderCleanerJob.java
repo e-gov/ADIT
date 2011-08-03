@@ -15,11 +15,18 @@ import org.springframework.scheduling.quartz.QuartzJobBean;
  * attachment files of outgoing SOAP messages). <br>
  * <br>
  * Quartz library: http://www.quartz-scheduler.org
- * 
+ *
  * @author Jaak Lember, Interinx, jaak@interinx.com
  */
 public class TemporaryFolderCleanerJob extends QuartzJobBean {
-    /**
+	/**
+	 * Unique ID of current job. This is used for maintenance job
+	 * synchronization between cluster nodes.
+	 * Must have a corresponding record in database table "MAINTENANCE_JOB".
+	 */
+	private static long jobId = Constants.JOB_ID_TEMPORARY_FOLDER_CLEAN;
+
+	/**
      * Log4j logger.
      */
     private static Logger logger = Logger.getLogger(TemporaryFolderCleanerJob.class);
@@ -79,7 +86,7 @@ public class TemporaryFolderCleanerJob extends QuartzJobBean {
 
     /**
      * Gets current configuration.
-     * 
+     *
      * @return Current configuration
      */
     public Configuration getConfiguration() {
@@ -88,7 +95,7 @@ public class TemporaryFolderCleanerJob extends QuartzJobBean {
 
     /**
      * Sets configuration.
-     * 
+     *
      * @param configuration
      *            {@link Configuration} object to be used in current objects
      *            methods

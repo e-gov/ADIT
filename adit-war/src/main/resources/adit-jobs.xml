@@ -18,6 +18,9 @@
 				<entry key="documentService">
 					<ref bean="documentService" />
 				</entry>
+                <entry key="maintenanceJobDAO">
+                    <ref bean="maintenanceJobDAO" />
+                </entry>
 			</map>
 		</property>
 	</bean>
@@ -35,6 +38,9 @@
 				<entry key="digidocConfigurationFile">
 					<value>jdigidoc.cfg</value>
 				</entry>
+                <entry key="maintenanceJobDAO">
+                    <ref bean="maintenanceJobDAO" />
+                </entry>
 			</map>
 		</property>
 	</bean>
@@ -46,6 +52,9 @@
 				<entry key="documentService">
 					<ref bean="documentService" />
 				</entry>
+                <entry key="maintenanceJobDAO">
+                    <ref bean="maintenanceJobDAO" />
+                </entry>
 			</map>
 		</property>
 	</bean>
@@ -57,6 +66,9 @@
 				<entry key="documentService">
 					<ref bean="documentService" />
 				</entry>
+                <entry key="maintenanceJobDAO">
+                    <ref bean="maintenanceJobDAO" />
+                </entry>
 			</map>
 		</property>
 	</bean>
@@ -74,6 +86,9 @@
 				<entry key="scheduleClient">
 					<ref bean="scheduleClient" />
 				</entry>
+                <entry key="maintenanceJobDAO">
+                    <ref bean="maintenanceJobDAO" />
+                </entry>
 			</map>
 		</property>
 	</bean>
@@ -96,6 +111,9 @@
 				<entry key="documentService">
 					<ref bean="documentService" />
 				</entry>
+                <entry key="maintenanceJobDAO">
+                    <ref bean="maintenanceJobDAO" />
+                </entry>
 			</map>
 		</property>
 	</bean>
@@ -107,6 +125,9 @@
 				<entry key="userService">
 					<ref bean="userService" />
 				</entry>
+                <entry key="maintenanceJobDAO">
+                    <ref bean="maintenanceJobDAO" />
+                </entry>
 			</map>
 		</property>
 	</bean>
