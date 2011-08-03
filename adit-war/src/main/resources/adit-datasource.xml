@@ -46,6 +46,7 @@
 				<value>classpath:hbm/DownloadRequestLog.hbm.xml</value>
 				<value>classpath:hbm/MetadataRequestLog.hbm.xml</value>
 				<value>classpath:hbm/MaintenanceJob.hbm.xml</value>
+				<value>classpath:hbm/SetJobRunningStatusResult.hbm.xml</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">
