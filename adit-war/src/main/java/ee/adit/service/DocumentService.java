@@ -2126,7 +2126,7 @@ public class DocumentService {
 
                             if (sharingDvkStatus != messageRecipient.getSendingStatusId()) {
                                 documentSharing.setDocumentDvkStatus(messageRecipient.getSendingStatusId());
-                                this.getDocumentSharingDAO().update(documentSharing);
+                                this.getDocumentSharingDAO().update(documentSharing, true);
                                 logger.debug("DocumentSharing DVK status updated: documentSharingID: "
                                         + documentSharing.getId() + ", DVK status: "
                                         + documentSharing.getDocumentDvkStatus());

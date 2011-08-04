@@ -16,7 +16,7 @@ import ee.adit.service.DocumentService;
 /**
  * Document sharing data access class. Provides methods for retrieving and manipulating
  * document sharing data.
- * 
+ *
  * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
  * @author Jaak Lember, Interinx, jaak@interinx.com
  */
@@ -24,7 +24,7 @@ public class DocumentSharingDAO extends HibernateDaoSupport {
 
     /**
      * Save document sharing.
-     * 
+     *
      * @param documentSharing document sharing
      * @return ID
      */
@@ -34,35 +34,56 @@ public class DocumentSharingDAO extends HibernateDaoSupport {
 
     /**
      * Update document sharing.
-     * 
+     *
      * @param documentSharing document sharing
      * @throws AditInternalException if document sharing update failed
      */
     public void update(DocumentSharing documentSharing) throws AditInternalException {
-        Session session = null;
-        Transaction transaction = null;
-        try {
+    	update(documentSharing, false);
+    }
 
-            session = this.getSessionFactory().openSession();
-            transaction = session.beginTransaction();
-            session.saveOrUpdate(documentSharing);
-            transaction.commit();
+    /**
+     * Update document sharing.
+     *
+     * @param documentSharing document sharing
+     * @param useExistingSession
+     * 		Should existing session be used for DB interaction
+     * @throws AditInternalException if document sharing update failed
+     */
+    public void update(DocumentSharing documentSharing, boolean useExistingSession) throws AditInternalException {
+        if (useExistingSession) {
+        	try {
+        		this.getHibernateTemplate().saveOrUpdate(documentSharing);
+        	} catch (Exception e) {
+	            logger.error(e);
+	            throw new AditInternalException("Error while updating DocumentSharing: ", e);
+	        }
+        } else {
+	    	Session session = null;
+	        Transaction transaction = null;
+	        try {
 
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            throw new AditInternalException("Error while updating DocumentSharing: ", e);
-        } finally {
-            if (session != null) {
-                session.close();
-            }
+	            session = this.getSessionFactory().openSession();
+	            transaction = session.beginTransaction();
+	            session.saveOrUpdate(documentSharing);
+	            transaction.commit();
+
+	        } catch (Exception e) {
+	            if (transaction != null) {
+	                transaction.rollback();
+	            }
+	            throw new AditInternalException("Error while updating DocumentSharing: ", e);
+	        } finally {
+	            if (session != null) {
+	                session.close();
+	            }
+	        }
         }
     }
 
     /**
      * Get DVK sharings for document.
-     * 
+     *
      * @param documentID document ID
      * @return list of DVK sharings
      */
@@ -75,7 +96,7 @@ public class DocumentSharingDAO extends HibernateDaoSupport {
 
     /**
      * Get DVK sharings by creation date.
-     * 
+     *
      * @param creationDateComparison date to compare to
      * @return list of document sharings
      */
