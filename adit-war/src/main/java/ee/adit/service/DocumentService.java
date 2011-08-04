@@ -1311,8 +1311,8 @@ public class DocumentService {
 	        while (i.hasNext()) {
 
 	            try {
-
 	                Document document = i.next();
+	                AditUser sender = this.getAditUserDAO().getUserByID(document.getCreatorCode());
 
 	                ContainerVer1 dvkContainer = new ContainerVer1();
 	                dvkContainer.setVersion(1);
@@ -1334,9 +1334,15 @@ public class DocumentService {
 	                dvk.api.container.v1.Transport transport = new dvk.api.container.v1.Transport();
 	                List<dvk.api.container.v1.Saaja> saajad = new ArrayList<dvk.api.container.v1.Saaja>();
 	                List<dvk.api.container.v1.Saatja> saatjad = new ArrayList<dvk.api.container.v1.Saatja>();
+
 	                dvk.api.container.v1.Saatja saatja = new dvk.api.container.v1.Saatja();
 	                saatja.setRegNr(Util.removeCountryPrefix(getConfiguration().getDvkOrgCode()));
 	                saatja.setIsikukood(Util.removeCountryPrefix(document.getCreatorCode()));
+	                if ((sender.getUsertype() == null) || ("person".equalsIgnoreCase(sender.getUsertype().getShortName()))) {
+	                	saatja.setNimi(sender.getFullName());
+	                } else {
+	                	saatja.setAsutuseNimi(sender.getFullName());
+	                }
 	                saatjad.add(saatja);
 	                transport.setSaatjad(saatjad);
 
@@ -1369,7 +1375,6 @@ public class DocumentService {
 
 	                        saajad.add(saaja);
 	                    }
-
 	                }
 
 	                transport.setSaajad(saajad);
@@ -1451,22 +1456,17 @@ public class DocumentService {
 	                    dvkMessage.setDhlGuid(document.getGuid());
 	                    dvkMessage.setSendingStatusId(DocumentService.DVK_STATUS_WAITING);
 
-	                    // Get sender org code
-	                    String documentOwnerCode = document.getCreatorCode();
-	                    AditUser documentOwner = (AditUser) session.get(AditUser.class, documentOwnerCode);
-	                    dvkMessage.setSenderOrgCode(documentOwner.getDvkOrgCode());
-	                    dvkMessage.setSenderPersonCode(documentOwner.getUserCode());
-	                    dvkMessage.setSenderName(documentOwner.getFullName());
+	                    dvkMessage.setSenderOrgCode(saatja.getRegNr());
+	                    dvkMessage.setSenderPersonCode(saatja.getIsikukood());
+	                    dvkMessage.setSenderOrgName(saatja.getAsutuseNimi());
+	                    dvkMessage.setSenderName(saatja.getNimi());
 
 	                    // Add first recipient data
 	                    if (firstRecipient != null) {
 	                    	dvkMessage.setRecipientOrgCode(firstRecipient.getRegNr());
 	                    	dvkMessage.setRecipientPersonCode(firstRecipient.getIsikukood());
-	                    	if (Util.isNullOrEmpty(firstRecipient.getIsikukood())) {
-	                    		dvkMessage.setRecipientOrgName(firstRecipient.getNimi());
-	                    	} else {
-	                    		dvkMessage.setRecipientName(firstRecipient.getNimi());
-	                    	}
+	                    	dvkMessage.setRecipientOrgName(firstRecipient.getAsutuseNimi());
+	                    	dvkMessage.setRecipientName(firstRecipient.getNimi());
 	                    }
 
 	                    // Insert data as stream
