@@ -2112,13 +2112,19 @@ public class DocumentService {
                         DocumentSharing documentSharing = documentSharings.get(i);
                         logger.debug("Updating for documentSharing: " + documentSharing.getId());
 
-                        if (documentSharing.getUserCode().equalsIgnoreCase(messageRecipient.getRecipientPersonCode())
-                                || documentSharing.getUserCode().equalsIgnoreCase(
-                                        messageRecipient.getRecipientOrgCode())) {
+                        String sharingUserCode = documentSharing.getUserCode();
+                        String sharingUserCodeWithoutCountryPrefix = Util.removeCountryPrefix(sharingUserCode);
+                        long sharingDvkStatus = (documentSharing.getDocumentDvkStatus() == null) ? 0 : documentSharing.getDocumentDvkStatus().longValue();
+
+                        if (sharingUserCodeWithoutCountryPrefix.equalsIgnoreCase(messageRecipient.getRecipientOrgCode())
+                        	|| sharingUserCode.equalsIgnoreCase(messageRecipient.getRecipientOrgCode())
+                        	|| sharingUserCodeWithoutCountryPrefix.equalsIgnoreCase(messageRecipient.getRecipientPersonCode())
+                            || sharingUserCode.equalsIgnoreCase(messageRecipient.getRecipientPersonCode())) {
 
                             // If the statuses differ, update the one in ADIT
                             // database
-                            if (!documentSharing.getDocumentDvkStatus().equals(messageRecipient.getSendingStatusId())) {
+
+                            if (sharingDvkStatus != messageRecipient.getSendingStatusId()) {
                                 documentSharing.setDocumentDvkStatus(messageRecipient.getSendingStatusId());
                                 this.getDocumentSharingDAO().update(documentSharing);
                                 logger.debug("DocumentSharing DVK status updated: documentSharingID: "
@@ -2126,10 +2132,10 @@ public class DocumentService {
                                         + documentSharing.getDocumentDvkStatus());
                                 result++;
                             }
+                        }
 
-                            if (messageRecipient.getSendingStatusId() != DocumentService.DVK_STATUS_SENT) {
-                                allDocumentSharingsSent = false;
-                            }
+                        if (documentSharing.getDocumentDvkStatus() != DocumentService.DVK_STATUS_SENT) {
+                            allDocumentSharingsSent = false;
                         }
                     }
 
@@ -2139,8 +2145,7 @@ public class DocumentService {
                         // Update document DVK status ID
                         document.setDocumentDvkStatusId(DocumentService.DVK_STATUS_SENT);
                         this.getDocumentDAO().update(document);
-                        logger
-                                .debug("All DVK sharings for this document updated to 'sent'. Updating document DVK status.");
+                        logger.debug("All DVK sharings for this document updated to 'sent'. Updating document DVK status.");
                     }
                 }
             } catch (Exception e) {
