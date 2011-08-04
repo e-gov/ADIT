@@ -2073,14 +2073,14 @@ public class DocumentService {
     @Transactional
     public int updateDocumentsFromDVK() {
         int result = 0;
-
         logger.info("Updating DVK statuses...");
 
         // 1. Võtame kõik dokumendid ADIT andmebaasist, millel DVK staatus ei
         // ole "saadetud"
         List<Document> documents = this.getDocumentDAO().getDocumentsWithoutDVKStatus(DVK_STATUS_SENT);
-        Iterator<Document> documentsIterator = documents.iterator();
+        logger.info(documents.size() + " documents found that need their statuses updated.");
 
+        Iterator<Document> documentsIterator = documents.iterator();
         while (documentsIterator.hasNext()) {
             Document document = documentsIterator.next();
 
