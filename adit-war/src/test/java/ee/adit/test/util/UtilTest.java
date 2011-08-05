@@ -83,6 +83,19 @@ public class UtilTest extends TestCase {
 		assertEquals(-1000L, Util.getDateDiffInMilliseconds(laterDate, earlierDate));
 	}
 
+	public void testCodeStartsWithCountryPrefix() {
+		assertFalse(Util.codeStartsWithCountryPrefix(null));
+		assertFalse(Util.codeStartsWithCountryPrefix(""));
+		assertFalse(Util.codeStartsWithCountryPrefix("E"));
+		assertTrue(Util.codeStartsWithCountryPrefix("EE"));
+		assertTrue(Util.codeStartsWithCountryPrefix("EE70006317"));
+		assertFalse(Util.codeStartsWithCountryPrefix("E70006317"));
+		assertFalse(Util.codeStartsWithCountryPrefix("70006317"));
+		assertTrue(Util.codeStartsWithCountryPrefix("EE3710101021"));
+		assertFalse(Util.codeStartsWithCountryPrefix("E3710101021"));
+		assertFalse(Util.codeStartsWithCountryPrefix("3710101021"));
+	}
+
 	/*public void testDateToXMLDate() {
 		assertEquals(null, Util.dateToXMLDate(null));
 	}*/

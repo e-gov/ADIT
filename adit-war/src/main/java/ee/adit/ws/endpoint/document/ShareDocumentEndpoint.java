@@ -33,7 +33,7 @@ import ee.webmedia.xtee.annotation.XTeeService;
 /**
  * Implementation of "shareDocument" web method (web service request). Contains
  * request input validation, request-specific workflow and response composition.
- * 
+ *
  * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
  * @author Jaak Lember, Interinx, jaak@interinx.com
  */
@@ -42,9 +42,9 @@ import ee.webmedia.xtee.annotation.XTeeService;
 public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 
     private static Logger logger = Logger.getLogger(ShareDocumentEndpoint.class);
-    
+
     private UserService userService;
-    
+
     private DocumentService documentService;
 
     private ScheduleClient scheduleClient;
@@ -62,7 +62,7 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 
     /**
      * Executes "V1" version of "shareDocument" request.
-     * 
+     *
      * @param requestObject
      *            Request body object
      * @return Response body object
@@ -101,7 +101,7 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
             // Kontrollime, kas päringus märgitud isik on teenuse kasutaja
             AditUser user = Util.getAditUserFromXroadHeader(this.getHeader(), this.getUserService());
             AditUser xroadRequestUser = Util.getXroadUserFromXroadHeader(user, this.getHeader(), this.getUserService());
-            
+
             Document doc = checkRightsAndGetDocument(request, applicationName, user);
 
             // All checks are successfully passed
@@ -112,6 +112,11 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
                 ArrayOfMessage statusMessages = new ArrayOfMessage();
 
                 AditUser recipient = this.getUserService().getUserByID(recipientCode);
+                if ((recipient == null) && !Util.codeStartsWithCountryPrefix(recipientCode)) {
+                	String recipientCodeWithDefaultCountryPrefix = "EE" + recipientCode;
+                	recipient = this.getUserService().getUserByID(recipientCodeWithDefaultCountryPrefix);
+                }
+
                 if (recipient == null) {
                     statusMessages.setMessage(this.getMessageService().getMessages(
                             "request.shareDocument.recipientStatus.recipient.nonExistant", new Object[] {}));
@@ -187,10 +192,10 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
                         AditUser recipient = this.getUserService().getUserByID(status.getCode());
                         if ((recipient != null)
                         	&& (userService.findNotification(recipient.getUserNotifications(), ScheduleClient.NOTIFICATION_TYPE_SHARE) != null)) {
-                            
+
                         	List<Message> messageInAllKnownLanguages = this.getMessageService().getMessages("scheduler.message.share", new Object[] {doc.getTitle(), user.getUserCode()});
                         	String eventText = Util.joinMessages(messageInAllKnownLanguages, "<br/>");
-                        	
+
                         	getScheduleClient().addEvent(recipient, eventText,
                                 this.getConfiguration().getSchedulerEventTypeName(), requestDate,
                                 ScheduleClient.NOTIFICATION_TYPE_SHARE, doc.getId(), this.userService);
@@ -280,7 +285,7 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 
     /**
      * Checks users rights for document.
-     * 
+     *
      * @param request
      *     Current request
      * @param applicationName
@@ -294,7 +299,7 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
     private Document checkRightsAndGetDocument(
     	final ShareDocumentRequest request, final String applicationName,
     	final AditUser user) {
-    	
+
         // Kontrollime, kas päringu käivitanud infosüsteem on ADITis
         // registreeritud
         boolean applicationRegistered = this.getUserService().isApplicationRegistered(applicationName);
@@ -366,24 +371,24 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
             aditCodedException.setParameters(new Object[] {request.getDocumentId().toString(), user.getUserCode()});
             throw aditCodedException;
         }
-        
+
         // Check whether the document is marked as invisible to owner
         if ((doc.getInvisibleToOwner() != null) && doc.getInvisibleToOwner()) {
             AditCodedException aditCodedException = new AditCodedException("document.deleted");
             aditCodedException.setParameters(new Object[] {doc.getId()});
             throw aditCodedException;
         }
-        
+
         return doc;
     }
-    	
+
     /**
      * Validates request body and makes sure that all required fields exist and
      * are not empty. <br>
      * <br>
      * Throws {@link AditCodedException} if any errors in request data are
      * found.
-     * 
+     *
      * @param request
      *            Request body as {@link ShareDocumentRequest} object.
      * @throws AditCodedException
@@ -404,7 +409,7 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 
     /**
      * Writes request parameters to application DEBUG log.
-     * 
+     *
      * @param request
      *            Request body as {@link ShareDocumentRequest} object.
      */
@@ -428,7 +433,7 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
     public void setScheduleClient(ScheduleClient scheduleClient) {
         this.scheduleClient = scheduleClient;
     }
-    
+
     public UserService getUserService() {
         return userService;
     }

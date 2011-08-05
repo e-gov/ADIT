@@ -1298,6 +1298,21 @@ public final class Util {
     }
 
     /**
+     * Detects if given user code starts with country prefix.
+     *
+     * @param code
+     * 		User code (personal id code or organization code)
+     * @return
+     * 		{@code true} if given code starts with country prefix
+     */
+    public static boolean codeStartsWithCountryPrefix(String code) {
+    	return ((!isNullOrEmpty(code))
+    		&& (code.length() > 1)
+    		&& (!"0123456789".contains(String.valueOf(code.charAt(0))))
+    		&& (!"0123456789".contains(String.valueOf(code.charAt(1)))));
+    }
+
+    /**
      * Extracts the query name from the X-Tee header. The query name must be in
      * the format "[prefix].[queryName].v[versionNumber]"
      *

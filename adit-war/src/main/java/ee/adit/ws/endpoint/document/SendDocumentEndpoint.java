@@ -32,7 +32,7 @@ import ee.webmedia.xtee.annotation.XTeeService;
 /**
  * Implementation of "sendDocument" web method (web service request). Contains
  * request input validation, request-specific workflow and response composition.
- * 
+ *
  * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
  * @author Jaak Lember, Interinx, jaak@interinx.com
  */
@@ -59,7 +59,7 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 
     /**
      * Executes "V1" version of "sendDocument" request.
-     * 
+     *
      * @param requestObject
      *            Request body object
      * @return Response body object
@@ -87,14 +87,14 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 
             // Check header for required fields
             checkHeader(header);
-            
+
             // Check request body
             checkRequest(request);
 
             // Check if the user is registered
             AditUser user = Util.getAditUserFromXroadHeader(this.getHeader(), this.getUserService());
             AditUser xroadRequestUser = Util.getXroadUserFromXroadHeader(user, this.getHeader(), this.getUserService());
-            
+
             Document doc = checkRightsAndGetDocument(request, applicationName, user);
 
             ArrayOfUserCode recipientList = request.getRecipientList();
@@ -110,7 +110,11 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 
                     // Check if the user is registered
                     AditUser recipient = this.getUserService().getUserByID(recipientCode);
-                    
+                    if ((recipient == null) && !Util.codeStartsWithCountryPrefix(recipientCode)) {
+                    	String recipientCodeWithDefaultCountryPrefix = "EE" + recipientCode;
+                    	recipient = this.getUserService().getUserByID(recipientCodeWithDefaultCountryPrefix);
+                    }
+
                     if (recipient == null || !recipient.getActive()) {
                         logger.error("User is not registered or inactive.");
                         String messageCode = "user.nonExistent";
@@ -264,7 +268,7 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 
     /**
      * Checks users rights for document.
-     * 
+     *
      * @param request
      *     Current request
      * @param applicationName
@@ -278,7 +282,7 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
     private Document checkRightsAndGetDocument(
     	final SendDocumentRequest request, final String applicationName,
     	final AditUser user) {
-    	
+
         // Check if the application is registered
         boolean applicationRegistered = this.getUserService().isApplicationRegistered(applicationName);
         if (!applicationRegistered) {
@@ -339,24 +343,24 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
             aditCodedException.setParameters(new Object[] {request.getDocumentId().toString(), user.getUserCode()});
             throw aditCodedException;
         }
-        
+
         // Check whether the document is marked as invisible to owner
         if ((doc.getInvisibleToOwner() != null) && doc.getInvisibleToOwner()) {
             AditCodedException aditCodedException = new AditCodedException("document.deleted");
             aditCodedException.setParameters(new Object[] {request.getDocumentId().toString() });
             throw aditCodedException;
         }
-        
+
         return doc;
     }
-    
+
     /**
      * Validates request body and makes sure that all required fields exist and
      * are not empty. <br>
      * <br>
      * Throws {@link AditCodedException} if any errors in request data are
      * found.
-     * 
+     *
      * @param request
      *            Request body as {@link SendDocumentRequest} object.
      * @throws AditCodedException
@@ -375,7 +379,7 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
             throw new AditCodedException("request.body.empty");
         }
     }
-    
+
     @Override
     protected Object getResultForGenericException(Exception ex) {
         super.logError(null, Calendar.getInstance().getTime(), LogService.ERROR_LOG_LEVEL_FATAL, "ERROR: "
