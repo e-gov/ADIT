@@ -96,6 +96,14 @@ public class UtilTest extends TestCase {
 		assertFalse(Util.codeStartsWithCountryPrefix("3710101021"));
 	}
 
+	public void testIsHexString() {
+		assertFalse(Util.isHexString(null));
+		assertFalse(Util.isHexString(""));
+		assertFalse(Util.isHexString("g"));
+		assertFalse(Util.isHexString("-"));
+		assertTrue(Util.isHexString("a06529cfdbe5fe1e7ca4ac80f81f9398f2bf7536358251de6d21018cc1fa95ad31c930923ce233929db12ee925dce0b980df6bfdfe0e208cfaa3bfe24335e2596c0538ec6eb62dc9ed55533b122eb675b2d555976df7ca6285c66aed57fb05ab28b89e28a0f2277a9b29efcd6354b82d962e6c59b3a704da6062c36d3f6ffaca"));
+	}
+
 	/*public void testDateToXMLDate() {
 		assertEquals(null, Util.dateToXMLDate(null));
 	}*/

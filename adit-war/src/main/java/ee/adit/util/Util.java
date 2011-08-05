@@ -603,6 +603,59 @@ public final class Util {
     }
 
     /**
+     * Detects if given string is a valid HEX string.
+     *
+     * @param potentialHexString
+     * 		String to check.
+     * @return
+     * 		{@code true} if given string is a valid HEX string
+     */
+    public static boolean isHexString(String potentialHexString) {
+    	if (isNullOrEmpty(potentialHexString)) {
+    		return false;
+    	}
+
+    	if ((potentialHexString.length() % 2) != 0) {
+    		return false;
+    	}
+
+    	for (int i = 0; i < potentialHexString.length(); i++) {
+    	    char currentChar = potentialHexString.charAt(i);
+    		boolean isHexChar = (currentChar >= '0' && currentChar <= '9')
+    			|| (currentChar >= 'a' && currentChar <= 'f')
+    			|| (currentChar >= 'A' && currentChar <= 'F');
+
+    	    if (!isHexChar) {
+    	        return false;
+    	    }
+    	}
+
+    	return true;
+    }
+
+    /**
+     * Converts HEX string to byte array.
+     *
+     * @param hexString
+     * 		HEX string to convert.
+     * @return
+     * 		Given HEX string as byte array
+     */
+    public static byte[] convertHexStringToByteArray(String hexString) {
+        if (isNullOrEmpty(hexString)) {
+        	return new byte[] {};
+        }
+
+    	int len = hexString.length();
+        byte[] data = new byte[len / 2];
+        for (int i = 0; i < len; i += 2) {
+            data[i / 2] = (byte) ((Character.digit(hexString.charAt(i), 16) << 4)
+                                 + Character.digit(hexString.charAt(i + 1), 16));
+        }
+        return data;
+    }
+
+    /**
      * Delete a directory and it's contents.
      *
      * @param dir

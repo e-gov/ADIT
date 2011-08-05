@@ -112,9 +112,9 @@ public class DocumentService {
     /**
      * Default MIME type to be used if MIME type cannot be determined.
      */
-	public static final String UNKNOWN_MIME_TYPE = "application/octet-stream";
+    public static final String UNKNOWN_MIME_TYPE = "application/octet-stream";
 
-	/**
+    /**
      * Document sharing type code - sign.
      */
     public static final String SHARINGTYPE_SIGN = "sign";
@@ -340,42 +340,42 @@ public class DocumentService {
     /**
      * ID of file type "document file".
      */
-	public static final long FILETYPE_DOCUMENT_FILE = 1L;
+    public static final long FILETYPE_DOCUMENT_FILE = 1L;
 
     /**
      * ID of file type "signature container".
      */
-	public static final long FILETYPE_SIGNATURE_CONTAINER = 2L;
+    public static final long FILETYPE_SIGNATURE_CONTAINER = 2L;
 
     /**
      * ID of file type "signature container draft".
      */
-	public static final long FILETYPE_SIGNATURE_CONTAINER_DRAFT = 3L;
+    public static final long FILETYPE_SIGNATURE_CONTAINER_DRAFT = 3L;
 
     /**
      * ID of file type "zip archive".
      */
-	public static final long FILETYPE_ZIP_ARCHIVE = 4L;
+    public static final long FILETYPE_ZIP_ARCHIVE = 4L;
 
     /**
      * Name of file type "document file".
      */
-	public static final String FILETYPE_NAME_DOCUMENT_FILE = "document_file";
+    public static final String FILETYPE_NAME_DOCUMENT_FILE = "document_file";
 
     /**
      * Name of file type "signature container".
      */
-	public static final String FILETYPE_NAME_SIGNATURE_CONTAINER = "signature_container";
+    public static final String FILETYPE_NAME_SIGNATURE_CONTAINER = "signature_container";
 
     /**
      * Name of file type "signature container draft".
      */
-	public static final String FILETYPE_NAME_SIGNATURE_CONTAINER_DRAFT = "signature_container_draft";
+    public static final String FILETYPE_NAME_SIGNATURE_CONTAINER_DRAFT = "signature_container_draft";
 
     /**
      * Name of file type "zip archive".
      */
-	public static final String FILETYPE_NAME_ZIP_ARCHIVE = "zip_archive";
+    public static final String FILETYPE_NAME_ZIP_ARCHIVE = "zip_archive";
 
     private static Logger logger = Logger.getLogger(UserService.class);
 
@@ -547,7 +547,7 @@ public class DocumentService {
      */
     @Transactional
     public SaveItemInternalResult save(
-    		final SaveDocumentRequestAttachment attachmentDocument,
+            final SaveDocumentRequestAttachment attachmentDocument,
             final String creatorCode,
             final String remoteApplication,
             final long remainingDiskQuota,
@@ -557,12 +557,12 @@ public class DocumentService {
             final String digidocConfigFile)
             throws FileNotFoundException, AditCodedException {
 
-    	final DocumentDAO docDao = this.getDocumentDAO();
+        final DocumentDAO docDao = this.getDocumentDAO();
 
         return (SaveItemInternalResult) this.getDocumentDAO().getHibernateTemplate().execute(new HibernateCallback() {
             public Object doInHibernate(Session session) throws HibernateException, SQLException, AditCodedException {
                 boolean involvedSignatureContainerExtraction = false;
-            	Date creationDate = new Date();
+                Date creationDate = new Date();
                 Document document = new Document();
 
                 if ((attachmentDocument.getId() != null) && (attachmentDocument.getId() > 0)) {
@@ -591,8 +591,8 @@ public class DocumentService {
                 document.setCreatorUserName(creatorUserName);
 
                 if ((attachmentDocument.getFiles() != null) && (attachmentDocument.getFiles().size() == 1)
-                	&& ((document.getDocumentFiles() == null) || (document.getDocumentFiles().size() == 0))) {
-                	OutputDocumentFile file = attachmentDocument.getFiles().get(0);
+                    && ((document.getDocumentFiles() == null) || (document.getDocumentFiles().size() == 0))) {
+                    OutputDocumentFile file = attachmentDocument.getFiles().get(0);
 
                     String extension = Util.getFileExtension(file.getName());
 
@@ -600,31 +600,31 @@ public class DocumentService {
                     // extract files and signatures from container. Otherwise add
                     // container as a regular file.
                     if (((file.getId() == null) || (file.getId() <= 0)) && "ddoc".equalsIgnoreCase(extension)) {
-                    	DigiDocExtractionResult extractionResult = extractDigiDocContainer(file.getSysTempFile(), digidocConfigFile);
-                    	if (extractionResult.isSuccess()) {
-                    		file.setFileType(FILETYPE_NAME_SIGNATURE_CONTAINER);
-                    		document.setSigned((extractionResult.getSignatures() != null) && (extractionResult.getSignatures().size() > 0));
-                    		involvedSignatureContainerExtraction = true;
+                        DigiDocExtractionResult extractionResult = extractDigiDocContainer(file.getSysTempFile(), digidocConfigFile);
+                        if (extractionResult.isSuccess()) {
+                            file.setFileType(FILETYPE_NAME_SIGNATURE_CONTAINER);
+                            document.setSigned((extractionResult.getSignatures() != null) && (extractionResult.getSignatures().size() > 0));
+                            involvedSignatureContainerExtraction = true;
 
-                    		for (int i = 0; i < extractionResult.getFiles().size(); i++) {
-                    			DocumentFile df = extractionResult.getFiles().get(i);
-                    			df.setDocument(document);
-                    			document.getDocumentFiles().add(df);
-                    		}
+                            for (int i = 0; i < extractionResult.getFiles().size(); i++) {
+                                DocumentFile df = extractionResult.getFiles().get(i);
+                                df.setDocument(document);
+                                document.getDocumentFiles().add(df);
+                            }
 
-                    		for (int i = 0; i < extractionResult.getSignatures().size(); i++) {
-                    			ee.adit.dao.pojo.Signature sig = extractionResult.getSignatures().get(i);
-                    			sig.setDocument(document);
-                    			document.getSignatures().add(sig);
-                    		}
-                    	}
+                            for (int i = 0; i < extractionResult.getSignatures().size(); i++) {
+                                ee.adit.dao.pojo.Signature sig = extractionResult.getSignatures().get(i);
+                                sig.setDocument(document);
+                                document.getSignatures().add(sig);
+                            }
+                        }
                     }
                 }
 
                 try {
-                	SaveItemInternalResult result = docDao.save(document, attachmentDocument.getFiles(), remainingDiskQuota, session);
-                	result.setInvolvedSignatureContainerExtraction(involvedSignatureContainerExtraction);
-                	return result;
+                    SaveItemInternalResult result = docDao.save(document, attachmentDocument.getFiles(), remainingDiskQuota, session);
+                    result.setInvolvedSignatureContainerExtraction(involvedSignatureContainerExtraction);
+                    return result;
                 } catch (Exception e) {
                     throw new HibernateException(e);
                 }
@@ -648,13 +648,13 @@ public class DocumentService {
      * @return Result of save as {@link SaveItemInternalResult} object.
      */
     public SaveItemInternalResult saveDocumentFile(
-    		final long documentId,
-    		final OutputDocumentFile file,
+            final long documentId,
+            final OutputDocumentFile file,
             final long remainingDiskQuota,
             final String temporaryFilesDir,
             final String digidocConfigFile) throws HibernateException, SQLException, AditCodedException {
 
-    	final DocumentDAO docDao = this.getDocumentDAO();
+        final DocumentDAO docDao = this.getDocumentDAO();
 
         return (SaveItemInternalResult) this.getDocumentDAO().getHibernateTemplate().execute(new HibernateCallback() {
             public Object doInHibernate(Session session) throws HibernateException, SQLException, AditCodedException {
@@ -686,29 +686,29 @@ public class DocumentService {
                 // container as a regular file.
                 boolean involvedSignatureContainerExtraction = false;
                 if ((maxId <= 0) && "ddoc".equalsIgnoreCase(extension)) {
-                	 DigiDocExtractionResult extractionResult = extractDigiDocContainer(file.getSysTempFile(), digidocConfigFile);
-                	 if (extractionResult.isSuccess()) {
-                		 file.setFileType(FILETYPE_NAME_SIGNATURE_CONTAINER);
-                		 document.setSigned((extractionResult.getSignatures() != null) && (extractionResult.getSignatures().size() > 0));
-                		 filesList.add(file);
-                		 involvedSignatureContainerExtraction = true;
+                     DigiDocExtractionResult extractionResult = extractDigiDocContainer(file.getSysTempFile(), digidocConfigFile);
+                     if (extractionResult.isSuccess()) {
+                         file.setFileType(FILETYPE_NAME_SIGNATURE_CONTAINER);
+                         document.setSigned((extractionResult.getSignatures() != null) && (extractionResult.getSignatures().size() > 0));
+                         filesList.add(file);
+                         involvedSignatureContainerExtraction = true;
 
-                		 for (int i = 0; i < extractionResult.getFiles().size(); i++) {
-                			 DocumentFile df = extractionResult.getFiles().get(i);
-                			 df.setDocument(document);
-                			 document.getDocumentFiles().add(df);
-                		 }
+                         for (int i = 0; i < extractionResult.getFiles().size(); i++) {
+                             DocumentFile df = extractionResult.getFiles().get(i);
+                             df.setDocument(document);
+                             document.getDocumentFiles().add(df);
+                         }
 
-                		 for (int i = 0; i < extractionResult.getSignatures().size(); i++) {
-                			 ee.adit.dao.pojo.Signature sig = extractionResult.getSignatures().get(i);
-                			 sig.setDocument(document);
-                			 document.getSignatures().add(sig);
-                		 }
-                	 } else {
-                		 filesList.add(file);
-                	 }
+                         for (int i = 0; i < extractionResult.getSignatures().size(); i++) {
+                             ee.adit.dao.pojo.Signature sig = extractionResult.getSignatures().get(i);
+                             sig.setDocument(document);
+                             document.getSignatures().add(sig);
+                         }
+                     } else {
+                         filesList.add(file);
+                     }
                 } else {
-                	filesList.add(file);
+                    filesList.add(file);
                 }
 
                 // Document to database
@@ -755,99 +755,99 @@ public class DocumentService {
      * 		{@link DigiDocExtractionResult} object.
      */
     private DigiDocExtractionResult extractDigiDocContainer(final String pathToContainer, final String digidocConfigFile)
-    	throws AditCodedException {
+        throws AditCodedException {
 
-    	DigiDocExtractionResult result = new DigiDocExtractionResult();
+        DigiDocExtractionResult result = new DigiDocExtractionResult();
 
-    	if (!Util.isNullOrEmpty(pathToContainer)) {
-    		File digiDocContainer = new File(pathToContainer);
-    		if (digiDocContainer.exists()) {
-    			try {
-	    			ConfigManager.init(digidocConfigFile);
-	    			SAXDigiDocFactory factory = new SAXDigiDocFactory();
-	                SignedDoc ddocContainer = factory.readSignedDoc(pathToContainer);
+        if (!Util.isNullOrEmpty(pathToContainer)) {
+            File digiDocContainer = new File(pathToContainer);
+            if (digiDocContainer.exists()) {
+                try {
+                    ConfigManager.init(digidocConfigFile);
+                    SAXDigiDocFactory factory = new SAXDigiDocFactory();
+                    SignedDoc ddocContainer = factory.readSignedDoc(pathToContainer);
 
-	                int dataFilesCount = ddocContainer.countDataFiles();
-	                if (dataFilesCount > 0) {
-	                	Hashtable<String, StartEndOffsetPair> dataFileOffsets = SimplifiedDigiDocParser.findDigiDocDataFileOffsets(pathToContainer);
-		                for (int i = 0; i < dataFilesCount; i++) {
-		                	DataFile ddocDataFile = ddocContainer.getDataFile(i);
-		                	DocumentFile localFile = new DocumentFile();
-		                	localFile.setDeleted(false);
-		                	localFile.setContentType(ddocDataFile.getMimeType());
-		                	localFile.setFileName(ddocDataFile.getFileName());
-		                	localFile.setFileSizeBytes(ddocDataFile.getSize());
-		                	localFile.setLastModifiedDate(new Date());
+                    int dataFilesCount = ddocContainer.countDataFiles();
+                    if (dataFilesCount > 0) {
+                        Hashtable<String, StartEndOffsetPair> dataFileOffsets = SimplifiedDigiDocParser.findDigiDocDataFileOffsets(pathToContainer);
+                        for (int i = 0; i < dataFilesCount; i++) {
+                            DataFile ddocDataFile = ddocContainer.getDataFile(i);
+                            DocumentFile localFile = new DocumentFile();
+                            localFile.setDeleted(false);
+                            localFile.setContentType(ddocDataFile.getMimeType());
+                            localFile.setFileName(ddocDataFile.getFileName());
+                            localFile.setFileSizeBytes(ddocDataFile.getSize());
+                            localFile.setLastModifiedDate(new Date());
 
-		                	StartEndOffsetPair currentFileOffsets = dataFileOffsets.get(ddocDataFile.getId());
-		                	if (currentFileOffsets != null) {
-		                		localFile.setFileDataInDdoc(true);
-		                		localFile.setDdocDataFileId(ddocDataFile.getId());
-		                		localFile.setDdocDataFileStartOffset(currentFileOffsets.getStart());
-		                		localFile.setDdocDataFileEndOffset(currentFileOffsets.getEnd());
-		                		localFile.setFileData(Hibernate.createBlob(currentFileOffsets.getDataMd5Hash()));
-		                	} else {
-		                		logger.error("Failed to find DataFile offsets for data file " + ddocDataFile.getId());
-		                		AditCodedException aditCodedException = new AditCodedException("digidoc.extract.genericException");
-		                        aditCodedException.setParameters(new Object[] {});
-		                        throw aditCodedException;
-		                	}
+                            StartEndOffsetPair currentFileOffsets = dataFileOffsets.get(ddocDataFile.getId());
+                            if (currentFileOffsets != null) {
+                                localFile.setFileDataInDdoc(true);
+                                localFile.setDdocDataFileId(ddocDataFile.getId());
+                                localFile.setDdocDataFileStartOffset(currentFileOffsets.getStart());
+                                localFile.setDdocDataFileEndOffset(currentFileOffsets.getEnd());
+                                localFile.setFileData(Hibernate.createBlob(currentFileOffsets.getDataMd5Hash()));
+                            } else {
+                                logger.error("Failed to find DataFile offsets for data file " + ddocDataFile.getId());
+                                AditCodedException aditCodedException = new AditCodedException("digidoc.extract.genericException");
+                                aditCodedException.setParameters(new Object[] {});
+                                throw aditCodedException;
+                            }
 
-		                	result.getFiles().add(localFile);
-		                }
-	                }
+                            result.getFiles().add(localFile);
+                        }
+                    }
 
-	                int signaturesCount = ddocContainer.countSignatures();
-	                logger.info("Extracted file contains " + signaturesCount + " signatures.");
-	                if (signaturesCount > 0) {
-	                	for (int i = 0; i < signaturesCount; i++) {
-	                		Signature ddocSignature = ddocContainer.getSignature(i);
+                    int signaturesCount = ddocContainer.countSignatures();
+                    logger.info("Extracted file contains " + signaturesCount + " signatures.");
+                    if (signaturesCount > 0) {
+                        for (int i = 0; i < signaturesCount; i++) {
+                            Signature ddocSignature = ddocContainer.getSignature(i);
 
-	                		// Convert DigiDoc signature to local signature
-	                		ee.adit.dao.pojo.Signature localSignature = convertDigiDocSignatureToLocalSignature(ddocSignature);
-	                		logger.info("Extracted signature of " + localSignature.getSignerName());
+                            // Convert DigiDoc signature to local signature
+                            ee.adit.dao.pojo.Signature localSignature = convertDigiDocSignatureToLocalSignature(ddocSignature);
+                            logger.info("Extracted signature of " + localSignature.getSignerName());
 
-	                		// Verify the signature
-	                		ArrayList verificationErrors = ddocSignature.verify(ddocContainer, true, true);
+                            // Verify the signature
+                            ArrayList verificationErrors = ddocSignature.verify(ddocContainer, true, true);
 
-	                		if ((verificationErrors == null) || (verificationErrors.size() < 1)) {
-		                        result.getSignatures().add(localSignature);
-	                		} else {
-	                            logger.error("Signature given by " + localSignature.getSignerName() + " was found to be invalid.");
-	                			AditCodedException aditCodedException = new AditCodedException("digidoc.extract.invalidSignature");
-	                            aditCodedException.setParameters(new Object[] {localSignature.getSignerName()});
-	                            throw aditCodedException;
-	                		}
-	                	}
-	                }
-	                result.setSuccess(true);
-    			} catch (AditCodedException ex) {
-    				throw ex;
-    			} catch (DigiDocException ex) {
+                            if ((verificationErrors == null) || (verificationErrors.size() < 1)) {
+                                result.getSignatures().add(localSignature);
+                            } else {
+                                logger.error("Signature given by " + localSignature.getSignerName() + " was found to be invalid.");
+                                AditCodedException aditCodedException = new AditCodedException("digidoc.extract.invalidSignature");
+                                aditCodedException.setParameters(new Object[] {localSignature.getSignerName()});
+                                throw aditCodedException;
+                            }
+                        }
+                    }
+                    result.setSuccess(true);
+                } catch (AditCodedException ex) {
+                    throw ex;
+                } catch (DigiDocException ex) {
                     logger.error(ex);
-    				AditCodedException aditCodedException = new AditCodedException("digidoc.extract.incorrectContainer");
+                    AditCodedException aditCodedException = new AditCodedException("digidoc.extract.incorrectContainer");
                     aditCodedException.setParameters(new Object[] {});
                     throw aditCodedException;
-    			} catch (Exception ex) {
+                } catch (Exception ex) {
                     logger.error(ex);
-    				AditCodedException aditCodedException = new AditCodedException("digidoc.extract.genericException");
+                    AditCodedException aditCodedException = new AditCodedException("digidoc.extract.genericException");
                     aditCodedException.setParameters(new Object[] {});
                     throw aditCodedException;
-    			}
-    		} else {
-    			logger.error("DigiDoc container extraction failed because container file \"" + pathToContainer + "\" does not exist!");
-    			AditCodedException aditCodedException = new AditCodedException("digidoc.extract.genericException");
+                }
+            } else {
+                logger.error("DigiDoc container extraction failed because container file \"" + pathToContainer + "\" does not exist!");
+                AditCodedException aditCodedException = new AditCodedException("digidoc.extract.genericException");
                 aditCodedException.setParameters(new Object[] {});
                 throw aditCodedException;
-    		}
-    	} else {
-    		logger.error("DigiDoc container extraction failed because container file was not supplied!");
-    		AditCodedException aditCodedException = new AditCodedException("digidoc.extract.genericException");
+            }
+        } else {
+            logger.error("DigiDoc container extraction failed because container file was not supplied!");
+            AditCodedException aditCodedException = new AditCodedException("digidoc.extract.genericException");
             aditCodedException.setParameters(new Object[] {});
             throw aditCodedException;
-    	}
+        }
 
-    	return result;
+        return result;
     }
 
     /**
@@ -868,7 +868,7 @@ public class DocumentService {
             if (user != null) {
                 Long usedDiskQuota = user.getDiskQuotaUsed();
                 if (usedDiskQuota == null) {
-                	usedDiskQuota = 0L;
+                    usedDiskQuota = 0L;
                 }
                 user.setDiskQuotaUsed(usedDiskQuota + saveResult.getAddedFilesSize());
             }
@@ -982,294 +982,294 @@ public class DocumentService {
         Session session = null;
 
         try {
-	        final String sqlQuery = "select doc from Document doc, DocumentSharing docSharing where docSharing.documentSharingType = 'send_dvk' and (docSharing.documentDvkStatus is null or docSharing.documentDvkStatus = "
-	                + DocumentService.DVK_STATUS_MISSING + ") and docSharing.documentId = doc.id";
+            final String sqlQuery = "select doc from Document doc, DocumentSharing docSharing where docSharing.documentSharingType = 'send_dvk' and (docSharing.documentDvkStatus is null or docSharing.documentDvkStatus = "
+                    + DocumentService.DVK_STATUS_MISSING + ") and docSharing.documentId = doc.id";
 
-	        final String tempDir = this.getConfiguration().getTempDir();
+            final String tempDir = this.getConfiguration().getTempDir();
 
-	        logger.info("Starting to send documents to DVK. Using org.code '" + this.getConfiguration().getDvkOrgCode() + "'");
+            logger.info("Starting to send documents to DVK. Using org.code '" + this.getConfiguration().getDvkOrgCode() + "'");
 
-	        logger.debug("Fetching documents for sending to DVK...");
-	        session = this.getDocumentDAO().getSessionFactory().openSession();
+            logger.debug("Fetching documents for sending to DVK...");
+            session = this.getDocumentDAO().getSessionFactory().openSession();
 
-	        Query query = session.createQuery(sqlQuery);
-	        List<Document> documents = query.list();
-	        //Set<Document> documents = new HashSet<Document>(query.list());
+            Query query = session.createQuery(sqlQuery);
+            List<Document> documents = query.list();
+            //Set<Document> documents = new HashSet<Document>(query.list());
 
-	        logger.info(documents.size() + " documents need to be sent to DVK.");
+            logger.info(documents.size() + " documents need to be sent to DVK.");
 
-	        Iterator<Document> i = documents.iterator();
+            Iterator<Document> i = documents.iterator();
 
-	        while (i.hasNext()) {
+            while (i.hasNext()) {
 
-	            try {
+                try {
 
-	                Document document = i.next();
+                    Document document = i.next();
 
-	                ContainerVer2 dvkContainer = new ContainerVer2();
-	                dvkContainer.setVersion(DVK_CONTAINER_VERSION);
+                    ContainerVer2 dvkContainer = new ContainerVer2();
+                    dvkContainer.setVersion(DVK_CONTAINER_VERSION);
 
-	                Metainfo metainfo = new Metainfo();
+                    Metainfo metainfo = new Metainfo();
 
-	                MetaManual metaManual = new MetaManual();
-	                metaManual.setAutoriIsikukood(null);
-	                metaManual.setAutoriKontakt(null);
-	                metaManual.setAutoriNimi(null);
-	                metaManual.setAutoriOsakond(null);
-	                metaManual.setDokumentGuid(document.getGuid());
-	                metaManual.setDokumentKeel(null);
-	                metaManual.setDokumentLiik(document.getDocumentType());
-	                metaManual.setDokumentPealkiri(document.getTitle());
-	                metaManual.setDokumentViit(null);
-	                metaManual.setIpr(null);
-	                metaManual.setJuurdepaasPiirang(null);
+                    MetaManual metaManual = new MetaManual();
+                    metaManual.setAutoriIsikukood(null);
+                    metaManual.setAutoriKontakt(null);
+                    metaManual.setAutoriNimi(null);
+                    metaManual.setAutoriOsakond(null);
+                    metaManual.setDokumentGuid(document.getGuid());
+                    metaManual.setDokumentKeel(null);
+                    metaManual.setDokumentLiik(document.getDocumentType());
+                    metaManual.setDokumentPealkiri(document.getTitle());
+                    metaManual.setDokumentViit(null);
+                    metaManual.setIpr(null);
+                    metaManual.setJuurdepaasPiirang(null);
 
-	                metainfo.setMetaManual(metaManual);
-	                dvkContainer.setMetainfo(metainfo);
+                    metainfo.setMetaManual(metaManual);
+                    dvkContainer.setMetainfo(metainfo);
 
-	                // Transport information
-	                Transport transport = new Transport();
-	                List<Saaja> saajad = new ArrayList<Saaja>();
-	                List<Saatja> saatjad = new ArrayList<Saatja>();
-	                Saatja saatja = new Saatja();
-	                saatja.setRegNr(Util.removeCountryPrefix(getConfiguration().getDvkOrgCode()));
-	                saatja.setIsikukood(Util.removeCountryPrefix(document.getCreatorCode()));
-	                saatjad.add(saatja);
-	                transport.setSaatjad(saatjad);
+                    // Transport information
+                    Transport transport = new Transport();
+                    List<Saaja> saajad = new ArrayList<Saaja>();
+                    List<Saatja> saatjad = new ArrayList<Saatja>();
+                    Saatja saatja = new Saatja();
+                    saatja.setRegNr(Util.removeCountryPrefix(getConfiguration().getDvkOrgCode()));
+                    saatja.setIsikukood(Util.removeCountryPrefix(document.getCreatorCode()));
+                    saatjad.add(saatja);
+                    transport.setSaatjad(saatjad);
 
-	                Iterator<DocumentSharing> documentSharings = document.getDocumentSharings().iterator();
+                    Iterator<DocumentSharing> documentSharings = document.getDocumentSharings().iterator();
 
-	                Saaja firstRecipient = null;
-	                while (documentSharings.hasNext()) {
-	                    DocumentSharing documentSharing = documentSharings.next();
+                    Saaja firstRecipient = null;
+                    while (documentSharings.hasNext()) {
+                        DocumentSharing documentSharing = documentSharings.next();
 
-	                    if (DocumentService.SHARINGTYPE_SEND_DVK.equalsIgnoreCase(documentSharing.getDocumentSharingType())
-	                            && (DocumentService.DVK_STATUS_WAITING.equals(documentSharing.getDocumentDvkStatus())
-	                                    || DocumentService.DVK_STATUS_MISSING.equals(documentSharing.getDocumentDvkStatus()) || documentSharing
-	                                    .getDocumentDvkStatus() == null)) {
+                        if (DocumentService.SHARINGTYPE_SEND_DVK.equalsIgnoreCase(documentSharing.getDocumentSharingType())
+                                && (DocumentService.DVK_STATUS_WAITING.equals(documentSharing.getDocumentDvkStatus())
+                                        || DocumentService.DVK_STATUS_MISSING.equals(documentSharing.getDocumentDvkStatus()) || documentSharing
+                                        .getDocumentDvkStatus() == null)) {
 
-	                        AditUser recipient = this.getAditUserDAO().getUserByID(documentSharing.getUserCode());
+                            AditUser recipient = this.getAditUserDAO().getUserByID(documentSharing.getUserCode());
 
-	                        Saaja saaja = new Saaja();
-	                        saaja.setRegNr(recipient.getDvkOrgCode());
+                            Saaja saaja = new Saaja();
+                            saaja.setRegNr(recipient.getDvkOrgCode());
 
-	                        if ("person".equalsIgnoreCase(recipient.getUsertype().getShortName())) {
-	                        	saaja.setNimi(recipient.getFullName());
-	                        	saaja.setIsikukood(recipient.getUserCode());
-	                        } else {
-	                        	saaja.setAsutuseNimi(recipient.getFullName());
-	                        }
+                            if ("person".equalsIgnoreCase(recipient.getUsertype().getShortName())) {
+                                saaja.setNimi(recipient.getFullName());
+                                saaja.setIsikukood(recipient.getUserCode());
+                            } else {
+                                saaja.setAsutuseNimi(recipient.getFullName());
+                            }
 
-	                        if (saajad.isEmpty()) {
-	                        	firstRecipient = saaja;
-	                        }
+                            if (saajad.isEmpty()) {
+                                firstRecipient = saaja;
+                            }
 
-	                        saajad.add(saaja);
-	                    }
+                            saajad.add(saaja);
+                        }
 
-	                }
+                    }
 
-	                transport.setSaajad(saajad);
-	                dvkContainer.setTransport(transport);
+                    transport.setSaajad(saajad);
+                    dvkContainer.setTransport(transport);
 
-	                FailideKonteiner failideKonteiner = new FailideKonteiner();
+                    FailideKonteiner failideKonteiner = new FailideKonteiner();
 
-	                Set<DocumentFile> aditFiles = document.getDocumentFiles();
-	                List<Fail> dvkFiles = new ArrayList<Fail>();
+                    Set<DocumentFile> aditFiles = document.getDocumentFiles();
+                    List<Fail> dvkFiles = new ArrayList<Fail>();
 
-	                Iterator<DocumentFile> aditFilesIterator = aditFiles.iterator();
-	                short count = 0;
+                    Iterator<DocumentFile> aditFilesIterator = aditFiles.iterator();
+                    short count = 0;
 
-	                // Convert the adit file to dvk file
-	                while (aditFilesIterator.hasNext()) {
-	                    DocumentFile f = aditFilesIterator.next();
+                    // Convert the adit file to dvk file
+                    while (aditFilesIterator.hasNext()) {
+                        DocumentFile f = aditFilesIterator.next();
 
-	                    if (((document.getSigned() != null) && document.getSigned() && (f.getDocumentFileTypeId() == FILETYPE_SIGNATURE_CONTAINER))
-	                    	|| (((document.getSigned() == null) || !document.getSigned()) && (f.getDocumentFileTypeId() == FILETYPE_DOCUMENT_FILE))) {
-		                    Fail dvkFile = new Fail();
+                        if (((document.getSigned() != null) && document.getSigned() && (f.getDocumentFileTypeId() == FILETYPE_SIGNATURE_CONTAINER))
+                            || (((document.getSigned() == null) || !document.getSigned()) && (f.getDocumentFileTypeId() == FILETYPE_DOCUMENT_FILE))) {
+                            Fail dvkFile = new Fail();
 
-		                    logger.debug("FileName: " + f.getFileName());
+                            logger.debug("FileName: " + f.getFileName());
 
-		                    // Create a temporary file from the ADIT file and
-		                    // add a reference to the DVK file
-		                    try {
-		                    	InputStream inputStream = f.getFileData().getBinaryStream();
-		                        String temporaryFile = Util.createTemporaryFile(inputStream, tempDir);
-		                        dvkFile.setFile(new File(temporaryFile));
-		                        dvkFiles.add(dvkFile);
+                            // Create a temporary file from the ADIT file and
+                            // add a reference to the DVK file
+                            try {
+                                InputStream inputStream = f.getFileData().getBinaryStream();
+                                String temporaryFile = Util.createTemporaryFile(inputStream, tempDir);
+                                dvkFile.setFile(new File(temporaryFile));
+                                dvkFiles.add(dvkFile);
 
-		                    } catch (Exception e) {
-		                        throw new HibernateException("Unable to create temporary file: ", e);
-		                    }
+                            } catch (Exception e) {
+                                throw new HibernateException("Unable to create temporary file: ", e);
+                            }
 
-		                    dvkFile.setFailNimi(f.getFileName());
-		                    dvkFile.setFailPealkiri(null);
-		                    dvkFile.setFailSuurus(f.getFileSizeBytes());
-		                    dvkFile.setFailTyyp(f.getContentType());
-		                    dvkFile.setJrkNr(count++);
-	                    }
-	                }
+                            dvkFile.setFailNimi(f.getFileName());
+                            dvkFile.setFailPealkiri(null);
+                            dvkFile.setFailSuurus(f.getFileSizeBytes());
+                            dvkFile.setFailTyyp(f.getContentType());
+                            dvkFile.setJrkNr(count++);
+                        }
+                    }
 
-	                failideKonteiner.setKokku(count);
-	                failideKonteiner.setFailid(dvkFiles);
-	                dvkContainer.setFailideKonteiner(failideKonteiner);
+                    failideKonteiner.setKokku(count);
+                    failideKonteiner.setFailid(dvkFiles);
+                    dvkContainer.setFailideKonteiner(failideKonteiner);
 
-	                // Save document to DVK Client database
+                    // Save document to DVK Client database
 
-	                SessionFactory sessionFactory = this.getDvkDAO().getSessionFactory();
-	                Long dvkMessageID = null;
-	                Session dvkSession = sessionFactory.openSession();
-	                dvkSession.setFlushMode(FlushMode.COMMIT);
-	                Transaction dvkTransaction = dvkSession.beginTransaction();
+                    SessionFactory sessionFactory = this.getDvkDAO().getSessionFactory();
+                    Long dvkMessageID = null;
+                    Session dvkSession = sessionFactory.openSession();
+                    dvkSession.setFlushMode(FlushMode.COMMIT);
+                    Transaction dvkTransaction = dvkSession.beginTransaction();
 
-	                logger.info("DVK session flush mode: " + dvkSession.getFlushMode().toString());
+                    logger.info("DVK session flush mode: " + dvkSession.getFlushMode().toString());
 
-	                try {
-	                    PojoMessage dvkMessage = new PojoMessage();
-	                    dvkMessage.setIsIncoming(false);
-	                    dvkMessage.setDhlFolderName("/");
-	                    dvkMessage.setLocalItemId(document.getId());
-	                    dvkMessage.setTitle(document.getTitle());
-	                    dvkMessage.setDhlGuid(document.getGuid());
-	                    dvkMessage.setSendingStatusId(DocumentService.DVK_STATUS_WAITING);
+                    try {
+                        PojoMessage dvkMessage = new PojoMessage();
+                        dvkMessage.setIsIncoming(false);
+                        dvkMessage.setDhlFolderName("/");
+                        dvkMessage.setLocalItemId(document.getId());
+                        dvkMessage.setTitle(document.getTitle());
+                        dvkMessage.setDhlGuid(document.getGuid());
+                        dvkMessage.setSendingStatusId(DocumentService.DVK_STATUS_WAITING);
 
-	                    // Get sender org code
-	                    String documentOwnerCode = document.getCreatorCode();
-	                    AditUser documentOwner = (AditUser) session.get(AditUser.class, documentOwnerCode);
-	                    dvkMessage.setSenderOrgCode(documentOwner.getDvkOrgCode());
-	                    dvkMessage.setSenderPersonCode(documentOwner.getUserCode());
-	                    dvkMessage.setSenderName(documentOwner.getFullName());
+                        // Get sender org code
+                        String documentOwnerCode = document.getCreatorCode();
+                        AditUser documentOwner = (AditUser) session.get(AditUser.class, documentOwnerCode);
+                        dvkMessage.setSenderOrgCode(documentOwner.getDvkOrgCode());
+                        dvkMessage.setSenderPersonCode(documentOwner.getUserCode());
+                        dvkMessage.setSenderName(documentOwner.getFullName());
 
-	                    // Add first recipient data
-	                    if (firstRecipient != null) {
-	                    	dvkMessage.setRecipientOrgCode(firstRecipient.getRegNr());
-	                    	dvkMessage.setRecipientPersonCode(firstRecipient.getIsikukood());
-	                    	if (Util.isNullOrEmpty(firstRecipient.getIsikukood())) {
-	                    		dvkMessage.setRecipientOrgName(firstRecipient.getNimi());
-	                    	} else {
-	                    		dvkMessage.setRecipientName(firstRecipient.getNimi());
-	                    	}
-	                    }
+                        // Add first recipient data
+                        if (firstRecipient != null) {
+                            dvkMessage.setRecipientOrgCode(firstRecipient.getRegNr());
+                            dvkMessage.setRecipientPersonCode(firstRecipient.getIsikukood());
+                            if (Util.isNullOrEmpty(firstRecipient.getIsikukood())) {
+                                dvkMessage.setRecipientOrgName(firstRecipient.getNimi());
+                            } else {
+                                dvkMessage.setRecipientName(firstRecipient.getNimi());
+                            }
+                        }
 
-	                    // Insert data as stream
-	                    Clob clob = Hibernate.createClob(" ", dvkSession);
-	                    dvkMessage.setData(clob);
+                        // Insert data as stream
+                        Clob clob = Hibernate.createClob(" ", dvkSession);
+                        dvkMessage.setData(clob);
 
-	                    logger.debug("Saving document to DVK database");
-	                    dvkMessageID = (Long) dvkSession.save(dvkMessage);
+                        logger.debug("Saving document to DVK database");
+                        dvkMessageID = (Long) dvkSession.save(dvkMessage);
 
-	                    if (dvkMessageID == null || dvkMessageID.longValue() == 0) {
-	                        logger.error("Error while saving outgoing message to DVK database - no ID returned by save method.");
-	                        throw new DataRetrievalFailureException(
-	                                "Error while saving outgoing message to DVK database - no ID returned by save method.");
-	                    } else {
-	                        logger.info("Outgoing message saved to DVK database. ID: " + dvkMessageID);
-	                    }
+                        if (dvkMessageID == null || dvkMessageID.longValue() == 0) {
+                            logger.error("Error while saving outgoing message to DVK database - no ID returned by save method.");
+                            throw new DataRetrievalFailureException(
+                                    "Error while saving outgoing message to DVK database - no ID returned by save method.");
+                        } else {
+                            logger.info("Outgoing message saved to DVK database. ID: " + dvkMessageID);
+                        }
 
-	                    logger.debug("DVK Message saved to client database. GUID: " + dvkMessage.getDhlGuid());
-	                    dvkTransaction.commit();
-	                } catch (Exception e) {
-	                    dvkTransaction.rollback();
-	                    throw new DataRetrievalFailureException("Error while adding message to DVK Client database: ", e);
-	                } finally {
-	                    if (dvkSession != null) {
-	                        dvkSession.close();
-	                    }
-	                }
+                        logger.debug("DVK Message saved to client database. GUID: " + dvkMessage.getDhlGuid());
+                        dvkTransaction.commit();
+                    } catch (Exception e) {
+                        dvkTransaction.rollback();
+                        throw new DataRetrievalFailureException("Error while adding message to DVK Client database: ", e);
+                    } finally {
+                        if (dvkSession != null) {
+                            dvkSession.close();
+                        }
+                    }
 
-	                // Update CLOB
-	                Session dvkSession2 = sessionFactory.openSession();
-	                dvkSession2.setFlushMode(FlushMode.COMMIT);
-	                Transaction dvkTransaction2 = dvkSession2.beginTransaction();
+                    // Update CLOB
+                    Session dvkSession2 = sessionFactory.openSession();
+                    dvkSession2.setFlushMode(FlushMode.COMMIT);
+                    Transaction dvkTransaction2 = dvkSession2.beginTransaction();
 
-	                try {
-	                    // Select the record for update
-	                    PojoMessage dvkMessageToUpdate = (PojoMessage) dvkSession2.load(PojoMessage.class, dvkMessageID, LockOptions.UPGRADE);
+                    try {
+                        // Select the record for update
+                        PojoMessage dvkMessageToUpdate = (PojoMessage) dvkSession2.load(PojoMessage.class, dvkMessageID, LockOptions.UPGRADE);
 
-	                    // Write the DVK Container to temporary file
-	                    String temporaryFile = this.getConfiguration().getTempDir() + File.separator
-	                            + Util.generateRandomFileName();
-	                    dvkContainer.save2File(temporaryFile);
+                        // Write the DVK Container to temporary file
+                        String temporaryFile = this.getConfiguration().getTempDir() + File.separator
+                                + Util.generateRandomFileName();
+                        dvkContainer.save2File(temporaryFile);
 
-	                    // Write the temporary file to the database
-	                    InputStream is = new FileInputStream(temporaryFile);
-	                    Writer clobWriter = dvkMessageToUpdate.getData().setCharacterStream(1);
+                        // Write the temporary file to the database
+                        InputStream is = new FileInputStream(temporaryFile);
+                        Writer clobWriter = dvkMessageToUpdate.getData().setCharacterStream(1);
 
-	                    byte[] buf = new byte[1024];
-	                    int len;
-	                    while ((len = is.read(buf)) > 0) {
-	                        clobWriter.write(new String(buf, 0, len, "UTF-8"));
-	                    }
-	                    is.close();
-	                    clobWriter.close();
+                        byte[] buf = new byte[1024];
+                        int len;
+                        while ((len = is.read(buf)) > 0) {
+                            clobWriter.write(new String(buf, 0, len, "UTF-8"));
+                        }
+                        is.close();
+                        clobWriter.close();
 
-	                    // Commit to DVK database
-	                    dvkTransaction2.commit();
+                        // Commit to DVK database
+                        dvkTransaction2.commit();
 
-	                    // Save the document DVK_ID to ADIT database
-	                    document.setDvkId(dvkMessageID);
-	                    session.saveOrUpdate(document);
+                        // Save the document DVK_ID to ADIT database
+                        document.setDvkId(dvkMessageID);
+                        session.saveOrUpdate(document);
 
-	                    logger.debug("Starting to update document sharings");
-	                    Transaction aditTransaction = session.beginTransaction();
-	                    // Update document sharings status
-	                    Iterator<DocumentSharing> documentSharingUpdateIterator = document.getDocumentSharings().iterator();
-	                    while (documentSharingUpdateIterator.hasNext()) {
-	                        DocumentSharing documentSharing = documentSharingUpdateIterator.next();
-	                        if (DocumentService.SHARINGTYPE_SEND_DVK.equalsIgnoreCase(documentSharing
-	                                .getDocumentSharingType())) {
-	                            documentSharing.setDocumentDvkStatus(DVK_STATUS_SENDING);
-	                            // documentSharing.setDvkSendDate(new Date());
-	                            session.saveOrUpdate(documentSharing);
-	                            logger.debug("DocumentSharing status updated to: '" + DVK_STATUS_SENDING + "'.");
-	                        }
-	                    }
+                        logger.debug("Starting to update document sharings");
+                        Transaction aditTransaction = session.beginTransaction();
+                        // Update document sharings status
+                        Iterator<DocumentSharing> documentSharingUpdateIterator = document.getDocumentSharings().iterator();
+                        while (documentSharingUpdateIterator.hasNext()) {
+                            DocumentSharing documentSharing = documentSharingUpdateIterator.next();
+                            if (DocumentService.SHARINGTYPE_SEND_DVK.equalsIgnoreCase(documentSharing
+                                    .getDocumentSharingType())) {
+                                documentSharing.setDocumentDvkStatus(DVK_STATUS_SENDING);
+                                // documentSharing.setDvkSendDate(new Date());
+                                session.saveOrUpdate(documentSharing);
+                                logger.debug("DocumentSharing status updated to: '" + DVK_STATUS_SENDING + "'.");
+                            }
+                        }
 
-	                    aditTransaction.commit();
+                        aditTransaction.commit();
 
-	                    result++;
+                        result++;
 
-	                } catch (Exception e) {
-	                    dvkTransaction2.rollback();
+                    } catch (Exception e) {
+                        dvkTransaction2.rollback();
 
-	                    // Remove the document with empty clob from the database
-	                    Session dvkSession3 = sessionFactory.openSession();
-	                    dvkSession3.setFlushMode(FlushMode.COMMIT);
-	                    Transaction dvkTransaction3 = dvkSession3.beginTransaction();
-	                    try {
-	                        logger.debug("Starting to delete document from DVK Client database: " + dvkMessageID);
-	                        PojoMessage dvkMessageToDelete = (PojoMessage) dvkSession3
-	                                .load(PojoMessage.class, dvkMessageID);
-	                        if (dvkMessageToDelete == null) {
-	                            logger.warn("DVK message to delete is not initialized.");
-	                        }
-	                        dvkSession3.delete(dvkMessageToDelete);
-	                        dvkTransaction3.commit();
-	                        logger.info("Empty DVK document deleted from DVK Client database. ID: " + dvkMessageID);
-	                    } catch (Exception dvkException) {
-	                        dvkTransaction3.rollback();
-	                        logger.error("Error deleting document from DVK database: ", dvkException);
-	                    } finally {
-	                        if (dvkSession3 != null) {
-	                            dvkSession3.close();
-	                        }
-	                    }
+                        // Remove the document with empty clob from the database
+                        Session dvkSession3 = sessionFactory.openSession();
+                        dvkSession3.setFlushMode(FlushMode.COMMIT);
+                        Transaction dvkTransaction3 = dvkSession3.beginTransaction();
+                        try {
+                            logger.debug("Starting to delete document from DVK Client database: " + dvkMessageID);
+                            PojoMessage dvkMessageToDelete = (PojoMessage) dvkSession3
+                                    .load(PojoMessage.class, dvkMessageID);
+                            if (dvkMessageToDelete == null) {
+                                logger.warn("DVK message to delete is not initialized.");
+                            }
+                            dvkSession3.delete(dvkMessageToDelete);
+                            dvkTransaction3.commit();
+                            logger.info("Empty DVK document deleted from DVK Client database. ID: " + dvkMessageID);
+                        } catch (Exception dvkException) {
+                            dvkTransaction3.rollback();
+                            logger.error("Error deleting document from DVK database: ", dvkException);
+                        } finally {
+                            if (dvkSession3 != null) {
+                                dvkSession3.close();
+                            }
+                        }
 
-	                    throw new DataRetrievalFailureException(
-	                            "Error while adding message to DVK Client database (CLOB update): ", e);
-	                } finally {
-	                    if (dvkSession2 != null) {
-	                        dvkSession2.close();
-	                    }
-	                }
-	            } catch (Exception e) {
-	                throw new AditInternalException("Error while sending documents to DVK Client database: ", e);
-	            }
-	        }
+                        throw new DataRetrievalFailureException(
+                                "Error while adding message to DVK Client database (CLOB update): ", e);
+                    } finally {
+                        if (dvkSession2 != null) {
+                            dvkSession2.close();
+                        }
+                    }
+                } catch (Exception e) {
+                    throw new AditInternalException("Error while sending documents to DVK Client database: ", e);
+                }
+            }
         } finally {
-	        if ((session != null) && session.isOpen()) {
-	            session.close();
-	        }
+            if ((session != null) && session.isOpen()) {
+                session.close();
+            }
         }
 
         return result;
@@ -1291,303 +1291,303 @@ public class DocumentService {
         Session session = null;
 
         try {
-	        final String sqlQuery = "select doc from Document doc, DocumentSharing docSharing where docSharing.documentSharingType = 'send_dvk' and (docSharing.documentDvkStatus is null or docSharing.documentDvkStatus = "
-	                + DocumentService.DVK_STATUS_MISSING + ") and docSharing.documentId = doc.id";
+            final String sqlQuery = "select doc from Document doc, DocumentSharing docSharing where docSharing.documentSharingType = 'send_dvk' and (docSharing.documentDvkStatus is null or docSharing.documentDvkStatus = "
+                    + DocumentService.DVK_STATUS_MISSING + ") and docSharing.documentId = doc.id";
 
-	        final String tempDir = this.getConfiguration().getTempDir();
+            final String tempDir = this.getConfiguration().getTempDir();
 
-	        logger.info("Starting to send documents to DVK. Using org.code '" + this.getConfiguration().getDvkOrgCode() + "'");
+            logger.info("Starting to send documents to DVK. Using org.code '" + this.getConfiguration().getDvkOrgCode() + "'");
 
-	        logger.debug("Fetching documents for sending to DVK...");
-	        session = this.getDocumentDAO().getSessionFactory().openSession();
+            logger.debug("Fetching documents for sending to DVK...");
+            session = this.getDocumentDAO().getSessionFactory().openSession();
 
-	        Query query = session.createQuery(sqlQuery);
-	        List<Document> documents = query.list();
+            Query query = session.createQuery(sqlQuery);
+            List<Document> documents = query.list();
 
-	        logger.info(documents.size() + " documents need to be sent to DVK.");
+            logger.info(documents.size() + " documents need to be sent to DVK.");
 
-	        Iterator<Document> i = documents.iterator();
+            Iterator<Document> i = documents.iterator();
 
-	        while (i.hasNext()) {
+            while (i.hasNext()) {
 
-	            try {
-	                Document document = i.next();
-	                AditUser sender = this.getAditUserDAO().getUserByID(document.getCreatorCode());
+                try {
+                    Document document = i.next();
+                    AditUser sender = this.getAditUserDAO().getUserByID(document.getCreatorCode());
 
-	                ContainerVer1 dvkContainer = new ContainerVer1();
-	                dvkContainer.setVersion(1);
+                    ContainerVer1 dvkContainer = new ContainerVer1();
+                    dvkContainer.setVersion(1);
 
-	                dvk.api.container.v1.Metainfo metainfo = new dvk.api.container.v1.Metainfo();
+                    dvk.api.container.v1.Metainfo metainfo = new dvk.api.container.v1.Metainfo();
 
-	                dvk.api.container.v1.MetaManual metaManual = new dvk.api.container.v1.MetaManual();
-	                metaManual.setAutoriIsikukood(null);
-	                metaManual.setAutoriKontakt(null);
-	                metaManual.setAutoriNimi(null);
-	                metaManual.setAutoriOsakond(null);
-	                metaManual.setKoostajaDokumendityyp(document.getDocumentType());
-	                metaManual.setKoostajaDokumendinimi(document.getTitle());
+                    dvk.api.container.v1.MetaManual metaManual = new dvk.api.container.v1.MetaManual();
+                    metaManual.setAutoriIsikukood(null);
+                    metaManual.setAutoriKontakt(null);
+                    metaManual.setAutoriNimi(null);
+                    metaManual.setAutoriOsakond(null);
+                    metaManual.setKoostajaDokumendityyp(document.getDocumentType());
+                    metaManual.setKoostajaDokumendinimi(document.getTitle());
 
-	                metainfo.setMetaManual(metaManual);
-	                dvkContainer.setMetainfo(metainfo);
+                    metainfo.setMetaManual(metaManual);
+                    dvkContainer.setMetainfo(metainfo);
 
-	                // Transport information
-	                dvk.api.container.v1.Transport transport = new dvk.api.container.v1.Transport();
-	                List<dvk.api.container.v1.Saaja> saajad = new ArrayList<dvk.api.container.v1.Saaja>();
-	                List<dvk.api.container.v1.Saatja> saatjad = new ArrayList<dvk.api.container.v1.Saatja>();
+                    // Transport information
+                    dvk.api.container.v1.Transport transport = new dvk.api.container.v1.Transport();
+                    List<dvk.api.container.v1.Saaja> saajad = new ArrayList<dvk.api.container.v1.Saaja>();
+                    List<dvk.api.container.v1.Saatja> saatjad = new ArrayList<dvk.api.container.v1.Saatja>();
 
-	                dvk.api.container.v1.Saatja saatja = new dvk.api.container.v1.Saatja();
-	                saatja.setRegNr(Util.removeCountryPrefix(getConfiguration().getDvkOrgCode()));
-	                saatja.setIsikukood(Util.removeCountryPrefix(document.getCreatorCode()));
-	                if ((sender.getUsertype() == null) || ("person".equalsIgnoreCase(sender.getUsertype().getShortName()))) {
-	                	saatja.setNimi(sender.getFullName());
-	                } else {
-	                	saatja.setAsutuseNimi(sender.getFullName());
-	                }
-	                saatjad.add(saatja);
-	                transport.setSaatjad(saatjad);
+                    dvk.api.container.v1.Saatja saatja = new dvk.api.container.v1.Saatja();
+                    saatja.setRegNr(Util.removeCountryPrefix(getConfiguration().getDvkOrgCode()));
+                    saatja.setIsikukood(Util.removeCountryPrefix(document.getCreatorCode()));
+                    if ((sender.getUsertype() == null) || ("person".equalsIgnoreCase(sender.getUsertype().getShortName()))) {
+                        saatja.setNimi(sender.getFullName());
+                    } else {
+                        saatja.setAsutuseNimi(sender.getFullName());
+                    }
+                    saatjad.add(saatja);
+                    transport.setSaatjad(saatjad);
 
-	                Iterator<DocumentSharing> documentSharings = document.getDocumentSharings().iterator();
+                    Iterator<DocumentSharing> documentSharings = document.getDocumentSharings().iterator();
 
-	                dvk.api.container.v1.Saaja firstRecipient = null;
-	                while (documentSharings.hasNext()) {
-	                    DocumentSharing documentSharing = documentSharings.next();
+                    dvk.api.container.v1.Saaja firstRecipient = null;
+                    while (documentSharings.hasNext()) {
+                        DocumentSharing documentSharing = documentSharings.next();
 
-	                    if (DocumentService.SHARINGTYPE_SEND_DVK.equalsIgnoreCase(documentSharing.getDocumentSharingType())
-	                            && (DocumentService.DVK_STATUS_WAITING.equals(documentSharing.getDocumentDvkStatus())
-	                                    || DocumentService.DVK_STATUS_MISSING.equals(documentSharing.getDocumentDvkStatus()) || documentSharing
-	                                    .getDocumentDvkStatus() == null)) {
+                        if (DocumentService.SHARINGTYPE_SEND_DVK.equalsIgnoreCase(documentSharing.getDocumentSharingType())
+                                && (DocumentService.DVK_STATUS_WAITING.equals(documentSharing.getDocumentDvkStatus())
+                                        || DocumentService.DVK_STATUS_MISSING.equals(documentSharing.getDocumentDvkStatus()) || documentSharing
+                                        .getDocumentDvkStatus() == null)) {
 
-	                        AditUser recipient = this.getAditUserDAO().getUserByID(documentSharing.getUserCode());
+                            AditUser recipient = this.getAditUserDAO().getUserByID(documentSharing.getUserCode());
 
-	                        dvk.api.container.v1.Saaja saaja = new dvk.api.container.v1.Saaja();
-	                        saaja.setRegNr(recipient.getDvkOrgCode());
+                            dvk.api.container.v1.Saaja saaja = new dvk.api.container.v1.Saaja();
+                            saaja.setRegNr(recipient.getDvkOrgCode());
 
-	                        if ("person".equalsIgnoreCase(recipient.getUsertype().getShortName())) {
-	                        	saaja.setNimi(recipient.getFullName());
-	                        	saaja.setIsikukood(recipient.getUserCode());
-	                        } else {
-	                        	saaja.setAsutuseNimi(recipient.getFullName());
-	                        }
+                            if ("person".equalsIgnoreCase(recipient.getUsertype().getShortName())) {
+                                saaja.setNimi(recipient.getFullName());
+                                saaja.setIsikukood(recipient.getUserCode());
+                            } else {
+                                saaja.setAsutuseNimi(recipient.getFullName());
+                            }
 
-	                        if (saajad.isEmpty()) {
-	                        	firstRecipient = saaja;
-	                        }
+                            if (saajad.isEmpty()) {
+                                firstRecipient = saaja;
+                            }
 
-	                        saajad.add(saaja);
-	                    }
-	                }
+                            saajad.add(saaja);
+                        }
+                    }
 
-	                transport.setSaajad(saajad);
-	                dvkContainer.setTransport(transport);
+                    transport.setSaajad(saajad);
+                    dvkContainer.setTransport(transport);
 
-	                dvk.api.container.v1.SignedDoc failideKonteiner = new dvk.api.container.v1.SignedDoc();
+                    dvk.api.container.v1.SignedDoc failideKonteiner = new dvk.api.container.v1.SignedDoc();
 
-	                Set<DocumentFile> aditFiles = document.getDocumentFiles();
-	                List<dvk.api.container.v1.DataFile> dvkFiles = new ArrayList<dvk.api.container.v1.DataFile>();
+                    Set<DocumentFile> aditFiles = document.getDocumentFiles();
+                    List<dvk.api.container.v1.DataFile> dvkFiles = new ArrayList<dvk.api.container.v1.DataFile>();
 
-	                Iterator<DocumentFile> aditFilesIterator = aditFiles.iterator();
-	                short count = 0;
+                    Iterator<DocumentFile> aditFilesIterator = aditFiles.iterator();
+                    short count = 0;
 
-	                // Convert the adit file to dvk file
-	                while (aditFilesIterator.hasNext()) {
-	                    DocumentFile f = aditFilesIterator.next();
+                    // Convert the adit file to dvk file
+                    while (aditFilesIterator.hasNext()) {
+                        DocumentFile f = aditFilesIterator.next();
 
-	                    if (((document.getSigned() != null) && document.getSigned() && (f.getDocumentFileTypeId() == FILETYPE_SIGNATURE_CONTAINER))
-	                    	|| (((document.getSigned() == null) || !document.getSigned()) && (f.getDocumentFileTypeId() == FILETYPE_DOCUMENT_FILE))) {
-	                    	dvk.api.container.v1.DataFile dvkFile = new dvk.api.container.v1.DataFile();
+                        if (((document.getSigned() != null) && document.getSigned() && (f.getDocumentFileTypeId() == FILETYPE_SIGNATURE_CONTAINER))
+                            || (((document.getSigned() == null) || !document.getSigned()) && (f.getDocumentFileTypeId() == FILETYPE_DOCUMENT_FILE))) {
+                            dvk.api.container.v1.DataFile dvkFile = new dvk.api.container.v1.DataFile();
 
-		                    logger.debug("FileName: " + f.getFileName());
+                            logger.debug("FileName: " + f.getFileName());
 
-		                    // Create a temporary file from the ADIT file and
-		                    // add a reference to the DVK file
-		                    try {
-		                    	InputStream inputStream = f.getFileData().getBinaryStream();
+                            // Create a temporary file from the ADIT file and
+                            // add a reference to the DVK file
+                            try {
+                                InputStream inputStream = f.getFileData().getBinaryStream();
 
-		                    	String binaryContentsFile = Util.createTemporaryFile(inputStream, tempDir);
-		                        String base64EncodedFile = Util.base64EncodeFile(binaryContentsFile, tempDir);
-		                        String base64ContentsAsString = Util.getFileContents(new File(base64EncodedFile));
+                                String binaryContentsFile = Util.createTemporaryFile(inputStream, tempDir);
+                                String base64EncodedFile = Util.base64EncodeFile(binaryContentsFile, tempDir);
+                                String base64ContentsAsString = Util.getFileContents(new File(base64EncodedFile));
 
-		                        dvkFile.setFileBase64Content(base64ContentsAsString);
-		                        dvkFiles.add(dvkFile);
+                                dvkFile.setFileBase64Content(base64ContentsAsString);
+                                dvkFiles.add(dvkFile);
 
-		                        try {
-		                        	(new File(binaryContentsFile)).delete();
-		                        } catch (Exception ex) {
-		                        	logger.warn(ex.getMessage(), ex);
-		                        }
+                                try {
+                                    (new File(binaryContentsFile)).delete();
+                                } catch (Exception ex) {
+                                    logger.warn(ex.getMessage(), ex);
+                                }
 
-		                        try {
-		                        	(new File(base64EncodedFile)).delete();
-		                        } catch (Exception ex) {
-		                        	logger.warn(ex.getMessage(), ex);
-		                        }
-		                    } catch (Exception e) {
-		                        throw new HibernateException("Unable to create temporary file: ", e);
-		                    }
+                                try {
+                                    (new File(base64EncodedFile)).delete();
+                                } catch (Exception ex) {
+                                    logger.warn(ex.getMessage(), ex);
+                                }
+                            } catch (Exception e) {
+                                throw new HibernateException("Unable to create temporary file: ", e);
+                            }
 
-		                    dvkFile.setDdocNamespace("http://www.sk.ee/DigiDoc/v1.3.0#");
-		                    dvkFile.setFileContentType("EMBEDDED_BASE64");
-		                    dvkFile.setFileId("D" + (dvkFiles.size() - 1));
-		                    dvkFile.setFileName(f.getFileName());
-		                    dvkFile.setFileSize(String.valueOf(f.getFileSizeBytes()));
-		                    dvkFile.setFileMimeType(f.getContentType());
-	                    }
-	                }
+                            dvkFile.setDdocNamespace("http://www.sk.ee/DigiDoc/v1.3.0#");
+                            dvkFile.setFileContentType("EMBEDDED_BASE64");
+                            dvkFile.setFileId("D" + (dvkFiles.size() - 1));
+                            dvkFile.setFileName(f.getFileName());
+                            dvkFile.setFileSize(String.valueOf(f.getFileSizeBytes()));
+                            dvkFile.setFileMimeType(f.getContentType());
+                        }
+                    }
 
-	                failideKonteiner.setDataFiles(dvkFiles);
-	                dvkContainer.setSignedDoc(failideKonteiner);
+                    failideKonteiner.setDataFiles(dvkFiles);
+                    dvkContainer.setSignedDoc(failideKonteiner);
 
-	                // Save document to DVK Client database
+                    // Save document to DVK Client database
 
-	                SessionFactory sessionFactory = this.getDvkDAO().getSessionFactory();
-	                Long dvkMessageID = null;
-	                Session dvkSession = sessionFactory.openSession();
-	                dvkSession.setFlushMode(FlushMode.COMMIT);
-	                Transaction dvkTransaction = dvkSession.beginTransaction();
+                    SessionFactory sessionFactory = this.getDvkDAO().getSessionFactory();
+                    Long dvkMessageID = null;
+                    Session dvkSession = sessionFactory.openSession();
+                    dvkSession.setFlushMode(FlushMode.COMMIT);
+                    Transaction dvkTransaction = dvkSession.beginTransaction();
 
-	                logger.info("DVK session flush mode: " + dvkSession.getFlushMode().toString());
+                    logger.info("DVK session flush mode: " + dvkSession.getFlushMode().toString());
 
-	                try {
-	                    PojoMessage dvkMessage = new PojoMessage();
-	                    dvkMessage.setIsIncoming(false);
-	                    dvkMessage.setDhlFolderName("/");
-	                    dvkMessage.setLocalItemId(document.getId());
-	                    dvkMessage.setTitle(document.getTitle());
-	                    dvkMessage.setDhlGuid(document.getGuid());
-	                    dvkMessage.setSendingStatusId(DocumentService.DVK_STATUS_WAITING);
+                    try {
+                        PojoMessage dvkMessage = new PojoMessage();
+                        dvkMessage.setIsIncoming(false);
+                        dvkMessage.setDhlFolderName("/");
+                        dvkMessage.setLocalItemId(document.getId());
+                        dvkMessage.setTitle(document.getTitle());
+                        dvkMessage.setDhlGuid(document.getGuid());
+                        dvkMessage.setSendingStatusId(DocumentService.DVK_STATUS_WAITING);
 
-	                    dvkMessage.setSenderOrgCode(saatja.getRegNr());
-	                    dvkMessage.setSenderPersonCode(saatja.getIsikukood());
-	                    dvkMessage.setSenderOrgName(saatja.getAsutuseNimi());
-	                    dvkMessage.setSenderName(saatja.getNimi());
+                        dvkMessage.setSenderOrgCode(saatja.getRegNr());
+                        dvkMessage.setSenderPersonCode(saatja.getIsikukood());
+                        dvkMessage.setSenderOrgName(saatja.getAsutuseNimi());
+                        dvkMessage.setSenderName(saatja.getNimi());
 
-	                    // Add first recipient data
-	                    if (firstRecipient != null) {
-	                    	dvkMessage.setRecipientOrgCode(firstRecipient.getRegNr());
-	                    	dvkMessage.setRecipientPersonCode(firstRecipient.getIsikukood());
-	                    	dvkMessage.setRecipientOrgName(firstRecipient.getAsutuseNimi());
-	                    	dvkMessage.setRecipientName(firstRecipient.getNimi());
-	                    }
+                        // Add first recipient data
+                        if (firstRecipient != null) {
+                            dvkMessage.setRecipientOrgCode(firstRecipient.getRegNr());
+                            dvkMessage.setRecipientPersonCode(firstRecipient.getIsikukood());
+                            dvkMessage.setRecipientOrgName(firstRecipient.getAsutuseNimi());
+                            dvkMessage.setRecipientName(firstRecipient.getNimi());
+                        }
 
-	                    // Insert data as stream
-	                    Clob clob = Hibernate.createClob(" ", dvkSession);
-	                    dvkMessage.setData(clob);
+                        // Insert data as stream
+                        Clob clob = Hibernate.createClob(" ", dvkSession);
+                        dvkMessage.setData(clob);
 
-	                    logger.debug("Saving document to DVK database");
-	                    dvkMessageID = (Long) dvkSession.save(dvkMessage);
+                        logger.debug("Saving document to DVK database");
+                        dvkMessageID = (Long) dvkSession.save(dvkMessage);
 
-	                    if (dvkMessageID == null || dvkMessageID.longValue() == 0) {
-	                        logger.error("Error while saving outgoing message to DVK database - no ID returned by save method.");
-	                        throw new DataRetrievalFailureException(
-	                                "Error while saving outgoing message to DVK database - no ID returned by save method.");
-	                    } else {
-	                        logger.info("Outgoing message saved to DVK database. ID: " + dvkMessageID);
-	                    }
+                        if (dvkMessageID == null || dvkMessageID.longValue() == 0) {
+                            logger.error("Error while saving outgoing message to DVK database - no ID returned by save method.");
+                            throw new DataRetrievalFailureException(
+                                    "Error while saving outgoing message to DVK database - no ID returned by save method.");
+                        } else {
+                            logger.info("Outgoing message saved to DVK database. ID: " + dvkMessageID);
+                        }
 
-	                    logger.debug("DVK Message saved to client database. GUID: " + dvkMessage.getDhlGuid());
-	                    dvkTransaction.commit();
-	                } catch (Exception e) {
-	                    dvkTransaction.rollback();
-	                    throw new DataRetrievalFailureException("Error while adding message to DVK Client database: ", e);
-	                } finally {
-	                    if (dvkSession != null) {
-	                        dvkSession.close();
-	                    }
-	                }
+                        logger.debug("DVK Message saved to client database. GUID: " + dvkMessage.getDhlGuid());
+                        dvkTransaction.commit();
+                    } catch (Exception e) {
+                        dvkTransaction.rollback();
+                        throw new DataRetrievalFailureException("Error while adding message to DVK Client database: ", e);
+                    } finally {
+                        if (dvkSession != null) {
+                            dvkSession.close();
+                        }
+                    }
 
-	                // Update CLOB
-	                Session dvkSession2 = sessionFactory.openSession();
-	                dvkSession2.setFlushMode(FlushMode.COMMIT);
-	                Transaction dvkTransaction2 = dvkSession2.beginTransaction();
+                    // Update CLOB
+                    Session dvkSession2 = sessionFactory.openSession();
+                    dvkSession2.setFlushMode(FlushMode.COMMIT);
+                    Transaction dvkTransaction2 = dvkSession2.beginTransaction();
 
-	                try {
-	                    // Select the record for update
-	                    PojoMessage dvkMessageToUpdate = (PojoMessage) dvkSession2.load(PojoMessage.class, dvkMessageID, LockOptions.UPGRADE);
+                    try {
+                        // Select the record for update
+                        PojoMessage dvkMessageToUpdate = (PojoMessage) dvkSession2.load(PojoMessage.class, dvkMessageID, LockOptions.UPGRADE);
 
-	                    // Write the DVK Container to temporary file
-	                    String temporaryFile = this.getConfiguration().getTempDir() + File.separator
-	                            + Util.generateRandomFileName();
-	                    dvkContainer.save2File(temporaryFile);
+                        // Write the DVK Container to temporary file
+                        String temporaryFile = this.getConfiguration().getTempDir() + File.separator
+                                + Util.generateRandomFileName();
+                        dvkContainer.save2File(temporaryFile);
 
-	                    // Write the temporary file to the database
-	                    InputStream is = new FileInputStream(temporaryFile);
-	                    Writer clobWriter = dvkMessageToUpdate.getData().setCharacterStream(1);
+                        // Write the temporary file to the database
+                        InputStream is = new FileInputStream(temporaryFile);
+                        Writer clobWriter = dvkMessageToUpdate.getData().setCharacterStream(1);
 
-	                    byte[] buf = new byte[1024];
-	                    int len;
-	                    while ((len = is.read(buf)) > 0) {
-	                        clobWriter.write(new String(buf, 0, len, "UTF-8"));
-	                    }
-	                    is.close();
-	                    clobWriter.close();
+                        byte[] buf = new byte[1024];
+                        int len;
+                        while ((len = is.read(buf)) > 0) {
+                            clobWriter.write(new String(buf, 0, len, "UTF-8"));
+                        }
+                        is.close();
+                        clobWriter.close();
 
-	                    // Commit to DVK database
-	                    dvkTransaction2.commit();
+                        // Commit to DVK database
+                        dvkTransaction2.commit();
 
-	                    // Save the document DVK_ID to ADIT database
-	                    document.setDvkId(dvkMessageID);
-	                    session.saveOrUpdate(document);
+                        // Save the document DVK_ID to ADIT database
+                        document.setDvkId(dvkMessageID);
+                        session.saveOrUpdate(document);
 
-	                    logger.debug("Starting to update document sharings");
-	                    Transaction aditTransaction = session.beginTransaction();
-	                    // Update document sharings status
-	                    Iterator<DocumentSharing> documentSharingUpdateIterator = document.getDocumentSharings().iterator();
-	                    while (documentSharingUpdateIterator.hasNext()) {
-	                        DocumentSharing documentSharing = documentSharingUpdateIterator.next();
-	                        if (DocumentService.SHARINGTYPE_SEND_DVK.equalsIgnoreCase(documentSharing
-	                                .getDocumentSharingType())) {
-	                            documentSharing.setDocumentDvkStatus(DVK_STATUS_SENDING);
-	                            // documentSharing.setDvkSendDate(new Date());
-	                            session.saveOrUpdate(documentSharing);
-	                            logger.debug("DocumentSharing status updated to: '" + DVK_STATUS_SENDING + "'.");
-	                        }
-	                    }
+                        logger.debug("Starting to update document sharings");
+                        Transaction aditTransaction = session.beginTransaction();
+                        // Update document sharings status
+                        Iterator<DocumentSharing> documentSharingUpdateIterator = document.getDocumentSharings().iterator();
+                        while (documentSharingUpdateIterator.hasNext()) {
+                            DocumentSharing documentSharing = documentSharingUpdateIterator.next();
+                            if (DocumentService.SHARINGTYPE_SEND_DVK.equalsIgnoreCase(documentSharing
+                                    .getDocumentSharingType())) {
+                                documentSharing.setDocumentDvkStatus(DVK_STATUS_SENDING);
+                                // documentSharing.setDvkSendDate(new Date());
+                                session.saveOrUpdate(documentSharing);
+                                logger.debug("DocumentSharing status updated to: '" + DVK_STATUS_SENDING + "'.");
+                            }
+                        }
 
-	                    aditTransaction.commit();
+                        aditTransaction.commit();
 
-	                    result++;
+                        result++;
 
-	                } catch (Exception e) {
-	                    dvkTransaction2.rollback();
+                    } catch (Exception e) {
+                        dvkTransaction2.rollback();
 
-	                    // Remove the document with empty clob from the database
-	                    Session dvkSession3 = sessionFactory.openSession();
-	                    dvkSession3.setFlushMode(FlushMode.COMMIT);
-	                    Transaction dvkTransaction3 = dvkSession3.beginTransaction();
-	                    try {
-	                        logger.debug("Starting to delete document from DVK Client database: " + dvkMessageID);
-	                        PojoMessage dvkMessageToDelete = (PojoMessage) dvkSession3
-	                                .load(PojoMessage.class, dvkMessageID);
-	                        if (dvkMessageToDelete == null) {
-	                            logger.warn("DVK message to delete is not initialized.");
-	                        }
-	                        dvkSession3.delete(dvkMessageToDelete);
-	                        dvkTransaction3.commit();
-	                        logger.info("Empty DVK document deleted from DVK Client database. ID: " + dvkMessageID);
-	                    } catch (Exception dvkException) {
-	                        dvkTransaction3.rollback();
-	                        logger.error("Error deleting document from DVK database: ", dvkException);
-	                    } finally {
-	                        if (dvkSession3 != null) {
-	                            dvkSession3.close();
-	                        }
-	                    }
+                        // Remove the document with empty clob from the database
+                        Session dvkSession3 = sessionFactory.openSession();
+                        dvkSession3.setFlushMode(FlushMode.COMMIT);
+                        Transaction dvkTransaction3 = dvkSession3.beginTransaction();
+                        try {
+                            logger.debug("Starting to delete document from DVK Client database: " + dvkMessageID);
+                            PojoMessage dvkMessageToDelete = (PojoMessage) dvkSession3
+                                    .load(PojoMessage.class, dvkMessageID);
+                            if (dvkMessageToDelete == null) {
+                                logger.warn("DVK message to delete is not initialized.");
+                            }
+                            dvkSession3.delete(dvkMessageToDelete);
+                            dvkTransaction3.commit();
+                            logger.info("Empty DVK document deleted from DVK Client database. ID: " + dvkMessageID);
+                        } catch (Exception dvkException) {
+                            dvkTransaction3.rollback();
+                            logger.error("Error deleting document from DVK database: ", dvkException);
+                        } finally {
+                            if (dvkSession3 != null) {
+                                dvkSession3.close();
+                            }
+                        }
 
-	                    throw new DataRetrievalFailureException(
-	                            "Error while adding message to DVK Client database (CLOB update): ", e);
-	                } finally {
-	                    if (dvkSession2 != null) {
-	                        dvkSession2.close();
-	                    }
-	                }
-	            } catch (Exception e) {
-	                throw new AditInternalException("Error while sending documents to DVK Client database: ", e);
-	            }
-	        }
+                        throw new DataRetrievalFailureException(
+                                "Error while adding message to DVK Client database (CLOB update): ", e);
+                    } finally {
+                        if (dvkSession2 != null) {
+                            dvkSession2.close();
+                        }
+                    }
+                } catch (Exception e) {
+                    throw new AditInternalException("Error while sending documents to DVK Client database: ", e);
+                }
+            }
         } finally {
-	        if ((session != null) && session.isOpen()) {
-	            session.close();
-	        }
+            if ((session != null) && session.isOpen()) {
+                session.close();
+            }
         }
 
         return result;
@@ -1636,7 +1636,7 @@ public class DocumentService {
                         Iterator<dvk.api.container.v1.Saaja> recipientsIterator = recipients.iterator();
 
                         while (recipientsIterator.hasNext()) {
-                        	dvk.api.container.v1.Saaja recipient = recipientsIterator.next();
+                            dvk.api.container.v1.Saaja recipient = recipientsIterator.next();
 
                             logger.info("Recipient: " + recipient.getRegNr() + " (" + recipient.getAsutuseNimi()
                                     + "). Isikukood: '" + recipient.getIsikukood() + "'.");
@@ -1646,12 +1646,12 @@ public class DocumentService {
                             // regardless if it is actually a person or an
                             // institution / company.
                             if (!Util.isNullOrEmpty(recipient.getRegNr())
-                            	&& !Util.isNullOrEmpty(recipient.getIsikukood())) {
+                                && !Util.isNullOrEmpty(recipient.getIsikukood())) {
                                 // The recipient is specified - check if it's a DVK user
-                            	String personalIdCodeWithCountryPrefix = recipient.getIsikukood().trim();
-                            	if (!personalIdCodeWithCountryPrefix.startsWith("EE")) {
-                            		personalIdCodeWithCountryPrefix = "EE" + personalIdCodeWithCountryPrefix;
-                            	}
+                                String personalIdCodeWithCountryPrefix = recipient.getIsikukood().trim();
+                                if (!personalIdCodeWithCountryPrefix.startsWith("EE")) {
+                                    personalIdCodeWithCountryPrefix = "EE" + personalIdCodeWithCountryPrefix;
+                                }
 
                                 logger.debug("Getting AditUser by personal code: " + personalIdCodeWithCountryPrefix);
                                 AditUser user = this.getAditUserDAO().getUserByID(personalIdCodeWithCountryPrefix);
@@ -1660,7 +1660,7 @@ public class DocumentService {
                                     // Check if user uses DVK
                                     if (!Util.isNullOrEmpty(user.getDvkOrgCode())) {
                                         // The user uses DVK - this is not allowed.
-                                    	// Users that use DVK have to exchange
+                                        // Users that use DVK have to exchange
                                         // documents with other users that
                                         // use DVK, over DVK.
                                         this.composeErrorResponse(DocumentService.DVK_RECEIVE_FAIL_REASON_USER_USES_DVK,
@@ -1694,31 +1694,31 @@ public class DocumentService {
                                     // Digital signature extraction
                                     boolean involvedSignatureContainerExtraction = false;
                                     if ((tempDocuments != null) && (tempDocuments.size() == 1)) {
-                                    	OutputDocumentFile file = tempDocuments.get(0);
+                                        OutputDocumentFile file = tempDocuments.get(0);
                                         String extension = Util.getFileExtension(file.getName());
 
                                         // If first added file happens to be a DigiDoc container then
                                         // extract files and signatures from container. Otherwise add
                                         // container as a regular file.
                                         if (((file.getId() == null) || (file.getId() <= 0)) && "ddoc".equalsIgnoreCase(extension)) {
-                                        	DigiDocExtractionResult extractionResult = extractDigiDocContainer(file.getSysTempFile(), digidocConfigFile);
-                                        	if (extractionResult.isSuccess()) {
-                                        		file.setFileType(FILETYPE_NAME_SIGNATURE_CONTAINER);
-                                        		aditDocument.setSigned((extractionResult.getSignatures() != null) && (extractionResult.getSignatures().size() > 0));
-                                        		involvedSignatureContainerExtraction = true;
+                                            DigiDocExtractionResult extractionResult = extractDigiDocContainer(file.getSysTempFile(), digidocConfigFile);
+                                            if (extractionResult.isSuccess()) {
+                                                file.setFileType(FILETYPE_NAME_SIGNATURE_CONTAINER);
+                                                aditDocument.setSigned((extractionResult.getSignatures() != null) && (extractionResult.getSignatures().size() > 0));
+                                                involvedSignatureContainerExtraction = true;
 
-                                        		for (int i = 0; i < extractionResult.getFiles().size(); i++) {
-                                        			DocumentFile df = extractionResult.getFiles().get(i);
-                                        			df.setDocument(aditDocument);
-                                        			aditDocument.getDocumentFiles().add(df);
-                                        		}
+                                                for (int i = 0; i < extractionResult.getFiles().size(); i++) {
+                                                    DocumentFile df = extractionResult.getFiles().get(i);
+                                                    df.setDocument(aditDocument);
+                                                    aditDocument.getDocumentFiles().add(df);
+                                                }
 
-                                        		for (int i = 0; i < extractionResult.getSignatures().size(); i++) {
-                                        			ee.adit.dao.pojo.Signature sig = extractionResult.getSignatures().get(i);
-                                        			sig.setDocument(aditDocument);
-                                        			aditDocument.getSignatures().add(sig);
-                                        		}
-                                        	}
+                                                for (int i = 0; i < extractionResult.getSignatures().size(); i++) {
+                                                    ee.adit.dao.pojo.Signature sig = extractionResult.getSignatures().get(i);
+                                                    sig.setDocument(aditDocument);
+                                                    aditDocument.getSignatures().add(sig);
+                                                }
+                                            }
                                         }
                                     }
 
@@ -1753,14 +1753,14 @@ public class DocumentService {
 
                                             // Add signature container extraction history event
                                             if (involvedSignatureContainerExtraction) {
-                                        		CustomXTeeHeader dummyHeader = new CustomXTeeHeader();
-                                        		dummyHeader.addElement(CustomXTeeHeader.ISIKUKOOD, user.getUserCode());
-                                        		dummyHeader.addElement(CustomXTeeHeader.INFOSYSTEEM, "");
+                                                CustomXTeeHeader dummyHeader = new CustomXTeeHeader();
+                                                dummyHeader.addElement(CustomXTeeHeader.ISIKUKOOD, user.getUserCode());
+                                                dummyHeader.addElement(CustomXTeeHeader.INFOSYSTEEM, "");
 
                                                 DocumentHistory historyEvent = new DocumentHistory(
-                                               		 HISTORY_TYPE_EXTRACT_FILE, saveResult.getItemId(),
-                                               		 Calendar.getInstance().getTime(), user,
-                                               		 user, dummyHeader);
+                                                        HISTORY_TYPE_EXTRACT_FILE, saveResult.getItemId(),
+                                                        Calendar.getInstance().getTime(), user,
+                                                        user, dummyHeader);
                                                 historyEvent.setDescription(DOCUMENT_HISTORY_DESCRIPTION_EXTRACT_FILE);
                                                 this.getDocumentHistoryDAO().save(historyEvent);
                                             }
@@ -1768,7 +1768,7 @@ public class DocumentService {
                                             // Update user quota limit
                                             Long usedDiskQuota = user.getDiskQuotaUsed();
                                             if (usedDiskQuota == null) {
-                                            	usedDiskQuota = 0L;
+                                                usedDiskQuota = 0L;
                                             }
                                             user.setDiskQuotaUsed(usedDiskQuota + saveResult.getAddedFilesSize());
                                             this.getAditUserDAO().saveOrUpdate(user, true);
@@ -1818,7 +1818,7 @@ public class DocumentService {
                 logger.info("No incoming messages found in DVK Client database.");
             }
         } catch (AditCodedException ex) {
-        	throw ex;
+            throw ex;
         } catch (Exception e) {
             throw new AditInternalException("Error while receiving documents from DVK Client database: ", e);
         }
@@ -1899,13 +1899,13 @@ public class DocumentService {
 
         Reader clobReader = null;
         try {
-        	StringBuilder sb = new StringBuilder(1024 * 1024 * 5);
-        	clobReader = document.getData().getCharacterStream();
+            StringBuilder sb = new StringBuilder(1024 * 1024 * 5);
+            clobReader = document.getData().getCharacterStream();
 
             char[] cbuf = new char[1024];
             int readCount = 0;
             while ((readCount = clobReader.read(cbuf)) > 0) {
-            	sb.append(cbuf, 0, readCount);
+                sb.append(cbuf, 0, readCount);
             }
             clobReader.close();
 
@@ -2016,7 +2016,7 @@ public class DocumentService {
             logger.debug("Total number of files in DVK Container: " + dvkFiles.size());
 
             while (dvkFilesIterator.hasNext()) {
-            	dvk.api.container.v1.DataFile dvkFile = dvkFilesIterator.next();
+                dvk.api.container.v1.DataFile dvkFile = dvkFilesIterator.next();
                 logger.debug("Processing file with ID: " + dvkFile.getFileId());
 
                 String fileContents = dvkFile.getFileBase64Content();
@@ -2117,8 +2117,8 @@ public class DocumentService {
                         long sharingDvkStatus = (documentSharing.getDocumentDvkStatus() == null) ? 0 : documentSharing.getDocumentDvkStatus().longValue();
 
                         if (sharingUserCodeWithoutCountryPrefix.equalsIgnoreCase(messageRecipient.getRecipientOrgCode())
-                        	|| sharingUserCode.equalsIgnoreCase(messageRecipient.getRecipientOrgCode())
-                        	|| sharingUserCodeWithoutCountryPrefix.equalsIgnoreCase(messageRecipient.getRecipientPersonCode())
+                            || sharingUserCode.equalsIgnoreCase(messageRecipient.getRecipientOrgCode())
+                            || sharingUserCodeWithoutCountryPrefix.equalsIgnoreCase(messageRecipient.getRecipientPersonCode())
                             || sharingUserCode.equalsIgnoreCase(messageRecipient.getRecipientPersonCode())) {
 
                             // If the statuses differ, update the one in ADIT
@@ -2558,7 +2558,7 @@ public class DocumentService {
 
         try {
             // DVK Container can contain only one sender
-        	dvk.api.container.v1.Saatja sender = dvkContainer.getTransport().getSaatjad().get(0);
+            dvk.api.container.v1.Saatja sender = dvkContainer.getTransport().getSaatjad().get(0);
             senderOrgCode = sender.getRegNr();
             senderPersonCode = sender.getIsikukood();
             senderOrgName = sender.getAsutuseNimi();
@@ -2938,20 +2938,20 @@ public class DocumentService {
             List<dvk.api.container.v1.DataFile> originalFiles = originalContainer.getSignedDoc().getDataFiles();
 
             for (int i = 0; i < originalFiles.size(); i++) {
-            	dvk.api.container.v1.DataFile originalFile = originalFiles.get(i);
-            	String filePath = Util.createTemporaryFile(
-            		Util.base64DecodeToByteArray(originalFile.getFileBase64Content()),
-            		this.getConfiguration().getTempDir());
-            	File f = new File(filePath);
+                dvk.api.container.v1.DataFile originalFile = originalFiles.get(i);
+                String filePath = Util.createTemporaryFile(
+                    Util.base64DecodeToByteArray(originalFile.getFileBase64Content()),
+                    this.getConfiguration().getTempDir());
+                File f = new File(filePath);
 
-            	Fail v2File = new Fail();
-            	v2File.setFile(f);
-            	v2File.setFailSuurus(f.length());
-            	v2File.setFailNimi(originalFile.getFileName());
-            	v2File.setFailTyyp(originalFile.getFileMimeType());
-            	v2File.setJrkNr((short)(i + 1));
-            	v2File.setKrypteering(false);
-            	v2File.setPohiDokument(false);
+                Fail v2File = new Fail();
+                v2File.setFile(f);
+                v2File.setFailSuurus(f.length());
+                v2File.setFailNimi(originalFile.getFileName());
+                v2File.setFailTyyp(originalFile.getFileMimeType());
+                v2File.setJrkNr((short)(i + 1));
+                v2File.setKrypteering(false);
+                v2File.setPohiDokument(false);
 
                 files.add(v2File);
             }
@@ -3105,14 +3105,14 @@ public class DocumentService {
         // Check whether or not given document belongs to current user
         if ((userCode != null) && (userCode.equalsIgnoreCase(doc.getCreatorCode()))) {
 
-        	// If document has been sent then preserve contents and only mark
-        	// document as invisible to owner.
-        	// If document has been shared then cancel sharing and delete the document
-        	boolean hasBeenSent = false;
-        	boolean hasBeenSentToSelfOnly = false;
-        	if (doc.getDocumentSharings() != null) {
+            // If document has been sent then preserve contents and only mark
+            // document as invisible to owner.
+            // If document has been shared then cancel sharing and delete the document
+            boolean hasBeenSent = false;
+            boolean hasBeenSentToSelfOnly = false;
+            if (doc.getDocumentSharings() != null) {
                 int numberOfSendRecipients = 0;
-        		Iterator<DocumentSharing> it = doc.getDocumentSharings().iterator();
+                Iterator<DocumentSharing> it = doc.getDocumentSharings().iterator();
                 while (it.hasNext()) {
                     DocumentSharing sharing = it.next();
                     if (sharing.getDocumentSharingType().equalsIgnoreCase(DocumentService.SHARINGTYPE_SHARE)
@@ -3121,42 +3121,42 @@ public class DocumentService {
                         it.remove();
                         sharing.setDocumentId(0);
                     } else {
-                    	hasBeenSent = true;
-                    	numberOfSendRecipients++;
+                        hasBeenSent = true;
+                        numberOfSendRecipients++;
 
-                    	if (userCode.equalsIgnoreCase(sharing.getUserCode())) {
-                    		sharing.setDeleted(true);
-                    		hasBeenSentToSelfOnly = true;
-                    	}
+                        if (userCode.equalsIgnoreCase(sharing.getUserCode())) {
+                            sharing.setDeleted(true);
+                            hasBeenSentToSelfOnly = true;
+                        }
                     }
                 }
                 hasBeenSentToSelfOnly = hasBeenSentToSelfOnly && (numberOfSendRecipients == 1);
-        	}
+            }
 
             // Replace file contents with MD5 hash of original contents
             if (!hasBeenSent || hasBeenSentToSelfOnly) {
                 if (doc.getDocumentFiles() != null) {
-	            	Iterator<DocumentFile> it = doc.getDocumentFiles().iterator();
-	                while (it.hasNext()) {
-	                    DocumentFile docFile = it.next();
+                    Iterator<DocumentFile> it = doc.getDocumentFiles().iterator();
+                    while (it.hasNext()) {
+                        DocumentFile docFile = it.next();
 
-	                    if ((docFile.getDeleted() == null) || !docFile.getDeleted()) {
-	                        String resultCode = this.deflateDocumentFile(doc.getId(), docFile.getId(), true, false);
+                        if ((docFile.getDeleted() == null) || !docFile.getDeleted()) {
+                            String resultCode = this.deflateDocumentFile(doc.getId(), docFile.getId(), true, false);
 
-	                        // Make sure no relevant error code was returned
-	                        if (resultCode.equalsIgnoreCase("file_does_not_exist")) {
-	                            AditCodedException aditCodedException = new AditCodedException("file.nonExistent");
-	                            aditCodedException.setParameters(new Object[] {new Long(docFile.getId()).toString() });
-	                            throw aditCodedException;
-	                        } else if (resultCode.equalsIgnoreCase("file_does_not_belong_to_document")) {
-	                            AditCodedException aditCodedException = new AditCodedException("file.doesNotBelongToDocument");
-	                            aditCodedException.setParameters(new Object[] {new Long(docFile.getId()).toString(), new Long(doc.getId()).toString() });
-	                            throw aditCodedException;
-	                        }
+                            // Make sure no relevant error code was returned
+                            if (resultCode.equalsIgnoreCase("file_does_not_exist")) {
+                                AditCodedException aditCodedException = new AditCodedException("file.nonExistent");
+                                aditCodedException.setParameters(new Object[] {new Long(docFile.getId()).toString() });
+                                throw aditCodedException;
+                            } else if (resultCode.equalsIgnoreCase("file_does_not_belong_to_document")) {
+                                AditCodedException aditCodedException = new AditCodedException("file.doesNotBelongToDocument");
+                                aditCodedException.setParameters(new Object[] {new Long(docFile.getId()).toString(), new Long(doc.getId()).toString() });
+                                throw aditCodedException;
+                            }
 
-	                        deletedFilesSize = deletedFilesSize + docFile.getFileSizeBytes();
-	                    }
-	                }
+                            deletedFilesSize = deletedFilesSize + docFile.getFileSizeBytes();
+                        }
+                    }
                 }
                 doc.setDeleted(true);
                 saveDocument = true;
@@ -3167,8 +3167,8 @@ public class DocumentService {
                     aditCodedException.setParameters(new Object[] {new Long(documentId).toString() });
                     throw aditCodedException;
                 } else {
-                	doc.setInvisibleToOwner(true);
-                	saveDocument = true;
+                    doc.setInvisibleToOwner(true);
+                    saveDocument = true;
                 }
             }
         } else if (doc.getDocumentSharings() != null) {
@@ -3178,13 +3178,13 @@ public class DocumentService {
                 DocumentSharing sharing = it.next();
                 if (sharing.getUserCode().equalsIgnoreCase(userCode)) {
                     if (sharing.getDocumentSharingType().equalsIgnoreCase(DocumentService.SHARINGTYPE_SHARE)
-                    	|| sharing.getDocumentSharingType().equalsIgnoreCase(DocumentService.SHARINGTYPE_SIGN)) {
-	                    // doc.getDocumentSharings().remove(sharing); // NB! DO NOT
-	                    // DO THAT - can throw ConcurrentModificationException
-	                    it.remove();
-	                    sharing.setDocumentId(0);
+                        || sharing.getDocumentSharingType().equalsIgnoreCase(DocumentService.SHARINGTYPE_SIGN)) {
+                        // doc.getDocumentSharings().remove(sharing); // NB! DO NOT
+                        // DO THAT - can throw ConcurrentModificationException
+                        it.remove();
+                        sharing.setDocumentId(0);
                     } else {
-                    	sharing.setDeleted(true);
+                        sharing.setDeleted(true);
                     }
                     saveDocument = true;
                 }
@@ -3212,18 +3212,18 @@ public class DocumentService {
                 if (user != null) {
                     Long usedDiskQuota = user.getDiskQuotaUsed();
                     if (usedDiskQuota == null) {
-                    	usedDiskQuota = 0L;
+                        usedDiskQuota = 0L;
                     }
 
                     // Re-calculate used disk quota and prevent the result
                     // from being negative.
                     long newUsedDiskQuota = usedDiskQuota - deletedFilesSize;
                     if (newUsedDiskQuota < 0) {
-                    	newUsedDiskQuota = 0;
+                        newUsedDiskQuota = 0;
                     }
 
                     user.setDiskQuotaUsed(newUsedDiskQuota);
-	                this.getAditUserDAO().saveOrUpdate(user, true);
+                    this.getAditUserDAO().saveOrUpdate(user, true);
                 }
             }
 
@@ -3285,7 +3285,7 @@ public class DocumentService {
             DocumentFile docFile = it.next();
 
             if ((docFile.getDeleted() == null) || !docFile.getDeleted()) {
-	            String resultCode = deflateDocumentFile(doc.getId(), docFile.getId(), false, false);
+                String resultCode = deflateDocumentFile(doc.getId(), docFile.getId(), false, false);
 
                 if (resultCode.equalsIgnoreCase("file_does_not_exist")) {
                     AditCodedException aditCodedException = new AditCodedException("file.nonExistent");
@@ -3297,7 +3297,7 @@ public class DocumentService {
                     throw aditCodedException;
                 }
 
-	            deflatedFilesSize = deflatedFilesSize + docFile.getFileSizeBytes();
+                deflatedFilesSize = deflatedFilesSize + docFile.getFileSizeBytes();
             }
         }
 
@@ -3320,18 +3320,18 @@ public class DocumentService {
             if (user != null) {
                 Long usedDiskQuota = user.getDiskQuotaUsed();
                 if (usedDiskQuota == null) {
-                	usedDiskQuota = 0L;
+                    usedDiskQuota = 0L;
                 }
 
                 // Re-calculate used disk quota and prevent the result
                 // from being negative.
                 long newUsedDiskQuota = usedDiskQuota - deflatedFilesSize;
                 if (newUsedDiskQuota < 0) {
-                	newUsedDiskQuota = 0;
+                    newUsedDiskQuota = 0;
                 }
 
                 user.setDiskQuotaUsed(newUsedDiskQuota);
-	            this.getAditUserDAO().saveOrUpdate(user, true);
+                this.getAditUserDAO().saveOrUpdate(user, true);
             }
         }
     }
@@ -3412,12 +3412,12 @@ public class DocumentService {
                 DocumentFile signatureContainer = findSignatureContainer(doc);
 
                 if ((signatureContainerDraft != null)
-                	&& (signatureContainerDraft.getFileData() != null)
-                	&& !isSignatureContainerDraftExpired(signatureContainerDraft)) {
-                	usingExistingDraft = true;
-                	readExistingContainer = true;
+                    && (signatureContainerDraft.getFileData() != null)
+                    && !isSignatureContainerDraftExpired(signatureContainerDraft)) {
+                    usingExistingDraft = true;
+                    readExistingContainer = true;
                 } else if ((signatureContainer != null) && (signatureContainer.getFileData() != null)) {
-                	readExistingContainer = true;
+                    readExistingContainer = true;
                 }
 
                 SignedDoc sdoc = null;
@@ -3430,14 +3430,14 @@ public class DocumentService {
 
                     InputStream containerAsStream = null;
                     try {
-                    	if (usingExistingDraft) {
-                    		containerAsStream = signatureContainerDraft.getFileData().getBinaryStream();
-                    	} else {
-                    		containerAsStream = signatureContainer.getFileData().getBinaryStream();
-                    	}
-                    	sdoc = factory.readSignedDoc(containerAsStream);
+                        if (usingExistingDraft) {
+                            containerAsStream = signatureContainerDraft.getFileData().getBinaryStream();
+                        } else {
+                            containerAsStream = signatureContainer.getFileData().getBinaryStream();
+                        }
+                        sdoc = factory.readSignedDoc(containerAsStream);
                     } finally {
-                    	Util.safeCloseStream(containerAsStream);
+                        Util.safeCloseStream(containerAsStream);
                     }
 
                     // Make sure that document is not already signed
@@ -3447,7 +3447,7 @@ public class DocumentService {
                     for (int i = 0; i < sigCount; i++) {
                         Signature existingSig = sdoc.getSignature(i);
                         if (isPossibleToRemovePendingSignature(existingSig, userCodeWithoutCountryPrefix)) {
-                        	removeSignatureAtIndex = i;
+                            removeSignatureAtIndex = i;
                         }
                     }
 
@@ -3455,28 +3455,28 @@ public class DocumentService {
                     // and now attempts to prepare another signature then
                     // lets remove the users earlier signature.
                     if (removeSignatureAtIndex >= 0) {
-                    	sdoc.removeSignature(removeSignatureAtIndex);
+                        sdoc.removeSignature(removeSignatureAtIndex);
                     } else if (usingExistingDraft) {
-                    	// If someone else has a pending signature then lets break
-                    	// signing until the other person has completed his/her
-                    	// signing process.
-                    	long containerDraftRemainingLifetime = getContainerDraftRemainingLifetimeSeconds(signatureContainerDraft);
-                    	if (containerDraftRemainingLifetime <= 0L) {
-                    		throw new AditCodedException("request.prepareSignature.documentIsBeingSignedByAnotherUser");
-                    	} else {
-	                        if (containerDraftRemainingLifetime > 60) {
-	                    		long minutes = (long) Math.floor((double) containerDraftRemainingLifetime / 60);
-	                    		long seconds = (containerDraftRemainingLifetime - (minutes * 60L));
+                        // If someone else has a pending signature then lets break
+                        // signing until the other person has completed his/her
+                        // signing process.
+                        long containerDraftRemainingLifetime = getContainerDraftRemainingLifetimeSeconds(signatureContainerDraft);
+                        if (containerDraftRemainingLifetime <= 0L) {
+                            throw new AditCodedException("request.prepareSignature.documentIsBeingSignedByAnotherUser");
+                        } else {
+                            if (containerDraftRemainingLifetime > 60) {
+                                long minutes = (long) Math.floor((double) containerDraftRemainingLifetime / 60);
+                                long seconds = (containerDraftRemainingLifetime - (minutes * 60L));
 
-	                        	AditCodedException aditCodedException = new AditCodedException("request.prepareSignature.documentIsBeingSignedByAnotherUser.withEstimate");
-		                        aditCodedException.setParameters(new Object[] {minutes, seconds});
-		                        throw aditCodedException;
-	                        } else {
-	                    		AditCodedException aditCodedException = new AditCodedException("request.prepareSignature.documentIsBeingSignedByAnotherUser.withEstimateSecondsOnly");
-		                        aditCodedException.setParameters(new Object[] {containerDraftRemainingLifetime});
-		                        throw aditCodedException;
-	                        }
-                    	}
+                                AditCodedException aditCodedException = new AditCodedException("request.prepareSignature.documentIsBeingSignedByAnotherUser.withEstimate");
+                                aditCodedException.setParameters(new Object[] {minutes, seconds});
+                                throw aditCodedException;
+                            } else {
+                                AditCodedException aditCodedException = new AditCodedException("request.prepareSignature.documentIsBeingSignedByAnotherUser.withEstimateSecondsOnly");
+                                aditCodedException.setParameters(new Object[] {containerDraftRemainingLifetime});
+                                throw aditCodedException;
+                            }
+                        }
                     }
                 }
 
@@ -3496,57 +3496,57 @@ public class DocumentService {
                 }
 
                 if ((sdoc.countDataFiles() < 1) && (sdoc.countSignatures() < 1)) {
-	                // Create unique subdirectory for files
-	                uniqueDir = new File(temporaryFilesDir + File.separator + documentId);
-	                int uniqueCounter = 0;
-	                while (uniqueDir.exists()) {
-	                    uniqueDir = new File(temporaryFilesDir + File.separator + documentId + "_" + (++uniqueCounter));
-	                }
-	                uniqueDir.mkdir();
+                    // Create unique subdirectory for files
+                    uniqueDir = new File(temporaryFilesDir + File.separator + documentId);
+                    int uniqueCounter = 0;
+                    while (uniqueDir.exists()) {
+                        uniqueDir = new File(temporaryFilesDir + File.separator + documentId + "_" + (++uniqueCounter));
+                    }
+                    uniqueDir.mkdir();
 
-	                List<DocumentFile> filesList = new ArrayList<DocumentFile>(doc.getDocumentFiles());
-	                for (DocumentFile docFile : filesList) {
-	                    if (isPossibleToSignFile(docFile)) {
-	                        String outputFileName = uniqueDir.getAbsolutePath() + File.separator + docFile.getFileName();
+                    List<DocumentFile> filesList = new ArrayList<DocumentFile>(doc.getDocumentFiles());
+                    for (DocumentFile docFile : filesList) {
+                        if (isPossibleToSignFile(docFile)) {
+                            String outputFileName = uniqueDir.getAbsolutePath() + File.separator + docFile.getFileName();
 
-	                        InputStream blobDataStream = null;
-	                        FileOutputStream fileOutputStream = null;
-	                        try {
-	                            byte[] buffer = new byte[10240];
-	                            int len = 0;
-	                            blobDataStream = docFile.getFileData().getBinaryStream();
-	                            fileOutputStream = new FileOutputStream(outputFileName);
-	                            while ((len = blobDataStream.read(buffer)) > 0) {
-	                                fileOutputStream.write(buffer, 0, len);
-	                            }
+                            InputStream blobDataStream = null;
+                            FileOutputStream fileOutputStream = null;
+                            try {
+                                byte[] buffer = new byte[10240];
+                                int len = 0;
+                                blobDataStream = docFile.getFileData().getBinaryStream();
+                                fileOutputStream = new FileOutputStream(outputFileName);
+                                while ((len = blobDataStream.read(buffer)) > 0) {
+                                    fileOutputStream.write(buffer, 0, len);
+                                }
 
-	                            // Add file to signature container
-	                            DataFile df = sdoc.addDataFile(new File(outputFileName), docFile.getContentType(), DataFile.CONTENT_EMBEDDED_BASE64);
-	                            docFile.setDdocDataFileId(df.getId());
-	                        } catch (IOException ex) {
-	                            throw new HibernateException(ex);
-	                        } finally {
-	                            try {
-	                                if (blobDataStream != null) {
-	                                    blobDataStream.close();
-	                                }
-	                                blobDataStream = null;
-	                            } catch (Exception ex) {
-	                                logger.error("Error closing BLOB data stream.", ex);
-	                            }
+                                // Add file to signature container
+                                DataFile df = sdoc.addDataFile(new File(outputFileName), docFile.getContentType(), DataFile.CONTENT_EMBEDDED_BASE64);
+                                docFile.setDdocDataFileId(df.getId());
+                            } catch (IOException ex) {
+                                throw new HibernateException(ex);
+                            } finally {
+                                try {
+                                    if (blobDataStream != null) {
+                                        blobDataStream.close();
+                                    }
+                                    blobDataStream = null;
+                                } catch (Exception ex) {
+                                    logger.error("Error closing BLOB data stream.", ex);
+                                }
 
-	                            try {
-	                                if (fileOutputStream != null) {
-	                                    fileOutputStream.close();
-	                                }
-	                                fileOutputStream = null;
-	                            } catch (Exception ex) {
-	                                logger.error("Error closing file output stream.", ex);
-	                            }
-	                        }
+                                try {
+                                    if (fileOutputStream != null) {
+                                        fileOutputStream.close();
+                                    }
+                                    fileOutputStream = null;
+                                } catch (Exception ex) {
+                                    logger.error("Error closing file output stream.", ex);
+                                }
+                            }
 
-	                    }
-	                }
+                        }
+                    }
                 }
 
                 // Add signature and calculate digest
@@ -3580,13 +3580,13 @@ public class DocumentService {
                 Blob containerData = Hibernate.createBlob(fileInputStream, length);
 
                 if (signatureContainerDraft == null) {
-                	signatureContainerDraft = new DocumentFile();
-                	signatureContainerDraft.setContentType(UNKNOWN_MIME_TYPE);
-                	signatureContainerDraft.setDeleted(false);
-                	signatureContainerDraft.setDocument(doc);
-                	signatureContainerDraft.setDocumentFileTypeId(FILETYPE_SIGNATURE_CONTAINER_DRAFT);
-                	signatureContainerDraft.setFileName(Util.convertToLegalFileName(doc.getTitle(), "ddoc", null));
-                	doc.getDocumentFiles().add(signatureContainerDraft);
+                    signatureContainerDraft = new DocumentFile();
+                    signatureContainerDraft.setContentType(UNKNOWN_MIME_TYPE);
+                    signatureContainerDraft.setDeleted(false);
+                    signatureContainerDraft.setDocument(doc);
+                    signatureContainerDraft.setDocumentFileTypeId(FILETYPE_SIGNATURE_CONTAINER_DRAFT);
+                    signatureContainerDraft.setFileName(Util.convertToLegalFileName(doc.getTitle(), "ddoc", null));
+                    doc.getDocumentFiles().add(signatureContainerDraft);
                 }
                 signatureContainerDraft.setFileSizeBytes(length);
                 signatureContainerDraft.setFileData(containerData);
@@ -3630,19 +3630,19 @@ public class DocumentService {
      * 		{@code true} if given container can be signed
      */
     public boolean isPossibleToSignFile(DocumentFile file) {
-    	if (file == null) {
-    		return false;
-    	}
+        if (file == null) {
+            return false;
+        }
 
-    	if (file.getDocumentFileTypeId() != FILETYPE_DOCUMENT_FILE) {
-    		return false;
-    	}
+        if (file.getDocumentFileTypeId() != FILETYPE_DOCUMENT_FILE) {
+            return false;
+        }
 
-    	if ((file.getDeleted() != null) && file.getDeleted()) {
-    		return false;
-    	}
+        if ((file.getDeleted() != null) && file.getDeleted()) {
+            return false;
+        }
 
-    	return true;
+        return true;
     }
 
     /**
@@ -3654,15 +3654,15 @@ public class DocumentService {
      * 		Remaining lifetime of given signature container draft in seconds
      */
     public long getContainerDraftRemainingLifetimeSeconds(DocumentFile containerDraft) {
-    	long result = 0;
-    	if ((this.configuration.getUnfinishedSignatureLifetimeSeconds() != null)
-        	&& (this.configuration.getUnfinishedSignatureLifetimeSeconds() > 0L)
-        	&& (containerDraft != null)) {
+        long result = 0;
+        if ((this.configuration.getUnfinishedSignatureLifetimeSeconds() != null)
+            && (this.configuration.getUnfinishedSignatureLifetimeSeconds() > 0L)
+            && (containerDraft != null)) {
 
-    		long containerAgeInSeconds = Util.getDateDiffInMilliseconds(containerDraft.getLastModifiedDate(), new Date()) / 1000L;
-    		result = this.configuration.getUnfinishedSignatureLifetimeSeconds() - containerAgeInSeconds;
-    	}
-    	return result;
+            long containerAgeInSeconds = Util.getDateDiffInMilliseconds(containerDraft.getLastModifiedDate(), new Date()) / 1000L;
+            result = this.configuration.getUnfinishedSignatureLifetimeSeconds() - containerAgeInSeconds;
+        }
+        return result;
     }
 
     /**
@@ -3676,14 +3676,14 @@ public class DocumentService {
      * 		{@code true} if given container is expired
      */
     public boolean isSignatureContainerDraftExpired(DocumentFile containerDraft) {
-    	long containerAgeInSeconds = Util.getDateDiffInMilliseconds(containerDraft.getLastModifiedDate(), new Date()) / 1000L;
-    	boolean result =
-    		(FILETYPE_SIGNATURE_CONTAINER_DRAFT == containerDraft.getDocumentFileTypeId())
-    		&& (this.configuration.getUnfinishedSignatureLifetimeSeconds() != null)
-    		&& (this.configuration.getUnfinishedSignatureLifetimeSeconds() > 0L)
-    		&& ((containerAgeInSeconds < 0)
-    			|| (containerAgeInSeconds > this.configuration.getUnfinishedSignatureLifetimeSeconds()));
-    	return result;
+        long containerAgeInSeconds = Util.getDateDiffInMilliseconds(containerDraft.getLastModifiedDate(), new Date()) / 1000L;
+        boolean result =
+            (FILETYPE_SIGNATURE_CONTAINER_DRAFT == containerDraft.getDocumentFileTypeId())
+            && (this.configuration.getUnfinishedSignatureLifetimeSeconds() != null)
+            && (this.configuration.getUnfinishedSignatureLifetimeSeconds() > 0L)
+            && ((containerAgeInSeconds < 0)
+                || (containerAgeInSeconds > this.configuration.getUnfinishedSignatureLifetimeSeconds()));
+        return result;
     }
 
     /**
@@ -3698,29 +3698,29 @@ public class DocumentService {
      * 		{@code true} if given signature can be safely removed
      */
     private boolean isPossibleToRemovePendingSignature(Signature signature, String userCodeWithoutCountryPrefix) {
-    	boolean result = false;
+        boolean result = false;
 
-    	if (signature != null) {
+        if (signature != null) {
             int certCount = signature.countCertValues();
 
             for (int i = 0; i < certCount; i++) {
                 if ((signature.getCertValue(i) != null) && (signature.getCertValue(i).getCert() != null)) {
-                	boolean pendingSignatureBelongsToCurrentUser =
-                		userCodeWithoutCountryPrefix.equalsIgnoreCase(
-                			SignedDoc.getSubjectPersonalCode(signature.getCertValue(i).getCert()));
+                    boolean pendingSignatureBelongsToCurrentUser =
+                        userCodeWithoutCountryPrefix.equalsIgnoreCase(
+                            SignedDoc.getSubjectPersonalCode(signature.getCertValue(i).getCert()));
 
                     if (pendingSignatureBelongsToCurrentUser) {
-                    	if (signature.findResponderCert() != null) {
-                    		throw new AditCodedException("request.prepareSignature.signer.hasAlreadySigned");
-                    	} else {
-                    		result = true;
-                    	}
+                        if (signature.findResponderCert() != null) {
+                            throw new AditCodedException("request.prepareSignature.signer.hasAlreadySigned");
+                        } else {
+                            result = true;
+                        }
                     }
                 }
             }
         }
 
-    	return result;
+        return result;
     }
 
     /**
@@ -3781,13 +3781,16 @@ public class DocumentService {
                 fs.read(sigValue, 0, sigValue.length);
             } catch (IOException ex) {
                 logger.error(ex);
-            	AditCodedException aditCodedException = new AditCodedException("request.confirmSignature.errorReadingSignatureFile");
+                AditCodedException aditCodedException = new AditCodedException("request.confirmSignature.errorReadingSignatureFile");
                 aditCodedException.setParameters(new Object[] {});
                 throw aditCodedException;
             } finally {
                 Util.safeCloseStream(fs);
                 fs = null;
             }
+
+            // Decode signature value if it is HEX encoded
+            sigValue = convertSignatureValueToByteArray(sigValue);
 
             Signature sig = null;
             for (int i = 0; i < sdoc.countSignatures(); i++) {
@@ -3800,7 +3803,7 @@ public class DocumentService {
 
             if (sig != null) {
                 sig.setOrigContent(null);
-            	sig.setSignatureValue(sigValue);
+                sig.setSignatureValue(sigValue);
                 sig.getConfirmation();
 
                 // Save container to file.
@@ -3822,14 +3825,14 @@ public class DocumentService {
 
                 boolean wasSignedBefore = true;
                 if (signatureContainer == null) {
-                	wasSignedBefore = false;
-                	signatureContainer = new DocumentFile();
-                	signatureContainer.setContentType(UNKNOWN_MIME_TYPE);
-                	signatureContainer.setDeleted(false);
-                	signatureContainer.setDocument(doc);
-                	signatureContainer.setDocumentFileTypeId(FILETYPE_SIGNATURE_CONTAINER);
-                	signatureContainer.setFileName(Util.convertToLegalFileName(doc.getTitle(), "ddoc", null));
-                	doc.getDocumentFiles().add(signatureContainer);
+                    wasSignedBefore = false;
+                    signatureContainer = new DocumentFile();
+                    signatureContainer.setContentType(UNKNOWN_MIME_TYPE);
+                    signatureContainer.setDeleted(false);
+                    signatureContainer.setDocument(doc);
+                    signatureContainer.setDocumentFileTypeId(FILETYPE_SIGNATURE_CONTAINER);
+                    signatureContainer.setFileName(Util.convertToLegalFileName(doc.getTitle(), "ddoc", null));
+                    doc.getDocumentFiles().add(signatureContainer);
                 }
                 signatureContainer.setFileSizeBytes(length);
                 signatureContainer.setFileData(containerData);
@@ -3853,14 +3856,14 @@ public class DocumentService {
 
                 // Remove file contents and calculate offsets
                 if (!wasSignedBefore) {
-	                Hashtable<String, StartEndOffsetPair> fileOffsetsInDdoc =
-	                	SimplifiedDigiDocParser.findDigiDocDataFileOffsets(containerFileName);
+                    Hashtable<String, StartEndOffsetPair> fileOffsetsInDdoc =
+                        SimplifiedDigiDocParser.findDigiDocDataFileOffsets(containerFileName);
 
-	                for (DocumentFile file : doc.getDocumentFiles()) {
-	                	if (isNecessaryToRemoveFileContentsAfterSigning(file, fileOffsetsInDdoc)) {
-	                		removeFileContents(doc.getId(), file, fileOffsetsInDdoc);
-	                	}
-	                }
+                    for (DocumentFile file : doc.getDocumentFiles()) {
+                        if (isNecessaryToRemoveFileContentsAfterSigning(file, fileOffsetsInDdoc)) {
+                            removeFileContents(doc.getId(), file, fileOffsetsInDdoc);
+                        }
+                    }
                 }
             } else {
                 AditCodedException aditCodedException = new AditCodedException("request.confirmSignature.signatureNotPrepared");
@@ -3881,6 +3884,24 @@ public class DocumentService {
     }
 
     /**
+     * Makes sure that given signature value is an unencoded byte array (in
+     * contrary to a byte array that represents a HEX string).
+     *
+     * @param signatureValue
+     * 		Signature value from input
+     * @return
+     * 		Normalized signature value
+     */
+    public byte[] convertSignatureValueToByteArray(byte[] signatureValue) {
+        String signatureValueAsString = new String(signatureValue);
+        if (Util.isHexString(signatureValueAsString)) {
+        	return Util.convertHexStringToByteArray(signatureValueAsString);
+        } else {
+        	return signatureValue;
+        }
+    }
+
+    /**
      * Removes file contents from file record.
      * After removal file contents can only be found from DigiDoc container,
      * using file data offset numbers from file record.
@@ -3895,37 +3916,37 @@ public class DocumentService {
      * @throws Exception
      */
     private void removeFileContents(long documentId, DocumentFile file,
-    	Hashtable<String, StartEndOffsetPair> fileOffsetsInDdoc) throws Exception {
+        Hashtable<String, StartEndOffsetPair> fileOffsetsInDdoc) throws Exception {
 
-		StartEndOffsetPair offsets = fileOffsetsInDdoc.get(file.getDdocDataFileId());
+        StartEndOffsetPair offsets = fileOffsetsInDdoc.get(file.getDdocDataFileId());
 
-		String resultMsg = documentFileDAO.removeSignedFileContents(
-			documentId, file.getId(), offsets.getStart(), offsets.getEnd());
+        String resultMsg = documentFileDAO.removeSignedFileContents(
+            documentId, file.getId(), offsets.getStart(), offsets.getEnd());
 
-		Exception fileContentRemovalException = null;
-		if ("file_data_already_moved".equalsIgnoreCase(resultMsg)) {
-			fileContentRemovalException = new Exception("Cannot remove signed file contents because file contents have already been moved!");
-		} else if ("file_is_deleted".equalsIgnoreCase(resultMsg)) {
-			fileContentRemovalException = new Exception("Cannot remove signed file contents because file is deleted!");
-		} else if ("file_does_not_belong_to_document".equalsIgnoreCase(resultMsg)) {
-			fileContentRemovalException = new Exception("Cannot remove signed file contents because file does not belong to current document!");
-		} else if ("file_does_not_exist".equalsIgnoreCase(resultMsg)) {
-			fileContentRemovalException = new Exception("Cannot remove signed file contents because file does not exist!");
-		}
+        Exception fileContentRemovalException = null;
+        if ("file_data_already_moved".equalsIgnoreCase(resultMsg)) {
+            fileContentRemovalException = new Exception("Cannot remove signed file contents because file contents have already been moved!");
+        } else if ("file_is_deleted".equalsIgnoreCase(resultMsg)) {
+            fileContentRemovalException = new Exception("Cannot remove signed file contents because file is deleted!");
+        } else if ("file_does_not_belong_to_document".equalsIgnoreCase(resultMsg)) {
+            fileContentRemovalException = new Exception("Cannot remove signed file contents because file does not belong to current document!");
+        } else if ("file_does_not_exist".equalsIgnoreCase(resultMsg)) {
+            fileContentRemovalException = new Exception("Cannot remove signed file contents because file does not exist!");
+        }
 
-		if (fileContentRemovalException != null) {
-			logger.error("Failed removing contents of following file:");
-			logger.error("Document ID: " + documentId);
-			logger.error("File ID: " + file.getId());
-			logger.error("File name: " + file.getFileName());
-			logger.error("Is the file deleted? " + file.getDeleted());
-			logger.error("File type ID: " + file.getDocumentFileTypeId());
-			logger.error("DigiDoc DataFile ID: " + file.getDdocDataFileId());
-			logger.error("DigiDoc DataFile start offset: " + file.getDdocDataFileStartOffset());
-			logger.error("DigiDoc DataFile end offset: " + file.getDdocDataFileEndOffset());
-			logger.error("Is file data in DigiDoc container? " + file.getFileDataInDdoc());
-			throw fileContentRemovalException;
-		}
+        if (fileContentRemovalException != null) {
+            logger.error("Failed removing contents of following file:");
+            logger.error("Document ID: " + documentId);
+            logger.error("File ID: " + file.getId());
+            logger.error("File name: " + file.getFileName());
+            logger.error("Is the file deleted? " + file.getDeleted());
+            logger.error("File type ID: " + file.getDocumentFileTypeId());
+            logger.error("DigiDoc DataFile ID: " + file.getDdocDataFileId());
+            logger.error("DigiDoc DataFile start offset: " + file.getDdocDataFileStartOffset());
+            logger.error("DigiDoc DataFile end offset: " + file.getDdocDataFileEndOffset());
+            logger.error("Is file data in DigiDoc container? " + file.getFileDataInDdoc());
+            throw fileContentRemovalException;
+        }
     }
 
     /**
@@ -3942,55 +3963,55 @@ public class DocumentService {
      * 		document has been suvvessfully digitally signed
      */
     public static boolean isNecessaryToRemoveFileContentsAfterSigning(
-    	DocumentFile file, Hashtable<String, StartEndOffsetPair> fileOffsetsInDdoc) {
+        DocumentFile file, Hashtable<String, StartEndOffsetPair> fileOffsetsInDdoc) {
 
-    	// Do not allow to delete anything if input parameters are empty.
-    	if ((file == null) || (fileOffsetsInDdoc == null)) {
-    		return false;
-    	}
+        // Do not allow to delete anything if input parameters are empty.
+        if ((file == null) || (fileOffsetsInDdoc == null)) {
+            return false;
+        }
 
-		// Contents of deleted files are already removed and no attempts
-		// should be made to remove them again.
-		if ((file.getDeleted() != null) && file.getDeleted()) {
-			return false;
-		}
+        // Contents of deleted files are already removed and no attempts
+        // should be made to remove them again.
+        if ((file.getDeleted() != null) && file.getDeleted()) {
+            return false;
+        }
 
-		// Only contents of regular files may be removed (as an opposite to
-		// contents of signature containers).
-		if (file.getDocumentFileTypeId() != FILETYPE_DOCUMENT_FILE) {
-			return false;
-		}
+        // Only contents of regular files may be removed (as an opposite to
+        // contents of signature containers).
+        if (file.getDocumentFileTypeId() != FILETYPE_DOCUMENT_FILE) {
+            return false;
+        }
 
-		// File contents should not be removed if we don't know the files
-		// ID in DigiDoc container (and therefore had no clue where to
-		// find the contents after they get removed from file record)
-		if (Util.isNullOrEmpty(file.getDdocDataFileId())) {
-			return false;
-		}
+        // File contents should not be removed if we don't know the files
+        // ID in DigiDoc container (and therefore had no clue where to
+        // find the contents after they get removed from file record)
+        if (Util.isNullOrEmpty(file.getDdocDataFileId())) {
+            return false;
+        }
 
-		// File contents should not be removed if file data offsets
-		// are already set (indicating that contents have already been removed).
-		if (((file.getDdocDataFileStartOffset() != null) && (file.getDdocDataFileStartOffset() > 0L))
-			|| ((file.getDdocDataFileEndOffset() != null) && (file.getDdocDataFileEndOffset() > 0L))) {
-			return false;
-		}
+        // File contents should not be removed if file data offsets
+        // are already set (indicating that contents have already been removed).
+        if (((file.getDdocDataFileStartOffset() != null) && (file.getDdocDataFileStartOffset() > 0L))
+            || ((file.getDdocDataFileEndOffset() != null) && (file.getDdocDataFileEndOffset() > 0L))) {
+            return false;
+        }
 
-		// It is safe to remove file contents if we know file data offsets
-		// in DigiDoc container.
-		if (!fileOffsetsInDdoc.containsKey(file.getDdocDataFileId())) {
-			return false;
-		}
+        // It is safe to remove file contents if we know file data offsets
+        // in DigiDoc container.
+        if (!fileOffsetsInDdoc.containsKey(file.getDdocDataFileId())) {
+            return false;
+        }
 
-		// As a precaution - removal of file contents should not be
-		// attempted, should the file data offsets be messed up in some
-		// obvious way.
-		StartEndOffsetPair offsets = fileOffsetsInDdoc.get(file.getDdocDataFileId());
-		if ((offsets == null) || (offsets.getStart() > offsets.getEnd())
-			|| (offsets.getStart() <= 0)) {
-			return false;
-		}
+        // As a precaution - removal of file contents should not be
+        // attempted, should the file data offsets be messed up in some
+        // obvious way.
+        StartEndOffsetPair offsets = fileOffsetsInDdoc.get(file.getDdocDataFileId());
+        if ((offsets == null) || (offsets.getStart() > offsets.getEnd())
+            || (offsets.getStart() <= 0)) {
+            return false;
+        }
 
-    	return true;
+        return true;
     }
 
     /**
@@ -4013,14 +4034,14 @@ public class DocumentService {
      * 		Will be thrown if saving DigiDoc container fails
      */
     public static OutputDocumentFile createSignatureContainerFromDocumentFiles(
-    	final Document doc,
-    	final String digidocConfigFile,
-    	final String temporaryFilesDir) throws DigiDocException, SQLException, IOException {
+        final Document doc,
+        final String digidocConfigFile,
+        final String temporaryFilesDir) throws DigiDocException, SQLException, IOException {
 
-    	ConfigManager.init(digidocConfigFile);
-    	SignedDoc sdoc = new SignedDoc(SignedDoc.FORMAT_DIGIDOC_XML, SignedDoc.VERSION_1_3);
+        ConfigManager.init(digidocConfigFile);
+        SignedDoc sdoc = new SignedDoc(SignedDoc.FORMAT_DIGIDOC_XML, SignedDoc.VERSION_1_3);
 
-    	// Create unique subdirectory for files
+        // Create unique subdirectory for files
         File uniqueDir = new File(temporaryFilesDir + File.separator + doc.getId());
         int uniqueCounter = 0;
         while (uniqueDir.exists()) {
@@ -4031,9 +4052,9 @@ public class DocumentService {
         List<DocumentFile> filesList = new ArrayList<DocumentFile>(doc.getDocumentFiles());
         for (DocumentFile docFile : filesList) {
             if (((docFile.getDeleted() == null) || !docFile.getDeleted())
-            	&& (docFile.getDocumentFileTypeId() == FILETYPE_DOCUMENT_FILE)) {
+                && (docFile.getDocumentFileTypeId() == FILETYPE_DOCUMENT_FILE)) {
 
-            	String outputFileName = uniqueDir.getAbsolutePath() + File.separator + docFile.getFileName();
+                String outputFileName = uniqueDir.getAbsolutePath() + File.separator + docFile.getFileName();
 
                 InputStream blobDataStream = null;
                 FileOutputStream fileOutputStream = null;
@@ -4041,7 +4062,7 @@ public class DocumentService {
                     blobDataStream = docFile.getFileData().getBinaryStream();
                     fileOutputStream = new FileOutputStream(outputFileName);
 
-                	byte[] buffer = new byte[10240];
+                    byte[] buffer = new byte[10240];
                     int len = 0;
                     while ((len = blobDataStream.read(buffer)) > 0) {
                         fileOutputStream.write(buffer, 0, len);
@@ -4061,7 +4082,7 @@ public class DocumentService {
         containerFileName = temporaryFilesDir + File.separator + containerFileName + ".adit";
         uniqueCounter = 0;
         while (new File(containerFileName).exists()) {
-        	containerFileName = temporaryFilesDir + File.separator + containerFileName + uniqueCounter + ".adit";
+            containerFileName = temporaryFilesDir + File.separator + containerFileName + uniqueCounter + ".adit";
         }
         sdoc.writeToFile(new File(containerFileName));
         long length = (new File(containerFileName)).length();
@@ -4091,11 +4112,11 @@ public class DocumentService {
      * 		will be thrown if writing ZIP archive fails for any reason
      */
     public static OutputDocumentFile createZipArchiveFromDocumentFiles(
-    	final Document doc,
-    	final List<OutputDocumentFile> filesList,
-    	final String temporaryFilesDir) throws IOException {
+        final Document doc,
+        final List<OutputDocumentFile> filesList,
+        final String temporaryFilesDir) throws IOException {
 
-    	// Create unique subdirectory for files
+        // Create unique subdirectory for files
         File uniqueDir = new File(temporaryFilesDir + File.separator + doc.getId());
         int uniqueCounter = 0;
         while (uniqueDir.exists()) {
@@ -4108,7 +4129,7 @@ public class DocumentService {
         archiveFileName = temporaryFilesDir + File.separator + archiveFileName + ".adit";
         uniqueCounter = 0;
         while (new File(archiveFileName).exists()) {
-        	archiveFileName = temporaryFilesDir + File.separator + archiveFileName + uniqueCounter + ".adit";
+            archiveFileName = temporaryFilesDir + File.separator + archiveFileName + uniqueCounter + ".adit";
         }
 
         FileOutputStream archiveStream = null;
@@ -4128,7 +4149,7 @@ public class DocumentService {
             List<String> usedEntryNames = new ArrayList<String>();
             for (OutputDocumentFile docFile : filesList) {
                 if (FILETYPE_NAME_DOCUMENT_FILE.equalsIgnoreCase(docFile.getFileType())) {
-                	try {
+                    try {
                         fileInputStream = new FileInputStream(Util.base64DecodeFile(docFile.getSysTempFile(), temporaryFilesDir));
                         bufferedFileStream = new BufferedInputStream(fileInputStream, data.length);
 
@@ -4138,8 +4159,8 @@ public class DocumentService {
 
                         uniqueCounter = 0;
                         while (usedEntryNames.contains(entryName)) {
-                        	uniqueCounter++;
-                        	entryName = Util.convertToLegalFileName(fileNameWithoutExtension, extension, String.valueOf(uniqueCounter));
+                            uniqueCounter++;
+                            entryName = Util.convertToLegalFileName(fileNameWithoutExtension, extension, String.valueOf(uniqueCounter));
                         }
 
                         ZipArchiveEntry entry = new ZipArchiveEntry(entryName);
@@ -4188,7 +4209,7 @@ public class DocumentService {
      * 		database
      */
     public ee.adit.dao.pojo.Signature convertDigiDocSignatureToLocalSignature(Signature digiDocSignature) {
-    	ee.adit.dao.pojo.Signature result = new ee.adit.dao.pojo.Signature();
+        ee.adit.dao.pojo.Signature result = new ee.adit.dao.pojo.Signature();
 
         if (digiDocSignature.getSignedProperties() != null) {
             if (digiDocSignature.getSignedProperties().getSignatureProductionPlace() != null) {
@@ -4212,21 +4233,21 @@ public class DocumentService {
             String signerCountryCode = getSubjectCountryCode(cert);
             String signerCodeWithCountryPrefix = "EE" + signerCode;
             if (!Util.isNullOrEmpty(signerCode) && !Util.isNullOrEmpty(signerCountryCode)) {
-            	signerCodeWithCountryPrefix = (signerCode.startsWith(signerCountryCode)) ? signerCode : signerCountryCode + signerCode;
+                signerCodeWithCountryPrefix = (signerCode.startsWith(signerCountryCode)) ? signerCode : signerCountryCode + signerCode;
             }
 
             result.setSignerCode(signerCodeWithCountryPrefix);
             result.setSignerName(SignedDoc.getSubjectLastName(cert) + ", " + SignedDoc.getSubjectFirstName(cert));
 
             // Add reference to ADIT user if signer happens to be registered user
-        	AditUser user = this.getAditUserDAO().getUserByID(signerCodeWithCountryPrefix);
+            AditUser user = this.getAditUserDAO().getUserByID(signerCodeWithCountryPrefix);
             if (user != null) {
-            	result.setUserCode(user.getUserCode());
-            	result.setUserName(user.getFullName());
+                result.setUserCode(user.getUserCode());
+                result.setUserName(user.getFullName());
             }
         }
 
-    	return result;
+        return result;
     }
 
     /**
@@ -4239,18 +4260,18 @@ public class DocumentService {
      * 		{@code null} if signature container is not found.
      */
     private DocumentFile findSignatureContainer(Document doc) {
-    	DocumentFile result = null;
+        DocumentFile result = null;
 
-    	if ((doc != null) && (doc.getDocumentFiles() != null)) {
-    		for (DocumentFile file : doc.getDocumentFiles()) {
-    			if (file.getDocumentFileTypeId() == FILETYPE_SIGNATURE_CONTAINER) {
-    				result = file;
-    				break;
-    			}
-    		}
-    	}
+        if ((doc != null) && (doc.getDocumentFiles() != null)) {
+            for (DocumentFile file : doc.getDocumentFiles()) {
+                if (file.getDocumentFileTypeId() == FILETYPE_SIGNATURE_CONTAINER) {
+                    result = file;
+                    break;
+                }
+            }
+        }
 
-    	return result;
+        return result;
     }
 
     /**
@@ -4263,18 +4284,18 @@ public class DocumentService {
      * 		{@code null} if signature container draft is not found.
      */
     private DocumentFile findSignatureContainerDraft(Document doc) {
-    	DocumentFile result = null;
+        DocumentFile result = null;
 
-    	if ((doc != null) && (doc.getDocumentFiles() != null)) {
-    		for (DocumentFile file : doc.getDocumentFiles()) {
-    			if (file.getDocumentFileTypeId() == FILETYPE_SIGNATURE_CONTAINER_DRAFT) {
-    				result = file;
-    				break;
-    			}
-    		}
-    	}
+        if ((doc != null) && (doc.getDocumentFiles() != null)) {
+            for (DocumentFile file : doc.getDocumentFiles()) {
+                if (file.getDocumentFileTypeId() == FILETYPE_SIGNATURE_CONTAINER_DRAFT) {
+                    result = file;
+                    break;
+                }
+            }
+        }
 
-    	return result;
+        return result;
     }
 
     /**
@@ -4289,19 +4310,19 @@ public class DocumentService {
     private String getSubjectCountryCode(X509Certificate cert) {
         String result = null;
         if (cert != null) {
-        	String dn = cert.getSubjectDN().getName();
-	        int idx1 = dn.indexOf("C=");
-	        if (idx1 >= 0) {
-	            idx1 += 2;
-	            while (idx1 < dn.length() && !Character.isLetter(dn.charAt(idx1))) {
-	                idx1++;
-	            }
-	            int idx2 = idx1;
-	            while (idx2 < dn.length() && dn.charAt(idx2) != ',' && dn.charAt(idx2) != '/') {
-	                idx2++;
-	            }
-	            result = dn.substring(idx1, idx2);
-	        }
+            String dn = cert.getSubjectDN().getName();
+            int idx1 = dn.indexOf("C=");
+            if (idx1 >= 0) {
+                idx1 += 2;
+                while (idx1 < dn.length() && !Character.isLetter(dn.charAt(idx1))) {
+                    idx1++;
+                }
+                int idx2 = idx1;
+                while (idx2 < dn.length() && dn.charAt(idx2) != ',' && dn.charAt(idx2) != '/') {
+                    idx2++;
+                }
+                result = dn.substring(idx1, idx2);
+            }
         }
         return result;
     }
@@ -4315,17 +4336,17 @@ public class DocumentService {
      * 		ID of file type
      */
     public static long resolveFileTypeId(String fileTypeName) {
-    	long result = FILETYPE_DOCUMENT_FILE;
+        long result = FILETYPE_DOCUMENT_FILE;
 
-    	if (FILETYPE_NAME_SIGNATURE_CONTAINER.equalsIgnoreCase(fileTypeName)) {
-    		result = FILETYPE_SIGNATURE_CONTAINER;
-    	} else if (FILETYPE_NAME_SIGNATURE_CONTAINER_DRAFT.equalsIgnoreCase(fileTypeName)) {
-    		result = FILETYPE_SIGNATURE_CONTAINER_DRAFT;
-    	} else if (FILETYPE_NAME_ZIP_ARCHIVE.equalsIgnoreCase(fileTypeName)) {
-    		result = FILETYPE_ZIP_ARCHIVE;
-    	}
+        if (FILETYPE_NAME_SIGNATURE_CONTAINER.equalsIgnoreCase(fileTypeName)) {
+            result = FILETYPE_SIGNATURE_CONTAINER;
+        } else if (FILETYPE_NAME_SIGNATURE_CONTAINER_DRAFT.equalsIgnoreCase(fileTypeName)) {
+            result = FILETYPE_SIGNATURE_CONTAINER_DRAFT;
+        } else if (FILETYPE_NAME_ZIP_ARCHIVE.equalsIgnoreCase(fileTypeName)) {
+            result = FILETYPE_ZIP_ARCHIVE;
+        }
 
-    	return result;
+        return result;
     }
 
     /**
@@ -4337,15 +4358,15 @@ public class DocumentService {
      * 		Name of file type
      */
     public static String resolveFileTypeName(Long fileTypeId) {
-    	String result = FILETYPE_NAME_DOCUMENT_FILE;
+        String result = FILETYPE_NAME_DOCUMENT_FILE;
 
-    	if (FILETYPE_SIGNATURE_CONTAINER == fileTypeId) {
-    		result = FILETYPE_NAME_SIGNATURE_CONTAINER;
-    	} else if (FILETYPE_SIGNATURE_CONTAINER_DRAFT == fileTypeId) {
-    		result = FILETYPE_NAME_SIGNATURE_CONTAINER_DRAFT;
-    	}
+        if (FILETYPE_SIGNATURE_CONTAINER == fileTypeId) {
+            result = FILETYPE_NAME_SIGNATURE_CONTAINER;
+        } else if (FILETYPE_SIGNATURE_CONTAINER_DRAFT == fileTypeId) {
+            result = FILETYPE_NAME_SIGNATURE_CONTAINER_DRAFT;
+        }
 
-    	return result;
+        return result;
     }
 
     /**
@@ -4418,11 +4439,11 @@ public class DocumentService {
      * 		{@code true} if file having given type ID should be returned
      */
     public static boolean fileIsOfRequestedType(long fileTypeId, ArrayOfFileType requestedTypes) {
-    	String fileTypeName = resolveFileTypeName(fileTypeId);
-    	return ((requestedTypes == null)
-    		|| (requestedTypes.getFileType() == null)
-			|| (requestedTypes.getFileType().size() < 1)
-			|| (requestedTypes.getFileType().contains(fileTypeName)));
+        String fileTypeName = resolveFileTypeName(fileTypeId);
+        return ((requestedTypes == null)
+            || (requestedTypes.getFileType() == null)
+            || (requestedTypes.getFileType().size() < 1)
+            || (requestedTypes.getFileType().contains(fileTypeName)));
     }
 
     public MessageSource getMessageSource() {
