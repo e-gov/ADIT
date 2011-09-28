@@ -102,10 +102,13 @@ public class DocumentHistoryDAO extends HibernateDaoSupport {
     	final long documentId, final String userCode) {
         boolean result = true;
 
+
         String sql = "from DocumentHistory where documentId=" + documentId
         	+ " and userCode='" + userCode + "' and documentHistoryType='"
         	+ historyTypeCode + "'";
-        List<DocumentHistory> existingHistoryEvents = this.getSessionFactory().openSession().createQuery(sql).list();
+
+        List<DocumentHistory> existingHistoryEvents =
+        	this.getHibernateTemplate().find(sql);
 
         if (existingHistoryEvents == null || existingHistoryEvents.size() < 1) {
             result = false;
