@@ -293,6 +293,11 @@ public class DocumentService {
 
     // Document history description literals
     /**
+     * Document history description - ADD FILE.
+     */
+    public static final String DOCUMENT_HISTORY_DESCRIPTION_ADDFILE = "Document file added";
+
+    /**
      * Document history description - CREATE.
      */
     public static final String DOCUMENT_HISTORY_DESCRIPTION_CREATE = "Document created";
@@ -301,6 +306,11 @@ public class DocumentService {
      * Document history description - LOCK.
      */
     public static final String DOCUMENT_HISTORY_DESCRIPTION_LOCK = "Document locked";
+
+    /**
+     * Document history description - UNLOCK.
+     */
+    public static final String DOCUMENT_HISTORY_DESCRIPTION_UNLOCK = "Document unlocked";
 
     /**
      * Document history description - DEFLATE.
@@ -336,6 +346,11 @@ public class DocumentService {
      * Document history type code - extract file.
      */
     public static final String DOCUMENT_HISTORY_DESCRIPTION_EXTRACT_FILE = "Files extracted from digital signature container";
+
+    /**
+     * Document history type code - mark viewed.
+     */
+    public static final String DOCUMENT_HISTORY_DESCRIPTION_MARK_VIEWED = "Document viewed";
 
     /**
      * ID of file type "document file".
@@ -935,8 +950,8 @@ public class DocumentService {
      *
      * @param applicationName
      *            remote application short name
-     * @param doc
-     *            document
+     * @param documentId
+     *            related document ID
      * @param userCode
      *            user code - the user that caused this event
      * @param historyType
@@ -950,14 +965,14 @@ public class DocumentService {
      * @param userName
      *            user name - the user that caused this event
      */
-    public void addHistoryEvent(String applicationName, Document doc, String userCode, String historyType,
-            String xteeUserCode, String xteeUserName, String description, String userName) {
+    public void addHistoryEvent(String applicationName, long documentId, String userCode, String historyType,
+            String xteeUserCode, String xteeUserName, String description, String userName, Date eventDate) {
         // Add history event
         DocumentHistory documentHistory = new DocumentHistory();
         documentHistory.setRemoteApplicationName(applicationName);
-        documentHistory.setDocumentId(doc.getId());
+        documentHistory.setDocumentId(documentId);
         documentHistory.setDocumentHistoryType(historyType);
-        documentHistory.setEventDate(new Date());
+        documentHistory.setEventDate(eventDate);
         documentHistory.setUserCode(userCode);
         documentHistory.setUserName(userName);
         documentHistory.setXteeUserCode(xteeUserCode);
@@ -1386,7 +1401,6 @@ public class DocumentService {
                     List<dvk.api.container.v1.DataFile> dvkFiles = new ArrayList<dvk.api.container.v1.DataFile>();
 
                     Iterator<DocumentFile> aditFilesIterator = aditFiles.iterator();
-                    short count = 0;
 
                     // Convert the adit file to dvk file
                     while (aditFilesIterator.hasNext()) {
@@ -1753,16 +1767,10 @@ public class DocumentService {
 
                                             // Add signature container extraction history event
                                             if (involvedSignatureContainerExtraction) {
-                                                CustomXTeeHeader dummyHeader = new CustomXTeeHeader();
-                                                dummyHeader.addElement(CustomXTeeHeader.ISIKUKOOD, user.getUserCode());
-                                                dummyHeader.addElement(CustomXTeeHeader.INFOSYSTEEM, "");
-
-                                                DocumentHistory historyEvent = new DocumentHistory(
-                                                        HISTORY_TYPE_EXTRACT_FILE, saveResult.getItemId(),
-                                                        Calendar.getInstance().getTime(), user,
-                                                        user, dummyHeader);
-                                                historyEvent.setDescription(DOCUMENT_HISTORY_DESCRIPTION_EXTRACT_FILE);
-                                                this.getDocumentHistoryDAO().save(historyEvent);
+                                                addHistoryEvent("", saveResult.getItemId(), user.getUserCode(),
+                                                	HISTORY_TYPE_EXTRACT_FILE,	user.getUserCode(), user.getFullName(),
+                                                	DOCUMENT_HISTORY_DESCRIPTION_EXTRACT_FILE, user.getFullName(),
+                                                	Calendar.getInstance().getTime());
                                             }
 
                                             // Update user quota limit

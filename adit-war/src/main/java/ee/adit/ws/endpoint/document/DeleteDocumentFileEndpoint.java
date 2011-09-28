@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
-import ee.adit.dao.pojo.DocumentHistory;
 import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.ArrayOfMessage;
@@ -181,10 +180,11 @@ public class DeleteDocumentFileEndpoint extends AbstractAditBaseEndpoint {
             }
 
             // If deletion was successful then add history event
-            DocumentHistory historyEvent = new DocumentHistory(DocumentService.HISTORY_TYPE_DELETE_FILE, documentId,
-                    requestDate.getTime(), user, xroadRequestUser, header);
-            historyEvent.setDescription(DocumentService.DOCUMENT_HISTORY_DESCRIPTION_DELETEFILE + request.getFileId());
-            this.getDocumentService().getDocumentHistoryDAO().save(historyEvent);
+            this.getDocumentService().addHistoryEvent(applicationName, documentId, user.getUserCode(),
+                DocumentService.HISTORY_TYPE_DELETE_FILE, xroadRequestUser.getUserCode(),
+                xroadRequestUser.getFullName(),
+                DocumentService.DOCUMENT_HISTORY_DESCRIPTION_DELETEFILE + request.getFileId(),
+                user.getFullName(), requestDate.getTime());
 
             // Set response messages
             response.setSuccess(new Success(true));

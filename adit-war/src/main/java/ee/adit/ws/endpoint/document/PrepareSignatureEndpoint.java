@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
-import ee.adit.dao.pojo.DocumentHistory;
 import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditException;
@@ -33,18 +32,18 @@ import ee.webmedia.xtee.annotation.XTeeService;
  * Implementation of "prepareSignature" web method (web service request).
  * Contains request input validation, request-specific workflow and response
  * composition.
- * 
+ *
  * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
  * @author Jaak Lember, Interinx, jaak@interinx.com
  */
 @XTeeService(name = "prepareSignature", version = "v1")
 @Component
 public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
-    
+
     private static Logger logger = Logger.getLogger(PrepareSignatureEndpoint.class);
-    
+
     private UserService userService;
-    
+
     private DocumentService documentService;
 
     private String digidocConfigurationFile;
@@ -62,7 +61,7 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
 
     /**
      * Executes "V1" version of "prepareSignature" request.
-     * 
+     *
      * @param requestObject
      *            Request body object
      * @return Response body object
@@ -96,10 +95,10 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
             // Kontrollime, kas päringus märgitud isik on teenuse kasutaja
             AditUser user = Util.getAditUserFromXroadHeader(this.getHeader(), this.getUserService());
             AditUser xroadRequestUser = Util.getXroadUserFromXroadHeader(user, this.getHeader(), this.getUserService());
-            
+
             Document doc = checkRightsAndGetDocument(request, applicationName, user);
             boolean documentIsAlreadyLocked = (doc.getLocked() == null) ? false : doc.getLocked();
-            
+
             // Get user certificate from attachment
             String certFile = null;
 
@@ -145,12 +144,12 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
 
             if (!documentIsAlreadyLocked) {
 	            // Document locking history event
-	            DocumentHistory historyEvent = new DocumentHistory(DocumentService.HISTORY_TYPE_LOCK, documentId,
-	                    requestDate.getTime(), user, xroadRequestUser, header);
-	            historyEvent.setDescription(DocumentService.DOCUMENT_HISTORY_DESCRIPTION_LOCK);
-	            this.getDocumentService().getDocumentHistoryDAO().save(historyEvent);
+                this.getDocumentService().addHistoryEvent(applicationName, documentId, user.getUserCode(),
+                    DocumentService.HISTORY_TYPE_LOCK, xroadRequestUser.getUserCode(),
+                    xroadRequestUser.getFullName(), DocumentService.DOCUMENT_HISTORY_DESCRIPTION_LOCK,
+                    user.getFullName(), requestDate.getTime());
             }
-            
+
             // Set response messages
             response.setSuccess(true);
             messages.setMessage(this.getMessageService().getMessages("request.prepareSignature.success",
@@ -204,10 +203,10 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
         response.setMessages(arrayOfMessage);
         return response;
     }
-    
+
     /**
      * Checks users rights for document.
-     * 
+     *
      * @param request
      *     Current request
      * @param applicationName
@@ -221,7 +220,7 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
     private Document checkRightsAndGetDocument(
     	final PrepareSignatureRequest request, final String applicationName,
     	final AditUser user) {
-    	
+
         // Kontrollime, kas päringu käivitanud infosüsteem on ADITis
         // registreeritud
         boolean applicationRegistered = this.getUserService().isApplicationRegistered(applicationName);
@@ -292,7 +291,7 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
             aditCodedException.setParameters(new Object[] {});
             throw aditCodedException;
         }
-        
+
         // Document can be signed only if:
         // a) document belongs to user
         // b) document is sent or shared to user for signing
@@ -304,7 +303,7 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
                 aditCodedException.setParameters(new Object[] {doc.getId()});
                 throw aditCodedException;
             }
-        	
+
         	isOwner = true;
         } else {
             if ((doc.getDocumentSharings() != null) && (!doc.getDocumentSharings().isEmpty())) {
@@ -319,14 +318,14 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
                             aditCodedException.setParameters(new Object[] {doc.getId()});
                             throw aditCodedException;
                         }
-                    	
+
                         isOwner = true;
                         break;
                     }
                 }
             }
         }
-        
+
         if (!isOwner) {
             logger.debug("Requested document does not belong to user. Document ID: " + request.getDocumentId()
                     + ", User ID: " + user.getUserCode());
@@ -334,7 +333,7 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
             aditCodedException.setParameters(new Object[] {request.getDocumentId().toString(), user.getUserCode()});
             throw aditCodedException;
         }
-        
+
         return doc;
     }
 
@@ -344,7 +343,7 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
      * <br>
      * Throws {@link AditCodedException} if any errors in request data are
      * found.
-     * 
+     *
      * @param request
      *            Request body as {@link PrepareSignatureRequest} object.
      * @throws AditCodedException
@@ -362,7 +361,7 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
 
     /**
      * Writes request parameters to application DEBUG log.
-     * 
+     *
      * @param request
      *            Request body as {@link PrepareSignatureRequest} object.
      */
@@ -376,7 +375,7 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
         logger.debug("Zip: " + request.getZip());
         logger.debug("----------------------------------------");
     }
-    
+
     public UserService getUserService() {
         return userService;
     }

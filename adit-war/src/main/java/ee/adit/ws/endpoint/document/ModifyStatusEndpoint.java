@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
-import ee.adit.dao.pojo.DocumentHistory;
 import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.dao.pojo.DocumentWfStatus;
 import ee.adit.exception.AditCodedException;
@@ -34,7 +33,7 @@ import ee.webmedia.xtee.annotation.XTeeService;
 /**
  * Implementation of "modifyStatus" web method (web service request). Contains
  * request input validation, request-specific workflow and response composition.
- * 
+ *
  * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
  * @author Jaak Lember, Interinx, jaak@interinx.com
  */
@@ -43,11 +42,11 @@ import ee.webmedia.xtee.annotation.XTeeService;
 public class ModifyStatusEndpoint extends AbstractAditBaseEndpoint {
 
     private static Logger logger = Logger.getLogger(ModifyStatusEndpoint.class);
-    
+
     private UserService userService;
-    
+
     private DocumentService documentService;
-    
+
     private ScheduleClient scheduleClient;
 
     @Override
@@ -63,7 +62,7 @@ public class ModifyStatusEndpoint extends AbstractAditBaseEndpoint {
 
     /**
      * Executes "V1" version of "modifyStatus" request.
-     * 
+     *
      * @param requestObject
      *            Request body object
      * @return Response body object
@@ -183,7 +182,7 @@ public class ModifyStatusEndpoint extends AbstractAditBaseEndpoint {
                     aditCodedException.setParameters(new Object[] {documentId.toString() });
                     throw aditCodedException;
                 }
-            	
+
             	doc.setDocumentWfStatusId(request.getDocumentStatusId());
                 doc.setLastModifiedDate(new Date());
                 saveDocument = true;
@@ -199,7 +198,7 @@ public class ModifyStatusEndpoint extends AbstractAditBaseEndpoint {
                                 aditCodedException.setParameters(new Object[] {documentId.toString() });
                                 throw aditCodedException;
                             }
-                        	
+
                         	sharing.setDocumentWfStatus(request.getDocumentStatusId());
                             sharing.setLastAccessDate(new Date());
                             saveDocument = true;
@@ -221,10 +220,10 @@ public class ModifyStatusEndpoint extends AbstractAditBaseEndpoint {
                     if ((docCreator != null)
                             && (userService.findNotification(docCreator.getUserNotifications(),
                                     ScheduleClient.NOTIFICATION_TYPE_MODIFY) != null)) {
-                    	
+
                     	List<Message> messageInAllKnownLanguages = this.getMessageService().getMessages("scheduler.message.modify", new Object[] {doc.getTitle(), docCreator.getUserCode()});
                     	String eventText = Util.joinMessages(messageInAllKnownLanguages, "<br/>");
-                    	
+
                         getScheduleClient().addEvent(
                             docCreator, eventText,
                             this.getConfiguration().getSchedulerEventTypeName(), requestDate,
@@ -240,11 +239,10 @@ public class ModifyStatusEndpoint extends AbstractAditBaseEndpoint {
             }
 
             // If status change was successful then add history event
-            DocumentHistory historyEvent = new DocumentHistory(DocumentService.HISTORY_TYPE_MODIFY_STATUS, documentId,
-                    requestDate.getTime(), user, xroadRequestUser, header);
-            historyEvent.setDescription(DocumentService.DOCUMENT_HISTORY_DESCRIPTION_MODIFYSTATUS
-                    + request.getDocumentStatusId());
-            this.getDocumentService().getDocumentHistoryDAO().save(historyEvent);
+            this.getDocumentService().addHistoryEvent(applicationName, documentId, user.getUserCode(),
+                DocumentService.HISTORY_TYPE_MODIFY_STATUS, xroadRequestUser.getUserCode(), xroadRequestUser.getFullName(),
+                DocumentService.DOCUMENT_HISTORY_DESCRIPTION_MODIFYSTATUS + request.getDocumentStatusId(),
+                user.getFullName(), requestDate.getTime());
 
             // Set response messages
             response.setSuccess(true);
@@ -305,7 +303,7 @@ public class ModifyStatusEndpoint extends AbstractAditBaseEndpoint {
      * <br>
      * Throws {@link AditCodedException} if any errors in request data are
      * found.
-     * 
+     *
      * @param request
      *            Request body as {@link ModifyStatusRequest} object.
      * @throws AditCodedException
@@ -325,7 +323,7 @@ public class ModifyStatusEndpoint extends AbstractAditBaseEndpoint {
 
     /**
      * Writes request parameters to application DEBUG log.
-     * 
+     *
      * @param request
      *            Request body as {@link ModifyStatusRequest} object.
      */
@@ -343,7 +341,7 @@ public class ModifyStatusEndpoint extends AbstractAditBaseEndpoint {
     public void setScheduleClient(ScheduleClient scheduleClient) {
         this.scheduleClient = scheduleClient;
     }
-    
+
     public UserService getUserService() {
         return userService;
     }

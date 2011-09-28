@@ -94,7 +94,7 @@
             </key>
             <one-to-many class="ee.adit.dao.pojo.Signature" />
         </set>
-        <set name="documentHistories" inverse="true" lazy="false" cascade="save-update" table="DOCUMENT_HISTORY" fetch="select">
+        <set name="documentHistories" inverse="true" lazy="true" table="DOCUMENT_HISTORY" fetch="select">
             <key>
                 <column name="DOCUMENT_ID" precision="12" scale="0" not-null="true" />
             </key>

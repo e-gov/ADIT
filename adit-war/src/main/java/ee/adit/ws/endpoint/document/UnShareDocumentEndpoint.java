@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
-import ee.adit.dao.pojo.DocumentHistory;
 import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditException;
@@ -36,7 +35,7 @@ import ee.webmedia.xtee.annotation.XTeeService;
  * Implementation of "unShareDocument" web method (web service request).
  * Contains request input validation, request-specific workflow and response
  * composition.
- * 
+ *
  * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
  * @author Jaak Lember, Interinx, jaak@interinx.com
  */
@@ -45,16 +44,16 @@ import ee.webmedia.xtee.annotation.XTeeService;
 public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 
     private static Logger logger = Logger.getLogger(UnShareDocumentEndpoint.class);
-    
+
     private UserService userService;
-    
+
     private DocumentService documentService;
-    
+
     private ScheduleClient scheduleClient;
 
     /**
      * Executes "V1" version of "unShareDocument" request.
-     * 
+     *
      * @param requestObject
      *            Request body object
      * @return Response body object
@@ -93,8 +92,8 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 
             // Check user rights for document
             Document doc = checkRightsAndGetDocument(request, applicationName, user);
-            
-            
+
+
             // All checks are successfully passed
             boolean saveDocument = false;
             List<String> userCodes = new ArrayList<String>();
@@ -176,9 +175,9 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
             }
 
             // Add history event about unsharing
-            doc.getDocumentHistories().add(
-                    new DocumentHistory(DocumentService.HISTORY_TYPE_UNSHARE, doc.getId(), requestDate.getTime(), user,
-                            xroadRequestUser, header));
+            this.getDocumentService().addHistoryEvent(applicationName, doc.getId(), user.getUserCode(),
+                DocumentService.HISTORY_TYPE_UNSHARE, xroadRequestUser.getUserCode(),
+                xroadRequestUser.getFullName(), null, user.getFullName(), requestDate.getTime());
 
             if (saveDocument) {
                 // If all sharings are removed and not signed then remove locking
@@ -187,9 +186,9 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
                     doc.setLockingDate(null);
 
                     // Lisame lukustamise ajaloosündmuse
-                    doc.getDocumentHistories().add(
-                            new DocumentHistory(DocumentService.HISTORY_TYPE_UNLOCK, doc.getId(), requestDate.getTime(),
-                                    user, xroadRequestUser, header));
+                    this.getDocumentService().addHistoryEvent(applicationName, doc.getId(), user.getUserCode(),
+                        DocumentService.HISTORY_TYPE_UNLOCK, xroadRequestUser.getUserCode(),
+                        xroadRequestUser.getFullName(), DocumentService.DOCUMENT_HISTORY_DESCRIPTION_UNLOCK, user.getFullName(), requestDate.getTime());
                 }
 
                 this.documentService.getDocumentDAO().save(doc, null, Long.MAX_VALUE, null);
@@ -206,10 +205,10 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
                         if ((recipient != null)
                             && (userService.findNotification(recipient.getUserNotifications(),
                                     ScheduleClient.NOTIFICATION_TYPE_SHARE) != null)) {
-                        	
+
                         	List<Message> messageInAllKnownLanguages = this.getMessageService().getMessages("scheduler.message.unShare", new Object[] {user.getUserCode(), doc.getTitle()});
                         	String eventText = Util.joinMessages(messageInAllKnownLanguages, "<br/>");
-                        	
+
                             getScheduleClient().addEvent(
                                 recipient, eventText,
                                 this.getConfiguration().getSchedulerEventTypeName(), requestDate,
@@ -306,7 +305,7 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 
     /**
      * Checks users rights for document.
-     * 
+     *
      * @param request
      *     Current request
      * @param applicationName
@@ -320,9 +319,9 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
     private Document checkRightsAndGetDocument(
     	final UnShareDocumentRequest request, final String applicationName,
     	final AditUser user) {
-    	
+
     	Document doc;
-        
+
     	// Kontrollime, kas päringu käivitanud infosüsteem on ADITis
         // registreeritud
         boolean applicationRegistered = this.getUserService().isApplicationRegistered(applicationName);
@@ -394,24 +393,24 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
             aditCodedException.setParameters(new Object[] {request.getDocumentId().toString(), user.getUserCode()});
             throw aditCodedException;
         }
-        
+
         // Check whether the document is marked as invisible to owner
         if ((doc.getInvisibleToOwner() != null) && doc.getInvisibleToOwner()) {
             AditCodedException aditCodedException = new AditCodedException("document.deleted");
             aditCodedException.setParameters(new Object[] {doc.getId()});
             throw aditCodedException;
         }
-        
+
         return doc;
     }
-    
+
     /**
      * Validates request body and makes sure that all required fields exist and
      * are not empty. <br>
      * <br>
      * Throws {@link AditCodedException} if any errors in request data are
      * found.
-     * 
+     *
      * @param request
      *            Request body as {@link UnShareDocumentRequest} object.
      * @throws AditCodedException
@@ -429,7 +428,7 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 
     /**
      * Writes request parameters to application DEBUG log.
-     * 
+     *
      * @param request
      *            Request body as {@link UnShareDocumentRequest} object.
      */
@@ -451,7 +450,7 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
     public void setScheduleClient(ScheduleClient scheduleClient) {
         this.scheduleClient = scheduleClient;
     }
-    
+
     public UserService getUserService() {
         return userService;
     }

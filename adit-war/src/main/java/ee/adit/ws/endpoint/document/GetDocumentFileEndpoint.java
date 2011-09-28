@@ -17,7 +17,6 @@ import org.springframework.stereotype.Component;
 
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
-import ee.adit.dao.pojo.DocumentHistory;
 import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditException;
@@ -44,7 +43,7 @@ import ee.webmedia.xtee.annotation.XTeeService;
  * Implementation of "getDocumentFile" web method (web service request).
  * Contains request input validation, request-specific workflow and response
  * composition.
- * 
+ *
  * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
  * @author Jaak Lember, Interinx, jaak@interinx.com
  */
@@ -55,9 +54,9 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
     private static Logger logger = Logger.getLogger(GetDocumentFileEndpoint.class);
 
     private UserService userService;
-    
+
     private DocumentService documentService;
-    
+
     private ScheduleClient scheduleClient;
 
     @Override
@@ -73,7 +72,7 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 
     /**
      * Executes "V1" version of "getDocumentFile" request.
-     * 
+     *
      * @param requestObject
      *            Request body object
      * @return Response body object
@@ -107,7 +106,8 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 
             // Kontrollime, kas päringus märgitud isik on teenuse kasutaja
             AditUser user = Util.getAditUserFromXroadHeader(this.getHeader(), this.getUserService());
-            
+            AditUser xroadRequestUser = Util.getXroadUserFromXroadHeader(user, this.getHeader(), this.getUserService());
+
             Document doc = checkRightsAndGetDocument(request, applicationName, user);
 
             boolean saveDocument = false;
@@ -123,7 +123,7 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
                     aditCodedException.setParameters(new Object[] {documentId.toString() });
                     throw aditCodedException;
                 }
-            	
+
                 userIsDocOwner = true;
             } else {
                 if ((doc.getDocumentSharings() != null) && (!doc.getDocumentSharings().isEmpty())) {
@@ -137,7 +137,7 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
                                 aditCodedException.setParameters(new Object[] {documentId.toString() });
                                 throw aditCodedException;
                             }
-                        	
+
                         	userIsDocOwner = true;
 
                             if (sharing.getLastAccessDate() == null) {
@@ -194,30 +194,15 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 
                     // If document has not been viewed by current
                     // user before then mark it viewed.
-                    boolean isViewed = false;
-                    if ((doc.getDocumentHistories() != null) && (!doc.getDocumentHistories().isEmpty())) {
-                        Iterator<DocumentHistory> it = doc.getDocumentHistories().iterator();
-                        while (it.hasNext()) {
-                            DocumentHistory event = it.next();
-                            if (event.getDocumentHistoryType().equalsIgnoreCase(
-                                    DocumentService.HISTORY_TYPE_MARK_VIEWED)
-                                    && event.getUserCode().equalsIgnoreCase(user.getUserCode())) {
-                                isViewed = true;
-                                break;
-                            }
-                        }
-                    }
+                    boolean isViewed = this.getDocumentService().getDocumentHistoryDAO()
+                		.checkIfHistoryEventExists(DocumentService.HISTORY_TYPE_MARK_VIEWED, doc.getId(), user.getUserCode());
 
                     if (!isViewed) {
                         // Add first viewing history event
-                        DocumentHistory historyEvent = new DocumentHistory();
-                        historyEvent.setRemoteApplicationName(applicationName);
-                        historyEvent.setDocumentId(doc.getId());
-                        historyEvent.setDocumentHistoryType(DocumentService.HISTORY_TYPE_MARK_VIEWED);
-                        historyEvent.setEventDate(new Date());
-                        historyEvent.setUserCode(user.getUserCode());
-                        doc.getDocumentHistories().add(historyEvent);
-                        saveDocument = true;
+                        this.getDocumentService().addHistoryEvent(applicationName, documentId, user.getUserCode(),
+                            DocumentService.HISTORY_TYPE_MARK_VIEWED, xroadRequestUser.getUserCode(),
+                            xroadRequestUser.getFullName(), DocumentService.DOCUMENT_HISTORY_DESCRIPTION_MARK_VIEWED,
+                            user.getFullName(), requestDate.getTime());
                     }
 
                     if (saveDocument) {
@@ -238,10 +223,10 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
                             && (docCreator != null)
                             && (userService.findNotification(docCreator.getUserNotifications(),
                                     ScheduleClient.NOTIFICATION_TYPE_VIEW) != null)) {
-                        	
+
                         	List<Message> messageInAllKnownLanguages = this.getMessageService().getMessages("scheduler.message.view", new Object[] {doc.getTitle(), user.getUserCode()});
                         	String eventText = Util.joinMessages(messageInAllKnownLanguages, "<br/>");
-                        	
+
                             getScheduleClient().addEvent(
                                 docCreator, eventText,
                                 this.getConfiguration().getSchedulerEventTypeName(), requestDate,
@@ -323,10 +308,10 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
         response.setMessages(arrayOfMessage);
         return response;
     }
-    
+
     /**
      * Checks users rights for document.
-     * 
+     *
      * @param request
      *     Current request
      * @param applicationName
@@ -340,7 +325,7 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
     private Document checkRightsAndGetDocument(
     	final GetDocumentFileRequest request, final String applicationName,
     	final AditUser user) {
-    	
+
         // Kontrollime, kas päringu käivitanud infosüsteem on ADITis
         // registreeritud
         boolean applicationRegistered = this.getUserService().isApplicationRegistered(applicationName);
@@ -375,7 +360,7 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
             exception.setParameters(new Object[] {applicationName, user.getUserCode() });
             throw exception;
         }
-    	
+
         // Now it is safe to load the document from database
         // (and even necessary to do all the document-specific checks)
         Document doc = this.documentService.getDocumentDAO().getDocument(request.getDocumentId());
@@ -403,13 +388,13 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
             aditCodedException.setParameters(new Object[] {Util.dateToEstonianDateString(doc.getDeflateDate()) });
             throw aditCodedException;
         }
-        
+
         return doc;
     }
 
     /**
      * Writes response attachment to file.
-     * 
+     *
      * @param filesList
      *     List of files to be returned in response attachment
      * @return
@@ -432,7 +417,7 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
      * <br>
      * Throws {@link AditCodedException} if any errors in request data are
      * found.
-     * 
+     *
      * @param request
      *            Request body as {@link GetDocumentFileRequest} object.
      * @throws AditCodedException
@@ -450,7 +435,7 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 
     /**
      * Writes request parameters to application DEBUG log.
-     * 
+     *
      * @param request
      *            Request body as {@link GetDocumentFileRequest} object.
      */
@@ -472,7 +457,7 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
     public void setScheduleClient(ScheduleClient scheduleClient) {
         this.scheduleClient = scheduleClient;
     }
-    
+
     public UserService getUserService() {
         return userService;
     }

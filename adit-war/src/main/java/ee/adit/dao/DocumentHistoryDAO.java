@@ -6,13 +6,14 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.DocumentHistory;
 import ee.adit.exception.AditInternalException;
 
 /**
  * Document history data access class. Provides methods for retrieving and manipulating
  * document history data.
- * 
+ *
  * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
  * @author Jaak Lember, Interinx, jaak@interinx.com
  */
@@ -20,7 +21,7 @@ public class DocumentHistoryDAO extends HibernateDaoSupport {
 
     /**
      * Save document history.
-     * 
+     *
      * @param documentHistory document histroy record
      * @return document history ID
      */
@@ -52,7 +53,7 @@ public class DocumentHistoryDAO extends HibernateDaoSupport {
 
     /**
      * Fetch document history list ordered by event date.
-     * 
+     *
      * @param documentID document ID
      * @return history list
      */
@@ -84,4 +85,32 @@ public class DocumentHistoryDAO extends HibernateDaoSupport {
         return result;
     }
 
+    /**
+     * Checks if a history event with given type exists for a given document.
+     *
+     * @param historyTypeCode
+     * 		Type code of history event
+     * @param documentId
+     * 		Related document ID
+     * @param userCode
+     * 		Code of user whose events will be checked
+     * @return
+     * 		{@code true} if a history event with given parameters exists.
+     * 		{@code false} otherwise.
+     */
+    public boolean checkIfHistoryEventExists(final String historyTypeCode,
+    	final long documentId, final String userCode) {
+        boolean result = true;
+
+        String sql = "from DocumentHistory where documentId=" + documentId
+        	+ " and userCode='" + userCode + "' and documentHistoryType='"
+        	+ historyTypeCode + "'";
+        List<DocumentHistory> existingHistoryEvents = this.getSessionFactory().openSession().createQuery(sql).list();
+
+        if (existingHistoryEvents == null || existingHistoryEvents.size() < 1) {
+            result = false;
+        }
+
+        return result;
+    }
 }

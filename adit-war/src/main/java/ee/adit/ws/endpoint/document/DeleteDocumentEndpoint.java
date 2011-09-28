@@ -7,7 +7,6 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 
 import ee.adit.dao.pojo.AditUser;
-import ee.adit.dao.pojo.DocumentHistory;
 import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.ArrayOfMessage;
@@ -27,19 +26,19 @@ import ee.webmedia.xtee.annotation.XTeeService;
 /**
  * Implementation of "deleteDocument" web method (web service request). Contains
  * request input validation, request-specific workflow and response composition.
- * 
+ *
  * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
  * @author Jaak Lember, Interinx, jaak@interinx.com
  */
 @XTeeService(name = "deleteDocument", version = "v1")
 @Component
 public class DeleteDocumentEndpoint extends AbstractAditBaseEndpoint {
-    
+
     private static Logger logger = Logger.getLogger(DeleteDocumentEndpoint.class);
-    
+
     private UserService userService;
-    
-    private DocumentService documentService;    
+
+    private DocumentService documentService;
 
     @Override
     protected Object invokeInternal(Object requestObject, int version) throws Exception {
@@ -54,7 +53,7 @@ public class DeleteDocumentEndpoint extends AbstractAditBaseEndpoint {
 
     /**
      * Executes "V1" version of "deleteDocument" request.
-     * 
+     *
      * @param requestObject
      *            Request body object
      * @return Response body object
@@ -118,10 +117,10 @@ public class DeleteDocumentEndpoint extends AbstractAditBaseEndpoint {
             this.getDocumentService().deleteDocument(request.getDocumentId(), user.getUserCode(), applicationName);
 
             // If deletion was successful then add history event
-            DocumentHistory historyEvent = new DocumentHistory(DocumentService.HISTORY_TYPE_DELETE, documentId,
-                    requestDate.getTime(), user, xroadRequestUser, header);
-            historyEvent.setDescription(DocumentService.DOCUMENT_HISTORY_DESCRIPTION_DELETE);
-            this.getDocumentService().getDocumentHistoryDAO().save(historyEvent);
+            this.getDocumentService().addHistoryEvent(applicationName, documentId, user.getUserCode(),
+                DocumentService.HISTORY_TYPE_DELETE, xroadRequestUser.getUserCode(),
+                xroadRequestUser.getFullName(), DocumentService.DOCUMENT_HISTORY_DESCRIPTION_DELETE,
+                user.getFullName(), requestDate.getTime());
 
             // Set response messages
             response.setSuccess(new Success(true));
@@ -178,7 +177,7 @@ public class DeleteDocumentEndpoint extends AbstractAditBaseEndpoint {
      * <br>
      * Throws {@link AditCodedException} if any errors in request data are
      * found.
-     * 
+     *
      * @param request
      *            Request body as {@link DeleteDocumentRequest} object.
      * @throws AditCodedException
@@ -196,7 +195,7 @@ public class DeleteDocumentEndpoint extends AbstractAditBaseEndpoint {
 
     /**
      * Writes request parameters to application DEBUG log.
-     * 
+     *
      * @param request
      *            Request body as {@link DeleteDocumentRequest} object.
      */
@@ -205,7 +204,7 @@ public class DeleteDocumentEndpoint extends AbstractAditBaseEndpoint {
         logger.debug("Document ID: " + String.valueOf(request.getDocumentId()));
         logger.debug("--------------------------------------");
     }
-    
+
     public UserService getUserService() {
         return userService;
     }

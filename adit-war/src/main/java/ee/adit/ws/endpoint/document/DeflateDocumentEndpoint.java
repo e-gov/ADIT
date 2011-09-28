@@ -28,7 +28,7 @@ import ee.webmedia.xtee.annotation.XTeeService;
  * Implementation of "deflateDocument" web method (web service request).
  * Contains request input validation, request-specific workflow and response
  * composition.
- * 
+ *
  * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
  * @author Jaak Lember, Interinx, jaak@interinx.com
  */
@@ -37,9 +37,9 @@ import ee.webmedia.xtee.annotation.XTeeService;
 public class DeflateDocumentEndpoint extends AbstractAditBaseEndpoint {
 
     private static Logger logger = Logger.getLogger(DeflateDocumentEndpoint.class);
-    
+
     private UserService userService;
-    
+
     private DocumentService documentService;
 
     @Override
@@ -55,7 +55,7 @@ public class DeflateDocumentEndpoint extends AbstractAditBaseEndpoint {
 
     /**
      * Executes "V1" version of "deflateDocument" request.
-     * 
+     *
      * @param requestObject
      *            Request body object
      * @return Response body object
@@ -131,15 +131,14 @@ public class DeflateDocumentEndpoint extends AbstractAditBaseEndpoint {
 
             // If deflation was successful then add history events
             // for deflation and locking.
-            DocumentHistory deflateEvent = new DocumentHistory(DocumentService.HISTORY_TYPE_DEFLATE, documentId,
-                    requestDate.getTime(), user, xroadRequestUser, header);
-            deflateEvent.setDescription(DocumentService.DOCUMENT_HISTORY_DESCRIPTION_DEFLATE);
-
-            DocumentHistory lockEvent = new DocumentHistory(DocumentService.HISTORY_TYPE_LOCK, documentId, requestDate
-                    .getTime(), user, xroadRequestUser, header);
-            lockEvent.setDescription(DocumentService.DOCUMENT_HISTORY_DESCRIPTION_LOCK);
-            this.getDocumentService().getDocumentHistoryDAO().save(deflateEvent);
-            this.getDocumentService().getDocumentHistoryDAO().save(lockEvent);
+            this.getDocumentService().addHistoryEvent(applicationName, documentId, user.getUserCode(),
+                DocumentService.HISTORY_TYPE_DEFLATE, xroadRequestUser.getUserCode(),
+                xroadRequestUser.getFullName(), DocumentService.DOCUMENT_HISTORY_DESCRIPTION_DEFLATE,
+                user.getFullName(), requestDate.getTime());
+            this.getDocumentService().addHistoryEvent(applicationName, documentId, user.getUserCode(),
+                DocumentService.HISTORY_TYPE_LOCK, xroadRequestUser.getUserCode(),
+                xroadRequestUser.getFullName(), DocumentService.DOCUMENT_HISTORY_DESCRIPTION_LOCK,
+                user.getFullName(), requestDate.getTime());
 
             // Set response messages
             response.setSuccess(new Success(true));
@@ -197,7 +196,7 @@ public class DeflateDocumentEndpoint extends AbstractAditBaseEndpoint {
      * <br>
      * Throws {@link AditCodedException} if any errors in request data are
      * found.
-     * 
+     *
      * @param request
      *            Request body as {@link DeflateDocumentRequest} object.
      * @throws AditCodedException
@@ -215,7 +214,7 @@ public class DeflateDocumentEndpoint extends AbstractAditBaseEndpoint {
 
     /**
      * Writes request parameters to application DEBUG log.
-     * 
+     *
      * @param request
      *            Request body as {@link DeflateDocumentRequest} object.
      */
@@ -224,7 +223,7 @@ public class DeflateDocumentEndpoint extends AbstractAditBaseEndpoint {
         logger.debug("Document ID: " + String.valueOf(request.getDocumentId()));
         logger.debug("--------------------------------------");
     }
-    
+
     public UserService getUserService() {
         return userService;
     }

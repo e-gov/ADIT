@@ -12,7 +12,6 @@ import org.springframework.ws.mime.Attachment;
 
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
-import ee.adit.dao.pojo.DocumentHistory;
 import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditException;
 import ee.adit.exception.AditInternalException;
@@ -251,23 +250,18 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
             }
 
             if (involvedSignatureContainerExtraction) {
-                DocumentHistory signatureContainerExtractionEvent = new DocumentHistory(
-             		 DocumentService.HISTORY_TYPE_EXTRACT_FILE, documentId,
-             		 requestDate.getTime(), user, xroadRequestUser, header);
-               signatureContainerExtractionEvent.setDescription(DocumentService.DOCUMENT_HISTORY_DESCRIPTION_EXTRACT_FILE);
-               this.getDocumentService().getDocumentHistoryDAO().save(signatureContainerExtractionEvent);
+                this.getDocumentService().addHistoryEvent(applicationName, documentId, user.getUserCode(),
+                    DocumentService.HISTORY_TYPE_EXTRACT_FILE, xroadRequestUser.getUserCode(),
+                    xroadRequestUser.getFullName(), DocumentService.DOCUMENT_HISTORY_DESCRIPTION_EXTRACT_FILE,
+                    user.getFullName(), requestDate.getTime());
             }
 
             // If saving was successful then add history event
-            DocumentHistory historyEvent = new DocumentHistory(
-                    (updatedExistingDocument ? DocumentService.HISTORY_TYPE_MODIFY : DocumentService.HISTORY_TYPE_CREATE),
-                    documentId, requestDate.getTime(), user, xroadRequestUser, header);
-            if (updatedExistingDocument) {
-                historyEvent.setDescription(DocumentService.DOCUMENT_HISTORY_DESCRIPTION_MODIFY);
-            } else {
-                historyEvent.setDescription(DocumentService.DOCUMENT_HISTORY_DESCRIPTION_CREATE);
-            }
-            this.getDocumentService().getDocumentHistoryDAO().save(historyEvent);
+            this.getDocumentService().addHistoryEvent(applicationName, documentId, user.getUserCode(),
+           		(updatedExistingDocument ? DocumentService.HISTORY_TYPE_MODIFY : DocumentService.HISTORY_TYPE_CREATE),
+                xroadRequestUser.getUserCode(), xroadRequestUser.getFullName(),
+                (updatedExistingDocument ? DocumentService.DOCUMENT_HISTORY_DESCRIPTION_MODIFY : DocumentService.DOCUMENT_HISTORY_DESCRIPTION_CREATE),
+                user.getFullName(), requestDate.getTime());
 
             // Set response messages
             response.setSuccess(new Success(true));

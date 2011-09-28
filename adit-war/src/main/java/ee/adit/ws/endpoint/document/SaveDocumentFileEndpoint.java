@@ -12,7 +12,6 @@ import org.springframework.ws.mime.Attachment;
 
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
-import ee.adit.dao.pojo.DocumentHistory;
 import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditException;
@@ -188,19 +187,18 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
             }
 
             if (involvedSignatureContainerExtraction) {
-                DocumentHistory signatureContainerExtractionEvent = new DocumentHistory(
-             		 DocumentService.HISTORY_TYPE_EXTRACT_FILE, documentId,
-             		 requestDate.getTime(), user, xroadRequestUser, header);
-               signatureContainerExtractionEvent.setDescription(DocumentService.DOCUMENT_HISTORY_DESCRIPTION_EXTRACT_FILE);
-               this.getDocumentService().getDocumentHistoryDAO().save(signatureContainerExtractionEvent);
+                this.getDocumentService().addHistoryEvent(applicationName, documentId, user.getUserCode(),
+                    DocumentService.HISTORY_TYPE_EXTRACT_FILE, xroadRequestUser.getUserCode(),
+                    xroadRequestUser.getFullName(), DocumentService.DOCUMENT_HISTORY_DESCRIPTION_EXTRACT_FILE,
+                    user.getFullName(), requestDate.getTime());
             }
 
             // If saving was successful then add history event
-            DocumentHistory historyEvent = new DocumentHistory(
-                    (updatedExistingFile ? DocumentService.HISTORY_TYPE_MODIFY_FILE : DocumentService.HISTORY_TYPE_ADD_FILE),
-                    documentId, requestDate.getTime(), user, xroadRequestUser, header);
-            historyEvent.setDescription(DocumentService.DOCUMENT_HISTORY_DESCRIPTION_MODIFYFILE + documentFileId);
-            this.getDocumentService().getDocumentHistoryDAO().save(historyEvent);
+            this.getDocumentService().addHistoryEvent(applicationName, documentId, user.getUserCode(),
+                (updatedExistingFile ? DocumentService.HISTORY_TYPE_MODIFY_FILE : DocumentService.HISTORY_TYPE_ADD_FILE),
+                xroadRequestUser.getUserCode(), xroadRequestUser.getFullName(),
+                (updatedExistingFile ? (DocumentService.DOCUMENT_HISTORY_DESCRIPTION_MODIFYFILE + documentFileId) : DocumentService.DOCUMENT_HISTORY_DESCRIPTION_ADDFILE),
+                user.getFullName(), requestDate.getTime());
 
             // Set response messages
             response.setSuccess(true);

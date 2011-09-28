@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
-import ee.adit.dao.pojo.DocumentHistory;
 import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditException;
@@ -174,14 +173,16 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
                 doc.setSignable(true);
 
                 // Lisame jagamise ajaloosündmuse
-                DocumentHistory sharingEvent = new DocumentHistory(DocumentService.HISTORY_TYPE_SHARE, documentId,
-                        requestDate.getTime(), user, xroadRequestUser, header);
-                doc.getDocumentHistories().add(sharingEvent);
+                this.getDocumentService().addHistoryEvent(applicationName, documentId, user.getUserCode(),
+                    DocumentService.HISTORY_TYPE_SHARE, xroadRequestUser.getUserCode(),
+                    xroadRequestUser.getFullName(), null,
+                    user.getFullName(), requestDate.getTime());
 
                 // Lisame lukustamise ajaloosündmuse
-                DocumentHistory lockEvent = new DocumentHistory(DocumentService.HISTORY_TYPE_LOCK, documentId,
-                        requestDate.getTime(), user, xroadRequestUser, header);
-                doc.getDocumentHistories().add(lockEvent);
+                this.getDocumentService().addHistoryEvent(applicationName, documentId, user.getUserCode(),
+                    DocumentService.HISTORY_TYPE_LOCK, xroadRequestUser.getUserCode(),
+                    xroadRequestUser.getFullName(), DocumentService.DOCUMENT_HISTORY_DESCRIPTION_LOCK,
+                    user.getFullName(), requestDate.getTime());
 
                 this.documentService.getDocumentDAO().save(doc, null, Long.MAX_VALUE, null);
 

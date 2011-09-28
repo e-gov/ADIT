@@ -164,11 +164,11 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
                             // Lock the document
                             this.getDocumentService().lockDocument(doc);
 
-                            // Add history event
-                            this.getDocumentService().addHistoryEvent(applicationName, doc, user.getUserCode(),
-                                    DocumentService.HISTORY_TYPE_LOCK, xroadRequestUser.getUserCode(),
-                                    xroadRequestUser.getFullName(), DocumentService.DOCUMENT_HISTORY_DESCRIPTION_LOCK,
-                                    user.getFullName());
+                            // Add locking history event
+                            this.getDocumentService().addHistoryEvent(applicationName, doc.getId(), user.getUserCode(),
+                                DocumentService.HISTORY_TYPE_LOCK, xroadRequestUser.getUserCode(),
+                                xroadRequestUser.getFullName(), DocumentService.DOCUMENT_HISTORY_DESCRIPTION_LOCK,
+                                user.getFullName(), requestDate.getTime());
 
                             // Add sharing information to database
                             this.getDocumentService().sendDocument(doc, recipient);
@@ -227,9 +227,9 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
             response.setMessages(messages);
 
             if (successCount > 0) {
-                this.getDocumentService().addHistoryEvent(applicationName, doc, user.getUserCode(),
+                this.getDocumentService().addHistoryEvent(applicationName, doc.getId(), user.getUserCode(),
                         DocumentService.HISTORY_TYPE_SEND, xroadRequestUser.getUserCode(),
-                        xroadRequestUser.getFullName(), description, user.getFullName());
+                        xroadRequestUser.getFullName(), description, user.getFullName(), requestDate.getTime());
             }
 
         } catch (Exception e) {

@@ -778,6 +778,7 @@ CREATE INDEX &&ADIT_SCHEMA..document_history_type_idx ON &&ADIT_SCHEMA..document
 CREATE INDEX &&ADIT_SCHEMA..document_history_app_idx ON &&ADIT_SCHEMA..document_history (remote_application) TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 CREATE INDEX &&ADIT_SCHEMA..document_history_docid_idx ON &&ADIT_SCHEMA..document_history (document_id) TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 CREATE INDEX &&ADIT_SCHEMA..document_history_user_idx ON &&ADIT_SCHEMA..document_history (user_code) TABLESPACE &&ADIT_INDEX_TABLESPACE.;
+CREATE INDEX &&ADIT_SCHEMA..document_history_search_idx ON &&ADIT_SCHEMA..document_history (document_id, user_code, document_history_type) TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 CREATE INDEX &&ADIT_SCHEMA..document_sharing_docid_idx ON &&ADIT_SCHEMA..document_sharing (document_id) TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 CREATE INDEX &&ADIT_SCHEMA..document_sharing_dvkstatus_idx ON &&ADIT_SCHEMA..document_sharing (dvk_status_id) TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 CREATE INDEX &&ADIT_SCHEMA..document_sharing_type_idx ON &&ADIT_SCHEMA..document_sharing (sharing_type) TABLESPACE &&ADIT_INDEX_TABLESPACE.;
