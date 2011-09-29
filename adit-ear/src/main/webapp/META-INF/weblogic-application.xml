@@ -8,6 +8,7 @@
 		<package-name>antlr.*</package-name>
 		<package-name>org.dom4j.*</package-name>
 		<package-name>org.hibernate.*</package-name>
+		<package-name>com.sun.xml.*</package-name>
 	</prefer-application-packages>
 
 	<xml>
@@ -15,15 +16,15 @@
 			<saxparser-factory>org.apache.xerces.jaxp.SAXParserFactoryImpl</saxparser-factory>
 		</parser-factory>
 	</xml>
-	
+
 	<application-param>
 		<param-name>weblogic.webservice.i18n.charset</param-name>
 		<param-value>utf-8</param-value>
 	</application-param>
-	
+
 	<application-param>
 	  <param-name>webapp.encoding.default</param-name>
 	  <param-value>utf-8</param-value>
 	</application-param>
-	
+
 </weblogic-application>
