@@ -1056,7 +1056,7 @@ public class DocumentDAO extends HibernateDaoSupport {
 
         String sql = "from Document where dvkId = " + documentDhlId + " and creatorCode = '"
                 + recipientPersonalIdCode.trim() + "'";
-        List<Document> existingDocuments = this.getSessionFactory().openSession().createQuery(sql).list();
+        List<Document> existingDocuments = this.getHibernateTemplate().find(sql);
 
         if (existingDocuments == null || existingDocuments.size() == 0) {
             result = false;

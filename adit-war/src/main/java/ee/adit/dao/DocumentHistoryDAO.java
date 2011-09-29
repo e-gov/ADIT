@@ -6,7 +6,6 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
-import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.DocumentHistory;
 import ee.adit.exception.AditInternalException;
 
@@ -100,8 +99,8 @@ public class DocumentHistoryDAO extends HibernateDaoSupport {
      */
     public boolean checkIfHistoryEventExists(final String historyTypeCode,
     	final long documentId, final String userCode) {
-        boolean result = true;
 
+    	boolean result = true;
 
         String sql = "from DocumentHistory where documentId=" + documentId
         	+ " and userCode='" + userCode + "' and documentHistoryType='"

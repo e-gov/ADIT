@@ -91,7 +91,7 @@ public class DocumentSharingDAO extends HibernateDaoSupport {
     public List<DocumentSharing> getDVKSharings(Long documentID) {
         String sql = "from DocumentSharing where documentId = " + documentID + " and documentSharingType = '"
                 + DocumentService.SHARINGTYPE_SEND_DVK + "'";
-        return this.getSessionFactory().openSession().createQuery(sql).list();
+        return this.getHibernateTemplate().find(sql);
     }
 
     /**
