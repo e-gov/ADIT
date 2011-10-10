@@ -10,11 +10,17 @@
 						http://www.springframework.org/schema/tx
 						http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
 
+	<!--
+	Enabling this configuration will cause SOAP response HTTP
+	headers to be rendered incorrectly (in a way that will cause
+	problems to x-road security servers.
+
 	<bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory">
 	    <property name="messageFactory">
 	        <bean class="weblogic.xml.saaj.MessageFactoryImpl"/>
 	    </property>
 	</bean>
+	-->
 
  	<!--
  	<bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory">
@@ -24,13 +30,11 @@
 	</bean>
 	-->
 
-	<!--
 	<bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory">
 	    <property name="messageFactory">
 	        <bean class="com.sun.xml.messaging.saaj.soap.ver1_1.SOAPMessageFactory1_1Impl"/>
 	    </property>
 	</bean>
-	-->
 
  	<import resource="adit-configuration.xml"/>
  	<import resource="adit-datasource.xml"/>
