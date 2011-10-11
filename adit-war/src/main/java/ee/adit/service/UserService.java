@@ -588,13 +588,15 @@ public class UserService {
     public UserNotification findNotification(final Set<UserNotification> notifications, final String notificationType) {
         UserNotification result = null;
 
-        Iterator<UserNotification> it = notifications.iterator();
-        while (it.hasNext()) {
-            UserNotification item = it.next();
-            if (item.getId().getNotificationType().equalsIgnoreCase(notificationType)) {
-                result = item;
-                break;
-            }
+        if ((notifications != null) && !Util.isNullOrEmpty(notificationType)) {
+	        Iterator<UserNotification> it = notifications.iterator();
+	        while (it.hasNext()) {
+	            UserNotification item = it.next();
+	            if ((item != null) && (item.getId() != null) && notificationType.equalsIgnoreCase(item.getId().getNotificationType())) {
+	                result = item;
+	                break;
+	            }
+	        }
         }
 
         return result;
