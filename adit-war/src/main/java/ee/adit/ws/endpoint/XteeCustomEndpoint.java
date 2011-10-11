@@ -282,6 +282,7 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
         if (respMessage != null) {
 	        // Add the proper MIME header
 	        // respMessage.getMimeHeaders().setHeader("Content-Type", "application/soap+xml;charset=utf-8");
+        	respMessage.getMimeHeaders().setHeader("Content-Type", "multipart/related;charset=utf-8");
 
 	        if (!this.isIgnoreAttachmentHeaders()) {
 	            Iterator it = respMessage.getAttachments();
