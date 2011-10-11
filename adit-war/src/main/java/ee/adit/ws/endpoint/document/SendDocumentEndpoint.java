@@ -178,9 +178,9 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
                             	List<Message> messageInAllKnownLanguages = this.getMessageService().getMessages("scheduler.message.send", new Object[] {doc.getTitle(), user.getUserCode()});
                             	String eventText = Util.joinMessages(messageInAllKnownLanguages, "<br/>");
 
-                            	this.scheduleClient.addEvent(recipient, eventText,
+                            	/*this.scheduleClient.addEvent(recipient, eventText,
                                     this.getConfiguration().getSchedulerEventTypeName(), requestDate,
-                                    ScheduleClient.NOTIFICATION_TYPE_SEND, doc.getId(), this.userService);
+                                    ScheduleClient.NOTIFICATION_TYPE_SEND, doc.getId(), this.userService);*/
                             }
 
                             // Add success message to response
