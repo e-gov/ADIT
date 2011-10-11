@@ -447,10 +447,12 @@
 				<includes>
 					<include>*</include>
 				</includes>
+				<!--
                 <excludes>
                     <exclude>saaj-api.jar</exclude>
                     <exclude>saaj-impl.jar</exclude>
                 </excludes>
+                -->
 				<targetPath>../adit-${version}/WEB-INF/lib</targetPath>
 			</resource>
 		</resources>
