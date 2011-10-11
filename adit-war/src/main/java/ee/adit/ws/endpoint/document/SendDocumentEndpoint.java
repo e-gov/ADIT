@@ -20,6 +20,7 @@ import ee.adit.pojo.Message;
 import ee.adit.pojo.RecipientStatus;
 import ee.adit.pojo.SendDocumentRequest;
 import ee.adit.pojo.SendDocumentResponse;
+import ee.adit.schedule.ScheduleClient;
 import ee.adit.service.DocumentService;
 import ee.adit.service.LogService;
 import ee.adit.service.MessageService;
@@ -39,12 +40,10 @@ import ee.webmedia.xtee.annotation.XTeeService;
 @XTeeService(name = "sendDocument", version = "v1")
 @Component
 public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
-
     private static Logger logger = Logger.getLogger(SendDocumentEndpoint.class);
-
     private UserService userService;
-
     private DocumentService documentService;
+    private ScheduleClient scheduleClient;
 
     @Override
     protected Object invokeInternal(Object requestObject, int version) throws Exception {
@@ -172,6 +171,17 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 
                             // Add sharing information to database
                             this.getDocumentService().sendDocument(doc, recipient);
+
+                            // Send notification to every user the document was shared to
+                            // (assuming they have requested such notifications)
+                            if ((userService.findNotification(recipient.getUserNotifications(), ScheduleClient.NOTIFICATION_TYPE_SEND) != null)) {
+                            	List<Message> messageInAllKnownLanguages = this.getMessageService().getMessages("scheduler.message.send", new Object[] {doc.getTitle(), user.getUserCode()});
+                            	String eventText = Util.joinMessages(messageInAllKnownLanguages, "<br/>");
+
+                            	this.scheduleClient.addEvent(recipient, eventText,
+                                    this.getConfiguration().getSchedulerEventTypeName(), requestDate,
+                                    ScheduleClient.NOTIFICATION_TYPE_SEND, doc.getId(), this.userService);
+                            }
 
                             // Add success message to response
                             recipientStatus.setSuccess(true);
@@ -390,6 +400,14 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
         arrayOfMessage.getMessage().add(new Message("en", ex.getMessage()));
         response.setMessages(arrayOfMessage);
         return response;
+    }
+
+    public ScheduleClient getScheduleClient() {
+        return scheduleClient;
+    }
+
+    public void setScheduleClient(ScheduleClient scheduleClient) {
+        this.scheduleClient = scheduleClient;
     }
 
     public UserService getUserService() {

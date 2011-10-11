@@ -46,13 +46,13 @@ import ee.webmedia.xtee.XTeeUtil;
  * Base class for web-service endpoints. Wraps the X-Tee specific operations and
  * data manipulation. Web-service endpoints extending this class will not have
  * to be aware of the X-Tee specific SOAP envelope.
- * 
+ *
  * The class is a modified version of the XRoad java library class {@code
  * ee.webmedia.xtee.endpoint.AbstractXTeeBaseEndpoint}.
- * 
+ *
  * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
  * @author Jaak Lember, Interinx, jaak@interinx.com
- * 
+ *
  */
 public abstract class XteeCustomEndpoint implements MessageEndpoint {
 
@@ -93,7 +93,7 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
      * and passes it to the
      * {@link #getResponse(CustomXTeeHeader, Document, SOAPMessage, SOAPMessage, Document)}
      * method for futher processing.
-     * 
+     *
      * @param messageContext
      *            the message context
      * @throws Exception
@@ -173,7 +173,7 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 
     /**
      * Parses the X-Tee headers.
-     * 
+     *
      * @param paringMessage
      *            the request message
      * @return X-Tee header object
@@ -198,7 +198,7 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
     /**
      * Parses the query - constructs a new {@link} Document} from the X-Tee
      * request body element.
-     * 
+     *
      * @param queryMsg
      *            query message
      * @return document representing X-Tee specific query data
@@ -223,7 +223,7 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
      * Finds "keha" element from X-Tee message in namespace-unaware fashion.<br>
      * This is useful if service consumer has placed "keha" element in some
      * namespace. In such case namespace-aware solutions are likely to fail.
-     * 
+     *
      * @param soapBody
      *            Body part of request SOAP envelope as {@link SOAPBody}
      * @return {@link Node} representing "keha" element (or null if "keha" was
@@ -255,7 +255,7 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
      * underlying web-service endpoint in {@link AbstractAditBaseEndpoint}. If
      * the query is a metaservice (listMethods) query, then the query and
      * headers are not copied.
-     * 
+     *
      * @param header
      *            X-Tee header
      * @param query
@@ -279,26 +279,27 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
             addHeader(header, respMessage);
         }
 
-        // Add the proper MIME header
-        respMessage.getMimeHeaders().setHeader("Content-Type", "application/soap+xml;charset=utf-8");
+        if (respMessage != null) {
+	        // Add the proper MIME header
+	        // respMessage.getMimeHeaders().setHeader("Content-Type", "application/soap+xml;charset=utf-8");
 
-        if ((respMessage != null) && !this.isIgnoreAttachmentHeaders()) {
-            Iterator it = respMessage.getAttachments();
-            if (it != null) {
-                while (it.hasNext()) {
-                    AttachmentPart at = (AttachmentPart) it.next();
-                    at.setMimeHeader("Content-Transfer-Encoding", "base64");
-                    at.setMimeHeader("Content-Encoding", "gzip");
-                }
-            }
+	        if (!this.isIgnoreAttachmentHeaders()) {
+	            Iterator it = respMessage.getAttachments();
+	            if (it != null) {
+	                while (it.hasNext()) {
+	                    AttachmentPart at = (AttachmentPart) it.next();
+	                    at.setMimeHeader("Content-Transfer-Encoding", "base64");
+	                    at.setMimeHeader("Content-Encoding", "gzip");
+	                }
+	            }
+	        }
         }
-
     }
 
     /**
      * Creates X-Tee specific structure for SOAP message: adds MIME headers,
      * base namespaces.
-     * 
+     *
      * @param reqMessage
      *            request SOAP message
      * @param respMessage
@@ -326,7 +327,7 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
      * Copies the request data to the response message - the request message's
      * <keha> element contents is copied to the response message's <paring>
      * element.
-     * 
+     *
      * @param paring
      *            request data
      * @param response
@@ -349,7 +350,7 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 
     /**
      * Adds headers from the {@code CustomXTeeHeader} to the SOAP message.
-     * 
+     *
      * @param pais
      *            headers
      * @param message
@@ -360,8 +361,7 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
         XTeeUtil.addXteeNamespace(message);
         for (QName qname : pais.getElemendid().keySet()) {
             if (qname.getNamespaceURI().equals(XTeeUtil.XTEE_NS_URI)) {
-                XTeeUtil
-                        .addHeaderElement(message.getSOAPHeader(), qname.getLocalPart(), pais.getElemendid().get(qname));
+                XTeeUtil.addHeaderElement(message.getSOAPHeader(), qname.getLocalPart(), pais.getElemendid().get(qname));
             }
         }
     }
@@ -369,7 +369,7 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
     /**
      * If true, request will be processed like meta-request (example of the
      * meta-query is <code>listMethods</code>).
-     * 
+     *
      * @param metaService
      *     Indicates if current request is a meta-request.
      */
@@ -379,7 +379,7 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 
     /**
      * Returns <code>true</code>, if this is a meta service.
-     * 
+     *
      * @return
      *     Is the current request a meta-request?
      */
@@ -389,7 +389,7 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 
     /**
      * Sets the property to ignore SOAP attachment headers.
-     * 
+     *
      * @param ignoreAttachmentHeaders
      *     Indicates if SOAP attachment headers should be ignored.
      */
@@ -399,7 +399,7 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 
     /**
      * Retrieves the response message.
-     * 
+     *
      * @return Response message as {@link SoapMessage} object.
      */
     public SoapMessage getResponseMessage() {
@@ -408,7 +408,7 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 
     /**
      * Retrieves the request message.
-     * 
+     *
      * @return Request message as {@link SoapMessage} object.
      */
     public SoapMessage getRequestMessage() {
@@ -417,7 +417,7 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 
     /**
      * Sets the response message.
-     * 
+     *
      * @param responseMessage
      *            Response message as {@link SaajSoapMessage} object.
      */
@@ -427,7 +427,7 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 
     /**
      * Sets the request message.
-     * 
+     *
      * @param requestMessage
      *            Request message as {@link SaajSoapMessage} object.
      */
@@ -437,7 +437,7 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 
     /**
      * Indicates whether SOAP attachments headers are to be corrected.
-     * 
+     *
      * @return <code>true</code> if this request should not attempt to correct
      *         response attachment headers.
      */
@@ -449,7 +449,7 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
      * Method which must implement the service logic, receives
      * <code>requestKeha</code>, <code>responseElement</code>
      * and <code>CustomXTeeHeader</code>.
-     * 
+     *
      * @param requestKeha
      *            query body
      * @param responseElement

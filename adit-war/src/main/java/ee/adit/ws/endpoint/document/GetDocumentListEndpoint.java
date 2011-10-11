@@ -33,7 +33,7 @@ import ee.webmedia.xtee.annotation.XTeeService;
  * Implementation of "getDocumentList" web method (web service request).
  * Contains request input validation, request-specific workflow and response
  * composition.
- * 
+ *
  * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
  * @author Jaak Lember, Interinx, jaak@interinx.com
  */
@@ -47,7 +47,7 @@ public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
     private DocumentService documentService;
     private String digidocConfigurationFile;
 
-    
+
     @Override
     protected Object invokeInternal(Object requestObject, int version) throws Exception {
         logger.debug("getDocumentList invoked. Version: " + version);
@@ -61,7 +61,7 @@ public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
 
     /**
      * Executes "V1" version of "getDocumentList" request.
-     * 
+     *
      * @param requestObject
      *            Request body object
      * @return Response body object
@@ -131,7 +131,7 @@ public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
 
             InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream(getDigidocConfigurationFile());
             String jdigidocCfgTmpFile = Util.createTemporaryFile(input, getConfiguration().getTempDir());
-            
+
             GetDocumentListResponseAttachment att = this.documentService.getDocumentDAO().getDocumentSearchResult(
                     request, user.getUserCode(), this.getConfiguration().getTempDir(),
                     this.getMessageSource().getMessage("files.nonExistentOrDeleted", new Object[] {}, Locale.ENGLISH),
@@ -161,7 +161,7 @@ public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
 
             // Set response messages
             response.setSuccess(true);
-            if (att.getTotal() > 0) {
+            if ((att != null) && (att.getTotal() > 0)) {
 	            messages.setMessage(this.getMessageService().getMessages("request.getDocumentList.success", new Object[] {}));
 	            response.setMessages(messages);
             } else {
@@ -169,12 +169,12 @@ public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
 	            response.setMessages(messages);
             }
 
-            if (att.getTotal() > 0) {
+            if ((att != null) && (att.getTotal() > 0)) {
 	            String additionalMessage = this.getMessageService().getMessage("request.getDocumentList.success", new Object[] {}, Locale.ENGLISH);
 	            additionalInformationForLog = LogService.REQUEST_LOG_SUCCESS + ": " + additionalMessage;
             } else {
 	            String additionalMessage = this.getMessageService().getMessage("request.getDocumentList.noDocumentsFound", new Object[] {user.getUserCode()}, Locale.ENGLISH);
-	            additionalInformationForLog = LogService.REQUEST_LOG_SUCCESS + ": " + additionalMessage;            	
+	            additionalInformationForLog = LogService.REQUEST_LOG_SUCCESS + ": " + additionalMessage;
             }
 
         } catch (Exception e) {
@@ -235,7 +235,7 @@ public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
      * <br>
      * Throws {@link AditCodedException} if any errors in request data are
      * found.
-     * 
+     *
      * @param request
      *            Request body as {@link GetDocumentListRequest} object.
      * @throws AditCodedException
@@ -257,7 +257,7 @@ public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
 
     /**
      * Writes request parameters to application DEBUG log.
-     * 
+     *
      * @param request
      *            Request body as {@link GetDocumentListRequest} object.
      */
@@ -300,7 +300,7 @@ public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
         logger.debug("Start indexr: " + request.getStartIndex());
         logger.debug("---------------------------------------");
     }
-    
+
     public UserService getUserService() {
         return userService;
     }
@@ -316,7 +316,7 @@ public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
     public void setDocumentService(DocumentService documentService) {
         this.documentService = documentService;
     }
-    
+
     public String getDigidocConfigurationFile() {
         return digidocConfigurationFile;
     }

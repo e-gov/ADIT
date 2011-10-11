@@ -25,7 +25,7 @@ import ee.adit.pojo.OutputDocumentFile;
 /**
  * Class containing methods for DigiDoc file manipulation (mainly for
  * data file extraction and finding offsets of data file contents).
- * 
+ *
  * @author Jaak Lember, Interinx, jaak@interinx.com
  */
 public final class SimplifiedDigiDocParser {
@@ -34,12 +34,12 @@ public final class SimplifiedDigiDocParser {
 	 */
 	private SimplifiedDigiDocParser() {
 	}
-	
+
 	private static Logger logger = Logger.getLogger(SimplifiedDigiDocParser.class);
-	
+
 	/**
 	 * Finds offsets of all data files in specified DigiDoc container.
-	 * 
+	 *
 	 * @param pathToDigiDoc
 	 *     Full path to DigiDoc container
 	 * @return
@@ -51,33 +51,33 @@ public final class SimplifiedDigiDocParser {
 		String pathToDigiDoc) throws IOException, NoSuchAlgorithmException {
 
 		Hashtable<String, StartEndOffsetPair> result = new Hashtable<String, StartEndOffsetPair>();
-		
+
         FileInputStream inStream = null;
         InputStreamReader textReader = null;
         BufferedReader bufferedReader = null;
-        
+
         // Helper streams for MD5 hash calculation
     	MessageDigest md5Digest = null;
     	BufferedOutputStream dummyFileOutStream = null;
         DigestOutputStream digestCalculatorStream = null;
         BufferedOutputStream base64OutputStream = null;
-        
+
         try {
             inStream = new FileInputStream(pathToDigiDoc);
             textReader = new InputStreamReader(inStream, "UTF-8");
             bufferedReader = new BufferedReader(textReader);
-            
+
             String pendingDataFileId = null;
             StartEndOffsetPair pendingOffsetPair = null;
-            
+
             long currentOffset = 0;
             boolean inTag = false;
             boolean inFileData = false;
             char[] currentChar = new char[1];
             StringBuilder tagText = new StringBuilder(512);
-            
+
             while (bufferedReader.read(currentChar, 0, currentChar.length) > 0) {
-                currentOffset++; 
+                currentOffset++;
             	switch (currentChar[0]) {
                     case '<':
                         tagText.append(currentChar[0]);
@@ -93,13 +93,13 @@ public final class SimplifiedDigiDocParser {
 
                         	inFileData = true;
                         	md5Digest = MessageDigest.getInstance("MD5");
-                        	String outFileName = pathToDigiDoc + pendingDataFileId; 
+                        	String outFileName = pathToDigiDoc + pendingDataFileId;
                             dummyFileOutStream = new BufferedOutputStream(new FileOutputStream(outFileName, false));
                             digestCalculatorStream = new DigestOutputStream(dummyFileOutStream, md5Digest);
                             base64OutputStream = new BufferedOutputStream(new Base64OutputStream(digestCalculatorStream, false));
                         } else if ("</DataFile>".equalsIgnoreCase(tagText.toString())) {
                         	pendingOffsetPair.setEnd(currentOffset - 11);
-                        	
+
                         	inFileData = false;
                         	try {
                         		base64OutputStream.close();
@@ -120,22 +120,24 @@ public final class SimplifiedDigiDocParser {
                         break;
                 }
             }
-            
+
         } finally {
-            Util.safeCloseReader(bufferedReader);
+            Util.safeCloseStream(base64OutputStream);
+        	Util.safeCloseReader(bufferedReader);
             Util.safeCloseReader(textReader);
             Util.safeCloseStream(inStream);
             inStream = null;
             textReader = null;
             bufferedReader = null;
+            base64OutputStream = null;
         }
-		
+
 		return result;
 	}
-	
+
 	/**
 	 * Gets XML attribute value.
-	 * 
+	 *
 	 * @param tag
 	 *     XML tag as String
 	 * @param attributeName
@@ -160,10 +162,10 @@ public final class SimplifiedDigiDocParser {
 
         return result;
     }
-    
+
     /**
      * Extracts file contents from DigiDoc container.
-     *  
+     *
      * @param ddocContainerAsStream
      *     DigiDoc container as {@link InputStream}
      * @param files
@@ -178,9 +180,9 @@ public final class SimplifiedDigiDocParser {
 		InputStream ddocContainerAsStream,
 		List<OutputDocumentFile> files,
 		final String temporaryFilesDir) throws IOException {
-    	
+
     	long totalBytesExtracted = 0L;
-    	
+
     	// Make sure that offsets are not null so that sorting in next
     	// step would have more reliable input data.
     	for (OutputDocumentFile file : files) {
@@ -191,53 +193,53 @@ public final class SimplifiedDigiDocParser {
     			file.setDdocDataFileEndOffset(0L);
     		}
     	}
-    	
+
     	// Make sure that files are sorted by start offset
-    	Collections.sort(files); 
-    	
+    	Collections.sort(files);
+
         InputStreamReader textReader = null;
         BufferedReader bufferedReader = null;
         FileOutputStream outStream = null;
         OutputStreamWriter textWriter = null;
         BufferedWriter bufferedWriter = null;
-        
+
         try {
         	textReader = new InputStreamReader(ddocContainerAsStream, "UTF-8");
             bufferedReader = new BufferedReader(textReader);
-        	
+
         	long currentOffset = 0;
 	    	for (OutputDocumentFile file : files) {
                 if (file.getDdocDataFileStartOffset() > 0L) {
 		    		String outputFileName = Util.generateRandomFileNameWithoutExtension();
 	                outputFileName = temporaryFilesDir + File.separator + outputFileName + "_" + file.getId() + ".adit";
-		    		
+
 	                long skipLength = file.getDdocDataFileStartOffset() - currentOffset;
 		    		if (skipLength > 0) {
 		    			bufferedReader.skip(skipLength);
 		    			currentOffset += skipLength;
 		    		}
-		    		
+
 		    		outStream = new FileOutputStream(outputFileName, false);
 		    		textWriter = new OutputStreamWriter(outStream, "UTF-8");
 		    		bufferedWriter = new BufferedWriter(textWriter);
-		    		
+
 	                int len = 0;
 	                char[] buffer = new char[1];
 		    		while ((currentOffset < file.getDdocDataFileEndOffset()) && ((len = bufferedReader.read(buffer)) > 0)) {
 	                	currentOffset += len;
 	                	bufferedWriter.write(buffer, 0, len);
 	                }
-	                
+
 	                Util.safeCloseWriter(bufferedWriter);
 	                Util.safeCloseWriter(textWriter);
 	                Util.safeCloseStream(outStream);
-	                
+
 	                file.setSysTempFile(outputFileName);
-	                
+
 	                // Lets trust database values instead of decoding base64 data
 	                totalBytesExtracted += (file.getSizeBytes() == null) ? 0L : file.getSizeBytes();
                 }
-	    	}    	
+	    	}
         } finally {
             Util.safeCloseReader(bufferedReader);
             Util.safeCloseReader(textReader);
@@ -250,7 +252,7 @@ public final class SimplifiedDigiDocParser {
             textWriter = null;
             bufferedWriter = null;
         }
-        
+
         return totalBytesExtracted;
     }
 }

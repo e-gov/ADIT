@@ -40,10 +40,10 @@ import ee.adit.util.Util;
 
 /**
  * Provides services for manipulating and retrieving user data.
- * 
+ *
  * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
  * @author Jaak Lember, Interinx, jaak@interinx.com
- * 
+ *
  */
 public class UserService {
 
@@ -69,12 +69,12 @@ public class UserService {
      * Usertype PERSON.
      */
     public static final String USERTYPE_PERSON = "PERSON";
-    
+
     /**
      * Usertype INSTITUTION.
      */
     public static final String USERTYPE_INSTITUTION = "INSTITUTION";
-    
+
     /**
      * Usertype COMPANY.
      */
@@ -84,7 +84,7 @@ public class UserService {
      * Usertype WRITE.
      */
     public static final String ACCESS_RESTRICTION_WRITE = "WRITE";
-    
+
     /**
      * Usertype READ.
      */
@@ -92,7 +92,7 @@ public class UserService {
 
     /**
      * Checks if the application is registered.
-     * 
+     *
      * @param remoteApplicationShortName
      *            remote application short name
      * @return true, if the application is registered
@@ -121,7 +121,7 @@ public class UserService {
      * 0 - no access<br>
      * 1 - read access<br>
      * 2 - write access (full access).
-     * 
+     *
      * @param remoteApplicationShortName
      *            Short name of application that executed current request
      * @return Access level for specified application
@@ -146,7 +146,7 @@ public class UserService {
      * 0 - no access<br>
      * 1 - read access<br>
      * 2 - write access (full access).
-     * 
+     *
      * @param remoteApplicationShortName
      *            Short name of application that executed current request.
      * @param aditUser
@@ -186,7 +186,7 @@ public class UserService {
 
     /**
      * Retrieves the usertype object specified by the usertype short name.
-     * 
+     *
      * @param usertypeShortName
      *            usertype short name
      * @return usertype object
@@ -205,7 +205,7 @@ public class UserService {
 
     /**
      * Retrieves user.
-     * 
+     *
      * @param userRegCode
      *            user code
      * @return user object, null if not found
@@ -230,7 +230,7 @@ public class UserService {
 
     /**
      * Adds a user.
-     * 
+     *
      * @param username
      *            user full name
      * @param usertype
@@ -256,7 +256,7 @@ public class UserService {
 
     /**
      * Adds a user.
-     * 
+     *
      * @param username
      *            user full name
      * @param usercode
@@ -275,7 +275,7 @@ public class UserService {
 
     /**
      * Updates / modifies a user. User reactivated if not presently active.
-     * 
+     *
      * @param aditUser
      *            user
      * @param username
@@ -308,7 +308,7 @@ public class UserService {
 
     /**
      * Updates user name.
-     * 
+     *
      * @param aditUser
      *            user
      * @param username
@@ -321,7 +321,7 @@ public class UserService {
 
     /**
      * Retrieves the userlist.
-     * 
+     *
      * @param startIndex
      *            start index (offset)
      * @param maxResults
@@ -339,7 +339,7 @@ public class UserService {
 
     /**
      * Retrieves user information.
-     * 
+     *
      * @param userList
      * 		List of users requested
      * @param globalDiskQuota
@@ -363,7 +363,7 @@ public class UserService {
 
     /**
      * Gets user info for a single user.
-     * 
+     *
      * @param userCode
      *     user code
      * @param globalDiskQuota
@@ -396,9 +396,9 @@ public class UserService {
 
             // Get total disk quota for current user
             userTotalDiskQuota = getTotalDiskQuota(user, globalDiskQuotaAsValueType);
-            
+
             // Get space used by current user
-            usedSpace = (user.getDiskQuotaUsed() == null) ? 0L : user.getDiskQuotaUsed().longValue();  
+            usedSpace = (user.getDiskQuotaUsed() == null) ? 0L : user.getDiskQuotaUsed().longValue();
 
             // Calculate free space available to current user
             unusedSpace = userTotalDiskQuota - usedSpace;
@@ -428,7 +428,7 @@ public class UserService {
 
     /**
      * Deactivates user.
-     * 
+     *
      * @param user
      *     User to be deactivated
      */
@@ -440,7 +440,7 @@ public class UserService {
 
     /**
      * Retrieves the remaining disk quota for the specified user.
-     * 
+     *
      * @param user
      *     User whose disk quota will be checked
      * @param globalDiskQuota
@@ -451,12 +451,12 @@ public class UserService {
     public long getRemainingDiskQuota(AditUser user, long globalDiskQuota) {
         if (user != null) {
         	logger.info("Finding disk quota for user: " + user.getUserCode());
-        	
+
             Long usedDiskSpace = user.getDiskQuotaUsed();
             if (usedDiskSpace == null) {
             	usedDiskSpace = 0L;
             }
-            
+
             long totalDiskQuota = getTotalDiskQuota(user, globalDiskQuota);
             long result = totalDiskQuota - usedDiskSpace;
             logger.debug("Remaining disk quota for user \"" + user.getUserCode() + "\" is " + result + " (total: "
@@ -470,7 +470,7 @@ public class UserService {
 
     /**
      * Determines the disk quota for the user specified.
-     * 
+     *
      * @param user
      *     User whose disk quota will be checked
      * @param globalDiskQuota
@@ -501,7 +501,7 @@ public class UserService {
 
     /**
      * Sets notifications settings for the specified user.
-     * 
+     *
      * @param userCode
      *            user code
      * @param notifications
@@ -544,7 +544,7 @@ public class UserService {
 
     /**
      * Retrieves the notifications settings for the user specified.
-     * 
+     *
      * @param userCode
      *            user code
      * @return notifications settings list
@@ -578,7 +578,7 @@ public class UserService {
 
     /**
      * Finds notification by type.
-     * 
+     *
      * @param notifications
      *            notifications settings list
      * @param notificationType
@@ -602,7 +602,7 @@ public class UserService {
 
     /**
      * Adds a notification for the specified user.
-     * 
+     *
      * @param id
      *            notification ID
      * @param documentId
@@ -645,7 +645,7 @@ public class UserService {
 
     /**
      * Retrieves usertypes list.
-     * 
+     *
      * @return
      *     List of user types
      */
@@ -660,7 +660,7 @@ public class UserService {
 
     /**
      * Retrieves the usertypes list and converts it to a string.
-     * 
+     *
      * @return
      *     List of user types as string (separated by "/")
      */
@@ -685,7 +685,7 @@ public class UserService {
 
     /**
      * Retrieves notification types and returns them as a string.
-     * 
+     *
      * @return
      *     List of notification types as string (separated by "/")
      */
@@ -710,7 +710,7 @@ public class UserService {
 
     /**
      * Checks if application is registered.
-     * 
+     *
      * @param applicationName
      *            application short name
      * @throws AditCodedException
@@ -726,7 +726,7 @@ public class UserService {
 
     /**
      * Checks if application has the overall 'write' privilege.
-     * 
+     *
      * @param applicationName
      *     Remote application name
      * @throws AditCodedException
@@ -743,7 +743,7 @@ public class UserService {
 
     /**
      * Checks if application has the overall 'read' privilege.
-     * 
+     *
      * @param applicationName
      *     Remote application name
      * @throws AditCodedException
@@ -761,7 +761,7 @@ public class UserService {
     /**
      * Synchronize DVK users with ADIT user accounts: DVK -> ADIT only 1. Get
      * DVK users 2. Check if user exists in ADIT 3. Check is user data changed
-     * 
+     *
      * @return result
      */
     public DVKUserSyncResult synchroinzeDVKUsers() {
@@ -827,7 +827,7 @@ public class UserService {
                     logger.info("Adding new user to ADIT (DVK user): " + dvkUser.getOrgCode() + ", " + dvkUser.getName());
                     AditUser newAditUser = new AditUser();
                     newAditUser.setDvkOrgCode(dvkUser.getOrgCode());
-                    newAditUser.setActive(new Boolean(true));
+                    newAditUser.setActive(Boolean.valueOf(true));
                     newAditUser.setFullName(dvkUser.getName());
                     newAditUser.setUserCode("EE" + dvkUser.getOrgCode());
                     newAditUser.setUsertype(institutionUsertype);
@@ -839,7 +839,6 @@ public class UserService {
 
             // For those users that remained in the list - delete (because they
             // don't exist in DVK anymore)
-
             if (aditUsersCopy != null && aditUsersCopy.size() > 0) {
                 Iterator<AditUser> deletedUserIterator = aditUsersCopy.iterator();
 
@@ -847,7 +846,7 @@ public class UserService {
                     AditUser deletedUser = deletedUserIterator.next();
                     if (deletedUser.getActive()) {
                         logger.info("Deactivating DVK user in ADIT: " + deletedUser.getUserCode());
-                        deletedUser.setActive(new Boolean(false));
+                        deletedUser.setActive(Boolean.valueOf(false));
                         deletedUser.setDeactivationDate(new Date());
                         this.getAditUserDAO().saveOrUpdate(deletedUser);
                         deactivated++;
