@@ -267,6 +267,7 @@
 		<property name="documentService" ref="documentService"/>
 		<property name="messageService" ref="messageService"/>
 		<property name="monitorService" ref="monitorService"/>
+		<property name="scheduleClient" ref="scheduleClient"/>
 	</bean>
 
 	<bean id="ShareDocumentEndpoint" class="ee.adit.ws.endpoint.document.ShareDocumentEndpoint">
