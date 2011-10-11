@@ -23,7 +23,7 @@
 		<property name="messageService" ref="messageService"/>
 		<property name="monitorService" ref="monitorService"/>
 	</bean>
-	
+
 	<bean id="UnJoinEndpoint" class="ee.adit.ws.endpoint.user.UnJoinEndpoint">
 		<property name="marshaller" ref="castorMarshaller"/>
 		<property name="unmarshaller" ref="castorMarshaller"/>
@@ -33,7 +33,7 @@
 		<property name="messageService" ref="messageService"/>
 		<property name="monitorService" ref="monitorService"/>
 	</bean>
-	
+
 	<bean id="GetJoinedEndpoint" class="ee.adit.ws.endpoint.user.GetJoinedEndpoint">
 		<property name="marshaller" ref="castorMarshaller"/>
 		<property name="unmarshaller" ref="castorMarshaller"/>
@@ -44,7 +44,7 @@
 		<property name="messageService" ref="messageService"/>
 		<property name="monitorService" ref="monitorService"/>
 	</bean>
-	
+
 	<bean id="GetUserInfoEndpoint" class="ee.adit.ws.endpoint.user.GetUserInfoEndpoint">
 		<property name="marshaller" ref="castorMarshaller"/>
 		<property name="unmarshaller" ref="castorMarshaller"/>
@@ -55,7 +55,7 @@
 		<property name="messageService" ref="messageService"/>
 		<property name="monitorService" ref="monitorService"/>
 	</bean>
-	
+
 	<bean id="SetNotificationsEndpoint" class="ee.adit.ws.endpoint.user.SetNotificationsEndpoint">
 		<property name="marshaller" ref="castorMarshaller"/>
 		<property name="unmarshaller" ref="castorMarshaller"/>
@@ -66,7 +66,7 @@
 		<property name="messageService" ref="messageService"/>
 		<property name="monitorService" ref="monitorService"/>
 	</bean>
-	
+
 	<bean id="GetNotificationsEndpoint" class="ee.adit.ws.endpoint.user.GetNotificationsEndpoint">
 		<property name="marshaller" ref="castorMarshaller"/>
 		<property name="unmarshaller" ref="castorMarshaller"/>
@@ -77,10 +77,10 @@
 		<property name="messageService" ref="messageService"/>
 		<property name="monitorService" ref="monitorService"/>
 	</bean>
-	
-	
+
+
 	<!-- Document endpoints -->
-	
+
 	<bean id="ConfirmSignatureEndpoint" class="ee.adit.ws.endpoint.document.ConfirmSignatureEndpoint">
 		<property name="marshaller" ref="castorMarshaller"/>
 		<property name="unmarshaller" ref="castorMarshaller"/>
@@ -95,7 +95,7 @@
 		<property name="monitorService" ref="monitorService"/>
 		<property name="scheduleClient" ref="scheduleClient"/>
 	</bean>
-	
+
 	<bean id="DeflateDocumentEndpoint" class="ee.adit.ws.endpoint.document.DeflateDocumentEndpoint">
 		<property name="marshaller" ref="castorMarshaller"/>
 		<property name="unmarshaller" ref="castorMarshaller"/>
@@ -107,7 +107,7 @@
 		<property name="messageService" ref="messageService"/>
 		<property name="monitorService" ref="monitorService"/>
 	</bean>
-	
+
 	<bean id="DeleteDocumentEndpoint" class="ee.adit.ws.endpoint.document.DeleteDocumentEndpoint">
 		<property name="marshaller" ref="castorMarshaller"/>
 		<property name="unmarshaller" ref="castorMarshaller"/>
@@ -119,7 +119,7 @@
 		<property name="messageService" ref="messageService"/>
 		<property name="monitorService" ref="monitorService"/>
 	</bean>
-	
+
 	<bean id="DeleteDocumentFileEndpoint" class="ee.adit.ws.endpoint.document.DeleteDocumentFileEndpoint">
 		<property name="marshaller" ref="castorMarshaller"/>
 		<property name="unmarshaller" ref="castorMarshaller"/>
@@ -131,7 +131,7 @@
 		<property name="messageService" ref="messageService"/>
 		<property name="monitorService" ref="monitorService"/>
 	</bean>
-	
+
 	<bean id="GetDocumentEndpoint" class="ee.adit.ws.endpoint.document.GetDocumentEndpoint">
 		<property name="marshaller" ref="castorMarshaller"/>
 		<property name="unmarshaller" ref="castorMarshaller"/>
@@ -146,7 +146,7 @@
 		<!-- NB! Value is case sensitive -->
 		<property name="digidocConfigurationFile" value="jdigidoc.cfg" />
 	</bean>
-	
+
 	<bean id="GetDocumentFileEndpoint" class="ee.adit.ws.endpoint.document.GetDocumentFileEndpoint">
 		<property name="marshaller" ref="castorMarshaller"/>
 		<property name="unmarshaller" ref="castorMarshaller"/>
@@ -159,7 +159,7 @@
 		<property name="monitorService" ref="monitorService"/>
 		<property name="scheduleClient" ref="scheduleClient"/>
 	</bean>
-	
+
 	<bean id="GetDocumentHistoryEndpoint" class="ee.adit.ws.endpoint.document.GetDocumentHistoryEndpoint">
 		<property name="marshaller" ref="castorMarshaller"/>
 		<property name="unmarshaller" ref="castorMarshaller"/>
@@ -171,7 +171,7 @@
 		<property name="messageService" ref="messageService"/>
 		<property name="monitorService" ref="monitorService"/>
 	</bean>
-	
+
 	<bean id="GetDocumentListEndpoint" class="ee.adit.ws.endpoint.document.GetDocumentListEndpoint">
 		<property name="marshaller" ref="castorMarshaller"/>
 		<property name="unmarshaller" ref="castorMarshaller"/>
@@ -185,7 +185,7 @@
 		<!-- NB! Value is case sensitive -->
 		<property name="digidocConfigurationFile" value="jdigidoc.cfg" />
 	</bean>
-	
+
 	<bean id="MarkDocumentViewedEndpoint" class="ee.adit.ws.endpoint.document.MarkDocumentViewedEndpoint">
 		<property name="marshaller" ref="castorMarshaller"/>
 		<property name="unmarshaller" ref="castorMarshaller"/>
@@ -198,7 +198,7 @@
 		<property name="monitorService" ref="monitorService"/>
 		<property name="scheduleClient" ref="scheduleClient"/>
 	</bean>
-	
+
 	<bean id="ModifyStatusEndpoint" class="ee.adit.ws.endpoint.document.ModifyStatusEndpoint">
 		<property name="marshaller" ref="castorMarshaller"/>
 		<property name="unmarshaller" ref="castorMarshaller"/>
@@ -211,7 +211,7 @@
 		<property name="monitorService" ref="monitorService"/>
 		<property name="scheduleClient" ref="scheduleClient"/>
 	</bean>
-	
+
 	<bean id="PrepareSignatureEndpoint" class="ee.adit.ws.endpoint.document.PrepareSignatureEndpoint">
 		<property name="marshaller" ref="castorMarshaller"/>
 		<property name="unmarshaller" ref="castorMarshaller"/>
@@ -222,11 +222,11 @@
 		<property name="documentService" ref="documentService"/>
 		<property name="messageService" ref="messageService"/>
 		<property name="monitorService" ref="monitorService"/>
-		
+
 		<!-- NB! Value is case sensitive -->
 		<property name="digidocConfigurationFile" value="jdigidoc.cfg" />
 	</bean>
-	
+
 	<bean id="SaveDocumentEndpoint" class="ee.adit.ws.endpoint.document.SaveDocumentEndpoint">
 		<property name="marshaller" ref="castorMarshaller"/>
 		<property name="unmarshaller" ref="castorMarshaller"/>
@@ -237,11 +237,11 @@
 		<property name="documentService" ref="documentService"/>
 		<property name="messageService" ref="messageService"/>
 		<property name="monitorService" ref="monitorService"/>
-		
+
 		<!-- NB! Value is case sensitive -->
 		<property name="digidocConfigurationFile" value="jdigidoc.cfg" />
 	</bean>
-	
+
 	<bean id="SaveDocumentFileEndpoint" class="ee.adit.ws.endpoint.document.SaveDocumentFileEndpoint">
 		<property name="marshaller" ref="castorMarshaller"/>
 		<property name="unmarshaller" ref="castorMarshaller"/>
@@ -252,11 +252,11 @@
 		<property name="documentService" ref="documentService"/>
 		<property name="messageService" ref="messageService"/>
 		<property name="monitorService" ref="monitorService"/>
-		
+
 		<!-- NB! Value is case sensitive -->
 		<property name="digidocConfigurationFile" value="jdigidoc.cfg" />
 	</bean>
-	
+
 	<bean id="SendDocumentEndpoint" class="ee.adit.ws.endpoint.document.SendDocumentEndpoint">
 		<property name="marshaller" ref="castorMarshaller"/>
 		<property name="unmarshaller" ref="castorMarshaller"/>
@@ -267,8 +267,9 @@
 		<property name="documentService" ref="documentService"/>
 		<property name="messageService" ref="messageService"/>
 		<property name="monitorService" ref="monitorService"/>
+		<property name="scheduleClient" ref="scheduleClient"/>
 	</bean>
-	
+
 	<bean id="ShareDocumentEndpoint" class="ee.adit.ws.endpoint.document.ShareDocumentEndpoint">
 		<property name="marshaller" ref="castorMarshaller"/>
 		<property name="unmarshaller" ref="castorMarshaller"/>
@@ -281,7 +282,7 @@
 		<property name="monitorService" ref="monitorService"/>
 		<property name="scheduleClient" ref="scheduleClient"/>
 	</bean>
-	
+
 	<bean id="UnShareDocumentEndpoint" class="ee.adit.ws.endpoint.document.UnShareDocumentEndpoint">
 		<property name="marshaller" ref="castorMarshaller"/>
 		<property name="unmarshaller" ref="castorMarshaller"/>
@@ -294,7 +295,7 @@
 		<property name="monitorService" ref="monitorService"/>
 		<property name="scheduleClient" ref="scheduleClient"/>
 	</bean>
-	
+
 	<!-- Meta service endpoint -->
 	<!--
 	<bean id="ListMethodsEndpoint" class="ee.webmedia.xtee.endpoint.ListMethodsEndpoint">
@@ -304,9 +305,9 @@
 		<property name="marshaller" ref="castorMarshaller"/>
 		<property name="unmarshaller" ref="castorMarshaller"/>
 	</bean>
-	
+
 	<!-- Endpoint Mappings -->
-	
+
 	<bean id="endpointMapping"
 		class="ee.adit.ws.endpoint.AditEndpointMapping">
 		<property name="mappings">
@@ -366,20 +367,20 @@
 	<bean id="contextPath" class="java.lang.String">
 		<constructor-arg type="java.lang.String" value="ee.adit.pojo" />
 	</bean>
-	
+
 	<bean id="schema" class="org.springframework.xml.xsd.SimpleXsdSchema">
 		<property name="xsd" value="/WEB-INF/adit.xsd" />
 	</bean>
-	
+
 	<bean id="adit"
 		class="org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition">
 		<constructor-arg value="classpath:adit.wsdl" />
 	</bean>
-	
+
 	<bean id="xteeDatabase" class="java.lang.String">
 		<constructor-arg value="ametlikud-dokumendid" />
 	</bean>
-	
-	
-	
+
+
+
 </beans>
