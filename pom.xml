@@ -24,7 +24,7 @@
 			ria-test-weblogic		Installs configuration for ADIT test server in RIA
 			ria-live-weblogic       Installs configuration for ADIT live server in RIA
 		-->
-		<resourceDir>${conf}</resourceDir>
+		<resourceDir>conf/${conf}</resourceDir>
 	</properties>
 
 </project>
