@@ -475,7 +475,7 @@
 				<artifactId>tomcat-maven-plugin</artifactId>
 				<configuration>
 					<server>tomcat6</server>
-					<warFile>${basedir}/target/adit-${version}.war</warFile>
+					<warFile>${basedir}/target/${conf}-${version}.war</warFile>
 				</configuration>
 			</plugin>
 
