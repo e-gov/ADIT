@@ -14,12 +14,12 @@
 	</parent>
 
 	<build>
-		<finalName>adit-${version}</finalName>
+		<finalName>${conf}-${version}</finalName>
 
 		<resources>
 			<resource>
 				<directory>src/main/webapp/META-INF</directory>
-				<targetPath>../adit-${version}/META-INF</targetPath>
+				<targetPath>../${conf}-${version}/META-INF</targetPath>
 				<includes>
 					<include>application.xml</include>
 					<include>weblogic-application.xml</include>
@@ -27,9 +27,9 @@
 			</resource>
 			<resource>
 				<directory>../adit-war/target</directory>
-				<targetPath>../adit-${version}</targetPath>
+				<targetPath>../${conf}-${version}</targetPath>
 				<includes>
-					<include>adit-${version}.war</include>
+					<include>${conf}-${version}.war</include>
 				</includes>
 			</resource>
 		</resources>
