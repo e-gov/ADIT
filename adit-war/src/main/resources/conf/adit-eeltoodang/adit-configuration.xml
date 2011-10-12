@@ -12,11 +12,11 @@
 
     <!-- Data sources -->
     <bean id="aditDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
-        <property name="jndiName" value="jdbc/adit" />
+        <property name="jndiName" value="jdbc/adit-eeltoodang" />
     </bean>
 
     <bean id="aditDVKDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
-        <property name="jndiName" value="jdbc/adit_dvk" />
+        <property name="jndiName" value="jdbc/adit_dvk-eeltoodang" />
     </bean>
 
 	<!-- Configuration -->
