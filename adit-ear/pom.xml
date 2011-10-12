@@ -29,7 +29,7 @@
 				<directory>../adit-war/target</directory>
 				<targetPath>../${conf}-${version}</targetPath>
 				<includes>
-					<include>${conf}-${version}.war</include>
+					<include>adit.war</include>
 				</includes>
 			</resource>
 		</resources>

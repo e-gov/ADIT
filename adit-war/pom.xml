@@ -372,7 +372,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>adit-${version}</finalName>
+		<finalName>adit</finalName>
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<testSourceDirectory>src/test/java</testSourceDirectory>
 		<testOutputDirectory>target/test-classes</testOutputDirectory>
@@ -380,30 +380,30 @@
 			<resource>
 				<directory>src/main/resources/castor-mapping</directory>
 				<filtering>false</filtering>
-				<targetPath>../adit-${version}/WEB-INF/classes/castor-mapping</targetPath>
+				<targetPath>../adit/WEB-INF/classes/castor-mapping</targetPath>
 			</resource>
 			<resource>
 				<directory>src/main/resources/dvkapi</directory>
 				<filtering>false</filtering>
-				<targetPath>../adit-${version}/WEB-INF/classes/dvkapi</targetPath>
+				<targetPath>../adit/WEB-INF/classes/dvkapi</targetPath>
 			</resource>
 			<resource>
 				<directory>src/main/resources/hbm</directory>
 				<filtering>false</filtering>
-				<targetPath>../adit-${version}/WEB-INF/classes/hbm</targetPath>
+				<targetPath>../adit/WEB-INF/classes/hbm</targetPath>
 			</resource>
 
 			<!-- Include all the environment specific configuration files -->
 			<resource>
 				<directory>src/main/resources/${resourceDir}</directory>
-				<targetPath>../adit-${version}/WEB-INF/classes</targetPath>
+				<targetPath>../adit/WEB-INF/classes</targetPath>
 				<excludes>
 					<exclude>adit-configuration.xml</exclude>
 				</excludes>
 			</resource>
 			<resource>
 				<directory>src/main/resources/${resourceDir}</directory>
-				<targetPath>../adit-${version}/WEB-INF</targetPath>
+				<targetPath>../adit/WEB-INF</targetPath>
 				<includes>
 					<include>adit-configuration.xml</include>
 				</includes>
@@ -411,7 +411,7 @@
 			<!-- Include static resources -->
 			<resource>
 				<directory>src/main/resources</directory>
-				<targetPath>../adit-${version}/WEB-INF/classes</targetPath>
+				<targetPath>../adit/WEB-INF/classes</targetPath>
 				<includes>
 					<include>adit-castor-mapping.xml</include>
 					<include>DVKresponseMessage.xsl</include>
@@ -423,7 +423,7 @@
 			</resource>
 			<resource>
 				<directory>src/main/resources</directory>
-				<targetPath>../adit-${version}/WEB-INF</targetPath>
+				<targetPath>../adit/WEB-INF</targetPath>
 				<includes>
 					<include>adit.xsd</include>
 					<include>adit-servlet.xml</include>
@@ -440,7 +440,7 @@
 			<resource>
 				<directory>${basedir}/sql</directory>
 				<filtering>false</filtering>
-				<targetPath>../adit-${version}/sql</targetPath>
+				<targetPath>../adit/sql</targetPath>
 			</resource>
 			<resource>
 				<directory>${basedir}/lib</directory>
@@ -453,7 +453,7 @@
                     <exclude>saaj-impl.jar</exclude>
                 </excludes>
                 -->
-				<targetPath>../adit-${version}/WEB-INF/lib</targetPath>
+				<targetPath>../adit/WEB-INF/lib</targetPath>
 			</resource>
 		</resources>
 		<plugins>
@@ -475,7 +475,7 @@
 				<artifactId>tomcat-maven-plugin</artifactId>
 				<configuration>
 					<server>tomcat6</server>
-					<warFile>${basedir}/target/${conf}-${version}.war</warFile>
+					<warFile>${basedir}/target/adit.war</warFile>
 				</configuration>
 			</plugin>
 
