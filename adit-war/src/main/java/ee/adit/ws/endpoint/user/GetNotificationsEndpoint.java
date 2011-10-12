@@ -30,7 +30,7 @@ import ee.webmedia.xtee.annotation.XTeeService;
  * Implementation of "getNotifications" web method (web service request).
  * Contains request input validation, request-specific workflow and response
  * composition.
- * 
+ *
  * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
  * @author Jaak Lember, Interinx, jaak@interinx.com
  */
@@ -39,9 +39,9 @@ import ee.webmedia.xtee.annotation.XTeeService;
 public class GetNotificationsEndpoint extends AbstractAditBaseEndpoint {
 
     private static Logger logger = Logger.getLogger(GetNotificationsEndpoint.class);
-    
+
     private UserService userService;
-    
+
     @Override
     protected Object invokeInternal(Object requestObject, int version) throws Exception {
         logger.debug("getNotifications invoked. Version: " + version);
@@ -55,7 +55,7 @@ public class GetNotificationsEndpoint extends AbstractAditBaseEndpoint {
 
     /**
      * Executes "V1" version of "getNotifications" request.
-     * 
+     *
      * @param requestObject
      *            Request body object
      * @return Response body object
@@ -120,8 +120,11 @@ public class GetNotificationsEndpoint extends AbstractAditBaseEndpoint {
             ArrayOfNotification notificationList = this.getUserService().getNotifications(user.getUserCode());
             response.setNotifications(notificationList);
 
-            // Get notification overall status and e-mail list
-            // from 'riigiportaal' database
+            // Get notification overall status and e-mail list from 'riigiportaal' database
+            /*
+             * 12.10.2011: It has turned out that such query does not exist in
+             * test or live version of 'riigiportaal'.
+             *
             NotificationStatus notificationStatus = StatePortalClient.getNotificationStatus(user.getUserCode(), this
                     .getConfiguration().getSchedulerEventTypeName());
             if (notificationStatus != null) {
@@ -134,6 +137,7 @@ public class GetNotificationsEndpoint extends AbstractAditBaseEndpoint {
                     response.setAddressList(addressList);
                 }
             }
+            */
 
             messages.setMessage(this.getMessageService().getMessages("request.getNotifications.success",
                     new Object[] {}));
@@ -191,7 +195,7 @@ public class GetNotificationsEndpoint extends AbstractAditBaseEndpoint {
         response.setMessages(arrayOfMessage);
         return response;
     }
-    
+
     public UserService getUserService() {
         return userService;
     }
