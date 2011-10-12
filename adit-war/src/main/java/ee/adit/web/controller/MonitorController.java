@@ -1,9 +1,11 @@
 package ee.adit.web.controller;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,7 +20,7 @@ import ee.adit.util.MonitorResult;
 
 /**
  * Controller class for monitoring view.
- * 
+ *
  * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
  * @author Jaak Lember, Interinx, jaak@interinx.com
  */
@@ -48,10 +50,10 @@ public class MonitorController extends AbstractController {
 
     /**
      * Performs the actual monitoring and returns the response data.
-     * 
+     *
      * @param arg0 HTTP request
      * @param arg1 HTTP response
-     * @return model and view 
+     * @return model and view
      */
     @Override
     protected ModelAndView handleRequestInternal(HttpServletRequest arg0, HttpServletResponse arg1) throws Exception {
@@ -70,7 +72,11 @@ public class MonitorController extends AbstractController {
         logger.info("ADIT monitoring servlet invoked.");
         ModelAndView mav = new ModelAndView();
         mav.setViewName("monitor.jsp");
-        DecimalFormat df = new DecimalFormat("0.000");
+
+        DecimalFormatSymbols formatSymbols = new DecimalFormatSymbols(Locale.getDefault());
+        formatSymbols.setDecimalSeparator('.');
+        formatSymbols.setGroupingSeparator(' ');
+        DecimalFormat df = new DecimalFormat("0.000", formatSymbols);
 
         List<MonitorResult> results = new ArrayList<MonitorResult>();
         boolean summaryStatusOk = true;
