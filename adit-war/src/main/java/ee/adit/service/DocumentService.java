@@ -1798,9 +1798,9 @@ public class DocumentService {
 
                                         // Finally commit
                                         //aditTransaction.commit();
-
+                                        aditSession.flush();
                                     } catch (Exception e) {
-                                        logger.debug("Error saving document to ADIT database: ", e);
+                                        logger.warn("Error saving document to ADIT database: ", e);
                                         //if (aditTransaction != null) {
                                         //    aditTransaction.rollback();
                                         //}
@@ -1812,9 +1812,9 @@ public class DocumentService {
                                 } else {
                                     logger.error("User not found. Personal code: " + recipient.getIsikukood().trim());
                                     this.composeErrorResponse(
-                                            DocumentService.DVK_RECEIVE_FAIL_REASON_USER_DOES_NOT_EXIST, dvkContainer,
-                                            recipient.getIsikukood().trim(), dvkDocument.getReceivedDate(),
-                                            recipient.getNimi());
+                                        DocumentService.DVK_RECEIVE_FAIL_REASON_USER_DOES_NOT_EXIST, dvkContainer,
+                                        recipient.getIsikukood().trim(), dvkDocument.getReceivedDate(),
+                                        recipient.getNimi());
                                 }
                             }
                         }
