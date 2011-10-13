@@ -549,7 +549,7 @@ public class DocumentDAO extends HibernateDaoSupport {
                     // This is necessary to avoid storing potentially large
                     // amounts of binary data in server memory.
                     if (includeFileContents) {
-                    	if ((doc.getSigned() == null) || !doc.getSigned() || (docFile.getDocumentFileTypeId() != DocumentService.FILETYPE_DOCUMENT_FILE)) {
+                    	if ((docFile.getFileDataInDdoc() == null) || !docFile.getFileDataInDdoc()) {
 	                        itemIndex++;
 	                        String outputFileName = Util.generateRandomFileNameWithoutExtension();
 	                        outputFileName = temporaryFilesDir + File.separator + outputFileName + "_" + itemIndex
