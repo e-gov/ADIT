@@ -1740,7 +1740,7 @@ public class DocumentService {
                                     try {
 
                                         // Save the document
-                                        aditSession = this.getDocumentDAO().getSessionFactory().openSession();
+                                        //aditSession = this.getDocumentDAO().getSessionFactory().openSession();
                                         //aditTransaction = aditSession.beginTransaction();
 
                                         // Before we save the document to
@@ -1756,7 +1756,7 @@ public class DocumentService {
 
                                         // Save document
                                         SaveItemInternalResult saveResult = this.getDocumentDAO().save(
-                                                aditDocument, tempDocuments, Long.MAX_VALUE, aditSession);
+                                                aditDocument, tempDocuments, Long.MAX_VALUE/*, aditSession*/);
                                         if (saveResult == null) {
                                             throw new AditInternalException("Document saving failed!");
                                         }
@@ -1787,7 +1787,7 @@ public class DocumentService {
 
                                             // Finally commit
                                             //aditTransaction.commit();
-                                            aditSession.flush();
+                                            //aditSession.flush();
                                         } else {
                                             if ((saveResult.getMessages() != null)
                                                     && (saveResult.getMessages().size() > 0)) {
