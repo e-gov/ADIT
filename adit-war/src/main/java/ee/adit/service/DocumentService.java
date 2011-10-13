@@ -1781,6 +1781,14 @@ public class DocumentService {
                                             user.setDiskQuotaUsed(usedDiskQuota + saveResult.getAddedFilesSize());
                                             this.getAditUserDAO().saveOrUpdate(user, true);
 
+                                            // Add ID of created ADIT document to
+                                            // DVK buffer table.
+                                            dvkDocument.setLocalItemId(saveResult.getItemId());
+                                            this.getDvkDAO().updateDocument(dvkDocument);
+
+                                            // Finally commit
+                                            //aditTransaction.commit();
+                                            aditSession.flush();
                                         } else {
                                             if ((saveResult.getMessages() != null)
                                                     && (saveResult.getMessages().size() > 0)) {
@@ -1790,15 +1798,6 @@ public class DocumentService {
                                                 throw new AditInternalException("Document saving failed!");
                                             }
                                         }
-
-                                        // Add ID of created ADIT document to
-                                        // DVK buffer table.
-                                        dvkDocument.setLocalItemId(saveResult.getItemId());
-                                        this.getDvkDAO().updateDocument(dvkDocument);
-
-                                        // Finally commit
-                                        //aditTransaction.commit();
-                                        aditSession.flush();
                                     } catch (Exception e) {
                                         logger.warn("Error saving document to ADIT database: ", e);
                                         //if (aditTransaction != null) {
