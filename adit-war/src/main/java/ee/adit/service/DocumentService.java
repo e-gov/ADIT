@@ -1627,14 +1627,13 @@ public class DocumentService {
         try {
             // Fetch all incoming documents from DVK Client database which
             // don't have local item ID set.
-            logger.info("Fetching documents from DVK Client database.");
+            logger.debug("Fetching documents from DVK Client database.");
             List<PojoMessage> dvkDocuments = this.getDvkDAO().getIncomingDocuments();
 
             if (dvkDocuments != null && dvkDocuments.size() > 0) {
-
                 logger.debug("Found " + dvkDocuments.size());
-                Iterator<PojoMessage> dvkDocumentsIterator = dvkDocuments.iterator();
 
+                Iterator<PojoMessage> dvkDocumentsIterator = dvkDocuments.iterator();
                 while (dvkDocumentsIterator.hasNext()) {
                     PojoMessage dvkDocument = dvkDocumentsIterator.next();
 

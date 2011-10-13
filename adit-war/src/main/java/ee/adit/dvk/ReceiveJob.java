@@ -45,7 +45,7 @@ public class ReceiveJob extends QuartzJobBean {
 		            // Receive documents from DVK Client database
 		            int receivedDocumentsCount = this.getDocumentService().receiveDocumentsFromDVK(jdigidocCfgTmpFile);
 
-		            logger.debug("Documents received from DVK (" + receivedDocumentsCount + ")");
+		            logger.info("Documents received from DVK (" + receivedDocumentsCount + ")");
         		} finally {
         			maintenanceJobDAO.setJobRunningStatus(jobId, false);
         		}
