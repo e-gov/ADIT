@@ -54,7 +54,7 @@
     </logger>
 
     <logger name="ee.adit.dao">
-    	<level value="INFO"></level>
+    	<level value="DEBUG"></level>
     	<appender-ref ref="file" />
     </logger>
 
