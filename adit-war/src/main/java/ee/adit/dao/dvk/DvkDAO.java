@@ -90,6 +90,10 @@ public class DvkDAO extends HibernateDaoSupport {
      */
     public void updateDocument(PojoMessage document) throws Exception {
 
+    	logger.debug("Updating DVK document");
+    	logger.debug("DVK document ID: " + document.getDhlMessageId());
+    	logger.debug("Local item ID: " + document.getLocalItemId());
+
     	this.getHibernateTemplate().saveOrUpdate(document);
 
 //    	Session session = this.getSessionFactory().openSession();
