@@ -3,7 +3,7 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated 21.06.2010 14:02:04 by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
-    <class name="ee.adit.dao.pojo.DocumentSharingType" table="DOCUMENT_SHARING_TYPE" schema="ADIT">
+    <class name="ee.adit.dao.pojo.DocumentSharingType" table="DOCUMENT_SHARING_TYPE" >
         <id name="shortName" type="string">
             <column name="SHORT_NAME" length="50" />
             <generator class="assigned" />

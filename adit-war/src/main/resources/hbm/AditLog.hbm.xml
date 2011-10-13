@@ -3,7 +3,7 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated 21.06.2010 14:02:04 by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
-    <class name="ee.adit.dao.pojo.AditLog" table="ADIT_LOG" schema="ADIT">
+    <class name="ee.adit.dao.pojo.AditLog" table="ADIT_LOG" >
         <id name="id" type="long">
             <column name="ID" precision="18" scale="0" />
             <generator class="assigned" />

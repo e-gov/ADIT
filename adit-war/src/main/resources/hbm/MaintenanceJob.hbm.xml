@@ -2,7 +2,7 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
-    <class name="ee.adit.dao.pojo.MaintenanceJob" table="MAINTENANCE_JOB" schema="ADIT">
+    <class name="ee.adit.dao.pojo.MaintenanceJob" table="MAINTENANCE_JOB" >
         <id name="id" type="long">
             <column name="ID" precision="12" scale="0" />
             <generator class="assigned" />
