@@ -40,11 +40,12 @@ public class DvkDAO extends HibernateDaoSupport {
     @SuppressWarnings("unchecked")
     public List<PojoMessage> getIncomingDocuments() {
         List<PojoMessage> result = new ArrayList<PojoMessage>();
-        Session session = this.getSessionFactory().getCurrentSession();
-        session.beginTransaction();
+        //Session session = this.getSessionFactory().getCurrentSession();
+        //session.beginTransaction();
         try {
-            final String sql = "from PojoMessage where isIncoming = true and (localItemId = null or localItemId = 0) and dhlMessageId != 9999999999";
-            result = session.createQuery(sql).list();
+        	final String sql = "from PojoMessage where isIncoming = true and (localItemId = null or localItemId = 0) and dhlMessageId != 9999999999";
+            //result = session.createQuery(sql).list();
+        	result = this.getHibernateTemplate().find(sql);
         } catch (Exception e) {
             logger.error("Exception while fetching DVK incoming messages: ", e);
         }
