@@ -59,7 +59,7 @@
     </logger>
 
     <logger name="ee.adit.service">
-    	<level value="INFO"></level>
+    	<level value="DEBUG"></level>
     	<appender-ref ref="file" />
     </logger>
 
