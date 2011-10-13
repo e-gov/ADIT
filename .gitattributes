@@ -513,11 +513,6 @@ adit-war/src/main/resources/hbm/Usertype.hbm.xml -text
 adit-war/src/main/resources/messages_en.properties -text
 adit-war/src/main/resources/messages_et.properties -text
 adit-war/src/main/resources/messages_ru.properties -text
-adit-war/src/main/resources/ria-dev-tomcat/adit-configuration.xml -text
-adit-war/src/main/resources/ria-dev-tomcat/jdigidoc.cfg -text
-adit-war/src/main/resources/ria-dev-tomcat/log4j.xml -text
-adit-war/src/main/resources/ria-dev-tomcat/nsca_send_clear.cfg -text
-adit-war/src/main/resources/ria-dev-tomcat/xtee.properties -text
 adit-war/src/main/resources/ria-dev-weblogic/adit-configuration.xml -text
 adit-war/src/main/resources/ria-dev-weblogic/jdigidoc.cfg -text
 adit-war/src/main/resources/ria-dev-weblogic/log4j.xml -text
