@@ -549,23 +549,31 @@ public class DocumentDAO extends HibernateDaoSupport {
                     // This is necessary to avoid storing potentially large
                     // amounts of binary data in server memory.
                     if (includeFileContents) {
+                    	logger.debug("Attempting to retreive file contents because contents of file " + docFile.getId() + " were requested.");
+
                     	if ((docFile.getFileDataInDdoc() == null) || !docFile.getFileDataInDdoc()) {
 	                        itemIndex++;
 	                        String outputFileName = Util.generateRandomFileNameWithoutExtension();
-	                        outputFileName = temporaryFilesDir + File.separator + outputFileName + "_" + itemIndex
-	                                + "_GDFv1.adit";
+	                        outputFileName = temporaryFilesDir + File.separator + outputFileName + "_" + itemIndex + "_GDFv1.adit";
+
 	                        InputStream blobDataStream = null;
 	                        FileOutputStream fileOutputStream = null;
 	                        try {
-	                            byte[] buffer = new byte[10240];
+	                        	byte[] buffer = new byte[10240];
 	                            int len = 0;
+	                            int currentFileBytes = 0;
+	                            logger.debug("Opening BLOB stream to retrieve data from database.");
 	                            blobDataStream = docFile.getFileData().getBinaryStream();
 	                            fileOutputStream = new FileOutputStream(outputFileName);
+	                            logger.debug("BLOB stream opened. Starting to read data");
 	                            while ((len = blobDataStream.read(buffer)) > 0) {
 	                                fileOutputStream.write(buffer, 0, len);
 	                                totalBytes += len;
+	                                currentFileBytes += len;
 	                            }
+	                            logger.debug("Successfully retreived " + currentFileBytes + " bytes. Was expecting " + docFile.getFileSizeBytes() + " bytes.");
 	                        } catch (IOException ex) {
+	                        	logger.debug("Exception occured while reading file " + docFile.getId() + " from database.", ex);
 	                            throw new HibernateException(ex);
 	                        } finally {
 	                        	Util.safeCloseStream(blobDataStream);
@@ -576,10 +584,15 @@ public class DocumentDAO extends HibernateDaoSupport {
 
 	                        // Base64 encode file
 	                        try {
+	                        	logger.debug("Base64 encoding contents of file " + docFile.getId() + " ad writing encoded data to disk.");
 	                            f.setSysTempFile(Util.base64EncodeFile(outputFileName, temporaryFilesDir));
+	                            logger.debug("Base64 encoded data was successfully written to " + f.getSysTempFile());
 	                        } catch (IOException ex) {
+	                        	logger.debug("Exception occured while Base64 encoding file contents and/or writing encoded data to disk.", ex);
 	                            throw new HibernateException(ex);
 	                        }
+	                    } else {
+	                    	logger.debug("Could not retreive contents of file " + docFile.getId() + " directly from database because contents of this file are stored in signature container (separate file).");
 	                    }
                     }
 
