@@ -7,7 +7,7 @@ public class Timer {
     private long startTime;
 
     public Timer() {
-        startTime = 0;
+        reset();
     }
 
     public void reset() {
