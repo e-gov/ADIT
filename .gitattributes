@@ -233,6 +233,7 @@ adit-war/src/main/java/ee/adit/exception/AditException.java -text
 adit-war/src/main/java/ee/adit/exception/AditInternalException.java -text
 adit-war/src/main/java/ee/adit/exception/AditMultipleException.java -text
 adit-war/src/main/java/ee/adit/exception/package-info.java -text
+adit-war/src/main/java/ee/adit/performance/Timer.java -text
 adit-war/src/main/java/ee/adit/pojo/Activity.java -text
 adit-war/src/main/java/ee/adit/pojo/ActivityActor.java -text
 adit-war/src/main/java/ee/adit/pojo/ActivitySubject.java -text

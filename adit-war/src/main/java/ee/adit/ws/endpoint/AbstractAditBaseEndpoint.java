@@ -26,6 +26,7 @@ import org.w3c.dom.Element;
 
 import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditInternalException;
+import ee.adit.performance.Timer;
 import ee.adit.service.LogService;
 import ee.adit.service.MessageService;
 import ee.adit.service.MonitorService;
@@ -37,7 +38,7 @@ import ee.adit.util.XRoadQueryName;
 /**
  * Base class for web-service endpoints. Wraps XML marshalling / unmarshalling.
  * Provides methods for request logging and SOAP attacments.
- * 
+ *
  * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
  * @author Jaak Lember, Interinx, jaak@interinx.com
  */
@@ -97,7 +98,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
      * Unmarshals the request element and calls the endpoint implementation
      * class. The response object returned by the implementing class is
      * marshalled back to XML.
-     * 
+     *
      * @param requestKeha
      *            request body element
      * @param responseElement
@@ -110,79 +111,84 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
     protected void invokeInternal(Document requestKeha, Element responseElement,
     	CustomXTeeHeader xteeHeader) throws Exception {
 
-        logger.debug("AbstractAditBaseEndpoint invoked");
-        Object responseObject = null;
-        String requestName = null;
-        int version = 1;
+    	Timer performanceTimer = new Timer();
+    	try {
+	        logger.debug("AbstractAditBaseEndpoint invoked");
+	        Object responseObject = null;
+	        String requestName = null;
+	        int version = 1;
 
-        if (requestKeha == null) {
-            throw new Exception("Failed unmarshalling request because request body is null!");
-        }
+	        if (requestKeha == null) {
+	            throw new Exception("Failed unmarshalling request because request body is null!");
+	        }
 
-        try {
-            // Set the header as a property
-            this.setHeader(xteeHeader);
+	        try {
+	            // Set the header as a property
+	            this.setHeader(xteeHeader);
 
-            if (!this.isMetaService()) {
-                // Check request version
-                if (xteeHeader.getNimi() == null) {
-                    throw new AditInternalException("X-Road header 'nimi' not defined: cannot check query version.");
-                }
-                XRoadQueryName queryName = Util.extractQueryName(xteeHeader.getNimi());
-                version = queryName.getVersion();
-                requestName = queryName.getName();
-            }
+	            if (!this.isMetaService()) {
+	                // Check request version
+	                if (xteeHeader.getNimi() == null) {
+	                    throw new AditInternalException("X-Road header 'nimi' not defined: cannot check query version.");
+	                }
+	                XRoadQueryName queryName = Util.extractQueryName(xteeHeader.getNimi());
+	                version = queryName.getVersion();
+	                requestName = queryName.getName();
+	            }
 
-            // Unmarshall the request object
-            Source requestObjectSource = new DOMSource(requestKeha);
-            Object requestObject = null;
+	            // Unmarshall the request object
+	            Source requestObjectSource = new DOMSource(requestKeha);
+	            Object requestObject = null;
 
-            try {
-                requestObject = this.getUnmarshaller().unmarshal(requestObjectSource);
-            } catch (Exception e) {
-                logger.error("Exception while unmarshalling request: ", e);
-                throw new AditInternalException("Error in request SOAP envelope: check parameters and XML syntax.");
-            }
+	            try {
+	                requestObject = this.getUnmarshaller().unmarshal(requestObjectSource);
+	            } catch (Exception e) {
+	                logger.error("Exception while unmarshalling request: ", e);
+	                throw new AditInternalException("Error in request SOAP envelope: check parameters and XML syntax.");
+	            }
 
-            // Perform system check
-            try {
-                performSystemCheck();
-            } catch (Exception e) {
-                logger.warn("System check failed: ", e);
-            }
+	            // Perform system check
+	            try {
+	                performSystemCheck();
+	            } catch (Exception e) {
+	                logger.warn("System check failed: ", e);
+	            }
 
-            // Excecute business logic
-            responseObject = invokeInternal(requestObject, version);
-        } catch (Exception e) {
-            logger.error("Exception while marshalling request/response object: ", e);
-            responseObject = getResultForGenericException(e);
+	            // Excecute business logic
+	            responseObject = invokeInternal(requestObject, version);
+	        } catch (Exception e) {
+	            logger.error("Exception while marshalling request/response object: ", e);
+	            responseObject = getResultForGenericException(e);
 
-            String additionalInformation = "ERROR: Exception while marshalling request/response object: "
-                    + e.getMessage();
+	            String additionalInformation = "ERROR: Exception while marshalling request/response object: "
+	                    + e.getMessage();
 
-            // Add request log entry
-            this.getLogService().addRequestLogEntry(DEFAULT_NAMESPACE + "." + requestName + ".v" + version, null,
-                    new Date(), xteeHeader.getInfosysteem(), xteeHeader.getIsikukood(), xteeHeader.getAsutus(),
-                    additionalInformation);
+	            // Add request log entry
+	            this.getLogService().addRequestLogEntry(DEFAULT_NAMESPACE + "." + requestName + ".v" + version, null,
+	                    new Date(), xteeHeader.getInfosysteem(), xteeHeader.getIsikukood(), xteeHeader.getAsutus(),
+	                    additionalInformation);
 
-        }
+	        }
 
-        if (responseObject != null) {
-            // Marshal the response object
-            DOMResult reponseObjectResult = new DOMResult(responseElement);
-            this.getMarshaller().marshal(responseObject, reponseObjectResult);
+	        if (responseObject != null) {
+	            // Marshal the response object
+	            DOMResult reponseObjectResult = new DOMResult(responseElement);
+	            this.getMarshaller().marshal(responseObject, reponseObjectResult);
 
-            // Add the response DOM tree as a child element to the responseKeha
-            // element
-            responseElement = (Element) reponseObjectResult.getNode();
-        } else {
-            logger.error("Response object not initialized.");
-        }
+	            // Add the response DOM tree as a child element to the responseKeha
+	            // element
+	            responseElement = (Element) reponseObjectResult.getNode();
+	        } else {
+	            logger.error("Response object not initialized.");
+	        }
+    	} finally {
+    		performanceTimer.logElapsedTime(this.getClass().getSimpleName());
+    	}
     }
 
     /**
      * Adds a SOAP attachment to the response message.
-     * 
+     *
      * @param fileName
      *            the temporary file to add as an attachment.
      * @return attachment ID
@@ -207,7 +213,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
     /**
      * Marshals the object to XML and stores the result in a temporary file. The
      * location of the temporary file is specified by {@link Configuration}
-     * 
+     *
      * @param object
      *            the object to be marshalled.
      * @return the absolute path to the temporary file created.
@@ -238,7 +244,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 
     /**
      * Unmarshals the contents of the file.
-     * 
+     *
      * @param fileName
      *            absolute path to the file that holds the XML content.
      * @return object representing the XML content.
@@ -253,7 +259,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 
     /**
      * Extract attachment XML to temporary file.
-     * 
+     *
      * @param message SOAP message
      * @param attachmentID attachment ID to be extracted
      * @return temporary file location
@@ -290,7 +296,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 
     /**
      * Extracts SOAP attachment to a temporary file.
-     * 
+     *
      * @param attachment
      *            the attachment to be extracted.
      * @return absolute path to the temporary file holding the attachment
@@ -305,7 +311,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 
     /**
      * Logs the current request.
-     * 
+     *
      * @param documentId
      *            ID of the document (if it is a document request)
      * @param requestDate
@@ -315,12 +321,12 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
      */
     public void logCurrentRequest(final Long documentId, final Date requestDate,
     	final String additionalInformation) {
-        
+
     	String logMessage = additionalInformation;
     	if (!Util.isNullOrEmpty(logMessage)) {
     		logMessage = logMessage.trim();
     	}
-    	
+
     	try {
             if (this.header != null) {
                 this.logService.addRequestLogEntry(this.header.getNimi(),
@@ -337,7 +343,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 
     /**
      * Log a downloading request - a request that downloads file data.
-     * 
+     *
      * @param documentId
      *            the ID of the document associated with the file.
      * @param fileId
@@ -362,7 +368,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 
     /**
      * Log metadata request.
-     * 
+     *
      * @param documentId
      *            the ID of the document queried
      * @param requestDate
@@ -385,7 +391,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 
     /**
      * Log an error.
-     * 
+     *
      * @param documentId
      *            the document associated with the error.
      * @param errorDate
@@ -397,12 +403,12 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
      */
     public void logError(final Long documentId, final Date errorDate,
     	final String level, final String errorMessage) {
-        
+
     	String logMessage = errorMessage;
     	if (!Util.isNullOrEmpty(logMessage)) {
     		logMessage = logMessage.trim();
     	}
-    	
+
     	try {
             if (this.header != null) {
                 this.logService.addErrorLogEntry(this.header.getNimi(),
@@ -421,7 +427,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
      * Checks whether or not the request header contains all required fields.
      * Throws a {@link AditCodedException} if any of required fields are missing
      * or empty.
-     * 
+     *
      * @param headerParam
      *            SOAP message header part as {@link CustomXTeeHeader}
      * @throws AditCodedException
@@ -449,7 +455,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
     /**
      * Abstract method to be implemented by the subclasses. Invokes the endpoint
      * logic.
-     * 
+     *
      * @param requestObject
      *            request object
      * @param version
@@ -462,7 +468,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
     /**
      * Generates error messages, creates a response object and adds error
      * messages to it.
-     * 
+     *
      * @param ex
      *            the exception for which error messages have to be created
      * @return response object
@@ -471,7 +477,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 
     /**
      * Retreives the marshaller.
-     * 
+     *
      * @return {@link Marshaller} object used for current request
      */
     public Marshaller getMarshaller() {
@@ -480,7 +486,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 
     /**
      * Sets the marshaller.
-     * 
+     *
      * @param marshaller
      *            {@link Marshaller} object to be used for current request
      */
@@ -490,7 +496,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 
     /**
      * Retreives the unmarshaller.
-     * 
+     *
      * @return {@link Unmarshaller} object used for current request
      */
     public Unmarshaller getUnmarshaller() {
@@ -499,7 +505,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 
     /**
      * Sets the unmarshaller.
-     * 
+     *
      * @param unmarshaller
      *            {@link Unmarshaller} object to be used for current request
      */
@@ -509,7 +515,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 
     /**
      * Retreives the X-Tee header.
-     * 
+     *
      * @return X-Tee header of current request
      */
     public CustomXTeeHeader getHeader() {
@@ -518,7 +524,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 
     /**
      * Sets the X-Tee header.
-     * 
+     *
      * @param header
      *            X-Tee header of current request
      */
@@ -528,7 +534,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 
     /**
      * Retreives the message source.
-     * 
+     *
      * @return Currently used message source as {@link MessageSource} object
      */
     public MessageSource getMessageSource() {
@@ -537,7 +543,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 
     /**
      * Sets the message source.
-     * 
+     *
      * @param messageSource
      *            {@link MessageSource} object that will be used for application
      *            success and error messages.
@@ -548,7 +554,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 
     /**
      * Retreives the configuration.
-     * 
+     *
      * @return Application configuration as {@link Configuration} object.
      */
     public Configuration getConfiguration() {
@@ -557,7 +563,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 
     /**
      * Sets the configuration.
-     * 
+     *
      * @param configuration
      *            Application configuration as {@link Configuration} object.
      */
@@ -567,7 +573,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 
     /**
      * Retreives the log service.
-     * 
+     *
      * @return Log service
      */
     public LogService getLogService() {
@@ -576,7 +582,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 
     /**
      * Sets the log service.
-     * 
+     *
      * @param logService
      *            Log service
      */
@@ -586,7 +592,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 
     /**
      * Retreives the message service.
-     * 
+     *
      * @return Message service
      */
     public MessageService getMessageService() {
@@ -595,7 +601,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 
     /**
      * Sets the message service.
-     * 
+     *
      * @param messageService
      *            Message service
      */
