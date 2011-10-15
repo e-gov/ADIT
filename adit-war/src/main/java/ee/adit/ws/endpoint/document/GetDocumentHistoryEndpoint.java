@@ -38,7 +38,7 @@ import ee.webmedia.xtee.annotation.XTeeService;
  * Implementation of "getDocumentHistory" web method (web service request).
  * Contains request input validation, request-specific workflow and response
  * composition.
- * 
+ *
  * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
  * @author Jaak Lember, Interinx, jaak@interinx.com
  */
@@ -47,9 +47,9 @@ import ee.webmedia.xtee.annotation.XTeeService;
 public class GetDocumentHistoryEndpoint extends AbstractAditBaseEndpoint {
 
     private static Logger logger = Logger.getLogger(ModifyStatusEndpoint.class);
-    
+
     private UserService userService;
-    
+
     private DocumentService documentService;
 
     @Override
@@ -65,7 +65,7 @@ public class GetDocumentHistoryEndpoint extends AbstractAditBaseEndpoint {
 
     /**
      * Executes "V1" version of "getDocumentHistory" request.
-     * 
+     *
      * @param requestObject
      *            Request body object
      * @return Response body object
@@ -165,7 +165,7 @@ public class GetDocumentHistoryEndpoint extends AbstractAditBaseEndpoint {
                     aditCodedException.setParameters(new Object[] {documentId.toString() });
                     throw aditCodedException;
                 }
-            	
+
                 docBelongsToUser = true;
             } else {
                 if ((doc.getDocumentSharings() != null) && (!doc.getDocumentSharings().isEmpty())) {
@@ -179,7 +179,7 @@ public class GetDocumentHistoryEndpoint extends AbstractAditBaseEndpoint {
                                 aditCodedException.setParameters(new Object[] {documentId.toString() });
                                 throw aditCodedException;
                             }
-                        	
+
                         	docBelongsToUser = true;
                             break;
                         }
@@ -189,9 +189,8 @@ public class GetDocumentHistoryEndpoint extends AbstractAditBaseEndpoint {
 
             if (docBelongsToUser) {
                 List<Activity> activityList = new ArrayList<Activity>();
-                if ((doc.getDocumentHistories() != null) && (!doc.getDocumentHistories().isEmpty())) {
-                    List<DocumentHistory> historyList = this.getDocumentService().getDocumentHistoryDAO()
-                            .getSortedList(documentId);
+                List<DocumentHistory> historyList = this.getDocumentService().getDocumentHistoryDAO().getSortedList(doc.getId());
+                if ((historyList != null) && !historyList.isEmpty()) {
                     for (DocumentHistory historyEvent : historyList) {
                         Activity activity = new Activity();
                         activity.setTime(historyEvent.getEventDate());
@@ -321,7 +320,7 @@ public class GetDocumentHistoryEndpoint extends AbstractAditBaseEndpoint {
      * <br>
      * Throws {@link AditCodedException} if any errors in request data are
      * found.
-     * 
+     *
      * @param request
      *            Request body as {@link GetDocumentHistoryRequest} object.
      * @throws AditCodedException
@@ -339,7 +338,7 @@ public class GetDocumentHistoryEndpoint extends AbstractAditBaseEndpoint {
 
     /**
      * Writes request parameters to application DEBUG log.
-     * 
+     *
      * @param request
      *            Request body as {@link GetDocumentHistoryRequest} object.
      */
@@ -348,7 +347,7 @@ public class GetDocumentHistoryEndpoint extends AbstractAditBaseEndpoint {
         logger.debug("Document ID: " + String.valueOf(request.getDocumentId()));
         logger.debug("------------------------------------------");
     }
-    
+
     public UserService getUserService() {
         return userService;
     }
