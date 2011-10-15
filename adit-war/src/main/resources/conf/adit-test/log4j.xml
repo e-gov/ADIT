@@ -38,6 +38,20 @@
 		</layout>
     </appender>
 
+    <appender name="performance" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="file" value="log/adit-arendus/adit_performance.log" />
+        <param name="datePattern" value="'.'yyyy-MM" />
+        <param name="append" value="true" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{ISO8601}%5p %m%n"/>
+        </layout>
+    </appender>
+
+    <logger name="ee.adit.performance">
+        <level value="INFO"></level>
+        <appender-ref ref="performance" />
+    </logger>
+
     <logger name="ee.adit.ws">
     	<level value="INFO"></level>
     	<appender-ref ref="file" />
