@@ -16,15 +16,14 @@
 		<!-- Encoding for source files -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-		<!--
-		Specifies which configuration resources to bundle with the build (ie. "dev", "test", "production")
-		Possible values:
-			dev-dev-weblogic		Installs configuration for developers computer
-			ria-dev-weblogic		Installs configuration for ADIT development server in RIA
-			ria-test-weblogic		Installs configuration for ADIT test server in RIA
-			ria-live-weblogic       Installs configuration for ADIT live server in RIA
-		-->
+        <!-- Default configuration -->
+        <conf>adit-toodang</conf>
+
+		<!-- Specifies which configuration resources to use in the build -->
 		<resourceDir>conf/${conf}</resourceDir>
+
+		<!-- X-Road producer name of current build -->
+		<producerName>ametlikud-dokumendid</producerName>
 	</properties>
 
 </project>

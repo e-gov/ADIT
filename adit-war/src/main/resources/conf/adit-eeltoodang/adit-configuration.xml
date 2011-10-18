@@ -28,10 +28,13 @@
 		<property name="schedulerEventTypeName" value="Minu dokumentide teavitus"/>
 		<property name="dvkResponseMessageStylesheet" value="DVKresponseMessage.xsl"/>
 
-		<!-- Üldine kettamahu piirang ühe kasutaja kohta baitides -->
+		<!-- Default disk quota in bytes per user -->
 		<property name="globalDiskQuota" value="10240000"/>
 
-		<!-- Dokumentide säilitustähtaeg päevades -->
+        <!--
+        Document retention deadline in days (specifies how many days
+        document is stored before it's files are deleted).
+        -->
 		<property name="documentRetentionDeadlineDays" value="365"/>
 
 		<property name="locales">
@@ -46,7 +49,11 @@
 		<property name="xteeSecurityServer" value="http://10.0.1.1/cgi-bin/consumer_proxy" />
 		<property name="xteeIdCode" value="00000000000" />
 
-        <!-- Kinnitamata digiallkirjade säilitustähtaeg sekundites -->
+        <!--
+        Specifies how many seconds the system waits for unfinished digital
+        signatures to be finished. During this period initiating additional
+        signatures to the same document is blocked.
+        -->
         <property name="unfinishedSignatureLifetimeSeconds" value="300"/>
 	</bean>
 
