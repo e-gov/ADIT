@@ -38,7 +38,7 @@ import ee.webmedia.xtee.annotation.XTeeService;
 /**
  * Implementation of "getJoined" web method (web service request). Contains
  * request input validation, request-specific workflow and response composition.
- * 
+ *
  * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
  * @author Jaak Lember, Interinx, jaak@interinx.com
  */
@@ -64,7 +64,7 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 
     /**
      * Executes "V1" version of "getJoined" request.
-     * 
+     *
      * @param requestObject
      *            Request body object
      * @return Response body object
@@ -76,13 +76,12 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
         String additionalInformationForLog = null;
 
         try {
-
             // Check configuration
             checkConfiguration();
 
             GetJoinedRequest request = (GetJoinedRequest) requestObject;
             CustomXTeeHeader header = this.getHeader();
-            String applicationName = header.getInfosysteem();
+            String applicationName = header.getInfosysteem(this.getConfiguration().getXteeProducerName());
 
             // Check header for required fields
             checkHeader(header);
@@ -220,7 +219,7 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 
     /**
      * Outputs the user list to a temporary file.
-     * 
+     *
      * @param userList
      *            users list
      * @return absolute path to temporary file created
@@ -254,7 +253,7 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
      * <br>
      * Throws {@link AditCodedException} if any errors in request data are
      * found.
-     * 
+     *
      * @param request
      *            Request body as {@link GetJoinedRequest} object.
      * @throws AditCodedException
@@ -274,7 +273,7 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 
     /**
      * Checks servlet configuration parameters and validates them.
-     * 
+     *
      * @throws AditInternalException
      *             thrown if errors exist in configuration parameters
      */
@@ -312,7 +311,7 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 
     /**
      * Gets user service.
-     * 
+     *
      * @return
      *     User service
      */
@@ -322,7 +321,7 @@ public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 
     /**
      * Sets user service.
-     * 
+     *
      * @param userService
      *     User service
      */

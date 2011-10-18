@@ -83,11 +83,11 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
         try {
             logger.debug("SaveDocumentEndpoint.v1 invoked.");
             CustomXTeeHeader header = this.getHeader();
-            String applicationName = header.getInfosysteem();
+            String applicationName = header.getInfosysteem(this.getConfiguration().getXteeProducerName());
             SaveDocumentRequest request = (SaveDocumentRequest) requestObject;
 
             // Log request
-            Util.printHeader(header);
+            Util.printHeader(header, this.getConfiguration());
 
             // Check header for required fields
             checkHeader(header);

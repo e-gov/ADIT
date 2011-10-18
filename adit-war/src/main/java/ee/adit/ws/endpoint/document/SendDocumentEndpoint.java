@@ -79,10 +79,10 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
             logger.debug("SendDocumentEndpoint.v1 invoked.");
             request = (SendDocumentRequest) requestObject;
             CustomXTeeHeader header = this.getHeader();
-            String applicationName = header.getInfosysteem();
+            String applicationName = header.getInfosysteem(this.getConfiguration().getXteeProducerName());
 
             // Log request
-            Util.printHeader(header);
+            Util.printHeader(header, this.getConfiguration());
 
             // Check header for required fields
             checkHeader(header);

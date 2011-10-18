@@ -32,7 +32,7 @@ import ee.webmedia.xtee.annotation.XTeeService;
  * Implementation of "confirmSignature" web method (web service request).
  * Contains request input validation, request-specific workflow and response
  * composition.
- * 
+ *
  * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
  * @author Jaak Lember, Interinx, jaak@interinx.com
  */
@@ -63,7 +63,7 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
 
     /**
      * Executes "V1" version of "confirmSignature" request.
-     * 
+     *
      * @param requestObject
      *            Request body object
      * @return Response body object
@@ -82,10 +82,10 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
                 documentId = request.getDocumentId();
             }
             CustomXTeeHeader header = this.getHeader();
-            String applicationName = header.getInfosysteem();
+            String applicationName = header.getInfosysteem(this.getConfiguration().getXteeProducerName());
 
             // Log request
-            Util.printHeader(header);
+            Util.printHeader(header, this.getConfiguration());
             printRequest(request);
 
             // Check header for required fields
@@ -180,7 +180,7 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
                     aditCodedException.setParameters(new Object[] {documentId.toString() });
                     throw aditCodedException;
                 }
-            	
+
                 isOwner = true;
             } else {
                 if ((doc.getDocumentSharings() != null) && (!doc.getDocumentSharings().isEmpty())) {
@@ -194,7 +194,7 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
                                 aditCodedException.setParameters(new Object[] {documentId.toString() });
                                 throw aditCodedException;
                             }
-                        	
+
                             isOwner = true;
                             break;
                         }
@@ -245,10 +245,10 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
                     AditUser docCreator = this.getUserService().getUserByID(doc.getCreatorCode());
                     if ((docCreator != null)
                         && (userService.findNotification(docCreator.getUserNotifications(), ScheduleClient.NOTIFICATION_TYPE_SIGN) != null)) {
-                        
+
                     	List<Message> messageInAllKnownLanguages = this.getMessageService().getMessages("scheduler.message.sign", new Object[] {doc.getTitle(), docCreator.getUserCode()});
                     	String eventText = Util.joinMessages(messageInAllKnownLanguages, "<br/>");
-                    	
+
                     	getScheduleClient().addEvent(
                             docCreator, eventText,
                             this.getConfiguration().getSchedulerEventTypeName(), requestDate,
@@ -319,7 +319,7 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
      * <br>
      * Throws {@link AditCodedException} if any errors in request data are
      * found.
-     * 
+     *
      * @param request
      *            Request body as {@link ConfirmSignatureRequest} object.
      * @throws AditCodedException
@@ -337,7 +337,7 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
 
     /**
      * Writes request parameters to application DEBUG log.
-     * 
+     *
      * @param request
      *            Request body as {@link ConfirmSignatureRequest} object.
      */
@@ -357,7 +357,7 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
     public void setScheduleClient(ScheduleClient scheduleClient) {
         this.scheduleClient = scheduleClient;
     }
-    
+
     public UserService getUserService() {
         return userService;
     }

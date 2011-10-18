@@ -565,9 +565,12 @@ public final class Util {
      * Prints the X-Tee header to log.
      *
      * @param header
-     *            X-Tee header
+     *      X-Tee header
+     * @param conf
+     * 		{@link Configuration} object containing current
+     * 		application configuration settings.
      */
-    public static void printHeader(CustomXTeeHeader header) {
+    public static void printHeader(CustomXTeeHeader header, Configuration conf) {
 
         logger.debug("-------- XTeeHeader --------");
 
@@ -578,7 +581,7 @@ public final class Util {
         logger.debug("Asutus: " + header.getAsutus());
         logger.debug("Allasutus: " + header.getAllasutus());
         logger.debug("Amet: " + header.getAmet());
-        logger.debug("Infosüsteem: " + header.getInfosysteem());
+        logger.debug("Infosüsteem: " + header.getInfosysteem(conf.getXteeProducerName()));
 
         logger.debug("----------------------------");
     }

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
-	xmlns:tns="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
+	xmlns:tns="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 	xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/">
-	
+
 	<annotation>
 	  	<documentation xml:lang="ee">
 	  		ADIT(Avalike Dokumentide Infrastruktuuri Teenus) päringutes kasutatavate
@@ -19,7 +19,7 @@
 	  		Licensed under [LICENSE].
 	  	</documentation>
   	</annotation>
-	
+
 	<element name="joinRequest" type="tns:joinRequest"/>
 	<element name="joinResponse" type="tns:joinResponse"/>
 	<element name="unJoinRequest" type="tns:unJoinRequest"/>
@@ -64,7 +64,7 @@
 	<element name="getDocumentHistoryResponse" type="tns:getDocumentHistoryResponse"/>
 	<element name="sendDocumentRequest" type="tns:sendDocumentRequest"/>
 	<element name="sendDocumentResponse" type="tns:sendDocumentResponse"/>
-	
+
 	<simpleType name="success">
 		<annotation>
 			<documentation xml:lang="ee">Näitab, kas päring õnnestus</documentation>
@@ -72,7 +72,7 @@
 		</annotation>
 		<restriction base="boolean" />
 	</simpleType>
-	
+
 	<simpleType name="href">
 		<annotation>
 			<documentation xml:lang="ee">Viide manusele</documentation>
@@ -80,7 +80,7 @@
 		</annotation>
 		<restriction base="string" />
 	</simpleType>
-	
+
 	<complexType name="message">
 		<annotation>
 	      	<documentation xml:lang="ee">Teade</documentation>
@@ -102,7 +102,7 @@
 			<element name="message" type="tns:message" maxOccurs="unbounded" minOccurs="0"/>
 		</sequence>
 	</complexType>
-	
+
 	<complexType name="arrayOfFileId">
 		<annotation>
 	      	<documentation xml:lang="ee">Failide identifikaatorite massiiv</documentation>
@@ -117,7 +117,7 @@
 			</element>
 		</sequence>
 	</complexType>
-	
+
 	<complexType name="arrayOfDocumentType">
 		<annotation>
 	      	<documentation xml:lang="ee">Dokumendi tüüpide massiiv</documentation>
@@ -132,7 +132,7 @@
 			</element>
 		</sequence>
 	</complexType>
-	
+
 	<complexType name="arrayOfDocumentDvkStatus">
 		<annotation>
 	      	<documentation xml:lang="ee">Dokumendi DVK(Dokumendivahetuskeskus) staatuste identifikaatorite massiiv</documentation>
@@ -147,7 +147,7 @@
 			</element>
 		</sequence>
 	</complexType>
-	
+
 	<complexType name="arrayOfDocumentWorkflowStatus">
 		<annotation>
 	      	<documentation xml:lang="ee">Dokumendi töövoo staatuste identifikaatorite massiiv</documentation>
@@ -162,7 +162,7 @@
 			</element>
 		</sequence>
 	</complexType>
-	
+
 	<complexType name="arrayOfCreatorApplication">
 		<annotation>
 	      	<documentation xml:lang="ee">Dokumendi loomiseks kasutatud infosüsteemide lühinimede massiiv</documentation>
@@ -177,7 +177,7 @@
 			</element>
 		</sequence>
 	</complexType>
-	
+
 	<complexType name="arrayOfUserCode">
 		<annotation>
 	      	<documentation xml:lang="ee">Kasutajakoodide massiiv</documentation>
@@ -209,7 +209,7 @@
 			<element name="messages" type="tns:arrayOfMessage"/>
 		</sequence>
 	</complexType>
-	
+
 	<complexType name="arrayOfRecipientStatus">
 		<annotation>
 	      	<documentation xml:lang="ee">Vastuvõtja(adressaadi) staatuste massiiv</documentation>
@@ -219,7 +219,7 @@
 			<element name="recipient" type="tns:recipientStatus" maxOccurs="unbounded" minOccurs="0"></element>
 		</sequence>
 	</complexType>
-	
+
 	<complexType name="notification">
 		<annotation>
 	      	<documentation xml:lang="ee">Teavitus</documentation>
@@ -240,7 +240,7 @@
 			</element>
 		</sequence>
 	</complexType>
-	
+
 	<complexType name="arrayOfNotification">
 		<annotation>
 	      	<documentation xml:lang="ee">Teavituste massiiv</documentation>
@@ -250,7 +250,7 @@
 			<element name="notification" type="tns:notification" maxOccurs="unbounded" minOccurs="0"></element>
 		</sequence>
 	</complexType>
-	
+
 	<complexType name="emailAddress">
 		<annotation>
 	      	<documentation xml:lang="ee">E-posti aadress</documentation>
@@ -271,7 +271,7 @@
 			</element>
 		</sequence>
 	</complexType>
-	
+
 	<complexType name="arrayOfEmailAddress">
 		<annotation>
 	      	<documentation xml:lang="ee">E-posti aadresside massiiv</documentation>
@@ -312,7 +312,7 @@
 			<element name="messages" type="tns:arrayOfMessage"></element>
 		</sequence>
 	</complexType>
-	
+
 	<!-- unJoin päringu tüübid -->
 	<complexType name="unJoinRequest">
 		<annotation>
@@ -331,7 +331,7 @@
 			<element name="messages" type="tns:arrayOfMessage"></element>
 		</sequence>
 	</complexType>
-	
+
 	<!-- getUserInfo päringu tüübid -->
 	<complexType name="getUserInfoRequest">
 		<annotation>
@@ -369,7 +369,7 @@
 			</element>
 		</sequence>
 	</complexType>
-	
+
 	<!-- getJoined päringu tüübid -->
 	<complexType name="getJoinedRequest">
 		<annotation>
@@ -410,7 +410,7 @@
 			</element>
 		</sequence>
 	</complexType>
-	
+
 	<!-- getNotifications päringu tüübid -->
 	<complexType name="getNotificationsRequest">
 		<annotation>
@@ -437,7 +437,7 @@
 			<element name="address_list" type="tns:arrayOfEmailAddress"/>
 		</sequence>
 	</complexType>
-	
+
 	<!-- setNotifications päringu tüübid -->
 	<complexType name="setNotificationsRequest">
 		<annotation>
@@ -458,7 +458,7 @@
 			<element name="messages" type="tns:arrayOfMessage"></element>
 		</sequence>
 	</complexType>
-	
+
 	<complexType name="getDocumentListRequest">
 		<annotation>
 			<documentation xml:lang="ee">Päring "getDocumentList"</documentation>
@@ -567,7 +567,7 @@
 			</element>
 		</sequence>
 	</complexType>
-	
+
 	<!-- getDocument päringu tüübid -->
 	<complexType name="getDocumentRequest">
 		<annotation>
@@ -608,7 +608,7 @@
 			</element>
 		</sequence>
 	</complexType>
-	
+
 	<!-- getDocumentFile päringu tüübid -->
 	<complexType name="getDocumentFileRequest">
 		<annotation>
@@ -644,7 +644,7 @@
 			</element>
 		</sequence>
 	</complexType>
-	
+
 	<!-- saveDocument päringu tüübid -->
 	<complexType name="saveDocumentRequest">
 		<annotation>
@@ -683,7 +683,7 @@
 			</element>
 		</sequence>
 	</complexType>
-	
+
 	<!-- saveDocumentFile päringu tüübid -->
 	<complexType name="saveDocumentFileRequest">
 		<annotation>
@@ -733,7 +733,7 @@
 			</element>
 		</sequence>
 	</complexType>
-	
+
 	<!-- deleteDocumentFile päringu tüübid -->
 	<complexType name="deleteDocumentFileRequest">
 		<annotation>
@@ -765,7 +765,7 @@
 			<element name="messages" type="tns:arrayOfMessage"/>
 		</sequence>
 	</complexType>
-	
+
 	<!-- deleteDocument päringu tüübid -->
 	<complexType name="deleteDocumentRequest">
 		<annotation>
@@ -791,7 +791,7 @@
 			<element name="messages" type="tns:arrayOfMessage"/>
 		</sequence>
 	</complexType>
-	
+
 	<!-- deflateDocument päringu tüübid -->
 	<complexType name="deflateDocumentRequest">
 		<annotation>
@@ -817,7 +817,7 @@
 			<element name="messages" type="tns:arrayOfMessage"/>
 		</sequence>
 	</complexType>
-	
+
 	<!-- prepareSignature päringu tüübid -->
 	<complexType name="prepareSignatureRequest">
 		<annotation>
@@ -888,7 +888,7 @@
 			</element>
 		</sequence>
 	</complexType>
-	
+
 	<complexType name="confirmSignatureRequest">
 		<annotation>
 	      	<documentation xml:lang="ee">Päring "confirmSignature"</documentation>
@@ -922,7 +922,7 @@
 			<element name="messages" type="tns:arrayOfMessage"></element>
 		</sequence>
 	</complexType>
-	
+
 	<complexType name="shareDocumentRequest">
 		<annotation>
 	      	<documentation xml:lang="ee">Päring "shareDocument"</documentation>
@@ -961,7 +961,7 @@
 			<element name="recipient_list" type="tns:arrayOfRecipientStatus"/>
 		</sequence>
 	</complexType>
-	
+
 	<!-- unShareDocument päringu tüübid -->
 	<complexType name="unShareDocumentRequest">
 		<annotation>
@@ -989,7 +989,7 @@
 			<element name="recipient_list" type="tns:arrayOfRecipientStatus"/>
 		</sequence>
 	</complexType>
-	
+
 	<!-- markDocumentViewed päringu tüübid -->
 	<complexType name="markDocumentViewedRequest">
 		<annotation>
@@ -1015,7 +1015,7 @@
 			<element name="messages" type="tns:arrayOfMessage"/>
 		</sequence>
 	</complexType>
-	
+
 	<!-- modifyStatus päringu tüübid -->
 	<complexType name="modifyStatusRequest">
 		<annotation>
@@ -1047,7 +1047,7 @@
 			<element name="messages" type="tns:arrayOfMessage"/>
 		</sequence>
 	</complexType>
-	
+
 	<!-- getDocumentHistory päringu tüübid -->
 	<complexType name="getDocumentHistoryRequest">
 		<annotation>
@@ -1082,7 +1082,7 @@
 			</element>
 		</sequence>
 	</complexType>
-	
+
 	<!-- sendDocument päringu tüübid -->
 	<complexType name="sendDocumentRequest">
 		<annotation>

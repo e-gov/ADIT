@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
-	xmlns:sch="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+	xmlns:sch="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
-	xmlns:tns="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+	xmlns:tns="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 	xmlns:xtee="http://x-tee.riik.ee/xsd/xtee.xsd"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	targetNamespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid">
+	targetNamespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@">
 
 	<wsdl:types>
 		<schema xmlns="http://www.w3.org/2001/XMLSchema"
 			xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
-			targetNamespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid">
+			targetNamespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@">
 			<import namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
 				schemaLocation="http://x-tee.riik.ee/xsd/xtee.xsd" />
 			<xs:annotation>
@@ -91,7 +91,7 @@
 				</xs:annotation>
 				<restriction base="boolean" />
 			</simpleType>
-			
+
 			<simpleType name="href">
 				<xs:annotation>
 					<xs:documentation xml:lang="ee">Viide manusele
@@ -101,7 +101,7 @@
 				</xs:annotation>
 				<restriction base="string" />
 			</simpleType>
-			
+
 			<complexType name="message">
 				<xs:annotation>
 					<xs:documentation xml:lang="ee">Teade</xs:documentation>
@@ -166,7 +166,7 @@
 					</element>
 				</sequence>
 			</complexType>
-			
+
 			<complexType name="arrayOfFileType">
 				<xs:annotation>
 					<xs:documentation xml:lang="ee">Faili tüüpide massiiv</xs:documentation>
@@ -1390,7 +1390,7 @@
 				</sequence>
 			</complexType>
 		</schema>
-		
+
         <!--
             Schema for SOAP Attachment types.
             Separate schema for attachment types is necessary to keep attachment
@@ -1418,8 +1418,8 @@
 					<xs:element maxOccurs="unbounded" minOccurs="0" name="message" type="message" />
 				</xs:sequence>
 			</xs:complexType>
-			
-			
+
+
 			<!-- getJoined attachments -->
             <xs:element name="getJoinedResponseAttachmentV1" type="getJoinedResponseAttachmentV1Type" />
 			<xs:complexType name="getJoinedResponseAttachmentV1Type">
@@ -2101,7 +2101,7 @@
 					<xs:element name="document_files" type="documentFilesType" />
 				</xs:sequence>
 			</xs:complexType>
-			
+
 			<xs:complexType name="documentSignatureV1Type">
 				<xs:annotation>
 					<xs:documentation xml:lang="ee">Dokumendile antud allkirja metaandmed</xs:documentation>
@@ -2180,7 +2180,7 @@
 					</xs:element>
 				</xs:all>
 			</xs:complexType>
-			
+
 			<xs:complexType name="documentSignatureListV1Type">
 				<xs:annotation>
 					<xs:documentation xml:lang="ee">Dokumendi allkirjade
@@ -2192,7 +2192,7 @@
                     <xs:element maxOccurs="unbounded" name="signature" type="documentSignatureV1Type" />
 				</xs:sequence>
 			</xs:complexType>
-			
+
 			<xs:complexType name="documentFilesType">
 				<xs:annotation>
 					<xs:documentation xml:lang="ee">Dokumendi failide andmed
@@ -2286,7 +2286,7 @@
 					</xs:element>
 				</xs:sequence>
 			</xs:complexType>
-			
+
             <xs:complexType name="documentSentToV1Type">
 				<xs:annotation>
 					<xs:documentation xml:lang="ee">Kasutajate andmete massiiv
@@ -2879,11 +2879,11 @@
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
 					part="nimi" use="literal">
 				</soap:header>
-				<soap:header message="tns:xteeStandardPais" namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					part="infosysteem" use="literal">
 				</soap:header>
 				<soap:body
-					namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					use="literal" />
 			</wsdl:input>
 			<wsdl:output name="getJoinedResponse">
@@ -2902,11 +2902,11 @@
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
 					part="nimi" use="literal">
 				</soap:header>
-				<soap:header message="tns:xteeStandardPais" namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					part="infosysteem" use="literal">
 				</soap:header>
 				<soap:body
-					namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					use="literal" />
 			</wsdl:output>
 		</wsdl:operation>
@@ -2929,11 +2929,11 @@
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
 					part="nimi" use="literal">
 				</soap:header>
-				<soap:header message="tns:xteeStandardPais" namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					part="infosysteem" use="literal">
 				</soap:header>
 				<soap:body
-					namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					use="literal" />
 			</wsdl:input>
 			<wsdl:output name="unShareDocumentResponse">
@@ -2952,11 +2952,11 @@
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
 					part="nimi" use="literal">
 				</soap:header>
-				<soap:header message="tns:xteeStandardPais" namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					part="infosysteem" use="literal">
 				</soap:header>
 				<soap:body
-					namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					use="literal" />
 			</wsdl:output>
 		</wsdl:operation>
@@ -2979,11 +2979,11 @@
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
 					part="nimi" use="literal">
 				</soap:header>
-				<soap:header message="tns:xteeStandardPais" namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					part="infosysteem" use="literal">
 				</soap:header>
 				<soap:body
-					namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					use="literal" />
 			</wsdl:input>
 			<wsdl:output name="saveDocumentFileResponse">
@@ -3002,11 +3002,11 @@
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
 					part="nimi" use="literal">
 				</soap:header>
-				<soap:header message="tns:xteeStandardPais" namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					part="infosysteem" use="literal">
 				</soap:header>
 				<soap:body
-					namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					use="literal" />
 			</wsdl:output>
 		</wsdl:operation>
@@ -3029,11 +3029,11 @@
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
 					part="nimi" use="literal">
 				</soap:header>
-				<soap:header message="tns:xteeStandardPais" namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					part="infosysteem" use="literal">
 				</soap:header>
 				<soap:body
-					namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					use="literal" />
 			</wsdl:input>
 			<wsdl:output name="confirmSignatureResponse">
@@ -3052,11 +3052,11 @@
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
 					part="nimi" use="literal">
 				</soap:header>
-				<soap:header message="tns:xteeStandardPais" namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					part="infosysteem" use="literal">
 				</soap:header>
 				<soap:body
-					namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					use="literal" />
 			</wsdl:output>
 		</wsdl:operation>
@@ -3079,11 +3079,11 @@
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
 					part="nimi" use="literal">
 				</soap:header>
-				<soap:header message="tns:xteeStandardPais" namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					part="infosysteem" use="literal">
 				</soap:header>
 				<soap:body
-					namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					use="literal" />
 			</wsdl:input>
 			<wsdl:output name="deflateDocumentResponse">
@@ -3102,11 +3102,11 @@
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
 					part="nimi" use="literal">
 				</soap:header>
-				<soap:header message="tns:xteeStandardPais" namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					part="infosysteem" use="literal">
 				</soap:header>
 				<soap:body
-					namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					use="literal" />
 			</wsdl:output>
 		</wsdl:operation>
@@ -3129,11 +3129,11 @@
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
 					part="nimi" use="literal">
 				</soap:header>
-				<soap:header message="tns:xteeStandardPais" namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					part="infosysteem" use="literal">
 				</soap:header>
 				<soap:body
-					namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					use="literal" />
 			</wsdl:input>
 			<wsdl:output name="getUserInfoResponse">
@@ -3152,11 +3152,11 @@
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
 					part="nimi" use="literal">
 				</soap:header>
-				<soap:header message="tns:xteeStandardPais" namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					part="infosysteem" use="literal">
 				</soap:header>
 				<soap:body
-					namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					use="literal" />
 			</wsdl:output>
 		</wsdl:operation>
@@ -3179,11 +3179,11 @@
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
 					part="nimi" use="literal">
 				</soap:header>
-				<soap:header message="tns:xteeStandardPais" namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					part="infosysteem" use="literal">
 				</soap:header>
 				<soap:body
-					namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					use="literal" />
 			</wsdl:input>
 			<wsdl:output name="deleteDocumentResponse">
@@ -3202,11 +3202,11 @@
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
 					part="nimi" use="literal">
 				</soap:header>
-				<soap:header message="tns:xteeStandardPais" namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					part="infosysteem" use="literal">
 				</soap:header>
 				<soap:body
-					namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					use="literal" />
 			</wsdl:output>
 		</wsdl:operation>
@@ -3229,11 +3229,11 @@
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
 					part="nimi" use="literal">
 				</soap:header>
-				<soap:header message="tns:xteeStandardPais" namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					part="infosysteem" use="literal">
 				</soap:header>
 				<soap:body
-					namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					use="literal" />
 			</wsdl:input>
 			<wsdl:output name="markDocumentViewedResponse">
@@ -3252,11 +3252,11 @@
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
 					part="nimi" use="literal">
 				</soap:header>
-				<soap:header message="tns:xteeStandardPais" namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					part="infosysteem" use="literal">
 				</soap:header>
 				<soap:body
-					namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					use="literal" />
 			</wsdl:output>
 		</wsdl:operation>
@@ -3279,11 +3279,11 @@
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
 					part="nimi" use="literal">
 				</soap:header>
-				<soap:header message="tns:xteeStandardPais" namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					part="infosysteem" use="literal">
 				</soap:header>
 				<soap:body
-					namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					use="literal" />
 			</wsdl:input>
 			<wsdl:output name="joinResponse">
@@ -3302,11 +3302,11 @@
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
 					part="nimi" use="literal">
 				</soap:header>
-				<soap:header message="tns:xteeStandardPais" namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					part="infosysteem" use="literal">
 				</soap:header>
 				<soap:body
-					namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					use="literal" />
 			</wsdl:output>
 		</wsdl:operation>
@@ -3329,11 +3329,11 @@
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
 					part="nimi" use="literal">
 				</soap:header>
-				<soap:header message="tns:xteeStandardPais" namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					part="infosysteem" use="literal">
 				</soap:header>
 				<soap:body
-					namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					use="literal" />
 			</wsdl:input>
 			<wsdl:output name="sendDocumentResponse">
@@ -3352,11 +3352,11 @@
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
 					part="nimi" use="literal">
 				</soap:header>
-				<soap:header message="tns:xteeStandardPais" namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					part="infosysteem" use="literal">
 				</soap:header>
 				<soap:body
-					namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					use="literal" />
 			</wsdl:output>
 		</wsdl:operation>
@@ -3379,11 +3379,11 @@
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
 					part="nimi" use="literal">
 				</soap:header>
-				<soap:header message="tns:xteeStandardPais" namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					part="infosysteem" use="literal">
 				</soap:header>
 				<soap:body
-					namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					use="literal" />
 			</wsdl:input>
 			<wsdl:output name="getNotificationsResponse">
@@ -3402,11 +3402,11 @@
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
 					part="nimi" use="literal">
 				</soap:header>
-				<soap:header message="tns:xteeStandardPais" namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					part="infosysteem" use="literal">
 				</soap:header>
 				<soap:body
-					namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					use="literal" />
 			</wsdl:output>
 		</wsdl:operation>
@@ -3429,11 +3429,11 @@
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
 					part="nimi" use="literal">
 				</soap:header>
-				<soap:header message="tns:xteeStandardPais" namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					part="infosysteem" use="literal">
 				</soap:header>
 				<soap:body
-					namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					use="literal" />
 			</wsdl:input>
 			<wsdl:output name="getDocumentResponse">
@@ -3452,11 +3452,11 @@
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
 					part="nimi" use="literal">
 				</soap:header>
-				<soap:header message="tns:xteeStandardPais" namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					part="infosysteem" use="literal">
 				</soap:header>
 				<soap:body
-					namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					use="literal" />
 			</wsdl:output>
 		</wsdl:operation>
@@ -3479,11 +3479,11 @@
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
 					part="nimi" use="literal">
 				</soap:header>
-				<soap:header message="tns:xteeStandardPais" namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					part="infosysteem" use="literal">
 				</soap:header>
 				<soap:body
-					namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					use="literal" />
 			</wsdl:input>
 			<wsdl:output name="unJoinResponse">
@@ -3502,11 +3502,11 @@
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
 					part="nimi" use="literal">
 				</soap:header>
-				<soap:header message="tns:xteeStandardPais" namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					part="infosysteem" use="literal">
 				</soap:header>
 				<soap:body
-					namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					use="literal" />
 			</wsdl:output>
 		</wsdl:operation>
@@ -3529,11 +3529,11 @@
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
 					part="nimi" use="literal">
 				</soap:header>
-				<soap:header message="tns:xteeStandardPais" namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					part="infosysteem" use="literal">
 				</soap:header>
 				<soap:body
-					namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					use="literal" />
 			</wsdl:input>
 			<wsdl:output name="deleteDocumentFileResponse">
@@ -3552,11 +3552,11 @@
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
 					part="nimi" use="literal">
 				</soap:header>
-				<soap:header message="tns:xteeStandardPais" namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					part="infosysteem" use="literal">
 				</soap:header>
 				<soap:body
-					namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					use="literal" />
 			</wsdl:output>
 		</wsdl:operation>
@@ -3579,11 +3579,11 @@
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
 					part="nimi" use="literal">
 				</soap:header>
-				<soap:header message="tns:xteeStandardPais" namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					part="infosysteem" use="literal">
 				</soap:header>
 				<soap:body
-					namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					use="literal" />
 			</wsdl:input>
 			<wsdl:output name="getDocumentFileResponse">
@@ -3602,11 +3602,11 @@
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
 					part="nimi" use="literal">
 				</soap:header>
-				<soap:header message="tns:xteeStandardPais" namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					part="infosysteem" use="literal">
 				</soap:header>
 				<soap:body
-					namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					use="literal" />
 			</wsdl:output>
 		</wsdl:operation>
@@ -3629,11 +3629,11 @@
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
 					part="nimi" use="literal">
 				</soap:header>
-				<soap:header message="tns:xteeStandardPais" namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					part="infosysteem" use="literal">
 				</soap:header>
 				<soap:body
-					namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					use="literal" />
 			</wsdl:input>
 			<wsdl:output name="modifyStatusResponse">
@@ -3652,11 +3652,11 @@
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
 					part="nimi" use="literal">
 				</soap:header>
-				<soap:header message="tns:xteeStandardPais" namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					part="infosysteem" use="literal">
 				</soap:header>
 				<soap:body
-					namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					use="literal" />
 			</wsdl:output>
 		</wsdl:operation>
@@ -3679,11 +3679,11 @@
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
 					part="nimi" use="literal">
 				</soap:header>
-				<soap:header message="tns:xteeStandardPais" namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					part="infosysteem" use="literal">
 				</soap:header>
 				<soap:body
-					namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					use="literal" />
 			</wsdl:input>
 			<wsdl:output name="saveDocumentResponse">
@@ -3702,11 +3702,11 @@
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
 					part="nimi" use="literal">
 				</soap:header>
-				<soap:header message="tns:xteeStandardPais" namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					part="infosysteem" use="literal">
 				</soap:header>
 				<soap:body
-					namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					use="literal" />
 			</wsdl:output>
 		</wsdl:operation>
@@ -3729,11 +3729,11 @@
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
 					part="nimi" use="literal">
 				</soap:header>
-				<soap:header message="tns:xteeStandardPais" namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					part="infosysteem" use="literal">
 				</soap:header>
 				<soap:body
-					namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					use="literal" />
 			</wsdl:input>
 			<wsdl:output name="prepareSignatureResponse">
@@ -3752,11 +3752,11 @@
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
 					part="nimi" use="literal">
 				</soap:header>
-				<soap:header message="tns:xteeStandardPais" namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					part="infosysteem" use="literal">
 				</soap:header>
 				<soap:body
-					namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					use="literal" />
 			</wsdl:output>
 		</wsdl:operation>
@@ -3779,11 +3779,11 @@
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
 					part="nimi" use="literal">
 				</soap:header>
-				<soap:header message="tns:xteeStandardPais" namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					part="infosysteem" use="literal">
 				</soap:header>
 				<soap:body
-					namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					use="literal" />
 			</wsdl:input>
 			<wsdl:output name="getDocumentHistoryResponse">
@@ -3802,11 +3802,11 @@
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
 					part="nimi" use="literal">
 				</soap:header>
-				<soap:header message="tns:xteeStandardPais" namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					part="infosysteem" use="literal">
 				</soap:header>
 				<soap:body
-					namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					use="literal" />
 			</wsdl:output>
 		</wsdl:operation>
@@ -3829,11 +3829,11 @@
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
 					part="nimi" use="literal">
 				</soap:header>
-				<soap:header message="tns:xteeStandardPais" namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					part="infosysteem" use="literal">
 				</soap:header>
 				<soap:body
-					namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					use="literal" />
 			</wsdl:input>
 			<wsdl:output name="setNotificationsResponse">
@@ -3852,11 +3852,11 @@
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
 					part="nimi" use="literal">
 				</soap:header>
-				<soap:header message="tns:xteeStandardPais" namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					part="infosysteem" use="literal">
 				</soap:header>
 				<soap:body
-					namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					use="literal" />
 			</wsdl:output>
 		</wsdl:operation>
@@ -3879,11 +3879,11 @@
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
 					part="nimi" use="literal">
 				</soap:header>
-				<soap:header message="tns:xteeStandardPais" namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					part="infosysteem" use="literal">
 				</soap:header>
 				<soap:body
-					namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					use="literal" />
 			</wsdl:input>
 			<wsdl:output name="getDocumentListResponse">
@@ -3902,11 +3902,11 @@
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
 					part="nimi" use="literal">
 				</soap:header>
-				<soap:header message="tns:xteeStandardPais" namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					part="infosysteem" use="literal">
 				</soap:header>
 				<soap:body
-					namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					use="literal" />
 			</wsdl:output>
 		</wsdl:operation>
@@ -3929,11 +3929,11 @@
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
 					part="nimi" use="literal">
 				</soap:header>
-				<soap:header message="tns:xteeStandardPais" namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					part="infosysteem" use="literal">
 				</soap:header>
 				<soap:body
-					namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					use="literal" />
 			</wsdl:input>
 			<wsdl:output name="shareDocumentResponse">
@@ -3952,11 +3952,11 @@
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
 					part="nimi" use="literal">
 				</soap:header>
-				<soap:header message="tns:xteeStandardPais" namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					part="infosysteem" use="literal">
 				</soap:header>
 				<soap:body
-					namespace="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
 					use="literal" />
 			</wsdl:output>
 		</wsdl:operation>
@@ -3965,7 +3965,7 @@
 		<wsdl:port binding="tns:aditSoap11" name="aditSoap11">
 			<xtee:title>ADIT</xtee:title>
 			<soap:address location="http://TURVASERVER/cgi-bin/consumer_proxy" />
-			<xtee:address producer="ametlikud-dokumendid"/>
+			<xtee:address producer="@PRODUCER_NAME@"/>
 		</wsdl:port>
 	</wsdl:service>
 </wsdl:definitions>

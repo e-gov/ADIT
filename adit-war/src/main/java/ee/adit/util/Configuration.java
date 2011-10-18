@@ -6,11 +6,16 @@ import java.util.List;
 /**
  * Application configuration holder class. The configuring takes place during
  * startup and the parameters are specified in the servlet configuration.
- * 
+ *
  * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
  * @author Jaak Lember, Interinx, jaak@interinx.com
  */
 public class Configuration {
+
+	/**
+	 * Specifies the x-road producer name of current application.
+	 */
+	private String xteeProducerName;
 
     /**
      * Specifies the maximum result size of the getJoined query.
@@ -45,7 +50,7 @@ public class Configuration {
      * specific quota is declared for the user.
      */
     private Long globalDiskQuota;
-    
+
     /**
      * Document retention deadline in days.
      * When given number of days has passed since last modification
@@ -79,7 +84,7 @@ public class Configuration {
      * XTee user code.
      */
     private String xteeIdCode;
-    
+
     /**
      * Lifetime of digital signatures that have been prepared but not confirmed.
      */
@@ -93,7 +98,15 @@ public class Configuration {
         this.locales = locales;
     }
 
-    public BigInteger getGetJoinedMaxResults() {
+    public String getXteeProducerName() {
+		return xteeProducerName;
+	}
+
+	public void setXteeProducerName(String xroadProducerName) {
+		this.xteeProducerName = xroadProducerName;
+	}
+
+	public BigInteger getGetJoinedMaxResults() {
         return getJoinedMaxResults;
     }
 
@@ -119,13 +132,13 @@ public class Configuration {
 
     /**
      * Retrieves the value for deleting temporary files as a boolean.
-     * 
+     *
      * @return true, if temporary files are to be deleted
      */
     public boolean getDeleteTemporaryFilesAsBoolean() {
         boolean result = false;
         if (this.getDeleteTemporaryFiles() != null) {
-            result = (new Boolean(this.getDeleteTemporaryFiles())).booleanValue();
+            result = Boolean.valueOf(this.getDeleteTemporaryFiles()).booleanValue();
         } else {
             result = false;
         }
@@ -204,5 +217,4 @@ public class Configuration {
 			Long unfinishedSignatureLifetimeSeconds) {
 		this.unfinishedSignatureLifetimeSeconds = unfinishedSignatureLifetimeSeconds;
 	}
-
 }

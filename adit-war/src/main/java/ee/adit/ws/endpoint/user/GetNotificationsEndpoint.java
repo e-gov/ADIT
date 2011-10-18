@@ -68,10 +68,10 @@ public class GetNotificationsEndpoint extends AbstractAditBaseEndpoint {
 
         try {
             CustomXTeeHeader header = this.getHeader();
-            String applicationName = header.getInfosysteem();
+            String applicationName = header.getInfosysteem(this.getConfiguration().getXteeProducerName());
 
             // Log request
-            Util.printHeader(header);
+            Util.printHeader(header, this.getConfiguration());
 
             // Check header for required fields
             checkHeader(header);

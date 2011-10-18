@@ -50,11 +50,6 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
     private static Logger logger = Logger.getLogger(AbstractAditBaseEndpoint.class);
 
     /**
-     * Name of applications default namespace.
-     */
-    public static final String DEFAULT_NAMESPACE = "ametlikud-dokumendid";
-
-    /**
      * X-Tee header.
      */
     private CustomXTeeHeader header;
@@ -164,10 +159,9 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 	                    + e.getMessage();
 
 	            // Add request log entry
-	            this.getLogService().addRequestLogEntry(DEFAULT_NAMESPACE + "." + requestName + ".v" + version, null,
-	                    new Date(), xteeHeader.getInfosysteem(), xteeHeader.getIsikukood(), xteeHeader.getAsutus(),
-	                    additionalInformation);
-
+	            this.getLogService().addRequestLogEntry(configuration.getXteeProducerName() + "." + requestName + ".v" + version, null,
+                    new Date(), xteeHeader.getInfosysteem(configuration.getXteeProducerName()),
+                    xteeHeader.getIsikukood(), xteeHeader.getAsutus(), additionalInformation);
 	        }
 
 	        if (responseObject != null) {
@@ -330,7 +324,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
     	try {
             if (this.header != null) {
                 this.logService.addRequestLogEntry(this.header.getNimi(),
-                	documentId, requestDate, this.header.getInfosysteem(),
+                	documentId, requestDate, this.header.getInfosysteem(configuration.getXteeProducerName()),
                 	Util.isNullOrEmpty(this.header.getAllasutus()) ? this.header.getIsikukood() : this.header.getAllasutus(),
                 	this.header.getAsutus(), logMessage);
             } else {
@@ -355,7 +349,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
         try {
             if (this.header != null) {
                 this.logService.addDownloadRequestLogEntry(documentId, fileId,
-                	requestDate, this.header.getInfosysteem(),
+                	requestDate, this.header.getInfosysteem(configuration.getXteeProducerName()),
                 	Util.isNullOrEmpty(this.header.getAllasutus()) ? this.header.getIsikukood() : this.header.getAllasutus(),
                 	this.header.getAsutus());
             } else {
@@ -378,7 +372,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
         try {
             if (this.header != null) {
                 this.logService.addMetadataRequestLogEntry(documentId,
-                    requestDate, this.header.getInfosysteem(),
+                    requestDate, this.header.getInfosysteem(configuration.getXteeProducerName()),
                     Util.isNullOrEmpty(this.header.getAllasutus()) ? this.header.getIsikukood() : this.header.getAllasutus(),
                     this.header.getAsutus());
             } else {
@@ -412,7 +406,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
     	try {
             if (this.header != null) {
                 this.logService.addErrorLogEntry(this.header.getNimi(),
-                	documentId, errorDate, this.header.getInfosysteem(),
+                	documentId, errorDate, this.header.getInfosysteem(configuration.getXteeProducerName()),
                 	Util.isNullOrEmpty(this.header.getAllasutus()) ? this.header.getIsikukood() : this.header.getAllasutus(),
                 	level, logMessage);
             } else {
@@ -435,11 +429,12 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
      */
     public void checkHeader(CustomXTeeHeader headerParam) throws AditCodedException {
         if (header != null) {
-            if ((header.getIsikukood() == null) || (header.getIsikukood().length() < 1)) {
+        	String infosysteem = header.getInfosysteem(configuration.getXteeProducerName());
+            if (Util.isNullOrEmpty(header.getIsikukood())) {
                 throw new AditCodedException("request.header.undefined.personalCode");
-            } else if ((header.getInfosysteem() == null) || (header.getInfosysteem().length() < 1)) {
+            } else if (Util.isNullOrEmpty(infosysteem)) {
                 throw new AditCodedException("request.header.undefined.systemName");
-            } else if ((header.getAsutus() == null) || (header.getAsutus().length() < 1)) {
+            } else if (Util.isNullOrEmpty(header.getAsutus())) {
                 throw new AditCodedException("request.header.undefined.institution");
             }
         }

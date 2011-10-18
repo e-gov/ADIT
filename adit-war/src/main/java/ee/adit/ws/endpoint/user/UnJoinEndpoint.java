@@ -24,7 +24,7 @@ import ee.webmedia.xtee.annotation.XTeeService;
 /**
  * Implementation of "unJoin" web method (web service request). Contains request
  * input validation, request-specific workflow and response composition.
- * 
+ *
  * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
  * @author Jaak Lember, Interinx, jaak@interinx.com
  */
@@ -49,7 +49,7 @@ public class UnJoinEndpoint extends AbstractAditBaseEndpoint {
 
     /**
      * Executes "V1" version of "unJoin" request.
-     * 
+     *
      * @param requestObject
      *            Request body object
      * @return Response body object
@@ -63,10 +63,10 @@ public class UnJoinEndpoint extends AbstractAditBaseEndpoint {
         try {
             logger.debug("UnJoinEndpoint.v1 invoked.");
             CustomXTeeHeader header = this.getHeader();
-            String applicationName = header.getInfosysteem();
+            String applicationName = header.getInfosysteem(this.getConfiguration().getXteeProducerName());
 
             // Log request
-            Util.printHeader(header);
+            Util.printHeader(header, this.getConfiguration());
 
             // Check header for required fields
             checkHeader(header);
@@ -178,7 +178,7 @@ public class UnJoinEndpoint extends AbstractAditBaseEndpoint {
 
     /**
      * Gets user service.
-     * 
+     *
      * @return user service
      */
     public UserService getUserService() {
@@ -187,7 +187,7 @@ public class UnJoinEndpoint extends AbstractAditBaseEndpoint {
 
     /**
      * Sets user service.
-     * 
+     *
      * @param userService
      *     User service
      */

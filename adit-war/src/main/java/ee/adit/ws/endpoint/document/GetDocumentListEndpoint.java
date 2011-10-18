@@ -77,10 +77,10 @@ public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
             logger.debug("getDocumentList.v1 invoked.");
             GetDocumentListRequest request = (GetDocumentListRequest) requestObject;
             CustomXTeeHeader header = this.getHeader();
-            String applicationName = header.getInfosysteem();
+            String applicationName = header.getInfosysteem(this.getConfiguration().getXteeProducerName());
 
             // Log request
-            Util.printHeader(header);
+            Util.printHeader(header, this.getConfiguration());
             printRequest(request);
 
             // Check header for required fields

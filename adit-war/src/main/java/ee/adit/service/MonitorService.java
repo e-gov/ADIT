@@ -61,14 +61,14 @@ import ee.adit.util.Util;
 import ee.webmedia.xtee.client.service.XTeeAttachment;
 
 /**
- * 
+ *
  * Provides monitoring services. Monitoring consist of the following:
- * 
+ *
  * 1. Check database read 2. Check database write 3. Check application settings
  * (temporary folder)
- * 
+ *
  * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
- * 
+ *
  */
 public class MonitorService {
 
@@ -76,17 +76,17 @@ public class MonitorService {
      * Status OK.
      */
     public static final String OK = "OK";
-    
+
     /**
      * Status FAIL.
      */
     public static final String FAIL = "FAIL";
-    
+
     /**
      * Milliseconds.
      */
     public static final String MS = "ms";
-    
+
     /**
      * Seconds.
      */
@@ -96,12 +96,12 @@ public class MonitorService {
      * Component ADIT_DB_CONNECTION.
      */
     private static final String ADIT_DB_CONNECTION = "ADIT_DB_CONNECTION";
-    
+
     /**
      * Component ADIT_DB_CONNECTION_READ.
      */
     private static final String ADIT_DB_CONNECTION_READ = "ADIT_DB_CONNECTION_READ";
-    
+
     /**
      * Component ADIT_DB_CONNECTION_WRITE.
      */
@@ -111,12 +111,12 @@ public class MonitorService {
      * Component ADIT_UK_CONNECTION.
      */
     private static final String ADIT_UK_CONNECTION = "ADIT_UK_CONNECTION";
-    
+
     /**
      * Component ADIT_UK_CONNECTION_READ.
      */
     private static final String ADIT_UK_CONNECTION_READ = "ADIT_UK_CONNECTION_READ";
-    
+
     /**
      * Component ADIT_UK_CONNECTION_WRITE.
      */
@@ -153,7 +153,7 @@ public class MonitorService {
 
     /**
      * Check ADIT and DVK database read functions.
-     * 
+     *
      */
     public void check() {
         logger.info("ADIT monitor - Checking database and application.");
@@ -216,7 +216,7 @@ public class MonitorService {
 
     /**
      * Check database read.
-     * 
+     *
      * @param documentID test document ID
      */
     public void checkDBRead(long documentID) {
@@ -254,7 +254,7 @@ public class MonitorService {
 
     /**
      * Check database write.
-     * 
+     *
      * @param documentID test document ID
      */
     public void checkDBWrite(long documentID) {
@@ -420,7 +420,7 @@ public class MonitorService {
 
     /**
      * Check DVK database read.
-     * 
+     *
      * @param messageDhlId DVK test message ID
      */
     public void checkDVKRead(long messageDhlId) {
@@ -457,7 +457,7 @@ public class MonitorService {
 
     /**
      * Check DVK database read.
-     * 
+     *
      * @param messageDhlId DVK test document ID
      */
     public void checkDVKWrite(long messageDhlId) {
@@ -500,7 +500,7 @@ public class MonitorService {
 
     /**
      * Tests "saveDocument" request.
-     * 
+     *
      * @param serviceURI web-service URI
      * @return test result
      */
@@ -566,7 +566,7 @@ public class MonitorService {
             logger.debug("Attachment added with id: 'document'");
 
             CustomXTeeServiceConfiguration xTeeServiceConfiguration = new CustomXTeeServiceConfiguration();
-            xTeeServiceConfiguration.setDatabase("ametlikud-dokumendid");
+            xTeeServiceConfiguration.setDatabase(this.getConfiguration().getXteeProducerName());
             xTeeServiceConfiguration.setIdCode(this.getMonitorConfiguration().getUserCode());
             xTeeServiceConfiguration.setInstitution(this.getMonitorConfiguration().getInstitutionCode());
             xTeeServiceConfiguration.setMethod("saveDocument");
@@ -618,7 +618,7 @@ public class MonitorService {
 
     /**
      * Tests "getDocument" request.
-     * 
+     *
      * @param serviceURI web-service URI
      * @return test result
      */
@@ -646,7 +646,7 @@ public class MonitorService {
             request.setIncludeFileContents(true);
 
             CustomXTeeServiceConfiguration xTeeServiceConfiguration = new CustomXTeeServiceConfiguration();
-            xTeeServiceConfiguration.setDatabase("ametlikud-dokumendid");
+            xTeeServiceConfiguration.setDatabase(this.getConfiguration().getXteeProducerName());
             xTeeServiceConfiguration.setIdCode(this.getMonitorConfiguration().getUserCode());
             xTeeServiceConfiguration.setInstitution(this.getMonitorConfiguration().getInstitutionCode());
             xTeeServiceConfiguration.setMethod("getDocument");
@@ -749,7 +749,7 @@ public class MonitorService {
 
     /**
      * Tests "getDocument" request.
-     * 
+     *
      * @param serviceURI web-service URI
      * @return test result
      */
@@ -787,7 +787,7 @@ public class MonitorService {
             String base64zippedFile = Util.gzipAndBase64Encode(tmpFile, getConfiguration().getTempDir(), true);
 
             CustomXTeeServiceConfiguration xTeeServiceConfiguration = new CustomXTeeServiceConfiguration();
-            xTeeServiceConfiguration.setDatabase("ametlikud-dokumendid");
+            xTeeServiceConfiguration.setDatabase(this.getConfiguration().getXteeProducerName());
             xTeeServiceConfiguration.setIdCode(this.getMonitorConfiguration().getUserCode());
             xTeeServiceConfiguration.setInstitution(this.getMonitorConfiguration().getInstitutionCode());
             xTeeServiceConfiguration.setMethod("getUserInfo");
@@ -883,7 +883,7 @@ public class MonitorService {
 
     /**
      * Tests if documents are sent to DVK client.
-     * 
+     *
      * @return test result
      */
     public MonitorResult checkDvkSend() {
@@ -938,7 +938,7 @@ public class MonitorService {
 
     /**
      * Checks if documents are being received from DVK.
-     * 
+     *
      * @return test result
      */
     @Transactional
@@ -1003,8 +1003,8 @@ public class MonitorService {
 
     /**
      * Check if notifications have been sent.
-     * 
-     * @return test result 
+     *
+     * @return test result
      */
     public MonitorResult checkNotifications() {
         MonitorResult result = new MonitorResult();
@@ -1050,7 +1050,7 @@ public class MonitorService {
 
     /**
      * Check error log.
-     * 
+     *
      * @return test result
      */
     public MonitorResult checkErrorLog() {
@@ -1096,7 +1096,7 @@ public class MonitorService {
 
     /**
      * Handle application exception.
-     * 
+     *
      * @param e exception
      */
     public void handleException(Exception e) {
@@ -1106,7 +1106,7 @@ public class MonitorService {
     /**
      * Marshals the object to XML and stores the result in a temporary file. The
      * location of the temporary file is specified by {@link Configuration}
-     * 
+     *
      * @param object
      *            the object to be marshalled.
      * @return the absolute path to the temporary file created.
@@ -1135,7 +1135,7 @@ public class MonitorService {
 
         return result;
     }
-    
+
     public DocumentDAO getDocumentDAO() {
         return documentDAO;
     }
@@ -1175,7 +1175,7 @@ public class MonitorService {
     public void setDocumentService(DocumentService documentService) {
         this.documentService = documentService;
     }
-    
+
     public Marshaller getMarshaller() {
         return marshaller;
     }

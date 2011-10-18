@@ -13,6 +13,7 @@ import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 
 import ee.adit.exception.AditInternalException;
+import ee.adit.util.Configuration;
 import ee.adit.util.Util;
 import ee.adit.util.XRoadQueryName;
 
@@ -42,6 +43,30 @@ public class AditEndpointMapping extends AbstractQNameEndpointMapping {
 
     static {
         transformerFactory = TransformerFactory.newInstance();
+    }
+
+    /**
+     * Configuration.
+     */
+    private Configuration configuration;
+
+    /**
+     * Retrieves the configuration.
+     *
+     * @return Application configuration as {@link Configuration} object.
+     */
+    public Configuration getConfiguration() {
+        return configuration;
+    }
+
+    /**
+     * Sets the configuration.
+     *
+     * @param configuration
+     *            Application configuration as {@link Configuration} object.
+     */
+    public void setConfiguration(Configuration configuration) {
+        this.configuration = configuration;
     }
 
     /**
@@ -79,7 +104,7 @@ public class AditEndpointMapping extends AbstractQNameEndpointMapping {
 
             SaajSoapMessage request = (SaajSoapMessage) messageContext.getRequest();
 
-            // If listMethods method, don't expext SOAP headers
+            // If listMethods method, don't expect SOAP headers
             if (requestQName != null && "listMethods".equalsIgnoreCase(requestQName.getLocalPart())) {
                 logger.debug("Mapping to listMethods method. Ignoring SOAP headers.");
             } else {
@@ -103,8 +128,9 @@ public class AditEndpointMapping extends AbstractQNameEndpointMapping {
 
                         if (queryName == null || queryName.getName() == null) {
                             throw new AditInternalException(
-                                    "X-Road query header name does not match the required format 'ametlikud-dokumendid.[methodName].v[versionNumber]': "
-                                            + requestNameHeaderValue);
+                                "X-Road query header name does not match the required format '"
+                            	+ configuration.getXteeProducerName() + ".[methodName].v[versionNumber]': "
+                                + requestNameHeaderValue);
                         }
 
                         if (!queryName.getName().equalsIgnoreCase(localName)) {

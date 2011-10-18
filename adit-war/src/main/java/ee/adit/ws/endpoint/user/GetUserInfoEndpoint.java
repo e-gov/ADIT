@@ -29,7 +29,7 @@ import ee.webmedia.xtee.annotation.XTeeService;
 /**
  * Implementation of "getUserInfo" web method (web service request). Contains
  * request input validation, request-specific workflow and response composition.
- * 
+ *
  * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
  * @author Jaak Lember, Interinx, jaak@interinx.com
  */
@@ -54,7 +54,7 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 
     /**
      * Executes "V1" version of "getUserInfo" request.
-     * 
+     *
      * @param requestObject
      *            Request body object
      * @return Response body object
@@ -69,7 +69,7 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 
             GetUserInfoRequest request = (GetUserInfoRequest) requestObject;
             CustomXTeeHeader header = this.getHeader();
-            String applicationName = header.getInfosysteem();
+            String applicationName = header.getInfosysteem(this.getConfiguration().getXteeProducerName());
 
             // Check header for required fields
             checkHeader(header);
@@ -130,7 +130,7 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
                                 if (!resultUser.isHasJoined()) {
 	                            	AditCodedException defaultException = new AditCodedException("user.nonExistent");
 	                                defaultException.setParameters(new Object[] {resultUser.getUserCode()});
-	                                
+
 	                                ArrayOfMessage defaultMessages = new ArrayOfMessage();
 	                                defaultMessages.setMessage(this.getMessageService().getMessages(defaultException));
 	                                resultUser.setMessages(defaultMessages);
@@ -138,7 +138,7 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
                                 	resultUser.setMessages(new ArrayOfMessage());
                                 }
                             }
-                            
+
                             GetUserInfoResponseAttachment responseAttachment = new GetUserInfoResponseAttachment();
                             responseAttachment.setUserList(userInfoList);
 
@@ -228,7 +228,7 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
         response.setMessages(arrayOfMessage);
         return response;
     }
-    
+
     public UserService getUserService() {
         return userService;
     }

@@ -29,7 +29,7 @@ import ee.webmedia.xtee.annotation.XTeeService;
  * Implementation of "setNotifications" web method (web service request).
  * Contains request input validation, request-specific workflow and response
  * composition.
- * 
+ *
  * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
  * @author Jaak Lember, Interinx, jaak@interinx.com
  */
@@ -38,7 +38,7 @@ import ee.webmedia.xtee.annotation.XTeeService;
 public class SetNotificationsEndpoint extends AbstractAditBaseEndpoint {
 
     private static Logger logger = Logger.getLogger(JoinEndpoint.class);
-    
+
     private UserService userService;
 
     @Override
@@ -54,7 +54,7 @@ public class SetNotificationsEndpoint extends AbstractAditBaseEndpoint {
 
     /**
      * Executes "V1" version of "setNotifications" request.
-     * 
+     *
      * @param requestObject
      *            Request body object
      * @return Response body object
@@ -69,10 +69,10 @@ public class SetNotificationsEndpoint extends AbstractAditBaseEndpoint {
             logger.debug("SetNotificationsEndpoint.v1 invoked.");
             SetNotificationsRequest request = (SetNotificationsRequest) requestObject;
             CustomXTeeHeader header = this.getHeader();
-            String applicationName = header.getInfosysteem();
+            String applicationName = header.getInfosysteem(this.getConfiguration().getXteeProducerName());
 
             // Log request
-            Util.printHeader(header);
+            Util.printHeader(header, this.getConfiguration());
             printRequest(request);
 
             // Check header for required fields
@@ -200,7 +200,7 @@ public class SetNotificationsEndpoint extends AbstractAditBaseEndpoint {
      * <br>
      * Throws {@link AditCodedException} if any errors in request data are
      * found.
-     * 
+     *
      * @param request
      *            Request body as {@link SetNotificationsRequest} object.
      * @throws AditCodedException
@@ -219,7 +219,7 @@ public class SetNotificationsEndpoint extends AbstractAditBaseEndpoint {
 
     /**
      * Writes request parameters to application DEBUG log.
-     * 
+     *
      * @param request
      *            Request body as {@link SetNotificationsRequest} object.
      */

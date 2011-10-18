@@ -5,17 +5,17 @@
 	<class name="ee.adit.pojo.ListMethodsRequest">
 		<map-to xml="listMethods" ns-uri="http://x-tee.riik.ee/xsd/xtee.xsd"/>
 	</class>
-	
+
 	<class name="ee.adit.pojo.ListMethodsResponse">
 		<map-to xml="keha" />
 		<field name="item" type="java.lang.String" collection="arraylist">
 			<bind-xml name="item"/>
 		</field>
 	</class>
-	
+
 	<!-- Join -->
 	<class name="ee.adit.pojo.JoinRequest">
-		<map-to xml="join" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="join" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
 		<field name="userType" type="java.lang.String">
 			<bind-xml name="userType" location="keha" />
 		</field>
@@ -35,7 +35,7 @@
 
 	<!-- UnJoin -->
 	<class name="ee.adit.pojo.UnJoinRequest">
-		<map-to xml="unJoin" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="unJoin" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
 		<field name="keha" type="java.lang.String">
 			<bind-xml name="keha" />
 		</field>
@@ -52,7 +52,7 @@
 
 	<!-- GetJoined -->
 	<class name="ee.adit.pojo.GetJoinedRequest">
-		<map-to xml="getJoined" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="getJoined" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
 		<field name="maxResults" type="java.math.BigInteger">
 			<bind-xml name="maxResults" location="keha" />
 		</field>
@@ -82,7 +82,7 @@
 			<bind-xml name="user" location="user_list" />
 		</field>
 	</class>
- 	
+
  	<class name="ee.adit.pojo.GetJoinedResponseAttachmentUser">
  		<map-to xml="user" />
  		<field name="code" type="java.lang.String">
@@ -95,29 +95,29 @@
 			<bind-xml name="type" />
 		</field>
  	</class>
- 	
+
  	<!-- GetUserInfo -->
  	<class name="ee.adit.pojo.GetUserInfoRequest">
-		<map-to xml="getUserInfo" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="getUserInfo" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
 		<field name="userList" type="ee.adit.pojo.GetUserInfoRequestUserList">
 			<bind-xml name="userList" location="keha" />
 		</field>
 	</class>
- 	
+
  	<class name="ee.adit.pojo.GetUserInfoRequestUserList">
-		<map-to xml="userList" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="userList" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
 		<field name="href" type="java.lang.String">
 			<bind-xml name="href" node="attribute" />
 		</field>
 	</class>
- 	
+
  	<class name="ee.adit.pojo.GetUserInfoRequestAttachmentUserList">
 		<map-to xml="getUserInfoRequestAttachmentV1" />
 		<field name="codes" type="java.lang.String" collection="arraylist">
 			<bind-xml name="code" location="user_list"/>
 		</field>
 	</class>
-	
+
  	<class name="ee.adit.pojo.GetUserInfoResponse">
 		<map-to xml="keha" />
 		<field name="success" type="ee.adit.pojo.Success" >
@@ -129,14 +129,14 @@
 			<bind-xml name="userList" />
 		</field>
 	</class>
- 	
+
  	<class name="ee.adit.pojo.GetUserInfoResponseAttachment">
  		<map-to xml="getUserInfoResponseAttachmentV1" />
  		<field name="userList" type="ee.adit.pojo.GetUserInfoResponseAttachmentUser" collection="arraylist">
 			<bind-xml name="user" location="user_list" />
 		</field>
  	</class>
- 	
+
  	<class name="ee.adit.pojo.GetUserInfoResponseAttachmentUser">
  		<map-to xml="user" />
  		<field name="userCode" type="java.lang.String">
@@ -167,12 +167,12 @@
 			<bind-xml name="messages" />
 		</field>
  	</class>
- 	
+
  	<!-- GetNotifications -->
 	<class name="ee.adit.pojo.GetNotificationsRequest">
-		<map-to xml="getNotifications" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="getNotifications" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
 	</class>
-	
+
 	<class name="ee.adit.pojo.GetNotificationsResponse">
 		<map-to xml="keha" />
 		<field name="success" type="boolean" >
@@ -194,7 +194,7 @@
 	<class name="ee.adit.pojo.ArrayOfNotification">
 		<field name="notification" type="ee.adit.pojo.Notification" collection="arraylist" />
 	</class>
-	
+
  	<class name="ee.adit.pojo.Notification">
  		<map-to xml="notification" />
 		<field name="type" type="java.lang.String">
@@ -215,15 +215,15 @@
 		<field name="address" type="java.lang.String"/>
 		<field name="redirectedTo" type="java.lang.String"/>
 	</class>
- 	
+
  	 <!-- SetNotifications -->
 	<class name="ee.adit.pojo.SetNotificationsRequest">
-		<map-to xml="setNotifications" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="setNotifications" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
 		<field name="notifications" type="ee.adit.pojo.ArrayOfNotification">
 			<bind-xml name="notifications" location="keha" />
 		</field>
 	</class>
-	
+
 	<class name="ee.adit.pojo.SetNotificationsResponse">
 		<map-to xml="keha" />
 		<field name="success" type="boolean" >
@@ -232,8 +232,8 @@
 			<bind-xml name="messages" />
 		</field>
 	</class>
- 	
- 	
+
+
  	<!-- Document global -->
  	<class name="ee.adit.pojo.OutputDocumentFile">
 		<map-to xml="file"/>
@@ -259,7 +259,7 @@
 			<bind-xml name="sysTempFile"/>
 		</field>
 	</class>
- 	
+
  	<class name="ee.adit.pojo.OutputDocumentFilesList">
 		<map-to xml="document_files"/>
 		<field name="totalFiles" type="java.lang.Integer">
@@ -272,14 +272,14 @@
 			<bind-xml name="file" location="document_files"/>
 		</field>
 	</class>
- 	
+
  	<class name="ee.adit.pojo.DocumentSignatureList">
 		<map-to xml="signatures"/>
 		<field name="signatures" type="ee.adit.pojo.Signature" collection="arraylist">
 			<bind-xml name="signature" />
 		</field>
 	</class>
- 	
+
  	<class name="ee.adit.pojo.Signature">
 		<map-to xml="signature"/>
 		<field name="signerCode" type="java.lang.String">
@@ -320,7 +320,7 @@
 			<bind-xml name="user" />
 		</field>
 	</class>
- 	
+
  	<class name="ee.adit.pojo.DocumentSharingRecipient">
 		<map-to xml="user"/>
 		<field name="code" type="java.lang.String">
@@ -348,7 +348,7 @@
 			<bind-xml name="shared_for_signing"/>
 		</field>
 	</class>
- 	
+
  	<class name="ee.adit.pojo.DocumentSendingData">
 		<map-to xml="sent_to"/>
 		<field name="sentTime" type="java.util.Date">
@@ -358,7 +358,7 @@
 			<bind-xml name="user" />
 		</field>
 	</class>
- 	
+
  	<class name="ee.adit.pojo.DocumentSendingRecipient">
 		<map-to xml="user"/>
 		<field name="code" type="java.lang.String">
@@ -380,7 +380,7 @@
 			<bind-xml name="dvk_status_id"/>
 		</field>
 	</class>
- 	
+
  	<class name="ee.adit.pojo.OutputDocument">
 		<map-to xml="document"/>
 		<field name="id" type="java.lang.Long">
@@ -474,10 +474,10 @@
 			<bind-xml name="document_files" />
 		</field>
 	</class>
-	
+
  	<!-- GetDocumentList -->
  	<class name="ee.adit.pojo.GetDocumentListRequest">
-		<map-to xml="getDocumentList" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="getDocumentList" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
 		<field name="folder" type="java.lang.String">
 			<bind-xml name="folder" location="keha" />
 		</field>
@@ -524,7 +524,7 @@
 			<bind-xml name="sort_order" location="keha" />
 		</field>
 	</class>
-	
+
 	<class name="ee.adit.pojo.GetDocumentListResponse">
 		<map-to xml="keha" />
 		<field name="success" type="java.lang.Boolean" >
@@ -536,14 +536,14 @@
 			<bind-xml name="documentList" />
 		</field>
 	</class>
-	
+
 	<class name="ee.adit.pojo.GetDocumentListResponseList">
 		<map-to xml="documentList" />
 		<field name="href" type="java.lang.String">
 			<bind-xml name="href" node="attribute" />
 		</field>
 	</class>
-	
+
 	<class name="ee.adit.pojo.GetDocumentListResponseAttachment">
 		<map-to xml="getDocumentListResponseAttachmentV1" />
 		<field name="total" type="java.lang.Integer">
@@ -553,11 +553,11 @@
 			<bind-xml name="document" location="document_list" />
 		</field>
 	</class>
-	
-	
+
+
  	<!-- GetDocument -->
  	<class name="ee.adit.pojo.GetDocumentRequest">
-		<map-to xml="getDocument" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="getDocument" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
 		<field name="documentId" type="long">
 			<bind-xml name="document_id" location="keha" />
 		</field>
@@ -568,7 +568,7 @@
 			<bind-xml name="file_types" location="keha" />
 		</field>
 	</class>
-	
+
 	<class name="ee.adit.pojo.GetDocumentResponse">
 		<map-to xml="keha" />
 		<field name="success" type="java.lang.Boolean" >
@@ -580,24 +580,24 @@
 			<bind-xml name="document" />
 		</field>
 	</class>
-	
+
 	<class name="ee.adit.pojo.GetDocumentResponseDocument">
 		<map-to xml="document" />
 		<field name="href" type="java.lang.String">
 			<bind-xml name="href" node="attribute" />
 		</field>
 	</class>
-	
+
 	<class name="ee.adit.pojo.GetDocumentResponseAttachment">
 		<map-to xml="getDocumentResponseAttachmentV1" />
 		<field name="document" type="ee.adit.pojo.OutputDocument">
 			<bind-xml name="document" />
 		</field>
 	</class>
- 	
+
  	<!-- GetDocumentFile -->
  	<class name="ee.adit.pojo.GetDocumentFileRequest">
-		<map-to xml="getDocumentFile" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="getDocumentFile" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
 		<field name="documentId" type="long">
 			<bind-xml name="document_id" location="keha" />
 		</field>
@@ -605,7 +605,7 @@
 			<bind-xml name="file_id_list" location="keha" />
 		</field>
 	</class>
-	
+
 	<class name="ee.adit.pojo.GetDocumentFileResponse">
 		<map-to xml="keha" />
 		<field name="success" type="java.lang.Boolean" >
@@ -617,36 +617,36 @@
 			<bind-xml name="files" />
 		</field>
 	</class>
-	
+
 	<class name="ee.adit.pojo.GetDocumentFileResponseFiles">
 		<map-to xml="files" />
 		<field name="href" type="java.lang.String">
 			<bind-xml name="href" node="attribute" />
 		</field>
 	</class>
-	
+
 	<class name="ee.adit.pojo.GetDocumentFileResponseAttachment">
 		<map-to xml="getDocumentFileResponseAttachmentV1" />
 		<field name="files" type="ee.adit.pojo.OutputDocumentFile" collection="arraylist">
 			<bind-xml name="file" location="files"/>
 		</field>
 	</class>
- 	
+
  	<!-- SaveDocument -->
  	<class name="ee.adit.pojo.SaveDocumentRequest">
-		<map-to xml="saveDocument" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="saveDocument" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
 		<field name="document" type="ee.adit.pojo.SaveDocumentRequestDocument">
 			<bind-xml name="document" location="keha" />
 		</field>
 	</class>
-	
+
 	<class name="ee.adit.pojo.SaveDocumentRequestDocument">
 		<map-to xml="document" />
 		<field name="href" type="java.lang.String">
 			<bind-xml name="href" node="attribute" />
 		</field>
 	</class>
-	
+
 	<class name="ee.adit.pojo.SaveDocumentRequestAttachment">
 		<map-to xml="saveDocumentRequestAttachmentV1" />
 		<field name="id" type="java.lang.Long">
@@ -663,12 +663,12 @@
 		</field>
 		<field name="previousDocumentID" type="java.lang.Long">
 			<bind-xml name="previous_document_id" location="document" />
-		</field>		
+		</field>
 		<field name="files" type="ee.adit.pojo.OutputDocumentFile" collection="arraylist">
 			<bind-xml name="file" location="document/files"/>
 		</field>
 	</class>
-	
+
 	<class name="ee.adit.pojo.SaveDocumentResponse">
 		<map-to xml="keha" />
 		<field name="success" type="ee.adit.pojo.Success" >
@@ -683,10 +683,10 @@
 			<bind-xml name="document" />
 		</field>
 	</class>
-	
+
  	<!-- SaveDocumentFile -->
  	<class name="ee.adit.pojo.SaveDocumentFileRequest">
-		<map-to xml="saveDocumentFile" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="saveDocumentFile" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
 		<field name="documentId" type="java.lang.Long">
 			<bind-xml name="document_id" location="keha" />
 		</field>
@@ -694,21 +694,21 @@
 			<bind-xml name="file" location="keha" />
 		</field>
 	</class>
-	
+
 	<class name="ee.adit.pojo.SaveDocumentFileRequestFile">
-		<map-to xml="file" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="file" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
 		<field name="href" type="java.lang.String">
 			<bind-xml name="href" node="attribute" />
 		</field>
 	</class>
-	
+
 	<class name="ee.adit.pojo.SaveDocumentFileRequestAttachment">
 		<map-to xml="saveDocumentFileAttachmentV1" />
 		<field name="file" type="ee.adit.pojo.OutputDocumentFile">
 			<bind-xml name="file" />
 		</field>
 	</class>
-	
+
 	<class name="ee.adit.pojo.SaveDocumentFileResponse">
 		<map-to xml="keha" />
 		<field name="success" type="boolean" >
@@ -723,10 +723,10 @@
 			<bind-xml name="file" />
 		</field>
 	</class>
- 	
+
 	<!-- DeleteDocumentFile -->
 	<class name="ee.adit.pojo.DeleteDocumentFileRequest">
-		<map-to xml="deleteDocumentFile" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="deleteDocumentFile" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
 		<field name="documentId" type="long">
 			<bind-xml name="document_id" location="keha" />
 		</field>
@@ -743,10 +743,10 @@
 			<bind-xml name="messages" />
 		</field>
 	</class>
- 	
+
 	<!-- DeleteDocument -->
 	<class name="ee.adit.pojo.DeleteDocumentRequest">
-		<map-to xml="deleteDocument" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="deleteDocument" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
 		<field name="documentId" type="long">
 			<bind-xml name="document_id" location="keha" />
 		</field>
@@ -760,10 +760,10 @@
 			<bind-xml name="messages" />
 		</field>
 	</class>
-	
+
 	<!-- DeflateDocument -->
 	<class name="ee.adit.pojo.DeflateDocumentRequest">
-		<map-to xml="deflateDocument" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="deflateDocument" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
 		<field name="documentId" type="long">
 			<bind-xml name="document_id" location="keha" />
 		</field>
@@ -777,10 +777,10 @@
 			<bind-xml name="messages" />
 		</field>
 	</class>
-	
+
 	<!-- PrepareSignature -->
 	<class name="ee.adit.pojo.PrepareSignatureRequest">
-		<map-to xml="prepareSignature" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="prepareSignature" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
 		<field name="documentId" type="java.lang.Long">
 			<bind-xml name="document_id" location="keha" />
 		</field>
@@ -803,9 +803,9 @@
 			<bind-xml name="signer_certificate" location="keha" />
 		</field>
 	</class>
-	
+
 	<class name="ee.adit.pojo.PrepareSignatureRequestCert">
-		<map-to xml="signer_certificate" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="signer_certificate" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
 		<field name="href" type="java.lang.String">
 			<bind-xml name="href" node="attribute" />
 		</field>
@@ -822,10 +822,10 @@
 			<bind-xml name="signature_hash" />
 		</field>
 	</class>
-	
+
 	<!-- ConfirmSignature -->
 	<class name="ee.adit.pojo.ConfirmSignatureRequest">
-		<map-to xml="confirmSignature" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="confirmSignature" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
 		<field name="documentId" type="java.lang.Long">
 			<bind-xml name="document_id" location="keha" />
 		</field>
@@ -833,9 +833,9 @@
 			<bind-xml name="signature" location="keha" />
 		</field>
 	</class>
-	
+
 	<class name="ee.adit.pojo.ConfirmSignatureRequestSignature">
-		<map-to xml="signature" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="signature" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
 		<field name="href" type="java.lang.String">
 			<bind-xml name="href" node="attribute" />
 		</field>
@@ -849,11 +849,11 @@
 			<bind-xml name="messages" />
 		</field>
 	</class>
- 	
- 	
+
+
  	<!-- ShareDocument -->
 	<class name="ee.adit.pojo.ShareDocumentRequest">
-		<map-to xml="shareDocument" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="shareDocument" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
 		<field name="documentId" type="java.lang.Long">
 			<bind-xml name="document_id" location="keha" />
 		</field>
@@ -879,10 +879,10 @@
 			<bind-xml name="recipient_list" />
 		</field>
 	</class>
- 	
+
  	<!-- UnShareDocument -->
 	<class name="ee.adit.pojo.UnShareDocumentRequest">
-		<map-to xml="unShareDocument" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="unShareDocument" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
 		<field name="documentId" type="java.lang.Long">
 			<bind-xml name="document_id" location="keha" />
 		</field>
@@ -902,10 +902,10 @@
 			<bind-xml name="recipient_list" />
 		</field>
 	</class>
- 	
+
  	<!-- MarkDocumentViewed -->
 	<class name="ee.adit.pojo.MarkDocumentViewedRequest">
-		<map-to xml="markDocumentViewed" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="markDocumentViewed" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
 		<field name="documentId" type="java.lang.Long">
 			<bind-xml name="document_id" location="keha" />
 		</field>
@@ -919,10 +919,10 @@
 			<bind-xml name="messages" />
 		</field>
 	</class>
- 	
+
  	<!-- ModifyStatus -->
 	<class name="ee.adit.pojo.ModifyStatusRequest">
-		<map-to xml="modifyStatus" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="modifyStatus" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
 		<field name="documentId" type="java.lang.Long">
 			<bind-xml name="document_id" location="keha" />
 		</field>
@@ -939,10 +939,10 @@
 			<bind-xml name="messages" />
 		</field>
 	</class>
- 	
+
  	<!-- GetDocumentHistory -->
 	<class name="ee.adit.pojo.GetDocumentHistoryRequest">
-		<map-to xml="getDocumentHistory" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="getDocumentHistory" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
 		<field name="documentId" type="java.lang.Long">
 			<bind-xml name="document_id" location="keha" />
 		</field>
@@ -959,14 +959,14 @@
 			<bind-xml name="document_history_list" />
 		</field>
 	</class>
-	
+
 	<class name="ee.adit.pojo.GetDocumentHistoryResponseDocument">
 		<map-to xml="document_history_list" />
 		<field name="href" type="java.lang.String">
 			<bind-xml name="href" node="attribute" />
 		</field>
 	</class>
-	
+
 	<class name="ee.adit.pojo.GetDocumentHistoryResponseAttachment">
 		<map-to xml="getDocumentHistoryResponseAttachmentV1" />
 		<field name="id" type="java.lang.Long">
@@ -979,7 +979,7 @@
 			<bind-xml name="activity" location="document/activity_list" />
 		</field>
 	</class>
-	
+
 	<class name="ee.adit.pojo.Activity">
 		<map-to xml="activity" />
 		<field name="time" type="java.util.Date" />
@@ -993,7 +993,7 @@
 		<field name="description" type="java.lang.String" />
 		<field name="application" type="java.lang.String" />
 	</class>
-	
+
 	<class name="ee.adit.pojo.ActivityActor">
 		<map-to xml="actor" />
 		<field name="code" type="java.lang.String" />
@@ -1005,16 +1005,16 @@
 			<bind-xml name="user_name" />
 		</field>
 	</class>
-	
+
 	<class name="ee.adit.pojo.ActivitySubject">
 		<map-to xml="subject" />
 		<field name="code" type="java.lang.String" />
 		<field name="name" type="java.lang.String" />
 	</class>
- 	
+
  	<!-- SendDocument -->
  	<class name="ee.adit.pojo.SendDocumentRequest">
-		<map-to xml="sendDocument" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" />
+		<map-to xml="sendDocument" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
 		<field name="documentId" type="java.lang.Long">
 			<bind-xml name="document_id" location="keha" />
 		</field>
@@ -1034,7 +1034,7 @@
 			<bind-xml name="recipient_list" />
 		</field>
 	</class>
- 	
+
  	<!-- Common -->
  	<class name="ee.adit.pojo.Success">
 		<map-to xml="success" />
@@ -1057,72 +1057,72 @@
 			<bind-xml name="lang" node="attribute"/>
 		</field>
 	</class>
- 	
+
  	<class name="ee.adit.pojo.UserList">
 		<map-to xml="userList" />
 		<field name="href" type="java.lang.String">
 			<bind-xml name="href" node="attribute"/>
 		</field>
 	</class>
- 	
+
 	<class name="ee.adit.pojo.ArrayOfFileId">
 		<map-to xml="file_id_list" />
 		<field name="fileId" type="java.lang.Long" collection="arraylist">
 			<bind-xml name="file_id" />
 		</field>
 	</class>
-	
+
 	<class name="ee.adit.pojo.ArrayOfUserCode">
 		<map-to xml="recipient_list" />
 		<field name="code" type="java.lang.String" collection="arraylist">
 			<bind-xml name="code" />
 		</field>
 	</class>
-	
+
 	<class name="ee.adit.pojo.RecipientStatus">
 		<map-to xml="recipient" />
 		<field name="code" type="java.lang.String" />
 		<field name="success" type="boolean" />
 		<field name="messages" type="ee.adit.pojo.ArrayOfMessage" />
 	</class>
-	
+
 	<class name="ee.adit.pojo.ArrayOfRecipientStatus">
 		<map-to xml="recipient_list" />
 		<field name="recipient" type="ee.adit.pojo.RecipientStatus" collection="arraylist" />
 	</class>
-	
+
 	<class name="ee.adit.pojo.ArrayOfDocumentType">
 		<field name="documentType" type="java.lang.String" collection="arraylist">
 			<bind-xml name="document_type" />
 		</field>
 	</class>
-	
+
 	<class name="ee.adit.pojo.ArrayOfFileType">
 		<field name="fileType" type="java.lang.String" collection="arraylist">
 			<bind-xml name="file_type" />
 		</field>
 	</class>
-	
+
 	<class name="ee.adit.pojo.ArrayOfDocumentDvkStatus">
 		<field name="statusId" type="java.lang.Long" collection="arraylist">
 			<bind-xml name="status_id" />
 		</field>
 	</class>
-	
+
 	<class name="ee.adit.pojo.ArrayOfDocumentWorkflowStatus">
 		<field name="statusId" type="java.lang.Long" collection="arraylist">
 			<bind-xml name="status_id" />
 		</field>
 	</class>
-	
+
 	<class name="ee.adit.pojo.ArrayOfCreatorApplication">
 		<field name="creatorApplication" type="java.lang.String" collection="arraylist">
 			<bind-xml name="creator_application" />
 		</field>
-	</class>	
-	
+	</class>
+
 	<!-- Monitoring request/response messages -->
-	
+
 	<class name="ee.adit.pojo.SaveDocumentRequestAttachmentMonitor">
 		<map-to xml="saveDocumentRequestAttachmentV1" />
 		<field name="id" type="java.lang.Long">
@@ -1139,12 +1139,12 @@
 		</field>
 		<field name="previousDocumentID" type="java.lang.Long">
 			<bind-xml name="previous_document_id" location="document" />
-		</field>		
+		</field>
 		<field name="files" type="ee.adit.pojo.OutputDocumentFileMonitor" collection="arraylist">
 			<bind-xml name="file" location="document/files"/>
 		</field>
 	</class>
-	
+
 	<class name="ee.adit.pojo.OutputDocumentFileMonitor">
 		<map-to xml="file"/>
 		<field name="id" type="java.lang.Long">
@@ -1169,14 +1169,14 @@
 			<bind-xml name="data"/>
 		</field>
 	</class>
-	
+
 	<class name="ee.adit.pojo.SaveDocumentResponseMonitor">
 		<map-to xml="saveDocumentResponse" />
 		<field name="keha" type="ee.adit.pojo.SaveDocumentResponseMonitorKeha" >
 			<bind-xml name="keha" />
 		</field>
 	</class>
-	
+
 	<class name="ee.adit.pojo.SaveDocumentResponseMonitorKeha">
 		<map-to xml="keha" />
 		<field name="success" type="boolean" >
@@ -1188,14 +1188,14 @@
 			<bind-xml name="document_id" />
 		</field>
 	</class>
-	
+
 	<class name="ee.adit.pojo.ArrayOfMessageMonitor">
 		<map-to xml="messages" />
 		<field name="message" type="java.lang.String" collection="arraylist">
 			<bind-xml name="message" />
 		</field>
 	</class>
-	
+
 	<class name="ee.adit.pojo.GetDocumentResponseMonitor">
 		<map-to xml="getDocumentResponse" />
 		<field name="success" type="java.lang.Boolean">
@@ -1208,7 +1208,7 @@
 			<bind-xml name="document" location="keha" />
 		</field>
 	</class>
-	
+
 	<class name="ee.adit.pojo.GetUserInfoResponseMonitor">
 		<map-to xml="getUserInfoResponse" />
 		<field name="success" type="java.lang.Boolean" >
@@ -1221,8 +1221,8 @@
 			<bind-xml name="userList" location="keha" />
 		</field>
 	</class>
-	
-	<!-- Notifications -->		
+
+	<!-- Notifications -->
 	<class name="ee.adit.pojo.notification.LisaSyndmusRequest">
 		<map-to xml="lisaSyndmus" ns-uri="http://producers.teavituskalender.xtee.riik.ee/producer/teavituskalender"/>
 		<field name="nahtavOmanikule" type="java.lang.Boolean" >
@@ -1250,7 +1250,7 @@
 			<bind-xml name="lopp" location="keha" />
 		</field>
 	</class>
-	
+
 	<class name="ee.adit.pojo.notification.LisaSyndmusRequestLugejad">
 		<map-to xml="lugejad" ns-uri="http://producers.teavituskalender.xtee.riik.ee/producer/teavituskalender" ns-prefix="ns5"/>
 		<field name="kasutajad" type="ee.adit.pojo.notification.LisaSyndmusRequestKasutaja" collection="arraylist" >
@@ -1263,7 +1263,7 @@
 			<bind-xml name="SOAP-ENC:arrayType" node="attribute" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" />
 		</field>
 	</class>
-	
+
 	<class name="ee.adit.pojo.notification.LisaSyndmusRequestKasutaja">
 		<map-to xml="kasutaja" ns-uri="http://producers.teavituskalender.xtee.riik.ee/producer/teavituskalender"/>
 		<field name="kood" type="java.lang.String" >
@@ -1273,7 +1273,7 @@
 			<bind-xml name="kasutajaTyyp" />
 		</field>
 	</class>
-	
+
 	<class name="ee.adit.pojo.notification.LisaSyndmusResponse">
 		<map-to xml="lisaSyndmusResponse" ns-uri="http://producers.teavituskalender.xtee.riik.ee/producer/teavituskalender" ns-prefix="tkal"/>
 		<field name="tulemus" type="ee.adit.pojo.notification.LisaSyndmusResponseTulemus" >
@@ -1283,7 +1283,7 @@
 			<bind-xml name="syndmusId" location="keha" />
 		</field>
 	</class>
-	
+
 	<class name="ee.adit.pojo.notification.LisaSyndmusResponseTulemus">
 		<map-to xml="tulemus" ns-uri="http://producers.teavituskalender.xtee.riik.ee/producer/teavituskalender" ns-prefix="tkal" />
 		<field name="tulemuseKood" type="java.lang.Integer" >
@@ -1297,25 +1297,25 @@
 		</field>
 		<field name="tulemuseTekstType" type="java.lang.String" >
 			<bind-xml name="xsi:type" location="keha/tulemuseTekst" node="attribute" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" />
-		</field>		
+		</field>
 	</class>
-	
+
 	<class name="ee.adit.pojo.SaveDocumentRequestMonitor">
-		<map-to xml="saveDocument" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" ns-prefix="adit" />
+		<map-to xml="saveDocument" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" ns-prefix="adit" />
 		<field name="document" type="ee.adit.pojo.SaveDocumentRequestDocument">
 			<bind-xml name="document" location="keha" QName-prefix="adit" />
 		</field>
 	</class>
-	
+
 	<class name="ee.adit.pojo.SaveDocumentRequestDocumentMonitor">
-		<map-to xml="document" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" ns-prefix="adit" />
+		<map-to xml="document" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" ns-prefix="adit" />
 		<field name="href" type="java.lang.String">
 			<bind-xml name="href" node="attribute" QName-prefix="adit" />
 		</field>
 	</class>
-	
+
 	<class name="ee.adit.pojo.GetDocumentRequestMonitor">
-		<map-to xml="getDocument" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" ns-prefix="adit" />
+		<map-to xml="getDocument" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" ns-prefix="adit" />
 		<field name="documentId" type="long">
 			<bind-xml name="document_id" location="keha" QName-prefix="adit" />
 		</field>
@@ -1323,20 +1323,20 @@
 			<bind-xml name="include_file_contents" location="keha" QName-prefix="adit" />
 		</field>
 	</class>
-	
+
 	<!-- GetUserInfo -->
  	<class name="ee.adit.pojo.GetUserInfoRequestMonitor">
-		<map-to xml="getUserInfo" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" ns-prefix="adit" />
+		<map-to xml="getUserInfo" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" ns-prefix="adit" />
 		<field name="userList" type="ee.adit.pojo.GetUserInfoRequestUserListMonitor">
 			<bind-xml name="userList" location="keha" QName-prefix="adit" />
 		</field>
 	</class>
- 	
+
  	<class name="ee.adit.pojo.GetUserInfoRequestUserListMonitor">
-		<map-to xml="userList" ns-uri="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" ns-prefix="adit" />
+		<map-to xml="userList" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" ns-prefix="adit" />
 		<field name="href" type="java.lang.String">
 			<bind-xml name="href" node="attribute" QName-prefix="adit" />
 		</field>
 	</class>
-	
+
 </mapping>

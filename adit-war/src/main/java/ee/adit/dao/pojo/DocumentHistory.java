@@ -4,6 +4,7 @@ package ee.adit.dao.pojo;
 
 import java.util.Date;
 
+import ee.adit.util.Configuration;
 import ee.adit.util.CustomXTeeHeader;
 
 /**
@@ -51,8 +52,8 @@ public class DocumentHistory implements java.io.Serializable {
     }
 
     public DocumentHistory(String historyType, Long documentId, Date eventDate, AditUser user, AditUser xroadUser,
-            CustomXTeeHeader header) {
-        this.setRemoteApplicationName(header.getInfosysteem());
+            CustomXTeeHeader header, Configuration config) {
+        this.setRemoteApplicationName(header.getInfosysteem(config.getXteeProducerName()));
         this.setDocumentId(documentId);
         this.setDocumentHistoryType(historyType);
         this.setEventDate(eventDate);
