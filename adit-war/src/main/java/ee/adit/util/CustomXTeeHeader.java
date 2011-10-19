@@ -25,7 +25,7 @@ public class CustomXTeeHeader extends XTeeHeader {
      * @return Value of {@code INFOSYSTEEM} SOAP header
      */
     public String getInfosysteem(final String producerName) {
-        String producerNsUri = String.format("http://producers.%s.xtee.riik.ee/producer/%s", producerName);
+        String producerNsUri = String.format("http://producers.%s.xtee.riik.ee/producer/%s", producerName, producerName);
         QName infosysteem = new QName(producerNsUri, "infosysteem");
 
     	if (this.getElemendid() != null) {
