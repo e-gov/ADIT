@@ -25,14 +25,14 @@ public class CustomXTeeHeader extends XTeeHeader {
      * @return Value of {@code INFOSYSTEEM} SOAP header
      */
     public String getInfosysteem(final String producerName) {
-        String producerNsUri = String.format("http://producers.{0}.xtee.riik.ee/producer/{0}", producerName);
+        String producerNsUri = String.format("http://producers.%s.xtee.riik.ee/producer/%s", producerName);
         QName infosysteem = new QName(producerNsUri, "infosysteem");
-        logger.info("Producer name: " + producerName);
-        logger.info("Namespace: " + producerNsUri);
 
     	if (this.getElemendid() != null) {
             return this.getElemendid().get(infosysteem);
         } else {
+            logger.info("Producer name: " + producerName);
+            logger.info("Namespace: " + producerNsUri);
             return null;
         }
     }

@@ -146,9 +146,9 @@ public final class StatePortalClient {
                 }
             }
         } catch (Exception ex) {
-        	String errorMessage = String.format("Error getting notification status from '{0}' database. Related user: {1}."
-        		+ " Please verify that organization '{2}' is allowed to run '{3}' query in '{0}' database.",
-        		databaseName, userCode, orgCodeForLog, queryName);
+        	String errorMessage = String.format("Error getting notification status from '%s' database. Related user: %s."
+        		+ " Please verify that organization '%s' is allowed to run '%s' query in '%s' database.",
+        		databaseName, userCode, orgCodeForLog, queryName, databaseName);
             logger.error(errorMessage, ex);
         }
         return result;
