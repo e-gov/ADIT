@@ -2,6 +2,9 @@ package ee.adit.util;
 
 import javax.xml.namespace.QName;
 
+import org.apache.log4j.Logger;
+
+import ee.adit.ws.endpoint.user.GetJoinedEndpoint;
 import ee.webmedia.xtee.XTeeHeader;
 
 /**
@@ -12,6 +15,7 @@ import ee.webmedia.xtee.XTeeHeader;
  */
 public class CustomXTeeHeader extends XTeeHeader {
     private static final long serialVersionUID = 1L;
+    private static Logger logger = Logger.getLogger(CustomXTeeHeader.class);
 
     /**
      * Retieves the value of the {@code INFOSYSTEEM} SOAP header.
@@ -23,6 +27,8 @@ public class CustomXTeeHeader extends XTeeHeader {
     public String getInfosysteem(final String producerName) {
         String producerNsUri = String.format("http://producers.{0}.xtee.riik.ee/producer/{0}", producerName);
         QName infosysteem = new QName(producerNsUri, "infosysteem");
+        logger.info("Producer name: " + producerName);
+        logger.info("Namespace: " + producerNsUri);
 
     	if (this.getElemendid() != null) {
             return this.getElemendid().get(infosysteem);
