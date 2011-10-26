@@ -20,6 +20,7 @@
 		<property name="userService" ref="userService"/>
 		<property name="logService" ref="logService"/>
 		<property name="messageSource" ref="messageSource"/>
+		<property name="configuration" ref="configuration"/>
 		<property name="messageService" ref="messageService"/>
 		<property name="monitorService" ref="monitorService"/>
 	</bean>
@@ -30,6 +31,7 @@
 		<property name="userService" ref="userService"/>
 		<property name="logService" ref="logService"/>
 		<property name="messageSource" ref="messageSource"/>
+		<property name="configuration" ref="configuration"/>
 		<property name="messageService" ref="messageService"/>
 		<property name="monitorService" ref="monitorService"/>
 	</bean>
