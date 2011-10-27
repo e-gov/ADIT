@@ -44,8 +44,8 @@
 				<value>ru_ru</value>
 			</list>
 		</property>
-		<property name="dvkOrgCode" value="70000007" />
-		<property name="xteeInstitution" value="70000007" />
+		<property name="dvkOrgCode" value="adit" />
+		<property name="xteeInstitution" value="adit" />
 		<property name="xteeSecurityServer" value="http://10.0.15.1/cgi-bin/consumer_proxy" />
 		<property name="xteeIdCode" value="38807030229" />
 

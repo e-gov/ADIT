@@ -61,7 +61,7 @@ public final class StatePortalClient {
         String databaseName = "riigiportaal";
         String queryName = "tellimusteStaatus";
         String queryVersion = "v1";
-        String orgCodeForLog = "70000007";
+        String orgCodeForLog = "adit";
 
         try {
             TellimusteStaatusDocument doc = TellimusteStaatusDocument.Factory.newInstance();
