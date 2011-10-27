@@ -545,6 +545,8 @@ public class DocumentDAO extends HibernateDaoSupport {
                     f.setDdocDataFileStartOffset(docFile.getDdocDataFileStartOffset());
                     f.setDdocDataFileEndOffset(docFile.getDdocDataFileEndOffset());
 
+                    totalBytes += ((docFile.getFileSizeBytes() == null) ? 0L : docFile.getFileSizeBytes().longValue());
+
                     // Read file data from BLOB and write it to temporary file.
                     // This is necessary to avoid storing potentially large
                     // amounts of binary data in server memory.
@@ -568,7 +570,6 @@ public class DocumentDAO extends HibernateDaoSupport {
 	                            logger.debug("BLOB stream opened. Starting to read data");
 	                            while ((len = blobDataStream.read(buffer)) > 0) {
 	                                fileOutputStream.write(buffer, 0, len);
-	                                totalBytes += len;
 	                                currentFileBytes += len;
 	                            }
 	                            logger.debug("Successfully retreived " + currentFileBytes + " bytes. Was expecting " + docFile.getFileSizeBytes() + " bytes.");
@@ -606,7 +607,7 @@ public class DocumentDAO extends HibernateDaoSupport {
 
         if (includeFileContents && (doc.getSigned() != null) && doc.getSigned() && (signatureContainerFile != null)) {
         	try {
-        		totalBytes += SimplifiedDigiDocParser.extractFileContentsFromDdoc(
+        		SimplifiedDigiDocParser.extractFileContentsFromDdoc(
 	        		signatureContainerFile.getFileData().getBinaryStream(),
 	        		outputFilesList, temporaryFilesDir);
         	} catch (IOException ex) {

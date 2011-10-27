@@ -2358,14 +2358,14 @@ public class DocumentService {
             // 2. Transform to XSL-FO
             ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xml.getBytes("UTF-8"));
             String xmlTempFile = Util.createTemporaryFile(byteArrayInputStream, this.getConfiguration().getTempDir());
-            String outputXslFoFile = Util.generateRandomFileName();
+            String outputXslFoFile = this.getConfiguration().getTempDir() + File.separator + Util.generateRandomFileName();
 
             InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream(this.getConfiguration().getDvkResponseMessageStylesheet());
             String styleSheet = Util.createTemporaryFile(input, this.getConfiguration().getTempDir());
             Util.applyXSLT(xmlTempFile, styleSheet, outputXslFoFile);
 
             // 3. Transform to PDF
-            String outputPDFFile = Util.generateRandomFileName();
+            String outputPDFFile = this.getConfiguration().getTempDir() + File.separator + Util.generateRandomFileName();
             Util.generatePDF(outputPDFFile, outputXslFoFile);
 
             // 4. Save the response message PDF to DVK
@@ -2404,14 +2404,14 @@ public class DocumentService {
             // 2. Transform to XSL-FO
             ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xml.getBytes("UTF-8"));
             String xmlTempFile = Util.createTemporaryFile(byteArrayInputStream, this.getConfiguration().getTempDir());
-            String outputXslFoFile = Util.generateRandomFileName();
+            String outputXslFoFile = this.getConfiguration().getTempDir() + File.separator + Util.generateRandomFileName();
 
             InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream(this.getConfiguration().getDvkResponseMessageStylesheet());
             String styleSheet = Util.createTemporaryFile(input, this.getConfiguration().getTempDir());
             Util.applyXSLT(xmlTempFile, styleSheet, outputXslFoFile);
 
             // 3. Transform to PDF
-            String outputPDFFile = Util.generateRandomFileName();
+            String outputPDFFile = this.getConfiguration().getTempDir() + File.separator + Util.generateRandomFileName();
             Util.generatePDF(outputPDFFile, outputXslFoFile);
 
             // 4. Save the response message PDF to DVK
