@@ -306,6 +306,7 @@
 	<bean id="ListMethodsEndpoint" class="ee.adit.ws.endpoint.ListMethodsEndpoint">
 		<property name="marshaller" ref="castorMarshaller"/>
 		<property name="unmarshaller" ref="castorMarshaller"/>
+		<property name="configuration" ref="configuration"/>
 	</bean>
 
 	<!-- Endpoint Mappings -->
