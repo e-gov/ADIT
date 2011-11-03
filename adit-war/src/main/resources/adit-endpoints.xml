@@ -307,6 +307,7 @@
 		<property name="marshaller" ref="castorMarshaller"/>
 		<property name="unmarshaller" ref="castorMarshaller"/>
 		<property name="configuration" ref="configuration"/>
+		<property name="monitorService" ref="monitorService"/>
 	</bean>
 
 	<!-- Endpoint Mappings -->
