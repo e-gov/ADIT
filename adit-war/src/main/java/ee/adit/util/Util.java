@@ -1490,10 +1490,12 @@ public final class Util {
      * @return user code without country prefix
      */
     public static String removeCountryPrefix(String code) {
-        if (code != null) {
-            return code.replace("EE", "");
+        if ((code != null) && (code.length() > 2)
+        	&& "EE".equalsIgnoreCase(code.substring(0, 2))) {
+
+        	return code.substring(2);
         } else {
-            return null;
+            return code;
         }
     }
 
