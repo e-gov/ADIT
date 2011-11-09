@@ -1769,7 +1769,7 @@ public class DocumentService {
 	            aditDocument.setLocked(true);
 	            aditDocument.setLockingDate(new Date());
 	            aditDocument.setSignable(true);
-	            aditDocument.setTitle(dvkDocument.getTitle());
+	            aditDocument.setTitle(Util.isNullOrEmpty(dvkDocument.getTitle()) ? "-" : dvkDocument.getTitle());
 	            aditDocument.setDocumentType(DOCTYPE_LETTER);
 
 	            // The creator is the sender
