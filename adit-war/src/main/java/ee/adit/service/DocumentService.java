@@ -830,6 +830,7 @@ public class DocumentService {
                                 result.getSignatures().add(localSignature);
                             } else {
                                 logger.error("Signature given by " + localSignature.getSignerName() + " was found to be invalid.");
+                                logDigidocVerificationErrors(verificationErrors);
                                 AditCodedException aditCodedException = new AditCodedException("digidoc.extract.invalidSignature");
                                 aditCodedException.setParameters(new Object[] {localSignature.getSignerName()});
                                 throw aditCodedException;
@@ -864,6 +865,25 @@ public class DocumentService {
         }
 
         return result;
+    }
+
+    /**
+     * Logs DigiDoc verification errors to application's error log.
+     *
+     * @param verificationErrors
+     * 		ArrayList containing verification errors of a DigiDoc file.
+     */
+    private void logDigidocVerificationErrors(ArrayList verificationErrors) {
+        if (verificationErrors != null) {
+	    	for (int i = 0; i < verificationErrors.size(); i++) {
+	        	try {
+	            	DigiDocException ddocEx = (DigiDocException) verificationErrors.get(i);
+	            	logger.error("Signature validation error " + i, ddocEx);
+	        	} catch (Exception ex) {
+	        		// Errors thrown by error logging are intentionally discarded
+	        	}
+	        }
+        }
     }
 
     /**
