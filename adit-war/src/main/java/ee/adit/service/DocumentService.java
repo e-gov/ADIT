@@ -1417,6 +1417,8 @@ public class DocumentService {
                     dvkContainer.setTransport(transport);
 
                     dvk.api.container.v1.SignedDoc failideKonteiner = new dvk.api.container.v1.SignedDoc();
+                    failideKonteiner.setFormat("DIGIDOC-XML");
+                    failideKonteiner.setVersion("1.3");
 
                     Set<DocumentFile> aditFiles = document.getDocumentFiles();
                     List<dvk.api.container.v1.DataFile> dvkFiles = new ArrayList<dvk.api.container.v1.DataFile>();
