@@ -3,6 +3,7 @@ package ee.adit.service;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -2019,26 +2020,19 @@ public class DocumentService {
     public ContainerVer1 getDVKContainerV1(PojoMessage document) throws AditInternalException {
         ContainerVer1 result = null;
 
-        Reader clobReader = null;
-        StringWriter sw = null;
+        InputStream s = null;
+        ByteArrayOutputStream f = null;
+        String containerAsString = "";
         try {
-        	sw = new StringWriter();
-            clobReader = document.getData().getCharacterStream();
-
-            char[] cbuf = new char[1024];
+        	s = document.getData().getAsciiStream();
+        	f = new ByteArrayOutputStream();
+        	byte[] buf = new byte[1024];
             int readCount = -1;
-            while ((readCount = clobReader.read(cbuf)) != -1) {
-            	sw.write(cbuf, 0, readCount);
+            while ((readCount = s.read(buf, 0, buf.length)) != -1) {
+            	f.write(buf, 0, readCount);
             }
-            clobReader.close();
-            sw.flush();
 
-            String containerAsString = sw.toString();
-            if (!Util.isNullOrEmpty(containerAsString)
-            	&& (containerAsString.length() >= 5)
-            	&& !containerAsString.substring(0, 5).equalsIgnoreCase("<?xml")) {
-            	containerAsString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + containerAsString;
-            }
+            containerAsString = f.toString("UTF-8");
             result = ContainerVer1.parse(containerAsString);
 
             if (result == null) {
@@ -2049,19 +2043,19 @@ public class DocumentService {
                 }
             }
         } catch (Exception e) {
-        	logger.error("XML of container that could not be processed: " + sw.toString());
+        	logger.error("XML of container that could not be processed: " + containerAsString);
             throw new AditInternalException("Exception while reading DVK container from database: ", e);
         } finally {
-            if (clobReader != null) {
+            if (s != null) {
                 try {
-                    clobReader.close();
+                    s.close();
                 } catch (Exception e) {
                     logger.warn("Error while closing Clob reader: ", e);
                 }
             }
-            if (sw != null) {
+            if (f != null) {
                 try {
-                    sw.close();
+                    f.close();
                 } catch (Exception e) {
                     logger.warn("Error while closing string writer: ", e);
                 }
