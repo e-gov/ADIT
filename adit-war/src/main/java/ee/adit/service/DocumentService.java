@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringBufferInputStream;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.security.cert.X509Certificate;
 import java.sql.Blob;
@@ -2019,18 +2020,20 @@ public class DocumentService {
         ContainerVer1 result = null;
 
         Reader clobReader = null;
+        StringWriter sw = null;
         try {
-            StringBuilder sb = new StringBuilder(1024 * 1024 * 5);
+        	sw = new StringWriter();
             clobReader = document.getData().getCharacterStream();
 
             char[] cbuf = new char[1024];
-            int readCount = 0;
-            while ((readCount = clobReader.read(cbuf)) > 0) {
-                sb.append(cbuf, 0, readCount);
+            int readCount = -1;
+            while ((readCount = clobReader.read(cbuf)) != -1) {
+            	sw.write(cbuf, 0, readCount);
             }
             clobReader.close();
+            sw.flush();
 
-            result = ContainerVer1.parse(sb.toString());
+            result = ContainerVer1.parse(sw.toString());
 
             if (result == null) {
                 throw new AditInternalException("DVK Container not initialized.");
@@ -2040,6 +2043,7 @@ public class DocumentService {
                 }
             }
         } catch (Exception e) {
+        	logger.error("XML of container that could not be processed: " + sw.toString());
             throw new AditInternalException("Exception while reading DVK container from database: ", e);
         } finally {
             if (clobReader != null) {
@@ -2047,6 +2051,13 @@ public class DocumentService {
                     clobReader.close();
                 } catch (Exception e) {
                     logger.warn("Error while closing Clob reader: ", e);
+                }
+            }
+            if (sw != null) {
+                try {
+                    sw.close();
+                } catch (Exception e) {
+                    logger.warn("Error while closing string writer: ", e);
                 }
             }
         }
