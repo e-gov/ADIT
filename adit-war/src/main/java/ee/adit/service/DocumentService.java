@@ -2020,20 +2020,19 @@ public class DocumentService {
     public ContainerVer1 getDVKContainerV1(PojoMessage document) throws AditInternalException {
         ContainerVer1 result = null;
 
-        InputStream s = null;
-        ByteArrayOutputStream f = null;
-        String containerAsString = "";
+        StringBuilder sb = new StringBuilder(1024 * 1024 * 5);
+        Reader clobReader = null;
         try {
-        	s = document.getData().getAsciiStream();
-        	f = new ByteArrayOutputStream();
-        	byte[] buf = new byte[1024];
-            int readCount = -1;
-            while ((readCount = s.read(buf, 0, buf.length)) != -1) {
-            	f.write(buf, 0, readCount);
-            }
+            clobReader = document.getData().getCharacterStream();
 
-            containerAsString = f.toString("UTF-8");
-            result = ContainerVer1.parse(containerAsString);
+            char[] cbuf = new char[1024];
+            int readCount = 0;
+            while ((readCount = clobReader.read(cbuf)) > 0) {
+                sb.append(cbuf, 0, readCount);
+            }
+            clobReader.close();
+
+            result = ContainerVer1.parse(sb.toString());
 
             if (result == null) {
                 throw new AditInternalException("DVK Container not initialized.");
@@ -2043,21 +2042,14 @@ public class DocumentService {
                 }
             }
         } catch (Exception e) {
-        	logger.error("XML of container that could not be processed: " + containerAsString);
+        	logger.error("XML of container that could not be processed: " + sb.toString());
             throw new AditInternalException("Exception while reading DVK container from database: ", e);
         } finally {
-            if (s != null) {
+            if (clobReader != null) {
                 try {
-                    s.close();
+                    clobReader.close();
                 } catch (Exception e) {
                     logger.warn("Error while closing Clob reader: ", e);
-                }
-            }
-            if (f != null) {
-                try {
-                    f.close();
-                } catch (Exception e) {
-                    logger.warn("Error while closing string writer: ", e);
                 }
             }
         }
