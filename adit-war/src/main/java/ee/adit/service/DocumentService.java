@@ -2033,7 +2033,13 @@ public class DocumentService {
             clobReader.close();
             sw.flush();
 
-            result = ContainerVer1.parse(sw.toString());
+            String containerAsString = sw.toString();
+            if (!Util.isNullOrEmpty(containerAsString)
+            	&& (containerAsString.length() >= 5)
+            	&& !containerAsString.substring(0, 5).equalsIgnoreCase("<?xml")) {
+            	containerAsString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + containerAsString;
+            }
+            result = ContainerVer1.parse(containerAsString);
 
             if (result == null) {
                 throw new AditInternalException("DVK Container not initialized.");
