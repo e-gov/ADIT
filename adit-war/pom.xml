@@ -4,13 +4,13 @@
 	<groupId>ee</groupId>
 	<artifactId>adit-war</artifactId>
 	<packaging>war</packaging>
-	<version>1.0.37</version>
+	<version>1.0.38</version>
 	<name>ADIT Web Application</name>
 
 	<parent>
 		<groupId>ee</groupId>
 		<artifactId>adit</artifactId>
-		<version>1.0.37</version>
+		<version>1.0.38</version>
 	</parent>
 
 	<properties>
@@ -287,7 +287,7 @@
 		<dependency>
 			<groupId>ee.dvk</groupId>
 			<artifactId>api</artifactId>
-			<version>1.0</version>
+			<version>1.0.2</version>
 			<scope>system</scope>
 			<systemPath>${basedir}/lib/dvkapi.jar</systemPath>
 		</dependency>
