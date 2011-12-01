@@ -127,6 +127,33 @@
 				</sequence>
 			</complexType>
 
+		    <complexType name="dataFileHash">
+		        <annotation>
+		            <documentation xml:lang="ee">Allkirjastatud faili räsikood</documentation>
+		            <documentation xml:lang="en">Hash code of signed file</documentation>
+		        </annotation>
+		        <simpleContent>
+		            <extension base="string">
+		                <attribute name="data_file_id" type="string" />
+		            </extension>
+		        </simpleContent>
+		    </complexType>
+
+		    <complexType name="arrayOfDataFileHash">
+		        <xs:annotation>
+		            <xs:documentation xml:lang="ee">Allkirjastatud failide räsikoodide massiiv</xs:documentation>
+		            <xs:documentation xml:lang="en">Array of hash codes of signed files</xs:documentation>
+		        </xs:annotation>
+		        <sequence>
+		            <element name="data_hile_has" type="tns:dataFileHash" maxOccurs="unbounded" minOccurs="0">
+		                <xs:annotation>
+		                    <xs:documentation xml:lang="ee">Allkirjastatud faili räsikood</xs:documentation>
+		                    <xs:documentation xml:lang="en">Hash code of signed file</xs:documentation>
+		                </xs:annotation>
+		            </element>
+		        </sequence>
+		    </complexType>
+
 			<complexType name="arrayOfFileId">
 				<xs:annotation>
 					<xs:documentation xml:lang="ee">Failide identifikaatorite
@@ -1115,6 +1142,14 @@
 							</xs:documentation>
 						</xs:annotation>
 					</element>
+		            <element name="data_file_hashes" type="tns:arrayOfDataFileHash">
+		                <xs:annotation>
+		                    <xs:documentation xml:lang="ee">Allkirja konteineris
+		                    sisalduvate andmefailide räsikoodid</xs:documentation>
+		                    <xs:documentation xml:lang="en">Hash codes of data files
+		                    contained by signature container</xs:documentation>
+		                </xs:annotation>
+		            </element>
 				</sequence>
 			</complexType>
 

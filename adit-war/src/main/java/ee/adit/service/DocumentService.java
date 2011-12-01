@@ -77,7 +77,9 @@ import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.dao.pojo.DocumentType;
 import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditInternalException;
+import ee.adit.pojo.ArrayOfDataFileHash;
 import ee.adit.pojo.ArrayOfFileType;
+import ee.adit.pojo.DataFileHash;
 import ee.adit.pojo.OutputDocumentFile;
 import ee.adit.pojo.PrepareSignatureInternalResult;
 import ee.adit.pojo.SaveDocumentRequestAttachment;
@@ -3610,7 +3612,7 @@ public class DocumentService {
                 }
                 SignatureProductionPlace address = null;
                 if (((country != null) && (country.length() > 0)) || ((state != null) && (state.length() > 0))
-                        || ((city != null) && (city.length() > 0)) || ((zip != null) && (zip.length() > 0))) {
+                    || ((city != null) && (city.length() > 0)) || ((zip != null) && (zip.length() > 0))) {
 
                     address = new SignatureProductionPlace();
                     address.setCountryName(country);
@@ -3678,6 +3680,9 @@ public class DocumentService {
                 byte[] digest = sig.calculateSignedInfoDigest();
                 result.setSignatureHash(Util.convertToHexString(digest));
 
+                // Build list of data file hashes
+                result.setDataFileHashes(getListOfDataFileDigests(sdoc));
+
                 // Create a dummy signature.
                 // Otherwise it will not be possible to save signature container
                 byte[] dummySignature = new byte[SignatureValue.SIGNATURE_VALUE_LENGTH];
@@ -3742,6 +3747,26 @@ public class DocumentService {
             }
         }
 
+        return result;
+    }
+
+    private ArrayOfDataFileHash getListOfDataFileDigests(SignedDoc sdoc) throws DigiDocException {
+    	ArrayOfDataFileHash result = new ArrayOfDataFileHash();
+    	if (sdoc != null) {
+	    	int dataFileCount = sdoc.countDataFiles();
+	        for (int i = 0; i < dataFileCount; i++) {
+	        	DataFile df = sdoc.getDataFile(i);
+	        	if (df != null) {
+		        	byte[] fileDigest = df.getDigest();
+		        	String digestAsHexString = Util.convertToHexString(fileDigest);
+		        	result.getDataFileHash().add(new DataFileHash(df.getId(), digestAsHexString));
+	        	} else {
+	        		logger.warn("Cannot calculate DataFile hash because DataFile is empty (NULL).");
+	        	}
+	        }
+    	} else {
+    		logger.warn("Cannot build list of DataFile hashes because supplies DigiDoc container is empty (NULL).");
+    	}
         return result;
     }
 

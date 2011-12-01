@@ -821,6 +821,9 @@
 		<field name="signatureHash" type="java.lang.String">
 			<bind-xml name="signature_hash" />
 		</field>
+        <field name="dataFileHashes" type="ee.adit.pojo.ArrayOfDataFileHash">
+            <bind-xml name="data_file_hashes" />
+        </field>
 	</class>
 
 	<!-- ConfirmSignature -->
@@ -1057,6 +1060,22 @@
 			<bind-xml name="lang" node="attribute"/>
 		</field>
 	</class>
+
+    <class name="ee.adit.pojo.ArrayOfDataFileHash">
+        <map-to xml="data_file_hashes" />
+        <field name="data_file_hash" type="ee.adit.pojo.DataFileHash" collection="arraylist">
+            <bind-xml name="data_file_hash" />
+        </field>
+    </class>
+
+    <class name="ee.adit.pojo.DataFileHash">
+        <map-to xml="data_file_hash" />
+        <field name="value" type="java.lang.String" container="true">
+        </field>
+        <field name="dataFileId" type="java.lang.String">
+            <bind-xml name="data_file_id" node="attribute"/>
+        </field>
+    </class>
 
  	<class name="ee.adit.pojo.UserList">
 		<map-to xml="userList" />

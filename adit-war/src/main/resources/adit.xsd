@@ -103,6 +103,33 @@
 		</sequence>
 	</complexType>
 
+    <complexType name="dataFileHash">
+        <annotation>
+            <documentation xml:lang="ee">Allkirjastatud faili räsikood</documentation>
+            <documentation xml:lang="en">Hash code of signed file</documentation>
+        </annotation>
+        <simpleContent>
+            <extension base="string">
+                <attribute name="data_file_id" type="string" />
+            </extension>
+        </simpleContent>
+    </complexType>
+
+    <complexType name="arrayOfDataFileHash">
+        <annotation>
+            <documentation xml:lang="ee">Allkirjastatud failide räsikoodide massiiv</documentation>
+            <documentation xml:lang="en">Array of hash codes of signed files</documentation>
+        </annotation>
+        <sequence>
+            <element name="data_hile_has" type="tns:dataFileHash" maxOccurs="unbounded" minOccurs="0">
+                <annotation>
+                    <documentation xml:lang="ee">Allkirjastatud faili räsikood</documentation>
+                    <documentation xml:lang="en">Hash code of signed file</documentation>
+                </annotation>
+            </element>
+        </sequence>
+    </complexType>
+
 	<complexType name="arrayOfFileId">
 		<annotation>
 	      	<documentation xml:lang="ee">Failide identifikaatorite massiiv</documentation>
@@ -885,6 +912,14 @@
 			      	<documentation xml:lang="ee">Allkirja räsi kood</documentation>
 			      	<documentation xml:lang="en">Signature hash</documentation>
 		    	</annotation>
+			</element>
+			<element name="data_file_hashes" type="tns:arrayOfDataFileHash">
+                <annotation>
+                    <documentation xml:lang="ee">Allkirja konteineris
+                    sisalduvate andmefailide räsikoodid</documentation>
+                    <documentation xml:lang="en">Hash codes of data files
+                    contained by signature container</documentation>
+                </annotation>
 			</element>
 		</sequence>
 	</complexType>

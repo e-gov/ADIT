@@ -104,8 +104,7 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
 
             String attachmentID = null;
             // Check if the attachment ID is specified
-            if (request.getSignerCertificate() != null && request.getSignerCertificate().getHref() != null
-                    && !request.getSignerCertificate().getHref().trim().equals("")) {
+            if (request.getSignerCertificate() != null && !Util.isNullOrEmpty(request.getSignerCertificate().getHref())) {
                 attachmentID = Util.extractContentID(request.getSignerCertificate().getHref());
             } else {
                 throw new AditCodedException("request.saveDocument.attachment.id.notSpecified");
@@ -137,6 +136,7 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
 
             if (sigResult.isSuccess()) {
                 response.setSignatureHash(sigResult.getSignatureHash());
+                response.setDataFileHashes(sigResult.getDataFileHashes());
             } else {
                 AditCodedException aditCodedException = new AditCodedException(sigResult.getErrorCode());
                 throw aditCodedException;
@@ -367,12 +367,16 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
      */
     private void printRequest(PrepareSignatureRequest request) {
         logger.debug("-------- PrepareSignatureRequest -------");
-        logger.debug("Document ID: " + request.getDocumentId());
-        logger.debug("Role/resolution: " + request.getManifest());
-        logger.debug("Country: " + request.getCountry());
-        logger.debug("State: " + request.getState());
-        logger.debug("City: " + request.getCity());
-        logger.debug("Zip: " + request.getZip());
+        if (request != null) {
+	        logger.debug("Document ID: " + request.getDocumentId());
+	        logger.debug("Role/resolution: " + request.getManifest());
+	        logger.debug("Country: " + request.getCountry());
+	        logger.debug("State: " + request.getState());
+	        logger.debug("City: " + request.getCity());
+	        logger.debug("Zip: " + request.getZip());
+        } else {
+        	logger.debug("Request is null.");
+        }
         logger.debug("----------------------------------------");
     }
 

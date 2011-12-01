@@ -3,11 +3,13 @@ package ee.adit.pojo;
 public class PrepareSignatureInternalResult {
     private boolean success;
     private String signatureHash;
+    private ArrayOfDataFileHash dataFileHashes;
     private String errorCode;
 
     public PrepareSignatureInternalResult() {
         this.success = false;
         this.signatureHash = "";
+        this.dataFileHashes = new ArrayOfDataFileHash();
         this.errorCode = "";
     }
 
@@ -27,7 +29,15 @@ public class PrepareSignatureInternalResult {
         this.signatureHash = signatureHash;
     }
 
-    public String getErrorCode() {
+    public ArrayOfDataFileHash getDataFileHashes() {
+		return dataFileHashes;
+	}
+
+	public void setDataFileHashes(ArrayOfDataFileHash dataFileHashes) {
+		this.dataFileHashes = dataFileHashes;
+	}
+
+	public String getErrorCode() {
         return errorCode;
     }
 
