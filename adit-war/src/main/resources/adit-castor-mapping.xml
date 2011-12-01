@@ -1063,7 +1063,7 @@
 
     <class name="ee.adit.pojo.ArrayOfDataFileHash">
         <map-to xml="data_file_hashes" />
-        <field name="data_file_hash" type="ee.adit.pojo.DataFileHash" collection="arraylist">
+        <field name="dataFileHash" type="ee.adit.pojo.DataFileHash" collection="arraylist">
             <bind-xml name="data_file_hash" />
         </field>
     </class>
