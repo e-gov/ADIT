@@ -145,7 +145,7 @@
 		            <xs:documentation xml:lang="en">Array of hash codes of signed files</xs:documentation>
 		        </xs:annotation>
 		        <sequence>
-		            <element name="data_hile_has" type="tns:dataFileHash" maxOccurs="unbounded" minOccurs="0">
+		            <element name="data_file_hash" type="tns:dataFileHash" maxOccurs="unbounded" minOccurs="0">
 		                <xs:annotation>
 		                    <xs:documentation xml:lang="ee">Allkirjastatud faili räsikood</xs:documentation>
 		                    <xs:documentation xml:lang="en">Hash code of signed file</xs:documentation>
