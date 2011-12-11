@@ -28,7 +28,7 @@
 		<field name="ajalugu" type="dvk.api.container.v2.Ajalugu">
 			<bind-xml name="ajalugu" />
 		</field>
-		
+
 		<field name="failideKonteiner" type="dvk.api.container.v2.FailideKonteiner">
 			<bind-xml name="failid" />
 		</field>
@@ -142,17 +142,21 @@
 		metainfo.koostajaKuupaev.dateHandler
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	-->
+	<!--
 	<field-handler name="metainfo.koostajaKuupaev.dateHandler" class="dvk.api.container.CustomDateHandler">
 		<param name="fieldName" value="koostajaKuupaev" />
 		<param name="info" value="DateHandler for Metainfo.KoostajaKuupaev" />
 	</field-handler>
+	-->
 	<!--
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		metaxml.letterMetaData.signDate.dateHandler
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	-->
+	<!--
 	<field-handler name="metaxml.letterMetaData.signDate.dateHandler" class="dvk.api.container.CustomDateHandler">
 		<param name="fieldName" value="signDate" />
 		<param name="info" value="DateHandler for LetterMetaData.SignDate" />
 	</field-handler>
+	-->
 </mapping>
