@@ -2,6 +2,8 @@ package ee.adit.service;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -11,9 +13,12 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.StringBufferInputStream;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.security.cert.X509Certificate;
 import java.sql.Blob;
@@ -47,7 +52,11 @@ import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.transaction.annotation.Transactional;
 
 import dvk.api.DVKConstants;
+import dvk.api.container.ArrayOfSignature;
 import dvk.api.container.Container;
+import dvk.api.container.LetterMetaData;
+import dvk.api.container.Metaxml;
+import dvk.api.container.Person;
 import dvk.api.container.v1.ContainerVer1;
 import dvk.api.container.v2.ContainerVer2;
 import dvk.api.container.v2.Fail;
@@ -1357,18 +1366,9 @@ public class DocumentService {
                     ContainerVer1 dvkContainer = new ContainerVer1();
                     dvkContainer.setVersion(1);
 
-                    dvk.api.container.v1.Metainfo metainfo = new dvk.api.container.v1.Metainfo();
-
-                    dvk.api.container.v1.MetaManual metaManual = new dvk.api.container.v1.MetaManual();
-                    metaManual.setAutoriIsikukood(null);
-                    metaManual.setAutoriKontakt(null);
-                    metaManual.setAutoriNimi(null);
-                    metaManual.setAutoriOsakond(null);
-                    metaManual.setKoostajaDokumendityyp(document.getDocumentType());
-                    metaManual.setKoostajaDokumendinimi(document.getTitle());
-
-                    metainfo.setMetaManual(metaManual);
-                    dvkContainer.setMetainfo(metainfo);
+                    dvkContainer.setMetainfo(new dvk.api.container.v1.Metainfo());
+                    dvkContainer.getMetainfo().setKoostajaDokumendityyp(document.getDocumentType());
+                    dvkContainer.getMetainfo().setKoostajaDokumendinimi(document.getTitle());
 
                     // Transport information
                     dvk.api.container.v1.Transport transport = new dvk.api.container.v1.Transport();
@@ -1419,6 +1419,9 @@ public class DocumentService {
 
                     transport.setSaajad(saajad);
                     dvkContainer.setTransport(transport);
+
+                    // Create contents of <metaxml> block
+                    dvkContainer.setMetaxml(createDvkMetaxml(document, saajad, sender));
 
                     dvk.api.container.v1.SignedDoc failideKonteiner = new dvk.api.container.v1.SignedDoc();
                     failideKonteiner.setFormat("DIGIDOC-XML");
@@ -1632,6 +1635,109 @@ public class DocumentService {
         }
 
         return result;
+    }
+
+    /**
+     * Creates metaxml part of outgoing DVK envelope.
+     *
+     * @param doc
+     * 		Document to be sent over DVK
+     * @param recipients
+     * 		List of document recipients
+     * @param documentOwner
+     * 		Document owner as {@link AditUser} object
+     * @return
+     * 		Generated metaxml block
+     */
+    private Metaxml createDvkMetaxml(Document doc, List<dvk.api.container.v1.Saaja> recipients,
+    	AditUser documentOwner) {
+    	Metaxml result = new Metaxml();
+
+    	if (doc != null) {
+    		Calendar cal = Calendar.getInstance();
+    		Date documentSignatureDate = null;
+
+    		if ((doc.getSignatures() != null) && (doc.getSignatures().size() > 0)) {
+    			result.setSignatures(new ArrayOfSignature());
+    			result.getSignatures().setSignature(new ArrayList<dvk.api.container.Signature>());
+
+    			Iterator<ee.adit.dao.pojo.Signature> i = doc.getSignatures().iterator();
+                while (i.hasNext()) {
+                	ee.adit.dao.pojo.Signature aditSignature = i.next();
+                	dvk.api.container.Signature dvkSignature = new dvk.api.container.Signature();
+
+                	dvkSignature.setSignatureInfo(new dvk.api.container.SignatureInfo());
+                	dvkSignature.getSignatureInfo().setSignatureDate(aditSignature.getSigningDate());
+                	dvkSignature.getSignatureInfo().setSignatureTime(aditSignature.getSigningDate());
+
+                	dvkSignature.setPerson(new dvk.api.container.Person());
+                	dvkSignature.getPerson().setSurname(aditSignature.getSignerName());
+                	dvkSignature.getPerson().setJobtitle(aditSignature.getSignerRole());
+
+                	result.getSignatures().getSignature().add(dvkSignature);
+
+                	if (documentSignatureDate == null) {
+                		documentSignatureDate = aditSignature.getSigningDate();
+                	} else {
+                		cal.setTime(documentSignatureDate);
+                		if (cal.after(aditSignature.getSigningDate())) {
+                			documentSignatureDate = aditSignature.getSigningDate();
+                		}
+                	}
+                }
+    		}
+
+    		if ((recipients != null) && (recipients.size() > 0)) {
+    			result.setAddressees(new ArrayList<dvk.api.container.AddresseeInfo>());
+    			for (dvk.api.container.v1.Saaja recipient : recipients) {
+    				dvk.api.container.AddresseeInfo addressee = new dvk.api.container.AddresseeInfo();
+
+    				if (!Util.isNullOrEmpty(recipient.getRegNr())) {
+    					addressee.setOrganisation(new dvk.api.container.Organisation());
+    					addressee.getOrganisation().setOrganisationName(recipient.getAsutuseNimi());
+    					addressee.getOrganisation().setDepartmentName(recipient.getAllyksuseNimetus());
+    				}
+    				if (!Util.isNullOrEmpty(recipient.getIsikukood())) {
+    					addressee.setPerson(new dvk.api.container.v1.Addressee());
+    					addressee.getPerson().setSurname(recipient.getNimi());
+    				}
+
+    				result.getAddressees().add(addressee);
+    			}
+    		} else {
+    			logger.warn("Could not fill \"Addressees\" part of \"metaxml\" block in outgoing DVK message. Supplied message recipients list was empty.");
+    		}
+
+    		result.setLetterMetaData(new LetterMetaData());
+    		result.getLetterMetaData().setSignDate(documentSignatureDate);
+    		result.getLetterMetaData().setTitle(doc.getTitle());
+    		result.getLetterMetaData().setType(doc.getDocumentType());
+
+    		if (documentOwner != null) {
+	    		result.setAuthorInfo(new dvk.api.container.AuthorInfo());
+	    		result.setCompilators(new ArrayList<dvk.api.container.Compilator>());
+
+	    		if ("person".equalsIgnoreCase(documentOwner.getUsertype().getShortName())) {
+	    			result.getAuthorInfo().setPerson(new Person());
+	    			result.getAuthorInfo().getPerson().setSurname(documentOwner.getFullName());
+	    			result.getCompilators().add(new dvk.api.container.Compilator());
+	    			result.getCompilators().get(0).setSurname(documentOwner.getFullName());
+	    		} else {
+	    			result.getAuthorInfo().setOrganisation(new dvk.api.container.Organisation());
+	    			result.getAuthorInfo().getOrganisation().setOrganisationName(documentOwner.getFullName());
+
+	    			if (!Util.isNullOrEmpty(doc.getCreatorUserName())) {
+		    			result.getCompilators().add(new dvk.api.container.Compilator());
+		    			result.getCompilators().get(0).setSurname(doc.getCreatorUserName());
+	    			}
+	    		}
+    		}
+    	} else {
+    		logger.warn("Could not create \"metaxml\" block in outgoing DVK message. Supplied ADIT document was NULL.");
+    	}
+
+
+    	return result;
     }
 
     /**
@@ -3679,6 +3785,7 @@ public class DocumentService {
                 Signature sig = sdoc.prepareSignature(cert, claimedRoles, address);
                 byte[] digest = sig.calculateSignedInfoDigest();
                 result.setSignatureHash(Util.convertToHexString(digest));
+                result.setSignatureId(sig.getId());
 
                 // Build list of data file hashes
                 result.setDataFileHashes(getListOfDataFileDigests(sdoc));
@@ -3938,87 +4045,121 @@ public class DocumentService {
                 fs = null;
             }
 
-            // Decode signature value if it is HEX encoded
-            sigValue = convertSignatureValueToByteArray(sigValue);
-
+            // Find unfinished Signature from container
             Signature sig = null;
+            int activeSignatureIndex = -1;
             for (int i = 0; i < sdoc.countSignatures(); i++) {
                 String signerPersonalCode = SignedDoc.getSubjectPersonalCode(sdoc.getSignature(i).getLastCertValue().getCert());
                 if (requestPersonalCode.endsWith(signerPersonalCode)) {
                     sig = sdoc.getSignature(i);
+                    activeSignatureIndex = i;
                     break;
                 }
             }
 
-            if (sig != null) {
+            if (sig == null) {
+                AditCodedException aditCodedException = new AditCodedException("request.confirmSignature.signatureNotPrepared");
+                aditCodedException.setParameters(new Object[] {});
+                throw aditCodedException;
+            }
+
+            // Incoming signature value can be of following 3 types (at least):
+            // a) binary signature value
+            // b) hex-encoded signature value
+            // c) base64 encoded <Signature> element
+            boolean isSignatureElement = false;
+            String base64DecodedSignatureValue = "";
+            try {
+	            base64DecodedSignatureValue = Util.base64decode(new String(sigValue, "UTF-8"));
+	            if (!Util.isNullOrEmpty(base64DecodedSignatureValue)
+	            	&& base64DecodedSignatureValue.startsWith("<Signature")) {
+	            	isSignatureElement = true;
+	            }
+            } catch (Exception ex) {
+            	logger.debug("Exception occured on base64 decoding of signature value", ex);
+            }
+
+
+        	String containerFileName = Util.generateRandomFileNameWithoutExtension();
+            containerFileName = temporaryFilesDir + File.separator + containerFileName + "_CSv1.adit";
+
+            if (isSignatureElement) {
+                // Write container to temporary file
+                sdoc.writeToFile(new File(containerFileName));
+
+                // Replace pending signature with confirmed signature
+                replaceSignatureInDigiDocContainer(containerFileName, sig.getId(), base64DecodedSignatureValue);
+
+                // Reload container
+                sdoc = factory.readSignedDoc(containerFileName);
+                sdoc.getSignature(activeSignatureIndex++);
+            } else {
+	            // Decode signature value if it is HEX encoded
+	            sigValue = convertSignatureValueToByteArray(sigValue);
+
                 sig.setOrigContent(null);
                 sig.setSignatureValue(sigValue);
                 sig.getConfirmation();
 
                 // Save container to file.
-                String containerFileName = Util.generateRandomFileNameWithoutExtension();
-                containerFileName = temporaryFilesDir + File.separator + containerFileName + "_CSv1.adit";
                 sdoc.writeToFile(new File(containerFileName));
+            }
 
-                // Add signature container to document table
-                FileInputStream fileInputStream = null;
-                try {
-                    fileInputStream = new FileInputStream(containerFileName);
-                } catch (FileNotFoundException e) {
-                    logger.error("Error reading digidoc container file: ", e);
-                }
-                long length = (new File(containerFileName)).length();
-                // Blob containerData = Hibernate.createBlob(fileInputStream,
-                // length, session);
-                Blob containerData = Hibernate.createBlob(fileInputStream, length);
+            // Add signature container to document table
+            FileInputStream fileInputStream = null;
+            try {
+                fileInputStream = new FileInputStream(containerFileName);
+            } catch (FileNotFoundException e) {
+                logger.error("Error reading digidoc container file: ", e);
+            }
+            long length = (new File(containerFileName)).length();
+            // Blob containerData = Hibernate.createBlob(fileInputStream,
+            // length, session);
+            Blob containerData = Hibernate.createBlob(fileInputStream, length);
 
-                boolean wasSignedBefore = true;
-                if (signatureContainer == null) {
-                    wasSignedBefore = false;
-                    signatureContainer = new DocumentFile();
-                    signatureContainer.setContentType(UNKNOWN_MIME_TYPE);
-                    signatureContainer.setDeleted(false);
-                    signatureContainer.setDocument(doc);
-                    signatureContainer.setDocumentFileTypeId(FILETYPE_SIGNATURE_CONTAINER);
-                    signatureContainer.setFileName(Util.convertToLegalFileName(doc.getTitle(), "ddoc", null));
-                    doc.getDocumentFiles().add(signatureContainer);
-                }
-                signatureContainer.setFileSizeBytes(length);
-                signatureContainer.setFileData(containerData);
-                signatureContainer.setLastModifiedDate(new Date());
-                doc.setSigned(true);
+            boolean wasSignedBefore = true;
+            if (signatureContainer == null) {
+                wasSignedBefore = false;
+                signatureContainer = new DocumentFile();
+                signatureContainer.setContentType(UNKNOWN_MIME_TYPE);
+                signatureContainer.setDeleted(false);
+                signatureContainer.setDocument(doc);
+                signatureContainer.setDocumentFileTypeId(FILETYPE_SIGNATURE_CONTAINER);
+                signatureContainer.setFileName(Util.convertToLegalFileName(doc.getTitle(), "ddoc", null));
+                doc.getDocumentFiles().add(signatureContainer);
+            }
+            signatureContainer.setFileSizeBytes(length);
+            signatureContainer.setFileData(containerData);
+            signatureContainer.setLastModifiedDate(new Date());
+            doc.setSigned(true);
 
-                // Remove container draft contents
-                signatureContainerDraft.setFileData(null);
-                signatureContainerDraft.setFileSizeBytes(0L);
+            // Remove container draft contents
+            signatureContainerDraft.setFileData(null);
+            signatureContainerDraft.setFileSizeBytes(0L);
 
-                // Update document
-                session.update(doc);
+            // Update document
+            session.update(doc);
 
-                // Add signature metadata to signature table
-                ee.adit.dao.pojo.Signature aditSig = convertDigiDocSignatureToLocalSignature(sig);
-                aditSig.setUserCode(currentUser.getUserCode());
-                aditSig.setUserName(currentUser.getFullName());
+            // Add signature metadata to signature table
+            ee.adit.dao.pojo.Signature aditSig = convertDigiDocSignatureToLocalSignature(sig);
+            aditSig.setUserCode(currentUser.getUserCode());
+            aditSig.setUserName(currentUser.getFullName());
 
-                aditSig.setDocument(doc);
-                session.save(aditSig);
+            aditSig.setDocument(doc);
+            session.save(aditSig);
 
-                // Remove file contents and calculate offsets
-                if (!wasSignedBefore) {
-                    Hashtable<String, StartEndOffsetPair> fileOffsetsInDdoc =
-                        SimplifiedDigiDocParser.findDigiDocDataFileOffsets(containerFileName);
+            // Remove file contents and calculate offsets
+            if (!wasSignedBefore) {
+                Hashtable<String, StartEndOffsetPair> fileOffsetsInDdoc =
+                    SimplifiedDigiDocParser.findDigiDocDataFileOffsets(containerFileName);
 
-                    for (DocumentFile file : doc.getDocumentFiles()) {
-                        if (isNecessaryToRemoveFileContentsAfterSigning(file, fileOffsetsInDdoc)) {
-                            removeFileContents(doc.getId(), file, fileOffsetsInDdoc);
-                        }
+                for (DocumentFile file : doc.getDocumentFiles()) {
+                    if (isNecessaryToRemoveFileContentsAfterSigning(file, fileOffsetsInDdoc)) {
+                        removeFileContents(doc.getId(), file, fileOffsetsInDdoc);
                     }
                 }
-            } else {
-                AditCodedException aditCodedException = new AditCodedException("request.confirmSignature.signatureNotPrepared");
-                aditCodedException.setParameters(new Object[] {});
-                throw aditCodedException;
             }
+
             tx.commit();
         } catch (Exception ex) {
             if (tx != null) {
@@ -4047,6 +4188,92 @@ public class DocumentService {
         	return Util.convertHexStringToByteArray(signatureValueAsString);
         } else {
         	return signatureValue;
+        }
+    }
+
+    /**
+     * Replaces Signature XML block with given XML text in DigiDoc container.
+     *
+     * @param ddocContainerFullPath
+     * 		Full path to DigiDoc container to be modified.
+     * @param signatureId
+     * 		Id of signature to be replaced
+     * @param signatureXml
+     * 		New Signature block
+     * @throws IOException
+     * 		Exception is thrown if digidoc container file cannot be found
+     * 		or application does not have sufficient rights to read from or write
+     * 		to the file.
+     */
+    public void replaceSignatureInDigiDocContainer(String ddocContainerFullPath,
+    	String signatureId, String signatureXml) throws IOException {
+
+    	boolean changesMade = false;
+        String containerWorkingCopyFullPath = ddocContainerFullPath + ".tmp";
+
+        BufferedWriter containerWriter = null;
+        BufferedReader originalContainerReader = null;
+        try {
+        	containerWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(containerWorkingCopyFullPath), "UTF-8"));
+        	originalContainerReader = new BufferedReader(new InputStreamReader(new FileInputStream(ddocContainerFullPath), "UTF-8"));
+
+            boolean inTag = false;
+            boolean ignoreInput = false;
+            char[] currentChar = new char[1];
+            StringBuilder tagText = new StringBuilder();
+
+            while (originalContainerReader.read(currentChar, 0, 1) > 0) {
+                switch (currentChar[0]) {
+                    case '<':
+                        tagText.append(currentChar[0]);
+                        inTag = true;
+                        break;
+                    case '>':
+                    	tagText.append(currentChar[0]);
+                        inTag = false;
+                        String tagTextString = tagText.toString();
+                        if (tagTextString.startsWith("<Signature ")) {
+                            String sigId = Util.getAttributeValueFromTag(tagTextString, "Id");
+                            if (signatureId.equalsIgnoreCase(sigId)) {
+                            	containerWriter.write(signatureXml);
+                                ignoreInput = true;
+                                changesMade = true;
+                            } else if (!ignoreInput) {
+                            	containerWriter.write(tagTextString);
+                            }
+                        } else if ("</Signature>".equalsIgnoreCase(tagTextString)) {
+                            if (ignoreInput) {
+                                ignoreInput = false;
+                            } else {
+                            	containerWriter.write(tagTextString);
+                            }
+                        } else if (!ignoreInput) {
+                        	containerWriter.write(tagTextString);
+                        }
+                        tagText = null;
+                        tagText = new StringBuilder();
+                        break;
+                    default:
+                        if (inTag) {
+                            tagText.append(currentChar[0]);
+                        } else if (!ignoreInput) {
+                        	containerWriter.write(currentChar[0]);
+                        }
+                        break;
+                }
+            }
+        } finally {
+        	Util.safeCloseWriter(containerWriter);
+        	Util.safeCloseReader(originalContainerReader);
+        	containerWriter = null;
+        	originalContainerReader = null;
+        }
+
+        if (changesMade) {
+        	Util.deleteFile(ddocContainerFullPath, true);
+        	File oldContainer = new File(ddocContainerFullPath);
+        	File newContainer = new File(containerWorkingCopyFullPath);
+        	newContainer.renameTo(oldContainer);
         }
     }
 

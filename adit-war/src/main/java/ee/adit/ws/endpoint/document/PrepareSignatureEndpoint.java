@@ -135,6 +135,7 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
                     certFile, jdigidocCfgTmpFile, this.getConfiguration().getTempDir(), xroadRequestUser);
 
             if (sigResult.isSuccess()) {
+            	response.setSignatureId(sigResult.getSignatureId());
                 response.setSignatureHash(sigResult.getSignatureHash());
                 response.setDataFileHashes(sigResult.getDataFileHashes());
             } else {

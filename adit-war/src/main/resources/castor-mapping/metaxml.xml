@@ -6,22 +6,26 @@
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	-->
 	<class name="dvk.api.container.Metaxml">
-		<map-to xml="metaxml" />
+		<map-to xml="metaxml" ns-uri="http://www.riik.ee/schemas/dhl" />
 
 		<field name="authorInfo" type="dvk.api.container.AuthorInfo">
-			<bind-xml name="Author" node="element" />
+			<bind-xml name="rkel:Author" node="element" xmlns:rkel="http://www.riik.ee/schemas/dhl/rkel_letter" />
 		</field>
 
 		<field name="addressees" type="dvk.api.container.AddresseeInfo" collection="arraylist">
-			<bind-xml name="Addressee" node="element" location="Addressees" />
+			<bind-xml name="rkel:Addressee" node="element" location="Addressees" xmlns:rkel="http://www.riik.ee/schemas/dhl/rkel_letter" />
 		</field>
 
 		<field name="compilators" type="dvk.api.container.Compilator" collection="arraylist">
-			<bind-xml name="Compilator" node="element" location="Compilators" />
+			<bind-xml name="rkel:Compilator" node="element" location="Compilators" xmlns:rkel="http://www.riik.ee/schemas/dhl/rkel_letter" />
 		</field>
 
 		<field name="letterMetaData" type="dvk.api.container.LetterMetaData">
-			<bind-xml name="LetterMetaData" node="element" />
+			<bind-xml name="rkel:LetterMetaData" node="element" xmlns:rkel="http://www.riik.ee/schemas/dhl/rkel_letter" />
+		</field>
+
+		<field name="signatures" type="dvk.api.container.ArrayOfSignature">
+			<bind-xml name="rkel:Signatures" node="element" xmlns:rkel="http://www.riik.ee/schemas/dhl/rkel_letter" />
 		</field>
 	</class>
 	<!--
@@ -116,6 +120,8 @@
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	-->
 	<class name="dvk.api.container.IntellectualPropertyRights">
+		<map-to xml="IntellectualPropertyRights" ns-uri="http://www.riik.ee/schemas/dhl/rkel_letter" ns-prefix="rkel" />
+
 		<field name="copyrightEndDate" type="date">
 			<bind-xml name="CopyrightEndDate" node="element" />
 		</field>
@@ -130,20 +136,24 @@
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	-->
 	<class name="dvk.api.container.SignatureInfo">
-		<field name="sigantureDate" type="date">
-			<bind-xml name="SigantureDate" node="element" />
+		<map-to xml="SignatureData" ns-uri="http://www.riik.ee/schemas/dhl/rkel_letter" ns-prefix="rkel" />
+
+		<field name="signatureDate" type="date" handler="dvk.api.container.SignatureDateHandler">
+			<bind-xml name="SignatureDate" node="element" />
 		</field>
 
-		<field name="signatureTime" type="date">
+		<field name="signatureTime" type="date" handler="dvk.api.container.SignatureTimeHandler">
 			<bind-xml name="SignatureTime" node="element" />
 		</field>
 	</class>
 	<!--
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		IntellectualPropertyRights
+		Signature
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	-->
 	<class name="dvk.api.container.Signature">
+		<map-to xml="Signature" ns-uri="http://www.riik.ee/schemas/dhl/rkel_letter" ns-prefix="rkel" />
+
 		<field name="person" type="dvk.api.container.Person">
 			<bind-xml name="Person" node="element" />
 		</field>
@@ -154,10 +164,24 @@
 	</class>
 	<!--
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		ArrayOfSignature
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	-->
+	<class name="dvk.api.container.ArrayOfSignature">
+		<map-to xml="Signatures" ns-uri="http://www.riik.ee/schemas/dhl/rkel_letter" ns-prefix="rkel" />
+
+		<field name="signature" type="dvk.api.container.Signature" collection="arraylist">
+			<bind-xml name="Signature" node="element" />
+		</field>
+	</class>
+	<!--
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		AccessRights
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	-->
 	<class name="dvk.api.container.AccessRights">
+		<map-to xml="AccessRights" ns-uri="http://www.riik.ee/schemas/dhl/rkel_letter" ns-prefix="rkel" />
+
 		<field name="restriction" type="string">
 			<bind-xml name="Restriction" node="element" />
 		</field>
@@ -180,6 +204,8 @@
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	-->
 	<class name="dvk.api.container.Enclosure">
+		<map-to xml="Enclosures" ns-uri="http://www.riik.ee/schemas/dhl/rkel_letter" ns-prefix="rkel" />
+
 		<field name="titles" type="string" collection="arraylist">
 			<bind-xml name="EnclosureTitle" node="element" />
 		</field>
@@ -192,7 +218,7 @@
 	<class name="dvk.api.container.LetterMetaData">
 		<map-to xml="LetterMetaData" ns-uri="http://www.riik.ee/schemas/dhl/rkel_letter" ns-prefix="rkel" />
 
-		<field name="signDate" type="string" handler="metaxml.letterMetaData.signDate.dateHandler">
+		<field name="signDate" type="string" handler="dvk.api.container.CustomDateHandler">
 			<bind-xml name="SignDate" node="element" />
 		</field>
 
@@ -254,7 +280,7 @@
 	</class>
 	<!--
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		Compolator
+		Compilator
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	-->
 	<class name="dvk.api.container.Compilator">
@@ -280,6 +306,4 @@
 			<bind-xml name="telephone" node="element" />
 		</field>
 	</class>
-
-
 </mapping>

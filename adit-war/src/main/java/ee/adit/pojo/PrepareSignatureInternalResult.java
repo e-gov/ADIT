@@ -2,6 +2,7 @@ package ee.adit.pojo;
 
 public class PrepareSignatureInternalResult {
     private boolean success;
+    private String signatureId;
     private String signatureHash;
     private ArrayOfDataFileHash dataFileHashes;
     private String errorCode;
@@ -21,7 +22,15 @@ public class PrepareSignatureInternalResult {
         this.success = success;
     }
 
-    public String getSignatureHash() {
+    public String getSignatureId() {
+		return signatureId;
+	}
+
+	public void setSignatureId(String signatureId) {
+		this.signatureId = signatureId;
+	}
+
+	public String getSignatureHash() {
         return signatureHash;
     }
 

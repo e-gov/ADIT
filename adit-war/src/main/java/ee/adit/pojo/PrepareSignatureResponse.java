@@ -27,7 +27,9 @@ import javax.xml.bind.annotation.XmlType;
  *       &lt;sequence>
  *         &lt;element name="success" type="{http://www.w3.org/2001/XMLSchema}boolean"/>
  *         &lt;element name="messages" type="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}ArrayOfMessage"/>
+ *         &lt;element name="signature_id" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="signature_hash" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="data_file_hashes" type="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}ArrayOfDataFileHash"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -37,12 +39,15 @@ import javax.xml.bind.annotation.XmlType;
  *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "PrepareSignatureResponse", propOrder = {"success", "messages", "signatureHash" })
+@XmlType(name = "PrepareSignatureResponse", propOrder = {"success", "messages",
+	"signatureId", "signatureHash", "dataFileHashes" })
 public class PrepareSignatureResponse {
-
+	@XmlElement(required = true)
     private boolean success;
     @XmlElement(required = true)
     private ArrayOfMessage messages;
+    @XmlElement(name = "signature_id", required = true)
+    private String signatureId;
     @XmlElement(name = "signature_hash", required = true)
     private String signatureHash;
     @XmlElement(name = "data_file_hashes")
@@ -83,6 +88,27 @@ public class PrepareSignatureResponse {
      */
     public void setMessages(ArrayOfMessage value) {
         this.messages = value;
+    }
+
+    /**
+     * Gets the value of the signatureId property.
+     *
+     * @return possible object is {@link String }
+     *
+     */
+    public String getSignatureId() {
+        return signatureId;
+    }
+
+    /**
+     * Sets the value of the signatureId property.
+     *
+     * @param value
+     *            allowed object is {@link String }
+     *
+     */
+    public void setSignatureId(String value) {
+        this.signatureId = value;
     }
 
     /**

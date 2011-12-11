@@ -1811,4 +1811,22 @@ public final class Util {
     	laterCal.setTime(laterDate);
     	return laterCal.getTimeInMillis() - earlierCal.getTimeInMillis();
     }
+
+    public static String getAttributeValueFromTag(String tag, String attributeName) {
+        String result = "";
+
+        if (!isNullOrEmpty(tag)) {
+            String leadIn = attributeName + "=\"";
+            int start = tag.indexOf(leadIn);
+            if (start > 0) {
+                start += leadIn.length();
+                int end = tag.indexOf("\"", start);
+                if (end > 0) {
+                    result = tag.substring(start, end);
+                }
+            }
+        }
+
+        return result;
+    }
 }

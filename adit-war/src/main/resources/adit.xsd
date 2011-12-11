@@ -907,9 +907,15 @@
 		<sequence>
 			<element name="success" type="tns:success" />
 			<element name="messages" type="tns:arrayOfMessage"></element>
+            <element name="signature_id" type="string">
+                <annotation>
+                    <documentation xml:lang="ee">Allkirja ID</documentation>
+                    <documentation xml:lang="en">Signature ID</documentation>
+                </annotation>
+            </element>
 			<element name="signature_hash" type="string">
 				<annotation>
-			      	<documentation xml:lang="ee">Allkirja räsi kood</documentation>
+			      	<documentation xml:lang="ee">Allkirja räsikood</documentation>
 			      	<documentation xml:lang="en">Signature hash</documentation>
 		    	</annotation>
 			</element>

@@ -1134,9 +1134,17 @@
 				<sequence>
 					<element name="success" type="tns:success" />
 					<element name="messages" type="tns:arrayOfMessage" />
+                    <element name="signature_id" type="string">
+                        <xs:annotation>
+                            <xs:documentation xml:lang="ee">Allkirja ID
+                            </xs:documentation>
+                            <xs:documentation xml:lang="en">Signature ID
+                            </xs:documentation>
+                        </xs:annotation>
+                    </element>
 					<element name="signature_hash" type="string">
 						<xs:annotation>
-							<xs:documentation xml:lang="ee">Allkirja räsi kood
+							<xs:documentation xml:lang="ee">Allkirja räsikood
 							</xs:documentation>
 							<xs:documentation xml:lang="en">Signature hash
 							</xs:documentation>
