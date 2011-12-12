@@ -4045,9 +4045,6 @@ public class DocumentService {
                 fs = null;
             }
 
-            logger.info("Signature value:");
-            logger.info(new String(sigValue, "UTF-8"));
-
             // Find unfinished Signature from container
             Signature sig = null;
             int activeSignatureIndex = -1;
@@ -4071,18 +4068,11 @@ public class DocumentService {
             // b) hex-encoded signature value
             // c) base64 encoded <Signature> element
             boolean isSignatureElement = false;
-            String base64DecodedSignatureValue = "";
-            try {
-	            //base64DecodedSignatureValue = Util.base64decode(new String(sigValue, "UTF-8"));
-            	base64DecodedSignatureValue = new String(sigValue, "UTF-8");
-	            if (!Util.isNullOrEmpty(base64DecodedSignatureValue)
-	            	&& base64DecodedSignatureValue.startsWith("<Signature")) {
-	            	isSignatureElement = true;
-	            }
-            } catch (Exception ex) {
-            	logger.debug("Exception occured on base64 decoding of signature value", ex);
+            String signatureValueAsString = new String(sigValue, "UTF-8");
+            if (!Util.isNullOrEmpty(signatureValueAsString)
+            	&& signatureValueAsString.startsWith("<Signature")) {
+            	isSignatureElement = true;
             }
-
 
         	String containerFileName = Util.generateRandomFileNameWithoutExtension();
             containerFileName = temporaryFilesDir + File.separator + containerFileName + "_CSv1.adit";
@@ -4092,7 +4082,7 @@ public class DocumentService {
                 sdoc.writeToFile(new File(containerFileName));
 
                 // Replace pending signature with confirmed signature
-                replaceSignatureInDigiDocContainer(containerFileName, sig.getId(), base64DecodedSignatureValue);
+                replaceSignatureInDigiDocContainer(containerFileName, sig.getId(), signatureValueAsString);
 
                 // Reload container
                 sdoc = factory.readSignedDoc(containerFileName);
