@@ -4045,6 +4045,9 @@ public class DocumentService {
                 fs = null;
             }
 
+            logger.info("Signature value:");
+            logger.info(new String(sigValue, "UTF-8"));
+
             // Find unfinished Signature from container
             Signature sig = null;
             int activeSignatureIndex = -1;
