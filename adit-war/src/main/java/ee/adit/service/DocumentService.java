@@ -4070,7 +4070,8 @@ public class DocumentService {
             boolean isSignatureElement = false;
             String base64DecodedSignatureValue = "";
             try {
-	            base64DecodedSignatureValue = Util.base64decode(new String(sigValue, "UTF-8"));
+	            //base64DecodedSignatureValue = Util.base64decode(new String(sigValue, "UTF-8"));
+            	base64DecodedSignatureValue = new String(sigValue, "UTF-8");
 	            if (!Util.isNullOrEmpty(base64DecodedSignatureValue)
 	            	&& base64DecodedSignatureValue.startsWith("<Signature")) {
 	            	isSignatureElement = true;
