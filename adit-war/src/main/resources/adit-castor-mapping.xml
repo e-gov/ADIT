@@ -818,6 +818,9 @@
 		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
 			<bind-xml name="messages" />
 		</field>
+        <field name="signatureId" type="java.lang.String">
+            <bind-xml name="signature_id" />
+        </field>
 		<field name="signatureHash" type="java.lang.String">
 			<bind-xml name="signature_hash" />
 		</field>
