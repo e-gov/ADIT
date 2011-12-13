@@ -1653,6 +1653,7 @@ public class DocumentService {
     	Metaxml result = new Metaxml();
 
     	if (doc != null) {
+    		DocumentType docType = documentTypeDAO.getDocumentType(doc.getDocumentType());
     		Calendar cal = Calendar.getInstance();
     		Date documentSignatureDate = null;
 
@@ -1714,7 +1715,10 @@ public class DocumentService {
     		result.setLetterMetaData(new LetterMetaData());
     		result.getLetterMetaData().setSignDate(documentSignatureDate);
     		result.getLetterMetaData().setTitle(doc.getTitle());
-    		result.getLetterMetaData().setType(doc.getDocumentType());
+
+    		if (docType != null) {
+    			result.getLetterMetaData().setType(docType.getDescription());
+    		}
 
     		if (documentOwner != null) {
 	    		result.setAuthorInfo(new dvk.api.container.AuthorInfo());
@@ -1726,7 +1730,7 @@ public class DocumentService {
 	    			result.getAuthorInfo().getPerson().setFirstname(ownersName.getFirstName());
 	    			result.getAuthorInfo().getPerson().setSurname(ownersName.getSurname());
 	    			result.getCompilators().add(new dvk.api.container.Compilator());
-	    			result.getCompilators().get(0).setSurname(ownersName.getFirstName());
+	    			result.getCompilators().get(0).setFirstname(ownersName.getFirstName());
 	    			result.getCompilators().get(0).setSurname(ownersName.getSurname());
 	    		} else {
 	    			result.getAuthorInfo().setOrganisation(new dvk.api.container.Organisation());
