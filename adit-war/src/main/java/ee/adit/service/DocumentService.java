@@ -90,6 +90,7 @@ import ee.adit.pojo.ArrayOfDataFileHash;
 import ee.adit.pojo.ArrayOfFileType;
 import ee.adit.pojo.DataFileHash;
 import ee.adit.pojo.OutputDocumentFile;
+import ee.adit.pojo.PersonName;
 import ee.adit.pojo.PrepareSignatureInternalResult;
 import ee.adit.pojo.SaveDocumentRequestAttachment;
 import ee.adit.pojo.SaveItemInternalResult;
@@ -1358,17 +1359,12 @@ public class DocumentService {
             Iterator<Document> i = documents.iterator();
 
             while (i.hasNext()) {
-
                 try {
                     Document document = i.next();
                     AditUser sender = this.getAditUserDAO().getUserByID(document.getCreatorCode());
 
                     ContainerVer1 dvkContainer = new ContainerVer1();
                     dvkContainer.setVersion(1);
-
-                    dvkContainer.setMetainfo(new dvk.api.container.v1.Metainfo());
-                    dvkContainer.getMetainfo().setKoostajaDokumendityyp(document.getDocumentType());
-                    dvkContainer.getMetainfo().setKoostajaDokumendinimi(document.getTitle());
 
                     // Transport information
                     dvk.api.container.v1.Transport transport = new dvk.api.container.v1.Transport();
@@ -1419,6 +1415,9 @@ public class DocumentService {
 
                     transport.setSaajad(saajad);
                     dvkContainer.setTransport(transport);
+
+                    // Create contents of <metainfo> block
+                    dvkContainer.setMetainfo(createDvkV1Metainfo(document, saajad, sender));
 
                     // Create contents of <metaxml> block
                     dvkContainer.setMetaxml(createDvkMetaxml(document, saajad, sender));
@@ -1671,7 +1670,9 @@ public class DocumentService {
                 	dvkSignature.getSignatureInfo().setSignatureTime(aditSignature.getSigningDate());
 
                 	dvkSignature.setPerson(new dvk.api.container.Person());
-                	dvkSignature.getPerson().setSurname(aditSignature.getSignerName());
+                	PersonName signersName = Util.splitPersonName(aditSignature.getSignerName());
+                	dvkSignature.getPerson().setFirstname(signersName.getFirstName());
+                	dvkSignature.getPerson().setSurname(signersName.getSurname());
                 	dvkSignature.getPerson().setJobtitle(aditSignature.getSignerRole());
 
                 	result.getSignatures().getSignature().add(dvkSignature);
@@ -1699,7 +1700,9 @@ public class DocumentService {
     				}
     				if (!Util.isNullOrEmpty(recipient.getIsikukood())) {
     					addressee.setPerson(new dvk.api.container.v1.Addressee());
-    					addressee.getPerson().setSurname(recipient.getNimi());
+    					PersonName addresseeName = Util.splitPersonName(recipient.getNimi());
+    					addressee.getPerson().setFirstname(addresseeName.getFirstName());
+    					addressee.getPerson().setSurname(addresseeName.getSurname());
     				}
 
     				result.getAddressees().add(addressee);
@@ -1717,18 +1720,23 @@ public class DocumentService {
 	    		result.setAuthorInfo(new dvk.api.container.AuthorInfo());
 	    		result.setCompilators(new ArrayList<dvk.api.container.Compilator>());
 
-	    		if ("person".equalsIgnoreCase(documentOwner.getUsertype().getShortName())) {
+	    		if (UserService.USERTYPE_PERSON.equalsIgnoreCase(documentOwner.getUsertype().getShortName())) {
+	    			PersonName ownersName = Util.splitPersonName(documentOwner.getFullName());
 	    			result.getAuthorInfo().setPerson(new Person());
-	    			result.getAuthorInfo().getPerson().setSurname(documentOwner.getFullName());
+	    			result.getAuthorInfo().getPerson().setFirstname(ownersName.getFirstName());
+	    			result.getAuthorInfo().getPerson().setSurname(ownersName.getSurname());
 	    			result.getCompilators().add(new dvk.api.container.Compilator());
-	    			result.getCompilators().get(0).setSurname(documentOwner.getFullName());
+	    			result.getCompilators().get(0).setSurname(ownersName.getFirstName());
+	    			result.getCompilators().get(0).setSurname(ownersName.getSurname());
 	    		} else {
 	    			result.getAuthorInfo().setOrganisation(new dvk.api.container.Organisation());
 	    			result.getAuthorInfo().getOrganisation().setOrganisationName(documentOwner.getFullName());
 
 	    			if (!Util.isNullOrEmpty(doc.getCreatorUserName())) {
+	    				PersonName creatorsName = Util.splitPersonName(doc.getCreatorUserName());
 		    			result.getCompilators().add(new dvk.api.container.Compilator());
-		    			result.getCompilators().get(0).setSurname(doc.getCreatorUserName());
+		    			result.getCompilators().get(0).setFirstname(creatorsName.getFirstName());
+		    			result.getCompilators().get(0).setSurname(creatorsName.getSurname());
 	    			}
 	    		}
     		}
@@ -1736,8 +1744,52 @@ public class DocumentService {
     		logger.warn("Could not create \"metaxml\" block in outgoing DVK message. Supplied ADIT document was NULL.");
     	}
 
-
     	return result;
+    }
+
+    /**
+     * Creates metainfo part of outgoing DVK v1 envelope.
+     *
+     * @param doc
+     * 		Document to be sent over DVK
+     * @param recipients
+     * 		List of document recipients
+     * @param documentOwner
+     * 		Document owner as {@link AditUser} object
+     * @return
+     * 		Generated metainfo block
+     */
+    private dvk.api.container.v1.Metainfo createDvkV1Metainfo(Document doc,
+    	List<dvk.api.container.v1.Saaja> recipients, AditUser documentOwner) {
+
+    	dvk.api.container.v1.Metainfo result = new dvk.api.container.v1.Metainfo();
+
+    	result.setKoostajaDokumendinimi(doc.getTitle());
+    	result.setKoostajaDokumendinr(String.valueOf(doc.getId()));
+    	result.setSaatjaDokumendinr(String.valueOf(doc.getId()));
+    	result.setKoostajaKuupaev(Util.dateToXMLDate(doc.getCreationDate()));
+    	result.setSaatjaKuupaev(doc.getCreationDate());
+
+    	DocumentType docType = documentTypeDAO.getDocumentType(doc.getDocumentType());
+    	if (docType != null) {
+    		result.setKoostajaDokumendityyp(docType.getDescription());
+    	}
+
+    	if (!UserService.USERTYPE_PERSON.equalsIgnoreCase(documentOwner.getUsertype().getShortName())) {
+    		result.setKoostajaAsutuseNr(Util.getPersonalIdCodeWithoutCountryPrefix(documentOwner.getUserCode()));
+    	} else {
+    		result.setAutoriIsikukood(Util.getPersonalIdCodeWithoutCountryPrefix(documentOwner.getUserCode()));
+    		result.setAutoriNimi(documentOwner.getFullName());
+    	}
+
+    	if ((recipients != null) && (recipients.size() > 0)) {
+    		dvk.api.container.v1.Saaja firstRecipient = recipients.get(0);
+    		result.setSaajaAsutuseNr(firstRecipient.getRegNr());
+    		result.setSaajaIsikukood(firstRecipient.getIsikukood());
+    		result.setSaajaNimi(Util.isNullOrEmpty(firstRecipient.getNimi()) ? firstRecipient.getAsutuseNimi() : firstRecipient.getNimi());
+    	}
+
+        return result;
     }
 
     /**

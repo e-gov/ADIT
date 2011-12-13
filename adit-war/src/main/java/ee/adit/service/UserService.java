@@ -68,17 +68,17 @@ public class UserService {
     /**
      * Usertype PERSON.
      */
-    public static final String USERTYPE_PERSON = "PERSON";
+    public static final String USERTYPE_PERSON = "person";
 
     /**
      * Usertype INSTITUTION.
      */
-    public static final String USERTYPE_INSTITUTION = "INSTITUTION";
+    public static final String USERTYPE_INSTITUTION = "institution";
 
     /**
      * Usertype COMPANY.
      */
-    public static final String USERTYPE_COMPANY = "COMPANY";
+    public static final String USERTYPE_COMPANY = "company";
 
     /**
      * Usertype WRITE.

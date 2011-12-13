@@ -56,6 +56,7 @@ import ee.adit.dao.pojo.AditUser;
 import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.Message;
+import ee.adit.pojo.PersonName;
 import ee.adit.service.UserService;
 
 /**
@@ -1828,5 +1829,31 @@ public final class Util {
         }
 
         return result;
+    }
+
+    public static PersonName splitPersonName(String personName) {
+    	PersonName result = new PersonName();
+
+    	if (!isNullOrEmpty(personName)) {
+    		if (personName.indexOf(",") > 0) {
+    			String[] splitName = personName.split(",");
+    			if (splitName.length == 2) {
+    				result.setFirstName(splitName[1].trim());
+    				result.setSurname(splitName[0].trim());
+    			} else {
+    				result.setSurname(personName);
+    			}
+    		} else {
+    			String[] splitName = personName.split(" ");
+	    		if (splitName.length == 1) {
+	    			result.setSurname(personName);
+	    		} else {
+					result.setFirstName(splitName[0].trim());
+					result.setSurname(Util.join(Arrays.asList(Arrays.copyOfRange(splitName, 1, splitName.length)), " ").trim());
+	    		}
+    		}
+    	}
+
+    	return result;
     }
 }

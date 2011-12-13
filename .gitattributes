@@ -314,6 +314,7 @@ adit-war/src/main/java/ee/adit/pojo/OutputDocument.java -text
 adit-war/src/main/java/ee/adit/pojo/OutputDocumentFile.java -text
 adit-war/src/main/java/ee/adit/pojo/OutputDocumentFileMonitor.java -text
 adit-war/src/main/java/ee/adit/pojo/OutputDocumentFilesList.java -text
+adit-war/src/main/java/ee/adit/pojo/PersonName.java -text
 adit-war/src/main/java/ee/adit/pojo/PrepareSignatureInternalResult.java -text
 adit-war/src/main/java/ee/adit/pojo/PrepareSignatureRequest.java -text
 adit-war/src/main/java/ee/adit/pojo/PrepareSignatureRequestCert.java -text
