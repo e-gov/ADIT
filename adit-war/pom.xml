@@ -447,9 +447,6 @@
 				<includes>
 					<include>*</include>
 				</includes>
-                <excludes>
-                    <exclude>dvkapi.jar</exclude>
-                </excludes>
 				<!--
                 <excludes>
                     <exclude>saaj-api.jar</exclude>
