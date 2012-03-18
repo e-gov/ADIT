@@ -40,6 +40,10 @@
 	<class name="dvk.api.container.v1.Metainfo">
 		<map-to xml="metainfo" />
 
+		<field name="dhlId" type="int">
+			<bind-xml name="dhl_id" node="element" xmlns="http://www.riik.ee/schemas/dhl-meta-automatic" />
+		</field>
+
 		<field name="dhlSaabumisviis" type="string">
 			<bind-xml name="dhl_saabumisviis" node="element" xmlns="http://www.riik.ee/schemas/dhl-meta-automatic" />
 		</field>
@@ -328,22 +332,4 @@
 			<bind-xml name="osakonna_nimi" node="element" />
 		</field>
 	</class>
-	<!--
-		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		metainfo.koostajaKuupaev.dateHandler
-		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	-->
-	<field-handler name="metainfo.koostajaKuupaev.dateHandler" class="dvk.api.container.CustomDateHandler">
-		<param name="fieldName" value="koostajaKuupaev" />
-		<param name="info" value="DateHandler for Metainfo.KoostajaKuupaev" />
-	</field-handler>
-	<!--
-		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		metaxml.letterMetaData.signDate.dateHandler
-		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	-->
-	<field-handler name="metaxml.letterMetaData.signDate.dateHandler" class="dvk.api.container.CustomDateHandler">
-		<param name="fieldName" value="signDate" />
-		<param name="info" value="DateHandler for LetterMetaData.SignDate" />
-	</field-handler>
 </mapping>

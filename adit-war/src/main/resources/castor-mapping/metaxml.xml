@@ -218,8 +218,7 @@
 	<class name="dvk.api.container.LetterMetaData">
 		<map-to xml="LetterMetaData" ns-uri="http://www.riik.ee/schemas/dhl/rkel_letter" ns-prefix="rkel" />
 
-        <field name="signDate" type="string" handler="dvk.api.container.CustomDateHandler">
-		<!--<field name="signDate" type="date">-->
+		<field name="signDate" type="string" handler="dvk.api.container.LetterMetadataSignDateHandler">
 			<bind-xml name="SignDate" node="element" />
 		</field>
 

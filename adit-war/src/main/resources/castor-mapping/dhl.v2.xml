@@ -28,7 +28,7 @@
 		<field name="ajalugu" type="dvk.api.container.v2.Ajalugu">
 			<bind-xml name="ajalugu" />
 		</field>
-
+		
 		<field name="failideKonteiner" type="dvk.api.container.v2.FailideKonteiner">
 			<bind-xml name="failid" />
 		</field>
