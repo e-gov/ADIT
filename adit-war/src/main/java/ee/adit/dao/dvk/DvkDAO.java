@@ -127,6 +127,7 @@ public class DvkDAO extends HibernateDaoSupport {
     public void updateDocumentLocalId(long localId, long documentId) throws Exception {
         logger.info("Updating local item id of DVK message. Message ID: " + documentId + ", ADIT document ID: " + localId);
         this.getHibernateTemplate().bulkUpdate("update PojoMessage set localItemId = "+ localId +" where dhlMessageId = " + documentId);
+        this.getHibernateTemplate().flush();
     }
 
     /**
