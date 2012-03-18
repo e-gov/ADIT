@@ -2046,6 +2046,7 @@ public class DocumentService {
 	                    // Finally commit
 	                    //aditTransaction.commit();
 	                    //aditSession.flush();
+	                    logger.info("DVK message " + dvkDocument.getDhlMessageId() + " was saved as ADIT document " + saveResult.getItemId());
 	                } else {
 	                    success = false;
 	                	if ((saveResult.getMessages() != null) && (saveResult.getMessages().size() > 0)) {
