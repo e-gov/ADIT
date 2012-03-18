@@ -2041,7 +2041,7 @@ public class DocumentService {
 	                    // Add ID of created ADIT document to
 	                    // DVK buffer table.
 	                    dvkDocument.setLocalItemId(saveResult.getItemId());
-	                    this.getDvkDAO().updateDocument(dvkDocument);
+	                    this.getDvkDAO().updateDocumentLocalId(saveResult.getItemId(), dvkDocument.getDhlMessageId());
 
 	                    // Finally commit
 	                    //aditTransaction.commit();

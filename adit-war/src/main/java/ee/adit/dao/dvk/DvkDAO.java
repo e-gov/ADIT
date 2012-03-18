@@ -116,6 +116,35 @@ public class DvkDAO extends HibernateDaoSupport {
     }
 
     /**
+     * Updates only local item id column in DVK UC database.
+     *
+     * @param localId
+     * 		localItemId
+     * @param documentId
+     * 		dhlMessageId
+     * @throws Exception
+     */
+    public void updateDocumentLocalId(long localId, long documentId) throws Exception {
+        String sql = "update PojoMessage set localItemId = :localItemId where dhlMessageId = :dhlMessageId";
+        Session session = null;
+
+        try {
+            session = this.getSessionFactory().openSession();
+            session.beginTransaction();
+            Query query = session.createQuery(sql);
+            query.setLong("localItemId", localId);
+            query.setLong("dhlMessageId", documentId);
+            query.executeUpdate();
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+    }
+
+    /**
      * Retrieves recipients for the specified DVK message.
      *
      * @param dvkMessageID DVK message ID
