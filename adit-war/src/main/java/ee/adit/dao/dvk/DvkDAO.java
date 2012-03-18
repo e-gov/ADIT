@@ -125,7 +125,8 @@ public class DvkDAO extends HibernateDaoSupport {
      * @throws Exception
      */
     public void updateDocumentLocalId(long localId, long documentId) throws Exception {
-        String sql = "update PojoMessage set localItemId = :localItemId where dhlMessageId = :dhlMessageId";
+        logger.info("Updating local item id of DVK message. Message ID: " + documentId + ", ADIT document ID: " + localId);
+    	String sql = "update PojoMessage set localItemId = :localItemId where dhlMessageId = :dhlMessageId";
         Session session = null;
 
         try {
