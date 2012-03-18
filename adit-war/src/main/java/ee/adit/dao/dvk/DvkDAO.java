@@ -126,29 +126,7 @@ public class DvkDAO extends HibernateDaoSupport {
      */
     public void updateDocumentLocalId(long localId, long documentId) throws Exception {
         logger.info("Updating local item id of DVK message. Message ID: " + documentId + ", ADIT document ID: " + localId);
-
-    	Session session = null;
-    	Transaction transaction = null;
-
-        try {
-            session = this.getSessionFactory().openSession();
-            transaction = session.beginTransaction();
-            String sql = "update PojoMessage set localItemId = :localItemId where dhlMessageId = :dhlMessageId";
-            Query query = session.createQuery(sql);
-            query.setLong("localItemId", localId);
-            query.setLong("dhlMessageId", documentId);
-            query.executeUpdate();
-            transaction.commit();
-        } catch (Exception e) {
-        	if (transaction != null) {
-        		transaction.rollback();
-        	}
-            throw e;
-        } finally {
-            if (session != null) {
-                session.close();
-            }
-        }
+        this.getHibernateTemplate().bulkUpdate("update PojoMessage set localItemId = "+ localId +" where dhlMessageId = " + documentId);
     }
 
     /**
