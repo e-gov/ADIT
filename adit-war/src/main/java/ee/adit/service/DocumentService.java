@@ -1103,7 +1103,7 @@ public class DocumentService {
                             Saaja saaja = new Saaja();
                             saaja.setRegNr(recipient.getDvkOrgCode());
 
-                            if ("person".equalsIgnoreCase(recipient.getUsertype().getShortName())) {
+                            if (UserService.USERTYPE_PERSON.equalsIgnoreCase(recipient.getUsertype().getShortName())) {
                                 saaja.setNimi(recipient.getFullName());
                                 saaja.setIsikukood(recipient.getUserCode());
                             } else {
@@ -1374,7 +1374,7 @@ public class DocumentService {
                     dvk.api.container.v1.Saatja saatja = new dvk.api.container.v1.Saatja();
                     saatja.setRegNr(Util.removeCountryPrefix(getConfiguration().getDvkOrgCode()));
                     saatja.setIsikukood(Util.removeCountryPrefix(document.getCreatorCode()));
-                    if ((sender.getUsertype() == null) || ("person".equalsIgnoreCase(sender.getUsertype().getShortName()))) {
+                    if ((sender.getUsertype() == null) || (UserService.USERTYPE_PERSON.equalsIgnoreCase(sender.getUsertype().getShortName()))) {
                         saatja.setNimi(sender.getFullName());
                     } else {
                         saatja.setAsutuseNimi(sender.getFullName());
@@ -1398,7 +1398,7 @@ public class DocumentService {
                             dvk.api.container.v1.Saaja saaja = new dvk.api.container.v1.Saaja();
                             saaja.setRegNr(recipient.getDvkOrgCode());
 
-                            if ("person".equalsIgnoreCase(recipient.getUsertype().getShortName())) {
+                            if (UserService.USERTYPE_PERSON.equalsIgnoreCase(recipient.getUsertype().getShortName())) {
                                 saaja.setNimi(recipient.getFullName());
                                 saaja.setIsikukood(recipient.getUserCode());
                             } else {

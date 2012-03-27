@@ -53,6 +53,7 @@ import org.castor.core.util.Base64Decoder;
 import org.castor.core.util.Base64Encoder;
 
 import ee.adit.dao.pojo.AditUser;
+import ee.adit.dao.pojo.Usertype;
 import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.Message;
@@ -1779,15 +1780,22 @@ public final class Util {
     	final UserService userService) {
 
     	AditUser xroadRequestUser = null;
-        if ("person".equalsIgnoreCase(currentUser.getUsertype().getShortName())) {
+
+        if (UserService.USERTYPE_PERSON.equalsIgnoreCase(currentUser.getUsertype().getShortName())) {
             xroadRequestUser = currentUser;
         } else {
             try {
                 xroadRequestUser = userService.getUserByID(header.getIsikukood());
             } catch (Exception ex) {
-                logger.debug("Error when attempting to find local user matchinig the person that executed a company request.");
+            	logger.error("Error when attempting to find local user matchinig the person that executed a company request.", ex);
             }
         }
+
+        if (xroadRequestUser == null) {
+        	xroadRequestUser = new AditUser();
+        	xroadRequestUser.setUsertype(new Usertype(UserService.USERTYPE_PERSON));
+        }
+
         return xroadRequestUser;
     }
 
