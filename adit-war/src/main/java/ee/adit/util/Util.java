@@ -1794,6 +1794,10 @@ public final class Util {
         if (xroadRequestUser == null) {
         	xroadRequestUser = new AditUser();
         	xroadRequestUser.setUsertype(new Usertype(UserService.USERTYPE_PERSON));
+        	if (header != null) {
+        		xroadRequestUser.setUserCode(header.getIsikukood());
+        		xroadRequestUser.setActive(false);
+        	}
         }
 
         return xroadRequestUser;
