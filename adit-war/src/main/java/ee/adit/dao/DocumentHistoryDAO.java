@@ -25,7 +25,7 @@ public class DocumentHistoryDAO extends HibernateDaoSupport {
      * @return document history ID
      */
     public Long save(DocumentHistory documentHistory) {
-        Long result = null;
+        /*Long result = null;
         Session session = null;
         Transaction transaction = null;
         try {
@@ -46,8 +46,8 @@ public class DocumentHistoryDAO extends HibernateDaoSupport {
             }
         }
 
-        return result;
-        // return (Long) this.getHibernateTemplate().save(documentHistory);
+        return result;*/
+        return (Long) this.getHibernateTemplate().save(documentHistory);
     }
 
     /**
