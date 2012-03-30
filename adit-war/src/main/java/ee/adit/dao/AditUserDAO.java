@@ -16,7 +16,7 @@ import ee.adit.exception.AditInternalException;
 /**
  * AditUser data access class. Provides methods for retrieving and manipulating
  * user data.
- * 
+ *
  * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
  */
 public class AditUserDAO extends HibernateDaoSupport {
@@ -25,7 +25,7 @@ public class AditUserDAO extends HibernateDaoSupport {
 
     /**
      * Retrieves user by ID.
-     * 
+     *
      * @param userCode user code (ID)
      * @return user
      */
@@ -43,16 +43,16 @@ public class AditUserDAO extends HibernateDaoSupport {
 
     /**
      * Saves changes for this user or inserts a new record.
-     * 
+     *
      * @param aditUser user
      */
     public void saveOrUpdate(AditUser aditUser) {
     	saveOrUpdate(aditUser, false);
     }
-    
+
     /**
      * Saves changes for this user or inserts a new record.
-     * 
+     *
      * @param aditUser user
      * @param useExistingSession
      * 		Should existing session be used for DB interaction
@@ -69,12 +69,12 @@ public class AditUserDAO extends HibernateDaoSupport {
 	    	Session session = null;
 	        Transaction transaction = null;
 	        try {
-	
+
 	            session = this.getSessionFactory().openSession();
 	            transaction = session.beginTransaction();
 	            session.saveOrUpdate(aditUser);
 	            transaction.commit();
-	
+
 	        } catch (Exception e) {
 	            logger.error(e);
 	        	if (transaction != null) {
@@ -96,7 +96,7 @@ public class AditUserDAO extends HibernateDaoSupport {
 
     /**
      * Fetches a list of all the active users ordered by name.
-     * 
+     *
      * @param startIndex start index (offset) of the result list
      * @param maxResults maximum number of results
      * @return list of users
@@ -107,7 +107,7 @@ public class AditUserDAO extends HibernateDaoSupport {
         List<AditUser> result = null;
 
         DetachedCriteria dt = DetachedCriteria.forClass(AditUser.class, "aditUser");
-        dt.add(Property.forName("aditUser.active").eq(new Boolean(true)));
+        dt.add(Property.forName("aditUser.active").eq(Boolean.valueOf(true)));
         dt.addOrder(Order.asc("aditUser.fullName"));
         result = this.getHibernateTemplate().findByCriteria(dt, startIndex, maxResults);
 
@@ -116,7 +116,7 @@ public class AditUserDAO extends HibernateDaoSupport {
 
     /**
      * Fetches all DVK users. No additional filtering is applied.
-     * 
+     *
      * @return list of DVK users
      * @throws Exception
      */
@@ -141,21 +141,18 @@ public class AditUserDAO extends HibernateDaoSupport {
 
     /**
      * Calculates used disk quota for user.
-     * 
+     *
      * @param userCode user code
      * @return used space in bytes
      */
     public Long getUsedSpaceForUser(String userCode) {
-        Long result = new Long(0);
         AditUser user = this.getUserByID(userCode);
 
         if (user != null) {
-            result = (user.getDiskQuotaUsed() == null) ? 0L : user.getDiskQuotaUsed();
+            return (user.getDiskQuotaUsed() == null) ? 0L : user.getDiskQuotaUsed();
         } else {
             throw new AditInternalException("Did not find user: " + userCode);
         }
-
-        return result;
     }
 
 }

@@ -371,10 +371,16 @@ public class UserService {
      * @return user information
      */
     public GetUserInfoResponseAttachmentUser getUserInfo(String userCode, Long globalDiskQuota) {
-
         GetUserInfoResponseAttachmentUser result = new GetUserInfoResponseAttachmentUser();
 
+        if (userCode == null) {
+        	userCode = "";
+        }
+
         AditUser user = this.getAditUserDAO().getUserByID(userCode);
+        if ((user == null) && !Util.codeStartsWithCountryPrefix(userCode)) {
+        	user = this.getAditUserDAO().getUserByID("EE" + userCode);
+        }
 
         long globalDiskQuotaAsValueType = (globalDiskQuota == null) ? 0L : globalDiskQuota.longValue();
         long userTotalDiskQuota = 0L;
