@@ -115,6 +115,7 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
 
             // Kontrollime, kas päringus märgitud isik on teenuse kasutaja
             AditUser user = Util.getAditUserFromXroadHeader(this.getHeader(), this.getUserService());
+            AditUser xroadRequestUser = Util.getXroadUserFromXroadHeader(user, this.getHeader(), this.getUserService());
 
             // Kontrollime, et kasutajakonto ligipääs poleks peatatud (kasutaja
             // lahkunud)
@@ -246,7 +247,8 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
                     if ((docCreator != null)
                         && (userService.findNotification(docCreator.getUserNotifications(), ScheduleClient.NOTIFICATION_TYPE_SIGN) != null)) {
 
-                    	List<Message> messageInAllKnownLanguages = this.getMessageService().getMessages("scheduler.message.sign", new Object[] {doc.getTitle(), docCreator.getUserCode()});
+                    	String signerData = user.getFullName() + " (" + header.getIsikukood() + ")";
+                    	List<Message> messageInAllKnownLanguages = this.getMessageService().getMessages("scheduler.message.sign", new Object[] {doc.getTitle(), signerData});
                     	String eventText = Util.joinMessages(messageInAllKnownLanguages, "<br/>");
 
                     	getScheduleClient().addEvent(
@@ -262,6 +264,12 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
                 aditCodedException.setParameters(new Object[] {request.getDocumentId().toString(), user.getUserCode()});
                 throw aditCodedException;
             }
+
+            // Add history event
+            this.getDocumentService().addHistoryEvent(applicationName, documentId, user.getUserCode(),
+                DocumentService.HISTORY_TYPE_SIGN, xroadRequestUser.getUserCode(),
+                xroadRequestUser.getFullName(), null,
+                user.getFullName(), requestDate.getTime());
 
             // Set response messages
             response.setSuccess(true);
