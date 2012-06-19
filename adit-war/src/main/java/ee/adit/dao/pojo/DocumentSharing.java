@@ -21,6 +21,7 @@ public class DocumentSharing implements java.io.Serializable {
     private Date creationDate;
     private Date lastAccessDate;
     private Boolean deleted;
+    private String dvkFolder;
 
     public DocumentSharing() {
     }
@@ -134,6 +135,14 @@ public class DocumentSharing implements java.io.Serializable {
 
 	public void setDeleted(Boolean deleted) {
 		this.deleted = deleted;
+	}
+
+	public String getDvkFolder() {
+		return dvkFolder;
+	}
+
+	public void setDvkFolder(String dvkFolder) {
+		this.dvkFolder = dvkFolder;
 	}
 
 }

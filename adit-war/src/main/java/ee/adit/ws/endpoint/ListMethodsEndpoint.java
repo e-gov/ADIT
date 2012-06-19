@@ -71,6 +71,7 @@ public class ListMethodsEndpoint extends AbstractAditBaseEndpoint {
         result.addItem(producerName + ".shareDocument.v1");
         result.addItem(producerName + ".unJoin.v1");
         result.addItem(producerName + ".unShareDocument.v1");
+        result.addItem(producerName + ".getUserContacts.v1");
         result.addItem(producerName + ".listMethods");
 
         return result;

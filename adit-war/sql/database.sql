@@ -96,7 +96,8 @@ CREATE TABLE &&ADIT_SCHEMA..DOCUMENT
     deleted                 NUMBER(1),                  /* Indicates if this document is deleted. "1" = deleted, "0" = not deleted. */
     invisible_to_owner      NUMBER(1,0) NULL,           /* Indicates if this document has been made invisible to its owner. Is used when document has been sent to someone else and owner wants to delete it from his/her own view. */
     signed                  NUMBER(1,0) NULL,           /* Indicates if this document has been signed. */
-    migrated                NUMBER (1,0)                /* Indicates if this document has been migrated from state portal */
+    migrated                NUMBER (1,0),               /* Indicates if this document has been migrated from state portal */
+    dvk_folder 				VARCHAR2(1000)				/* DVK dokumendi kausta nimi */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
 COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT                          IS 'Document data';
@@ -124,6 +125,7 @@ COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.deleted                 IS 'Indicates 
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.invisible_to_owner      IS 'Indicates if this document has been made invisible to its owner. Is used when document has been sent to someone else and owner wants to delete it from his/her own view.';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.signed                  IS 'Indicates if this document has been signed.';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.migrated                IS 'Indicates if this document has been migrated from state portal';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.dvk_folder 			  IS 'DVK dokumendi kausta nimi';
 
 
 CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_DVK_STATUS
@@ -222,7 +224,8 @@ CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING
     dvk_status_id     NUMBER(12),                  /* DEC status ID of document. Is used when document has been sent using DEC */
     wf_status_id      NUMBER(12),                  /* Workflow status ID. Is used for feedback from recipient to sender. */
     last_access_date  DATE,                        /* Date and time the document was last accessed by recipient. */
-	deleted           NUMBER(1,0) NULL             /* Document has been deleted by the user to whom it was sent. */
+	deleted           NUMBER(1,0) NULL,            /* Document has been deleted by the user to whom it was sent. */
+	dvk_folder		  VARCHAR2(1000)			   /* DVK dokumendi kausta nimi */	
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
 COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING                    IS 'Document sharing data';
@@ -237,6 +240,7 @@ COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.dvk_status_id     IS 'DEC stat
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.wf_status_id      IS 'Workflow status ID. Is used for feedback from recipient to sender.';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.last_access_date  IS 'Date and time the document was last accessed by recipient.';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.deleted           IS 'Document has been deleted by the user to whom it was sent.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.dvk_folder		IS 'DVK dokumendi kausta nimi';
 
 CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING_TYPE
 (
@@ -468,6 +472,19 @@ COMMENT ON COLUMN &&ADIT_SCHEMA..MAINTENANCE_JOB.ID           IS 'Unique ID of j
 COMMENT ON COLUMN &&ADIT_SCHEMA..MAINTENANCE_JOB.NAME         IS 'Name of job';
 COMMENT ON COLUMN &&ADIT_SCHEMA..MAINTENANCE_JOB.IS_RUNNING   IS 'Indicates if current job is already running';
 
+CREATE TABLE &&ADIT_SCHEMA..USER_CONTACT
+(
+    ID                NUMBER(12) NOT NULL,
+    user_code           VARCHAR2(50) NOT NULL,         /* Reference to the user (user_code) who owns the contact book */
+    contact_code        VARCHAR2(50) NOT NULL,         /* Reference to the user (user_code) whos contact data is shown in the contact book */
+    last_used_date				 TIMESTAMP			   /* Date and time when given contacts has been used for sharing or sending documents */
+) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
+
+COMMENT ON TABLE &&ADIT_SCHEMA..USER_CONTACT                    	IS 'User contact data';
+COMMENT ON COLUMN &&ADIT_SCHEMA..USER_CONTACT.ID                	IS 'Unique identifier';
+COMMENT ON COLUMN &&ADIT_SCHEMA..USER_CONTACT.user_code       		IS 'Reference to the user (user_code) who owns the contact book';
+COMMENT ON COLUMN &&ADIT_SCHEMA..USER_CONTACT.contact_code         	IS 'Reference to the user (user_code) whos contact data is shown in the contact book';
+COMMENT ON COLUMN &&ADIT_SCHEMA..USER_CONTACT.last_used_date        IS 'Date and time when given contacts has been used for sharing or sending documents';
 
 /* Create Primary Key Constraints */
 ALTER TABLE &&ADIT_SCHEMA..ACCESS_RESTRICTION ADD CONSTRAINT PK_ACCESS_RESTRICTIONS
@@ -565,6 +582,10 @@ ALTER TABLE &&ADIT_SCHEMA..USERTYPE ADD CONSTRAINT PK_USERTYPES
  ALTER TABLE &&ADIT_SCHEMA..MAINTENANCE_JOB ADD CONSTRAINT PK_MAINTENANCE_JOB
     PRIMARY KEY (ID)
  USING INDEX TABLESPACE &&ADIT_INDEX_TABLESPACE.;
+ 
+ ALTER TABLE &&ADIT_SCHEMA..USER_CONTACT ADD CONSTRAINT PK_USER_CONTACTS
+    PRIMARY KEY (ID)
+ USING INDEX TABLESPACE &&ADIT_INDEX_TABLESPACE.;
 
 /* Create Foreign Key Constraints */
 ALTER TABLE &&ADIT_SCHEMA..ACCESS_RESTRICTION ADD CONSTRAINT remote_application_short_name
@@ -641,7 +662,13 @@ ALTER TABLE &&ADIT_SCHEMA..NOTIFICATION ADD CONSTRAINT FK_NOTIFICATION_DOCUMENT
 
 ALTER TABLE &&ADIT_SCHEMA..NOTIFICATION ADD CONSTRAINT FK_NOTIFICATION_NOTIF_TYPE
     FOREIGN KEY (notification_type) REFERENCES &&ADIT_SCHEMA..NOTIFICATION_TYPE (short_name);
-
+ 
+ALTER TABLE &&ADIT_SCHEMA..USER_CONTACT ADD CONSTRAINT FK_USER_CONTACT_USER
+    FOREIGN KEY (user_code) REFERENCES &&ADIT_SCHEMA..ADIT_USER (user_code);
+    
+ALTER TABLE &&ADIT_SCHEMA..USER_CONTACT ADD CONSTRAINT FK_USER_CONTACT_CONTACT
+    FOREIGN KEY (contact_code) REFERENCES &&ADIT_SCHEMA..ADIT_USER (user_code);
+    
 /* Create Triggers */
 CREATE SEQUENCE &&ADIT_SCHEMA..ADIT_LOG_ID_SEQ
 INCREMENT BY 1
@@ -754,6 +781,15 @@ NOCACHE
 NOORDER;
 
 CREATE SEQUENCE &&ADIT_SCHEMA..ACCESS_RESTR_ID_SEQ
+INCREMENT BY 1
+START WITH 1
+NOMAXVALUE
+MINVALUE 1
+NOCYCLE
+NOCACHE
+NOORDER;
+
+CREATE SEQUENCE &&ADIT_SCHEMA..USER_CONTACT_ID_SEQ
 INCREMENT BY 1
 START WITH 1
 NOMAXVALUE

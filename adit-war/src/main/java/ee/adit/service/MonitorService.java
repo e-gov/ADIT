@@ -523,6 +523,7 @@ public class MonitorService {
             SaveDocumentRequestDocument document = new SaveDocumentRequestDocument();
             document.setHref("cid:document");
             request.setDocument(document);
+            request.setDvkFolder("TESTFOLDER");
 
             SaveDocumentRequestAttachmentMonitor requestAttachment = new SaveDocumentRequestAttachmentMonitor();
             requestAttachment.setDocumentType(DocumentService.DOCTYPE_LETTER);

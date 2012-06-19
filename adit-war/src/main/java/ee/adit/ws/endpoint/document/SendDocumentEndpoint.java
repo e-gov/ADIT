@@ -168,9 +168,16 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
                                 DocumentService.HISTORY_TYPE_LOCK, xroadRequestUser.getUserCode(),
                                 xroadRequestUser.getFullName(), DocumentService.DOCUMENT_HISTORY_DESCRIPTION_LOCK,
                                 user.getFullName(), requestDate.getTime());
-
+                            
+                            String dvkFolder = request.getDvkFolder();
+                            
                             // Add sharing information to database
-                            this.getDocumentService().sendDocument(doc, recipient);
+                            this.getDocumentService().sendDocument(doc, recipient, dvkFolder);
+                            
+                            
+                            //TODO: it is better to add dvkFolder to the Document object here 
+                            //instead of adding it in sendDocument Method to DocumentSharing objects
+                            
 
                             // Send notification to every user the document was shared to
                             // (assuming they have requested such notifications)
@@ -196,6 +203,9 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
                                 additionalInformationForLog = additionalInformationForLog + ",";
                             }
                             additionalInformationForLog = additionalInformationForLog + " Document sent to: " + recipientCode;
+                            
+                            // Add recipient to user contacts
+                            userService.addUserContact(user, recipient);
 
                         } catch (Exception e) {
                             logger.error("Exception while sharing document: ", e);

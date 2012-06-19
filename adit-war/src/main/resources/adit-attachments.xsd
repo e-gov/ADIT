@@ -204,7 +204,69 @@
 			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
-
+	
+    <!-- getUserContacts attachments -->
+    <xs:element name="getUserContactsResponseAttachmentV1" type="getUserContactsResponseAttachmentV1Type" />
+	<xs:complexType name="getUserContactsResponseAttachmentV1Type">
+		<xs:annotation>
+			<xs:documentation xml:lang="ee">Päringu "getUserContacts" vastuse
+				manus</xs:documentation>
+			<xs:documentation xml:lang="en">Attachment for request
+				"getUserContacts" response message</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="user_contact_list" type="getUserContactsResponseAttachmentV1UserContactListType" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="getUserContactsResponseAttachmentV1UserContactListType">
+		<xs:annotation>
+			<xs:documentation xml:lang="ee">Kasutaja kontaktide nimekiri
+			</xs:documentation>
+			<xs:documentation xml:lang="en">User contact list</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="total" type="xs:integer">
+				<xs:annotation>
+					<xs:documentation xml:lang="ee">Tagastatavate tulemuste arv
+					</xs:documentation>
+					<xs:documentation xml:lang="en">Total number of results
+						returned</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element maxOccurs="unbounded" name="user_contact" type="getUserContactsResponseAttachmentV1UserContactType" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="getUserContactsResponseAttachmentV1UserContactType">
+		<xs:annotation>
+			<xs:documentation xml:lang="ee">Kasutaja kontakti andmed
+			</xs:documentation>
+			<xs:documentation xml:lang="en">User contact data</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="code" type="xs:string">
+				<xs:annotation>
+					<xs:documentation xml:lang="ee">Kasutajakood
+					</xs:documentation>
+					<xs:documentation xml:lang="en">Usercode</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="name" type="xs:string">
+				<xs:annotation>
+					<xs:documentation xml:lang="ee">Kasutajanimi
+					</xs:documentation>
+					<xs:documentation xml:lang="en">Username</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="type" type="xs:string">
+				<xs:annotation>
+					<xs:documentation xml:lang="ee">Kasutaja tüüp
+					</xs:documentation>
+					<xs:documentation xml:lang="en">Usertype</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+        
 	<!-- getDocument attachments -->
 	<xs:element name="getDocumentResponseAttachmentV1" type="getDocumentResponseAttachmentV1Type" />
 	<xs:complexType name="getDocumentResponseAttachmentV1Type">

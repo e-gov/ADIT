@@ -26,6 +26,7 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="folder" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="dvk_folder" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="document_types" type="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}ArrayOfDocumentType"/>
  *         &lt;element name="file_types" type="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}ArrayOfFileType"/>
  *         &lt;element name="document_dvk_statuses" type="{http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid}ArrayOfDocumentDvkStatus"/>
@@ -49,13 +50,15 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "GetDocumentListRequest", propOrder = {"folder", "documentTypes", "fileTypes", "documentDvkStatuses",
+@XmlType(name = "GetDocumentListRequest", propOrder = {"folder", "dvkFolder", "documentTypes", "fileTypes", "documentDvkStatuses",
         "documentWorkflowStatuses", "hasBeenViewed", "isDeflated", "creatorApplications", "searchPhrase",
         "periodStart", "periodEnd", "maxResults", "startIndex", "sortBy", "sortOrder" })
 public class GetDocumentListRequest {
 
     @XmlElement(required = true)
     private String folder;
+    @XmlElement(name = "dvk_folder", required = true)
+    private String dvkFolder;
     @XmlElement(name = "document_types", required = true)
     private ArrayOfDocumentType documentTypes;
     @XmlElement(name = "file_types")
@@ -107,6 +110,30 @@ public class GetDocumentListRequest {
         this.folder = value;
     }
 
+    /**
+     * Gets the value of the dvkFolder property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getDvkFolder() {
+        return dvkFolder;
+    }
+
+    /**
+     * Sets the value of the dvkFolder property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setDvkFolder(String value) {
+        this.dvkFolder = value;
+    }
+    
     /**
      * Gets the value of the documentTypes property.
      * 

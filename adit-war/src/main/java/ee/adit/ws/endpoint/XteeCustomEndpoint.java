@@ -14,6 +14,7 @@
 
 package ee.adit.ws.endpoint;
 
+import java.io.StringWriter;
 import java.util.Iterator;
 
 import javax.xml.namespace.QName;
@@ -25,6 +26,10 @@ import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPMessage;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.apache.log4j.Logger;
 import org.exolab.castor.xml.NodeType;
@@ -271,6 +276,16 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
     private void getResponse(CustomXTeeHeader header, Document query, SOAPMessage respMessage,
             SOAPMessage reqMessage, Document operationNode) throws Exception {
         SOAPElement teenusElement = createXteeMessageStructure(reqMessage, respMessage);
+        //For testing only
+        DOMSource domSource = new DOMSource(query);
+        StringWriter writer = new StringWriter();
+        StreamResult result = new StreamResult(writer);
+        TransformerFactory tf = TransformerFactory.newInstance();
+        Transformer transformer = tf.newTransformer();
+        transformer.transform(domSource, result);
+        String requestObjectSourceXml = writer.toString();
+        logger.info(requestObjectSourceXml);
+        //testing end
         if (!metaService) {
             copyParing(query, teenusElement);
         }

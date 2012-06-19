@@ -49,6 +49,9 @@ public class SaveDocumentRequestMonitor {
     @XmlElement(required = true)
     private SaveDocumentRequestDocument document;
 
+    @XmlElement(required = true)
+    protected String dvkFolder;
+
     /**
      * Gets the value of the document property.
      * 
@@ -68,6 +71,30 @@ public class SaveDocumentRequestMonitor {
      */
     public void setDocument(SaveDocumentRequestDocument value) {
         this.document = value;
+    }
+
+    /**
+     * Gets the value of the dvkFolder property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getDvkFolder() {
+        return dvkFolder;
+    }
+
+    /**
+     * Sets the value of the dvkFolder property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setDvkFolder(String value) {
+        this.dvkFolder = value;
     }
 
 }

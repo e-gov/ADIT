@@ -578,6 +578,7 @@ public class DocumentService {
     @Transactional
     public SaveItemInternalResult save(
             final SaveDocumentRequestAttachment attachmentDocument,
+            final String dvkFolder,
             final String creatorCode,
             final String remoteApplication,
             final long remainingDiskQuota,
@@ -588,7 +589,7 @@ public class DocumentService {
             throws FileNotFoundException, AditCodedException {
 
         final DocumentDAO docDao = this.getDocumentDAO();
-
+        
         return (SaveItemInternalResult) this.getDocumentDAO().getHibernateTemplate().execute(new HibernateCallback() {
             public Object doInHibernate(Session session) throws HibernateException, SQLException, AditCodedException {
                 boolean involvedSignatureContainerExtraction = false;
@@ -619,6 +620,7 @@ public class DocumentService {
                 document.setTitle(attachmentDocument.getTitle());
                 document.setCreatorUserCode(creatorUserCode);
                 document.setCreatorUserName(creatorUserName);
+                document.setDvkFolder(dvkFolder);
 
                 if ((attachmentDocument.getFiles() != null) && (attachmentDocument.getFiles().size() == 1)
                     && ((document.getDocumentFiles() == null) || (document.getDocumentFiles().size() == 0))) {
@@ -710,7 +712,6 @@ public class DocumentService {
 
                 List<OutputDocumentFile> filesList = new ArrayList<OutputDocumentFile>();
                 String extension = Util.getFileExtension(file.getName());
-
                 // If first added file happens to be a DigiDoc container then
                 // extract files and signatures from container. Otherwise add
                 // container as a regular file.
@@ -953,14 +954,20 @@ public class DocumentService {
      *            document
      * @param recipient
      *            user
+     * @param dvkFolder
+     *            DVK folder
      * @return true, if sending succeeded
      */
-    public boolean sendDocument(Document document, AditUser recipient) {
+    public boolean sendDocument(Document document, AditUser recipient, String dvkFolder) {
         boolean result = false;
 
         DocumentSharing documentSharing = new DocumentSharing();
         documentSharing.setDocumentId(document.getId());
         documentSharing.setCreationDate(new Date());
+        
+        if (dvkFolder != null) {
+        	documentSharing.setDvkFolder(dvkFolder);
+        }
 
         if (recipient.getDvkOrgCode() != null && !"".equalsIgnoreCase(recipient.getDvkOrgCode().trim())) {
             documentSharing.setDocumentSharingType(DocumentService.SHARINGTYPE_SEND_DVK);
@@ -979,7 +986,21 @@ public class DocumentService {
 
         return result;
     }
+    
+    /**
+     * Sends document to the specified user.
+     *
+     * @param document
+     *            document
+     * @param recipient
+     *            user
+     * @return true, if sending succeeded
+     */
+    public boolean sendDocument(Document document, AditUser recipient) {
 
+        return sendDocument(document, recipient, null);
+    }
+        
     /**
      * Adds a document history event.
      *
@@ -1087,8 +1108,12 @@ public class DocumentService {
                     saatjad.add(saatja);
                     transport.setSaatjad(saatjad);
 
+                    //dvkFolder value taken from documentSharing
+                    //TODO: take value from the document object
+                    String dvkFolder = null;
+                    
                     Iterator<DocumentSharing> documentSharings = document.getDocumentSharings().iterator();
-
+                    
                     Saaja firstRecipient = null;
                     while (documentSharings.hasNext()) {
                         DocumentSharing documentSharing = documentSharings.next();
@@ -1115,6 +1140,8 @@ public class DocumentService {
                             }
 
                             saajad.add(saaja);
+                            
+                            dvkFolder = documentSharing.getDvkFolder();
                         }
 
                     }
@@ -1177,7 +1204,14 @@ public class DocumentService {
                     try {
                         PojoMessage dvkMessage = new PojoMessage();
                         dvkMessage.setIsIncoming(false);
-                        dvkMessage.setDhlFolderName("/");
+                        
+                        if (dvkFolder == null) {
+                        	dvkMessage.setDhlFolderName("/");
+                        } else {
+                        	dvkMessage.setDhlFolderName(dvkFolder);
+                        	logger.info("DVK folder name : " + dvkFolder);
+                        }
+                        
                         dvkMessage.setLocalItemId(document.getId());
                         dvkMessage.setTitle(document.getTitle());
                         dvkMessage.setDhlGuid(document.getGuid());
@@ -1383,7 +1417,10 @@ public class DocumentService {
                     transport.setSaatjad(saatjad);
 
                     Iterator<DocumentSharing> documentSharings = document.getDocumentSharings().iterator();
-
+                    
+                    //dvkFolder value taken from documentSharing
+                    //TODO: take value from the document object
+                    String dvkFolder = null;
                     dvk.api.container.v1.Saaja firstRecipient = null;
                     while (documentSharings.hasNext()) {
                         DocumentSharing documentSharing = documentSharings.next();
@@ -1410,6 +1447,8 @@ public class DocumentService {
                             }
 
                             saajad.add(saaja);
+                            
+                            dvkFolder = documentSharing.getDvkFolder();
                         }
                     }
 
@@ -1493,7 +1532,14 @@ public class DocumentService {
                     try {
                         PojoMessage dvkMessage = new PojoMessage();
                         dvkMessage.setIsIncoming(false);
-                        dvkMessage.setDhlFolderName("/");
+
+                        if (dvkFolder == null) {
+                        	dvkMessage.setDhlFolderName("/");
+                        } else {
+                        	dvkMessage.setDhlFolderName(dvkFolder);
+                        	logger.info("DVK folder name : " + dvkFolder);
+                        }
+                        
                         dvkMessage.setLocalItemId(document.getId());
                         dvkMessage.setTitle(document.getTitle());
                         dvkMessage.setDhlGuid(document.getGuid());

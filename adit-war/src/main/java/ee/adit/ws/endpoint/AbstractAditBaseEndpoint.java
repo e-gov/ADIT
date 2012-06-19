@@ -4,9 +4,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.Date;
 
 import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
@@ -134,7 +137,17 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 	            // Unmarshall the request object
 	            Source requestObjectSource = new DOMSource(requestKeha);
 	            Object requestObject = null;
-
+	            
+	            //For testing only
+	            StringWriter writer = new StringWriter();
+	            StreamResult result = new StreamResult(writer);
+	            TransformerFactory tf = TransformerFactory.newInstance();
+	            Transformer transformer = tf.newTransformer();
+	            transformer.transform(requestObjectSource, result);
+	            String requestObjectSourceXml = writer.toString();
+	            logger.info(requestObjectSourceXml);
+	            //testing end
+	            
 	            try {
 	                requestObject = this.getUnmarshaller().unmarshal(requestObjectSource);
 	            } catch (Exception e) {

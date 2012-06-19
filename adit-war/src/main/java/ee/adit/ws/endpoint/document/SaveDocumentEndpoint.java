@@ -180,8 +180,8 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 
                         // Document to database
                         SaveItemInternalResult saveResult = this.getDocumentService().save(document,
-                                user.getUserCode(), applicationName, remainingDiskQuota, creatorUserCode,
-                                creatorUserName, user.getFullName(), jdigidocCfgTmpFile);
+                        		request.getDvkFolder(), user.getUserCode(), applicationName, remainingDiskQuota,
+                        		creatorUserCode, creatorUserName, user.getFullName(), jdigidocCfgTmpFile);
                         if (saveResult.isSuccess()) {
                             documentId = saveResult.getItemId();
                             logger.debug("Document saved with ID: " + documentId.toString());
@@ -212,8 +212,8 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 
                         // Document to database
                         SaveItemInternalResult saveResult = this.getDocumentService().save(document,
-                                user.getUserCode(), applicationName, remainingDiskQuota, creatorUserCode,
-                                creatorUserName, user.getFullName(), jdigidocCfgTmpFile);
+                        		request.getDvkFolder(),user.getUserCode(), applicationName, remainingDiskQuota,
+                        		creatorUserCode, creatorUserName, user.getFullName(), jdigidocCfgTmpFile);
                         if (saveResult.isSuccess()) {
                             documentId = saveResult.getItemId();
                             logger.debug("Document saved with ID: " + documentId.toString());

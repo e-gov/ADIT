@@ -7,7 +7,7 @@
 	</class>
 
 	<class name="ee.adit.pojo.ListMethodsResponse">
-		<map-to xml="keha" />
+		<map-to xml="keha"/>
 		<field name="item" type="java.lang.String" collection="arraylist">
 			<bind-xml name="item"/>
 		</field>
@@ -85,6 +85,46 @@
 
  	<class name="ee.adit.pojo.GetJoinedResponseAttachmentUser">
  		<map-to xml="user" />
+ 		<field name="code" type="java.lang.String">
+			<bind-xml name="code" />
+		</field>
+		<field name="name" type="java.lang.String">
+			<bind-xml name="name" />
+		</field>
+		<field name="type" type="java.lang.String">
+			<bind-xml name="type" />
+		</field>
+ 	</class>
+ 	
+	<!-- GetUserContacts -->
+	<class name="ee.adit.pojo.GetUserContactsRequest">
+		<map-to xml="getUserContacts" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
+	</class>
+
+	<class name="ee.adit.pojo.GetUserContactsResponse">
+		<map-to xml="keha" />
+		<field name="success" type="ee.adit.pojo.Success" >
+		</field>
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
+			<bind-xml name="messages" />
+		</field>
+		<field name="userContactList" type="ee.adit.pojo.UserContactList">
+			<bind-xml name="userContactList" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.GetUserContactsResponseAttachment">
+		<map-to xml="getUserContactsResponseAttachmentV1" />
+		<field name="total" type="java.lang.Integer">
+			<bind-xml name="total" location="user_contact_list" />
+		</field>
+		 <field name="userContacts" type="ee.adit.pojo.GetUserContactsResponseAttachmentUserContact" collection="arraylist">
+			<bind-xml name="user_contact" location="user_contact_list" />
+		</field>
+	</class>
+
+ 	<class name="ee.adit.pojo.GetUserContactsResponseAttachmentUserContact">
+ 		<map-to xml="user_contact" />
  		<field name="code" type="java.lang.String">
 			<bind-xml name="code" />
 		</field>
@@ -481,6 +521,9 @@
 		<field name="folder" type="java.lang.String">
 			<bind-xml name="folder" location="keha" />
 		</field>
+		<field name="dvkFolder" type="java.lang.String">
+			<bind-xml name="dvk_folder" location="keha" />
+		</field>
 		<field name="documentTypes" type="ee.adit.pojo.ArrayOfDocumentType">
 			<bind-xml name="document_types" location="keha" />
 		</field>
@@ -637,6 +680,9 @@
 		<map-to xml="saveDocument" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
 		<field name="document" type="ee.adit.pojo.SaveDocumentRequestDocument">
 			<bind-xml name="document" location="keha" />
+		</field>
+		<field name="dvkFolder" type="java.lang.String">
+			<bind-xml name="dvk_folder" location="keha" />
 		</field>
 	</class>
 
@@ -1027,6 +1073,9 @@
 		<field name="recipientList" type="ee.adit.pojo.ArrayOfUserCode">
 			<bind-xml name="recipient_list" location="keha" />
 		</field>
+		<field name="dvkFolder" type="java.lang.String">
+			<bind-xml name="dvk_folder" location="keha"/>
+		</field>
 	</class>
 
 	<class name="ee.adit.pojo.SendDocumentResponse">
@@ -1087,6 +1136,13 @@
 		</field>
 	</class>
 
+ 	<class name="ee.adit.pojo.UserContactList">
+		<map-to xml="userContactList" />
+		<field name="href" type="java.lang.String">
+			<bind-xml name="href" node="attribute"/>
+		</field>
+	</class>
+	
 	<class name="ee.adit.pojo.ArrayOfFileId">
 		<map-to xml="file_id_list" />
 		<field name="fileId" type="java.lang.Long" collection="arraylist">
@@ -1326,6 +1382,9 @@
 		<map-to xml="saveDocument" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" ns-prefix="adit" />
 		<field name="document" type="ee.adit.pojo.SaveDocumentRequestDocument">
 			<bind-xml name="document" location="keha" QName-prefix="adit" />
+		</field>
+		<field name="dvkFolder" type="java.lang.String">
+			<bind-xml name="dvk_folder" location="keha" QName-prefix="adit" />
 		</field>
 	</class>
 

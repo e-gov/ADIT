@@ -20,12 +20,15 @@ import ee.adit.dao.DocumentDAO;
 import ee.adit.dao.NotificationDAO;
 import ee.adit.dao.NotificationTypeDAO;
 import ee.adit.dao.RemoteApplicationDAO;
+import ee.adit.dao.UserContactDAO;
 import ee.adit.dao.UsertypeDAO;
 import ee.adit.dao.dvk.DvkDAO;
 import ee.adit.dao.pojo.AccessRestriction;
 import ee.adit.dao.pojo.AditUser;
+import ee.adit.dao.pojo.DocumentFile;
 import ee.adit.dao.pojo.NotificationType;
 import ee.adit.dao.pojo.RemoteApplication;
+import ee.adit.dao.pojo.UserContact;
 import ee.adit.dao.pojo.UserNotification;
 import ee.adit.dao.pojo.UserNotificationId;
 import ee.adit.dao.pojo.Usertype;
@@ -64,6 +67,8 @@ public class UserService {
     private NotificationDAO notificationDAO;
 
     private DvkDAO dvkDAO;
+    
+    private UserContactDAO userContactDAO;
 
     /**
      * Usertype PERSON.
@@ -90,7 +95,7 @@ public class UserService {
      */
     public static final String ACCESS_RESTRICTION_READ = "READ";
 
-    /**
+	/**
      * Checks if the application is registered.
      *
      * @param remoteApplicationShortName
@@ -876,7 +881,55 @@ public class UserService {
 
         return result;
     }
+    
+    /**
+     * Adds/updates a user contact.
+     *
+     * @param username
+     *            user full name
+     * @param usercode
+     *            user code
+     * @param usertype
+     *            usertype
+     */
+    public void addUserContact(AditUser user, AditUser contact) {
+    	UserContact userContact = this.getUserContactDAO().getUserContact(user, contact);
+    	
+    	if (userContact == null) {
+    		userContact = new UserContact(user, contact);
+    	}
+    	
+    	userContact.setLastUsedDate(new Date());
+    	
+    	this.getUserContactDAO().saveOrUpdate(userContact);
+    }
 
+    /**
+     * Retrieves the user list from given user contacts.
+     *
+     * @param user
+     *            user
+     * @return userlist
+     * @throws Exception
+     */
+    public List<AditUser> getUserContacts(AditUser user) throws Exception {
+        List<AditUser> users = new ArrayList<AditUser>();
+        
+        List<UserContact> userContacts = null;
+        
+        userContacts = this.getUserContactDAO().getUserContacts(user);
+        
+        Iterator<UserContact> it = userContacts.iterator();
+        if (it != null) {
+            while (it.hasNext()) {
+                UserContact userContact = it.next();
+                users.add(userContact.getContact());
+            }
+        }
+
+        return users;
+    }
+    
     public RemoteApplicationDAO getRemoteApplicationDAO() {
         return remoteApplicationDAO;
     }
@@ -941,4 +994,11 @@ public class UserService {
         this.dvkDAO = dvkDAO;
     }
 
+    public UserContactDAO getUserContactDAO() {
+		return userContactDAO;
+	}
+
+	public void setUserContactDAO(UserContactDAO userContactDAO) {
+		this.userContactDAO = userContactDAO;
+	}
 }

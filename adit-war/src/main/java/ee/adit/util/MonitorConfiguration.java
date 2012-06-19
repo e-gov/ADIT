@@ -40,6 +40,11 @@ public class MonitorConfiguration {
     private Long dvkTestDocumentID;
 
     /**
+     * DVK test documendi kaust.
+     */
+    private String dvkFolder;
+
+	/**
      * Test document file ID.
      */
     private Long testDocumentFileId;
@@ -271,7 +276,22 @@ public class MonitorConfiguration {
     public void setDvkTestDocumentID(Long dvkTestDocumentID) {
         this.dvkTestDocumentID = dvkTestDocumentID;
     }
+    
+    /**
+     * Get DVK test document kausta nimi.
+     * @return DVK document folder
+     */
+    public String getDvkFolder() {
+		return dvkFolder;
+	}
 
+    /**
+     * Set DVK test document kausta nimi.
+     * @param dvkFolder DVK test document folder name
+     */
+	public void setDvkFolder(String dvkFolder) {
+		this.dvkFolder = dvkFolder;
+	}
     /**
      * Get institution code.
      * @return institution code

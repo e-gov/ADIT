@@ -26,6 +26,7 @@ public class Document implements java.io.Serializable {
     private Date lastModifiedDate;
     private Long documentDvkStatusId;
     private Long dvkId;
+    private String dvkFolder;
     private Long documentWfStatusId;
     private Boolean locked;
     private Date lockingDate;
@@ -88,7 +89,7 @@ public class Document implements java.io.Serializable {
         this.documentSharings = documentSharings;
     }
 
-    public long getId() {
+	public long getId() {
         return this.id;
     }
 
@@ -199,6 +200,14 @@ public class Document implements java.io.Serializable {
     public void setDvkId(Long dvkId) {
         this.dvkId = dvkId;
     }
+
+    public String getDvkFolder() {
+		return dvkFolder;
+	}
+
+	public void setDvkFolder(String dvkFolder) {
+		this.dvkFolder = dvkFolder;
+	}
 
     public Long getDocumentWfStatusId() {
         return this.documentWfStatusId;

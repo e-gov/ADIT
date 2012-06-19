@@ -40,5 +40,8 @@
         <property name="deleted" type="java.lang.Boolean">
             <column name="DELETED" precision="1" scale="0" />
         </property>
+        <property name="dvkFolder" type="string">
+            <column name="DVK_FOLDER" length="1000" />
+        </property>
     </class>
 </hibernate-mapping>

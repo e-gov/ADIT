@@ -27,6 +27,7 @@
 		<property name="accessRestrictionDAO" ref="accessRestrictionDAO" />
 		<property name="notificationDAO" ref="notificationDAO" />
 		<property name="dvkDAO" ref="dvkDAO" />
+		<property name="userContactDAO" ref="userContactDAO" />
 	</bean>
 
 	<bean id="documentService" class="ee.adit.service.DocumentService">

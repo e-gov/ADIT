@@ -172,6 +172,8 @@ adit-war/sql/updates/1_0_29/dvk_client_trigger_fix.sql -text
 adit-war/sql/updates/1_0_29/update_1_0_29.sql -text
 adit-war/sql/updates/1_0_30/update_1_0_30.sql -text
 adit-war/sql/updates/1_0_31/update_1_0_31.sql -text
+adit-war/sql/updates/1_0_32/update_1_0_32.sql -text
+adit-war/sql/updates/1_0_32/update_synonyms_1_0_32.sql -text
 adit-war/sql/updates/1_0_8/update_1_0_8.sql -text
 adit-war/sql/usertype.dml.sql -text
 adit-war/src/main/java/ee/adit/dao/AccessRestrictionDAO.java -text
@@ -190,6 +192,7 @@ adit-war/src/main/java/ee/adit/dao/NotificationDAO.java -text
 adit-war/src/main/java/ee/adit/dao/NotificationTypeDAO.java -text
 adit-war/src/main/java/ee/adit/dao/RemoteApplicationDAO.java -text
 adit-war/src/main/java/ee/adit/dao/RequestLogDAO.java -text
+adit-war/src/main/java/ee/adit/dao/UserContactDAO.java -text svneol=unset#text/plain
 adit-war/src/main/java/ee/adit/dao/UsertypeDAO.java -text
 adit-war/src/main/java/ee/adit/dao/dvk/DvkDAO.java -text
 adit-war/src/main/java/ee/adit/dao/dvk/package-info.java -text
@@ -217,6 +220,7 @@ adit-war/src/main/java/ee/adit/dao/pojo/RemoteApplication.java -text
 adit-war/src/main/java/ee/adit/dao/pojo/RequestLog.java -text
 adit-war/src/main/java/ee/adit/dao/pojo/SetJobRunningStatusResult.java -text
 adit-war/src/main/java/ee/adit/dao/pojo/Signature.java -text
+adit-war/src/main/java/ee/adit/dao/pojo/UserContact.java -text svneol=unset#text/plain
 adit-war/src/main/java/ee/adit/dao/pojo/UserNotification.java -text
 adit-war/src/main/java/ee/adit/dao/pojo/UserNotificationId.java -text
 adit-war/src/main/java/ee/adit/dao/pojo/Usertype.java -text
@@ -290,6 +294,10 @@ adit-war/src/main/java/ee/adit/pojo/GetJoinedResponseAttachment.java -text
 adit-war/src/main/java/ee/adit/pojo/GetJoinedResponseAttachmentUser.java -text
 adit-war/src/main/java/ee/adit/pojo/GetNotificationsRequest.java -text
 adit-war/src/main/java/ee/adit/pojo/GetNotificationsResponse.java -text
+adit-war/src/main/java/ee/adit/pojo/GetUserContactsRequest.java -text svneol=unset#text/plain
+adit-war/src/main/java/ee/adit/pojo/GetUserContactsResponse.java -text svneol=unset#text/plain
+adit-war/src/main/java/ee/adit/pojo/GetUserContactsResponseAttachment.java -text svneol=unset#text/plain
+adit-war/src/main/java/ee/adit/pojo/GetUserContactsResponseAttachmentUserContact.java -text svneol=unset#text/plain
 adit-war/src/main/java/ee/adit/pojo/GetUserInfoRequest.java -text
 adit-war/src/main/java/ee/adit/pojo/GetUserInfoRequestAttachmentUserList.java -text
 adit-war/src/main/java/ee/adit/pojo/GetUserInfoRequestMonitor.java -text
@@ -347,6 +355,7 @@ adit-war/src/main/java/ee/adit/pojo/UnJoinRequest.java -text
 adit-war/src/main/java/ee/adit/pojo/UnJoinResponse.java -text
 adit-war/src/main/java/ee/adit/pojo/UnShareDocumentRequest.java -text
 adit-war/src/main/java/ee/adit/pojo/UnShareDocumentResponse.java -text
+adit-war/src/main/java/ee/adit/pojo/UserContactList.java -text svneol=unset#text/plain
 adit-war/src/main/java/ee/adit/pojo/UserList.java -text
 adit-war/src/main/java/ee/adit/pojo/notification/LisaSyndmusRequest.java -text
 adit-war/src/main/java/ee/adit/pojo/notification/LisaSyndmusRequestKasutaja.java -text
@@ -415,6 +424,7 @@ adit-war/src/main/java/ee/adit/ws/endpoint/document/package-info.java -text
 adit-war/src/main/java/ee/adit/ws/endpoint/package-info.java -text
 adit-war/src/main/java/ee/adit/ws/endpoint/user/GetJoinedEndpoint.java -text
 adit-war/src/main/java/ee/adit/ws/endpoint/user/GetNotificationsEndpoint.java -text
+adit-war/src/main/java/ee/adit/ws/endpoint/user/GetUserContactsEndpoint.java -text svneol=unset#text/plain
 adit-war/src/main/java/ee/adit/ws/endpoint/user/GetUserInfoEndpoint.java -text
 adit-war/src/main/java/ee/adit/ws/endpoint/user/JoinEndpoint.java -text
 adit-war/src/main/java/ee/adit/ws/endpoint/user/SetNotificationsEndpoint.java -text
@@ -456,6 +466,11 @@ adit-war/src/main/resources/conf/adit-arendus-tomcat/jdigidoc.cfg -text
 adit-war/src/main/resources/conf/adit-arendus-tomcat/log4j.xml -text
 adit-war/src/main/resources/conf/adit-arendus-tomcat/nsca_send_clear.cfg -text
 adit-war/src/main/resources/conf/adit-arendus-tomcat/xtee.properties -text
+adit-war/src/main/resources/conf/adit-arendus-wl-local/adit-configuration.xml -text svneol=unset#text/plain
+adit-war/src/main/resources/conf/adit-arendus-wl-local/jdigidoc.cfg -text
+adit-war/src/main/resources/conf/adit-arendus-wl-local/log4j.xml -text svneol=unset#text/plain
+adit-war/src/main/resources/conf/adit-arendus-wl-local/nsca_send_clear.cfg -text
+adit-war/src/main/resources/conf/adit-arendus-wl-local/xtee.properties -text svneol=unset#text/plain
 adit-war/src/main/resources/conf/adit-arendus/adit-configuration.xml -text
 adit-war/src/main/resources/conf/adit-arendus/jdigidoc.cfg -text
 adit-war/src/main/resources/conf/adit-arendus/log4j.xml -text
@@ -512,6 +527,7 @@ adit-war/src/main/resources/hbm/RemoteApplication.hbm.xml -text
 adit-war/src/main/resources/hbm/RequestLog.hbm.xml -text
 adit-war/src/main/resources/hbm/SetJobRunningStatusResult.hbm.xml -text
 adit-war/src/main/resources/hbm/Signature.hbm.xml -text
+adit-war/src/main/resources/hbm/UserContact.hbm.xml -text svneol=unset#text/plain
 adit-war/src/main/resources/hbm/UserNotification.hbm.xml -text
 adit-war/src/main/resources/hbm/Usertype.hbm.xml -text
 adit-war/src/main/resources/messages_en.properties -text

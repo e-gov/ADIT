@@ -58,6 +58,17 @@
 		<property name="monitorService" ref="monitorService"/>
 	</bean>
 
+	<bean id="GetUserContactsEndpoint" class="ee.adit.ws.endpoint.user.GetUserContactsEndpoint">
+		<property name="marshaller" ref="castorMarshaller"/>
+		<property name="unmarshaller" ref="castorMarshaller"/>
+		<property name="userService" ref="userService"/>
+		<property name="logService" ref="logService"/>
+		<property name="messageSource" ref="messageSource"/>
+		<property name="configuration" ref="configuration"/>
+		<property name="messageService" ref="messageService"/>
+		<property name="monitorService" ref="monitorService"/>
+	</bean>
+
 	<bean id="SetNotificationsEndpoint" class="ee.adit.ws.endpoint.user.SetNotificationsEndpoint">
 		<property name="marshaller" ref="castorMarshaller"/>
 		<property name="unmarshaller" ref="castorMarshaller"/>
@@ -324,6 +335,8 @@
 					key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}getJoined">GetJoinedEndpoint</prop>
 				<prop
 					key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}getUserInfo">GetUserInfoEndpoint</prop>
+				<prop
+					key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}getUserContacts">GetUserContactsEndpoint</prop>
 				<prop
 					key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}setNotifications">SetNotificationsEndpoint</prop>
 				<prop

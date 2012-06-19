@@ -43,7 +43,9 @@ public class SendDocumentRequest {
     private Long documentId;
     @XmlElement(name = "recipient_list", required = true)
     private ArrayOfUserCode recipientList;
-
+    @XmlElement(required = true)
+    private String dvkFolder;
+    
     /**
      * Gets the value of the documentId property.
      * 
@@ -84,6 +86,31 @@ public class SendDocumentRequest {
      */
     public void setRecipientList(ArrayOfUserCode value) {
         this.recipientList = value;
+    }
+    
+
+    /**
+     * Gets the value of the dvkFolder property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getDvkFolder() {
+        return dvkFolder;
+    }
+
+    /**
+     * Sets the value of the dvkFolder property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setDvkFolder(String value) {
+        this.dvkFolder = value;
     }
 
 }

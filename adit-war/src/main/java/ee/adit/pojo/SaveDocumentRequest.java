@@ -34,6 +34,7 @@ import javax.xml.bind.annotation.XmlType;
  *             &lt;/complexContent>
  *           &lt;/complexType>
  *         &lt;/element>
+ *         &lt;element name="dvk_folder" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -43,12 +44,15 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "SaveDocumentRequest", propOrder = {"document" })
+@XmlType(name = "SaveDocumentRequest", propOrder = {"document", "dvkFolder"})
 public class SaveDocumentRequest {
 
     @XmlElement(required = true)
     private SaveDocumentRequestDocument document;
 
+    @XmlElement(required = true)
+    private String dvkFolder;
+    
     /**
      * Gets the value of the document property.
      * 
@@ -69,5 +73,31 @@ public class SaveDocumentRequest {
     public void setDocument(SaveDocumentRequestDocument value) {
         this.document = value;
     }
+    
+
+    /**
+     * Gets the value of the dvkFolder property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getDvkFolder() {
+        return dvkFolder;
+    }
+
+    /**
+     * Sets the value of the dvkFolder property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setDvkFolder(String value) {
+        this.dvkFolder = value;
+    }
+
 
 }

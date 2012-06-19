@@ -74,6 +74,8 @@
 			<element name="getDocumentHistoryResponse" type="tns:getDocumentHistoryResponse" />
 			<element name="sendDocumentRequest" type="tns:sendDocumentRequest" />
 			<element name="sendDocumentResponse" type="tns:sendDocumentResponse" />
+			<element name="getUserContactsRequest" type="tns:getUserContactsRequest" />
+			<element name="getUserContactsResponse" type="tns:getUserContactsResponse" />
 
 			<element name="infosysteem" type="string">
 				<xs:annotation>
@@ -643,6 +645,14 @@
 							</xs:documentation>
 						</xs:annotation>
 					</element>
+					<element name="dvk_folder" type="string">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">DVK dokumentide kaust
+							</xs:documentation>
+							<xs:documentation xml:lang="en">DVK Folder of documents
+							</xs:documentation>
+						</xs:annotation>
+					</element>
 					<element name="document_types" type="tns:arrayOfDocumentType" />
 					<element name="file_types" type="tns:arrayOfFileType" />
 					<element name="document_dvk_statuses" type="tns:arrayOfDocumentDvkStatus" />
@@ -868,6 +878,14 @@
 						<complexType>
 							<attribute name="href" type="tns:href" />
 						</complexType>
+					</element>
+					<element name="dvk_folder" type="string">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">DVK dokumentide kaust
+							</xs:documentation>
+							<xs:documentation xml:lang="en">DVK Folder of documents
+							</xs:documentation>
+						</xs:annotation>
 					</element>
 				</sequence>
 			</complexType>
@@ -1417,6 +1435,14 @@
 						</xs:annotation>
 					</element>
 					<element name="recipient_list" type="tns:arrayOfUserCode" />
+					<element name="dvk_folder" type="string">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">DVK dokumentide kaust
+							</xs:documentation>
+							<xs:documentation xml:lang="en">DVK Folder of documents
+							</xs:documentation>
+						</xs:annotation>
+					</element>
 				</sequence>
 			</complexType>
 			<complexType name="sendDocumentResponse">
@@ -1430,6 +1456,40 @@
 					<element name="success" type="tns:success" />
 					<element name="messages" type="tns:arrayOfMessage" />
 					<element name="recipient_list" type="tns:arrayOfRecipientStatus" />
+				</sequence>
+			</complexType>
+			
+			<!-- getUserContacts päringu tüübid -->
+			<complexType name="getUserContactsRequest">
+				<xs:annotation>
+					<xs:documentation xml:lang="ee">Päring "getUserContacts"
+					</xs:documentation>
+					<xs:documentation xml:lang="en">"getUserContacts" request
+					</xs:documentation>
+				</xs:annotation>
+				<sequence />
+			</complexType>
+			<complexType name="getUserContactsResponse">
+				<xs:annotation>
+					<xs:documentation xml:lang="ee">Päringu "getUserContacts"
+						vastus</xs:documentation>
+					<xs:documentation xml:lang="en">"getUserContacts" request
+						response</xs:documentation>
+				</xs:annotation>
+				<sequence>
+					<element name="success" type="tns:success" />
+					<element name="messages" type="tns:arrayOfMessage" />
+					<element name="userContactList">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Kasutaja kontaktide massiiv
+							</xs:documentation>
+							<xs:documentation xml:lang="en">Array of user contacts
+							</xs:documentation>
+						</xs:annotation>
+						<complexType>
+							<attribute name="href" type="tns:href" />
+						</complexType>
+					</element>
 				</sequence>
 			</complexType>
 		</schema>
@@ -1649,7 +1709,69 @@
 					<xs:element name="messages" type="tns:arrayOfMessage" />
 				</xs:sequence>
 			</xs:complexType>
-
+			
+        	<!-- getUserContacts attachments -->
+            <xs:element name="getUserContactsResponseAttachmentV1" type="getUserContactsResponseAttachmentV1Type" />
+			<xs:complexType name="getUserContactsResponseAttachmentV1Type">
+				<xs:annotation>
+					<xs:documentation xml:lang="ee">Päringu "getUserContacts" vastuse
+						manus</xs:documentation>
+					<xs:documentation xml:lang="en">Attachment for request
+						"getUserContacts" response message</xs:documentation>
+				</xs:annotation>
+				<xs:sequence>
+					<xs:element name="user_contact_list" type="getUserContactsResponseAttachmentV1UserContactListType" />
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="getUserContactsResponseAttachmentV1UserContactListType">
+				<xs:annotation>
+					<xs:documentation xml:lang="ee">Kasutaja kontaktide nimekiri
+					</xs:documentation>
+					<xs:documentation xml:lang="en">User contact list</xs:documentation>
+				</xs:annotation>
+				<xs:sequence>
+					<xs:element name="total" type="xs:integer">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Tagastatavate tulemuste arv
+							</xs:documentation>
+							<xs:documentation xml:lang="en">Total number of results
+								returned</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element maxOccurs="unbounded" name="user_contact" type="getUserContactsResponseAttachmentV1UserContactType" />
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="getUserContactsResponseAttachmentV1UserContactType">
+				<xs:annotation>
+					<xs:documentation xml:lang="ee">Kasutaja kontakti andmed
+					</xs:documentation>
+					<xs:documentation xml:lang="en">User contact data</xs:documentation>
+				</xs:annotation>
+				<xs:sequence>
+					<xs:element name="code" type="xs:string">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Kasutajakood
+							</xs:documentation>
+							<xs:documentation xml:lang="en">Usercode</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="name" type="xs:string">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Kasutajanimi
+							</xs:documentation>
+							<xs:documentation xml:lang="en">Username</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="type" type="xs:string">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Kasutaja tüüp
+							</xs:documentation>
+							<xs:documentation xml:lang="en">Usertype</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:complexType>
+        
 			<!-- getDocument attachments -->
 			<xs:element name="getDocumentResponseAttachmentV1" type="getDocumentResponseAttachmentV1Type" />
 			<xs:complexType name="getDocumentResponseAttachmentV1Type">
@@ -2674,7 +2796,14 @@
 		<wsdl:part name="keha" type="tns:deleteDocumentFileRequest">
 		</wsdl:part>
 	</wsdl:message>
-
+	<wsdl:message name="getUserContactsRequest">
+		<wsdl:part name="keha" type="tns:getUserContactsRequest">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="getUserContactsResponse">
+		<wsdl:part name="keha" type="tns:getUserContactsResponse">
+		</wsdl:part>
+	</wsdl:message>
 	<wsdl:portType name="adit">
 		<wsdl:operation name="getJoined">
 			<xs:documentation>
@@ -2684,6 +2813,16 @@
 			<wsdl:input message="tns:getJoinedRequest" name="getJoinedRequest">
 			</wsdl:input>
 			<wsdl:output message="tns:getJoinedResponse" name="getJoinedResponse">
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getUserContacts">
+			<xs:documentation>
+				<xtee:title>Kasutaja kontakdite päring</xtee:title>
+				<xtee:notes>Tagastab kasutajaga seotud dokumentide kontaktide nimekiri</xtee:notes>
+			</xs:documentation>
+			<wsdl:input message="tns:getUserContactsRequest" name="getUserContactsRequest">
+			</wsdl:input>
+			<wsdl:output message="tns:getUserContactsResponse" name="getUserContactsResponse">
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="unShareDocument">
@@ -2930,6 +3069,56 @@
 					use="literal" />
 			</wsdl:input>
 			<wsdl:output name="getJoinedResponse">
+				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
+					part="asutus" use="literal">
+				</soap:header>
+				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
+					part="andmekogu" use="literal">
+				</soap:header>
+				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
+					part="isikukood" use="literal">
+				</soap:header>
+				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
+					part="id" use="literal">
+				</soap:header>
+				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
+					part="nimi" use="literal">
+				</soap:header>
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
+					part="infosysteem" use="literal">
+				</soap:header>
+				<soap:body
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
+					use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getUserContacts">
+			<xtee:version>v1</xtee:version>
+			<soap:operation soapAction="" />
+			<wsdl:input name="getUserContactsRequest">
+				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
+					part="asutus" use="literal">
+				</soap:header>
+				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
+					part="andmekogu" use="literal">
+				</soap:header>
+				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
+					part="isikukood" use="literal">
+				</soap:header>
+				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
+					part="id" use="literal">
+				</soap:header>
+				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
+					part="nimi" use="literal">
+				</soap:header>
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
+					part="infosysteem" use="literal">
+				</soap:header>
+				<soap:body
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
+					use="literal" />
+			</wsdl:input>
+			<wsdl:output name="getUserContactsResponse">
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
 					part="asutus" use="literal">
 				</soap:header>

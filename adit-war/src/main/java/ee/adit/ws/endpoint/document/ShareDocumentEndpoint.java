@@ -161,7 +161,10 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
                 status.setCode(recipientCode);
                 status.setMessages(statusMessages);
                 statusArray.addRecipient(status);
-
+                
+                // Add recipient to user contacts
+                userService.addUserContact(user, recipient);
+                
                 completeSuccess = (completeSuccess && isSuccess);
             }
 

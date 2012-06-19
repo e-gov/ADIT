@@ -64,6 +64,8 @@
 	<element name="getDocumentHistoryResponse" type="tns:getDocumentHistoryResponse"/>
 	<element name="sendDocumentRequest" type="tns:sendDocumentRequest"/>
 	<element name="sendDocumentResponse" type="tns:sendDocumentResponse"/>
+	<element name="getUserContactsRequest" type="tns:getUserContactsRequest" />
+	<element name="getUserContactsResponse" type="tns:getUserContactsResponse" />
 
 	<simpleType name="success">
 		<annotation>
@@ -498,6 +500,14 @@
 					<documentation xml:lang="en">Folder of documents</documentation>
 				</annotation>
 			</element>
+			<element name="dvk_folder" type="string">
+				<annotation>
+					<documentation xml:lang="ee">DVK dokumentide kaust
+					</documentation>
+					<documentation xml:lang="en">DVK Folder of documents
+					</documentation>
+				</annotation>
+			</element>
 			<element name="document_types" type="tns:arrayOfDocumentType" />
 			<element name="document_dvk_statuses" type="tns:arrayOfDocumentDvkStatus" />
 			<element name="document_workflow_statuses" type="tns:arrayOfDocumentWorkflowStatus" />
@@ -687,6 +697,14 @@
 				<complexType>
 					<attribute name="href" type="tns:href" />
 				</complexType>
+			</element>
+			<element name="dvk_folder" type="string">
+				<annotation>
+					<documentation xml:lang="ee">DVK dokumentide kaust
+					</documentation>
+					<documentation xml:lang="en">DVK Folder of documents
+					</documentation>
+				</annotation>
 			</element>
 		</sequence>
 	</complexType>
@@ -1138,6 +1156,14 @@
 		    	</annotation>
 			</element>
 			<element name="recipient_list" type="tns:arrayOfUserCode"/>
+			<element name="dvk_folder" type="string">
+				<annotation>
+					<documentation xml:lang="ee">DVK dokumentide kaust
+					</documentation>
+					<documentation xml:lang="en">DVK Folder of documents
+					</documentation>
+				</annotation>
+			</element>
 		</sequence>
 	</complexType>
 	<complexType name="sendDocumentResponse">
@@ -1149,6 +1175,40 @@
 			<element name="success" type="tns:success" />
 			<element name="messages" type="tns:arrayOfMessage"/>
 			<element name="recipient_list" type="tns:arrayOfRecipientStatus"/>
+		</sequence>
+	</complexType>
+	
+	<!-- getUserContacts päringu tüübid -->
+	<complexType name="getUserContactsRequest">
+		<annotation>
+			<documentation xml:lang="ee">Päring "getUserContacts"
+			</documentation>
+			<documentation xml:lang="en">"getUserContacts" request
+			</documentation>
+		</annotation>
+		<sequence />
+	</complexType>
+	<complexType name="getUserContactsResponse">
+		<annotation>
+			<documentation xml:lang="ee">Päringu "getUserContacts"
+				vastus</documentation>
+			<documentation xml:lang="en">"getUserContacts" request
+				response</documentation>
+		</annotation>
+		<sequence>
+			<element name="success" type="tns:success" />
+			<element name="messages" type="tns:arrayOfMessage" />
+			<element name="userContactList">
+				<annotation>
+					<documentation xml:lang="ee">Kasutaja kontaktide massiiv
+					</documentation>
+					<documentation xml:lang="en">Array of user contacts
+					</documentation>
+				</annotation>
+				<complexType>
+					<attribute name="href" type="tns:href" />
+				</complexType>
+			</element>
 		</sequence>
 	</complexType>
 </schema>
