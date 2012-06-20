@@ -172,8 +172,6 @@ adit-war/sql/updates/1_0_29/dvk_client_trigger_fix.sql -text
 adit-war/sql/updates/1_0_29/update_1_0_29.sql -text
 adit-war/sql/updates/1_0_30/update_1_0_30.sql -text
 adit-war/sql/updates/1_0_31/update_1_0_31.sql -text
-adit-war/sql/updates/1_0_32/update_1_0_32.sql -text
-adit-war/sql/updates/1_0_32/update_synonyms_1_0_32.sql -text
 adit-war/sql/updates/1_0_48/update_1_0_48.sql -text
 adit-war/sql/updates/1_0_48/update_synonyms_1_0_48.sql -text
 adit-war/sql/updates/1_0_8/update_1_0_8.sql -text
