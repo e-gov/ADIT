@@ -10,7 +10,7 @@
 
     <appender name="file" class="org.apache.log4j.DailyRollingFileAppender">
 		<param name="file" value="log/adit/adit.log" />
-		<param name="datePattern" value="'.'yyyy-MM" />
+		<!-- <param name="datePattern" value="'.'yyyy-MM" /> -->
 		<param name="append" value="true" />
 		<layout class="org.apache.log4j.PatternLayout">
 	    	<param name="ConversionPattern" value="%d{ISO8601}%5p %C:%L - %m%n"/>
@@ -19,7 +19,7 @@
 
     <appender name="dvk" class="org.apache.log4j.DailyRollingFileAppender">
 		<param name="file" value="log/adit/adit_dvk.log" />
-		<param name="datePattern" value="'.'yyyy-MM" />
+		<!-- <param name="datePattern" value="'.'yyyy-MM" /> -->
 		<param name="append" value="true" />
 		<layout class="org.apache.log4j.PatternLayout">
 	    	<param name="ConversionPattern" value="%d{ISO8601}%5p %C:%L - %m%n"/>
@@ -28,7 +28,7 @@
 
     <appender name="monitoring" class="org.apache.log4j.DailyRollingFileAppender">
 		<param name="file" value="log/adit/adit_monitoring.log" />
-		<param name="datePattern" value="'.'yyyy-MM" />
+		<!-- <param name="datePattern" value="'.'yyyy-MM" /> -->
 		<param name="append" value="true" />
 		<layout class="org.apache.log4j.PatternLayout">
 	    	<param name="ConversionPattern" value="%d{ISO8601}%5p %C:%L - %m%n"/>
@@ -37,7 +37,7 @@
 
     <appender name="nagios" class="org.apache.log4j.DailyRollingFileAppender">
 		<param name="file" value="log/adit/adit_nagios.log" />
-		<param name="datePattern" value="'.'yyyy-MM" />
+		<!-- <param name="datePattern" value="'.'yyyy-MM" /> -->
 		<param name="append" value="true" />
 		<layout class="org.apache.log4j.PatternLayout">
 	    	<param name="ConversionPattern" value="%d{ISO8601}%5p %C:%L - %m%n"/>

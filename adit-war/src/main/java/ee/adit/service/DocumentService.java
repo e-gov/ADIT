@@ -1206,12 +1206,22 @@ public class DocumentService {
                         dvkMessage.setIsIncoming(false);
                         
                         if (dvkFolder == null) {
-                        	dvkMessage.setDhlFolderName("/");
-                        } else {
-                        	dvkMessage.setDhlFolderName(dvkFolder);
-                        	logger.info("DVK folder name : " + dvkFolder);
-                        }
-                        
+                        	if (document.getDocumentType().equals("letter") && this.getConfiguration().getDvkFolderForLetterType() != null && !this.getConfiguration().getDvkFolderForLetterType().isEmpty()) {
+//                        		dvkMessage.setDhlFolderName(this.getConfiguration().getDvkSendFolder());
+                        		dvkFolder = this.getConfiguration().getDvkFolderForLetterType();
+                        	}
+                        	if (document.getDocumentType().equals("application") && this.getConfiguration().getDvkFolderForApplicationType() != null && !this.getConfiguration().getDvkFolderForApplicationType().isEmpty()) {
+                        		dvkFolder = this.getConfiguration().getDvkFolderForApplicationType();
+                        	}
+                        	if (dvkFolder == null) {
+                        		dvkFolder = this.getConfiguration().getDvkSendFolder();
+                        	}
+                        } 
+//                        else {
+//                        	dvkMessage.setDhlFolderName(dvkFolder);
+//                        	logger.info("DVK folder name : " + dvkFolder);
+//                        }
+                        dvkMessage.setDhlFolderName(dvkFolder);
                         dvkMessage.setLocalItemId(document.getId());
                         dvkMessage.setTitle(document.getTitle());
                         dvkMessage.setDhlGuid(document.getGuid());
@@ -1863,7 +1873,7 @@ public class DocumentService {
             // Fetch all incoming documents from DVK Client database which
             // don't have local item ID set.
             logger.debug("Fetching documents from DVK Client database.");
-            List<PojoMessage> dvkDocuments = this.getDvkDAO().getIncomingDocuments();
+            List<PojoMessage> dvkDocuments = this.getDvkDAO().getIncomingDocuments(this.getConfiguration().getDvkRecieveFolders());
 
             if (dvkDocuments != null && dvkDocuments.size() > 0) {
                 logger.debug("Found " + dvkDocuments.size());

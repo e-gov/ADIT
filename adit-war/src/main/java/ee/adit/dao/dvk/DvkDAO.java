@@ -38,16 +38,34 @@ public class DvkDAO extends HibernateDaoSupport {
      * @return list of messages
      */
     @SuppressWarnings("unchecked")
-    public List<PojoMessage> getIncomingDocuments() {
+    public List<PojoMessage> getIncomingDocuments(List<String> dvkFolderNames) {
         List<PojoMessage> result = new ArrayList<PojoMessage>();
         //Session session = this.getSessionFactory().getCurrentSession();
         //session.beginTransaction();
+        
+//        try {
+//        	final String sql = "from PojoMessage where isIncoming = true and (localItemId = null or localItemId = 0) and dhlMessageId != 9999999999";
+//            //result = session.createQuery(sql).list();
+//        	result = this.getHibernateTemplate().find(sql);
+//        } catch (Exception e) {
+//            logger.error("Exception while fetching DVK incoming messages: ", e);
+//        }
+        
+        String sql = "from PojoMessage where isIncoming = true and (localItemId = null or localItemId = 0) and dhlMessageId != 9999999999 and dhlFolderName in (:folders)";
+        Session session = null;
+
         try {
-        	final String sql = "from PojoMessage where isIncoming = true and (localItemId = null or localItemId = 0) and dhlMessageId != 9999999999";
-            //result = session.createQuery(sql).list();
-        	result = this.getHibernateTemplate().find(sql);
+            session = this.getSessionFactory().openSession();
+            session.beginTransaction();
+            Query query = session.createQuery(sql);
+            query.setParameterList("folders", dvkFolderNames);
+            result = query.list();
         } catch (Exception e) {
-            logger.error("Exception while fetching DVK incoming messages: ", e);
+        	logger.error("Exception while fetching DVK incoming messages: ", e);
+        } finally {
+            if (session != null) {
+                session.close();
+            }
         }
 
         return result;

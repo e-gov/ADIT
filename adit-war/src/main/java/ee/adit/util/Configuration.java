@@ -89,7 +89,28 @@ public class Configuration {
      * Lifetime of digital signatures that have been prepared but not confirmed.
      */
     private Long unfinishedSignatureLifetimeSeconds;
+    
+    /**
+     * Default DVK folder name which is used by sendDocument request
+     */
+    private String dvkSendFolder;
+    
+    /**
+     * DVK folder names list from which ADIT recieves documents.
+     */
+    private List<String> dvkRecieveFolders;
+    
+    /**
+     * DVK folder name for Letter type documents used by sendDocument request.
+     */
+    private String dvkFolderForLetterType;
+    
+    /**
+     * DVK folder name for Application type documents used by sendDocument request.
+     */
+    private String dvkFolderForApplicationType;
 
+    
     public List<String> getLocales() {
         return locales;
     }
@@ -217,4 +238,38 @@ public class Configuration {
 			Long unfinishedSignatureLifetimeSeconds) {
 		this.unfinishedSignatureLifetimeSeconds = unfinishedSignatureLifetimeSeconds;
 	}
+
+	public String getDvkSendFolder() {
+		return dvkSendFolder;
+	}
+
+	public void setDvkSendFolder(String dvkSendFolder) {
+		this.dvkSendFolder = dvkSendFolder;
+	}
+
+	public List<String> getDvkRecieveFolders() {
+		return dvkRecieveFolders;
+	}
+
+	public void setDvkRecieveFolders(List<String> dvkRecieveFolders) {
+		this.dvkRecieveFolders = dvkRecieveFolders;
+	}
+
+	public String getDvkFolderForLetterType() {
+		return dvkFolderForLetterType;
+	}
+
+	public void setDvkFolderForLetterType(String dvkFolderForLetterType) {
+		this.dvkFolderForLetterType = dvkFolderForLetterType;
+	}
+
+	public String getDvkFolderForApplicationType() {
+		return dvkFolderForApplicationType;
+	}
+
+	public void setDvkFolderForApplicationType(String dvkFolderForApplicationType) {
+		this.dvkFolderForApplicationType = dvkFolderForApplicationType;
+	}
+	
+	
 }

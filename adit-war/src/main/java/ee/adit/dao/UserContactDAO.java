@@ -125,14 +125,24 @@ public class UserContactDAO extends HibernateDaoSupport {
     @SuppressWarnings("unchecked")
     public List<UserContact> getUserContacts(final AditUser aditUser) {
         List<UserContact> result = null;
-
+        Session session = null;
         try {
             logger.debug("Finding contacts for user: " + aditUser.getUserCode() + ", "
                             + aditUser.getFullName());
-            result = this.getHibernateTemplate().find(
-                    "from UserContact userContact where userContact.user = ? order by userContact.lastUsedDate desc", aditUser);
+            String sql = "select userContact from UserContact userContact join userContact.contact contact where userContact.user = :user and contact.active = :active order by userContact.lastUsedDate desc";
+            session = this.getSessionFactory().openSession();
+            Query query = session.createQuery(sql);
+            query.setParameter("user", aditUser);
+            query.setParameter("active", true);
+            result =  query.list();
+//            result = this.getHibernateTemplate().find(
+//                    "select userContact from UserContact userContact join userContact.user user where userContact.user = ? and user.active = ? order by userContact.lastUsedDate desc", aditUser, true);
         } catch (Exception e) {
-            logger.error("Exception while finding user contacts: ", e);
+        	throw new AditInternalException("Error while fetching user contact: ", e);
+        } finally {
+            if (session != null) {
+                session.close();
+            }
         }
 
         return result;
