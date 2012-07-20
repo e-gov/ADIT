@@ -3852,7 +3852,9 @@ public class DocumentService {
                     List<DocumentFile> filesList = new ArrayList<DocumentFile>(doc.getDocumentFiles());
                     for (DocumentFile docFile : filesList) {
                         if (isPossibleToSignFile(docFile)) {
-                            String outputFileName = uniqueDir.getAbsolutePath() + File.separator + docFile.getFileName();
+                            String outputFileName = uniqueDir.getAbsolutePath()
+                            	+ File.separator
+                            	+ makeFileNameSafeForDigiDocLibrary(docFile.getFileName());
 
                             InputStream blobDataStream = null;
                             FileOutputStream fileOutputStream = null;
@@ -3968,6 +3970,23 @@ public class DocumentService {
         }
 
         return result;
+    }
+
+    /**
+     * Replaces in file name symbols that can crash DigiDoc library with
+     * symbols that will not cause anything to crash.
+     *
+     * @param originalFileName
+     * 		Original name of file that will be added to DigiDoc container.
+     * @return
+     * 		File name with unsafe symbols replaced.
+     */
+    public static String makeFileNameSafeForDigiDocLibrary(String originalFileName) {
+    	String result = "";
+    	if (!Util.isNullOrEmpty(originalFileName)) {
+    		result = originalFileName.replace("&", "_");
+    	}
+    	return result;
     }
 
     private ArrayOfDataFileHash getListOfDataFileDigests(SignedDoc sdoc) throws DigiDocException {
@@ -4537,7 +4556,9 @@ public class DocumentService {
             if (((docFile.getDeleted() == null) || !docFile.getDeleted())
                 && (docFile.getDocumentFileTypeId() == FILETYPE_DOCUMENT_FILE)) {
 
-                String outputFileName = uniqueDir.getAbsolutePath() + File.separator + docFile.getFileName();
+                String outputFileName = uniqueDir.getAbsolutePath()
+                	+ File.separator
+                	+ makeFileNameSafeForDigiDocLibrary(docFile.getFileName());
 
                 InputStream blobDataStream = null;
                 FileOutputStream fileOutputStream = null;

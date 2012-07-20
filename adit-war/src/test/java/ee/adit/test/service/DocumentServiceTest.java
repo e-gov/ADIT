@@ -40,6 +40,13 @@ public class DocumentServiceTest extends TestCase {
 		super(name);
 	}
 
+	public void testMakeFileNameSafeForDigiDocLibrary() {
+		assertTrue("".equalsIgnoreCase(DocumentService.makeFileNameSafeForDigiDocLibrary(null)));
+		assertTrue("".equalsIgnoreCase(DocumentService.makeFileNameSafeForDigiDocLibrary("")));
+		assertTrue("_".equalsIgnoreCase(DocumentService.makeFileNameSafeForDigiDocLibrary("&")));
+		assertTrue("x_y".equalsIgnoreCase(DocumentService.makeFileNameSafeForDigiDocLibrary("x&y")));
+	}
+
 	public void testFileIsOfRequestedType() {
 		ArrayOfFileType types = null;
 		assertTrue(DocumentService.fileIsOfRequestedType(DocumentService.FILETYPE_DOCUMENT_FILE, types));
