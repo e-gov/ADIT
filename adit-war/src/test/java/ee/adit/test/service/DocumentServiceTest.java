@@ -32,12 +32,19 @@ import junit.framework.TestCase;
 public class DocumentServiceTest extends TestCase {
 
 	/**
-	 * Construct new test instance
+	 * Construct new test instance.
 	 *
 	 * @param name the test name
 	 */
 	public DocumentServiceTest(String name) {
 		super(name);
+	}
+
+	public void testMakeFileNameSafeForDigiDocLibrary() {
+		assertTrue("".equalsIgnoreCase(DocumentService.makeFileNameSafeForDigiDocLibrary(null)));
+		assertTrue("".equalsIgnoreCase(DocumentService.makeFileNameSafeForDigiDocLibrary("")));
+		assertTrue("_".equalsIgnoreCase(DocumentService.makeFileNameSafeForDigiDocLibrary("&")));
+		assertTrue("x_y".equalsIgnoreCase(DocumentService.makeFileNameSafeForDigiDocLibrary("x&y")));
 	}
 
 	public void testFileIsOfRequestedType() {
