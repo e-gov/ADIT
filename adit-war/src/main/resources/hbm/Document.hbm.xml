@@ -49,9 +49,6 @@
         <property name="dvkId" type="java.lang.Long">
             <column name="DVK_ID" precision="12" scale="0" />
         </property>
-        <property name="dvkFolder" type="string">
-            <column name="DVK_FOLDER" length="50" />
-        </property>
         <property name="documentWfStatusId" type="java.lang.Long">
             <column name="DOCUMENT_WF_STATUS_ID" precision="12" scale="0" />
         </property>

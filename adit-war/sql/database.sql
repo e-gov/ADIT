@@ -96,8 +96,7 @@ CREATE TABLE &&ADIT_SCHEMA..DOCUMENT
     deleted                 NUMBER(1),                  /* Indicates if this document is deleted. "1" = deleted, "0" = not deleted. */
     invisible_to_owner      NUMBER(1,0) NULL,           /* Indicates if this document has been made invisible to its owner. Is used when document has been sent to someone else and owner wants to delete it from his/her own view. */
     signed                  NUMBER(1,0) NULL,           /* Indicates if this document has been signed. */
-    migrated                NUMBER (1,0),               /* Indicates if this document has been migrated from state portal */
-    dvk_folder 				VARCHAR2(1000)				/* DVK dokumendi kausta nimi */
+    migrated                NUMBER (1,0)               /* Indicates if this document has been migrated from state portal */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
 COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT                          IS 'Document data';
@@ -125,7 +124,6 @@ COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.deleted                 IS 'Indicates 
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.invisible_to_owner      IS 'Indicates if this document has been made invisible to its owner. Is used when document has been sent to someone else and owner wants to delete it from his/her own view.';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.signed                  IS 'Indicates if this document has been signed.';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.migrated                IS 'Indicates if this document has been migrated from state portal';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.dvk_folder 			  IS 'DVK dokumendi kausta nimi';
 
 
 CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_DVK_STATUS

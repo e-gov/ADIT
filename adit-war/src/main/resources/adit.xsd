@@ -698,14 +698,6 @@
 					<attribute name="href" type="tns:href" />
 				</complexType>
 			</element>
-			<element name="dvk_folder" type="string">
-				<annotation>
-					<documentation xml:lang="ee">DVK dokumentide kaust
-					</documentation>
-					<documentation xml:lang="en">DVK Folder of documents
-					</documentation>
-				</annotation>
-			</element>
 		</sequence>
 	</complexType>
 	<complexType name="saveDocumentResponse">

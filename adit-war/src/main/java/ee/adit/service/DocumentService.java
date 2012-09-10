@@ -578,7 +578,6 @@ public class DocumentService {
     @Transactional
     public SaveItemInternalResult save(
             final SaveDocumentRequestAttachment attachmentDocument,
-            final String dvkFolder,
             final String creatorCode,
             final String remoteApplication,
             final long remainingDiskQuota,
@@ -620,7 +619,6 @@ public class DocumentService {
                 document.setTitle(attachmentDocument.getTitle());
                 document.setCreatorUserCode(creatorUserCode);
                 document.setCreatorUserName(creatorUserName);
-                document.setDvkFolder(dvkFolder);
 
                 if ((attachmentDocument.getFiles() != null) && (attachmentDocument.getFiles().size() == 1)
                     && ((document.getDocumentFiles() == null) || (document.getDocumentFiles().size() == 0))) {
@@ -1109,7 +1107,6 @@ public class DocumentService {
                     transport.setSaatjad(saatjad);
 
                     //dvkFolder value taken from documentSharing
-                    //TODO: take value from the document object
                     String dvkFolder = null;
                     
                     Iterator<DocumentSharing> documentSharings = document.getDocumentSharings().iterator();
@@ -1429,7 +1426,6 @@ public class DocumentService {
                     Iterator<DocumentSharing> documentSharings = document.getDocumentSharings().iterator();
                     
                     //dvkFolder value taken from documentSharing
-                    //TODO: take value from the document object
                     String dvkFolder = null;
                     dvk.api.container.v1.Saaja firstRecipient = null;
                     while (documentSharings.hasNext()) {

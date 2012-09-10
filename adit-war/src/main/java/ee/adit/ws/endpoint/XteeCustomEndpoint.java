@@ -277,14 +277,14 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
             SOAPMessage reqMessage, Document operationNode) throws Exception {
         SOAPElement teenusElement = createXteeMessageStructure(reqMessage, respMessage);
         //For testing only
-        DOMSource domSource = new DOMSource(query);
-        StringWriter writer = new StringWriter();
-        StreamResult result = new StreamResult(writer);
-        TransformerFactory tf = TransformerFactory.newInstance();
-        Transformer transformer = tf.newTransformer();
-        transformer.transform(domSource, result);
-        String requestObjectSourceXml = writer.toString();
-        logger.info(requestObjectSourceXml);
+//        DOMSource domSource = new DOMSource(query);
+//        StringWriter writer = new StringWriter();
+//        StreamResult result = new StreamResult(writer);
+//        TransformerFactory tf = TransformerFactory.newInstance();
+//        Transformer transformer = tf.newTransformer();
+//        transformer.transform(domSource, result);
+//        String requestObjectSourceXml = writer.toString();
+//        logger.info(requestObjectSourceXml);
         //testing end
         if (!metaService) {
             copyParing(query, teenusElement);

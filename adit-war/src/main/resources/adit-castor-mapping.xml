@@ -681,9 +681,6 @@
 		<field name="document" type="ee.adit.pojo.SaveDocumentRequestDocument">
 			<bind-xml name="document" location="keha" />
 		</field>
-		<field name="dvkFolder" type="java.lang.String">
-			<bind-xml name="dvk_folder" location="keha" />
-		</field>
 	</class>
 
 	<class name="ee.adit.pojo.SaveDocumentRequestDocument">
@@ -1382,9 +1379,6 @@
 		<map-to xml="saveDocument" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" ns-prefix="adit" />
 		<field name="document" type="ee.adit.pojo.SaveDocumentRequestDocument">
 			<bind-xml name="document" location="keha" QName-prefix="adit" />
-		</field>
-		<field name="dvkFolder" type="java.lang.String">
-			<bind-xml name="dvk_folder" location="keha" QName-prefix="adit" />
 		</field>
 	</class>
 
