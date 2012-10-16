@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 21.06.2010 14:02:04 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="ee.adit.dao.pojo.DocumentSharing" table="DOCUMENT_SHARING" >
+        <id name="id" type="long">
+            <column name="ID" precision="12" scale="0" />
+            <generator class="sequence">
+            	<param name="sequence">document_sharing_id_seq</param>
+            </generator>
+        </id>
+        <property name="documentSharingType" type="string">
+            <column name="SHARING_TYPE" length="50" not-null="true" />
+        </property>
+        <property name="documentDvkStatus" type="long">
+            <column name="DVK_STATUS_ID" precision="12" scale="0" />
+        </property>
+        <property name="documentWfStatus" type="long">
+            <column name="WF_STATUS_ID" precision="12" scale="0" />
+        </property>
+        <property name="documentId" type="long">
+            <column name="DOCUMENT_ID" precision="12" scale="0" not-null="true" />
+        </property>
+        <property name="userCode" type="string">
+            <column name="USER_CODE" length="50" not-null="true" />
+        </property>
+        <property name="userName" type="string">
+            <column name="USER_NAME" length="255" />
+        </property>
+        <property name="taskDescription" type="string">
+            <column name="TASK_DESCRIPTION" length="4000" />
+        </property>
+        <property name="creationDate" type="timestamp">
+            <column name="CREATION_DATE" length="7" />
+        </property>
+        <property name="lastAccessDate" type="timestamp">
+            <column name="LAST_ACCESS_DATE" length="7" />
+        </property>
+        <property name="deleted" type="java.lang.Boolean">
+            <column name="DELETED" precision="1" scale="0" />
+        </property>
+        <property name="dvkFolder" type="string">
+            <column name="DVK_FOLDER" length="1000" />
+        </property>
+    </class>
+</hibernate-mapping>
