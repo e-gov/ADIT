@@ -47,7 +47,7 @@
 		<property name="dvkOrgCode" value="adit" />
 		<property name="xteeInstitution" value="adit" />
 		<property name="xteeSecurityServer" value="http://10.0.14.15/cgi-bin/consumer_proxy" />
-		<property name="xteeIdCode" value="38807030229" />
+		<property name="xteeIdCode" value="EE38806190294" />
 		
 		<!-- DVK folder names -->
 		<property name="dvkSendFolder" value="/" />
