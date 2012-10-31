@@ -2,7 +2,7 @@
 <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
 <log4j:configuration>
   <appender name="file" class="org.apache.log4j.RollingFileAppender">
-    <param name="file" value="/var/log/weblogic/adit-toodang/adit.log" />
+    <param name="file" value="/log/adit-toodang/adit.log" />
     <param name="datePattern" value="'.'yyyy-MM" />
     <param name="append" value="true" />
     <layout class="org.apache.log4j.PatternLayout">
@@ -10,7 +10,7 @@
     </layout>
   </appender>
   <appender name="dvk" class="org.apache.log4j.RollingFileAppender">
-    <param name="file" value="/var/log/weblogic/adit-toodang/adit_dvk.log" />
+    <param name="file" value="/log/adit-toodang/adit_dvk.log" />
     <param name="datePattern" value="'.'yyyy-MM" />
     <param name="append" value="true" />
     <layout class="org.apache.log4j.PatternLayout">
@@ -18,7 +18,7 @@
     </layout>
   </appender>
   <appender name="monitoring" class="org.apache.log4j.RollingFileAppender">
-    <param name="file" value="/var/log/weblogic/adit-toodang/adit_monitoring.log" />
+    <param name="file" value="/log/adit-toodang/adit_monitoring.log" />
     <param name="datePattern" value="'.'yyyy-MM" />
     <param name="append" value="true" />
     <layout class="org.apache.log4j.PatternLayout">
@@ -26,7 +26,7 @@
     </layout>
   </appender>
   <appender name="nagios" class="org.apache.log4j.RollingFileAppender">
-    <param name="file" value="/var/log/weblogic/adit-toodang/adit_nagios.log" />
+    <param name="file" value="/log/adit-toodang/adit_nagios.log" />
     <param name="datePattern" value="'.'yyyy-MM" />
     <param name="append" value="true" />
     <layout class="org.apache.log4j.PatternLayout">
@@ -34,7 +34,7 @@
     </layout>
   </appender>
   <appender name="performance" class="org.apache.log4j.DailyRollingFileAppender">
-    <param name="file" value="/var/log/weblogic/adit-toodang/adit_performance.log" />
+    <param name="file" value="/log/adit-toodang/adit_performance.log" />
     <param name="datePattern" value="'.'yyyy-MM" />
     <param name="append" value="true" />
     <layout class="org.apache.log4j.PatternLayout">
