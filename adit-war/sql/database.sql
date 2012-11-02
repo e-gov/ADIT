@@ -377,8 +377,8 @@ CREATE TABLE &&ADIT_SCHEMA..SIGNATURE
     ID              NUMBER(12) NOT NULL,             /* Unique identifier */
     user_code       VARCHAR2(50),                    /* Code of user who gave this signature */
     document_id     NUMBER(12) NOT NULL,             /* ID of document this signature belongs to */
-    signer_role     VARCHAR2(50),                    /* Signers role */
-    resolution      VARCHAR2(100),                   /* Signers resolution */
+    signer_role     VARCHAR2(200),                    /* Signers role */
+    resolution      VARCHAR2(200),                   /* Signers resolution */
     country         VARCHAR2(100),                   /* Signature production place - country */
     county          VARCHAR2(100),                   /* Signature production place - state/county */
     city            VARCHAR2(100),                   /* Signature production place - town */
