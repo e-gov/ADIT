@@ -804,6 +804,26 @@
 		</field>
 	</class>
 
+	<!-- DeleteDocuments -->
+	<class name="ee.adit.pojo.DeleteDocumentsRequest">
+		<map-to xml="deleteDocuments" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
+		<field name="documents" type="ee.adit.pojo.ArrayOfDocumentId">
+			<bind-xml name="documents" location="keha" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.DeleteDocumentsResponse">
+		<map-to xml="keha" />
+		<field name="success" type="ee.adit.pojo.Success" >
+		</field>
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
+			<bind-xml name="messages" />
+		</field>
+		<field name="documents" type="ee.adit.pojo.ArrayOfDocumentActionStatus">
+			<bind-xml name="documents" />
+		</field>
+	</class>
+
 	<!-- DeflateDocument -->
 	<class name="ee.adit.pojo.DeflateDocumentRequest">
 		<map-to xml="deflateDocument" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
@@ -1146,7 +1166,14 @@
 			<bind-xml name="file_id" />
 		</field>
 	</class>
-
+	
+	<class name="ee.adit.pojo.ArrayOfDocumentId">
+		<map-to xml="documents" />
+		<field name="documentId" type="java.lang.Long" collection="arraylist">
+			<bind-xml name="document_id" />
+		</field>
+	</class>
+	
 	<class name="ee.adit.pojo.ArrayOfUserCode">
 		<map-to xml="recipient_list" />
 		<field name="code" type="java.lang.String" collection="arraylist">
@@ -1183,7 +1210,21 @@
 			<bind-xml name="status_id" />
 		</field>
 	</class>
-
+	
+ 	<class name="ee.adit.pojo.DocumentActionStatus">
+		<map-to xml="document" />
+		<field name="documentId" type="java.lang.Long">
+			<bind-xml name="document_id"/>
+		</field>
+		<field name="success" type="boolean" />
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage" />
+	</class>
+	
+	<class name="ee.adit.pojo.ArrayOfDocumentActionStatus">
+		<map-to xml="documents" />
+		<field name="document" type="ee.adit.pojo.DocumentActionStatus" collection="arraylist" />
+	</class>
+	
 	<class name="ee.adit.pojo.ArrayOfDocumentWorkflowStatus">
 		<field name="statusId" type="java.lang.Long" collection="arraylist">
 			<bind-xml name="status_id" />

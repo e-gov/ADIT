@@ -133,6 +133,18 @@
 		<property name="monitorService" ref="monitorService"/>
 	</bean>
 
+	<bean id="DeleteDocumentsEndpoint" class="ee.adit.ws.endpoint.document.DeleteDocumentsEndpoint">
+		<property name="marshaller" ref="castorMarshaller"/>
+		<property name="unmarshaller" ref="castorMarshaller"/>
+		<property name="userService" ref="userService"/>
+		<property name="logService" ref="logService"/>
+		<property name="messageSource" ref="messageSource"/>
+		<property name="configuration" ref="configuration"/>
+		<property name="documentService" ref="documentService"/>
+		<property name="messageService" ref="messageService"/>
+		<property name="monitorService" ref="monitorService"/>
+	</bean>
+
 	<bean id="DeleteDocumentFileEndpoint" class="ee.adit.ws.endpoint.document.DeleteDocumentFileEndpoint">
 		<property name="marshaller" ref="castorMarshaller"/>
 		<property name="unmarshaller" ref="castorMarshaller"/>
@@ -347,6 +359,8 @@
 					key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}deflateDocument">DeflateDocumentEndpoint</prop>
 				<prop
 					key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}deleteDocument">DeleteDocumentEndpoint</prop>
+				<prop
+					key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}deleteDocuments">DeleteDocumentsEndpoint</prop>
 				<prop
 					key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}deleteDocumentFile">DeleteDocumentFileEndpoint</prop>
 				<prop

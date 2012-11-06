@@ -205,7 +205,7 @@ public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
             response.setMessages(arrayOfMessage);
         }
 
-        super.logCurrentRequest(null, requestDate.getTime(), additionalInformationForLog);
+        super.logCurrentRequest((Long)null, requestDate.getTime(), additionalInformationForLog);
 
         // Log metadata download
         if ((documentIdList == null) || (documentIdList.size() < 1)) {

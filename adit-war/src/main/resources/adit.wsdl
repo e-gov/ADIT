@@ -58,6 +58,8 @@
 			<element name="deflateDocumentResponse" type="tns:deflateDocumentResponse" />
 			<element name="deleteDocumentRequest" type="tns:deleteDocumentRequest" />
 			<element name="deleteDocumentResponse" type="tns:deleteDocumentResponse" />
+			<element name="deleteDocumentsRequest" type="tns:deleteDocumentsRequest" />
+			<element name="deleteDocumentsResponse" type="tns:deleteDocumentsResponse" />
 			<element name="prepareSignatureRequest" type="tns:prepareSignatureRequest" />
 			<element name="prepareSignatureResponse" type="tns:prepareSignatureResponse" />
 			<element name="confirmSignatureRequest" type="tns:confirmSignatureRequest" />
@@ -176,6 +178,26 @@
 				</sequence>
 			</complexType>
 
+			<complexType name="arrayOfDocumentId">
+				<xs:annotation>
+					<xs:documentation xml:lang="ee">Dokumentide identifikaatorite
+						massiiv</xs:documentation>
+					<xs:documentation xml:lang="en">Array of document identificators
+					</xs:documentation>
+				</xs:annotation>
+				<sequence>
+					<element maxOccurs="unbounded" minOccurs="0" name="document_id"
+						type="integer">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Dokumendi identifikaator
+							</xs:documentation>
+							<xs:documentation xml:lang="en">Document identificator
+							</xs:documentation>
+						</xs:annotation>
+					</element>
+				</sequence>
+			</complexType>	
+
 			<complexType name="arrayOfDocumentType">
 				<xs:annotation>
 					<xs:documentation xml:lang="ee">Dokumendi tüüpide massiiv
@@ -260,6 +282,39 @@
 				</sequence>
 			</complexType>
 
+			<complexType name="documentActionStatus">
+				<xs:annotation>
+					<xs:documentation xml:lang="ee">Dokumendi toimingu staatus
+					</xs:documentation>
+					<xs:documentation xml:lang="en">Document action status
+					</xs:documentation>
+				</xs:annotation>
+				<sequence>
+					<element name="document_id" type="integer">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Dokumendi identifikaator
+							</xs:documentation>
+							<xs:documentation xml:lang="en">Document identificator
+							</xs:documentation>
+						</xs:annotation>
+					</element>
+					<element name="success" type="tns:success" />
+					<element name="messages" type="tns:arrayOfMessage" />
+				</sequence>
+			</complexType>
+			
+			<complexType name="arrayOfDocumentActionStatus">
+				<xs:annotation>
+					<xs:documentation xml:lang="ee">Dokumendi toimingu staatuste massiiv</xs:documentation>
+					<xs:documentation xml:lang="en">Array of document action statuses
+					</xs:documentation>
+				</xs:annotation>
+				<sequence>
+					<element maxOccurs="unbounded" minOccurs="0" name="document"
+						type="tns:documentActionStatus" />
+				</sequence>
+			</complexType>
+			
 			<complexType name="arrayOfCreatorApplication">
 				<xs:annotation>
 					<xs:documentation xml:lang="ee">Dokumendi loomiseks kasutatud
@@ -1034,6 +1089,32 @@
 				</sequence>
 			</complexType>
 
+			<!-- deleteDocuments päringu tüübid -->
+			<complexType name="deleteDocumentsRequest">
+				<xs:annotation>
+					<xs:documentation xml:lang="ee">Päring "deleteDocuments"
+					</xs:documentation>
+					<xs:documentation xml:lang="en">"deleteDocuments" request
+					</xs:documentation>
+				</xs:annotation>
+				<sequence>
+					<element name="documents" type="tns:arrayOfDocumentId" />
+				</sequence>
+			</complexType>
+			<complexType name="deleteDocumentsResponse">
+				<xs:annotation>
+					<xs:documentation xml:lang="ee">Päringu "deleteDocuments"
+						vastus</xs:documentation>
+					<xs:documentation xml:lang="en">"deleteDocuments" request
+						response</xs:documentation>
+				</xs:annotation>
+				<sequence>
+					<element name="success" type="tns:success" />
+					<element name="messages" type="tns:arrayOfMessage" />
+					<element name="documents" type="tns:arrayOfDocumentActionStatus" />
+				</sequence>
+			</complexType>
+			
 			<!-- deflateDocument päringu tüübid -->
 			<complexType name="deflateDocumentRequest">
 				<xs:annotation>
@@ -2756,6 +2837,14 @@
 		<wsdl:part name="keha" type="tns:deleteDocumentResponse">
 		</wsdl:part>
 	</wsdl:message>
+	<wsdl:message name="deleteDocumentsRequest">
+		<wsdl:part name="keha" type="tns:deleteDocumentsRequest">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="deleteDocumentsResponse">
+		<wsdl:part name="keha" type="tns:deleteDocumentsResponse">
+		</wsdl:part>
+	</wsdl:message>
 	<wsdl:message name="deflateDocumentResponse">
 		<wsdl:part name="keha" type="tns:deflateDocumentResponse">
 		</wsdl:part>
@@ -2875,6 +2964,16 @@
 			<wsdl:input message="tns:deleteDocumentRequest" name="deleteDocumentRequest">
 			</wsdl:input>
 			<wsdl:output message="tns:deleteDocumentResponse" name="deleteDocumentResponse">
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="deleteDocuments">
+			<xs:documentation>
+				<xtee:title>Mitmete dokumentide kustutamine</xtee:title>
+				<xtee:notes>Dokumentide kustutamisel asendatakse dokumendi failide sisu räsikoodiga</xtee:notes>
+			</xs:documentation>
+			<wsdl:input message="tns:deleteDocumentsRequest" name="deleteDocumentsRequest">
+			</wsdl:input>
+			<wsdl:output message="tns:deleteDocumentsResponse" name="deleteDocumentsResponse">
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="markDocumentViewed">
@@ -3411,6 +3510,56 @@
 					use="literal" />
 			</wsdl:input>
 			<wsdl:output name="deleteDocumentResponse">
+				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
+					part="asutus" use="literal">
+				</soap:header>
+				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
+					part="andmekogu" use="literal">
+				</soap:header>
+				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
+					part="isikukood" use="literal">
+				</soap:header>
+				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
+					part="id" use="literal">
+				</soap:header>
+				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
+					part="nimi" use="literal">
+				</soap:header>
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
+					part="infosysteem" use="literal">
+				</soap:header>
+				<soap:body
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
+					use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="deleteDocuments">
+			<xtee:version>v1</xtee:version>
+			<soap:operation soapAction="" />
+			<wsdl:input name="deleteDocumentsRequest">
+				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
+					part="asutus" use="literal">
+				</soap:header>
+				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
+					part="andmekogu" use="literal">
+				</soap:header>
+				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
+					part="isikukood" use="literal">
+				</soap:header>
+				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
+					part="id" use="literal">
+				</soap:header>
+				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
+					part="nimi" use="literal">
+				</soap:header>
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
+					part="infosysteem" use="literal">
+				</soap:header>
+				<soap:body
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
+					use="literal" />
+			</wsdl:input>
+			<wsdl:output name="deleteDocumentsResponse">
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
 					part="asutus" use="literal">
 				</soap:header>

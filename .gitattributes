@@ -248,7 +248,9 @@ adit-war/src/main/java/ee/adit/pojo/ActivityActor.java -text
 adit-war/src/main/java/ee/adit/pojo/ActivitySubject.java -text
 adit-war/src/main/java/ee/adit/pojo/ArrayOfCreatorApplication.java -text
 adit-war/src/main/java/ee/adit/pojo/ArrayOfDataFileHash.java -text
+adit-war/src/main/java/ee/adit/pojo/ArrayOfDocumentActionStatus.java -text svneol=unset#text/plain
 adit-war/src/main/java/ee/adit/pojo/ArrayOfDocumentDvkStatus.java -text
+adit-war/src/main/java/ee/adit/pojo/ArrayOfDocumentId.java -text svneol=unset#text/plain
 adit-war/src/main/java/ee/adit/pojo/ArrayOfDocumentType.java -text
 adit-war/src/main/java/ee/adit/pojo/ArrayOfDocumentWorkflowStatus.java -text
 adit-war/src/main/java/ee/adit/pojo/ArrayOfEmailAddress.java -text
@@ -269,6 +271,9 @@ adit-war/src/main/java/ee/adit/pojo/DeleteDocumentFileRequest.java -text
 adit-war/src/main/java/ee/adit/pojo/DeleteDocumentFileResponse.java -text
 adit-war/src/main/java/ee/adit/pojo/DeleteDocumentRequest.java -text
 adit-war/src/main/java/ee/adit/pojo/DeleteDocumentResponse.java -text
+adit-war/src/main/java/ee/adit/pojo/DeleteDocumentsRequest.java -text svneol=unset#text/plain
+adit-war/src/main/java/ee/adit/pojo/DeleteDocumentsResponse.java -text svneol=unset#text/plain
+adit-war/src/main/java/ee/adit/pojo/DocumentActionStatus.java -text svneol=unset#text/plain
 adit-war/src/main/java/ee/adit/pojo/DocumentSendingData.java -text
 adit-war/src/main/java/ee/adit/pojo/DocumentSendingRecipient.java -text
 adit-war/src/main/java/ee/adit/pojo/DocumentSharingData.java -text
@@ -413,6 +418,7 @@ adit-war/src/main/java/ee/adit/ws/endpoint/document/ConfirmSignatureEndpoint.jav
 adit-war/src/main/java/ee/adit/ws/endpoint/document/DeflateDocumentEndpoint.java -text
 adit-war/src/main/java/ee/adit/ws/endpoint/document/DeleteDocumentEndpoint.java -text
 adit-war/src/main/java/ee/adit/ws/endpoint/document/DeleteDocumentFileEndpoint.java -text
+adit-war/src/main/java/ee/adit/ws/endpoint/document/DeleteDocumentsEndpoint.java -text svneol=unset#text/plain
 adit-war/src/main/java/ee/adit/ws/endpoint/document/GetDocumentEndpoint.java -text
 adit-war/src/main/java/ee/adit/ws/endpoint/document/GetDocumentFileEndpoint.java -text
 adit-war/src/main/java/ee/adit/ws/endpoint/document/GetDocumentHistoryEndpoint.java -text

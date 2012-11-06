@@ -48,6 +48,8 @@
 	<element name="deflateDocumentResponse" type="tns:deflateDocumentResponse"/>
 	<element name="deleteDocumentRequest" type="tns:deleteDocumentRequest"/>
 	<element name="deleteDocumentResponse" type="tns:deleteDocumentResponse"/>
+	<element name="deleteDocumentsRequest" type="tns:deleteDocumentsRequest"/>
+	<element name="deleteDocumentsResponse" type="tns:deleteDocumentsResponse"/>
 	<element name="prepareSignatureRequest" type="tns:prepareSignatureRequest"/>
 	<element name="prepareSignatureResponse" type="tns:prepareSignatureResponse"/>
 	<element name="confirmSignatureRequest" type="tns:confirmSignatureRequest"/>
@@ -146,7 +148,22 @@
 			</element>
 		</sequence>
 	</complexType>
-
+			
+	<complexType name="arrayOfDocumentId">
+		<annotation>
+	      	<documentation xml:lang="ee">Dokumentide identifikaatorite massiiv</documentation>
+	      	<documentation xml:lang="en">Array of document identificators</documentation>
+    	</annotation>
+		<sequence>
+			<element name="document_id" type="integer" maxOccurs="unbounded" minOccurs="0">
+				<annotation>
+			      	<documentation xml:lang="ee">Dokumendi identifikaator</documentation>
+			      	<documentation xml:lang="en">Document identificator</documentation>
+		    	</annotation>
+			</element>
+		</sequence>
+	</complexType>
+	
 	<complexType name="arrayOfDocumentType">
 		<annotation>
 	      	<documentation xml:lang="ee">Dokumendi tüüpide massiiv</documentation>
@@ -192,6 +209,33 @@
 		</sequence>
 	</complexType>
 
+	<complexType name="documentActionStatus">
+		<annotation>
+	      	<documentation xml:lang="ee">Dokumendi toimingu staatus</documentation>
+	      	<documentation xml:lang="en">Document action status</documentation>
+    	</annotation>
+		<sequence>
+			<element name="document_id" type="integer">
+				<annotation>
+			      	<documentation xml:lang="ee">Dokumendi identifikaator</documentation>
+			      	<documentation xml:lang="en">Document identificator</documentation>
+		    	</annotation>
+			</element>
+			<element name="success" type="tns:success" />
+			<element name="messages" type="tns:arrayOfMessage"/>
+		</sequence>
+	</complexType>
+
+	<complexType name="arrayOfDocumentActionStatus">
+		<annotation>
+	      	<documentation xml:lang="ee">Dokumendi toimingu staatuste massiiv</documentation>
+	      	<documentation xml:lang="en">Array of document action statuses</documentation>
+    	</annotation>
+		<sequence>
+			<element name="document" type="tns:documentActionStatus" maxOccurs="unbounded" minOccurs="0"></element>
+		</sequence>
+	</complexType>
+				
 	<complexType name="arrayOfCreatorApplication">
 		<annotation>
 	      	<documentation xml:lang="ee">Dokumendi loomiseks kasutatud infosüsteemide lühinimede massiiv</documentation>
@@ -818,6 +862,7 @@
 			</element>
 		</sequence>
 	</complexType>
+	
 	<complexType name="deleteDocumentResponse">
 		<annotation>
 	      	<documentation xml:lang="ee">Päringu "deleteDocument" vastus</documentation>
@@ -826,6 +871,27 @@
 		<sequence>
 			<element name="success" type="tns:success" />
 			<element name="messages" type="tns:arrayOfMessage"/>
+		</sequence>
+	</complexType>
+	<!-- deleteDocument päringu tüübid -->
+	<complexType name="deleteDocumentsRequest">
+		<annotation>
+	      	<documentation xml:lang="ee">Päring "deleteDocuments"</documentation>
+	      	<documentation xml:lang="en">"deleteDocuments" request</documentation>
+    	</annotation>
+		<sequence>
+			<element name="documents" type="tns:arrayOfDocumentId" />
+		</sequence>
+	</complexType>
+	<complexType name="deleteDocumentsResponse">
+		<annotation>
+	      	<documentation xml:lang="ee">Päringu "deleteDocuments" vastus</documentation>
+	      	<documentation xml:lang="en">"deleteDocuments" request response</documentation>
+    	</annotation>
+		<sequence>
+			<element name="success" type="tns:success" />
+			<element name="messages" type="tns:arrayOfMessage"/>
+			<element name="documents" type="tns:arrayOfDocumentActionStatus" />
 		</sequence>
 	</complexType>
 

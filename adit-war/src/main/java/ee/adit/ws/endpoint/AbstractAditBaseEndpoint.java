@@ -26,10 +26,12 @@ import org.springframework.ws.mime.Attachment;
 import org.springframework.ws.soap.SoapMessage;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditInternalException;
 import ee.adit.performance.Timer;
+import ee.adit.pojo.ListMethodsResponse;
 import ee.adit.service.LogService;
 import ee.adit.service.MessageService;
 import ee.adit.service.MonitorService;
@@ -185,6 +187,23 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 	            // Add the response DOM tree as a child element to the responseKeha
 	            // element
 	            responseElement = (Element) reponseObjectResult.getNode();
+	            
+	            // Add SOAP attributes to ListMethods meta service response body and its elements
+	            if (this.isMetaService()){
+	            	
+	            	((Element)responseElement.getFirstChild()).setAttribute("xsi:type", "SOAP-ENC:Array");
+	            	int size = ((ListMethodsResponse)responseObject).getItem().size();
+	            	((Element)responseElement.getFirstChild()).setAttribute("SOAP-ENC:arrayType", "xsd:string["+size+"]");
+	            	((Element)responseElement.getFirstChild()).setAttribute("SOAP-ENC:offset", "[0]");
+	            		            	
+	            	for(Node childNode = responseElement.getFirstChild().getFirstChild(); childNode!=null;){
+	            		  Node nextChild = childNode.getNextSibling();	 
+	            		  ((Element) childNode).setAttribute("xsi:type", "xsd:string");
+	            		  childNode = nextChild;
+	            		  
+	            	}
+	            			
+	            }
 	        } else {
 	            logger.error("Response object not initialized.");
 	        }
