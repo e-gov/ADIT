@@ -7,7 +7,7 @@
                 </layout>
   </appender>-->
   <appender name="file" class="org.apache.log4j.RollingFileAppender">
-    <param name="file" value="/log/adit-arendus/adit.log" />
+    <param name="file" value="log/adit-arendus/adit.log" />
     <param name="datePattern" value="'.'yyyy-MM" />
     <param name="append" value="true" />
     <layout class="org.apache.log4j.PatternLayout">
@@ -15,7 +15,7 @@
     </layout>
   </appender>
   <appender name="dvk" class="org.apache.log4j.RollingFileAppender">
-    <param name="file" value="/log/adit-arendus/adit_dvk.log" />
+    <param name="file" value="log/adit-arendus/adit_dvk.log" />
     <param name="datePattern" value="'.'yyyy-MM" />
     <param name="append" value="true" />
     <layout class="org.apache.log4j.PatternLayout">
@@ -23,7 +23,7 @@
     </layout>
   </appender>
   <appender name="monitoring" class="org.apache.log4j.RollingFileAppender">
-    <param name="file" value="/log/adit-arendus/adit_monitoring.log" />
+    <param name="file" value="log/adit-arendus/adit_monitoring.log" />
     <param name="datePattern" value="'.'yyyy-MM" />
     <param name="append" value="true" />
     <layout class="org.apache.log4j.PatternLayout">
@@ -31,7 +31,7 @@
     </layout>
   </appender>
   <appender name="nagios" class="org.apache.log4j.RollingFileAppender">
-    <param name="file" value="/log/adit-arendus/adit_nagios.log" />
+    <param name="file" value="log/adit-arendus/adit_nagios.log" />
     <param name="datePattern" value="'.'yyyy-MM" />
     <param name="append" value="true" />
     <layout class="org.apache.log4j.PatternLayout">
@@ -39,7 +39,7 @@
     </layout>
   </appender>
   <appender name="performance" class="org.apache.log4j.DailyRollingFileAppender">
-    <param name="file" value="/log/adit-arendus/adit_performance.log" />
+    <param name="file" value="log/adit-arendus/adit_performance.log" />
     <param name="datePattern" value="'.'yyyy-MM" />
     <param name="append" value="true" />
     <layout class="org.apache.log4j.PatternLayout">
