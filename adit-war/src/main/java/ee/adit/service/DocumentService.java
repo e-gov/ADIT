@@ -647,6 +647,12 @@ public class DocumentService {
                                 sig.setDocument(document);
                                 document.getSignatures().add(sig);
                             }
+                            
+                            //If it's a signed container, then document must be locked. That prevents users to modify files inside the signed container.
+                            if (document.getSigned()) {
+                           	 document.setLocked(true);
+                           	 document.setLockingDate(new Date());
+                            }
                         }
                     }
                 }
@@ -719,6 +725,7 @@ public class DocumentService {
                      if (extractionResult.isSuccess()) {
                          file.setFileType(FILETYPE_NAME_SIGNATURE_CONTAINER);
                          document.setSigned((extractionResult.getSignatures() != null) && (extractionResult.getSignatures().size() > 0));
+                         
                          filesList.add(file);
                          involvedSignatureContainerExtraction = true;
 
@@ -732,6 +739,12 @@ public class DocumentService {
                              ee.adit.dao.pojo.Signature sig = extractionResult.getSignatures().get(i);
                              sig.setDocument(document);
                              document.getSignatures().add(sig);
+                         }
+                         
+                         //if it's a signed container, then document must be locked. Otherwise users can change files after signing.
+                         if (document.getSigned()) {
+                        	 document.setLocked(true);
+                        	 document.setLockingDate(new Date());
                          }
                      } else {
                          filesList.add(file);
