@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
@@ -83,7 +84,52 @@ public class DocumentDAO extends HibernateDaoSupport {
         logger.debug("Attempting to load document from database. Document id: " + String.valueOf(id));
         return (Document) this.getHibernateTemplate().get(Document.class, id);
     }
+    
+    /**
+     * Fetches document with Signatures by document ID.
+     * Main goal is to initialize signatures collection which is lazy initialized by default. 
+     * @param documentId
+     * @return
+     * @throws Exception
+     */
+    public Document getDocumentWithSignaturesAndFiles(final long documentId)
+            throws Exception {
+        if (documentId <= 0) {
+            throw new IllegalArgumentException("Document ID must be a positive integer. Currently supplied ID was "
+                    + documentId + ".");
+        }
 
+        Document result = null;
+
+        try {
+            logger.debug("Attempting to load document files for document " + documentId);
+            result = (Document) getHibernateTemplate().execute(new HibernateCallback() {
+
+                @Override
+                public Object doInHibernate(Session session) throws HibernateException, SQLException {
+                    Document doc = (Document) session.get(Document.class, documentId);
+                    
+                    if (doc.getSigned()) {
+                    	Set<ee.adit.dao.pojo.Signature> signatures =  doc.getSignatures();
+                    	logger.debug("While fetching document for unsharing, initialized set of signatures. Set size - " + signatures.size());
+                    }
+                    Set<DocumentFile> docFiles = doc.getDocumentFiles();
+                    logger.debug("While fetching document for unsharing, initialized set of document files. Set size - " + docFiles.size());
+                    return doc;
+                }
+            });
+        } catch (DataAccessException ex) {
+            logger.error("Error while fetching document data from database: ", ex);
+            if (ex.getRootCause() instanceof AditException) {
+                throw (AditException) ex.getRootCause();
+            } else {
+                throw ex;
+            }
+        }
+        return result;
+    }
+    
+    
     /**
      * Document search.
      *

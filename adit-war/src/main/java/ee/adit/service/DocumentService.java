@@ -786,6 +786,111 @@ public class DocumentService {
     }
 
     /**
+     * Makes a document copy and saves it. Used for unSahring of signed document.
+     * @param doc
+     * @param sharing
+     * @param remainingDiskQuota
+     * @return
+     */
+    public SaveItemInternalResult saveDocumentCopy (final Document doc, final DocumentSharing sharing, final long remainingDiskQuota) {
+    	
+       final DocumentDAO docDao = this.getDocumentDAO();
+        
+        return (SaveItemInternalResult) this.getDocumentDAO().getHibernateTemplate().execute(new HibernateCallback() {
+            public Object doInHibernate(Session session) throws HibernateException, SQLException, AditCodedException {
+                boolean involvedSignatureContainerExtraction = false;
+                Date creationDate = new Date();
+                Document document = new Document();
+
+                document.setCreationDate(doc.getCreationDate());
+                document.setCreatorCode(sharing.getUserCode());
+                document.setRemoteApplication(doc.getRemoteApplication());
+                document.setSignable(doc.getSignable());
+
+                document.setDocumentType(doc.getDocumentType());
+                document.setGuid(Util.generateGUID());
+
+                document.setCreatorName(sharing.getUserName());
+                document.setLastModifiedDate(doc.getLastModifiedDate());
+                document.setTitle(doc.getTitle());
+                document.setCreatorUserCode(sharing.getUserCode());
+                document.setCreatorUserName(sharing.getUserName());
+                
+                //Add original document as a Parent document of the copy.
+                document.setDocument(doc);
+                
+                
+                //Copy files
+                if ((doc.getDocumentFiles() != null) && (doc.getDocumentFiles().size() > 0)) {
+                    
+                    Iterator<DocumentFile> it = doc.getDocumentFiles().iterator();
+                    
+                    while (it.hasNext()) {
+                    	DocumentFile origFile = it.next();
+                    	DocumentFile file = new DocumentFile();
+                    	
+                    	file.setContentType(origFile.getContentType());
+                    	file.setDeleted(false);
+                    	file.setFileName(origFile.getFileName());
+                    	file.setDescription(origFile.getDescription());
+                    	file.setFileSizeBytes(origFile.getFileSizeBytes());
+                    	file.setLastModifiedDate(origFile.getLastModifiedDate());
+                    	
+                    	file.setDocumentFileTypeId(origFile.getDocumentFileTypeId());
+                    	
+                    	file.setFileDataInDdoc(origFile.getFileDataInDdoc());
+                        file.setDdocDataFileId(origFile.getDdocDataFileId());
+                        file.setDdocDataFileStartOffset(origFile.getDdocDataFileStartOffset());
+                        file.setDdocDataFileEndOffset(origFile.getDdocDataFileEndOffset());
+                        file.setFileData(origFile.getFileData());
+                        
+                        file.setDocument(document);
+                        document.getDocumentFiles().add(file);
+                        
+                    }
+                    
+                    //Copy signatures
+                    
+                    if (doc.getSigned()) {
+                    	
+                    	Iterator<ee.adit.dao.pojo.Signature> itr = doc.getSignatures().iterator();
+                    	
+                    	while (itr.hasNext()) {
+                    		ee.adit.dao.pojo.Signature origSig = itr.next();
+                    		ee.adit.dao.pojo.Signature sig = new ee.adit.dao.pojo.Signature();
+                    		sig.setDocument(document);
+                    		sig.setUserCode(origSig.getUserCode());
+                    		sig.setSignerName(origSig.getSignerName());
+                    		sig.setSignerRole(origSig.getSignerRole());
+                    		sig.setResolution(origSig.getResolution());
+                    		sig.setCountry(origSig.getCountry());
+                    		sig.setCounty(origSig.getCounty());
+                    		sig.setCity(origSig.getCity());
+                    		sig.setPostIndex(origSig.getPostIndex());
+                    		sig.setSignerCode(origSig.getSignerCode());
+                    		sig.setSigningDate(origSig.getSigningDate());
+                    		sig.setUserName(origSig.getUserName());
+                    		
+                    		document.getSignatures().add(sig);
+                    	}
+                    	
+                    	document.setLocked(true);
+                    	document.setLockingDate(doc.getLockingDate());
+                    }
+                }
+
+                try {
+                    SaveItemInternalResult result = docDao.save(document, null, remainingDiskQuota, session);
+                	result.setSuccess(true);
+                    return result;
+                } catch (Exception e) {
+                    throw new HibernateException(e);
+                }
+            }
+        });
+    }
+    
+    /**
      * Extracts data files and signature data from DigiDoc container.
      *
      * @param pathToContainer
@@ -4909,6 +5014,33 @@ public class DocumentService {
         }
 
         return result;
+    }
+
+    /**
+     * Helper method to determine if document has been signed by given user.
+     *
+     * @param doc
+     * 		Document
+     * @param sharing
+     * 		Document sharing record
+     * @return
+     * 		{@code true} if document has been signed by person in the sharing object.
+     */
+    public static boolean documentSignedBySharing(Set<ee.adit.dao.pojo.Signature> documentSignatures, DocumentSharing sharing) {
+    	boolean result = false;
+    	
+    	
+		Iterator<ee.adit.dao.pojo.Signature> it = documentSignatures.iterator();
+		while(it.hasNext()){
+			ee.adit.dao.pojo.Signature signature = (ee.adit.dao.pojo.Signature) it.next();
+			if (sharing.getUserCode().equalsIgnoreCase(signature.getUserCode()) && sharing.getCreationDate().compareTo(signature.getSigningDate())<0  ) {
+				result = true;
+				break;
+			}
+		}
+    
+    	
+    	return result;    	
     }
 
     /**

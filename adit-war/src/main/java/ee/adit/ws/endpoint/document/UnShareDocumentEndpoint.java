@@ -15,10 +15,12 @@ import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditException;
 import ee.adit.exception.AditInternalException;
+import ee.adit.exception.AditMultipleException;
 import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.ArrayOfRecipientStatus;
 import ee.adit.pojo.Message;
 import ee.adit.pojo.RecipientStatus;
+import ee.adit.pojo.SaveItemInternalResult;
 import ee.adit.pojo.UnShareDocumentRequest;
 import ee.adit.pojo.UnShareDocumentResponse;
 import ee.adit.schedule.ScheduleClient;
@@ -111,7 +113,59 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 
                         if (sharing.getDocumentSharingType().equalsIgnoreCase(DocumentService.SHARINGTYPE_SHARE)
                                 || sharing.getDocumentSharingType().equalsIgnoreCase(DocumentService.SHARINGTYPE_SIGN)) {
+                        	
+                        	//Control if document is signed by user and make a copy of this document for him.
+                        	
+                        	boolean documentSignedByUser = false;
+                        	if (doc.getSigned()){
+                        		documentSignedByUser = DocumentService.documentSignedBySharing(doc.getSignatures(), sharing);
+                        	}
+                        	
+                        	if (documentSignedByUser) {
+                        		logger.debug("user " + sharing.getUserCode() + " has signed document " + doc.getId() + " so he will get a copy of this document after sharing is finished.");
+                                
+                        		// Kas kasutajal on piisavalt vaba kettaruumi
+                        		AditUser sharingUser = userService.getUserByID(sharing.getUserCode());
+                        		
+                                long remainingDiskQuota = this.getUserService().getRemainingDiskQuota(sharingUser,
+                                        this.getConfiguration().getGlobalDiskQuota());
+                                
+                                SaveItemInternalResult saveResult = this.getDocumentService().saveDocumentCopy(doc, sharing, remainingDiskQuota);
+                                
+                                this.getDocumentService().addHistoryEvent(applicationName, saveResult.getItemId(), sharing.getUserCode(),
+                                        DocumentService.HISTORY_TYPE_CREATE, xroadRequestUser.getUserCode(),
+                                        xroadRequestUser.getFullName(), DocumentService.DOCUMENT_HISTORY_DESCRIPTION_CREATE, sharing.getUserName(), requestDate.getTime());
+                                
+                                if (saveResult.isSuccess()) {
+                                    documentId = saveResult.getItemId();
+                                    logger.info("Signed document copy with ID: " + documentId.toString() + " saved for user: " + sharing.getUserCode());
 
+                                    // Update user disk quota (used)
+                                    logger.info("User disk quota shrinked by: " + saveResult.getAddedFilesSize());
+                                    Long usedDiskQuota = user.getDiskQuotaUsed();
+                                    if (usedDiskQuota == null) {
+                                    	usedDiskQuota = 0L;
+                                    }
+                                    user.setDiskQuotaUsed(usedDiskQuota + saveResult.getAddedFilesSize());
+                                    this.getUserService().getAditUserDAO().saveOrUpdate(user);
+
+                                } else { 
+                                    if ((saveResult.getMessages() != null) && (saveResult.getMessages().size() > 0)) {
+                                        AditMultipleException aditMultipleException = new AditMultipleException(
+                                                "MultiException");
+                                        aditMultipleException.setMessages(saveResult.getMessages());
+                                        throw aditMultipleException;
+                                    } else {
+                                        throw new AditException("Document copy saving failed!");
+                                    }
+                                }
+//                        		throw new Exception ("Just to prevent document unSharing FOR DEVELOPMENT PURPOSES ONLY!");
+                        	} 
+                        	
+                        /*	else {
+                        		logger.debug("user " + sharing.getUserCode() + " has NOT signed document " + doc.getId() + " so he will get a copy of this document after sharing is finished. Just for the purpose of testing the document copy functionality.");	
+                        	}*/
+                        		
                             // Remove sharing
                             // doc.getDocumentSharings().remove(sharing);// DO
                             // NOT DO THAT - causes
@@ -358,9 +412,14 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
         }
 
         // Now it is safe to load the document from database
-        // (and even necessary to do all the document-specific checks)
-        doc = this.documentService.getDocumentDAO().getDocument(request.getDocumentId());
-
+        // (and even necessary to do all the document-specific checks)        
+        try {
+			doc = this.documentService.getDocumentDAO().getDocumentWithSignaturesAndFiles(request.getDocumentId());
+		} catch (Exception e) {
+			doc = this.documentService.getDocumentDAO().getDocument(request.getDocumentId());
+		}
+        
+        
         // Check whether the document exists
         if (doc == null) {
             logger.debug("Requested document does not exist. Document ID: " + request.getDocumentId());
