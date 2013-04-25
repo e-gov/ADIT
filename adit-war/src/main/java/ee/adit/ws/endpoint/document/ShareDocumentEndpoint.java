@@ -106,6 +106,10 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
             // All checks are successfully passed
             boolean saveDocument = false;
             boolean completeSuccess = true;
+            boolean recipientNotRegistered = false;
+            boolean recipientNotActive = false;
+            boolean allChecksOk = false;
+            
             for (String recipientCode : request.getRecipientList().getCode()) {
                 boolean isSuccess = false;
                 ArrayOfMessage statusMessages = new ArrayOfMessage();
@@ -115,22 +119,32 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
                 	String recipientCodeWithDefaultCountryPrefix = "EE" + recipientCode;
                 	recipient = this.getUserService().getUserByID(recipientCodeWithDefaultCountryPrefix);
                 }
-
+                
+                //Status messages can be later uncommented in case
+                //sharing with unregistered or non active users will be deactivated
                 if (recipient == null) {
-                    statusMessages.setMessage(this.getMessageService().getMessages(
-                            "request.shareDocument.recipientStatus.recipient.nonExistant", new Object[] {}));
+                	recipientNotRegistered = true;
+//                    statusMessages.setMessage(this.getMessageService().getMessages(
+//                            "request.shareDocument.recipientStatus.recipient.nonExistant", new Object[] {}));
                 } else if (!recipient.getActive()) {
-                    statusMessages.setMessage(this.getMessageService().getMessages(
-                            "request.shareDocument.recipientStatus.recipient.inactive", new Object[] {}));
-                } else if (DocumentService.documentSharingExists(doc.getDocumentSharings(), recipientCode)) {
+                	recipientNotActive = true;
+//                    statusMessages.setMessage(this.getMessageService().getMessages(
+//                            "request.shareDocument.recipientStatus.recipient.inactive", new Object[] {}));
+                }
+                
+                if (!recipientNotRegistered && DocumentService.documentSharingExists(doc.getDocumentSharings(), recipientCode)) {
                     statusMessages
                             .setMessage(this.getMessageService().getMessages(
                                     "request.shareDocument.recipientStatus.alreadySharedToUser",
                                     new Object[] {recipientCode }));
-                } else if (recipient.getDvkOrgCode() != null && !"".equalsIgnoreCase(recipient.getDvkOrgCode().trim())) {
+                } else if (!recipientNotRegistered && recipient.getDvkOrgCode() != null && !"".equalsIgnoreCase(recipient.getDvkOrgCode().trim())) {
                     statusMessages.setMessage(this.getMessageService().getMessages(
                             "request.shareDocument.recipient.usesDVK", new Object[] {recipientCode }));
                 } else {
+                	allChecksOk = true;
+                }
+                
+                if (allChecksOk || recipientNotRegistered || recipientNotActive) {
                     DocumentSharing sharing = new DocumentSharing();
                     sharing.setCreationDate(requestDate.getTime());
                     sharing.setDocumentId(doc.getId());
@@ -142,8 +156,18 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
                     }
 
                     sharing.setTaskDescription(request.getReasonForSharing());
-                    sharing.setUserCode(recipient.getUserCode());
-                    sharing.setUserName(recipient.getFullName());
+                    
+                    if (recipientNotRegistered) {
+                    	sharing.setUserCode(recipientCode);
+                    	logger.info("Document " + doc.getId() + " is being shared with not registered user " + recipientCode);
+                    } else {
+	                    sharing.setUserCode(recipient.getUserCode());
+	                    sharing.setUserName(recipient.getFullName());
+	                    if (recipientNotActive) {
+	                    	logger.info("Document " + doc.getId() + " is being shared with not active user " + recipientCode);
+	                    }
+                    }
+                    
                     doc.getDocumentSharings().add(sharing);
 
                     isSuccess = true;
@@ -163,7 +187,9 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
                 statusArray.addRecipient(status);
                 
                 // Add recipient to user contacts
-                userService.addUserContact(user, recipient);
+                if (!recipientNotRegistered){
+                	userService.addUserContact(user, recipient);
+                }
                 
                 completeSuccess = (completeSuccess && isSuccess);
             }

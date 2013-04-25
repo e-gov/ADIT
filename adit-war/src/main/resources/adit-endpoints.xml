@@ -18,6 +18,7 @@
 		<property name="marshaller" ref="castorMarshaller"/>
 		<property name="unmarshaller" ref="castorMarshaller"/>
 		<property name="userService" ref="userService"/>
+		<property name="documentService" ref="documentService"/>
 		<property name="logService" ref="logService"/>
 		<property name="messageSource" ref="messageSource"/>
 		<property name="configuration" ref="configuration"/>

@@ -14,6 +14,7 @@ import ee.adit.pojo.JoinRequest;
 import ee.adit.pojo.JoinResponse;
 import ee.adit.pojo.Message;
 import ee.adit.pojo.Success;
+import ee.adit.service.DocumentService;
 import ee.adit.service.LogService;
 import ee.adit.service.MessageService;
 import ee.adit.service.UserService;
@@ -34,6 +35,8 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
     private static Logger logger = Logger.getLogger(JoinEndpoint.class);
 
     private UserService userService;
+    
+    private DocumentService documentService;
 
     @Override
     protected Object invokeInternal(Object requestObject, int version) throws Exception {
@@ -147,6 +150,9 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
                             logger.info("Adding new user.");
                             userService.addUser(request.getUserName(), usertype, header.getAllasutus(), header
                                     .getIsikukood());
+                            //add user full name to all document sharings that were made before user joined ADIT.
+                            documentService.addUserNameToDocumentSharings(userService.getUserByID(header.getIsikukood()));
+                            
                             response.setSuccess(new Success(true));
                             String message = this.getMessageService().getMessage("request.join.success.userAdded",
                                     new Object[] {request.getUserType() }, Locale.ENGLISH);
@@ -272,6 +278,25 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
      */
     public void setUserService(UserService userService) {
         this.userService = userService;
+    }
+
+    /**
+     * Gets document service.
+     *
+     * @return Document service
+     */
+    public DocumentService getDocumentService() {
+        return documentService;
+    }
+
+    /**
+     * Sets document service.
+     *
+     * @param documentService
+     *     Document service
+     */
+    public void setDocumentService(DocumentService documentService) {
+        this.documentService = documentService;
     }
 
 }

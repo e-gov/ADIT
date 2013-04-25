@@ -1806,6 +1806,18 @@ public class DocumentService {
         return result;
     }
 
+    public void addUserNameToDocumentSharings (AditUser user) throws AditInternalException {
+    	List<DocumentSharing> sharings = documentSharingDAO.getSharingsByUserCode(user.getUserCode());
+    	Iterator<DocumentSharing> itr = sharings.iterator();
+        while (itr.hasNext()) {
+        	DocumentSharing sharing = itr.next();
+        	logger.debug("Adding user " + user.getUserCode() + " name " + user.getFullName() + "to document sharing of document " + sharing.getDocumentId());
+        	sharing.setUserName(user.getFullName());
+        	documentSharingDAO.update(sharing);
+        }
+        return;
+    }
+    
     /**
      * Creates metaxml part of outgoing DVK envelope.
      *
