@@ -180,6 +180,7 @@ adit-war/sql/updates/1_0_48/update_synonyms_1_0_48.sql -text
 adit-war/sql/updates/1_0_49/update_1_0_49.sql -text
 adit-war/sql/updates/1_0_51/update_1_0_51.sql -text
 adit-war/sql/updates/1_0_54/update_1_0_54.sql -text
+adit-war/sql/updates/1_0_55/update_1_0_55.sql -text
 adit-war/sql/updates/1_0_8/update_1_0_8.sql -text
 adit-war/sql/usertype.dml.sql -text
 adit-war/src/main/java/ee/adit/dao/AccessRestrictionDAO.java -text

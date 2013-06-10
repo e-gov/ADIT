@@ -84,7 +84,24 @@ public class DocumentDAO extends HibernateDaoSupport {
         logger.debug("Attempting to load document from database. Document id: " + String.valueOf(id));
         return (Document) this.getHibernateTemplate().get(Document.class, id);
     }
-    
+
+    /**
+     * Fetches document by externalID.
+     *
+     * @param externalId document externalID
+     * @return document
+     */
+    @SuppressWarnings("unchecked")
+    public Document getDocumentByGuid(String documentGuid) {
+        logger.debug("Attempting to load document from database. Document GUID: " + String.valueOf(documentGuid));
+        
+        List<Document> result;
+        DetachedCriteria dt = DetachedCriteria.forClass(Document.class, "document");
+        dt.add(Property.forName("document.guid").eq(documentGuid));
+        result = this.getHibernateTemplate().findByCriteria(dt);
+        
+        return (result.isEmpty() ? null : result.get(0));
+    }
     /**
      * Fetches document with Signatures by document ID.
      * Main goal is to initialize signatures collection which is lazy initialized by default. 
@@ -1063,7 +1080,7 @@ public class DocumentDAO extends HibernateDaoSupport {
 
                     documentFile.setFileDataInDdoc((attachmentFile.getDdocDataFileStartOffset() != null) && (attachmentFile.getDdocDataFileStartOffset() > 0));
                     documentFile.setDocumentFileTypeId(DocumentService.resolveFileTypeId(attachmentFile.getFileType()));
-
+                    documentFile.setGuid(attachmentFile.getGuid());
                     documentFile.setContentType(attachmentFile.getContentType());
                     documentFile.setDeleted(false);
                     documentFile.setDescription(attachmentFile.getDescription());

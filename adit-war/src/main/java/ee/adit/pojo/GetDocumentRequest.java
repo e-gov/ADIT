@@ -37,11 +37,13 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "GetDocumentRequest", propOrder = {"documentId", "includeFileContents", "fileTypes" })
+@XmlType(name = "GetDocumentRequest", propOrder = {"documentId", "documentGuid", "includeFileContents", "fileTypes" })
 public class GetDocumentRequest {
 
-    @XmlElement(name = "document_id", required = true)
+    @XmlElement(name = "document_id")
     private Long documentId;
+    @XmlElement(name = "document_guid")
+    private String documentGuid;
     @XmlElement(name = "include_file_contents")
     private Boolean includeFileContents;
     @XmlElement(name = "file_types")
@@ -99,4 +101,24 @@ public class GetDocumentRequest {
     public void setFileTypes(ArrayOfFileType value) {
         this.fileTypes = value;
     }
+    
+    /**
+     * Gets the value of documentExternalId property
+     * 
+     * @return documentExternalId
+     */
+	public String getDocumentGuid() {
+		return documentGuid;
+	}
+
+	/**
+	 * Sets the value of documentExternalId property
+	 * 
+	 * @param documentExternalId
+	 */
+	public void setDocumentGuid(String documentGuid) {
+		this.documentGuid = documentGuid;
+	}
+    
+    
 }

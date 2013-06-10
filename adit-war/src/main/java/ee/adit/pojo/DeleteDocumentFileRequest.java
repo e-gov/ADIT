@@ -29,14 +29,15 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "DeleteDocumentFileRequest", propOrder = {"documentId", "fileId" })
+@XmlType(name = "DeleteDocumentFileRequest", propOrder = {"documentId", "fileId", "fileGuid"})
 public class DeleteDocumentFileRequest {
 
     @XmlElement(name = "document_id", required = true)
     private long documentId;
-    @XmlElement(name = "file_id", required = true)
+    @XmlElement(name = "file_id")
     private long fileId;
-
+    @XmlElement(name = "file_guid")
+    private String fileGuid;
     /**
      * Gets the value of the documentId property.
      * 
@@ -78,4 +79,13 @@ public class DeleteDocumentFileRequest {
     public void setFileId(long value) {
         this.fileId = value;
     }
+
+	public String getFileGuid() {
+		return fileGuid;
+	}
+
+	public void setFileGuid(String fileGuid) {
+		this.fileGuid = fileGuid;
+	}
+    
 }

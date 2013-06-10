@@ -1,14 +1,21 @@
 package ee.adit.dao;
 
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Property;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+import ee.adit.dao.pojo.Document;
+import ee.adit.dao.pojo.DocumentFile;
 import ee.adit.dao.pojo.DocumentFileDeflateResult;
 
 /**
@@ -99,4 +106,18 @@ public class DocumentFileDAO extends HibernateDaoSupport {
 
         return result.getResultCode();
     }
+    
+    @SuppressWarnings("unchecked")
+    public DocumentFile getDocumentFileIdByGuid(Document doc, String documentFileGuid) {
+    	logger.debug("Attempting to load document file id from database. Document ID: " + String.valueOf(doc.getId()) + " Document File GUID: " + String.valueOf(documentFileGuid));
+        
+        List<DocumentFile> result;
+        DetachedCriteria dt = DetachedCriteria.forClass(DocumentFile.class, "document_file");
+//        dt.add(Property.forName("document_file.document.id").eq(documentId));
+        dt.add(Restrictions.or(Restrictions.eq("document", doc), Restrictions.eq("guid", documentFileGuid)));
+        result = this.getHibernateTemplate().findByCriteria(dt);
+        
+        return (result.isEmpty() ? null : result.get(0));
+    }
+
 }

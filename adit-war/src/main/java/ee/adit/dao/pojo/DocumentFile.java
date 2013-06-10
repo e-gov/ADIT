@@ -16,6 +16,7 @@ public class DocumentFile implements java.io.Serializable {
     private static final long serialVersionUID = 1428423268886079325L;
     private long id;
     private Document document;
+    private String guid;
     private String fileName;
     private String contentType;
     private String description;
@@ -179,4 +180,14 @@ public class DocumentFile implements java.io.Serializable {
 	public void setLastModifiedDate(Date lastModifiedDate) {
 		this.lastModifiedDate = lastModifiedDate;
 	}
+
+	public String getGuid() {
+		return guid;
+	}
+
+	public void setGuid(String guid) {
+		this.guid = guid;
+	}
+	
+	
 }

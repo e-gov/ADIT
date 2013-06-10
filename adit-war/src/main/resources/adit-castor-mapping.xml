@@ -280,6 +280,9 @@
 		<field name="id" type="java.lang.Long">
 			<bind-xml name="id"/>
 		</field>
+		<field name="guid" type="java.lang.String">
+			<bind-xml name="guid"/>
+		</field>
 		<field name="name" type="java.lang.String">
 			<bind-xml name="name"/>
 		</field>
@@ -604,6 +607,9 @@
 		<field name="documentId" type="long">
 			<bind-xml name="document_id" location="keha" />
 		</field>
+		<field name="documentGuid" type="java.lang.String">
+			<bind-xml name="document_guid" location="keha" />
+		</field>
 		<field name="includeFileContents" type="java.lang.Boolean">
 			<bind-xml name="include_file_contents" location="keha" />
 		</field>
@@ -775,6 +781,9 @@
 		</field>
 		<field name="fileId" type="long">
 			<bind-xml name="file_id" location="keha" />
+		</field>
+		<field name="fileGuid" type="java.lang.String">
+			<bind-xml name="file_guid" location="keha" />
 		</field>
 	</class>
 

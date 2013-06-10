@@ -10,6 +10,9 @@
             	<param name="sequence">document_file_id_seq</param>
             </generator>
         </id>
+        <property name="guid" type="string">
+            <column name="GUID" length="50"/>
+        </property>
         <many-to-one name="document" class="ee.adit.dao.pojo.Document" fetch="select">
             <column name="DOCUMENT_ID" precision="12" scale="0" not-null="true" />
         </many-to-one>

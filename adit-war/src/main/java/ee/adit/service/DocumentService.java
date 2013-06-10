@@ -4958,6 +4958,16 @@ public class DocumentService {
     }
 
     /**
+     * Gets Document File ID by document and file guid
+     * @param doc
+     * @param documentFileGuid
+     * @return document file ID
+     */
+    public long getDocumentFileIdByGuid(Document doc, String documentFileGuid) {
+    	return this.getDocumentFileDAO().getDocumentFileIdByGuid(doc, documentFileGuid).getId();
+    }
+    
+    /**
      * Translates file type name to file type ID.
      *
      * @param fileTypeName

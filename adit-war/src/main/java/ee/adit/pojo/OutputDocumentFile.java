@@ -2,6 +2,7 @@ package ee.adit.pojo;
 
 public class OutputDocumentFile implements Comparable<OutputDocumentFile> {
     private Long id;
+    private String guid;
     private String name;
     private String contentType;
     private String description;
@@ -90,6 +91,14 @@ public class OutputDocumentFile implements Comparable<OutputDocumentFile> {
 
 	public void setDdocDataFileEndOffset(Long ddocDataFileEndOffset) {
 		this.ddocDataFileEndOffset = ddocDataFileEndOffset;
+	}
+
+	public String getGuid() {
+		return guid;
+	}
+
+	public void setGuid(String guid) {
+		this.guid = guid;
 	}
 
 	/**
