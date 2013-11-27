@@ -117,7 +117,7 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
                         	//Control if document is signed by user and make a copy of this document for him.
                         	
                         	boolean documentSignedByUser = false;
-                        	if (doc.getSigned()){
+                        	if (doc.getSigned() != null){
                         		documentSignedByUser = DocumentService.documentSignedBySharing(doc.getSignatures(), sharing);
                         	}
                         	

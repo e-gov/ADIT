@@ -76,6 +76,9 @@
         <property name="signed" type="java.lang.Boolean">
             <column name="SIGNED" precision="1" scale="0" />
         </property>
+        <property name="eformUseId" type="java.lang.Long">
+            <column name="EFORM_USE_ID" precision="12" scale="0" />
+        </property>
         <set name="documents" inverse="true" lazy="true" table="DOCUMENT" fetch="select">
             <key>
                 <column name="PARENT_ID" precision="12" scale="0" />

@@ -60,6 +60,7 @@ import ee.adit.util.NagiosLogger;
 import ee.adit.util.Util;
 import ee.webmedia.xtee.client.service.XTeeAttachment;
 
+
 /**
  *
  * Provides monitoring services. Monitoring consist of the following:
@@ -150,6 +151,7 @@ public class MonitorService {
     private Marshaller marshaller;
 
     private Unmarshaller unmarshaller;
+	
 
     /**
      * Check ADIT and DVK database read functions.
@@ -1121,7 +1123,7 @@ public class MonitorService {
             String tempFileFullName = this.getConfiguration().getTempDir() + File.separator + tempFileName;
             fos = new FileOutputStream(tempFileFullName);
             StreamResult reponseObjectResult = new StreamResult(fos);
-
+						
             // Marshal to output
             this.getMarshaller().marshal(object, reponseObjectResult);
 

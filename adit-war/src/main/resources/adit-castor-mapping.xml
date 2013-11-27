@@ -474,6 +474,9 @@
 		<field name="workflowStatusId" type="java.lang.Long">
 			<bind-xml name="workflow_status_id"/>
 		</field>
+		<field name="eformUseId" type="java.lang.Long">
+			<bind-xml name="eform_use_id"/>
+		</field>
 		<field name="lastAccessed" type="java.util.Date">
 			<bind-xml name="last_accessed"/>
 		</field>
@@ -541,6 +544,9 @@
 		</field>
 		<field name="hasBeenViewed" type="java.lang.Boolean">
 			<bind-xml name="has_been_viewed" location="keha" />
+		</field>
+		<field name="eformUseId" type="java.lang.Long">
+			<bind-xml name="eform_use_id" location="keha" />
 		</field>
 		<field name="isDeflated" type="java.lang.Boolean">
 			<bind-xml name="is_deflated" location="keha" />
@@ -712,6 +718,9 @@
 		</field>
 		<field name="previousDocumentID" type="java.lang.Long">
 			<bind-xml name="previous_document_id" location="document" />
+		</field>
+		<field name="eformUseId" type="java.lang.Long">
+			<bind-xml name="eform_use_id" location="document" />
 		</field>
 		<field name="files" type="ee.adit.pojo.OutputDocumentFile" collection="arraylist">
 			<bind-xml name="file" location="document/files"/>
@@ -1349,7 +1358,7 @@
 
 	<!-- Notifications -->
 	<class name="ee.adit.pojo.notification.LisaSyndmusRequest">
-		<map-to xml="lisaSyndmus" ns-uri="http://producers.teavituskalender.xtee.riik.ee/producer/teavituskalender"/>
+		<map-to xml="lisaSyndmus" ns-uri="http://producers.teavituskalender.xtee.riik.ee/producer/teavituskalender" ns-prefix="ns5"/>
 		<field name="nahtavOmanikule" type="java.lang.Boolean" >
 			<bind-xml name="nahtavOmanikule" location="keha" />
 		</field>

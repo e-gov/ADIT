@@ -35,6 +35,7 @@ public class Document implements java.io.Serializable {
     private Boolean deleted;
     private Boolean invisibleToOwner;
     private Boolean signed;
+    private Long eformUseId;
     private Set<Document> documents = new HashSet<Document>(0);
     private Set<DocumentFile> documentFiles = new HashSet<DocumentFile>(0);
     private Set<Signature> signatures = new HashSet<Signature>(0);
@@ -272,7 +273,15 @@ public class Document implements java.io.Serializable {
         this.signed = signed;
     }
 
-    public Set<Document> getDocuments() {
+    public Long getEformUseId() {
+		return eformUseId;
+	}
+
+	public void setEformUseId(Long eformUseId) {
+		this.eformUseId = eformUseId;
+	}
+
+	public Set<Document> getDocuments() {
         return this.documents;
     }
 

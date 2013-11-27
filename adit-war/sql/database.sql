@@ -140,6 +140,7 @@ CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_FILE
 (
     ID                           NUMBER(12) NOT NULL,               /* Unique identifier */
     document_id                  NUMBER(12) NOT NULL,               /* ID of document this file belongs to */
+    guid                         VARCHAR(50),                       /* file guid */
     file_name                    VARCHAR2(355) NOT NULL,            /* File name */
     content_type                 VARCHAR2(255),                     /* MIME type of file */
     description                  VARCHAR2(4000),                    /* File description */
@@ -157,6 +158,7 @@ CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_FILE
 COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_FILE                               IS 'Document files';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.ID                           IS 'Unique identifier';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.document_id                  IS 'ID of document this file belongs to';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.guid                         IS 'Faili globaalselt unikaalne identifikaator';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.file_name                    IS 'File name';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.content_type                 IS 'MIME type of file';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.description                  IS 'File description';

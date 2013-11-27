@@ -2123,6 +2123,14 @@
 								document)</xs:documentation>
 						</xs:annotation>
 					</xs:element>
+					<xs:element name="eform_use_id" type="xs:integer">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Evormi kasutuselevĆµtu id. Tidetakse ainult siis, kui tegemist on evormi andmetega
+							</xs:documentation>
+							<xs:documentation xml:lang="en">Eform use id. Filled only in case of eform formData
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="files" type="subDocumentFilesType" />
 				</xs:sequence>
 			</xs:complexType>

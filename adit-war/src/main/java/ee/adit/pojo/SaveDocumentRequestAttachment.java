@@ -13,7 +13,9 @@ public class SaveDocumentRequestAttachment {
     private String documentType;
 
     private Long previousDocumentID;
-
+    
+    private Long eformUseId; 
+    
     private List<OutputDocumentFile> files;
 
     public Long getId() {
@@ -64,4 +66,13 @@ public class SaveDocumentRequestAttachment {
         this.previousDocumentID = previousDocumentID;
     }
 
+	public Long getEformUseId() {
+		return eformUseId;
+	}
+
+	public void setEformUseId(Long eformUseId) {
+		this.eformUseId = eformUseId;
+	}
+    
+    
 }

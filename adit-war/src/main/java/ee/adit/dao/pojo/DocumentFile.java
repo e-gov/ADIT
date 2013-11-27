@@ -189,5 +189,4 @@ public class DocumentFile implements java.io.Serializable {
 		this.guid = guid;
 	}
 	
-	
 }

@@ -273,7 +273,13 @@ public class DocumentDAO extends HibernateDaoSupport {
                         }
                         criteria.add(disjunction);
                     }
-
+                    
+                    // Document eform use ID
+                    if (param.getEformUseId() != null) {
+                    	
+                    	criteria.add(Restrictions.eq("eformUseId", param.getEformUseId()));
+                    }
+                    
                     // Has the document been viewed?
                     // - if user is document creator, then it is viewed
                     // - if document was sent to user then check viewing status
@@ -600,6 +606,7 @@ public class DocumentDAO extends HibernateDaoSupport {
                     f.setContentType(docFile.getContentType());
                     f.setDescription(docFile.getDescription());
                     f.setId(docFile.getId());
+                    f.setGuid(docFile.getGuid());
                     f.setName(docFile.getFileName());
                     f.setSizeBytes(docFile.getFileSizeBytes());
                     f.setFileType(DocumentService.resolveFileTypeName(docFile.getDocumentFileTypeId()));
@@ -850,6 +857,7 @@ public class DocumentDAO extends HibernateDaoSupport {
         result.setSigned(doc.getSigned());
         result.setTitle(doc.getTitle());
         result.setWorkflowStatusId(doc.getDocumentWfStatusId());
+        
 
         // Estimated document remove date
         Date removeDate = null;
@@ -884,6 +892,10 @@ public class DocumentDAO extends HibernateDaoSupport {
         	result.setFolder("outgoing");
         } else {
         	result.setFolder("incoming");
+        }
+        
+        if (doc.getEformUseId() != null) {
+        	result.setEformUseId(doc.getEformUseId());
         }
 
         // Has the document been viewed?

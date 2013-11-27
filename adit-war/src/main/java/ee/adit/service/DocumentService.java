@@ -619,6 +619,7 @@ public class DocumentService {
                 document.setTitle(attachmentDocument.getTitle());
                 document.setCreatorUserCode(creatorUserCode);
                 document.setCreatorUserName(creatorUserName);
+                document.setEformUseId(attachmentDocument.getEformUseId());
 
                 if ((attachmentDocument.getFiles() != null) && (attachmentDocument.getFiles().size() == 1)
                     && ((document.getDocumentFiles() == null) || (document.getDocumentFiles().size() == 0))) {

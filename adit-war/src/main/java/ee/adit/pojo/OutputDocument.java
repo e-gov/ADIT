@@ -19,6 +19,7 @@ public class OutputDocument {
     private Long dvkStatusId;
     private Long dvkId;
     private Long workflowStatusId;
+    private Long eformUseId;
     private Date lastAccessed;
     private Long previousDocumentId;
     private String previousDocumentGuid;
@@ -162,7 +163,15 @@ public class OutputDocument {
         this.workflowStatusId = workflowStatusId;
     }
 
-    public Date getLastAccessed() {
+    public Long getEformUseId() {
+		return eformUseId;
+	}
+
+	public void setEformUseId(Long eformUseId) {
+		this.eformUseId = eformUseId;
+	}
+
+	public Date getLastAccessed() {
         return lastAccessed;
     }
 
