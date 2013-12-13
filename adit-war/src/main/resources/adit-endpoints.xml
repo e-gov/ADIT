@@ -172,6 +172,21 @@
 		<!-- NB! Value is case sensitive -->
 		<property name="digidocConfigurationFile" value="jdigidoc.cfg" />
 	</bean>
+	
+	<bean id="GetSendStatusEndpoint" class="ee.adit.ws.endpoint.document.GetSendStatusEndpoint">
+		<property name="marshaller" ref="castorMarshaller"/>
+		<property name="unmarshaller" ref="castorMarshaller"/>
+		<property name="userService" ref="userService"/>
+		<property name="logService" ref="logService"/>
+		<property name="messageSource" ref="messageSource"/>
+		<property name="configuration" ref="configuration"/>
+		<property name="documentService" ref="documentService"/>
+		<property name="messageService" ref="messageService"/>
+		<property name="monitorService" ref="monitorService"/>
+		<property name="scheduleClient" ref="scheduleClient"/>
+		<!-- NB! Value is case sensitive -->
+		<property name="digidocConfigurationFile" value="jdigidoc.cfg" />
+	</bean>
 
 	<bean id="GetDocumentFileEndpoint" class="ee.adit.ws.endpoint.document.GetDocumentFileEndpoint">
 		<property name="marshaller" ref="castorMarshaller"/>
@@ -366,6 +381,8 @@
 					key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}deleteDocumentFile">DeleteDocumentFileEndpoint</prop>
 				<prop
 					key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}getDocument">GetDocumentEndpoint</prop>
+				<prop
+					key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}getSendStatus">GetSendStatusEndpoint</prop>
 				<prop
 					key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}getDocumentFile">GetDocumentFileEndpoint</prop>
 				<prop

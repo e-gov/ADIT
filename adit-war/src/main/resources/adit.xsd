@@ -36,6 +36,8 @@
 	<element name="getDocumentListResponse" type="tns:getDocumentListResponse"/>
 	<element name="getDocumentRequest" type="tns:getDocumentRequest"/>
 	<element name="getDocumentResponse" type="tns:getDocumentResponse"/>
+	<element name="getSendStatusRequest" type="tns:getSendStatusRequest" />
+	<element name="getSendStatusResponse" type="tns:getSendStatusResponse" />
 	<element name="getDocumentFileRequest" type="tns:getDocumentFileRequest"/>
 	<element name="getDocumentFileResponse" type="tns:getDocumentFileResponse"/>
 	<element name="saveDocumentRequest" type="tns:saveDocumentRequest"/>
@@ -689,7 +691,49 @@
 			</element>
 		</sequence>
 	</complexType>
-
+	<!-- getSendStatus päringu tüübid -->
+	<complexType name="getSendStatusRequest">
+		<annotation>
+			<documentation xml:lang="ee">Päring "getSendStatus"
+			</documentation>
+			<documentation xml:lang="en">"getSendStatus" request
+			</documentation>
+		</annotation>
+		<sequence>
+			<element name="documendid">
+				<annotation>
+					<documentation xml:lang="ee">Dokumendid</documentation>
+					<documentation xml:lang="en">Documents</documentation>
+				</annotation>
+				<complexType>
+					<attribute name="href" type="tns:href" />
+				</complexType>
+			</element>
+		</sequence>
+	</complexType>
+	<complexType name="getSendStatusResponse">
+		<annotation>
+			<documentation xml:lang="ee">Päringu "getDocument" vastus
+			</documentation>
+			<documentation xml:lang="en">"getDocument" request
+				response</documentation>
+		</annotation>
+		<sequence>
+			<element name="success" type="tns:success" />
+			<element name="messages" type="tns:arrayOfMessage" />
+			<element name="document">
+				<annotation>
+					<documentation xml:lang="ee">Dokumendi andmed
+					</documentation>
+					<documentation xml:lang="en">Document data
+					</documentation>
+				</annotation>
+				<complexType>
+					<attribute name="href" type="tns:href" />
+				</complexType>
+			</element>
+		</sequence>
+	</complexType>
 	<!-- getDocumentFile päringu tüübid -->
 	<complexType name="getDocumentFileRequest">
 		<annotation>

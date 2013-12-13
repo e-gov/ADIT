@@ -19,9 +19,10 @@ public class DocumentSharing implements java.io.Serializable {
     private String userName;
     private String taskDescription;
     private Date creationDate;
-    private Date lastAccessDate;
+    private Date firstAccessDate;
     private Boolean deleted;
     private String dvkFolder;
+    private Long dvkId;
 
     public DocumentSharing() {
     }
@@ -35,7 +36,7 @@ public class DocumentSharing implements java.io.Serializable {
 
     public DocumentSharing(Long id, String documentSharingType, Long documentDvkStatus, Long documentWfStatus,
             long documentId, String userCode, String userName, String taskDescription, Date creationDate,
-            Date lastAccessDate, Boolean deleted) {
+            Date firstAccessDate, Boolean deleted) {
         this.id = id;
         this.documentSharingType = documentSharingType;
         this.documentDvkStatus = documentDvkStatus;
@@ -45,7 +46,7 @@ public class DocumentSharing implements java.io.Serializable {
         this.userName = userName;
         this.taskDescription = taskDescription;
         this.creationDate = creationDate;
-        this.lastAccessDate = lastAccessDate;
+        this.firstAccessDate = firstAccessDate;
         this.deleted = deleted;
     }
 
@@ -121,12 +122,12 @@ public class DocumentSharing implements java.io.Serializable {
         this.creationDate = creationDate;
     }
 
-    public Date getLastAccessDate() {
-        return this.lastAccessDate;
+    public Date getFirstAccessDate() {
+        return this.firstAccessDate;
     }
 
-    public void setLastAccessDate(Date lastAccessDate) {
-        this.lastAccessDate = lastAccessDate;
+    public void setFirstAccessDate(Date firstAccessDate) {
+        this.firstAccessDate = firstAccessDate;
     }
 
 	public Boolean getDeleted() {
@@ -143,6 +144,14 @@ public class DocumentSharing implements java.io.Serializable {
 
 	public void setDvkFolder(String dvkFolder) {
 		this.dvkFolder = dvkFolder;
+	}
+	
+	public Long getDvkId() {
+		return dvkId;
+	}
+
+	public void setDvkId(Long dvkId) {
+		this.dvkId = dvkId;
 	}
 
 }

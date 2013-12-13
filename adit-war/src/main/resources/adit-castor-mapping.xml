@@ -600,7 +600,73 @@
 		</field>
 	</class>
 
+	<!-- GetSendStatus -->
+	<class name="ee.adit.pojo.GetSendStatusRequest">
+		<map-to xml="getSendStatus" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
+		<field name="document" type="ee.adit.pojo.GetSendStatusRequestDocument">
+			<bind-xml name="documendid" location="keha" />
+		</field>
+	</class>
+	<class name="ee.adit.pojo.GetSendStatusRequestDocument">
+		<map-to xml="dokumendid" />
+		<field name="href" type="java.lang.String">
+			<bind-xml name="href" node="attribute" />
+		</field>
+	</class>
+	<class name="ee.adit.pojo.GetSendStatusRequestAttachment">
+		<map-to xml="item" />
+		<field name="dhlIds" type="java.lang.Long" collection="arraylist">
+			<bind-xml name="dhl_id" />
+		</field>
+	</class>
 
+	<class name="ee.adit.pojo.GetSendStatusResponse">
+		<map-to xml="keha" />
+		<field name="success" type="java.lang.Boolean" >
+		</field>
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
+			<bind-xml name="messages" />
+		</field>
+		<field name="document" type="ee.adit.pojo.GetSendStatusResponseDocument">
+			<bind-xml name="document" />
+		</field>
+	</class>
+	
+	<class name="ee.adit.pojo.GetSendStatusResponseDocument">
+		<map-to xml="document" />
+		<field name="href" type="java.lang.String">
+			<bind-xml name="href" node="attribute" />
+		</field>
+	</class>
+	
+	<class name="ee.adit.pojo.GetSendStatusResponseAttachment">
+		<map-to xml="item" />
+		<field name="documents" type="ee.adit.pojo.DocumentSendStatus" collection="arraylist">
+			<bind-xml name="dokument" />
+		</field>
+	</class>
+	<class name="ee.adit.pojo.DocumentSendStatus">
+		<field name="dhlId" type="java.lang.Long">
+			<bind-xml name="dhl_id"/>
+		</field>
+		<field name="recipients" type="ee.adit.pojo.DocumentSharingRecipientStatus" collection="arraylist">
+			<bind-xml name="saaja" />
+		</field>
+	</class>
+	<class name="ee.adit.pojo.DocumentSharingRecipientStatus">
+		<field name="code" type="java.lang.String">
+			<bind-xml name="isikukood"/>
+		</field>
+		<field name="name" type="java.lang.String">
+			<bind-xml name="saajaNimi"/>
+		</field>
+		<field name="hasBeenViewed" type="java.lang.Boolean">
+			<bind-xml name="avatud"/>
+		</field>
+		<field name="openedTime" type="java.util.Date">
+			<bind-xml name="avamiseAeg"/>
+		</field>
+	</class>
  	<!-- GetDocument -->
  	<class name="ee.adit.pojo.GetDocumentRequest">
 		<map-to xml="getDocument" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
@@ -1448,7 +1514,7 @@
 			<bind-xml name="include_file_contents" location="keha" QName-prefix="adit" />
 		</field>
 	</class>
-
+	
 	<!-- GetUserInfo -->
  	<class name="ee.adit.pojo.GetUserInfoRequestMonitor">
 		<map-to xml="getUserInfo" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" ns-prefix="adit" />

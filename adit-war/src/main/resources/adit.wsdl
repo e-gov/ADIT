@@ -46,6 +46,8 @@
 			<element name="getDocumentListResponse" type="tns:getDocumentListResponse" />
 			<element name="getDocumentRequest" type="tns:getDocumentRequest" />
 			<element name="getDocumentResponse" type="tns:getDocumentResponse" />
+			<element name="getSendStatusRequest" type="tns:getSendStatusRequest" />
+			<element name="getSendStatusResponse" type="tns:getSendStatusResponse" />
 			<element name="getDocumentFileRequest" type="tns:getDocumentFileRequest" />
 			<element name="getDocumentFileResponse" type="tns:getDocumentFileResponse" />
 			<element name="saveDocumentRequest" type="tns:saveDocumentRequest" />
@@ -881,7 +883,51 @@
 					</element>
 				</sequence>
 			</complexType>
-
+			
+			<!-- getSendStatus päringu tüübid -->
+			<complexType name="getSendStatusRequest">
+				<xs:annotation>
+					<xs:documentation xml:lang="ee">Päring "getSendStatus"
+					</xs:documentation>
+					<xs:documentation xml:lang="en">"getSendStatus" request
+					</xs:documentation>
+				</xs:annotation>
+				<sequence>
+					<element name="documendid">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Dokumendid</xs:documentation>
+							<xs:documentation xml:lang="en">Documents</xs:documentation>
+						</xs:annotation>
+						<complexType>
+							<attribute name="href" type="tns:href" />
+						</complexType>
+					</element>
+				</sequence>
+			</complexType>
+			<complexType name="getSendStatusResponse">
+				<xs:annotation>
+					<xs:documentation xml:lang="ee">Päringu "getDocument" vastus
+					</xs:documentation>
+					<xs:documentation xml:lang="en">"getDocument" request
+						response</xs:documentation>
+				</xs:annotation>
+				<sequence>
+					<element name="success" type="tns:success" />
+					<element name="messages" type="tns:arrayOfMessage" />
+					<element name="document">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Dokumendi andmed
+							</xs:documentation>
+							<xs:documentation xml:lang="en">Document data
+							</xs:documentation>
+						</xs:annotation>
+						<complexType>
+							<attribute name="href" type="tns:href" />
+						</complexType>
+					</element>
+				</sequence>
+			</complexType>
+			
 			<!-- getDocumentFile päringu tüübid -->
 			<complexType name="getDocumentFileRequest">
 				<xs:annotation>
@@ -1873,6 +1919,19 @@
 					<xs:element name="document" type="documentV1Type" />
 				</xs:sequence>
 			</xs:complexType>
+			
+			<!-- getSendStatus attachments -->
+			<xs:element name="getSendStatusResponseAttachmentV1" type="getSendStatusResponseAttachmentV1" />
+			<xs:complexType name="getSendStatusResponseAttachmentV1">
+				<xs:annotation>
+					<xs:documentation xml:lang="ee">Päringu "getSendStatus" vastuse manus</xs:documentation>
+					<xs:documentation xml:lang="en">Attachment for request
+						"getSendStatus" response message</xs:documentation>
+				</xs:annotation>
+				<xs:sequence>
+					<xs:element name="dokument" type="documentV1Type" />
+				</xs:sequence>
+			</xs:complexType>
 
 
 			<!-- getDocumentFile attachments -->
@@ -2060,7 +2119,21 @@
 						type="documentV1Type" />
 				</xs:sequence>
 			</xs:complexType>
-
+			
+			<!-- getSendStatus attachments -->
+			<xs:element name="getSendStatusRequestAttachmentV1" type="getSendStatusRequestAttachmentV1" />
+			<xs:complexType name="getSendStatusRequestAttachmentV1">
+				<xs:annotation>
+					<xs:documentation xml:lang="ee">Päringu "getSendStatus" manus
+					</xs:documentation>
+					<xs:documentation xml:lang="en">Attachment for request
+						"getSendStatus" request message</xs:documentation>
+				</xs:annotation>
+				<xs:sequence>
+					<xs:element name="dhl_id" type="xs:integer" />
+				</xs:sequence>
+			</xs:complexType>
+			
 			<!-- saveDocument attachments -->
 			<xs:element name="saveDocumentRequestAttachmentV1" type="saveDocumentRequestAttachmentV1Type" />
 			<xs:complexType name="saveDocumentRequestAttachmentV1Type">
@@ -2907,6 +2980,14 @@
 		<wsdl:part name="keha" type="tns:getUserContactsResponse">
 		</wsdl:part>
 	</wsdl:message>
+	<wsdl:message name="getSendStatusRequest">
+		<wsdl:part name="keha" type="tns:getSendStatusRequest">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="getSendStatusResponse">
+		<wsdl:part name="keha" type="tns:getSendStatusResponse">
+		</wsdl:part>
+	</wsdl:message>
 	<wsdl:portType name="adit">
 		<wsdl:operation name="getJoined">
 			<xs:documentation>
@@ -3047,6 +3128,16 @@
 			<wsdl:input message="tns:getDocumentRequest" name="getDocumentRequest">
 			</wsdl:input>
 			<wsdl:output message="tns:getDocumentResponse" name="getDocumentResponse">
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getSendStatus">
+			<xs:documentation>
+				<xtee:title>Dokumendi päring</xtee:title>
+				<xtee:notes>Tagastab dokumendi</xtee:notes>
+			</xs:documentation>
+			<wsdl:input message="tns:getSendStatusRequest" name="getSendStatusRequest">
+			</wsdl:input>
+			<wsdl:output message="tns:getSendStatusResponse" name="getSendStatusResponse">
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="unJoin">
@@ -3832,6 +3923,56 @@
 					use="literal" />
 			</wsdl:input>
 			<wsdl:output name="getDocumentResponse">
+				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
+					part="asutus" use="literal">
+				</soap:header>
+				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
+					part="andmekogu" use="literal">
+				</soap:header>
+				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
+					part="isikukood" use="literal">
+				</soap:header>
+				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
+					part="id" use="literal">
+				</soap:header>
+				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
+					part="nimi" use="literal">
+				</soap:header>
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
+					part="infosysteem" use="literal">
+				</soap:header>
+				<soap:body
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
+					use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getSendStatus">
+			<xtee:version>v1</xtee:version>
+			<soap:operation soapAction="" />
+			<wsdl:input name="getSendStatusRequest">
+				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
+					part="asutus" use="literal">
+				</soap:header>
+				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
+					part="andmekogu" use="literal">
+				</soap:header>
+				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
+					part="isikukood" use="literal">
+				</soap:header>
+				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
+					part="id" use="literal">
+				</soap:header>
+				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
+					part="nimi" use="literal">
+				</soap:header>
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
+					part="infosysteem" use="literal">
+				</soap:header>
+				<soap:body
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
+					use="literal" />
+			</wsdl:input>
+			<wsdl:output name="getSendStatusResponse">
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
 					part="asutus" use="literal">
 				</soap:header>

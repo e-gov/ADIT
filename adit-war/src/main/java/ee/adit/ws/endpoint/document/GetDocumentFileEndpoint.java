@@ -140,8 +140,8 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 
                         	userIsDocOwner = true;
 
-                            if (sharing.getLastAccessDate() == null) {
-                                sharing.setLastAccessDate(new Date());
+                            if (sharing.getFirstAccessDate() == null) {
+                                sharing.setFirstAccessDate(new Date());
                                 saveDocument = true;
                             }
 

@@ -1,6 +1,7 @@
 package ee.adit.dao;
 
 import java.io.File;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -31,6 +32,7 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.Subqueries;
+import org.hibernate.Query;
 import org.springframework.context.MessageSource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.orm.hibernate3.HibernateCallback;
@@ -46,7 +48,10 @@ import ee.adit.pojo.ArrayOfFileType;
 import ee.adit.pojo.DocumentSendingData;
 import ee.adit.pojo.DocumentSendingRecipient;
 import ee.adit.pojo.DocumentSharingData;
+import ee.adit.pojo.DocumentSharingRecipientStatus;
 import ee.adit.pojo.DocumentSharingRecipient;
+import ee.adit.pojo.DocumentSendStatus;
+
 import ee.adit.pojo.DocumentSignatureList;
 import ee.adit.pojo.GetDocumentListRequest;
 import ee.adit.pojo.GetDocumentListResponseAttachment;
@@ -778,9 +783,9 @@ public class DocumentDAO extends HibernateDaoSupport {
 
                         DocumentSharingRecipient rec = new DocumentSharingRecipient();
                         rec.setCode(sharing.getUserCode());
-                        rec.setHasBeenViewed((sharing.getLastAccessDate() != null));
+                        rec.setHasBeenViewed((sharing.getFirstAccessDate() != null));
                         rec.setName(sharing.getUserName());
-                        rec.setOpenedTime(sharing.getLastAccessDate());
+                        rec.setOpenedTime(sharing.getFirstAccessDate());
                         rec.setWorkflowStatusId(sharing.getDocumentWfStatus());
                         rec.setSharedTime(sharing.getCreationDate());
                         rec.setReasonForSharing(sharing.getTaskDescription());
@@ -789,9 +794,9 @@ public class DocumentDAO extends HibernateDaoSupport {
                     } else {
                         DocumentSendingRecipient rec = new DocumentSendingRecipient();
                         rec.setCode(sharing.getUserCode());
-                        rec.setHasBeenViewed((sharing.getLastAccessDate() != null));
+                        rec.setHasBeenViewed((sharing.getFirstAccessDate() != null));
                         rec.setName(sharing.getUserName());
-                        rec.setOpenedTime(sharing.getLastAccessDate());
+                        rec.setOpenedTime(sharing.getFirstAccessDate());
                         rec.setWorkflowStatusId(sharing.getDocumentWfStatus());
                         rec.setDvkStatusId(sharing.getDocumentDvkStatus());
                         sendingData.getUserList().add(rec);
@@ -896,7 +901,7 @@ public class DocumentDAO extends HibernateDaoSupport {
                 while (it.hasNext()) {
                     DocumentSharing sharing = (DocumentSharing) it.next();
                     if (currentRequestUserCode.equalsIgnoreCase(sharing.getUserCode())) {
-                    	result.setHasBeenViewed(sharing.getLastAccessDate() != null);
+                    	result.setHasBeenViewed(sharing.getFirstAccessDate() != null);
                     	break;
                     }
                 }
@@ -1246,5 +1251,93 @@ public class DocumentDAO extends HibernateDaoSupport {
     	} else {
     		return xmlName.toLowerCase();
     	}
+    }
+    
+    /**
+     * Fetches documents from database by list of dhl ids
+     * @param dhlIds list of dhl ids
+     * @return document
+     */
+    @SuppressWarnings("unchecked")
+    public List<Document> getDocumentsByDhlIds(final List<Long> dhlIds) {
+    	if(dhlIds==null || dhlIds.size()==0) {
+   		 throw new IllegalArgumentException("Dhl ids list is empty");
+	   	}
+	   	for(Long dhlId : dhlIds) {
+		        if (dhlId <= 0) {
+		            throw new IllegalArgumentException("Document ID must be a positive integer. Currently supplied ID was "
+		                    + dhlId + ".");
+		        }
+	   	}
+        List<Document> result = null;
+        Session session = null;
+        try {
+            logger.debug("Finding documents for dhlids: " + dhlIds);
+            String sql = "select document from Document document join document.documentSharings documentSharings where documentSharings.dvkId in (:dhlIds)";
+            session = this.getSessionFactory().openSession();
+            Query query = session.createQuery(sql);
+            query.setParameterList("dhlIds", dhlIds);
+            result =  query.list();
+//            result = this.getHibernateTemplate().find(
+//                    "select userContact from UserContact userContact join userContact.user user where userContact.user = ? and user.active = ? order by userContact.lastUsedDate desc", aditUser, true);
+        } catch (Exception e) {
+        	throw new AditInternalException("Error while fetching document: ", e);
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+        logger.debug("Found" + result.size() + " documents"); 
+        
+        return result;
+    }
+    
+    /**
+     * Get list of DocumentSendStatus objects by list of dhl ids.
+     *
+     * @param dhlIds document dhl IDs
+     * @return documentSendStatusList
+     * @throws Exception if any sort of exception occurred
+     */
+    public List<DocumentSendStatus> getDocumentsForSendStatus(final List<Long> dhlIds)
+            throws Exception {
+    	List<DocumentSendStatus> result = new ArrayList<DocumentSendStatus>();
+		List<Document> documents = getDocumentsByDhlIds(dhlIds);
+		for(Document document : documents) {
+        	logger.debug("Attempting to convert document to outptudocument" + document.getId());   
+        	DocumentSendStatus documentSendStatus = getDocumentSendStatusFromDocumentForSendStatus(document);
+        	result.add(documentSendStatus);
+        }
+        return result;
+    }
+    
+    /**
+     * 
+     * @param document - document onbject
+     * @return documentSendStatus
+     */
+    private DocumentSendStatus getDocumentSendStatusFromDocumentForSendStatus (Document document) {
+    	DocumentSendStatus result = new DocumentSendStatus();
+    	//result.setDhlId(document.);
+    	if (document.getDocumentSharings()!=null && document.getDocumentSharings().size()>0) {
+    		List<DocumentSharingRecipientStatus> recipients = new ArrayList<DocumentSharingRecipientStatus>();
+    		Long dhlId = null;
+    		for(DocumentSharing documentSharing : document.getDocumentSharings()) {
+    			dhlId = documentSharing.getDvkId();
+    			DocumentSharingRecipientStatus recipient = new DocumentSharingRecipientStatus();
+    			recipient.setCode(documentSharing.getUserCode());
+    			recipient.setName(documentSharing.getUserName());
+    			boolean opened = false;
+    			if(documentSharing.getFirstAccessDate()!=null) {
+    				opened = true;
+    			}
+    			recipient.setHasBeenViewed(opened);
+    			recipient.setOpenedTime(documentSharing.getFirstAccessDate());
+    			recipients.add(recipient);
+    		}
+    		result.setRecipients(recipients);
+    		result.setDhlId(dhlId);
+    	}
+    	return result;
     }
 }

@@ -200,7 +200,7 @@ public class ModifyStatusEndpoint extends AbstractAditBaseEndpoint {
                             }
 
                         	sharing.setDocumentWfStatus(request.getDocumentStatusId());
-                            sharing.setLastAccessDate(new Date());
+                            sharing.setFirstAccessDate(new Date());
                             saveDocument = true;
                             break;
                         }
