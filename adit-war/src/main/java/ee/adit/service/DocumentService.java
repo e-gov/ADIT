@@ -1074,7 +1074,7 @@ public class DocumentService {
      *            DVK folder
      * @return true, if sending succeeded
      */
-    public boolean sendDocument(Document document, AditUser recipient, String dvkFolder) {
+    public boolean sendDocument(Document document, AditUser recipient, String dvkFolder, Long dvkId) {
         boolean result = false;
 
         DocumentSharing documentSharing = new DocumentSharing();
@@ -1085,9 +1085,8 @@ public class DocumentService {
         	documentSharing.setDvkFolder(dvkFolder);
         }
 
-        if(document.getDvkId() != null) {
-        	documentSharing.setDvkId(document.getDvkId());
-        }
+        documentSharing.setDvkId(dvkId);
+        
         if (recipient.getDvkOrgCode() != null && !"".equalsIgnoreCase(recipient.getDvkOrgCode().trim())) {
             documentSharing.setDocumentSharingType(DocumentService.SHARINGTYPE_SEND_DVK);
         } else {
@@ -1117,7 +1116,7 @@ public class DocumentService {
      */
     public boolean sendDocument(Document document, AditUser recipient) {
 
-        return sendDocument(document, recipient, null);
+        return sendDocument(document, recipient, null, null);
     }
         
     /**
@@ -1431,6 +1430,7 @@ public class DocumentService {
                             if (DocumentService.SHARINGTYPE_SEND_DVK.equalsIgnoreCase(documentSharing
                                     .getDocumentSharingType())) {
                                 documentSharing.setDocumentDvkStatus(DVK_STATUS_SENDING);
+                                documentSharing.setDvkId(dvkMessageToUpdate.getDhlId());
                                 // documentSharing.setDvkSendDate(new Date());
                                 session.saveOrUpdate(documentSharing);
                                 logger.debug("DocumentSharing status updated to: '" + DVK_STATUS_SENDING + "'.");
@@ -1754,6 +1754,7 @@ public class DocumentService {
                                     .getDocumentSharingType())) {
                                 documentSharing.setDocumentDvkStatus(DVK_STATUS_SENDING);
                                 // documentSharing.setDvkSendDate(new Date());
+                                documentSharing.setDvkId(dvkMessageToUpdate.getDhlId());
                                 session.saveOrUpdate(documentSharing);
                                 logger.debug("DocumentSharing status updated to: '" + DVK_STATUS_SENDING + "'.");
                             }
@@ -2212,7 +2213,7 @@ public class DocumentService {
 	                    // Add record to sending table to make document
 	                    // available to recipient.
 	                    for (AditUser user : allRecipients) {
-	                    	this.sendDocument(aditDocument, user);
+	                    	this.sendDocument(aditDocument, user, null, dvkDocument.getDhlId());
 	                    }
 
 	                    // Update user quota limit
