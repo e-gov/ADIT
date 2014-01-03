@@ -12,11 +12,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
@@ -1277,6 +1280,7 @@ public class DocumentDAO extends HibernateDaoSupport {
             session = this.getSessionFactory().openSession();
             Query query = session.createQuery(sql);
             query.setParameterList("dhlIds", dhlIds);
+            query.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
             result =  query.list();
 //            result = this.getHibernateTemplate().find(
 //                    "select userContact from UserContact userContact join userContact.user user where userContact.user = ? and user.active = ? order by userContact.lastUsedDate desc", aditUser, true);
@@ -1305,8 +1309,8 @@ public class DocumentDAO extends HibernateDaoSupport {
 		List<Document> documents = getDocumentsByDhlIds(dhlIds);
 		for(Document document : documents) {
         	logger.debug("Attempting to convert document to outptudocument" + document.getId());   
-        	DocumentSendStatus documentSendStatus = getDocumentSendStatusFromDocumentForSendStatus(document);
-        	result.add(documentSendStatus);
+        	Collection<DocumentSendStatus> documentSendStatus = getDocumentSendStatusFromDocumentForSendStatus(document, dhlIds);
+        	result.addAll(documentSendStatus);
         }
         return result;
     }
@@ -1316,28 +1320,39 @@ public class DocumentDAO extends HibernateDaoSupport {
      * @param document - document onbject
      * @return documentSendStatus
      */
-    private DocumentSendStatus getDocumentSendStatusFromDocumentForSendStatus (Document document) {
-    	DocumentSendStatus result = new DocumentSendStatus();
-    	//result.setDhlId(document.);
-    	if (document.getDocumentSharings()!=null && document.getDocumentSharings().size()>0) {
-    		List<DocumentSharingRecipientStatus> recipients = new ArrayList<DocumentSharingRecipientStatus>();
-    		Long dhlId = null;
-    		for(DocumentSharing documentSharing : document.getDocumentSharings()) {
-    			dhlId = documentSharing.getDvkId();
-    			DocumentSharingRecipientStatus recipient = new DocumentSharingRecipientStatus();
-    			recipient.setCode(documentSharing.getUserCode());
-    			recipient.setName(documentSharing.getUserName());
-    			boolean opened = false;
-    			if(documentSharing.getFirstAccessDate()!=null) {
-    				opened = true;
-    			}
-    			recipient.setHasBeenViewed(opened);
-    			recipient.setOpenedTime(documentSharing.getFirstAccessDate());
-    			recipients.add(recipient);
-    		}
-    		result.setRecipients(recipients);
-    		result.setDhlId(dhlId);
-    	}
-    	return result;
+    private Collection<DocumentSendStatus> getDocumentSendStatusFromDocumentForSendStatus (Document document, final List<Long> dhlIds) {
+        Map<Long,DocumentSendStatus> docs = new TreeMap<Long,DocumentSendStatus>();
+        
+        if (document.getDocumentSharings()!=null && document.getDocumentSharings().size()>0) {
+            
+            for(DocumentSharing documentSharing : document.getDocumentSharings()) {
+                DocumentSendStatus result = null;
+                List<DocumentSharingRecipientStatus> recipients = null;
+                Long dhlId = documentSharing.getDvkId();
+                if (dhlId != null && dhlId > 0 && dhlIds.contains(dhlId)) {
+                	result = docs.get(dhlId);
+                    if (result == null) {
+                        result = new DocumentSendStatus();
+                        recipients = new ArrayList<DocumentSharingRecipientStatus>();
+                        result.setRecipients(recipients);
+                        result.setDhlId(dhlId);
+                        docs.put(dhlId, result);
+                    } else {
+                    	recipients = result.getRecipients();
+                    }
+                    DocumentSharingRecipientStatus recipient = new DocumentSharingRecipientStatus();
+                    recipient.setCode(documentSharing.getUserCode());
+                    recipient.setName(documentSharing.getUserName());
+                    boolean opened = false;
+                    if(documentSharing.getFirstAccessDate()!=null) {
+                        opened = true;
+                    }
+                    recipient.setHasBeenViewed(opened);
+                    recipient.setOpenedTime(documentSharing.getFirstAccessDate());
+                    recipients.add(recipient);
+                }
+            }
+        }
+        return docs.values();
     }
 }

@@ -153,12 +153,9 @@ public class GetSendStatusEndpoint extends AbstractAditBaseEndpoint {
                      // Kontrollime, kas päringu käivitanud infosüsteem tohib
                      // andmeid näha
                      this.getUserService().checkApplicationReadPrivilege(applicationName);
-
-                     // Kontrollime, kas päringus märgitud isik on teenuse kasutaja
-                     AditUser user = Util.getAditUserFromXroadHeader(this.getHeader(), this.getUserService());
-                     AditUser xroadRequestUser = Util.getXroadUserFromXroadHeader(user, this.getHeader(), this.getUserService());
-                	 	 List<DocumentSendStatus> documentSendStatuses = this.documentService.getDocumentDAO().getDocumentsForSendStatus(requestAttachment.getDhlIds());
-                         if (documentSendStatuses != null) {
+                     
+                	 List<DocumentSendStatus> documentSendStatuses = this.documentService.getDocumentDAO().getDocumentsForSendStatus(requestAttachment.getDhlIds());
+                     if (documentSendStatuses != null) {
                              // 1. Convert java list to XML string and output
                              // to file
                              GetSendStatusResponseAttachment attachment = new GetSendStatusResponseAttachment();
@@ -177,9 +174,9 @@ public class GetSendStatusEndpoint extends AbstractAditBaseEndpoint {
                              GetSendStatusResponseDocument responseDoc = new GetSendStatusResponseDocument();
                              responseDoc.setHref("cid:" + contentID);
                              response.setDocument(responseDoc);
-                         } else {
-                             logger.debug("Document has no files!");
-                         }
+                     } else {
+                         logger.debug("Document has no files!");
+                     }
                 	 // Set response messages
                      response.setSuccess(true);
                      messages.setMessage(this.getMessageService().getMessages("request.getSendStatus.success", new Object[] {}));
