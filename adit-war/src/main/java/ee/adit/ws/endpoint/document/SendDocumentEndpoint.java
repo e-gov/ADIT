@@ -1,6 +1,7 @@
 package ee.adit.ws.endpoint.document;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -168,16 +169,16 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
                                 DocumentService.HISTORY_TYPE_LOCK, xroadRequestUser.getUserCode(),
                                 xroadRequestUser.getFullName(), DocumentService.DOCUMENT_HISTORY_DESCRIPTION_LOCK,
                                 user.getFullName(), requestDate.getTime());
-                            
+
                             String dvkFolder = request.getDvkFolder();
-                            
+
                             // Add sharing information to database
                             this.getDocumentService().sendDocument(doc, recipient, dvkFolder, null);
-                            
-                            
-                            //TODO: it is better to add dvkFolder to the Document object here 
+
+
+                            //TODO: it is better to add dvkFolder to the Document object here
                             //instead of adding it in sendDocument Method to DocumentSharing objects
-                            
+
 
                             // Send notification to every user the document was shared to
                             // (assuming they have requested such notifications)
@@ -203,7 +204,7 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
                                 additionalInformationForLog = additionalInformationForLog + ",";
                             }
                             additionalInformationForLog = additionalInformationForLog + " Document sent to: " + recipientCode;
-                            
+
                             // Add recipient to user contacts
                             userService.addUserContact(user, recipient);
 
@@ -236,6 +237,9 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
                 additionalInformationForLog = LogService.REQUEST_LOG_SUCCESS + ": " + additionalMessage;
                 messages.setMessage(this.getMessageService().getMessages("request.sendDocument.success",
                         new Object[] {}));
+    			// update doc last modified date
+    			doc.setLastModifiedDate(new Date());
+    			this.documentService.save(doc, Long.MAX_VALUE);
             } else {
                 String additionalMessage = this.getMessageService().getMessage("request.sendDocument.fail",
                         new Object[] {}, Locale.ENGLISH);

@@ -51,7 +51,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "GetDocumentListRequest", propOrder = {"folder", "dvkFolder", "documentTypes", "fileTypes", "documentDvkStatuses",
-        "documentWorkflowStatuses", "hasBeenViewed", "isDeflated", "creatorApplications", "searchPhrase",
+        "documentWorkflowStatuses", "eformUseId", "signed", "hasBeenViewed", "isDeflated", "creatorApplications", "searchPhrase",
         "periodStart", "periodEnd", "maxResults", "startIndex", "sortBy", "sortOrder" })
 public class GetDocumentListRequest {
 
@@ -69,6 +69,10 @@ public class GetDocumentListRequest {
     private ArrayOfDocumentWorkflowStatus documentWorkflowStatuses;
     @XmlElement(name = "has_been_viewed")
     private Boolean hasBeenViewed;
+    @XmlElement(name = "eform_use_id")
+    private Long eformUseId;
+    @XmlElement(name = "signed")
+    private Boolean signed;
     @XmlElement(name = "is_deflated")
     private Boolean isDeflated;
     @XmlElement(name = "creator_applications", required = true)
@@ -418,4 +422,21 @@ public class GetDocumentListRequest {
 		this.sortOrder = sortOrder;
 	}
 
+	public Long getEformUseId() {
+		return eformUseId;
+	}
+
+	public void setEformUseId(Long eformUseId) {
+		this.eformUseId = eformUseId;
+	}
+
+	public Boolean getSigned() {
+		return signed;
+	}
+
+	public void setSigned(Boolean signed) {
+		this.signed = signed;
+	}
+	
+	
 }

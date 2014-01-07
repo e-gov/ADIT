@@ -7,6 +7,7 @@ public class GetUserInfoResponseAttachmentUser {
     private boolean hasJoined;
     private Long freeSpace;
     private Long usedSpace;
+    private Long totalSpace;
     private boolean canRead;
     private boolean canWrite;
     private boolean usesDVK;
@@ -51,6 +52,24 @@ public class GetUserInfoResponseAttachmentUser {
     public void setUsedSpace(Long usedSpace) {
         this.usedSpace = usedSpace;
     }
+
+	/**
+	 * Gets the totalSpace.
+	 *
+	 * @return the totalSpace
+	 */
+	public Long getTotalSpace() {
+		return totalSpace;
+	}
+
+	/**
+	 * Sets the totalSpace.
+	 *
+	 * @param totalSpace the totalSpace to set
+	 */
+	public void setTotalSpace(Long totalSpace) {
+		this.totalSpace = totalSpace;
+	}
 
     public boolean isCanRead() {
         return canRead;

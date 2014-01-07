@@ -1,6 +1,7 @@
 package ee.adit.ws.endpoint.document;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -109,7 +110,7 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
             boolean recipientNotRegistered = false;
             boolean recipientNotActive = false;
             boolean allChecksOk = false;
-            
+
             for (String recipientCode : request.getRecipientList().getCode()) {
                 boolean isSuccess = false;
                 ArrayOfMessage statusMessages = new ArrayOfMessage();
@@ -119,7 +120,7 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
                 	String recipientCodeWithDefaultCountryPrefix = "EE" + recipientCode;
                 	recipient = this.getUserService().getUserByID(recipientCodeWithDefaultCountryPrefix);
                 }
-                
+
                 //Status messages can be later uncommented in case
                 //sharing with unregistered or non active users will be deactivated
                 if (recipient == null) {
@@ -131,7 +132,7 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 //                    statusMessages.setMessage(this.getMessageService().getMessages(
 //                            "request.shareDocument.recipientStatus.recipient.inactive", new Object[] {}));
                 }
-                
+
                 if (!recipientNotRegistered && DocumentService.documentSharingExists(doc.getDocumentSharings(), recipientCode)) {
                     statusMessages
                             .setMessage(this.getMessageService().getMessages(
@@ -143,7 +144,7 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
                 } else {
                 	allChecksOk = true;
                 }
-                
+
                 if (allChecksOk || recipientNotRegistered || recipientNotActive) {
                     DocumentSharing sharing = new DocumentSharing();
                     sharing.setCreationDate(requestDate.getTime());
@@ -156,7 +157,7 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
                     }
 
                     sharing.setTaskDescription(request.getReasonForSharing());
-                    
+
                     if (recipientNotRegistered) {
                     	sharing.setUserCode(recipientCode);
                     	logger.info("Document " + doc.getId() + " is being shared with not registered user " + recipientCode);
@@ -167,7 +168,7 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
 	                    	logger.info("Document " + doc.getId() + " is being shared with not active user " + recipientCode);
 	                    }
                     }
-                    
+
                     doc.getDocumentSharings().add(sharing);
 
                     isSuccess = true;
@@ -185,12 +186,12 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
                 status.setCode(recipientCode);
                 status.setMessages(statusMessages);
                 statusArray.addRecipient(status);
-                
+
                 // Add recipient to user contacts
                 if (!recipientNotRegistered){
                 	userService.addUserContact(user, recipient);
                 }
-                
+
                 completeSuccess = (completeSuccess && isSuccess);
             }
 
@@ -200,6 +201,9 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
                     doc.setLockingDate(requestDate.getTime());
                 }
                 doc.setSignable(true);
+
+				// update doc last modified date
+				doc.setLastModifiedDate(new Date());
 
                 // Lisame jagamise ajaloosündmuse
                 this.getDocumentService().addHistoryEvent(applicationName, documentId, user.getUserCode(),

@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -22,19 +23,14 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import org.apache.log4j.Logger;
-import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Disjunction;
-import org.hibernate.criterion.MatchMode;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Property;
-import org.hibernate.criterion.Restrictions;
-import org.hibernate.criterion.Subqueries;
+import org.hibernate.type.Type;
 import org.hibernate.Query;
 import org.springframework.context.MessageSource;
 import org.springframework.dao.DataAccessException;
@@ -102,17 +98,17 @@ public class DocumentDAO extends HibernateDaoSupport {
     @SuppressWarnings("unchecked")
     public Document getDocumentByGuid(String documentGuid) {
         logger.debug("Attempting to load document from database. Document GUID: " + String.valueOf(documentGuid));
-        
+
         List<Document> result;
         DetachedCriteria dt = DetachedCriteria.forClass(Document.class, "document");
         dt.add(Property.forName("document.guid").eq(documentGuid));
         result = this.getHibernateTemplate().findByCriteria(dt);
-        
+
         return (result.isEmpty() ? null : result.get(0));
     }
     /**
      * Fetches document with Signatures by document ID.
-     * Main goal is to initialize signatures collection which is lazy initialized by default. 
+     * Main goal is to initialize signatures collection which is lazy initialized by default.
      * @param documentId
      * @return
      * @throws Exception
@@ -133,7 +129,7 @@ public class DocumentDAO extends HibernateDaoSupport {
                 @Override
                 public Object doInHibernate(Session session) throws HibernateException, SQLException {
                     Document doc = (Document) session.get(Document.class, documentId);
-                    
+
                     if (doc.getSigned()) {
                     	Set<ee.adit.dao.pojo.Signature> signatures =  doc.getSignatures();
                     	logger.debug("While fetching document for unsharing, initialized set of signatures. Set size - " + signatures.size());
@@ -145,321 +141,6 @@ public class DocumentDAO extends HibernateDaoSupport {
             });
         } catch (DataAccessException ex) {
             logger.error("Error while fetching document data from database: ", ex);
-            if (ex.getRootCause() instanceof AditException) {
-                throw (AditException) ex.getRootCause();
-            } else {
-                throw ex;
-            }
-        }
-        return result;
-    }
-    
-    
-    /**
-     * Document search.
-     *
-     * @param param search parameters
-     * @param userCode user code (document owner)
-     * @param temporaryFilesDir temporary directory
-     * @param filesNotFoundMessageBase exception message base
-     * @param currentRequestUserCode user code (the user that activated the request)
-     * @param documentRetentionDeadlineDays
-     * 		Document retention deadline from application configuration. Will be
-     * 		used to calculate estimated remove date of document.
-     * @param digidocConfigFile
-     *     Full path to DigiDoc library configuration file.
-     *
-     * @return document list
-     */
-    @SuppressWarnings("unchecked")
-    public GetDocumentListResponseAttachment getDocumentSearchResult(final GetDocumentListRequest param,
-            final String userCode, final String temporaryFilesDir, final String filesNotFoundMessageBase,
-            final String currentRequestUserCode, final Long documentRetentionDeadlineDays, final String digidocConfigFile) {
-
-        GetDocumentListResponseAttachment result = null;
-
-        try {
-            result = (GetDocumentListResponseAttachment) getHibernateTemplate().execute(new HibernateCallback() {
-
-                @Override
-                public Object doInHibernate(Session session) throws HibernateException, SQLException {
-                    GetDocumentListResponseAttachment innerResult = new GetDocumentListResponseAttachment();
-                    innerResult.setDocumentList(new ArrayList<OutputDocument>());
-                    Criteria criteria = session.createCriteria(Document.class, "doc");
-
-                    // General parameters
-                    criteria.add(Restrictions.or(Restrictions.isNull("deleted"), Restrictions.eq("deleted", false)));
-
-                    // Document "folder" (local, incoming, outgoing)
-                    if (!Util.isNullOrEmpty(param.getFolder())) {
-                        if (param.getFolder().equalsIgnoreCase("local")) {
-                            criteria.add(Restrictions.eq("creatorCode", userCode));
-                            criteria.add(Restrictions.or(Restrictions.isNull("invisibleToOwner"), Restrictions.eq("invisibleToOwner", false)));
-                            criteria.add(Restrictions.or(Restrictions.isNull("documentSharings"), Restrictions.isEmpty("documentSharings")));
-                        } else if (param.getFolder().equalsIgnoreCase("incoming")) {
-                            // "Incoming" means that:
-                            // - someone else is document creator
-                            // - document has been shared to user
-                            criteria.add(Restrictions.ne("creatorCode", userCode));
-                            DetachedCriteria sharedToMeSubquery = DetachedCriteria.forClass(Document.class, "doc1")
-	                            .createCriteria("documentSharings", "sh1")
-	                            .add(Restrictions.eq("userCode", userCode))
-	                            .add(Restrictions.or(Restrictions.isNull("deleted"), Restrictions.eq("deleted", false)))
-                                .add(Property.forName("doc.id").eqProperty("doc1.id"))
-                                .setProjection(Projections.id());
-                            criteria.add(Subqueries.exists(sharedToMeSubquery));
-                        } else if (param.getFolder().equalsIgnoreCase("outgoing")) {
-                            // "Outgoing" means that:
-                            // - user is document owner
-                            // - and document has been sent or shared to
-                            // someone else
-                            criteria.add(Restrictions.eq("creatorCode", userCode));
-                            criteria.add(Restrictions.or(Restrictions.isNull("invisibleToOwner"), Restrictions.eq("invisibleToOwner", false)));
-                            criteria.add(Restrictions.isNotNull("documentSharings"));
-                            criteria.add(Restrictions.isNotEmpty("documentSharings"));
-                        } else {
-                        	// If incorrect folder is specified then return all documents
-                        	// accessible to given user.
-                            DetachedCriteria sharedToMeSubquery = DetachedCriteria.forClass(Document.class, "doc1")
-                                    .createCriteria("documentSharings", "sh1")
-                                    .add(Restrictions.eq("userCode", userCode))
-                                    .add(Restrictions.or(Restrictions.isNull("deleted"), Restrictions.eq("deleted", false)))
-                                    .add(Property.forName("doc.id").eqProperty("doc1.id"))
-                                    .setProjection(Projections.id());
-                            criteria.add(Restrictions.or(
-                            	Restrictions.and(
-                            		Restrictions.eq("creatorCode", userCode),
-                            		Restrictions.or(Restrictions.isNull("invisibleToOwner"), Restrictions.eq("invisibleToOwner", false))),
-                            	Subqueries.exists(sharedToMeSubquery)));
-                        }
-                    } else {
-                    	// If no folder is specified then return all documents accessible to given user.
-                    	DetachedCriteria sharedToMeSubquery = DetachedCriteria.forClass(Document.class, "doc1")
-	                        .createCriteria("documentSharings", "sh1")
-	                        .add(Restrictions.eq("userCode", userCode))
-	                        .add(Restrictions.or(Restrictions.isNull("deleted"), Restrictions.eq("deleted", false)))
-	                        .add(Property.forName("doc.id").eqProperty("doc1.id"))
-	                        .setProjection(Projections.id());
-                        criteria.add(Restrictions.or(
-                        	Restrictions.and(
-                        		Restrictions.eq("creatorCode", userCode),
-                        		Restrictions.or(Restrictions.isNull("invisibleToOwner"), Restrictions.eq("invisibleToOwner", false))),
-	                		Subqueries.exists(sharedToMeSubquery)));
-                    }
-
-                    // Document type
-                    if ((param.getDocumentTypes() != null) && (param.getDocumentTypes().getDocumentType() != null)
-                            && !param.getDocumentTypes().getDocumentType().isEmpty()) {
-
-                        Disjunction disjunction = Restrictions.disjunction();
-                        for (String docType : param.getDocumentTypes().getDocumentType()) {
-                            disjunction.add(Restrictions.eq("documentType", docType));
-                        }
-                        criteria.add(disjunction);
-                    }
-
-                    // Document DVK status
-                    if ((param.getDocumentDvkStatuses() != null)
-                            && (param.getDocumentDvkStatuses().getStatusId() != null)
-                            && !param.getDocumentDvkStatuses().getStatusId().isEmpty()) {
-
-                        Disjunction disjunction = Restrictions.disjunction();
-                        for (Long statusId : param.getDocumentDvkStatuses().getStatusId()) {
-                            disjunction.add(Restrictions.eq("documentDvkStatusId", statusId));
-                        }
-                        criteria.add(disjunction);
-                    }
-
-                    // Document workflow status
-                    if ((param.getDocumentWorkflowStatuses() != null)
-                            && (param.getDocumentWorkflowStatuses().getStatusId() != null)
-                            && !param.getDocumentWorkflowStatuses().getStatusId().isEmpty()) {
-
-                        Disjunction disjunction = Restrictions.disjunction();
-                        for (Long statusId : param.getDocumentWorkflowStatuses().getStatusId()) {
-                            disjunction.add(Restrictions.eq("documentWfStatusId", statusId));
-                        }
-                        criteria.add(disjunction);
-                    }
-
-                    // Has the document been viewed?
-                    // - if user is document creator, then it is viewed
-                    // - if document was sent to user then check viewing status
-                    // - if document was shared to user then check viewing status
-                    if (param.isHasBeenViewed() != null) {
-                        DetachedCriteria historySubquery = DetachedCriteria.forClass(Document.class, "doc5")
-                                .createCriteria("documentHistories", "history").add(
-                                        Restrictions.eq("userCode", userCode)).add(
-                                        Restrictions.eq("documentHistoryType", DocumentService.HISTORY_TYPE_MARK_VIEWED))
-                                .add(Property.forName("doc.id").eqProperty("doc5.id")).setProjection(Projections.id());
-
-                        if (param.isHasBeenViewed()) {
-                            Disjunction disjunction = Restrictions.disjunction();
-                            disjunction.add(Restrictions.eq("creatorCode", userCode));
-                            disjunction.add(Subqueries.exists(historySubquery));
-                            criteria.add(disjunction);
-                        } else {
-                        	criteria.add(Restrictions.ne("creatorCode", userCode));
-                        	criteria.add(Subqueries.notExists(historySubquery));
-                        }
-                    }
-
-                    // Include deflated documents
-                    if (param.isIsDeflated() != null) {
-	                    if (param.isIsDeflated()) {
-	                    	criteria.add(Restrictions.eq("deflated", true));
-	                    } else {
-	                        criteria.add(Restrictions.or(Restrictions.isNull("deflated"), Restrictions.eq("deflated", false)));
-	                    }
-                    }
-
-                    // Creator application
-                    if ((param.getCreatorApplications() != null)
-                            && (param.getCreatorApplications().getCreatorApplication() != null)
-                            && !param.getCreatorApplications().getCreatorApplication().isEmpty()) {
-
-                        Disjunction disjunction = Restrictions.disjunction();
-                        for (String appName : param.getCreatorApplications().getCreatorApplication()) {
-                            disjunction.add(Restrictions.eq("remoteApplication", appName));
-                        }
-                        criteria.add(disjunction);
-                    }
-
-                    // Phrase search
-                    if ((param.getSearchPhrase() != null) && (param.getSearchPhrase().length() > 0)) {
-                        Disjunction disjunction = Restrictions.disjunction();
-                        disjunction.add(Restrictions.ilike("title", param.getSearchPhrase(), MatchMode.ANYWHERE));
-                        disjunction.add(Restrictions.ilike("creatorCode", param.getSearchPhrase(), MatchMode.ANYWHERE));
-                        disjunction.add(Restrictions.ilike("creatorName", param.getSearchPhrase(), MatchMode.ANYWHERE));
-
-                        DetachedCriteria sigSubquery = DetachedCriteria.forClass(Document.class, "doc2")
-                                .createCriteria("signatures", "sig").add(
-                                        Restrictions.or(Restrictions.ilike("signerCode", param.getSearchPhrase(),
-                                                MatchMode.ANYWHERE), Restrictions.ilike("signerName", param
-                                                .getSearchPhrase(), MatchMode.ANYWHERE))).add(
-                                        Property.forName("doc.id").eqProperty("doc2.id")).setProjection(
-                                        Projections.id());
-                        disjunction.add(Subqueries.exists(sigSubquery));
-
-                        DetachedCriteria shareSubquery = DetachedCriteria.forClass(Document.class, "doc3")
-                                .createCriteria("documentSharings", "sh").add(
-                                        Restrictions.or(Restrictions.ilike("userCode", param.getSearchPhrase(),
-                                                MatchMode.ANYWHERE), Restrictions.ilike("userName", param
-                                                .getSearchPhrase(), MatchMode.ANYWHERE))).add(
-                                        Property.forName("doc.id").eqProperty("doc3.id")).setProjection(
-                                        Projections.id());
-                        disjunction.add(Subqueries.exists(shareSubquery));
-
-                        DetachedCriteria filesSubquery = DetachedCriteria.forClass(Document.class, "doc4")
-                                .createCriteria("documentFiles", "files").add(
-                                        Restrictions.or(Restrictions.ilike("fileName", param.getSearchPhrase(),
-                                                MatchMode.ANYWHERE), Restrictions.ilike("description", param
-                                                .getSearchPhrase(), MatchMode.ANYWHERE))).add(
-                                        Property.forName("doc.id").eqProperty("doc4.id")).setProjection(
-                                        Projections.id());
-                        disjunction.add(Subqueries.exists(filesSubquery));
-
-                        criteria.add(disjunction);
-                    }
-
-                    // Last modified date range
-                    if (param.getPeriodStart() != null) {
-                    	criteria.add(Restrictions.isNotNull("lastModifiedDate"));
-                    	criteria.add(Restrictions.ge("lastModifiedDate", param.getPeriodStart().toDate()));
-                    }
-                    if (param.getPeriodEnd() != null) {
-                    	// Increase end date by 1 day to get documents modified
-                    	// before 00:00 of next day.
-                    	Calendar cal = Calendar.getInstance();
-                    	cal.setTime(param.getPeriodEnd().toDate());
-                    	cal.add(Calendar.DATE, 1);
-                    	criteria.add(Restrictions.isNotNull("lastModifiedDate"));
-                    	criteria.add(Restrictions.lt("lastModifiedDate", cal.getTime()));
-                    } else if (param.getPeriodStart() != null) {
-                    	// If period start date is set and end date is not then return only
-                    	// documents modified within 7 days from period start date.
-                    	Calendar cal = Calendar.getInstance();
-                    	cal.setTime(param.getPeriodStart().toDate());
-                    	cal.add(Calendar.DATE, 8);
-                    	criteria.add(Restrictions.isNotNull("lastModifiedDate"));
-                    	criteria.add(Restrictions.lt("lastModifiedDate", cal.getTime()));
-                    }
-
-
-                    // First get total number of matching documents
-                    criteria.setProjection(Projections.rowCount());
-                    innerResult.setTotal(((Long) criteria.uniqueResult()).intValue());
-                    criteria.setProjection(null);
-                    criteria.setResultTransformer(Criteria.ROOT_ENTITY);
-
-                    // Then apply paging and ordering and get the final list
-                    int startIndex = (param.getStartIndex() != null) ? param.getStartIndex().intValue() : 0;
-                    if (startIndex < 1) {
-                        startIndex = 1;
-                    }
-                    int maxResults = (param.getMaxResults() != null) ? param.getMaxResults().intValue() : 20;
-                    if (maxResults < 0) {
-                    	// It is OK to ask 0 results because it is the only way to get total number
-                    	// of documents without retrieving any of them.
-                    	maxResults = 20;
-                    } else if (maxResults > 100) {
-                        maxResults = 100;
-                    }
-
-                    criteria.setFirstResult(startIndex - 1);
-                    criteria.setMaxResults(maxResults);
-
-                    // Search result ordering
-                    String sortBy = "lastModifiedDate";
-                    String sortOrder = "desc";
-                    if (!Util.isNullOrEmpty(param.getSortBy())) {
-                    	String sortByDbName = documentFieldXmlNameToDbName(param.getSortBy());
-	                    if (Arrays.asList("id", "guid", "title", "document_type", "created", "last_modified", "dvk_id").contains(param.getSortBy())
-	                    	&& Util.classContainsField(Document.class, sortByDbName)) {
-	                    	sortBy = sortByDbName;
-	                    	sortOrder = "asc";
-                    	} else {
-                            AditCodedException aditCodedException = new AditCodedException("request.getDocumentList.incorrectSortByParameter");
-                            aditCodedException.setParameters(new Object[] {param.getSortBy()});
-                            throw aditCodedException;
-                    	}
-                    }
-                    if (!Util.isNullOrEmpty(param.getSortOrder())) {
-                    	if ("asc".equalsIgnoreCase(param.getSortOrder()) || "desc".equalsIgnoreCase(param.getSortOrder())) {
-                    		sortOrder = param.getSortOrder().toLowerCase();
-                    	} else {
-                            AditCodedException aditCodedException = new AditCodedException("request.getDocumentList.incorrectSortOrderParameter");
-                            aditCodedException.setParameters(new Object[] {param.getSortOrder()});
-                            throw aditCodedException;
-                    	}
-                    }
-
-                    if ("asc".equalsIgnoreCase(sortOrder)) {
-                    	criteria.addOrder(Order.asc(sortBy).ignoreCase());
-                    } else {
-                    	criteria.addOrder(Order.desc(sortBy).ignoreCase());
-                    }
-
-                    // If primary sorting is done by field that can be NULL or have
-                    // same value for multiple documents then add secondary sorting by
-                    // last modified date.
-                    if (sortBy.equalsIgnoreCase("title") || sortBy.equalsIgnoreCase("documentType") || sortBy.equalsIgnoreCase("dvkId")) {
-                    	criteria.addOrder(Order.desc("lastModifiedDate").ignoreCase());
-                    }
-
-                    List<Document> docList = criteria.list();
-
-                    for (Document doc : docList) {
-                        OutputDocument resultDoc = dbDocumentToOutputDocument(doc, null, true, true, false, param.getFileTypes(),
-                                temporaryFilesDir, filesNotFoundMessageBase, currentRequestUserCode, documentRetentionDeadlineDays,
-                                digidocConfigFile);
-                        innerResult.getDocumentList().add(resultDoc);
-                    }
-
-                    return innerResult;
-                }
-            });
-        } catch (DataAccessException ex) {
             if (ex.getRootCause() instanceof AditException) {
                 throw (AditException) ex.getRootCause();
             } else {
@@ -564,8 +245,8 @@ public class DocumentDAO extends HibernateDaoSupport {
 
             for (DocumentFile docFile : filesList) {
                 if (((docFile.getDeleted() == null) || !docFile.getDeleted())
-                	&& internalIdList.contains((Long) docFile.getId())) {
-                    internalIdList.remove((Long) docFile.getId());
+                	&& internalIdList.contains(docFile.getId())) {
+                    internalIdList.remove(docFile.getId());
                 }
             }
 
@@ -608,6 +289,7 @@ public class DocumentDAO extends HibernateDaoSupport {
                     f.setContentType(docFile.getContentType());
                     f.setDescription(docFile.getDescription());
                     f.setId(docFile.getId());
+                    f.setGuid(docFile.getGuid());
                     f.setName(docFile.getFileName());
                     f.setSizeBytes(docFile.getFileSizeBytes());
                     f.setFileType(DocumentService.resolveFileTypeName(docFile.getDocumentFileTypeId()));
@@ -858,6 +540,8 @@ public class DocumentDAO extends HibernateDaoSupport {
         result.setSigned(doc.getSigned());
         result.setTitle(doc.getTitle());
         result.setWorkflowStatusId(doc.getDocumentWfStatusId());
+        result.setFilesSizeBytes(doc.getFilesSizeBytes());
+        result.setSenderReceiver(doc.getSenderReceiver());
 
         // Estimated document remove date
         Date removeDate = null;
@@ -882,8 +566,11 @@ public class DocumentDAO extends HibernateDaoSupport {
         if (doc.getDocument() != null) {
             result.setPreviousDocumentId(doc.getDocument().getId());
             result.setPreviousDocumentGuid(doc.getDocument().getGuid());
+	        result.setPreviousDocumentTitle(doc.getDocument().getTitle());
+	        result.setPreviousDocumentDeleted(Boolean.TRUE.equals(doc.getDocument().getDeleted()));
         }
 
+        boolean hasSentReply = false;
         // Document folder
         if (currentRequestUserCode.equalsIgnoreCase(doc.getCreatorCode())
         	&& ((doc.getDocumentSharings() == null) || doc.getDocumentSharings().isEmpty())) {
@@ -892,6 +579,28 @@ public class DocumentDAO extends HibernateDaoSupport {
         	result.setFolder("outgoing");
         } else {
         	result.setFolder("incoming");
+        	// check if document has a sent reply to the sender
+            if (doc.getDocuments() != null && !doc.getDocuments().isEmpty()) {
+            	for (Document childDocument : doc.getDocuments()) {
+    				if (childDocument.getDocumentSharings() != null && !childDocument.getDocumentSharings().isEmpty()) {
+    					for (DocumentSharing sharing : childDocument.getDocumentSharings()) {
+							if (!Boolean.TRUE.equals(sharing.getDeleted()) && doc.getCreatorCode().equals(sharing.getUserCode())) {
+								hasSentReply = true;
+								break;
+							}
+						}
+    					
+    				}
+    				if (hasSentReply) {
+    					break;
+    				}
+    			}
+            }
+        }
+        result.setHasSentReply(hasSentReply);
+
+        if (doc.getEformUseId() != null) {
+        	result.setEformUseId(doc.getEformUseId());
         }
 
         // Has the document been viewed?
@@ -947,7 +656,8 @@ public class DocumentDAO extends HibernateDaoSupport {
     public SaveItemInternalResult save(final Document document, final List<OutputDocumentFile> files,
             final long remainingDiskQuota) throws Exception {
         return (SaveItemInternalResult) this.getHibernateTemplate().execute(new HibernateCallback() {
-            public Object doInHibernate(Session session) throws HibernateException, SQLException {
+            @Override
+			public Object doInHibernate(Session session) throws HibernateException, SQLException {
                 try {
                     return saveImpl(document, files, remainingDiskQuota, session);
                 } catch (Exception ex) {
@@ -1233,28 +943,361 @@ public class DocumentDAO extends HibernateDaoSupport {
         this.messageService = messageService;
     }
 
-    /**
-     * Translates XML (WSDL) name of document field to database name of that
-     * field.
-     *
-     * @param xmlName
-     *     Field name in XML (WSDL)
-     * @return
-     *     Field name in database
-     */
-    private String documentFieldXmlNameToDbName(String xmlName) {
-    	if ("document_type".equalsIgnoreCase(xmlName)) {
-    		return "documentType";
-    	} else if ("last_modified".equalsIgnoreCase(xmlName)) {
-    		return "lastModifiedDate";
-    	}  else if ("dvk_id".equalsIgnoreCase(xmlName)) {
-    		return "dvkId";
-    	}  else if ("created".equalsIgnoreCase(xmlName)) {
-    		return "creationDate";
-    	} else {
-    		return xmlName.toLowerCase();
-    	}
-    }
+	/**
+	 * Translates XML (WSDL) name of document field to database name of that
+	 * field.
+	 *
+	 * @param xmlName
+	 *	 Field name in XML (WSDL)
+	 * @return
+	 *	 Field name in database
+	 */
+	private String documentFieldXmlNameToDbName(String xmlName) {
+		if ("id".equalsIgnoreCase(xmlName)) {
+			return "documents.id";
+		} else if ("guid".equalsIgnoreCase(xmlName)) {
+			return "documents.guid";
+		} else if ("title".equalsIgnoreCase(xmlName)) {
+			return "LOWER(documents.title)";
+		} else if ("document_type".equalsIgnoreCase(xmlName)) {
+			return "documents.document_type";
+		} else if ("created".equalsIgnoreCase(xmlName)) {
+			return "documents.creation_date";
+		} else if ("last_modified".equalsIgnoreCase(xmlName)) {
+			return "documents.last_modified_date";
+		} else if ("dvk_id".equalsIgnoreCase(xmlName)) {
+			return "documents.dvk_id";
+		} else if ("file_size".equalsIgnoreCase(xmlName)) {
+			return "files_size_bytes";
+		} else if ("sender_receiver".equalsIgnoreCase(xmlName)) {
+			return "LOWER(sender_receiver)";
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * Document search.
+	 *
+	 * @param param search parameters
+	 * @param userCode user code (document owner)
+	 * @param temporaryFilesDir temporary directory
+	 * @param filesNotFoundMessageBase exception message base
+	 * @param currentRequestUserCode user code (the user that activated the request)
+	 * @param documentRetentionDeadlineDays
+	 * 		Document retention deadline from application configuration. Will be
+	 * 		used to calculate estimated remove date of document.
+	 * @param digidocConfigFile
+	 *	 Full path to DigiDoc library configuration file.
+	 *
+	 * @return document list
+	 * @throws SQLException
+	 */
+	@SuppressWarnings("unchecked")
+	public GetDocumentListResponseAttachment getDocumentSearchResult(final GetDocumentListRequest param,
+			final String userCode, final String temporaryFilesDir, final String filesNotFoundMessageBase,
+			final String currentRequestUserCode, final Long documentRetentionDeadlineDays,
+			final String digidocConfigFile) throws SQLException {
+
+		Map<String, Object> parameterMap = new HashMap<String, Object>();
+		parameterMap.put("hasBeenViewed", Arrays.asList(param.isHasBeenViewed(), Hibernate.BOOLEAN).toArray());
+		parameterMap.put("userCode", Arrays.asList(userCode, Hibernate.STRING).toArray());
+		parameterMap.put("searchPhrase", Arrays.asList(param.getSearchPhrase() == null || param.getSearchPhrase().length() == 0 ? null : "%" + param.getSearchPhrase().toLowerCase() + "%", Hibernate.STRING).toArray());
+		parameterMap.put("deflated", Arrays.asList(param.isIsDeflated(), Hibernate.BOOLEAN).toArray());
+		parameterMap.put("periodStart", Arrays.asList(param.getPeriodStart() == null ? null : param.getPeriodStart().toDate(), Hibernate.DATE).toArray());
+		parameterMap.put("periodEnd", Arrays.asList(param.getPeriodEnd() == null ? null : param.getPeriodEnd().toDate(), Hibernate.DATE).toArray());
+		parameterMap.put("folder", Arrays.asList(param.getFolder() == null || param.getFolder().length() == 0 ? null : param.getFolder().toLowerCase(), Hibernate.STRING).toArray());
+		parameterMap.put("eformUseId", Arrays.asList(param.getEformUseId(), Hibernate.LONG).toArray());
+		parameterMap.put("signed", Arrays.asList(param.getSigned(), Hibernate.BOOLEAN).toArray());
+
+		StringBuilder selectSql = new StringBuilder("SELECT * FROM (\r\n");
+		StringBuilder countSql = new StringBuilder("SELECT count(*) total FROM (\r\n");
+		StringBuilder sql = new StringBuilder( 
+				"	SELECT results.*, rownum rnum FROM (\r\n" +
+//				"		SELECT documents.*, id_size_shared.file_size files_size_bytes, CASE WHEN documents.creator_code != :userCode THEN documents.creator_name ELSE id_size_shared.shared_to END sender_receiver FROM (\r\n" +
+				"		SELECT documents.id, documents.guid, documents.title, documents.type, documents.creator_code, documents.creator_name, " +
+				"				documents.creator_user_code, documents.creator_user_name, documents.creation_date, documents.remote_application, " +
+				"				documents.last_modified_date, documents.document_dvk_status_id, documents.dvk_id, documents.document_wf_status_id, " +
+				"				documents.parent_id, documents.locked, documents.locking_date, documents.signable, documents.deflated, " +
+				"				documents.deflate_date, documents.deleted, documents.invisible_to_owner, documents.signed, documents.migrated, " +
+				"				documents.external_id, documents.eform_use_id, " +
+				"				id_size_shared.file_size files_size_bytes, " +
+				"				CASE WHEN documents.creator_code != :userCode THEN documents.creator_name ELSE id_size_shared.shared_to END sender_receiver" +
+				"		FROM (\r\n" +
+				"			SELECT id_size.id, id_size.file_size, LISTAGG(sharings.user_name, ', ') WITHIN GROUP (ORDER BY LOWER(sharings.user_name)) shared_to FROM (\r\n" + 
+				"				SELECT ids.id, sum(files.file_size_bytes) as file_size FROM (\r\n" + 
+				"					SELECT\r\n" + 
+				"						DISTINCT d.id\r\n" + 
+				"					FROM document d\r\n" + 
+				"					LEFT JOIN document_sharing ds ON ds.document_id = d.id\r\n" + 
+				"					LEFT JOIN document_file df ON df.document_id = d.id\r\n" + 
+				"					LEFT JOIN document_history dh ON dh.document_id = d.id AND :hasBeenViewed IS NOT NULL AND dh.document_history_type = 'mark_viewed' AND dh.user_code = :userCode\r\n" + 
+				"					LEFT JOIN signature s ON s.document_id = d.id AND :searchPhrase IS NOT NULL\r\n" + 
+				"					WHERE\r\n" + 
+				"						COALESCE(d.deleted, 0) = 0\r\n" + 
+				"						AND (d.creator_code != :userCode OR COALESCE(d.invisible_to_owner, 0) = 0)\r\n" + 
+				"						AND (\r\n" + 
+				"							(d.creator_code = :userCode)\r\n" + 
+				"							OR (\r\n" + 
+				"								COALESCE(ds.deleted, 0) = 0\r\n" + 
+				"								AND ds.user_code = :userCode\r\n" + 
+				"							)\r\n" + 
+				"						)\r\n" + 
+				"						AND (\r\n" + 
+				"							('local' != COALESCE(:folder, 'X'))\r\n" + 
+				"							OR ('local' = :folder AND d.creator_code = :userCode AND ds.id IS NULL)\r\n" + 
+				"						)\r\n" + 
+				"						AND (\r\n" + 
+				"							('incoming' != COALESCE(:folder, 'X'))\r\n" + 
+				"							OR ('incoming' = :folder AND d.creator_code != :userCode AND ds.id IS NOT NULL)\r\n" + 
+				"						)\r\n" + 
+				"						AND (\r\n" + 
+				"							('outgoing' != COALESCE(:folder, 'X'))\r\n" + 
+				"							OR ('outgoing' = :folder AND d.creator_code = :userCode AND ds.id IS NOT NULL)\r\n" + 
+				"						)\r\n" + 
+				"						AND (\r\n" + 
+				"							(:hasBeenViewed IS NULL)\r\n" + 
+				"							OR (\r\n" + 
+				"								1 = :hasBeenViewed\r\n" + 
+				"								AND (\r\n" + 
+				"									d.creator_code = :userCode\r\n" + 
+				"									OR dh.id IS NOT NULL\r\n" + 
+				"								)\r\n" + 
+				"							)\r\n" + 
+				"							OR (\r\n" + 
+				"								0 = :hasBeenViewed\r\n" + 
+				"								AND d.creator_code != :userCode\r\n" + 
+				"								AND dh.id IS NULL\r\n" + 
+				"							)\r\n" + 
+				"						)\r\n" + 
+				"						AND (:deflated IS NULL OR COALESCE(d.deflated, 0) = :deflated)\r\n" + 
+				"						AND (\r\n" + 
+				"							:searchPhrase IS NULL\r\n" + 
+				"							OR (\r\n" + 
+				"								LOWER(d.title) LIKE :searchPhrase\r\n" + 
+				"								OR LOWER(d.creator_code) LIKE :searchPhrase\r\n" + 
+				"								OR LOWER(d.creator_name) LIKE :searchPhrase\r\n" + 
+				"								OR LOWER(s.signer_code) LIKE :searchPhrase\r\n" + 
+				"								OR LOWER(s.signer_name) LIKE :searchPhrase\r\n" + 
+				"								OR LOWER(ds.user_code) LIKE :searchPhrase\r\n" + 
+				"								OR LOWER(ds.user_name) LIKE :searchPhrase\r\n" + 
+				"								OR LOWER(df.file_name) LIKE :searchPhrase\r\n" + 
+				"								OR LOWER(df.description) LIKE :searchPhrase\r\n" + 
+				"							)\r\n" + 
+				"						)\r\n" + 
+				"						AND (\r\n" + 
+				"							:periodStart IS NULL\r\n" + 
+				"							OR CAST(d.last_modified_date AS DATE) >= :periodStart\r\n" + 
+				"						)\r\n" + 
+				"						AND (\r\n" + 
+				"							:periodEnd IS NULL\r\n" + 
+				"							OR CAST(d.last_modified_date AS DATE) <= :periodEnd\r\n" + 
+				"						)\r\n" +
+				"						AND (:eformUseId IS NULL OR d.eform_use_id = :eformUseId)\r\n" +
+				"						AND (:signed IS NULL OR COALESCE(d.signed, 0) = :signed)");
+
+		// no NULL support in IN
+
+		// Document type
+		List<String> documentTypes = new ArrayList<String>();
+		if ((param.getDocumentTypes() != null) && (param.getDocumentTypes().getDocumentType() != null)
+				&& !param.getDocumentTypes().getDocumentType().isEmpty()) {
+
+			for (String docType : param.getDocumentTypes().getDocumentType()) {
+				documentTypes.add(docType);
+			}
+			if (documentTypes.size() > 0) {
+				sql.append("\r\n" + "						AND (d.type in (:documentTypes ))");
+			}
+		}
+
+		// Document DVK status
+		List<Long> documentDvkStatuses = new ArrayList<Long>();
+		if ((param.getDocumentDvkStatuses() != null) && (param.getDocumentDvkStatuses().getStatusId() != null)
+				&& !param.getDocumentDvkStatuses().getStatusId().isEmpty()) {
+
+			for (Long statusId : param.getDocumentDvkStatuses().getStatusId()) {
+				documentDvkStatuses.add(statusId);
+			}
+			if (documentDvkStatuses.size() > 0) {
+				sql.append("\r\n" + "						AND (d.document_dvk_status_id in (:documentDvkStatuses ))");
+			}
+		}
+
+		// Document workflow status
+		List<Long> documentWfStatuses = new ArrayList<Long>();
+		if ((param.getDocumentWorkflowStatuses() != null)
+				&& (param.getDocumentWorkflowStatuses().getStatusId() != null)
+				&& !param.getDocumentWorkflowStatuses().getStatusId().isEmpty()) {
+
+			for (Long statusId : param.getDocumentWorkflowStatuses().getStatusId()) {
+				documentWfStatuses.add(statusId);
+			}
+			if (documentWfStatuses.size() > 0) {
+				sql.append("\r\n" + "						AND (d.document_wf_status_id in (:documentWfStatuses ))");
+			}
+		}
+
+		// Creator application
+		List<String> creatorApplications = new ArrayList<String>();
+		if ((param.getCreatorApplications() != null)
+				&& (param.getCreatorApplications().getCreatorApplication() != null)
+				&& !param.getCreatorApplications().getCreatorApplication().isEmpty()) {
+
+			for (String appName : param.getCreatorApplications().getCreatorApplication()) {
+				creatorApplications.add(appName);
+			}
+			if (creatorApplications.size() > 0) {
+				sql.append("\r\n" + "						AND (d.remote_application in (:creatorApplications ))");
+			}
+		}
+
+		sql.append("\r\n" + 
+				"				) ids\r\n" + 
+				"				JOIN document documents ON documents.id = ids.id\r\n" + 
+				"				LEFT JOIN document_file files ON files.document_id = documents.id AND COALESCE(files.deleted, 0) = 0 AND COALESCE(documents.deflated, 0) = 0 AND COALESCE(documents.invisible_to_owner, 0) = 0 AND files.document_file_type_id NOT IN (:ddocContainers )\r\n" + 
+				"				GROUP BY ids.id\r\n" + 
+				"			) id_size\r\n" +
+				"			LEFT JOIN document_sharing sharings ON sharings.document_id = id_size.id AND COALESCE(sharings.deleted, 0) = 0\r\n" +
+				"			GROUP BY id_size.id, id_size.file_size\r\n" + 
+				"		) id_size_shared\r\n" + 
+				"		JOIN document documents ON documents.id = id_size_shared.id\r\n" + 
+				"		ORDER BY ");
+
+		// Search result ordering
+		String sortBy = documentFieldXmlNameToDbName("last_modified");
+		String sortOrder = "DESC NULLS LAST";
+		if (!Util.isNullOrEmpty(param.getSortBy())) {
+			String sortByDbName = documentFieldXmlNameToDbName(param.getSortBy());
+			if (sortByDbName != null) {
+				sortBy = sortByDbName;
+				sortOrder = "ASC NULLS FIRST";
+			} else {
+				AditCodedException aditCodedException = new AditCodedException(
+						"request.getDocumentList.incorrectSortByParameter");
+				aditCodedException.setParameters(new Object[] { param.getSortBy() });
+				throw aditCodedException;
+			}
+		}
+		if (!Util.isNullOrEmpty(param.getSortOrder())) {
+			if ("asc".equalsIgnoreCase(param.getSortOrder())) {
+				sortOrder = "ASC NULLS FIRST";
+			} else if ("desc".equalsIgnoreCase(param.getSortOrder())) {
+				sortOrder = "DESC NULLS LAST";
+			} else {
+				AditCodedException aditCodedException = new AditCodedException(
+						"request.getDocumentList.incorrectSortOrderParameter");
+				aditCodedException.setParameters(new Object[] { param.getSortOrder() });
+				throw aditCodedException;
+			}
+		}
+		sql.append(sortBy).append(" ").append(sortOrder);
+
+		sql.append(",\r\n" + 
+				"		documents.last_modified_date DESC, documents.id ASC\r\n" + 
+				"	) results");
+
+		selectSql.append(sql);
+		countSql.append(sql);
+
+		// Then apply paging and ordering and get the final list
+		int startIndex = (param.getStartIndex() != null) ? param.getStartIndex().intValue() : 0;
+		if (startIndex < 1) {
+			startIndex = 1;
+		}
+		int maxResults = (param.getMaxResults() != null) ? param.getMaxResults().intValue() : 20;
+		if (maxResults < 0) {
+			// It is OK to ask 0 results because it is the only way to get total number
+			// of documents without retrieving any of them.
+			maxResults = 20;
+		} else if (maxResults > 100) {
+			maxResults = 100;
+		}
+
+		// limit for select
+		selectSql.append("\r\n" + 
+				"	where rownum < :end");
+
+		selectSql.append("\r\n" + 
+				") ");
+		countSql.append("\r\n" + 
+				") ");
+
+		// offset for select
+		selectSql.append("where rnum >= :start");
+
+		selectSql.append("\r\n" + 
+				"order by rnum asc");
+		countSql.append("\r\n" + 
+				"order by rnum asc");
+
+		List<Document> documents = null;
+		Integer count = 0;
+		Session session = getSession();
+
+		try {
+			SQLQuery countQuery = session.createSQLQuery(countSql.toString());
+			SQLQuery selectQuery = session.createSQLQuery(selectSql.toString());
+			for (Iterator<String> iterator = parameterMap.keySet().iterator(); iterator.hasNext();) {
+				String key = iterator.next();
+				Object[] value = (Object[]) parameterMap.get(key);
+				selectQuery.setParameter(key, value[0], (Type) value[1]);
+				countQuery.setParameter(key, value[0], (Type) value[1]);
+			}
+			Long[] ddocContainers = new Long[] { DocumentService.FILETYPE_SIGNATURE_CONTAINER,
+					DocumentService.FILETYPE_SIGNATURE_CONTAINER_DRAFT };
+			selectQuery.setParameterList("ddocContainers", ddocContainers);
+			countQuery.setParameterList("ddocContainers", ddocContainers);
+			if (documentTypes.size() > 0) {
+				selectQuery.setParameterList("documentTypes", documentTypes);
+				countQuery.setParameterList("documentTypes", documentTypes);
+			}
+			if (documentDvkStatuses.size() > 0) {
+				selectQuery.setParameterList("documentDvkStatuses", documentDvkStatuses);
+				countQuery.setParameterList("documentDvkStatuses", documentDvkStatuses);
+			}
+			if (documentWfStatuses.size() > 0) {
+				selectQuery.setParameterList("documentWfStatuses", documentWfStatuses);
+				countQuery.setParameterList("documentWfStatuses", documentWfStatuses);
+			}
+			if (creatorApplications.size() > 0) {
+				selectQuery.setParameterList("creatorApplications", creatorApplications);
+				countQuery.setParameterList("creatorApplications", creatorApplications);
+			}
+			selectQuery.setParameter("start", startIndex);
+			selectQuery.setParameter("end", startIndex + maxResults);
+
+			countQuery.addScalar("total", Hibernate.INTEGER);
+			count = (Integer) countQuery.list().get(0);
+			selectQuery.addEntity(Document.class);
+			documents = selectQuery.list();
+
+			GetDocumentListResponseAttachment innerResult = new GetDocumentListResponseAttachment();
+			innerResult.setDocumentList(new ArrayList<OutputDocument>());
+
+			for (Document doc : documents) {
+				OutputDocument resultDoc = dbDocumentToOutputDocument(doc, null, true, true, false,
+						param.getFileTypes(), temporaryFilesDir, filesNotFoundMessageBase,
+						currentRequestUserCode, documentRetentionDeadlineDays, digidocConfigFile);
+				innerResult.getDocumentList().add(resultDoc);
+			}
+
+			innerResult.setTotal(count);
+			return innerResult;
+		} catch (DataAccessException ex) {
+			if (ex.getRootCause() instanceof AditException) {
+				throw (AditException) ex.getRootCause();
+			} else {
+				throw ex;
+			}
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			if (session != null && session.isOpen()) {
+				session.close();
+			}
+		}
+	}
     
     /**
      * Fetches documents from database by list of dhl ids

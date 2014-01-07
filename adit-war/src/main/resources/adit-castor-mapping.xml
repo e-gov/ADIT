@@ -194,6 +194,9 @@
 		<field name="usedSpace" type="java.lang.Long">
 			<bind-xml name="used_space_bytes" />
 		</field>
+		<field name="totalSpace" type="java.lang.Long">
+			<bind-xml name="total_space_bytes" />
+		</field>
 		<field name="canRead" type="boolean">
 			<bind-xml name="can_read" />
 		</field>
@@ -480,8 +483,17 @@
 		<field name="previousDocumentId" type="java.lang.Long">
 			<bind-xml name="previous_document_id"/>
 		</field>
+		<field name="previousDocumentTitle" type="java.lang.String">
+			<bind-xml name="previous_document_title"/>
+		</field>
+		<field name="previousDocumentDeleted" type="java.lang.Boolean">
+			<bind-xml name="previous_document_deleted"/>
+		</field>
 		<field name="previousDocumentGuid" type="java.lang.String">
 			<bind-xml name="previous_document_guid"/>
+		</field>
+		<field name="hasSentReply" type="java.lang.Boolean">
+			<bind-xml name="has_sent_reply"/>
 		</field>
 		<field name="locked" type="java.lang.Boolean">
 			<bind-xml name="locked"/>
@@ -504,6 +516,9 @@
 		<field name="signed" type="java.lang.Boolean">
 			<bind-xml name="signed"/>
 		</field>
+		<field name="eformUseId" type="java.lang.Long">
+			<bind-xml name="eform_use_id"/>
+		</field>
 		<field name="signatures" type="ee.adit.pojo.DocumentSignatureList">
 			<bind-xml name="signatures" />
 		</field>
@@ -515,6 +530,12 @@
 		</field>
 		<field name="files" type="ee.adit.pojo.OutputDocumentFilesList">
 			<bind-xml name="document_files" />
+		</field>
+		<field name="filesSizeBytes" type="java.lang.Long">
+			<bind-xml name="files_size_bytes"/>
+		</field>
+		<field name="senderReceiver" type="java.lang.String">
+			<bind-xml name="sender_receiver"/>
 		</field>
 	</class>
 
@@ -541,6 +562,12 @@
 		</field>
 		<field name="hasBeenViewed" type="java.lang.Boolean">
 			<bind-xml name="has_been_viewed" location="keha" />
+		</field>
+		<field name="eformUseId" type="java.lang.Long">
+			<bind-xml name="eform_use_id" location="keha" />
+		</field>
+		<field name="signed" type="java.lang.Boolean">
+			<bind-xml name="signed" location="keha" />
 		</field>
 		<field name="isDeflated" type="java.lang.Boolean">
 			<bind-xml name="is_deflated" location="keha" />
@@ -778,6 +805,9 @@
 		</field>
 		<field name="previousDocumentID" type="java.lang.Long">
 			<bind-xml name="previous_document_id" location="document" />
+		</field>
+		<field name="eformUseId" type="java.lang.Long">
+			<bind-xml name="eform_use_id" location="document" />
 		</field>
 		<field name="files" type="ee.adit.pojo.OutputDocumentFile" collection="arraylist">
 			<bind-xml name="file" location="document/files"/>

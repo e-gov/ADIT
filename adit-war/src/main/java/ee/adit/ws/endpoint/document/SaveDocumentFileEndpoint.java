@@ -3,6 +3,7 @@ package ee.adit.ws.endpoint.document;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Locale;
 
@@ -199,6 +200,10 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
                 xroadRequestUser.getUserCode(), xroadRequestUser.getFullName(),
                 (updatedExistingFile ? (DocumentService.DOCUMENT_HISTORY_DESCRIPTION_MODIFYFILE + documentFileId) : DocumentService.DOCUMENT_HISTORY_DESCRIPTION_ADDFILE),
                 user.getFullName(), requestDate.getTime());
+
+			// update doc last modified date
+			doc.setLastModifiedDate(new Date());
+			this.documentService.save(doc, Long.MAX_VALUE);
 
             // Set response messages
             response.setSuccess(true);
@@ -412,7 +417,7 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
             if ((doc.getDocumentSharings() != null) && (!doc.getDocumentSharings().isEmpty())) {
                 Iterator<DocumentSharing> it = doc.getDocumentSharings().iterator();
                 while (it.hasNext()) {
-                    DocumentSharing sharing = (DocumentSharing) it.next();
+                    DocumentSharing sharing = it.next();
                     if (sharing.getUserCode().equalsIgnoreCase(user.getUserCode())) {
                         // Check whether the document is marked as deleted by recipient
                         if ((sharing.getDeleted() != null) && sharing.getDeleted()) {

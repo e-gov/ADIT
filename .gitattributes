@@ -1,8 +1,11 @@
 * text=auto !eol
+/.project -text
+adit-ear/.project -text
 adit-ear/pom.xml -text
 adit-ear/src/main/webapp/META-INF/application.xml -text
 adit-ear/src/main/webapp/META-INF/weblogic-application.xml -text
 adit-war/.checkstyle -text
+adit-war/.project -text
 adit-war/doc/adit.vsd -text
 adit-war/doc/adit_cs_checks.xml -text
 adit-war/doc/dvk_test/data.xml -text
@@ -181,6 +184,7 @@ adit-war/sql/updates/1_0_49/update_1_0_49.sql -text
 adit-war/sql/updates/1_0_51/update_1_0_51.sql -text
 adit-war/sql/updates/1_0_54/update_1_0_54.sql -text
 adit-war/sql/updates/1_0_55/update_1_0_55.sql -text
+adit-war/sql/updates/1_0_57/update_1_0_57.sql -text
 adit-war/sql/updates/1_0_60/update_1_0_60.sql -text
 adit-war/sql/updates/1_0_60/update_packages_1_0_60.sql -text
 adit-war/sql/updates/1_0_60/update_triggers_1_0_60.sql -text
@@ -486,6 +490,11 @@ adit-war/src/main/resources/castor-mapping/xsd.v1/rkel_letter.xsd -text
 adit-war/src/main/resources/castor-mapping/xsd.v2/dhl-meta-automatic.xsd -text
 adit-war/src/main/resources/castor-mapping/xsd.v2/dhl-meta-manual.xsd -text
 adit-war/src/main/resources/castor-mapping/xsd.v2/dhl.xsd -text
+adit-war/src/main/resources/conf/adit-arendus-tomcat-local/adit-configuration.xml -text
+adit-war/src/main/resources/conf/adit-arendus-tomcat-local/jdigidoc.cfg -text
+adit-war/src/main/resources/conf/adit-arendus-tomcat-local/log4j.xml -text
+adit-war/src/main/resources/conf/adit-arendus-tomcat-local/nsca_send_clear.cfg -text
+adit-war/src/main/resources/conf/adit-arendus-tomcat-local/xtee.properties -text
 adit-war/src/main/resources/conf/adit-arendus-tomcat/adit-configuration.xml -text
 adit-war/src/main/resources/conf/adit-arendus-tomcat/jdigidoc.cfg -text
 adit-war/src/main/resources/conf/adit-arendus-tomcat/log4j.xml -text

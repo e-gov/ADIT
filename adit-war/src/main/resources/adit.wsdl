@@ -722,6 +722,14 @@
 								has been viewed</xs:documentation>
 						</xs:annotation>
 					</element>
+					<element name="signed" type="boolean">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Näitab, kas antud dokument
+								on allkirjastatud</xs:documentation>
+							<xs:documentation xml:lang="en">Indicates if the document
+								has been signed</xs:documentation>
+						</xs:annotation>
+					</element>
 					<element name="is_deflated" type="boolean">
 						<xs:annotation>
 							<xs:documentation xml:lang="ee">Näitab, kas antud dokument
@@ -783,6 +791,8 @@
 								<enumeration value="id"/>
 								<enumeration value="last_modified"/>
 								<enumeration value="title"/>
+								<enumeration value="file_size"/>
+								<enumeration value="sender_receiver"/>
 							</restriction>
 						</simpleType>
 					</element>
@@ -1817,6 +1827,14 @@
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
+					<xs:element name="total_space_bytes" type="xs:integer">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Kasutajakonto kogu ruum
+							</xs:documentation>
+							<xs:documentation xml:lang="en">Useraccount total space
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="can_read" type="xs:boolean">
 						<xs:annotation>
 							<xs:documentation xml:lang="ee">Näitab, kas kasutajal on
@@ -2196,6 +2214,14 @@
 								document)</xs:documentation>
 						</xs:annotation>
 					</xs:element>
+					<xs:element name="eform_use_id" type="xs:integer">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Evormi kasutuselevõtu id. Tidetakse ainult siis, kui tegemist on evormi andmetega
+							</xs:documentation>
+							<xs:documentation xml:lang="en">Eform use id. Filled only in case of eform formData
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="files" type="subDocumentFilesType" />
 				</xs:sequence>
 			</xs:complexType>
@@ -2357,6 +2383,24 @@
 								the document, that this document is based on</xs:documentation>
 						</xs:annotation>
 					</xs:element>
+					<xs:element name="previous_document_deleted" type="xs:boolean">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Näitab, kas eelmine
+								versioooni või antud dokumendi aluseks olev
+								dokument on kustutatud</xs:documentation>
+							<xs:documentation xml:lang="en">Indicates if the
+								document's previous version or the document,
+								that this is based on is deleted</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="previous_document_title" type="xs:string">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Dokumendi eelmise versioooni või
+								antud dokumendi aluseks oleva dokumendi pealkiri</xs:documentation>
+							<xs:documentation xml:lang="en">Title of documents last version or of
+								the document, that this document is based on</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="previous_document_guid" type="xs:string">
 						<xs:annotation>
 							<xs:documentation xml:lang="ee">Dokumendi eelmise versioooni või
@@ -2417,6 +2461,14 @@
 							<xs:documentation xml:lang="en">Indicates if the document has been signed</xs:documentation>
 						</xs:annotation>
 					</xs:element>
+					<xs:element name="eform_use_id" type="xs:integer">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Evormi kasutuselevõtu id
+							</xs:documentation>
+							<xs:documentation xml:lang="en">Eform use id
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="signatures" type="documentSignatureListV1Type">
 						<xs:annotation>
 							<xs:documentation xml:lang="ee">Dokumendi allkirjade andmed</xs:documentation>
@@ -2426,6 +2478,30 @@
                     <xs:element name="sent_to" type="documentSentToV1Type" />
                     <xs:element name="shared_to" type="documentSharedToV1Type" />
 					<xs:element name="document_files" type="documentFilesType" />
+					<xs:element name="files_size_bytes" type="xs:integer" nillable="true">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Failide suurus baitides
+							</xs:documentation>
+							<xs:documentation xml:lang="en">Files size in bytes
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="sender_receiver" type="xs:string" nillable="true">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Dokumendi saaja või saatja(d)
+							</xs:documentation>
+							<xs:documentation xml:lang="en">Document sender or receiver(s)
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="has_sent_reply" type="xs:boolean">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Näitab, kas dokumendile on
+								saadetud vastus</xs:documentation>
+							<xs:documentation xml:lang="en">Indicates if the
+								document is has a sent reply</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 				</xs:sequence>
 			</xs:complexType>
 

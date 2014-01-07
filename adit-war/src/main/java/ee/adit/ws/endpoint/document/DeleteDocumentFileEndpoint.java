@@ -1,7 +1,7 @@
 package ee.adit.ws.endpoint.document;
 
 import java.util.Calendar;
-import java.util.Iterator;
+import java.util.Date;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
-import ee.adit.dao.pojo.DocumentFile;
 import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.ArrayOfMessage;
@@ -119,13 +118,13 @@ public class DeleteDocumentFileEndpoint extends AbstractAditBaseEndpoint {
             }
 
             Document doc = this.documentService.getDocumentDAO().getDocument(request.getDocumentId());
-            
+
             long documentFileId = request.getFileId();
             //if file ID is 0, get it by file GUID
             if (documentFileId == 0 && request.getFileGuid() != null) {
             	documentFileId = this.documentService.getDocumentFileIdByGuid(doc, request.getFileGuid());
             }
-            
+
             // Kontrollime, kas ID-le vastav dokument on olemas
             if (doc != null) {
                 // Kontrollime, kas dokument kuulub päringu käivitanud
@@ -154,9 +153,9 @@ public class DeleteDocumentFileEndpoint extends AbstractAditBaseEndpoint {
                         aditCodedException.setParameters(new Object[] {doc.getLockingDate()});
                         throw aditCodedException;
                     }
-                    
 
-                    
+
+
                     String resultCode = this.documentService.deflateDocumentFile(request.getDocumentId(), documentFileId, true, true);
                     if (resultCode.equalsIgnoreCase("already_deleted")) {
                         AditCodedException aditCodedException = new AditCodedException("file.isDeleted");
@@ -194,6 +193,10 @@ public class DeleteDocumentFileEndpoint extends AbstractAditBaseEndpoint {
                 xroadRequestUser.getFullName(),
                 DocumentService.DOCUMENT_HISTORY_DESCRIPTION_DELETEFILE + documentFileId,
                 user.getFullName(), requestDate.getTime());
+
+			// update doc last modified date
+			doc.setLastModifiedDate(new Date());
+			this.documentService.save(doc, Long.MAX_VALUE);
 
             // Set response messages
             response.setSuccess(new Success(true));

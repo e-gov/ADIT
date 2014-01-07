@@ -19,6 +19,7 @@ public class OutputDocument {
     private Long dvkStatusId;
     private Long dvkId;
     private Long workflowStatusId;
+    private Long eformUseId;
     private Date lastAccessed;
     private Long previousDocumentId;
     private String previousDocumentGuid;
@@ -33,6 +34,11 @@ public class OutputDocument {
     private DocumentSendingData sentTo;
     private DocumentSharingData sharedTo;
     private OutputDocumentFilesList files;
+    private Long filesSizeBytes;
+    private String senderReceiver;
+    private String previousDocumentTitle;
+    private boolean previousDocumentDeleted;
+    private boolean hasSentReply;
 
     public Long getId() {
         return id;
@@ -162,7 +168,15 @@ public class OutputDocument {
         this.workflowStatusId = workflowStatusId;
     }
 
-    public Date getLastAccessed() {
+    public Long getEformUseId() {
+		return eformUseId;
+	}
+
+	public void setEformUseId(Long eformUseId) {
+		this.eformUseId = eformUseId;
+	}
+
+	public Date getLastAccessed() {
         return lastAccessed;
     }
 
@@ -273,4 +287,44 @@ public class OutputDocument {
     public void setFiles(OutputDocumentFilesList files) {
         this.files = files;
     }
+
+	public Long getFilesSizeBytes() {
+		return filesSizeBytes;
+	}
+
+	public void setFilesSizeBytes(Long filesSizeBytes) {
+		this.filesSizeBytes = filesSizeBytes;
+	}
+
+    public String getPreviousDocumentTitle() {
+        return previousDocumentTitle;
+    }
+
+    public void setPreviousDocumentTitle(String previousDocumentTitle) {
+        this.previousDocumentTitle = previousDocumentTitle;
+    }
+
+	public boolean isPreviousDocumentDeleted() {
+		return previousDocumentDeleted;
+	}
+
+	public void setPreviousDocumentDeleted(boolean previousDocumentDeleted) {
+		this.previousDocumentDeleted = previousDocumentDeleted;
+	}
+
+	public String getSenderReceiver() {
+		return senderReceiver;
+	}
+
+	public void setSenderReceiver(String senderReceiver) {
+		this.senderReceiver = senderReceiver;
+	}
+
+	public boolean isHasSentReply() {
+		return hasSentReply;
+	}
+
+	public void setHasSentReply(boolean hasSentReply) {
+		this.hasSentReply = hasSentReply;
+	}
 }

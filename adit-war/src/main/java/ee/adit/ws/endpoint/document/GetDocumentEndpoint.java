@@ -379,9 +379,17 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
         
         // Check whether the document exists
         if (doc == null) {
-            logger.debug("Requested document does not exist. Document ID: " + request.getDocumentId() + ". Document GUID: " + request.getDocumentGuid());
+        	if (request.getDocumentId() != null) {
+        		logger.debug("Requested document does not exist. Document ID: " + request.getDocumentId());
+        	} else if (request.getDocumentGuid() != null) {
+        		logger.debug("Requested document does not exist. Document GUID: " + request.getDocumentGuid());
+        	}
             AditCodedException aditCodedException = new AditCodedException("document.nonExistent");
-            aditCodedException.setParameters(new Object[] {request.getDocumentId().toString() });
+            if (request.getDocumentId() != null) {
+            	aditCodedException.setParameters(new Object[] {request.getDocumentId().toString() });
+            } else if (request.getDocumentGuid() != null) {
+            	aditCodedException.setParameters(new Object[] {request.getDocumentGuid().toString() });
+            }
             throw aditCodedException;
         }
 

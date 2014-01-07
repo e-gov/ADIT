@@ -96,7 +96,9 @@ CREATE TABLE &&ADIT_SCHEMA..DOCUMENT
     deleted                 NUMBER(1),                  /* Indicates if this document is deleted. "1" = deleted, "0" = not deleted. */
     invisible_to_owner      NUMBER(1,0) NULL,           /* Indicates if this document has been made invisible to its owner. Is used when document has been sent to someone else and owner wants to delete it from his/her own view. */
     signed                  NUMBER(1,0) NULL,           /* Indicates if this document has been signed. */
-    migrated                NUMBER (1,0)               /* Indicates if this document has been migrated from state portal */
+    migrated                NUMBER (1,0),               /* Indicates if this document has been migrated from state portal */
+    files_size_bytes        NUMBER(18,0) DEFAULT 0,     /* Total size of files in bytes, needed for transient mapping */
+    sender_receiver         VARCHAR(50)                 /* Sender/receiver transient column, needed for transient mapping */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
 COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT                          IS 'Document data';
@@ -124,7 +126,8 @@ COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.deleted                 IS 'Indicates 
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.invisible_to_owner      IS 'Indicates if this document has been made invisible to its owner. Is used when document has been sent to someone else and owner wants to delete it from his/her own view.';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.signed                  IS 'Indicates if this document has been signed.';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.migrated                IS 'Indicates if this document has been migrated from state portal';
-
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.files_size_bytes        IS 'Total size of files in bytes, needed for transient mapping';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.sender_receiver         IS 'Sender/receiver transient column, needed for transient mapping';
 
 CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_DVK_STATUS
 (
@@ -140,6 +143,7 @@ CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_FILE
 (
     ID                           NUMBER(12) NOT NULL,               /* Unique identifier */
     document_id                  NUMBER(12) NOT NULL,               /* ID of document this file belongs to */
+    guid                         VARCHAR(50),                       /* file guid */
     file_name                    VARCHAR2(355) NOT NULL,            /* File name */
     content_type                 VARCHAR2(255),                     /* MIME type of file */
     description                  VARCHAR2(4000),                    /* File description */
@@ -157,6 +161,7 @@ CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_FILE
 COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_FILE                               IS 'Document files';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.ID                           IS 'Unique identifier';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.document_id                  IS 'ID of document this file belongs to';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.guid                         IS 'Faili globaalselt unikaalne identifikaator';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.file_name                    IS 'File name';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.content_type                 IS 'MIME type of file';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_FILE.description                  IS 'File description';

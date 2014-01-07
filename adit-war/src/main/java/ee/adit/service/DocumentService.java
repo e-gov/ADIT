@@ -5,7 +5,6 @@ import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -17,8 +16,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.StringBufferInputStream;
-import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.security.cert.X509Certificate;
 import java.sql.Blob;
@@ -27,13 +24,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
+import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.fop.apps.MimeConstants;
 import org.apache.log4j.Logger;
 import org.hibernate.FlushMode;
@@ -45,15 +43,12 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.cfg.Environment;
 import org.springframework.context.MessageSource;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.transaction.annotation.Transactional;
 
-import dvk.api.DVKConstants;
 import dvk.api.container.ArrayOfSignature;
-import dvk.api.container.Container;
 import dvk.api.container.LetterMetaData;
 import dvk.api.container.Metaxml;
 import dvk.api.container.Person;
@@ -95,7 +90,6 @@ import ee.adit.pojo.PrepareSignatureInternalResult;
 import ee.adit.pojo.SaveDocumentRequestAttachment;
 import ee.adit.pojo.SaveItemInternalResult;
 import ee.adit.util.Configuration;
-import ee.adit.util.CustomXTeeHeader;
 import ee.adit.util.DigiDocExtractionResult;
 import ee.adit.util.SimplifiedDigiDocParser;
 import ee.adit.util.StartEndOffsetPair;
@@ -109,9 +103,6 @@ import ee.sk.digidoc.SignatureValue;
 import ee.sk.digidoc.SignedDoc;
 import ee.sk.digidoc.factory.SAXDigiDocFactory;
 import ee.sk.utils.ConfigManager;
-
-import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
-import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 
 
 /**
@@ -588,9 +579,10 @@ public class DocumentService {
             throws FileNotFoundException, AditCodedException {
 
         final DocumentDAO docDao = this.getDocumentDAO();
-        
+
         return (SaveItemInternalResult) this.getDocumentDAO().getHibernateTemplate().execute(new HibernateCallback() {
-            public Object doInHibernate(Session session) throws HibernateException, SQLException, AditCodedException {
+            @Override
+			public Object doInHibernate(Session session) throws HibernateException, SQLException, AditCodedException {
                 boolean involvedSignatureContainerExtraction = false;
                 Date creationDate = new Date();
                 Document document = new Document();
@@ -619,6 +611,12 @@ public class DocumentService {
                 document.setTitle(attachmentDocument.getTitle());
                 document.setCreatorUserCode(creatorUserCode);
                 document.setCreatorUserName(creatorUserName);
+                document.setEformUseId(attachmentDocument.getEformUseId());
+				Document parent = null;
+				if (attachmentDocument.getPreviousDocumentID() != null) {
+					parent = docDao.getDocument(attachmentDocument.getPreviousDocumentID());
+				}
+				document.setDocument(parent);
 
                 if ((attachmentDocument.getFiles() != null) && (attachmentDocument.getFiles().size() == 1)
                     && ((document.getDocumentFiles() == null) || (document.getDocumentFiles().size() == 0))) {
@@ -647,7 +645,7 @@ public class DocumentService {
                                 sig.setDocument(document);
                                 document.getSignatures().add(sig);
                             }
-                            
+
                             //If it's a signed container, then document must be locked. That prevents users to modify files inside the signed container.
                             if (document.getSigned()) {
                            	 document.setLocked(true);
@@ -693,7 +691,8 @@ public class DocumentService {
         final DocumentDAO docDao = this.getDocumentDAO();
 
         return (SaveItemInternalResult) this.getDocumentDAO().getHibernateTemplate().execute(new HibernateCallback() {
-            public Object doInHibernate(Session session) throws HibernateException, SQLException, AditCodedException {
+            @Override
+			public Object doInHibernate(Session session) throws HibernateException, SQLException, AditCodedException {
                 SaveItemInternalResult result = new SaveItemInternalResult();
 
                 Document document = (Document) session.get(Document.class, documentId);
@@ -725,7 +724,7 @@ public class DocumentService {
                      if (extractionResult.isSuccess()) {
                          file.setFileType(FILETYPE_NAME_SIGNATURE_CONTAINER);
                          document.setSigned((extractionResult.getSignatures() != null) && (extractionResult.getSignatures().size() > 0));
-                         
+
                          filesList.add(file);
                          involvedSignatureContainerExtraction = true;
 
@@ -740,7 +739,7 @@ public class DocumentService {
                              sig.setDocument(document);
                              document.getSignatures().add(sig);
                          }
-                         
+
                          //if it's a signed container, then document must be locked. Otherwise users can change files after signing.
                          if (document.getSigned()) {
                         	 document.setLocked(true);
@@ -793,11 +792,12 @@ public class DocumentService {
      * @return
      */
     public SaveItemInternalResult saveDocumentCopy (final Document doc, final DocumentSharing sharing, final long remainingDiskQuota) {
-    	
+
        final DocumentDAO docDao = this.getDocumentDAO();
-        
+
         return (SaveItemInternalResult) this.getDocumentDAO().getHibernateTemplate().execute(new HibernateCallback() {
-            public Object doInHibernate(Session session) throws HibernateException, SQLException, AditCodedException {
+            @Override
+			public Object doInHibernate(Session session) throws HibernateException, SQLException, AditCodedException {
                 boolean involvedSignatureContainerExtraction = false;
                 Date creationDate = new Date();
                 Document document = new Document();
@@ -815,46 +815,46 @@ public class DocumentService {
                 document.setTitle(doc.getTitle());
                 document.setCreatorUserCode(sharing.getUserCode());
                 document.setCreatorUserName(sharing.getUserName());
-                
+
                 //Add original document as a Parent document of the copy.
                 document.setDocument(doc);
-                
-                
+
+
                 //Copy files
                 if ((doc.getDocumentFiles() != null) && (doc.getDocumentFiles().size() > 0)) {
-                    
+
                     Iterator<DocumentFile> it = doc.getDocumentFiles().iterator();
-                    
+
                     while (it.hasNext()) {
                     	DocumentFile origFile = it.next();
                     	DocumentFile file = new DocumentFile();
-                    	
+
                     	file.setContentType(origFile.getContentType());
                     	file.setDeleted(false);
                     	file.setFileName(origFile.getFileName());
                     	file.setDescription(origFile.getDescription());
                     	file.setFileSizeBytes(origFile.getFileSizeBytes());
                     	file.setLastModifiedDate(origFile.getLastModifiedDate());
-                    	
+
                     	file.setDocumentFileTypeId(origFile.getDocumentFileTypeId());
-                    	
+
                     	file.setFileDataInDdoc(origFile.getFileDataInDdoc());
                         file.setDdocDataFileId(origFile.getDdocDataFileId());
                         file.setDdocDataFileStartOffset(origFile.getDdocDataFileStartOffset());
                         file.setDdocDataFileEndOffset(origFile.getDdocDataFileEndOffset());
                         file.setFileData(origFile.getFileData());
-                        
+
                         file.setDocument(document);
                         document.getDocumentFiles().add(file);
-                        
+
                     }
-                    
+
                     //Copy signatures
-                    
+
                     if (doc.getSigned()) {
-                    	
+
                     	Iterator<ee.adit.dao.pojo.Signature> itr = doc.getSignatures().iterator();
-                    	
+
                     	while (itr.hasNext()) {
                     		ee.adit.dao.pojo.Signature origSig = itr.next();
                     		ee.adit.dao.pojo.Signature sig = new ee.adit.dao.pojo.Signature();
@@ -870,10 +870,10 @@ public class DocumentService {
                     		sig.setSignerCode(origSig.getSignerCode());
                     		sig.setSigningDate(origSig.getSigningDate());
                     		sig.setUserName(origSig.getUserName());
-                    		
+
                     		document.getSignatures().add(sig);
                     	}
-                    	
+
                     	document.setLocked(true);
                     	document.setLockingDate(doc.getLockingDate());
                     }
@@ -889,7 +889,7 @@ public class DocumentService {
             }
         });
     }
-    
+
     /**
      * Extracts data files and signature data from DigiDoc container.
      *
@@ -1080,7 +1080,7 @@ public class DocumentService {
         DocumentSharing documentSharing = new DocumentSharing();
         documentSharing.setDocumentId(document.getId());
         documentSharing.setCreationDate(new Date());
-        
+
         if (dvkFolder != null) {
         	documentSharing.setDvkFolder(dvkFolder);
         }
@@ -1104,7 +1104,7 @@ public class DocumentService {
 
         return result;
     }
-    
+
     /**
      * Sends document to the specified user.
      *
@@ -1118,7 +1118,7 @@ public class DocumentService {
 
         return sendDocument(document, recipient, null, null);
     }
-        
+
     /**
      * Adds a document history event.
      *
@@ -1228,9 +1228,9 @@ public class DocumentService {
 
                     //dvkFolder value taken from documentSharing
                     String dvkFolder = null;
-                    
+
                     Iterator<DocumentSharing> documentSharings = document.getDocumentSharings().iterator();
-                    
+
                     Saaja firstRecipient = null;
                     while (documentSharings.hasNext()) {
                         DocumentSharing documentSharing = documentSharings.next();
@@ -1257,7 +1257,7 @@ public class DocumentService {
                             }
 
                             saajad.add(saaja);
-                            
+
                             dvkFolder = documentSharing.getDvkFolder();
                         }
 
@@ -1321,7 +1321,7 @@ public class DocumentService {
                     try {
                         PojoMessage dvkMessage = new PojoMessage();
                         dvkMessage.setIsIncoming(false);
-                        
+
                         if (dvkFolder == null) {
                         	if (document.getDocumentType().equals("letter") && this.getConfiguration().getDvkFolderForLetterType() != null && !this.getConfiguration().getDvkFolderForLetterType().isEmpty()) {
 //                        		dvkMessage.setDhlFolderName(this.getConfiguration().getDvkSendFolder());
@@ -1333,7 +1333,7 @@ public class DocumentService {
                         	if (dvkFolder == null) {
                         		dvkFolder = this.getConfiguration().getDvkSendFolder();
                         	}
-                        } 
+                        }
 //                        else {
 //                        	dvkMessage.setDhlFolderName(dvkFolder);
 //                        	logger.info("DVK folder name : " + dvkFolder);
@@ -1545,7 +1545,7 @@ public class DocumentService {
                     transport.setSaatjad(saatjad);
 
                     Iterator<DocumentSharing> documentSharings = document.getDocumentSharings().iterator();
-                    
+
                     //dvkFolder value taken from documentSharing
                     String dvkFolder = null;
                     dvk.api.container.v1.Saaja firstRecipient = null;
@@ -1574,7 +1574,7 @@ public class DocumentService {
                             }
 
                             saajad.add(saaja);
-                            
+
                             dvkFolder = documentSharing.getDvkFolder();
                         }
                     }
@@ -1666,7 +1666,7 @@ public class DocumentService {
                         	dvkMessage.setDhlFolderName(dvkFolder);
                         	logger.info("DVK folder name : " + dvkFolder);
                         }
-                        
+
                         dvkMessage.setLocalItemId(document.getId());
                         dvkMessage.setTitle(document.getTitle());
                         dvkMessage.setDhlGuid(document.getGuid());
@@ -1821,7 +1821,7 @@ public class DocumentService {
         }
         return;
     }
-    
+
     /**
      * Creates metaxml part of outgoing DVK envelope.
      *
@@ -2145,6 +2145,19 @@ public class DocumentService {
 	            aditDocument.setSignable(true);
 	            aditDocument.setTitle(Util.isNullOrEmpty(dvkDocument.getTitle()) ? "-" : dvkDocument.getTitle());
 	            aditDocument.setDocumentType(DOCTYPE_LETTER);
+
+	            String seotudDokumendinrSaajal = dvkContainer.getMetainfo().getSeotudDokumendinrSaajal();
+	            if (seotudDokumendinrSaajal != null && seotudDokumendinrSaajal.length() > 0) {
+	            	try {
+	            		Document parent =  this.getDocumentDAO().getDocument(Long.valueOf(seotudDokumendinrSaajal));
+
+	            		if (parent != null) {
+	            			aditDocument.setDocument(parent);
+	            		}
+	            	} catch (NumberFormatException ex) {
+	            		  logger.info("Invalid related adit doc id in dhl message - " + dvkDocument.getDhlMessageId());
+	            	}
+	            }
 
 	            // The creator is the sender
 	            aditDocument.setCreatorCode(senderUser.getUserCode());
@@ -3554,7 +3567,6 @@ public class DocumentService {
         }
     }
 
-
     /**
      * Marks document matching the given ID as deleted. Document file contents
      * will be replaced with their MD5 hash codes. Document and individual files
@@ -3621,44 +3633,45 @@ public class DocumentService {
                 hasBeenSentToSelfOnly = hasBeenSentToSelfOnly && (numberOfSendRecipients == 1);
             }
 
-            // Replace file contents with MD5 hash of original contents
-            if (!hasBeenSent || hasBeenSentToSelfOnly) {
-                if (doc.getDocumentFiles() != null) {
-                    Iterator<DocumentFile> it = doc.getDocumentFiles().iterator();
-                    while (it.hasNext()) {
-                        DocumentFile docFile = it.next();
-
-                        if ((docFile.getDeleted() == null) || !docFile.getDeleted()) {
-                            String resultCode = this.deflateDocumentFile(doc.getId(), docFile.getId(), true, false);
-
-                            // Make sure no relevant error code was returned
-                            if (resultCode.equalsIgnoreCase("file_does_not_exist")) {
-                                AditCodedException aditCodedException = new AditCodedException("file.nonExistent");
-                                aditCodedException.setParameters(new Object[] {new Long(docFile.getId()).toString() });
-                                throw aditCodedException;
-                            } else if (resultCode.equalsIgnoreCase("file_does_not_belong_to_document")) {
-                                AditCodedException aditCodedException = new AditCodedException("file.doesNotBelongToDocument");
-                                aditCodedException.setParameters(new Object[] {new Long(docFile.getId()).toString(), new Long(doc.getId()).toString() });
-                                throw aditCodedException;
-                            }
-
-                            deletedFilesSize = deletedFilesSize + docFile.getFileSizeBytes();
-                        }
-                    }
-                }
-                doc.setDeleted(true);
-                saveDocument = true;
-            } else {
-                // Make sure that the document is not already deleted by owner
-                if ((doc.getInvisibleToOwner() != null) && doc.getInvisibleToOwner()) {
-                    AditCodedException aditCodedException = new AditCodedException("request.deleteDocument.document.deleted");
-                    aditCodedException.setParameters(new Object[] {new Long(documentId).toString() });
-                    throw aditCodedException;
-                } else {
-                    doc.setInvisibleToOwner(true);
-                    saveDocument = true;
-                }
-            }
+			if (!Boolean.TRUE.equals(doc.getDeleted()) && !Boolean.TRUE.equals(doc.getInvisibleToOwner())) {
+				if (doc.getDocumentFiles() != null) {
+					Iterator<DocumentFile> it = doc.getDocumentFiles().iterator();
+					while (it.hasNext()) {
+						DocumentFile docFile = it.next();
+						if ((docFile.getDeleted() == null) || !docFile.getDeleted()) {
+							if (!hasBeenSent || hasBeenSentToSelfOnly) {
+								// Replace file contents with MD5 hash of original contents
+								String resultCode = this.deflateDocumentFile(doc.getId(), docFile.getId(), true, false);
+								// Make sure no relevant error code was returned
+								if (resultCode.equalsIgnoreCase("file_does_not_exist")) {
+									AditCodedException aditCodedException = new AditCodedException("file.nonExistent");
+									aditCodedException.setParameters(new Object[] { new Long(docFile.getId())
+											.toString() });
+									throw aditCodedException;
+								} else if (resultCode.equalsIgnoreCase("file_does_not_belong_to_document")) {
+									AditCodedException aditCodedException = new AditCodedException(
+											"file.doesNotBelongToDocument");
+									aditCodedException.setParameters(new Object[] {
+											new Long(docFile.getId()).toString(), new Long(doc.getId()).toString() });
+									throw aditCodedException;
+								}
+							}
+							deletedFilesSize = deletedFilesSize + docFile.getFileSizeBytes();
+						}
+					}
+				}
+				if (!hasBeenSent || hasBeenSentToSelfOnly) {
+					doc.setDeleted(true);
+				} else {
+					doc.setInvisibleToOwner(true);
+				}
+				saveDocument = true;
+			} else {
+				AditCodedException aditCodedException = new AditCodedException(
+						"request.deleteDocument.document.deleted");
+				aditCodedException.setParameters(new Object[] { new Long(documentId).toString() });
+				throw aditCodedException;
+			}
         } else if (doc.getDocumentSharings() != null) {
             // Check whether or not the document has been shared to current user
             Iterator<DocumentSharing> it = doc.getDocumentSharings().iterator();
@@ -4401,6 +4414,8 @@ public class DocumentService {
             signatureContainer.setFileData(containerData);
             signatureContainer.setLastModifiedDate(new Date());
             doc.setSigned(true);
+			// update doc last modified date
+			doc.setLastModifiedDate(new Date());
 
             // Remove container draft contents
             signatureContainerDraft.setFileData(null);
@@ -4983,7 +4998,7 @@ public class DocumentService {
     public long getDocumentFileIdByGuid(Document doc, String documentFileGuid) {
     	return this.getDocumentFileDAO().getDocumentFileIdByGuid(doc, documentFileGuid).getId();
     }
-    
+
     /**
      * Translates file type name to file type ID.
      *
@@ -5067,19 +5082,19 @@ public class DocumentService {
      */
     public static boolean documentSignedBySharing(Set<ee.adit.dao.pojo.Signature> documentSignatures, DocumentSharing sharing) {
     	boolean result = false;
-    	
-    	
+
+
 		Iterator<ee.adit.dao.pojo.Signature> it = documentSignatures.iterator();
 		while(it.hasNext()){
-			ee.adit.dao.pojo.Signature signature = (ee.adit.dao.pojo.Signature) it.next();
+			ee.adit.dao.pojo.Signature signature = it.next();
 			if (sharing.getUserCode().equalsIgnoreCase(signature.getUserCode()) && sharing.getCreationDate().compareTo(signature.getSigningDate())<0  ) {
 				result = true;
 				break;
 			}
 		}
-    
-    	
-    	return result;    	
+
+
+    	return result;
     }
 
     /**

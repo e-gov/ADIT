@@ -81,8 +81,10 @@ public class MonitorController extends AbstractController {
         List<MonitorResult> results = new ArrayList<MonitorResult>();
         boolean summaryStatusOk = true;
 
+		
+		
         try {
-
+			logger.error("tmpshit" + getServletContext().getRealPath(arg0.getContextPath()));
             double duration = 0;
             Date start = new Date();
             long startTime = start.getTime();

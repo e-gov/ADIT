@@ -563,6 +563,14 @@
 					<documentation xml:lang="en">Indicates if the document has been viewed</documentation>
 				</annotation>
 			</element>
+			<element name="signed" type="boolean">
+				<annotation>
+					<documentation xml:lang="ee">Näitab, kas antud dokument
+						on allkirjastatud</documentation>
+					<documentation xml:lang="en">Indicates if the document
+						has been signed</documentation>
+				</annotation>
+			</element>
 			<element name="is_deflated" type="boolean">
 				<annotation>
 					<documentation xml:lang="ee">Näitab, kas antud dokument on arhiveeritud</documentation>
@@ -614,6 +622,8 @@
 						<enumeration value="id"/>
 						<enumeration value="last_modified"/>
 						<enumeration value="title"/>
+						<enumeration value="file_size"/>
+						<enumeration value="sender_receiver"/>
 					</restriction>
 				</simpleType>
 			</element>

@@ -425,6 +425,7 @@ public class UserService {
             result.setHasJoined(hasJoined);
             result.setFreeSpace(unusedSpace);
             result.setUsedSpace(usedSpace);
+            result.setTotalSpace(userTotalDiskQuota);
             result.setCanRead(canRead);
             result.setCanWrite(canWrite);
             result.setUsesDVK(usesDVK);
