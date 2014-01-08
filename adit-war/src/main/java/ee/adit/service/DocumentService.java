@@ -754,6 +754,10 @@ public class DocumentService {
 
                 // Document to database
                 try {
+
+					// update doc last modified date
+					document.setLastModifiedDate(new Date());
+
                     result = docDao.save(document, filesList, remainingDiskQuota, session);
                 } catch (Exception e) {
                     throw new HibernateException(e);

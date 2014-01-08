@@ -4,7 +4,7 @@
 	<groupId>ee</groupId>
 	<artifactId>adit</artifactId>
 	<packaging>pom</packaging>
-	<version>1.0.63</version>
+	<version>1.0.64</version>
 	<name>ADIT Main Build</name>
 
 	<modules>
