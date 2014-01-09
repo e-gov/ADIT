@@ -1301,6 +1301,37 @@ public class DocumentDAO extends HibernateDaoSupport {
 	}
     
     /**
+     * Fetches document from database by dhl id
+     * @param dhlId
+     * @return document
+     */
+    @SuppressWarnings("unchecked")
+    public Document getDocumentByDhlId(final Long dhlId) {
+        if (dhlId==null || dhlId <= 0) {
+            throw new IllegalArgumentException("Document ID must be a positive integer. Currently supplied ID was "
+                    + dhlId + ".");
+        }
+        Document result = null;
+        Session session = null;
+        try {
+            logger.debug("Finding document for dhlids " + dhlId);
+            String sql = "select document from Document document join document.documentSharings documentSharings where documentSharings.dvkId = :dhlId";
+            session = this.getSessionFactory().openSession();
+            Query query = session.createQuery(sql);
+            query.setParameter("dhlId", dhlId);
+            query.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+            result =  (Document) query.uniqueResult();
+        } catch (Exception e) {
+        	throw new AditInternalException("Error while fetching document: ", e);
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }        
+        return result;
+    }
+    
+    /**
      * Fetches documents from database by list of dhl ids
      * @param dhlIds list of dhl ids
      * @return document

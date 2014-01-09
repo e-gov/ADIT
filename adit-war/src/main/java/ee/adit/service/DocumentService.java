@@ -1,6 +1,7 @@
 package ee.adit.service;
 
 import java.io.BufferedInputStream;
+
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -5149,6 +5150,25 @@ public class DocumentService {
             || (requestedTypes.getFileType().contains(fileTypeName)));
     }
 
+    
+    public Long findDocumentDvkIdForUser (Document doc, AditUser user) {
+    	Long result = null;
+    	if ((doc.getDocumentSharings() != null) && (!doc.getDocumentSharings().isEmpty())) {
+            Iterator<DocumentSharing> it = doc.getDocumentSharings().iterator();
+            while (it.hasNext()) {
+                DocumentSharing sharing = it.next();
+                if (sharing.getUserCode().equalsIgnoreCase(user.getUserCode())) {
+                    // Check whether the document is marked as deleted by recipient
+                    if ((sharing.getDeleted() == null) || !sharing.getDeleted()) {
+                    	result = sharing.getDvkId();
+                    	break;
+                    }
+                    
+                }
+            }
+        }
+    	return result;
+    }
     public MessageSource getMessageSource() {
         return messageSource;
     }

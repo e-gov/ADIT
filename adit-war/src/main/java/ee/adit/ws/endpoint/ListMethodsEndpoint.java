@@ -55,6 +55,7 @@ public class ListMethodsEndpoint extends AbstractAditBaseEndpoint {
         result.addItem(producerName + ".deleteDocuments.v1");
         result.addItem(producerName + ".deleteDocumentFile.v1");
         result.addItem(producerName + ".getDocument.v1");
+        result.addItem(producerName + ".getDocument.v2");
         result.addItem(producerName + ".getDocumentFile.v1");
         result.addItem(producerName + ".getDocumentHistory.v1");
         result.addItem(producerName + ".getDocumentList.v1");

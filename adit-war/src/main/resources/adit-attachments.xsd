@@ -288,6 +288,19 @@
 			<xs:element name="document" type="documentV1Type" />
 		</xs:sequence>
 	</xs:complexType>
+	
+	<xs:element name="getDocumentResponseAttachmentV2" type="getDocumentResponseAttachmentV2Type" />
+	<xs:complexType name="getDocumentResponseAttachmentV2Type">
+		<xs:annotation>
+			<xs:documentation xml:lang="ee">Päringu "getDocument"
+				vastuse manus</xs:documentation>
+			<xs:documentation xml:lang="en">Attachment for request
+				"getDocument" response message</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="document" type="documentV1Type" />
+		</xs:sequence>
+	</xs:complexType>
 
 
 	<!-- getDocumentFile attachments -->

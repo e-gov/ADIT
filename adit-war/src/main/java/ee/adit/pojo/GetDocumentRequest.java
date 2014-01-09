@@ -48,6 +48,8 @@ public class GetDocumentRequest {
     private Boolean includeFileContents;
     @XmlElement(name = "file_types")
     private ArrayOfFileType fileTypes;
+    @XmlElement(name = "dvk_id")
+    private Long dvkId;
 
     /**
      * Gets the value of the documentId property.
@@ -120,5 +122,19 @@ public class GetDocumentRequest {
 		this.documentGuid = documentGuid;
 	}
     
-    
+	/**
+     * Gets the value of the documentId property.
+     * 
+     */
+    public Long getDvkId() {
+        return dvkId;
+    }
+
+    /**
+     * Sets the value of the documentId property.
+     * 
+     */
+    public void setDvkId(Long value) {
+        this.dvkId = value;
+    }
 }

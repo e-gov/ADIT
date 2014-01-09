@@ -46,6 +46,8 @@
 			<element name="getDocumentListResponse" type="tns:getDocumentListResponse" />
 			<element name="getDocumentRequest" type="tns:getDocumentRequest" />
 			<element name="getDocumentResponse" type="tns:getDocumentResponse" />
+			<element name="getDocumentV2Request" type="tns:getDocumentV2Request" />
+			<element name="getDocumentV2Response" type="tns:getDocumentV2Response" />
 			<element name="getSendStatusRequest" type="tns:getSendStatusRequest" />
 			<element name="getSendStatusResponse" type="tns:getSendStatusResponse" />
 			<element name="getDocumentFileRequest" type="tns:getDocumentFileRequest" />
@@ -871,6 +873,74 @@
 				</sequence>
 			</complexType>
 			<complexType name="getDocumentResponse">
+				<xs:annotation>
+					<xs:documentation xml:lang="ee">Päringu "getDocument" vastus
+					</xs:documentation>
+					<xs:documentation xml:lang="en">"getDocument" request
+						response</xs:documentation>
+				</xs:annotation>
+				<sequence>
+					<element name="success" type="tns:success" />
+					<element name="messages" type="tns:arrayOfMessage" />
+					<element name="document">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Dokumendi andmed
+							</xs:documentation>
+							<xs:documentation xml:lang="en">Document data
+							</xs:documentation>
+						</xs:annotation>
+						<complexType>
+							<attribute name="href" type="tns:href" />
+						</complexType>
+					</element>
+				</sequence>
+			</complexType>
+			
+			<!-- getDocumentV2 päringu tüübid -->
+			<complexType name="getDocumentV2Request">
+				<xs:annotation>
+					<xs:documentation xml:lang="ee">Päring "getDocument"
+					</xs:documentation>
+					<xs:documentation xml:lang="en">"getDocument" request
+					</xs:documentation>
+				</xs:annotation>
+				<sequence>
+					<element name="document_id" type="integer">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Dokumendi identifikaator
+							</xs:documentation>
+							<xs:documentation xml:lang="en">Document identificator
+							</xs:documentation>
+						</xs:annotation>
+					</element>
+					<element name="include_file_contents" type="boolean">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Näitab, kas tagastatakse ka
+								failide sisu</xs:documentation>
+							<xs:documentation xml:lang="en">Indicates if the content of
+								the files is returned</xs:documentation>
+						</xs:annotation>
+					</element>
+					<element name="file_types" type="tns:arrayOfFileType" />
+					<element name="document_guid" type="string">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Dokumendi globaalselt unikaalne identifikaator
+							</xs:documentation>
+							<xs:documentation xml:lang="en">Document generally unique identificator
+							</xs:documentation>
+						</xs:annotation>
+					</element>
+					<element name="dvk_id" type="integer">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">DVK id
+							</xs:documentation>
+							<xs:documentation xml:lang="en">DVK id
+							</xs:documentation>
+						</xs:annotation>
+					</element>
+				</sequence>
+			</complexType>
+			<complexType name="getDocumentV2Response">
 				<xs:annotation>
 					<xs:documentation xml:lang="ee">Päringu "getDocument" vastus
 					</xs:documentation>
@@ -1938,6 +2008,18 @@
 				</xs:sequence>
 			</xs:complexType>
 			
+			<xs:element name="getDocumentResponseAttachmentV2" type="getDocumentResponseAttachmentV2Type" />
+			<xs:complexType name="getDocumentResponseAttachmentV2Type">
+				<xs:annotation>
+					<xs:documentation xml:lang="ee">Päringu "getDocument" vastuse manus</xs:documentation>
+					<xs:documentation xml:lang="en">Attachment for request
+						"getDocument" response message</xs:documentation>
+				</xs:annotation>
+				<xs:sequence>
+					<xs:element name="document" type="documentV1Type" />
+				</xs:sequence>
+			</xs:complexType>
+			
 			<!-- getSendStatus attachments -->
 			<xs:element name="getSendStatusResponseAttachmentV1" type="getSendStatusResponseAttachmentV1" />
 			<xs:complexType name="getSendStatusResponseAttachmentV1">
@@ -2878,6 +2960,10 @@
 		<wsdl:part name="keha" type="tns:getDocumentResponse">
 		</wsdl:part>
 	</wsdl:message>
+	<wsdl:message name="getDocumentV2Response">
+		<wsdl:part name="keha" type="tns:getDocumentV2Response">
+		</wsdl:part>
+	</wsdl:message>
 	<wsdl:message name="shareDocumentResponse">
 		<wsdl:part name="keha" type="tns:shareDocumentResponse">
 		</wsdl:part>
@@ -3030,6 +3116,10 @@
 	</wsdl:message>
 	<wsdl:message name="getDocumentRequest">
 		<wsdl:part name="keha" type="tns:getDocumentRequest">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="getDocumentV2Request">
+		<wsdl:part name="keha" type="tns:getDocumentV2Request">
 		</wsdl:part>
 	</wsdl:message>
 	<wsdl:message name="getDocumentFileRequest">
@@ -3204,6 +3294,16 @@
 			<wsdl:input message="tns:getDocumentRequest" name="getDocumentRequest">
 			</wsdl:input>
 			<wsdl:output message="tns:getDocumentResponse" name="getDocumentResponse">
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getDocument">
+			<xs:documentation>
+				<xtee:title>Dokumendi päring</xtee:title>
+				<xtee:notes>Tagastab dokumendi</xtee:notes>
+			</xs:documentation>
+			<wsdl:input message="tns:getDocumentV2Request" name="getDocumentV2Request">
+			</wsdl:input>
+			<wsdl:output message="tns:getDocumentV2Response" name="getDocumentV2Response">
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="getSendStatus">
@@ -3999,6 +4099,56 @@
 					use="literal" />
 			</wsdl:input>
 			<wsdl:output name="getDocumentResponse">
+				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
+					part="asutus" use="literal">
+				</soap:header>
+				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
+					part="andmekogu" use="literal">
+				</soap:header>
+				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
+					part="isikukood" use="literal">
+				</soap:header>
+				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
+					part="id" use="literal">
+				</soap:header>
+				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
+					part="nimi" use="literal">
+				</soap:header>
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
+					part="infosysteem" use="literal">
+				</soap:header>
+				<soap:body
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
+					use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getDocument">
+			<xtee:version>v2</xtee:version>
+			<soap:operation soapAction="" />
+			<wsdl:input name="getDocumentV2Request">
+				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
+					part="asutus" use="literal">
+				</soap:header>
+				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
+					part="andmekogu" use="literal">
+				</soap:header>
+				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
+					part="isikukood" use="literal">
+				</soap:header>
+				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
+					part="id" use="literal">
+				</soap:header>
+				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
+					part="nimi" use="literal">
+				</soap:header>
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
+					part="infosysteem" use="literal">
+				</soap:header>
+				<soap:body
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
+					use="literal" />
+			</wsdl:input>
+			<wsdl:output name="getDocumentV2Response">
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
 					part="asutus" use="literal">
 				</soap:header>

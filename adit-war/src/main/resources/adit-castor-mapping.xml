@@ -709,8 +709,11 @@
 		<field name="fileTypes" type="ee.adit.pojo.ArrayOfFileType">
 			<bind-xml name="file_types" location="keha" />
 		</field>
+		<field name="dvkId" type="long">
+			<bind-xml name="dvk_id" location="keha" />
+		</field>
 	</class>
-
+	
 	<class name="ee.adit.pojo.GetDocumentResponse">
 		<map-to xml="keha" />
 		<field name="success" type="java.lang.Boolean" >
@@ -732,6 +735,13 @@
 
 	<class name="ee.adit.pojo.GetDocumentResponseAttachment">
 		<map-to xml="getDocumentResponseAttachmentV1" />
+		<field name="document" type="ee.adit.pojo.OutputDocument">
+			<bind-xml name="document" />
+		</field>
+	</class>
+	
+	<class name="ee.adit.pojo.GetDocumentResponseAttachmentV2">
+		<map-to xml="getDocumentResponseAttachmentV2" />
 		<field name="document" type="ee.adit.pojo.OutputDocument">
 			<bind-xml name="document" />
 		</field>
