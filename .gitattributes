@@ -184,6 +184,7 @@ adit-war/sql/updates/1_0_49/update_1_0_49.sql -text
 adit-war/sql/updates/1_0_51/update_1_0_51.sql -text
 adit-war/sql/updates/1_0_54/update_1_0_54.sql -text
 adit-war/sql/updates/1_0_55/update_1_0_55.sql -text
+adit-war/sql/updates/1_0_56/update_1_0_56.sql -text
 adit-war/sql/updates/1_0_57/update_1_0_57.sql -text
 adit-war/sql/updates/1_0_60/update_1_0_60.sql -text
 adit-war/sql/updates/1_0_60/update_packages_1_0_60.sql -text
