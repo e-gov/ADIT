@@ -308,6 +308,7 @@ adit-war/src/main/java/ee/adit/pojo/GetDocumentRequest.java -text
 adit-war/src/main/java/ee/adit/pojo/GetDocumentRequestMonitor.java -text
 adit-war/src/main/java/ee/adit/pojo/GetDocumentResponse.java -text
 adit-war/src/main/java/ee/adit/pojo/GetDocumentResponseAttachment.java -text
+adit-war/src/main/java/ee/adit/pojo/GetDocumentResponseAttachmentV2.java -text svneol=unset#text/plain
 adit-war/src/main/java/ee/adit/pojo/GetDocumentResponseDocument.java -text
 adit-war/src/main/java/ee/adit/pojo/GetDocumentResponseMonitor.java -text
 adit-war/src/main/java/ee/adit/pojo/GetJoinedRequest.java -text
