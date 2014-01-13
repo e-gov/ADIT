@@ -97,6 +97,7 @@ adit-war/lib/bcprov-jdk14-125.jar -text
 adit-war/lib/bcprov-jdk14-126.jar -text
 adit-war/lib/bcprov-jdk14-133.jar -text
 adit-war/lib/bcprov-jdk15-125.jar -text
+adit-war/lib/bcprov-jdk15on-150.jar -text
 adit-war/lib/bctsp-jdk14-133.jar -text
 adit-war/lib/c3p0-0.9.0.jar -text
 adit-war/lib/castor-1.3.1-core.jar -text

@@ -3941,7 +3941,7 @@ public class DocumentService {
                         } else {
                             containerAsStream = signatureContainer.getFileData().getBinaryStream();
                         }
-                        sdoc = factory.readSignedDoc(containerAsStream);
+                        sdoc = factory.readSignedDocFromStreamOfType(containerAsStream, false);
                     } finally {
                         Util.safeCloseStream(containerAsStream);
                     }
@@ -4314,7 +4314,7 @@ public class DocumentService {
 
             ConfigManager.init(digidocConfigFile);
             SAXDigiDocFactory factory = new SAXDigiDocFactory();
-            SignedDoc sdoc = factory.readSignedDoc(signatureContainerDraft.getFileData().getBinaryStream());
+            SignedDoc sdoc = factory.readSignedDocFromStreamOfType(signatureContainerDraft.getFileData().getBinaryStream(), false);
 
             File signatureFile = new File(signatureFileName);
             if (!signatureFile.exists()) {
@@ -4343,7 +4343,7 @@ public class DocumentService {
             int activeSignatureIndex = -1;
             for (int i = 0; i < sdoc.countSignatures(); i++) {
                 String signerPersonalCode = SignedDoc.getSubjectPersonalCode(sdoc.getSignature(i).getLastCertValue().getCert());
-                if (requestPersonalCode.endsWith(signerPersonalCode)) {
+                if (signerPersonalCode!=null && requestPersonalCode.endsWith(signerPersonalCode)) {
                     sig = sdoc.getSignature(i);
                     activeSignatureIndex = i;
                     break;
