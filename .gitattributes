@@ -190,6 +190,7 @@ adit-war/sql/updates/1_0_57/update_1_0_57.sql -text
 adit-war/sql/updates/1_0_60/update_1_0_60.sql -text
 adit-war/sql/updates/1_0_60/update_packages_1_0_60.sql -text
 adit-war/sql/updates/1_0_60/update_triggers_1_0_60.sql -text
+adit-war/sql/updates/1_0_67/update_1_0_67.sql -text
 adit-war/sql/updates/1_0_8/update_1_0_8.sql -text
 adit-war/sql/usertype.dml.sql -text
 adit-war/src/main/java/ee/adit/dao/AccessRestrictionDAO.java -text
@@ -429,6 +430,7 @@ adit-war/src/main/java/ee/adit/util/Util.java -text
 adit-war/src/main/java/ee/adit/util/XRoadQueryName.java -text
 adit-war/src/main/java/ee/adit/util/package-info.java -text
 adit-war/src/main/java/ee/adit/web/controller/MonitorController.java -text
+adit-war/src/main/java/ee/adit/web/controller/VerifyController.java -text svneol=unset#text/plain
 adit-war/src/main/java/ee/adit/web/controller/package-info.java -text
 adit-war/src/main/java/ee/adit/ws/endpoint/AbstractAditBaseEndpoint.java -text
 adit-war/src/main/java/ee/adit/ws/endpoint/AditEndpointMapping.java -text
@@ -576,6 +578,7 @@ adit-war/src/main/webapp/META-INF/weblogic-application.xml -text
 adit-war/src/main/webapp/WEB-INF/web.xml -text
 adit-war/src/main/webapp/index.jsp -text
 adit-war/src/main/webapp/monitor.jsp -text
+adit-war/src/main/webapp/verify.jsp -text svneol=unset#text/plain
 adit-war/src/test/java/ee/adit/test/service/DocumentServiceTest.java -text
 adit-war/src/test/java/ee/adit/test/util/SimplifiedDigiDocParserTest.java -text
 adit-war/src/test/java/ee/adit/test/util/UtilTest.java -text

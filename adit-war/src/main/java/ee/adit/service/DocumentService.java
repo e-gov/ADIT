@@ -1,7 +1,6 @@
 package ee.adit.service;
 
 import java.io.BufferedInputStream;
-
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -35,6 +34,7 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.fop.apps.MimeConstants;
 import org.apache.log4j.Logger;
+import org.bouncycastle.asn1.x500.style.BCStyle;
 import org.hibernate.FlushMode;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
@@ -102,6 +102,7 @@ import ee.sk.digidoc.Signature;
 import ee.sk.digidoc.SignatureProductionPlace;
 import ee.sk.digidoc.SignatureValue;
 import ee.sk.digidoc.SignedDoc;
+import ee.sk.digidoc.factory.DigiDocGenFactory;
 import ee.sk.digidoc.factory.SAXDigiDocFactory;
 import ee.sk.utils.ConfigManager;
 
@@ -420,7 +421,79 @@ public class DocumentService {
     private Configuration configuration;
 
     private DvkDAO dvkDAO;
+    
+    
+    /**
+     * Methods verifies all signed documents using jDigiDoc and logs result
+     * @param digidocConfigFile
+     * @throws Exception
+     */
+	public void verifySignedDocuments(String digidocConfigFile) throws Exception {
+			logger.debug("Starting to check signed documents");
+			ConfigManager.init(digidocConfigFile);
+			List<Document> signedDocuments = getDocumentDAO()
+					.getSignedDocuments();
+			logger.debug("Found signed documents: " + signedDocuments.size());
+			SAXDigiDocFactory factory = new SAXDigiDocFactory();
+			InputStream stream = null;
+			for (Document document : signedDocuments) {
+				logger.info("Checking signed document with id: " + document.getId());
+				//DocumentFile signatureContainer = findSignatureContainer(document);
+				if ((document != null) && (document.getDocumentFiles() != null)) {
+		            for (DocumentFile file : document.getDocumentFiles()) {
+		                if (file.getDocumentFileTypeId() == FILETYPE_SIGNATURE_CONTAINER && !file.getDeleted()) {
+		                	logger.info("Signature documentFile id: "
+		    						+ file.getId());
+		    				try {
+		    					stream = file.getFileData().getBinaryStream();
+		    					SignedDoc sdoc = factory.readSignedDocFromStreamOfType(
+		    							stream, false);
+		    					ArrayList<Exception> errs = sdoc.verify(true, true);
+		    					if (errs==null || errs.size() == 0) {
+		    						ArrayList<Signature> signatures = sdoc.getSignatures();
+		    						if(signatures!=null && signatures.size()>0) {
+		    							boolean hadTestSignature = false;
+		    							for(Signature signature : signatures) {
+		    								CertValue signerCertificate = signature.getCertValueOfType(CertValue.CERTVAL_TYPE_SIGNER);
+		    								X509Certificate cert = null;
+		    							    if ((signerCertificate != null) && (signerCertificate.getCert() != null)) {
+		    							            cert = signerCertificate.getCert();
+		    							    }
+		    								if(DigiDocGenFactory.isTestCard(cert)) {
+		    									hadTestSignature = true;
+		    									logger.error("Signed document has test signature. DocumentId: " + document.getId() + " Signature serialnumber: "  + Util.getSubjectSerialNumberFromCert(cert));
+				    						} 
+		    								
+		    							}
+			    						 if(!hadTestSignature) {
+			    							logger.debug("Signed document is OK. DocumentId: " + document.getId());
+			    						}
+		    						}
+		    					} else {
+		    						for (Exception e : errs) {
+			    						if (e instanceof DigiDocException) {
+			    							DigiDocException de = (DigiDocException) e;
+			    							logger.error("Signed document with DocumentId: " + document.getId() + " has error. DigiDocException errorCode: "
+			    									+ de.getCode());
+			    						}
+			    						logger.error("Signed document has errors. DocumentId: " + document.getId(), e);
+			    					}
+		    					}
+		    				}
 
+		    				catch (Exception ex) {
+		    					logger.error("Error occured while checking signed document.", ex);
+		    				} finally {
+		    					Util.safeCloseStream(stream);
+		    				}
+		                }
+		            }
+		        }
+
+			}
+			logger.debug("Signed documents check is finished");
+	}
+    
     /**
      * Checks if document metadata is sufficient and correct for creating a new
      * document.
@@ -3895,11 +3968,11 @@ public class DocumentService {
 
                 // Remove country prefix from request user code, so it can be
                 // compared to certificate personal id code more reliably
-                String userCodeWithoutCountryPrefix = Util.getPersonalIdCodeWithoutCountryPrefix(xroadUser.getUserCode());
-
+                
                 // Determine if certificate belongs to same person
                 // who executed current query
-                String certPersonalIdCode = SignedDoc.getSubjectPersonalCode(cert);
+                String certPersonalIdCode = Util.getSubjectSerialNumberFromCert(cert);
+                String userCodeWithoutCountryPrefix = Util.getPersonalIdCodeWithoutCountryPrefix(xroadUser.getUserCode());;
                 if (!userCodeWithoutCountryPrefix.equalsIgnoreCase(certPersonalIdCode)) {
                     logger.info("Attempted to sign document " + documentId + " by person \"" + certPersonalIdCode
                             + "\" while logged in as person \"" + userCodeWithoutCountryPrefix + "\"");
@@ -4256,7 +4329,8 @@ public class DocumentService {
                 if ((signature.getCertValue(i) != null) && (signature.getCertValue(i).getCert() != null)) {
                     boolean pendingSignatureBelongsToCurrentUser =
                         userCodeWithoutCountryPrefix.equalsIgnoreCase(
-                            SignedDoc.getSubjectPersonalCode(signature.getCertValue(i).getCert()));
+                        		Util.getSubjectSerialNumberFromCert(signature.getCertValue(i).getCert())
+                           );
 
                     if (pendingSignatureBelongsToCurrentUser) {
                         if (signature.findResponderCert() != null) {
@@ -4342,7 +4416,7 @@ public class DocumentService {
             Signature sig = null;
             int activeSignatureIndex = -1;
             for (int i = 0; i < sdoc.countSignatures(); i++) {
-                String signerPersonalCode = SignedDoc.getSubjectPersonalCode(sdoc.getSignature(i).getLastCertValue().getCert());
+                String signerPersonalCode = Util.getSubjectSerialNumberFromCert(sdoc.getSignature(i).getLastCertValue().getCert()); //SignedDoc.getSubjectPersonalCode(sdoc.getSignature(i).getLastCertValue().getCert());
                 if (signerPersonalCode!=null && requestPersonalCode.endsWith(signerPersonalCode)) {
                     sig = sdoc.getSignature(i);
                     activeSignatureIndex = i;
@@ -4368,7 +4442,6 @@ public class DocumentService {
             }
 
         	String containerFileName = Util.generateRandomFileNameWithoutExtension();
-            containerFileName = temporaryFilesDir + File.separator + containerFileName + "_CSv1.adit";
 
             if (isSignatureElement) {
                 // Write container to temporary file
@@ -4895,11 +4968,11 @@ public class DocumentService {
         CertValue signerCertificate = digiDocSignature.getCertValueOfType(CertValue.CERTVAL_TYPE_SIGNER);
         if ((signerCertificate != null) && (signerCertificate.getCert() != null)) {
             X509Certificate cert = signerCertificate.getCert();
-
-            String signerCode = SignedDoc.getSubjectPersonalCode(cert);
+           // String signerCode = SignedDoc.getSubjectPersonalCode(cert);
+            String signerCode  = Util.getSubjectSerialNumberFromCert(cert);
             String signerCountryCode = getSubjectCountryCode(cert);
-            String signerCodeWithCountryPrefix = "EE" + signerCode;
-            if (!Util.isNullOrEmpty(signerCode) && !Util.isNullOrEmpty(signerCountryCode)) {
+            String signerCodeWithCountryPrefix = "EE" + signerCode;            
+           if (!Util.isNullOrEmpty(signerCode) && !Util.isNullOrEmpty(signerCountryCode)) {
                 signerCodeWithCountryPrefix = (signerCode.startsWith(signerCountryCode)) ? signerCode : signerCountryCode + signerCode;
             }
 

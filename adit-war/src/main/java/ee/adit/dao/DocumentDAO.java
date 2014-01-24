@@ -883,7 +883,32 @@ public class DocumentDAO extends HibernateDaoSupport {
 
         return result;
     }
-
+    
+    
+    /**
+     * Fetch documents which have signatures.
+     *
+     * @return document list
+     */
+    @SuppressWarnings("unchecked")
+    public List<Document> getSignedDocuments() {
+        List<Document> result = null;
+        logger.debug("Fetching signed documents");
+        String sql = "select document from Document document join document.signatures signatures where signatures.id is not null ";
+        logger.debug("SQL: " + sql);
+        Session session = null;
+        try {
+            session = this.getSessionFactory().openSession();
+            Query query = session.createQuery(sql);
+            query.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+            result = query.list(); 
+        } catch (Exception e) {
+            throw new AditInternalException("Error while getting signed documents: ", e);
+        }
+        return result;
+    }
+    
+    
     /**
      * Update existing document.
      *

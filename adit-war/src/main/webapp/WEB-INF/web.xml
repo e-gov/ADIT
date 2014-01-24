@@ -30,9 +30,8 @@
 
 	<servlet-mapping>
 		<servlet-name>adit-monitor</servlet-name>
-		<url-pattern>/monitor/*</url-pattern>
+		<url-pattern>/</url-pattern>
 	</servlet-mapping>
-
 	<servlet-mapping>
 		<servlet-name>adit</servlet-name>
 		<url-pattern>/service/*</url-pattern>

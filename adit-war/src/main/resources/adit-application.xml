@@ -13,13 +13,19 @@
 	<bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
 		<property name="mappings">
 			<value>
-				/*=monitorController
+				monitor=monitorController
+				verify=verifyController
             </value>
 		</property>
 	</bean>
-
 	<bean id="monitorController" class="ee.adit.web.controller.MonitorController">
 		<property name="monitorService" ref="monitorService" />
+		<property name="configuration" ref="configuration" />
+	</bean>
+	<bean id="verifyController" class="ee.adit.web.controller.VerifyController">
+		<property name="documentService" ref="documentService" />
+		<property name="checkSignaturesOnStartup" ref="checkSignaturesOnStartup" />	
+		<property name="digidocConfigurationFile" value="jdigidoc.cfg" />
 		<property name="configuration" ref="configuration" />
 	</bean>
 						
