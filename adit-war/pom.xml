@@ -4,13 +4,13 @@
 	<groupId>ee</groupId>
 	<artifactId>adit-war</artifactId>
 	<packaging>war</packaging>
-	<version>1.0.66</version>
+	<version>1.0.67</version>
 	<name>ADIT Web Application</name>
 
 	<parent>
 		<groupId>ee</groupId>
 		<artifactId>adit</artifactId>
-		<version>1.0.66</version>
+		<version>1.0.67</version>
 	</parent>
 
 	<properties>
@@ -20,7 +20,7 @@
 		<!--<resourceDir>ria-dev-weblogic</resourceDir>-->
 		<!--<resourceDir>ria-test-weblogic</resourceDir>-->
 		<!--<resourceDir>ria-live-weblogic</resourceDir>-->
-		<!--<resourceDir>dev-dev-weblogic</resourceDir>-->
+		<!-- <resourceDir>dev-dev-weblogic</resourceDir> -->
 	</properties>
 
 	<dependencies>
@@ -210,6 +210,14 @@
 			<systemPath>${basedir}/lib/commons-codec-1.4.jar</systemPath>
 		</dependency>
 
+		<!-- DigiDoc -->
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>BouncyCastle</artifactId>
+			<version>1.5</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/bcprov-jdk15on-150.jar</systemPath>
+		</dependency>
 		<!-- DigiDoc -->
 		<dependency>
 			<groupId>ee.sk.digidoc</groupId>
