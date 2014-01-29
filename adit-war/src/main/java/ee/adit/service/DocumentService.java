@@ -437,12 +437,12 @@ public class DocumentService {
 			SAXDigiDocFactory factory = new SAXDigiDocFactory();
 			InputStream stream = null;
 			for (Document document : signedDocuments) {
-				logger.info("Checking signed document with id: " + document.getId());
+				logger.debug("Checking signed document with id: " + document.getId());
 				//DocumentFile signatureContainer = findSignatureContainer(document);
 				if ((document != null) && (document.getDocumentFiles() != null)) {
 		            for (DocumentFile file : document.getDocumentFiles()) {
 		                if (file.getDocumentFileTypeId() == FILETYPE_SIGNATURE_CONTAINER && !file.getDeleted()) {
-		                	logger.info("Signature documentFile id: "
+		                	logger.debug("Signature documentFile id: "
 		    						+ file.getId());
 		    				try {
 		    					stream = file.getFileData().getBinaryStream();
@@ -4442,7 +4442,7 @@ public class DocumentService {
             }
 
         	String containerFileName = Util.generateRandomFileNameWithoutExtension();
-
+        	containerFileName = temporaryFilesDir + File.separator + containerFileName + "_CSv1.adit";
             if (isSignatureElement) {
                 // Write container to temporary file
                 sdoc.writeToFile(new File(containerFileName));

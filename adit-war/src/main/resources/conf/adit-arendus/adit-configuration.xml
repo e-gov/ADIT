@@ -84,5 +84,7 @@
 		<property name="errorInterval" value="60000" />
 		<property name="errorLevel" value="FATAL" />
 	</bean>
-
+	<bean id="checkSignatures" class="java.lang.Boolean">
+		  <constructor-arg value="true"/>
+	</bean>
 </beans>

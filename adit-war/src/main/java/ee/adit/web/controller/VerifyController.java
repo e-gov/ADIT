@@ -33,7 +33,7 @@ public class VerifyController extends AbstractController {
      */
     private DocumentService documentService;
     
-    private Boolean checkSignaturesOnStartup;
+    private Boolean checkSignatures;
     
     private String digidocConfigurationFile; 
     /**
@@ -58,7 +58,7 @@ public class VerifyController extends AbstractController {
     protected ModelAndView handleRequestInternal(HttpServletRequest arg0, HttpServletResponse arg1) throws Exception {
         logger.info("ADIT verify servlet invoked.");
         ModelAndView mav = new ModelAndView();
-        if (getCheckSignaturesOnStartup()) {
+        if (getCheckSignatures()) {
         	InputStream input = Thread.currentThread().getContextClassLoader()
 					.getResourceAsStream(getDigidocConfigurationFile());
 			String jdigidocCfgTmpFile = Util.createTemporaryFile(input,
@@ -82,14 +82,6 @@ public class VerifyController extends AbstractController {
 		this.documentService = documentService;
 	}
 
-	public Boolean getCheckSignaturesOnStartup() {
-		return checkSignaturesOnStartup;
-	}
-
-	public void setCheckSignaturesOnStartup(Boolean checkSignaturesOnStartup) {
-		this.checkSignaturesOnStartup = checkSignaturesOnStartup;
-	}
-
 	public String getDigidocConfigurationFile() {
 		return digidocConfigurationFile;
 	}
@@ -104,6 +96,14 @@ public class VerifyController extends AbstractController {
 
 	public void setConfiguration(Configuration configuration) {
 		this.configuration = configuration;
+	}
+
+	public Boolean getCheckSignatures() {
+		return checkSignatures;
+	}
+
+	public void setCheckSignatures(Boolean checkSignatures) {
+		this.checkSignatures = checkSignatures;
 	}
 
 }
