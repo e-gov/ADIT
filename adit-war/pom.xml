@@ -4,13 +4,13 @@
 	<groupId>ee</groupId>
 	<artifactId>adit-war</artifactId>
 	<packaging>war</packaging>
-	<version>1.0.67</version>
+	<version>1.0.68</version>
 	<name>ADIT Web Application</name>
 
 	<parent>
 		<groupId>ee</groupId>
 		<artifactId>adit</artifactId>
-		<version>1.0.67</version>
+		<version>1.0.68</version>
 	</parent>
 
 	<properties>
@@ -216,7 +216,7 @@
 			<artifactId>BouncyCastle</artifactId>
 			<version>1.5</version>
 			<scope>system</scope>
-			<systemPath>${basedir}/lib/bcprov-jdk15on-150.jar</systemPath>
+			<systemPath>${basedir}/lib/bcprov-jdk15on-148.jar</systemPath>
 		</dependency>
 		<!-- DigiDoc -->
 		<dependency>
