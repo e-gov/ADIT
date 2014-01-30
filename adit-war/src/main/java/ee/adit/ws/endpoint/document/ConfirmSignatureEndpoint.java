@@ -27,6 +27,7 @@ import ee.adit.service.UserService;
 import ee.adit.util.CustomXTeeHeader;
 import ee.adit.util.Util;
 import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
+import ee.sk.digidoc.DigiDocException;
 import ee.webmedia.xtee.annotation.XTeeService;
 
 /**
@@ -294,7 +295,19 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
                 errorMessage = this.getMessageService().getMessage(e.getMessage(),
                         ((AditCodedException) e).getParameters(), Locale.ENGLISH);
                 errorMessage = "ERROR: " + errorMessage;
-            } else {
+            } else if(e instanceof DigiDocException 
+            		&& (DocumentService.DIGIDOC_REVOKED_CERT_EXCPETION_CODE==((DigiDocException) e).getCode()
+            			|| DocumentService.DIGIDOC_UNKNOWN_CERT_EXCPETION_CODE==((DigiDocException) e).getCode())
+            		) { 
+            	if (DocumentService.DIGIDOC_REVOKED_CERT_EXCPETION_CODE==((DigiDocException) e).getCode()) {
+            		arrayOfMessage.setMessage(this.getMessageService().getMessages("request.saveDocument.revokedcertificate", new Object[]{}));
+            	} else if (DocumentService.DIGIDOC_UNKNOWN_CERT_EXCPETION_CODE==((DigiDocException) e).getCode()){
+            		arrayOfMessage.setMessage(this.getMessageService().getMessages("request.saveDocument.unknowncertificate", new Object[]{}));  
+            	}
+            	errorMessage = "ERROR: " + e.getMessage();
+            }
+            
+            else {
             	arrayOfMessage.setMessage(this.getMessageService().getMessages(MessageService.GENERIC_ERROR_CODE, new Object[]{}));
                 errorMessage = "ERROR: " + e.getMessage();
             }

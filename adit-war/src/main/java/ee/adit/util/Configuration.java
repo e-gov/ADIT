@@ -110,6 +110,10 @@ public class Configuration {
      */
     private String dvkFolderForApplicationType;
 
+    /**
+     * Checking of certificates for test certificate is performed or not
+     * */
+    private Boolean doCheckTestCert;
     
     public List<String> getLocales() {
         return locales;
@@ -269,6 +273,14 @@ public class Configuration {
 
 	public void setDvkFolderForApplicationType(String dvkFolderForApplicationType) {
 		this.dvkFolderForApplicationType = dvkFolderForApplicationType;
+	}
+
+	public Boolean getDoCheckTestCert() {
+		return doCheckTestCert;
+	}
+
+	public void setDoCheckTestCert(Boolean doCheckTestCert) {
+		this.doCheckTestCert = doCheckTestCert;
 	}
 	
 	

@@ -394,6 +394,12 @@ public class DocumentService {
      * Name of file type "signature container draft".
      */
     public static final String FILETYPE_NAME_SIGNATURE_CONTAINER_DRAFT = "signature_container_draft";
+    
+    /**
+     * Exception codes which digiDoc throws when certificate is unknown or revoked 
+     * */
+    public static final Integer DIGIDOC_REVOKED_CERT_EXCPETION_CODE = 91;
+    public static final Integer DIGIDOC_UNKNOWN_CERT_EXCPETION_CODE = 92;
 
     /**
      * Name of file type "zip archive".
@@ -3965,7 +3971,7 @@ public class DocumentService {
 
                 // Load certificate from file
                 X509Certificate cert = SignedDoc.readCertificate(certFile);
-
+                
                 // Remove country prefix from request user code, so it can be
                 // compared to certificate personal id code more reliably
                 
@@ -3980,7 +3986,16 @@ public class DocumentService {
                     result.setErrorCode("request.prepareSignature.signer.notCurrentUser");
                     return result;
                 }
-
+                if (getConfiguration().getDoCheckTestCert()) {
+                	Boolean isTest = DigiDocGenFactory.isTestCard(cert);
+                	if(isTest) {
+	                	 logger.info("Attempted to sign document " + documentId + " by person \"" + certPersonalIdCode
+	                             + " using test certificate");
+	                     result.setSuccess(false);
+	                     result.setErrorCode("request.saveDocument.testcertificate");
+	                     return result;
+                	}
+                }
                 // Load document
                 Document doc = (Document) session.get(Document.class, documentId);
 
@@ -4948,7 +4963,7 @@ public class DocumentService {
      * 		Local signature object that can be added to document and saved to
      * 		database
      */
-    public ee.adit.dao.pojo.Signature convertDigiDocSignatureToLocalSignature(Signature digiDocSignature) {
+    public ee.adit.dao.pojo.Signature convertDigiDocSignatureToLocalSignature(Signature digiDocSignature) throws AditCodedException{
         ee.adit.dao.pojo.Signature result = new ee.adit.dao.pojo.Signature();
 
         if (digiDocSignature.getSignedProperties() != null) {
@@ -4975,7 +4990,14 @@ public class DocumentService {
            if (!Util.isNullOrEmpty(signerCode) && !Util.isNullOrEmpty(signerCountryCode)) {
                 signerCodeWithCountryPrefix = (signerCode.startsWith(signerCountryCode)) ? signerCode : signerCountryCode + signerCode;
             }
-
+           if (getConfiguration().getDoCheckTestCert()) {
+           	Boolean isTest = DigiDocGenFactory.isTestCard(cert);
+           	if(isTest) {
+	            	 logger.info("Attempted to sign document by person \"" + signerCodeWithCountryPrefix
+	                         + " using test certificate");
+	            	 throw new AditCodedException("request.saveDocument.testcertificate");
+           	}
+           }
             result.setSignerCode(signerCodeWithCountryPrefix);
             result.setSignerName(SignedDoc.getSubjectLastName(cert) + ", " + SignedDoc.getSubjectFirstName(cert));
 
