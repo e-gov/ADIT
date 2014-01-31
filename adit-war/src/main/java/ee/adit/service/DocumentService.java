@@ -1056,7 +1056,7 @@ public class DocumentService {
                 } catch (AditCodedException ex) {
                     throw ex;
                 } catch (DigiDocException ex) {
-                    logger.error(ex);
+                    logger.error(ex, ex);
                     AditCodedException aditCodedException = new AditCodedException("digidoc.extract.incorrectContainer");
                     aditCodedException.setParameters(new Object[] {});
                     throw aditCodedException;
