@@ -8,15 +8,7 @@
 		<package-name>antlr.*</package-name>
 		<package-name>org.dom4j.*</package-name>
 		<package-name>org.hibernate.*</package-name>
-		<package-name>org.bouncycastle.*</package-name>
-		<package-name>org.bouncycastle.asn1.*</package-name>
-		<package-name>org.bouncycastle.crypto.*</package-name>
-		<package-name>org.bouncycastle.i18n.*</package-name>
-		<package-name>org.bouncycastle.jce.*</package-name>
-		<package-name>org.bouncycastle.math.*</package-name>
-		<package-name>org.bouncycastle.ocsp.*</package-name>
-		<package-name>org.bouncycastle.util.*</package-name>
-		<package-name>org.bouncycastle.x509.*</package-name>
+		
 	</prefer-application-packages>
 
 </weblogic-application>
