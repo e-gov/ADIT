@@ -33,6 +33,7 @@ import ee.adit.util.FileSplitResult;
 import ee.adit.util.Util;
 import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
 import ee.sk.digidoc.DigiDocException;
+import ee.sk.utils.ConfigManager;
 import ee.webmedia.xtee.annotation.XTeeService;
 
 /**
@@ -86,7 +87,13 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
             CustomXTeeHeader header = this.getHeader();
             String applicationName = header.getInfosysteem(this.getConfiguration().getXteeProducerName());
             SaveDocumentRequest request = (SaveDocumentRequest) requestObject;
-
+            InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream(getDigidocConfigurationFile());
+            String jdigidocCfgTmpFile = Util.createTemporaryFile(input, getConfiguration().getTempDir());
+            logger.debug("JDigidoc.cfg file created as a temporary file: '" + jdigidocCfgTmpFile + "'");
+            //jDigiDoc does not add provider when preparing signature, but uses it causing error. So add provider manualy
+        	ConfigManager.init(jdigidocCfgTmpFile);
+        	ConfigManager.addProvider();
+            
             // Log request
             Util.printHeader(header, this.getConfiguration());
 
@@ -166,8 +173,8 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
                         creatorUserCode = header.getIsikukood();
                     }
 
-                    InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream(getDigidocConfigurationFile());
-                    String jdigidocCfgTmpFile = Util.createTemporaryFile(input, getConfiguration().getTempDir());
+                 //   InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream(getDigidocConfigurationFile());
+                 //   String jdigidocCfgTmpFile = Util.createTemporaryFile(input, getConfiguration().getTempDir());
 
                     if (document.getId() != null && document.getId() != 0) {
                         updatedExistingDocument = true;
