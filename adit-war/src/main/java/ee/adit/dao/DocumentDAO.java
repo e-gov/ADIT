@@ -91,9 +91,9 @@ public class DocumentDAO extends HibernateDaoSupport {
     }
 
     /**
-     * Fetches document by externalID.
+     * Fetches document by GUID.
      *
-     * @param externalId document externalID
+     * @param documentGuid document GUID
      * @return document
      */
     @SuppressWarnings("unchecked")
@@ -1046,7 +1046,7 @@ public class DocumentDAO extends HibernateDaoSupport {
 				"				documents.last_modified_date, documents.document_dvk_status_id, documents.dvk_id, documents.document_wf_status_id, " +
 				"				documents.parent_id, documents.locked, documents.locking_date, documents.signable, documents.deflated, " +
 				"				documents.deflate_date, documents.deleted, documents.invisible_to_owner, documents.signed, documents.migrated, " +
-				"				documents.external_id, documents.eform_use_id, " +
+				"				documents.eform_use_id, " +
 				"				id_size_shared.file_size files_size_bytes, " +
 				"				CASE WHEN documents.creator_code != :userCode THEN documents.creator_name ELSE id_size_shared.shared_to END sender_receiver" +
 				"		FROM (\r\n" +
