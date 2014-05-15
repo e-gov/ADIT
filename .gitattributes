@@ -608,6 +608,7 @@ adit-war/src/test/java/ee/adit/dvk/converter/RecordCreatorTest.java -text
 adit-war/src/test/java/ee/adit/dvk/converter/RecordMetadataTest.java -text
 adit-war/src/test/java/ee/adit/dvk/converter/SignatureMetadataTest.java -text
 adit-war/src/test/java/ee/adit/dvk/converter/TransportTest.java -text
+adit-war/src/test/java/ee/adit/integrationtests/AppSetupTest.java -text
 adit-war/src/test/java/ee/adit/test/service/DocumentServiceTest.java -text
 adit-war/src/test/java/ee/adit/test/service/StubAditUserDAOForOrg.java -text
 adit-war/src/test/java/ee/adit/test/service/StubAditUserDAOForPerson.java -text
@@ -617,6 +618,15 @@ adit-war/src/test/java/ee/adit/test/util/UtilTest.java -text
 adit-war/src/test/resources/ValidDigiDoc_2Files_1Signature.ddoc -text
 adit-war/src/test/resources/ValidDigiDoc_3Files_NoSignatures.ddoc -text
 adit-war/src/test/resources/ValidDigiDoc_NoFiles_NoSignatures.ddoc -text
+adit-war/src/test/resources/dvkapi/Counter.hbm.xml -text
+adit-war/src/test/resources/dvkapi/Message.hbm.xml -text
+adit-war/src/test/resources/dvkapi/MessageRecipient.hbm.xml -text
+adit-war/src/test/resources/dvkapi/Occupation.hbm.xml -text
+adit-war/src/test/resources/dvkapi/Organization.hbm.xml -text
+adit-war/src/test/resources/dvkapi/Settings.hbm.xml -text
+adit-war/src/test/resources/dvkapi/SettingsFolders.hbm.xml -text
+adit-war/src/test/resources/dvkapi/Subdivision.hbm.xml -text
+adit-war/src/test/resources/integration-tests.xml -text
 doc/adit_kasutusjuhend.odt -text
 doc/adit_kirjeldus.odt -text
 doc/adit_paigaldusjuhend.odt -text

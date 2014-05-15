@@ -68,6 +68,12 @@
 			<scope>system</scope>
 			<systemPath>${basedir}/lib/spring.jar</systemPath>
 		</dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>3.0.2.RELEASE</version>
+            <scope>test</scope>
+        </dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>servlet</artifactId>
@@ -369,14 +375,21 @@
 			<systemPath>${basedir}/lib/commons-compress-1.1.jar</systemPath>
 		</dependency>
 
+
+        <!-- Testing -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.0</version>
-			<type>jar</type>
+			<version>4.6</version>
 			<scope>test</scope>
-			<optional>true</optional>
 		</dependency>
+
+        <dependency>
+            <groupId>commons-dbcp</groupId>
+            <artifactId>commons-dbcp</artifactId>
+            <version>1.2.2</version>
+            <scope>test</scope>
+        </dependency>
 	</dependencies>
 
 	<build>
