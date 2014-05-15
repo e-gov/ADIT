@@ -34,7 +34,6 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.fop.apps.MimeConstants;
 import org.apache.log4j.Logger;
-import org.bouncycastle.asn1.x500.style.BCStyle;
 import org.hibernate.FlushMode;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;

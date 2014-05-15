@@ -1,16 +1,20 @@
 package ee.adit.dao;
 
+import java.security.acl.Owner;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import ee.adit.dao.pojo.Document;
+import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Property;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import ee.adit.dao.pojo.AditUser;
@@ -33,7 +37,7 @@ public class DocumentSharingDAO extends HibernateDaoSupport {
      * @param documentSharing document sharing
      * @return ID
      */
-    public Long save(DocumentSharing documentSharing) {
+    public Long save(final DocumentSharing documentSharing) {
         return (Long) this.getHibernateTemplate().save(documentSharing);
     }
 
@@ -43,7 +47,7 @@ public class DocumentSharingDAO extends HibernateDaoSupport {
      * @param documentSharing document sharing
      * @throws AditInternalException if document sharing update failed
      */
-    public void update(DocumentSharing documentSharing) throws AditInternalException {
+    public void update(final DocumentSharing documentSharing) throws AditInternalException {
     	update(documentSharing, false);
     }
 
@@ -55,7 +59,7 @@ public class DocumentSharingDAO extends HibernateDaoSupport {
      * 		Should existing session be used for DB interaction
      * @throws AditInternalException if document sharing update failed
      */
-    public void update(DocumentSharing documentSharing, boolean useExistingSession) throws AditInternalException {
+    public void update(final DocumentSharing documentSharing, final boolean useExistingSession) throws AditInternalException {
         if (useExistingSession) {
         	try {
         		this.getHibernateTemplate().saveOrUpdate(documentSharing);
@@ -93,7 +97,7 @@ public class DocumentSharingDAO extends HibernateDaoSupport {
      * @return list of DVK sharings
      */
     @SuppressWarnings("unchecked")
-    public List<DocumentSharing> getDVKSharings(Long documentID) {
+    public List<DocumentSharing> getDVKSharings(final Long documentID) {
         String sql = "from DocumentSharing where documentId = " + documentID + " and documentSharingType = '"
                 + DocumentService.SHARINGTYPE_SEND_DVK + "'";
         return this.getHibernateTemplate().find(sql);
@@ -106,7 +110,7 @@ public class DocumentSharingDAO extends HibernateDaoSupport {
      * @return list of document sharings
      */
     @SuppressWarnings("unchecked")
-    public List<DocumentSharing> getDVKSharings(Date creationDateComparison) {
+    public List<DocumentSharing> getDVKSharings(final Date creationDateComparison) {
         List<DocumentSharing> result = new ArrayList<DocumentSharing>();
         String sql = "from DocumentSharing where documentSharingType = '" + DocumentService.SHARINGTYPE_SEND_DVK
                 + "' and documentDvkStatus = " + DocumentService.DVK_STATUS_MISSING
@@ -129,7 +133,6 @@ public class DocumentSharingDAO extends HibernateDaoSupport {
 
         return result;
     }
-    
 
     /**
      * Get sharings for user.
@@ -138,12 +141,11 @@ public class DocumentSharingDAO extends HibernateDaoSupport {
      * @return list of sharings
      */
     @SuppressWarnings("unchecked")
-    public List<DocumentSharing> getSharingsByUserCode(String userCode) {
+    public List<DocumentSharing> getSharingsByUserCode(final String userCode) {
         List<DocumentSharing> result;
         DetachedCriteria dt = DetachedCriteria.forClass(DocumentSharing.class, "sharing");
         dt.add(Property.forName("sharing.userCode").eq(userCode));
         result = this.getHibernateTemplate().findByCriteria(dt);
         return result;
     }
-
 }

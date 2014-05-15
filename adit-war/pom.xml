@@ -291,13 +291,13 @@
 			<systemPath>${basedir}/lib/quartz-1.8.3.jar</systemPath>
 		</dependency>
 
-		<!-- DVKAPI -->
+		<!-- DVK-API -->
 		<dependency>
-			<groupId>ee.dvk</groupId>
+			<groupId>dvk</groupId>
 			<artifactId>api</artifactId>
-			<version>1.0.4</version>
+			<version>1.0.6</version>
 			<scope>system</scope>
-			<systemPath>${basedir}/lib/dvkapi.jar</systemPath>
+			<systemPath>${basedir}/lib/dvk-api-1.0.6.jar</systemPath>
 		</dependency>
 
 		<!-- FOP -->
@@ -407,6 +407,7 @@
 				<targetPath>../adit/WEB-INF/classes</targetPath>
 				<excludes>
 					<exclude>adit-configuration.xml</exclude>
+                    <exclude>adit-datasource.xml</exclude>
 				</excludes>
 			</resource>
 			<resource>
@@ -414,6 +415,7 @@
 				<targetPath>../adit/WEB-INF</targetPath>
 				<includes>
 					<include>adit-configuration.xml</include>
+                    <include>adit-datasource.xml</include>
 				</includes>
 			</resource>
 			<!-- Include static resources -->
@@ -438,7 +440,7 @@
 					<include>adit-monitor-servlet.xml</include>
 					<include>adit-application.xml</include>
 					<include>adit-dao.xml</include>
-					<include>adit-datasource.xml</include>
+					<!--<include>adit-datasource.xml</include>-->
 					<include>adit-jobs.xml</include>
 					<include>adit-services.xml</include>
 					<include>adit-endpoints.xml</include>

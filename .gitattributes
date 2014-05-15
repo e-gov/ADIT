@@ -105,6 +105,7 @@ adit-war/lib/commons-compress-1.1.jar -text
 adit-war/lib/commons-io-1.3.1.jar -text
 adit-war/lib/commons-logging-1.1.1.jar -text
 adit-war/lib/dom4j-1.6.1.jar -text
+adit-war/lib/dvk-api-1.0.6.jar -text
 adit-war/lib/dvkapi.jar -text
 adit-war/lib/esteidtestcerts.jar -text
 adit-war/lib/fop.jar -text
@@ -205,6 +206,7 @@ adit-war/src/main/java/ee/adit/dao/DocumentTypeDAO.java -text
 adit-war/src/main/java/ee/adit/dao/DocumentWfStatusDAO.java -text
 adit-war/src/main/java/ee/adit/dao/DownloadRequestLogDAO.java -text
 adit-war/src/main/java/ee/adit/dao/ErrorLogDAO.java -text
+adit-war/src/main/java/ee/adit/dao/IDocumentDao.java -text
 adit-war/src/main/java/ee/adit/dao/MaintenanceJobDAO.java -text
 adit-war/src/main/java/ee/adit/dao/MetadataRequestLogDAO.java -text
 adit-war/src/main/java/ee/adit/dao/NotificationDAO.java -text
@@ -250,6 +252,17 @@ adit-war/src/main/java/ee/adit/dvk/SendJob.java -text
 adit-war/src/main/java/ee/adit/dvk/UpdateStatusJob.java -text
 adit-war/src/main/java/ee/adit/dvk/UpdateStatusToDVKJob.java -text
 adit-war/src/main/java/ee/adit/dvk/UserSyncJob.java -text
+adit-war/src/main/java/ee/adit/dvk/converter/Converter.java -text
+adit-war/src/main/java/ee/adit/dvk/converter/DocumentContainerVer2_1ConverterImpl.java -text
+adit-war/src/main/java/ee/adit/dvk/converter/documentcontainer/AccessBuilder.java -text
+adit-war/src/main/java/ee/adit/dvk/converter/documentcontainer/ContactInfoBuilder.java -text
+adit-war/src/main/java/ee/adit/dvk/converter/documentcontainer/FileBuilder.java -text
+adit-war/src/main/java/ee/adit/dvk/converter/documentcontainer/RecipientBuilder.java -text
+adit-war/src/main/java/ee/adit/dvk/converter/documentcontainer/RecordCreatorBuilder.java -text
+adit-war/src/main/java/ee/adit/dvk/converter/documentcontainer/RecordMetadataBuilder.java -text
+adit-war/src/main/java/ee/adit/dvk/converter/documentcontainer/RecordSenderToDecBuilder.java -text
+adit-war/src/main/java/ee/adit/dvk/converter/documentcontainer/SignatureMetadataBuilder.java -text
+adit-war/src/main/java/ee/adit/dvk/converter/documentcontainer/TransportBuilder.java -text
 adit-war/src/main/java/ee/adit/dvk/package-info.java -text
 adit-war/src/main/java/ee/adit/exception/AditCodedException.java -text
 adit-war/src/main/java/ee/adit/exception/AditException.java -text
@@ -401,6 +414,8 @@ adit-war/src/main/java/ee/adit/schedule/ScheduleClient.java -text
 adit-war/src/main/java/ee/adit/schedule/SendNotificationsJob.java -text
 adit-war/src/main/java/ee/adit/schedule/package-info.java -text
 adit-war/src/main/java/ee/adit/service/DocumentService.java -text
+adit-war/src/main/java/ee/adit/service/DvkService.java -text
+adit-war/src/main/java/ee/adit/service/DvkServiceImpl.java -text
 adit-war/src/main/java/ee/adit/service/LogService.java -text
 adit-war/src/main/java/ee/adit/service/MessageService.java -text
 adit-war/src/main/java/ee/adit/service/MonitorService.java -text
@@ -532,6 +547,12 @@ adit-war/src/main/resources/conf/adit-toodang/jdigidoc.cfg -text
 adit-war/src/main/resources/conf/adit-toodang/log4j.xml -text
 adit-war/src/main/resources/conf/adit-toodang/nsca_send_clear.cfg -text
 adit-war/src/main/resources/conf/adit-toodang/xtee.properties -text
+adit-war/src/main/resources/conf/icefire-arendus/adit-configuration.xml -text
+adit-war/src/main/resources/conf/icefire-arendus/adit-datasource.xml -text
+adit-war/src/main/resources/conf/icefire-arendus/jdigidoc.cfg -text
+adit-war/src/main/resources/conf/icefire-arendus/log4j.xml -text
+adit-war/src/main/resources/conf/icefire-arendus/nsca_send_clear.cfg -text
+adit-war/src/main/resources/conf/icefire-arendus/xtee.properties -text
 adit-war/src/main/resources/dev-dev-weblogic/adit-configuration.xml -text
 adit-war/src/main/resources/dev-dev-weblogic/jdigidoc.cfg -text
 adit-war/src/main/resources/dev-dev-weblogic/log4j.xml -text
@@ -581,7 +602,16 @@ adit-war/src/main/webapp/WEB-INF/web.xml -text
 adit-war/src/main/webapp/index.jsp -text
 adit-war/src/main/webapp/monitor.jsp -text
 adit-war/src/main/webapp/verify.jsp -text svneol=unset#text/plain
+adit-war/src/test/java/ee/adit/dvk/converter/DecMetadataTest.java -text
+adit-war/src/test/java/ee/adit/dvk/converter/DocumentTestingUtil.java -text
+adit-war/src/test/java/ee/adit/dvk/converter/RecordCreatorTest.java -text
+adit-war/src/test/java/ee/adit/dvk/converter/RecordMetadataTest.java -text
+adit-war/src/test/java/ee/adit/dvk/converter/SignatureMetadataTest.java -text
+adit-war/src/test/java/ee/adit/dvk/converter/TransportTest.java -text
 adit-war/src/test/java/ee/adit/test/service/DocumentServiceTest.java -text
+adit-war/src/test/java/ee/adit/test/service/StubAditUserDAOForOrg.java -text
+adit-war/src/test/java/ee/adit/test/service/StubAditUserDAOForPerson.java -text
+adit-war/src/test/java/ee/adit/test/service/StubDocumentTypeDAO.java -text
 adit-war/src/test/java/ee/adit/test/util/SimplifiedDigiDocParserTest.java -text
 adit-war/src/test/java/ee/adit/test/util/UtilTest.java -text
 adit-war/src/test/resources/ValidDigiDoc_2Files_1Signature.ddoc -text

@@ -163,6 +163,7 @@ public class GetSendStatusEndpoint extends AbstractAditBaseEndpoint {
                              outputDocuments.add(resultDoc);*/
                              attachment.setDocuments(documentSendStatuses);
                              String xmlFile = marshal(attachment);
+                             logger.debug("xmlFile: " + xmlFile);
                              Util.joinSplitXML(xmlFile, "data");
 
                              // 2. GZip the temporary file Base64 encoding
