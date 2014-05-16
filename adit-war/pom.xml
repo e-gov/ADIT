@@ -303,7 +303,7 @@
 			<artifactId>api</artifactId>
 			<version>1.0.6</version>
 			<scope>system</scope>
-			<systemPath>${basedir}/lib/dvk-api-1.0.6.jar</systemPath>
+			<systemPath>${basedir}/lib/dvk-api-1.0.9.jar</systemPath>
 		</dependency>
 
 		<!-- FOP -->
@@ -374,7 +374,11 @@
 			<scope>system</scope>
 			<systemPath>${basedir}/lib/commons-compress-1.1.jar</systemPath>
 		</dependency>
-
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.3.2</version>
+        </dependency>
 
         <!-- Testing -->
 		<dependency>

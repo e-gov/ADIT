@@ -14,7 +14,8 @@ public class UtilsService {
     public static PojoMessage prepareMessageBeforeInsert(DvkDAO dvkDAO, String containerFile) {
         PojoMessage dvkMessage = new PojoMessage();
 
-        dvkMessage.setIsIncoming(false);
+        dvkMessage.setDhlMessageId(1);
+        dvkMessage.setIsIncoming(true);
         dvkMessage.setTitle("TestDocument1");
         dvkMessage.setSenderOrgCode("10885324");
         dvkMessage.setSenderOrgName("IceFire OÜ");
@@ -26,7 +27,9 @@ public class UtilsService {
         dvkMessage.setRecipientName("Hendrik Pärna");
         dvkMessage.setSendingStatusId(DocumentService.DVK_STATUS_WAITING);
         dvkMessage.setUnitId(0);
+        dvkMessage.setLocalItemId(null);
         dvkMessage.setStatusUpdateNeeded((long) 0);
+        dvkMessage.setDhlFolderName("/");
         String container = "";
         try {
             container = readSQLToString(containerFile);

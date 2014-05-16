@@ -1,5 +1,6 @@
 package ee.adit.integrationtests;
 
+import dvk.api.container.v1.ContainerVer1;
 import dvk.api.container.v2_1.ContainerVer2_1;
 import dvk.api.ml.PojoMessage;
 import ee.adit.dao.DocumentDAO;
@@ -40,14 +41,21 @@ public class AppSetupTest {
     public void receiveDocumentFromDVKClient() throws Exception {
         // Path to the container, and parse XML to a container
         String containerFile = AppSetupTest.
-                class.getResource("/containerVer2_1.xml").getPath();
-        ContainerVer2_1 inputContainer = new ContainerVer2_1();
+                class.getResource("/testOldContainer.xml").getPath();
+        String digiDocConfFile = AppSetupTest.
+                class.getResource("/jdigidoc.cfg").getPath();
+//        ContainerVer2_1 inputContainer = new ContainerVer2_1();
         // TODO: fix this string
         // inputContainer = ContainerVer2_1.parseFile(containerFile);
         // Prepare a new message
         PojoMessage newMessage = UtilsService.prepareMessageBeforeInsert(dvkDAO, containerFile);
         // Save the message to DVK Client DB
         dvkDAO.updateDocument(newMessage);
+        documentService.receiveDocumentsFromDVK(digiDocConfFile);
+        ContainerVer1 container = ContainerVer1.parse(UtilsService.readSQLToString(containerFile));
+
+        Assert.notNull(container);
+//
     }
 
     @Test
