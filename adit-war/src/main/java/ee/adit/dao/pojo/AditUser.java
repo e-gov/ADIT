@@ -2,6 +2,8 @@ package ee.adit.dao.pojo;
 
 // Generated 21.06.2010 14:02:03 by Hibernate Tools 3.2.4.GA
 
+import ee.adit.service.UserService;
+
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -123,5 +125,18 @@ public class AditUser implements java.io.Serializable {
 
     public void setDiskQuotaUsed(Long diskQuotaUsed) {
         this.diskQuotaUsed = diskQuotaUsed;
+    }
+
+    /**
+     * Is adit user a person?
+     * @return true if yes otherwise false
+     */
+    public boolean isPerson() {
+        boolean result = false;
+        if (this.getUsertype() != null
+                && UserService.USERTYPE_PERSON.equalsIgnoreCase(this.getUsertype().getShortName())) {
+            result = true;
+        }
+        return result;
     }
 }

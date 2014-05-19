@@ -72,7 +72,7 @@ public class TransportTest {
         Assert.assertNotNull(transport.getDecRecipient());
         Assert.assertNotNull(transport.getDecRecipient().get(0));
         DecRecipient recipient = transport.getDecRecipient().get(0);
-        Assert.assertEquals("36212240216", recipient.getPersonalIdCode());
+        Assert.assertNull(recipient.getPersonalIdCode());
         Assert.assertEquals("12345678", recipient.getOrganisationCode());
         Assert.assertNull(recipient.getStructuralUnit());
     }
@@ -91,7 +91,7 @@ public class TransportTest {
         DecRecipient recipient = transport.getDecRecipient().get(0);
         Assert.assertNull(recipient.getPersonalIdCode());
         Assert.assertEquals("12345678", recipient.getOrganisationCode());
-        Assert.assertEquals("MyComp OÜ", recipient.getStructuralUnit());
+        Assert.assertNull(recipient.getStructuralUnit());
     }
 
 

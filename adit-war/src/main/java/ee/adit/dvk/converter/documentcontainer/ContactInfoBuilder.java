@@ -15,32 +15,32 @@ import ee.adit.util.Util;
 public class ContactInfoBuilder {
 
     private Document document;
-    private AditUserDAO aditUserDAO;
+    private AditUser aditUser;
 
     /**
      * Constructor.
-     * @param document {@link Document}
-     * @param aditUserDAO {@link AditUserDAO}
+     *
+     * @param document    {@link Document}
+     * @param aditUser {@link AditUser}
      */
-    public ContactInfoBuilder(final Document document, final AditUserDAO aditUserDAO) {
+    public ContactInfoBuilder(final Document document, final AditUser aditUser) {
         this.document = document;
-        this.aditUserDAO = aditUserDAO;
+        this.aditUser = aditUser;
     }
 
-    ContactInfo build() {
+    /**
+     * Builds a {@link ContactInfo}.
+     *
+     * @return ContactInfo
+     */
+    public ContactInfo build() {
         ContactInfo contactInfo = new ContactInfo();
 
-        AditUser documentOwner = aditUserDAO.getUserByID(document.getCreatorCode());
-
-        //organization
-        OrganisationType organisation = new OrganisationType();
-        if (documentOwner != null) {
-            organisation.setName(documentOwner.getFullName());
-            organisation.setOrganisationCode(Util.getPersonalIdCodeWithoutCountryPrefix(documentOwner.getUserCode()));
+        if (aditUser.isPerson()) {
+            contactInfo.setPerson(createPersonType(aditUser));
+        } else {
+            contactInfo.setOrganisation(createOrganizationType(aditUser));
         }
-        contactInfo.setOrganisation(organisation);
-
-        contactInfo.setPerson(getPersonType(documentOwner));
 
         ContactDataType contactDataType = new ContactDataType();
         contactInfo.setContactData(contactDataType);
@@ -48,26 +48,35 @@ public class ContactInfoBuilder {
         return contactInfo;
     }
 
-    private PersonType getPersonType(final AditUser documentOwner) {
+    private OrganisationType createOrganizationType(final AditUser documentOwner) {
+        OrganisationType organisation = new OrganisationType();
+        organisation.setName(documentOwner.getFullName());
+        organisation.setOrganisationCode(documentOwner.getDvkOrgCode());
+        organisation.setResidency(documentOwner.getUserCode().substring(0, 2));
+        return organisation;
+    }
+
+    private PersonType createPersonType(final AditUser documentOwner) {
         PersonType personType = new PersonType();
 
-        if (documentOwner != null) {
-            personType.setName(documentOwner.getFullName());
+        personType.setName(documentOwner.getFullName());
 
-            PersonName ownersName = null;
-            if (UserService.USERTYPE_PERSON.equalsIgnoreCase(documentOwner.getUsertype().getShortName())) {
-                ownersName = Util.splitPersonName(documentOwner.getFullName());
-            } else {
-                ownersName = Util.splitPersonName(document.getCreatorUserName());
-            }
+        PersonName ownersName;
 
-            if (ownersName != null) {
-                personType.setGivenName(ownersName.getFirstName());
-                personType.setSurname(ownersName.getSurname());
-            }
-
-            personType.setPersonalIdCode(Util.getPersonalIdCodeWithoutCountryPrefix(documentOwner.getUserCode()));
+        if (UserService.USERTYPE_PERSON.equalsIgnoreCase(documentOwner.getUsertype().getShortName())) {
+            ownersName = Util.splitPersonName(documentOwner.getFullName());
+        } else {
+            ownersName = Util.splitPersonName(document.getCreatorUserName());
         }
+
+        if (ownersName != null) {
+            personType.setGivenName(ownersName.getFirstName());
+            personType.setSurname(ownersName.getSurname());
+        }
+
+        personType.setPersonalIdCode(Util.getPersonalIdCodeWithoutCountryPrefix(documentOwner.getUserCode()));
+        personType.setResidency(documentOwner.getUserCode().substring(0, 2));
         return personType;
     }
+
 }

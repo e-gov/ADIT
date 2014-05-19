@@ -1,34 +1,37 @@
 package ee.adit.dvk.converter.documentcontainer;
 
-import dvk.api.container.v2_1.ContactDataType;
-import dvk.api.container.v2_1.OrganisationType;
-import dvk.api.container.v2_1.PersonType;
-import dvk.api.container.v2_1.Recipient;
+import dvk.api.container.v2_1.*;
+import ee.adit.dao.AditUserDAO;
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
+import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.pojo.PersonName;
 import ee.adit.service.UserService;
 import ee.adit.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Hendrik Pärna
  * @since 6.05.14
  */
 public class RecipientBuilder {
+    private Set<DocumentSharing> documentSharings;
     private Document document;
-    private List<AditUser> recipients;
+    private AditUserDAO aditUserDAO;
 
     /**
      * Constructor.
      * @param document {@link Document}
-     * @param recipients list of {@link AditUser}
+     * @param aditUserDAO {@link AditUserDAO}
+     * @param documentSharings list of {@link AditUser}
      */
-    public RecipientBuilder(final Document document, final List<AditUser> recipients) {
+    public RecipientBuilder(final Document document, final AditUserDAO aditUserDAO, final Set<DocumentSharing> documentSharings) {
         this.document = document;
-        this.recipients = recipients;
+        this.aditUserDAO = aditUserDAO;
+        this.documentSharings = documentSharings;
     }
 
     /**
@@ -39,27 +42,17 @@ public class RecipientBuilder {
     public List<Recipient> build() {
         List<Recipient> results = new ArrayList<Recipient>();
 
-        if (recipients != null) {
-            for (AditUser aditUser : recipients) {
+        if (documentSharings != null) {
+            for (DocumentSharing documentSharing : documentSharings) {
+                AditUser recipientUser = aditUserDAO.getUserByID(documentSharing.getUserCode());
+                ContactInfo contactInfo = new ContactInfoBuilder(document, recipientUser).build();
                 Recipient recipient = new Recipient();
-                OrganisationType organization = new OrganisationType();
-                PersonType personType = new PersonType();
-
-                if (UserService.USERTYPE_PERSON.equalsIgnoreCase(aditUser.getUsertype().getShortName())) {
-                    PersonName personName = Util.splitPersonName(aditUser.getFullName());
-                    personType.setGivenName(personName.getFirstName());
-                    personType.setSurname(personName.getSurname());
-                    personType.setName(aditUser.getFullName());
-                    personType.setPersonalIdCode(aditUser.getUserCode());
-                } else {
-                    organization.setName(aditUser.getFullName());
-                }
-
-                recipient.setOrganisation(organization);
-                recipient.setPerson(personType);
-
-                ContactDataType contactDataType = new ContactDataType();
-                recipient.setContactData(contactDataType);
+                recipient.setPerson(contactInfo.getPerson());
+                recipient.setContactData(contactInfo.getContactData());
+                recipient.setOrganisation(contactInfo.getOrganisation());
+                //TODO finish me
+                //recipient.setMessageForRecipient();
+                results.add(recipient);
             }
         }
 

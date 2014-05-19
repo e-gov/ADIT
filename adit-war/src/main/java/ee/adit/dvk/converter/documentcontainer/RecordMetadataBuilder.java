@@ -36,6 +36,8 @@ public class RecordMetadataBuilder {
     public RecordMetadata build() {
         RecordMetadata recordMetadata = new RecordMetadata();
 
+        recordMetadata.setRecordGuid(document.getGuid());
+
         DocumentType docType = documentTypeDAO.getDocumentType(document.getDocumentType());
         if (docType != null) {
             recordMetadata.setRecordType(docType.getDescription());
@@ -44,6 +46,8 @@ public class RecordMetadataBuilder {
         recordMetadata.setRecordOriginalIdentifier(String.valueOf(document.getId()));
         recordMetadata.setRecordDateRegistered(getRecordDateRegistered(document));
         recordMetadata.setRecordTitle(document.getTitle());
+        //TODO: finish me, field still in development
+        //recordMetadata.setRecordAbstract();
 
         return recordMetadata;
     }
@@ -66,13 +70,11 @@ public class RecordMetadataBuilder {
     private Date getOldestSignatureDate(final Set<Signature> signatures) {
         Date documentSignatureDate = null;
         if (signatures != null) {
-            Calendar cal = Calendar.getInstance();
             for (Signature signature : signatures) {
                 if (documentSignatureDate == null) {
                     documentSignatureDate = signature.getSigningDate();
                 } else {
-                    cal.setTime(documentSignatureDate);
-                    if (cal.after(signature.getSigningDate())) {
+                    if (signature.getSigningDate().getTime() < documentSignatureDate.getTime()) {
                         documentSignatureDate = signature.getSigningDate();
                     }
                 }

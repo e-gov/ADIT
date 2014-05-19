@@ -3,7 +3,6 @@ package ee.adit.dvk.converter;
 import dvk.api.container.v2_1.*;
 import ee.adit.dao.AditUserDAO;
 import ee.adit.dao.DocumentTypeDAO;
-import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.dvk.converter.documentcontainer.*;
@@ -29,13 +28,12 @@ public class DocumentContainerVer2_1ConverterImpl implements Converter<Document,
 
         ContainerVer2_1 container = new ContainerVer2_1();
         container.setTransport(createTransport(document));
-        container.setDecMetadata(createDecMetaData(document));
         container.setRecordMetadata(createRecordMetadata(document));
         container.setRecordCreator(createRecordCreator(document));
         container.setRecordSenderToDec(createRecordSenderToDec(document));
         container.setSignatureMetadata(createSignatureMetadata(document));
-        container.setRecipient(createRecipients(document, findRecipientsAditUsers(document)));
-        container.setAccess(createAccess(document));
+        container.setRecipient(createRecipients(document, document.getDocumentSharings()));
+        container.setAccess(createAccess());
         container.setRecordSenderToDec(createRecordSenderToDec(document));
         container.setFile(createFiles(document));
 
@@ -46,26 +44,12 @@ public class DocumentContainerVer2_1ConverterImpl implements Converter<Document,
         return new FileBuilder(document).build();
     }
 
-    private List<AditUser> findRecipientsAditUsers(final Document document) {
-        List<AditUser> results = new ArrayList<AditUser>();
-        if (document.getDocumentSharings() != null) {
-            for (DocumentSharing documentSharing: document.getDocumentSharings()) {
-                AditUser aditUser = aditUserDAO.getUserByID(documentSharing.getUserCode());
-                if (aditUser != null) {
-                    results.add(aditUser);
-                }
-            }
-        }
-
-        return results;
+    protected Access createAccess() {
+        return new AccessBuilder().build();
     }
 
-    private Access createAccess(final Document document) {
-        return new AccessBuilder(document).build();
-    }
-
-    private List<Recipient> createRecipients(final Document document, final List<AditUser> recipients) {
-        return new RecipientBuilder(document, recipients).build();
+    protected List<Recipient> createRecipients(final Document document, final Set<DocumentSharing> documentSharings) {
+        return new RecipientBuilder(document, aditUserDAO, documentSharings).build();
     }
 
     protected List<SignatureMetadata> createSignatureMetadata(final Document document) {
@@ -84,22 +68,8 @@ public class DocumentContainerVer2_1ConverterImpl implements Converter<Document,
         return new RecordCreatorBuilder(document, aditUserDAO).build();
     }
 
-    //TODO: should it be removed
-    protected DecMetadata createDecMetaData(final Document document) {
-        DecMetadata decMetadata = new DecMetadata();
-        decMetadata.setDecId(document.getDvkId().toString());
-        //TODO: finish me
-        //decMetadata.setDecFolder();
-        //decMetadata.setDecReceiptDate();
-        return decMetadata;
-    }
-
     protected Transport createTransport(final Document document) {
         return new TransportBuilder(document, aditUserDAO, configuration).build();
-    }
-
-    public AditUserDAO getAditUserDAO() {
-        return aditUserDAO;
     }
 
     public void setAditUserDAO(final AditUserDAO aditUserDAO) {
@@ -112,10 +82,6 @@ public class DocumentContainerVer2_1ConverterImpl implements Converter<Document,
 
     public void setConfiguration(final Configuration configuration) {
         this.configuration = configuration;
-    }
-
-    public DocumentTypeDAO getDocumentTypeDAO() {
-        return documentTypeDAO;
     }
 
     public void setDocumentTypeDAO(DocumentTypeDAO documentTypeDAO) {

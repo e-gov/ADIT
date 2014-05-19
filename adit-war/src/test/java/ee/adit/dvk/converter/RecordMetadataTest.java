@@ -32,7 +32,7 @@ public class RecordMetadataTest {
         Assert.assertNotNull(recordMetadata);
         Assert.assertEquals("Avaldus / Taotlus", recordMetadata.getRecordType());
         Assert.assertEquals("1", recordMetadata.getRecordOriginalIdentifier());
-        Assert.assertEquals(document.getCreationDate(), recordMetadata.getRecordDateRegistered());
+        Assert.assertEquals(document.getCreationDate().getTime(), recordMetadata.getRecordDateRegistered().getTime());
         Assert.assertEquals(document.getTitle(), recordMetadata.getRecordTitle());
     }
 
@@ -56,11 +56,12 @@ public class RecordMetadataTest {
         document.setSignatures(signatures);
 
         RecordMetadata recordMetadata = converter.createRecordMetadata(document);
-        Assert.assertEquals(s1.getSigningDate(), recordMetadata.getRecordDateRegistered());
+        Assert.assertEquals(s1.getSigningDate().getTime(), recordMetadata.getRecordDateRegistered().getTime());
     }
 
     private Date getDateBeforeDays(int before) {
         Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.MILLISECOND, 0);
         cal.add(Calendar.DAY_OF_MONTH, -before);
         return cal.getTime();
     }

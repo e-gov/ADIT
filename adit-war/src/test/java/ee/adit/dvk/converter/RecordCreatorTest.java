@@ -16,15 +16,16 @@ public class RecordCreatorTest {
     @Test
     public void testOrganization() throws Exception {
         DocumentContainerVer2_1ConverterImpl converter = new DocumentContainerVer2_1ConverterImpl();
-        converter.setAditUserDAO(new StubAditUserDAOForPerson());
+        converter.setAditUserDAO(new StubAditUserDAOForOrg());
 
         Document document = DocumentTestingUtil.createTestDocument();
         RecordCreator documentCreator = converter.createRecordCreator(document);
 
         Assert.assertNotNull(documentCreator);
         Assert.assertNotNull(documentCreator.getOrganisation());
-        Assert.assertEquals("Test User", documentCreator.getOrganisation().getName());
-        Assert.assertEquals("36212240216", documentCreator.getOrganisation().getOrganisationCode());
+        Assert.assertEquals("MyComp OÜ", documentCreator.getOrganisation().getName());
+        Assert.assertEquals("12345678", documentCreator.getOrganisation().getOrganisationCode());
+        Assert.assertEquals("EE", documentCreator.getOrganisation().getResidency());
     }
 
     @Test
@@ -41,21 +42,23 @@ public class RecordCreatorTest {
         Assert.assertEquals("Test", documentCreator.getPerson().getGivenName());
         Assert.assertEquals("User", documentCreator.getPerson().getSurname());
         Assert.assertEquals("36212240216", documentCreator.getPerson().getPersonalIdCode());
+        Assert.assertEquals("EE", documentCreator.getPerson().getResidency());
     }
 
     @Test
     public void testPersonForOrg() throws Exception {
         DocumentContainerVer2_1ConverterImpl converter = new DocumentContainerVer2_1ConverterImpl();
-        converter.setAditUserDAO(new StubAditUserDAOForOrg());
+        converter.setAditUserDAO(new StubAditUserDAOForPerson());
 
         Document document = DocumentTestingUtil.createTestDocument();
         RecordCreator documentCreator = converter.createRecordCreator(document);
 
         Assert.assertNotNull(documentCreator);
         Assert.assertNotNull(documentCreator.getPerson());
-        Assert.assertEquals("MyComp OÜ", documentCreator.getPerson().getName());
+        Assert.assertEquals("Test User", documentCreator.getPerson().getName());
         Assert.assertEquals("Test", documentCreator.getPerson().getGivenName());
         Assert.assertEquals("User", documentCreator.getPerson().getSurname());
-        Assert.assertEquals("", documentCreator.getPerson().getPersonalIdCode());
+        Assert.assertEquals("36212240216", documentCreator.getPerson().getPersonalIdCode());
+        Assert.assertEquals("EE", documentCreator.getPerson().getResidency());
     }
 }

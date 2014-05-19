@@ -256,6 +256,7 @@ adit-war/src/main/java/ee/adit/dvk/UserSyncJob.java -text
 adit-war/src/main/java/ee/adit/dvk/converter/Converter.java -text
 adit-war/src/main/java/ee/adit/dvk/converter/DocumentContainerVer2_1ConverterImpl.java -text
 adit-war/src/main/java/ee/adit/dvk/converter/documentcontainer/AccessBuilder.java -text
+adit-war/src/main/java/ee/adit/dvk/converter/documentcontainer/AccessConditionsCode.java -text
 adit-war/src/main/java/ee/adit/dvk/converter/documentcontainer/ContactInfoBuilder.java -text
 adit-war/src/main/java/ee/adit/dvk/converter/documentcontainer/FileBuilder.java -text
 adit-war/src/main/java/ee/adit/dvk/converter/documentcontainer/RecipientBuilder.java -text
@@ -603,8 +604,9 @@ adit-war/src/main/webapp/WEB-INF/web.xml -text
 adit-war/src/main/webapp/index.jsp -text
 adit-war/src/main/webapp/monitor.jsp -text
 adit-war/src/main/webapp/verify.jsp -text svneol=unset#text/plain
-adit-war/src/test/java/ee/adit/dvk/converter/DecMetadataTest.java -text
+adit-war/src/test/java/ee/adit/dvk/converter/AccessTest.java -text
 adit-war/src/test/java/ee/adit/dvk/converter/DocumentTestingUtil.java -text
+adit-war/src/test/java/ee/adit/dvk/converter/ReceipientsTest.java -text
 adit-war/src/test/java/ee/adit/dvk/converter/RecordCreatorTest.java -text
 adit-war/src/test/java/ee/adit/dvk/converter/RecordMetadataTest.java -text
 adit-war/src/test/java/ee/adit/dvk/converter/SignatureMetadataTest.java -text

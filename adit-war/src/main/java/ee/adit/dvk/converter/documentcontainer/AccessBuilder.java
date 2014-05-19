@@ -1,7 +1,6 @@
 package ee.adit.dvk.converter.documentcontainer;
 
 import dvk.api.container.v2_1.Access;
-import ee.adit.dao.pojo.Document;
 
 /**
  * @author Hendrik Pärna
@@ -9,23 +8,20 @@ import ee.adit.dao.pojo.Document;
  */
 public class AccessBuilder {
 
-    private Document document;
-
     /**
      * Constructor.
-     * @param document {@link Document}
      */
-    public AccessBuilder(final Document document) {
-         this.document = document;
+    public AccessBuilder() {
     }
 
     /**
-     * Builds a {@link Access}.
+     * Builds a {@link ee.adit.dvk.converter.documentcontainer.AccessConditionsCode}.
      * @return access
      */
     public Access build() {
         Access access = new Access();
-
+        access.setAccessConditionsCode(AccessConditionsCode.AK.getVal());
         return access;
     }
+
 }

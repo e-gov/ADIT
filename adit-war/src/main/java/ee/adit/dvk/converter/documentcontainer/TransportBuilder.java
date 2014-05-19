@@ -46,12 +46,6 @@ public class TransportBuilder {
         DecSender decSender = new DecSender();
         decSender.setOrganisationCode(Util.removeCountryPrefix(configuration.getDvkOrgCode()));
         decSender.setPersonalIdCode(Util.removeCountryPrefix(document.getCreatorCode()));
-
-        AditUser sender = aditUserDAO.getUserByID(document.getCreatorCode());
-
-        if (isAditUserNotAPerson(sender)) {
-            decSender.setStructuralUnit(sender.getFullName());
-        }
         transport.setDecSender(decSender);
 
         Set<DocumentSharing> documentSharings = document.getDocumentSharings();
@@ -60,26 +54,12 @@ public class TransportBuilder {
                 AditUser recipient = aditUserDAO.getUserByID(documentSharing.getUserCode());
                 DecRecipient decRecipient = new DecRecipient();
                 decRecipient.setOrganisationCode(recipient.getDvkOrgCode());
-                if (isAditUserNotAPerson(recipient)) {
-                    decRecipient.setStructuralUnit(recipient.getFullName());
-                } else {
-                    decRecipient.setPersonalIdCode(Util.removeCountryPrefix(recipient.getUserCode()));
-                }
                 recipients.add(decRecipient);
             }
         }
         transport.setDecRecipient(recipients);
 
         return transport;
-    }
-
-    private boolean isAditUserNotAPerson(final AditUser aditUser) {
-        boolean result = false;
-        if (aditUser.getUsertype() != null
-                && !UserService.USERTYPE_PERSON.equalsIgnoreCase(aditUser.getUsertype().getShortName())) {
-            result = true;
-        }
-        return result;
     }
 
     private boolean isDocumentReadyForSharing(final DocumentSharing documentSharing) {

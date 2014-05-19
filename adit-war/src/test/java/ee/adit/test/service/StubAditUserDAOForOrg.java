@@ -21,6 +21,7 @@ public class StubAditUserDAOForOrg extends AditUserDAO {
         AditUser result = new AditUser();
         result.setFullName("MyComp OÜ");
         result.setDvkOrgCode("12345678");
+        result.setUserCode("EE12345678");
 
         Usertype usertype = new Usertype();
         usertype.setShortName(UserService.USERTYPE_COMPANY);
