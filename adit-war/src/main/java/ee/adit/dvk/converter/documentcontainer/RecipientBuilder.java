@@ -50,8 +50,7 @@ public class RecipientBuilder {
                 recipient.setPerson(contactInfo.getPerson());
                 recipient.setContactData(contactInfo.getContactData());
                 recipient.setOrganisation(contactInfo.getOrganisation());
-                //TODO finish me
-                //recipient.setMessageForRecipient();
+                recipient.setMessageForRecipient(documentSharing.getComment());
                 results.add(recipient);
             }
         }

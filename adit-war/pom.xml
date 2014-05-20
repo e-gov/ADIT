@@ -4,7 +4,7 @@
 	<groupId>ee</groupId>
 	<artifactId>adit-war</artifactId>
 	<packaging>war</packaging>
-	<version>1.0.70</version>
+	<version>1.0.71</version>
 	<name>ADIT Web Application</name>
 
 	<parent>
@@ -401,7 +401,17 @@
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<testSourceDirectory>src/test/java</testSourceDirectory>
 		<testOutputDirectory>target/test-classes</testOutputDirectory>
-		<resources>
+        <testResources>
+            <testResource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+            </testResource>
+            <testResource>
+                <directory>src/test/resources</directory>
+                <filtering>false</filtering>
+            </testResource>
+        </testResources>
+        <resources>
 			<resource>
 				<directory>src/main/resources/castor-mapping</directory>
 				<filtering>false</filtering>
@@ -417,7 +427,6 @@
 				<filtering>false</filtering>
 				<targetPath>../adit/WEB-INF/classes/hbm</targetPath>
 			</resource>
-
 			<!-- Include all the environment specific configuration files -->
 			<resource>
 				<directory>src/main/resources/${resourceDir}</directory>

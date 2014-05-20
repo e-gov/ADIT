@@ -5,6 +5,7 @@ import dvk.api.container.v2_1.ContainerVer2_1;
 import dvk.api.ml.PojoMessage;
 import ee.adit.dao.DocumentDAO;
 import ee.adit.dao.dvk.DvkDAO;
+import ee.adit.dao.pojo.Document;
 import ee.adit.service.DocumentService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,7 +35,11 @@ public class AppSetupTest {
         Assert.notNull(dvkDAO.getHibernateTemplate());
         Assert.notNull(dvkDAO.getSessionFactory());
 
+        Document document = documentDAO.getDocument(3493);
+
         PojoMessage message = dvkDAO.getMessage(81);
+
+        Assert.notNull(document);
     }
 
     @Test
@@ -56,16 +61,6 @@ public class AppSetupTest {
 
         Assert.notNull(container);
 //
-    }
-
-    @Test
-    public void testDocumentDAO() {
-        Assert.notNull(documentDAO);
-    }
-
-    @Test
-    public void testDocumentService() {
-        Assert.notNull(documentService);
     }
 
     @Test

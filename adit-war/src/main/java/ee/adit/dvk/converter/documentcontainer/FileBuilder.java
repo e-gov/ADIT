@@ -2,7 +2,12 @@ package ee.adit.dvk.converter.documentcontainer;
 
 import dvk.api.container.v2_1.File;
 import ee.adit.dao.pojo.Document;
+import ee.adit.dao.pojo.DocumentFile;
+import ee.adit.util.Configuration;
+import ee.adit.util.Util;
+import org.apache.log4j.Logger;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,14 +17,18 @@ import java.util.List;
  */
 public class FileBuilder {
 
+    private static Logger logger = Logger.getLogger(FileBuilder.class);
+
     private Document document;
+    private Configuration configuration;
 
     /**
      * Constructor.
      * @param document {@link Document}
      */
-    public FileBuilder(final Document document) {
+    public FileBuilder(final Document document, final Configuration configuration) {
         this.document = document;
+        this.configuration = configuration;
     }
 
     /**
@@ -29,6 +38,34 @@ public class FileBuilder {
     public List<File> build() {
         List<File> files = new ArrayList<File>();
 
+        if (document.getDocumentFiles() != null) {
+            for (DocumentFile documentFile: document.getDocumentFiles()) {
+                File file = new File();
+                file.setFileGuid(documentFile.getGuid());
+                file.setFileName(documentFile.getFileName());
+                file.setFileSize(documentFile.getFileSizeBytes().intValue());
+                file.setMimeType(documentFile.getContentType());
+                file.setZipBase64Content(getGZippedBase64FileContent(documentFile));
+                files.add(file);
+            }
+        }
+
         return files;
     }
+
+    private String getGZippedBase64FileContent(DocumentFile documentFile) {
+        String result = null;
+
+        try {
+            InputStream inputStream = documentFile.getFileData().getBinaryStream();
+            String binaryContentsFile = Util.createTemporaryFile(inputStream, configuration.getTempDir());
+            String gzAndBase64EncodedFile = Util.gzipAndBase64Encode(binaryContentsFile, configuration.getTempDir(), true);
+            result = Util.getFileContents(new java.io.File(gzAndBase64EncodedFile));
+        } catch (Exception e) {
+            logger.error("Unable to create the gzipped and base64 encoded file contents: ", e);
+        }
+
+        return result;
+    }
+
 }

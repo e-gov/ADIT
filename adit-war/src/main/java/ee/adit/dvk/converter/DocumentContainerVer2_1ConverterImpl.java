@@ -40,8 +40,8 @@ public class DocumentContainerVer2_1ConverterImpl implements Converter<Document,
         return container;
     }
 
-    private List<File> createFiles(final Document document) {
-        return new FileBuilder(document).build();
+    protected List<File> createFiles(final Document document) {
+        return new FileBuilder(document, configuration).build();
     }
 
     protected Access createAccess() {
