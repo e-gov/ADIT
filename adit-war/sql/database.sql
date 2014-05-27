@@ -98,7 +98,8 @@ CREATE TABLE &&ADIT_SCHEMA..DOCUMENT
     signed                  NUMBER(1,0) NULL,           /* Indicates if this document has been signed. */
     migrated                NUMBER (1,0),               /* Indicates if this document has been migrated from state portal */
     files_size_bytes        NUMBER(18,0) DEFAULT 0,     /* Total size of files in bytes, needed for transient mapping */
-    sender_receiver         VARCHAR(50)                 /* Sender/receiver transient column, needed for transient mapping */
+    sender_receiver         VARCHAR(50),                /* Sender/receiver transient column, needed for transient mapping */
+    content					VARCHAR2(4000)				/* Textual content of the document. Used to keep email body. */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
 COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT                          IS 'Document data';
@@ -128,6 +129,7 @@ COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.signed                  IS 'Indicates 
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.migrated                IS 'Indicates if this document has been migrated from state portal';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.files_size_bytes        IS 'Total size of files in bytes, needed for transient mapping';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.sender_receiver         IS 'Sender/receiver transient column, needed for transient mapping';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.content				  IS 'Textual content of the document. Used to keep email body.';
 
 CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_DVK_STATUS
 (
@@ -219,7 +221,7 @@ CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING
 (
     ID                NUMBER(12) NOT NULL,
     document_id       NUMBER(12) NOT NULL,         /* Reference to the document that was shared or sent */
-    user_code         VARCHAR2(50) NOT NULL,       /* Referente to user (user code) to whom the document was shared or sent */
+    user_code         VARCHAR2(50) NULL,       	   /* Referente to user (user code) to whom the document was shared or sent */
     user_name         VARCHAR2(255) NULL,          /* Name of the user (as it was at the moment of sharing) */
     sharing_type      VARCHAR2(50) NOT NULL,       /* Short name of sharing type */
     task_description  VARCHAR2(4000),              /* Purpose of sharing (what the other user should do with this document) */
@@ -228,7 +230,8 @@ CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING
     wf_status_id      NUMBER(12),                  /* Workflow status ID. Is used for feedback from recipient to sender. */
     last_access_date  DATE,                        /* Date and time the document was last accessed by recipient. */
 	deleted           NUMBER(1,0) NULL,            /* Document has been deleted by the user to whom it was sent. */
-	dvk_folder		  VARCHAR2(1000)			   /* DVK dokumendi kausta nimi */	
+	dvk_folder		  VARCHAR2(1000),			   /* DVK dokumendi kausta nimi */
+	user_email		  VARCHAR2(255)				   /* Recipient email if document is sent by email*/
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
 COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING                    IS 'Document sharing data';
@@ -244,6 +247,7 @@ COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.wf_status_id      IS 'Workflow
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.last_access_date  IS 'Date and time the document was last accessed by recipient.';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.deleted           IS 'Document has been deleted by the user to whom it was sent.';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.dvk_folder		IS 'DVK dokumendi kausta nimi';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.user_email		IS 'Recipient email if document is sent by email';
 
 CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING_TYPE
 (

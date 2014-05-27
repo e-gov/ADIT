@@ -17,6 +17,7 @@ import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.ArrayOfRecipientStatus;
 import ee.adit.pojo.ArrayOfUserCode;
+import ee.adit.pojo.ArrayOfUserEmail;
 import ee.adit.pojo.Message;
 import ee.adit.pojo.RecipientStatus;
 import ee.adit.pojo.SendDocumentRequest;
@@ -99,6 +100,10 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 
             ArrayOfUserCode recipientList = request.getRecipientList();
 
+            ArrayOfUserEmail recipientEmailList = request.getRecipientEmailList();
+            
+            boolean recipientListIsEmpty = false;
+            boolean recipientEmailListIsEmpty = false;
             if (recipientList != null && recipientList.getCode() != null && recipientList.getCode().size() > 0) {
                 Iterator<String> i = recipientList.getCode().iterator();
                 while (i.hasNext()) {
@@ -224,6 +229,39 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
                 }
 
             } else {
+            	recipientListIsEmpty = true;
+            }
+            
+            if (recipientEmailList != null && recipientEmailList.getEmail() != null && recipientEmailList.getEmail().size() > 0) {
+            //TODO: add email sending logic here
+                Iterator<String> i = recipientEmailList.getEmail().iterator();
+                while (i.hasNext()) {
+                	String recipientEmail = i.next();
+                	try {
+                    // Lock the document
+                    this.getDocumentService().lockDocument(doc);
+
+                    // Add locking history event
+                    this.getDocumentService().addHistoryEvent(applicationName, doc.getId(), user.getUserCode(),
+                        DocumentService.HISTORY_TYPE_LOCK, xroadRequestUser.getUserCode(),
+                        xroadRequestUser.getFullName(), DocumentService.DOCUMENT_HISTORY_DESCRIPTION_LOCK,
+                        user.getFullName(), requestDate.getTime());
+                	
+                    // Add sharing information to database
+                    this.getDocumentService().sendDocumentByEmail(doc, recipientEmail);
+                	} catch (Exception e) {
+                        logger.error("Exception while sharing document: ", e);
+                        success = false;
+                        additionalInformationForLog = "Exception while sending document by email: " + e.getMessage() + " ";
+                    }
+                }
+                
+            	
+            } else {
+            	recipientEmailListIsEmpty = true;
+            }
+            
+            if (recipientListIsEmpty && recipientEmailListIsEmpty) {
                 throw new NullPointerException("Recipient list is empty or null.");
             }
 
@@ -394,9 +432,12 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
         if (request != null) {
             if (request.getDocumentId() <= 0) {
                 throw new AditCodedException("request.body.undefined.documentId");
-            } else if ((request.getRecipientList() == null)
-            	|| (request.getRecipientList().getCode() == null)
-            	|| request.getRecipientList().getCode().isEmpty()) {
+            } else if (((request.getRecipientList() == null)
+            		|| (request.getRecipientList().getCode() == null)
+            		|| request.getRecipientList().getCode().isEmpty())
+            	&& ((request.getRecipientEmailList() == null)
+                    || (request.getRecipientEmailList().getEmail() == null)
+                    || request.getRecipientEmailList().getEmail().isEmpty())) {
             	throw new AditCodedException("request.sendDocument.recipients.unspecified");
             }
         } else {

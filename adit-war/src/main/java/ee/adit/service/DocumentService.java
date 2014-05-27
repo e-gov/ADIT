@@ -143,6 +143,11 @@ public class DocumentService {
     public static final String SHARINGTYPE_SEND_ADIT = "send_adit";
 
     /**
+     * Document sharing type code - send using ADIT.
+     */
+    public static final String SHARINGTYPE_SEND_EMAIL = "send_email";
+
+    /**
      * Document DVK status - missing.
      */
     public static final Long DVK_STATUS_MISSING = new Long(0);
@@ -394,7 +399,7 @@ public class DocumentService {
      * Name of file type "signature container draft".
      */
     public static final String FILETYPE_NAME_SIGNATURE_CONTAINER_DRAFT = "signature_container_draft";
-    
+
     /**
      * Exception codes which digiDoc throws when certificate is unknown or revoked 
      * */
@@ -427,8 +432,8 @@ public class DocumentService {
     private Configuration configuration;
 
     private DvkDAO dvkDAO;
-    
-    
+
+
     /**
      * Methods verifies all signed documents using jDigiDoc and logs result
      * @param digidocConfigFile
@@ -499,7 +504,7 @@ public class DocumentService {
 			}
 			logger.debug("Signed documents check is finished");
 	}
-    
+
     /**
      * Checks if document metadata is sufficient and correct for creating a new
      * document.
@@ -692,6 +697,7 @@ public class DocumentService {
                 document.setCreatorUserCode(creatorUserCode);
                 document.setCreatorUserName(creatorUserName);
                 document.setEformUseId(attachmentDocument.getEformUseId());
+                document.setContent(attachmentDocument.getContent());
 				Document parent = null;
 				if (attachmentDocument.getPreviousDocumentID() != null) {
 					parent = docDao.getDocument(attachmentDocument.getPreviousDocumentID());
@@ -1158,6 +1164,37 @@ public class DocumentService {
      *            DVK folder
      * @return true, if sending succeeded
      */
+    public boolean sendDocumentByEmail(Document document, String recipientEmail) {
+        boolean result = false;
+
+        DocumentSharing documentSharing = new DocumentSharing();
+        documentSharing.setDocumentId(document.getId());
+        documentSharing.setCreationDate(new Date());
+        documentSharing.setDocumentSharingType(DocumentService.SHARINGTYPE_SEND_EMAIL);
+
+        documentSharing.setUserEmail(recipientEmail);
+
+        this.getDocumentSharingDAO().save(documentSharing);
+
+        if (documentSharing.getId() == 0) {
+            throw new AditInternalException("Could not add document sharing information to database.");
+        }
+
+        return result;
+    }
+    
+    /**
+     * Sends document to the specified user.
+     *
+     * @param document
+     *            document
+     * @param recipient
+     *            user
+     * @param dvkFolder
+     *            DVK folder
+     * @return true, if sending succeeded
+     */
+
     public boolean sendDocument(Document document, AditUser recipient, String dvkFolder, Long dvkId) {
         boolean result = false;
 
@@ -3761,7 +3798,7 @@ public class DocumentService {
             Iterator<DocumentSharing> it = doc.getDocumentSharings().iterator();
             while (it.hasNext()) {
                 DocumentSharing sharing = it.next();
-                if (sharing.getUserCode().equalsIgnoreCase(userCode)) {
+                if (sharing.getUserCode() != null && sharing.getUserCode().equalsIgnoreCase(userCode)) {
                     if (sharing.getDocumentSharingType().equalsIgnoreCase(DocumentService.SHARINGTYPE_SHARE)
                         || sharing.getDocumentSharingType().equalsIgnoreCase(DocumentService.SHARINGTYPE_SIGN)) {
                         // doc.getDocumentSharings().remove(sharing); // NB! DO NOT
@@ -3971,7 +4008,7 @@ public class DocumentService {
 
                 // Load certificate from file
                 X509Certificate cert = SignedDoc.readCertificate(certFile);
-                
+
                 // Remove country prefix from request user code, so it can be
                 // compared to certificate personal id code more reliably
                 
@@ -3979,6 +4016,7 @@ public class DocumentService {
                 // who executed current query
                 String certPersonalIdCode = Util.getSubjectSerialNumberFromCert(cert);
                 String userCodeWithoutCountryPrefix = Util.getPersonalIdCodeWithoutCountryPrefix(xroadUser.getUserCode());;
+
                 if (!userCodeWithoutCountryPrefix.equalsIgnoreCase(certPersonalIdCode)) {
                     logger.info("Attempted to sign document " + documentId + " by person \"" + certPersonalIdCode
                             + "\" while logged in as person \"" + userCodeWithoutCountryPrefix + "\"");
@@ -3996,6 +4034,7 @@ public class DocumentService {
 	                     return result;
                 	}
                 }
+
                 // Load document
                 Document doc = (Document) session.get(Document.class, documentId);
 
@@ -4346,6 +4385,7 @@ public class DocumentService {
                         userCodeWithoutCountryPrefix.equalsIgnoreCase(
                         		Util.getSubjectSerialNumberFromCert(signature.getCertValue(i).getCert())
                            );
+
 
                     if (pendingSignatureBelongsToCurrentUser) {
                         if (signature.findResponderCert() != null) {
@@ -5158,7 +5198,7 @@ public class DocumentService {
             Iterator<DocumentSharing> it = documentSharings.iterator();
             while (it.hasNext()) {
                 DocumentSharing sharing = it.next();
-                if (userCode.equalsIgnoreCase(sharing.getUserCode())
+                if (sharing.getUserCode() != null && userCode.equalsIgnoreCase(sharing.getUserCode())
                         && (sharing.getDocumentSharingType().equalsIgnoreCase(DocumentService.SHARINGTYPE_SHARE) || sharing
                                 .getDocumentSharingType().equalsIgnoreCase(DocumentService.SHARINGTYPE_SIGN))) {
                     result = true;
@@ -5187,7 +5227,7 @@ public class DocumentService {
 		Iterator<ee.adit.dao.pojo.Signature> it = documentSignatures.iterator();
 		while(it.hasNext()){
 			ee.adit.dao.pojo.Signature signature = it.next();
-			if (sharing.getUserCode().equalsIgnoreCase(signature.getUserCode()) && sharing.getCreationDate().compareTo(signature.getSigningDate())<0  ) {
+			if (sharing.getUserCode() != null && sharing.getUserCode().equalsIgnoreCase(signature.getUserCode()) && sharing.getCreationDate().compareTo(signature.getSigningDate())<0  ) {
 				result = true;
 				break;
 			}
@@ -5214,7 +5254,7 @@ public class DocumentService {
             Iterator<DocumentSharing> it = documentSharings.iterator();
             while (it.hasNext()) {
                 DocumentSharing sharing = it.next();
-                if (userCode.equalsIgnoreCase(sharing.getUserCode())
+                if (sharing.getUserCode() != null && userCode.equalsIgnoreCase(sharing.getUserCode())
                     && (sharing.getDocumentSharingType().equalsIgnoreCase(DocumentService.SHARINGTYPE_SEND_ADIT)
                     || sharing.getDocumentSharingType().equalsIgnoreCase(DocumentService.SHARINGTYPE_SEND_DVK))) {
                     result = true;
@@ -5245,7 +5285,6 @@ public class DocumentService {
             || (requestedTypes.getFileType().contains(fileTypeName)));
     }
 
-    
     public Long findDocumentDvkIdForUser (Document doc, AditUser user) {
     	Long result = null;
     	if ((doc.getDocumentSharings() != null) && (!doc.getDocumentSharings().isEmpty())) {
@@ -5264,6 +5303,7 @@ public class DocumentService {
         }
     	return result;
     }
+
     public MessageSource getMessageSource() {
         return messageSource;
     }

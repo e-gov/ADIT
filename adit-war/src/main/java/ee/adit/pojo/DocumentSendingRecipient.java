@@ -5,6 +5,7 @@ import java.util.Date;
 public class DocumentSendingRecipient {
     private String code;
     private String name;
+    private String email;
     private Boolean hasBeenViewed;
     private Date openedTime;
     private Long workflowStatusId;
@@ -57,4 +58,13 @@ public class DocumentSendingRecipient {
     public void setDvkStatusId(Long dvkStatusId) {
         this.dvkStatusId = dvkStatusId;
     }
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 }

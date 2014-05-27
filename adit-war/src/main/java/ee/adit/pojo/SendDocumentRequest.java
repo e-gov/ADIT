@@ -36,13 +36,15 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "SendDocumentRequest", propOrder = {"documentId", "recipientList" })
+@XmlType(name = "SendDocumentRequest", propOrder = {"documentId", "recipientList", "recipientEmailList" })
 public class SendDocumentRequest {
 
     @XmlElement(name = "document_id", required = true)
     private Long documentId;
-    @XmlElement(name = "recipient_list", required = true)
+    @XmlElement(name = "recipient_list", required = false)
     private ArrayOfUserCode recipientList;
+    @XmlElement(name = "recipient_email_list", required = false)
+    private ArrayOfUserEmail recipientEmailList;
     @XmlElement(required = true)
     private String dvkFolder;
     
@@ -90,6 +92,20 @@ public class SendDocumentRequest {
     
 
     /**
+	 * @return the recipientEmailList
+	 */
+	public ArrayOfUserEmail getRecipientEmailList() {
+		return recipientEmailList;
+	}
+
+	/**
+	 * @param recipientEmailList the recipientEmailList to set
+	 */
+	public void setRecipientEmailList(ArrayOfUserEmail recipientEmailList) {
+		this.recipientEmailList = recipientEmailList;
+	}
+
+	/**
      * Gets the value of the dvkFolder property.
      * 
      * @return

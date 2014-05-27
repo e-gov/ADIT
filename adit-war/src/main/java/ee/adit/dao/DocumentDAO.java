@@ -479,12 +479,18 @@ public class DocumentDAO extends HibernateDaoSupport {
                         sharingData.getUserList().add(rec);
                     } else {
                         DocumentSendingRecipient rec = new DocumentSendingRecipient();
-                        rec.setCode(sharing.getUserCode());
-                        rec.setHasBeenViewed((sharing.getFirstAccessDate() != null));
-                        rec.setName(sharing.getUserName());
-                        rec.setOpenedTime(sharing.getFirstAccessDate());
-                        rec.setWorkflowStatusId(sharing.getDocumentWfStatus());
-                        rec.setDvkStatusId(sharing.getDocumentDvkStatus());
+
+                        if (sharing.getDocumentSharingType().equalsIgnoreCase(DocumentService.SHARINGTYPE_SEND_EMAIL)) {
+                            rec.setEmail(sharing.getUserEmail());
+                        } else {
+	                        rec.setCode(sharing.getUserCode());
+	                        rec.setHasBeenViewed((sharing.getFirstAccessDate() != null));
+	                        rec.setName(sharing.getUserName());
+	                        rec.setOpenedTime(sharing.getFirstAccessDate());
+	                        rec.setWorkflowStatusId(sharing.getDocumentWfStatus());
+	                        rec.setDvkStatusId(sharing.getDocumentDvkStatus());
+                        }
+                        
                         sendingData.getUserList().add(rec);
 
                         // There should be possible to have only one sending per document.
@@ -540,6 +546,7 @@ public class DocumentDAO extends HibernateDaoSupport {
         result.setSignable(doc.getSignable());
         result.setSigned(doc.getSigned());
         result.setTitle(doc.getTitle());
+        result.setContent(doc.getContent());
         result.setWorkflowStatusId(doc.getDocumentWfStatusId());
         result.setFilesSizeBytes(doc.getFilesSizeBytes());
         result.setSenderReceiver(doc.getSenderReceiver());
@@ -585,12 +592,11 @@ public class DocumentDAO extends HibernateDaoSupport {
             	for (Document childDocument : doc.getDocuments()) {
     				if (childDocument.getDocumentSharings() != null && !childDocument.getDocumentSharings().isEmpty()) {
     					for (DocumentSharing sharing : childDocument.getDocumentSharings()) {
-							if (!Boolean.TRUE.equals(sharing.getDeleted()) && doc.getCreatorCode().equals(sharing.getUserCode())) {
+							if (!Boolean.TRUE.equals(sharing.getDeleted()) && sharing.getUserCode() != null && doc.getCreatorCode().equals(sharing.getUserCode())) {
 								hasSentReply = true;
 								break;
 							}
-						}
-    					
+						}    					
     				}
     				if (hasSentReply) {
     					break;
@@ -613,7 +619,7 @@ public class DocumentDAO extends HibernateDaoSupport {
                 Iterator it = doc.getDocumentSharings().iterator();
                 while (it.hasNext()) {
                     DocumentSharing sharing = (DocumentSharing) it.next();
-                    if (currentRequestUserCode.equalsIgnoreCase(sharing.getUserCode())) {
+                    if (sharing.getUserCode() != null && currentRequestUserCode.equalsIgnoreCase(sharing.getUserCode())) {
                     	result.setHasBeenViewed(sharing.getFirstAccessDate() != null);
                     	break;
                     }
@@ -883,8 +889,7 @@ public class DocumentDAO extends HibernateDaoSupport {
 
         return result;
     }
-    
-    
+
     /**
      * Fetch documents which have signatures.
      *
@@ -907,8 +912,7 @@ public class DocumentDAO extends HibernateDaoSupport {
         }
         return result;
     }
-    
-    
+
     /**
      * Update existing document.
      *
@@ -997,6 +1001,10 @@ public class DocumentDAO extends HibernateDaoSupport {
 			return "files_size_bytes";
 		} else if ("sender_receiver".equalsIgnoreCase(xmlName)) {
 			return "LOWER(sender_receiver)";
+		} else if ("sender".equalsIgnoreCase(xmlName)) {
+			return "LOWER(sender)";
+		} else if ("receiver".equalsIgnoreCase(xmlName)) {
+			return "LOWER(receiver)";
 		} else {
 			return null;
 		}
@@ -1039,18 +1047,26 @@ public class DocumentDAO extends HibernateDaoSupport {
 		StringBuilder selectSql = new StringBuilder("SELECT * FROM (\r\n");
 		StringBuilder countSql = new StringBuilder("SELECT count(*) total FROM (\r\n");
 		StringBuilder sql = new StringBuilder( 
-				"	SELECT results.*, rownum rnum FROM (\r\n" +
+				"	SELECT results.id, results.guid, results.title, results.type, results.creator_code, results.creator_name, " +
+				"			results.creator_user_code, results.creator_user_name, results.creation_date, results.remote_application, " +
+				"			results.last_modified_date, results.document_dvk_status_id, results.dvk_id, results.document_wf_status_id, " +
+				"			results.parent_id, results.locked, results.locking_date, results.signable, results.deflated, " +
+				"			results.deflate_date, results.deleted, results.invisible_to_owner, results.signed, results.migrated, " +
+				"			results.eform_use_id, results.content, results.files_size_bytes, results.sender_receiver, " +
+				"			rownum rnum FROM (\r\n" +
 //				"		SELECT documents.*, id_size_shared.file_size files_size_bytes, CASE WHEN documents.creator_code != :userCode THEN documents.creator_name ELSE id_size_shared.shared_to END sender_receiver FROM (\r\n" +
 				"		SELECT documents.id, documents.guid, documents.title, documents.type, documents.creator_code, documents.creator_name, " +
 				"				documents.creator_user_code, documents.creator_user_name, documents.creation_date, documents.remote_application, " +
 				"				documents.last_modified_date, documents.document_dvk_status_id, documents.dvk_id, documents.document_wf_status_id, " +
 				"				documents.parent_id, documents.locked, documents.locking_date, documents.signable, documents.deflated, " +
 				"				documents.deflate_date, documents.deleted, documents.invisible_to_owner, documents.signed, documents.migrated, " +
-				"				documents.eform_use_id, " +
+				"				documents.eform_use_id, documents.content, " +
 				"				id_size_shared.file_size files_size_bytes, " +
-				"				CASE WHEN documents.creator_code != :userCode THEN documents.creator_name ELSE id_size_shared.shared_to END sender_receiver" +
+				"				CASE WHEN documents.creator_code != :userCode THEN documents.creator_name ELSE id_size_shared.shared_to END sender_receiver, " +
+				"				documents.creator_name sender, " +
+				"				id_size_shared.shared_to receiver" +
 				"		FROM (\r\n" +
-				"			SELECT id_size.id, id_size.file_size, LISTAGG(sharings.user_name, ', ') WITHIN GROUP (ORDER BY LOWER(sharings.user_name)) shared_to FROM (\r\n" + 
+				"			SELECT id_size.id, id_size.file_size, LISTAGG(COALESCE(sharings.user_name, sharings.user_email), ', ') WITHIN GROUP (ORDER BY LOWER(sharings.user_name)) shared_to FROM (\r\n" +
 				"				SELECT ids.id, sum(files.file_size_bytes) as file_size FROM (\r\n" + 
 				"					SELECT\r\n" + 
 				"						DISTINCT d.id\r\n" + 

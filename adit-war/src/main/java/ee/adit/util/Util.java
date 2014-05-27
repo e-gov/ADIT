@@ -35,6 +35,7 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 import javax.security.auth.x500.X500Principal;
+
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -50,11 +51,13 @@ import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
 import org.apache.fop.apps.MimeConstants;
 import org.apache.log4j.Logger;
+
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.x500.RDN;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.style.BCStyle;
 import org.bouncycastle.asn1.x500.style.IETFUtils;
+
 import org.castor.core.util.Base64Decoder;
 import org.castor.core.util.Base64Encoder;
 
@@ -100,9 +103,9 @@ public final class Util {
      * The length of the generated random ID.
      */
     public static final int RANDOM_ID_LENGTH = 30;
-
     
     public static final String DIGIDOC_STAMP_ISSUER = "KLASS3-SK";
+
     /**
      * Base64 encodes the specified string.
      *
@@ -1901,4 +1904,5 @@ public final class Util {
     public static String getSubjectSerialNumberFromCert (X509Certificate cert) {
     	return getDetailFromCert(cert, BCStyle.SERIALNUMBER);
     }
+
 }

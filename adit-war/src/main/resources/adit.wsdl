@@ -357,6 +357,25 @@
 					</element>
 				</sequence>
 			</complexType>
+			
+			<complexType name="arrayOfUserEmail">
+				<xs:annotation>
+					<xs:documentation xml:lang="ee">Kasutajate emailide massiiv
+					</xs:documentation>
+					<xs:documentation xml:lang="en">Array of user emails
+					</xs:documentation>
+				</xs:annotation>
+				<sequence>
+					<element maxOccurs="unbounded" minOccurs="0" name="email"
+						type="string">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Kasutaja email
+							</xs:documentation>
+							<xs:documentation xml:lang="en">User email</xs:documentation>
+						</xs:annotation>
+					</element>
+				</sequence>
+			</complexType>
 
 			<complexType name="recipientStatus">
 				<xs:annotation>
@@ -795,6 +814,8 @@
 								<enumeration value="title"/>
 								<enumeration value="file_size"/>
 								<enumeration value="sender_receiver"/>
+								<enumeration value="sender"/>
+								<enumeration value="receiver"/>
 							</restriction>
 						</simpleType>
 					</element>
@@ -1650,6 +1671,7 @@
 						</xs:annotation>
 					</element>
 					<element name="recipient_list" type="tns:arrayOfUserCode" />
+					<element name="recipient_email_list" type="tns:arrayOfUserEmail" />					
 					<element name="dvk_folder" type="string">
 						<xs:annotation>
 							<xs:documentation xml:lang="ee">DVK dokumentide kaust
@@ -2007,7 +2029,7 @@
 					<xs:element name="document" type="documentV1Type" />
 				</xs:sequence>
 			</xs:complexType>
-			
+
 			<xs:element name="getDocumentResponseAttachmentV2" type="getDocumentResponseAttachmentV2Type" />
 			<xs:complexType name="getDocumentResponseAttachmentV2Type">
 				<xs:annotation>
@@ -2019,7 +2041,7 @@
 					<xs:element name="document" type="documentV1Type" />
 				</xs:sequence>
 			</xs:complexType>
-			
+
 			<!-- getSendStatus attachments -->
 			<xs:element name="getSendStatusResponseAttachmentV1" type="getSendStatusResponseAttachmentV1" />
 			<xs:complexType name="getSendStatusResponseAttachmentV1">
@@ -2032,7 +2054,6 @@
 					<xs:element name="dokument" type="documentV1Type" />
 				</xs:sequence>
 			</xs:complexType>
-
 
 			<!-- getDocumentFile attachments -->
 			<xs:element name="getDocumentFileResponseAttachmentV1" type="getDocumentFileResponseAttachmentV1Type" />
@@ -2304,6 +2325,14 @@
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
+					<xs:element name="content" type="xs:string">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Dokumendi sisu
+							</xs:documentation>
+							<xs:documentation xml:lang="en">Document content
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="files" type="subDocumentFilesType" />
 				</xs:sequence>
 			</xs:complexType>
@@ -2347,6 +2376,12 @@
 						<xs:annotation>
 							<xs:documentation xml:lang="ee">Dokumendi pealkiri</xs:documentation>
 							<xs:documentation xml:lang="en">Document title</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="content" type="xs:string">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Dokumendi sisu</xs:documentation>
+							<xs:documentation xml:lang="en">Document content</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="folder" type="xs:string">
@@ -2815,6 +2850,13 @@
 							<xs:documentation xml:lang="ee">Kasutaja nimi
 							</xs:documentation>
 							<xs:documentation xml:lang="en">User name</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="email" type="xs:string">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Kasutaja email
+							</xs:documentation>
+							<xs:documentation xml:lang="en">User email</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="has_been_viewed" type="xs:boolean">

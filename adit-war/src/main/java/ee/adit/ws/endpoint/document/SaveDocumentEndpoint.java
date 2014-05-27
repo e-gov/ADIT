@@ -93,7 +93,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
             //jDigiDoc does not add provider when preparing signature, but uses it causing error. So add provider manualy
         	ConfigManager.init(jdigidocCfgTmpFile);
         	ConfigManager.addProvider();
-            
+
             // Log request
             Util.printHeader(header, this.getConfiguration());
 

@@ -193,6 +193,7 @@ adit-war/sql/updates/1_0_60/update_packages_1_0_60.sql -text
 adit-war/sql/updates/1_0_60/update_triggers_1_0_60.sql -text
 adit-war/sql/updates/1_0_67/update_1_0_67.sql -text
 adit-war/sql/updates/1_0_70/update_1_0_70.sql -text
+adit-war/sql/updates/1_0_71/update_1_0_71.sql -text
 adit-war/sql/updates/1_0_8/update_1_0_8.sql -text
 adit-war/sql/usertype.dml.sql -text
 adit-war/src/main/java/ee/adit/dao/AccessRestrictionDAO.java -text
@@ -275,6 +276,7 @@ adit-war/src/main/java/ee/adit/pojo/ArrayOfMessageMonitor.java -text
 adit-war/src/main/java/ee/adit/pojo/ArrayOfNotification.java -text
 adit-war/src/main/java/ee/adit/pojo/ArrayOfRecipientStatus.java -text
 adit-war/src/main/java/ee/adit/pojo/ArrayOfUserCode.java -text
+adit-war/src/main/java/ee/adit/pojo/ArrayOfUserEmail.java -text
 adit-war/src/main/java/ee/adit/pojo/ConfirmSignatureRequest.java -text
 adit-war/src/main/java/ee/adit/pojo/ConfirmSignatureRequestSignature.java -text
 adit-war/src/main/java/ee/adit/pojo/ConfirmSignatureResponse.java -text

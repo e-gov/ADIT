@@ -23,6 +23,7 @@ public class DocumentSharing implements java.io.Serializable {
     private Boolean deleted;
     private String dvkFolder;
     private Long dvkId;
+    private String userEmail;
 
     public DocumentSharing() {
     }
@@ -152,6 +153,14 @@ public class DocumentSharing implements java.io.Serializable {
 
 	public void setDvkId(Long dvkId) {
 		this.dvkId = dvkId;
+	}
+
+	public String getUserEmail() {
+		return userEmail;
+	}
+
+	public void setUserEmail(String userEmail) {
+		this.userEmail = userEmail;
 	}
 
 }
