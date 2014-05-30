@@ -197,6 +197,7 @@ adit-war/sql/updates/1_0_67/update_1_0_67.sql -text
 adit-war/sql/updates/1_0_70/update_1_0_70.sql -text
 adit-war/sql/updates/1_0_71/update_1_0_71.sql -text
 adit-war/sql/updates/1_0_8/update_1_0_8.sql -text
+adit-war/sql/updates/database_updates.sql -text
 adit-war/sql/usertype.dml.sql -text
 adit-war/src/main/java/ee/adit/dao/AccessRestrictionDAO.java -text
 adit-war/src/main/java/ee/adit/dao/AditUserDAO.java -text
