@@ -5,9 +5,12 @@ import dvk.api.container.v1.ContainerVer1;
 import dvk.api.container.v1.Saaja;
 import dvk.api.container.v1.Saatja;
 import dvk.api.ml.PojoMessage;
+import ee.adit.dao.AditUserDAO;
 import ee.adit.dao.DocumentDAO;
 import ee.adit.dao.dvk.DvkDAO;
+import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
+import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.service.DocumentService;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
@@ -88,10 +91,41 @@ public class UtilsService {
         return dvkMessage;
     }
 
-    public static PojoMessage prepareMessageBeforeInsert_V_2_1(DvkDAO dvkDAO, String containerFilePath) throws Exception {
+    public static PojoMessage prepareAndSaveDvkMessage_V_2_1(DvkDAO dvkDAO, String containerFilePath) throws Exception {
         PojoMessage dvkMessage = new PojoMessage();
         return dvkMessage;
     }
+
+    public static Document prepareAndSaveAditDocument_V_1_0(DocumentDAO documentDAO, AditUserDAO aditUserDAO,
+                                                            AditUser creatorUserPerson, String recipient, File containerFile) throws Exception {
+        Document aditDoc = null;
+        DocumentSharing aditDocSharing = null;
+        AditUser creator;
+
+        try {
+            // Get container v 1.0
+            ContainerVer1 container = (ContainerVer1) getContainer(containerFile, Container.Version.Ver1);
+
+            Saatja sender = container.getTransport().getSaatjad().get(0);
+            creator =  aditUserDAO.getUserByID(sender.getIsikukood());
+
+            aditDoc.setCreatorCode(creator.getUserCode());
+            aditDoc.setCreatorName(creator.getFullName());
+            aditDoc.setCreatorUserCode(creatorUserPerson.getUserCode());
+            aditDoc.setCreatorUserName(creatorUserPerson.getFullName());
+
+
+        } catch (Exception e){
+            logger.error(e.getMessage());
+
+        } finally {
+
+        }
+
+        return aditDoc;
+    }
+
+
 
     public static Container getContainer(File containerFile, Container.Version version) {
         BufferedReader in = null;
@@ -189,9 +223,9 @@ public class UtilsService {
         return fileData.toString();
     }
 
-    public static String getContainerPath(String fileName){
-        String containersPath = AppSetupTest_Integration.CONTAINERS_PATH;
-        return containersPath + fileName;
+    public static String getContainerPath(String fileName, String where){
+        String containersPath = AppSetupTest_Integration.CONTAINERS_PATH + where;
+        return UtilsService.class.getResource(containersPath + fileName).getPath();
     }
 
 }

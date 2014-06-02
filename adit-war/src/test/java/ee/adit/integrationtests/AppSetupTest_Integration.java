@@ -3,10 +3,12 @@ package ee.adit.integrationtests;
 import dvk.api.container.Container;
 import dvk.api.container.v1.ContainerVer1;
 import dvk.api.ml.PojoMessage;
+import ee.adit.dao.AditUserDAO;
 import ee.adit.dao.DocumentDAO;
 import ee.adit.dao.DocumentFileDAO;
 import ee.adit.dao.DocumentSharingDAO;
 import ee.adit.dao.dvk.DvkDAO;
+import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
 import ee.adit.service.DocumentService;
 import ee.adit.util.Util;
@@ -35,9 +37,14 @@ import java.util.UUID;
 @ContextConfiguration(locations = {"classpath:integration-tests.xml"})
 public class AppSetupTest_Integration {
     final static String CONTAINERS_PATH = "/containers/";
+    final static String TO_ADIT = "to_ADIT/";
+    final static String TO_DVK = "to_DVK/";
     final static long DEFAULT_DHL_ID = 1;
     final static String DEFAULT_DOCUMENT_TITLE = "Integration Tests TestDocument";
     final static UUID DEFAULT_GUID = UUID.randomUUID();
+    final static String RIA_ADIT_USER_CODE = "EE70006317";
+    final static String RIA_ADIT_PERSON_USER_CODE = "EE38806190294";
+    final static String ICEFIRE_DVK_USER_CODE = "10885324";
 
     //private static Logger logger = Logger.getLogger(UtilsService.class);
 
@@ -49,6 +56,8 @@ public class AppSetupTest_Integration {
     private DocumentSharingDAO documentSharingDAO;
     @Autowired
     private DocumentFileDAO documentFileDAO;
+    @Autowired
+    private AditUserDAO aditUserDAO;
     @Autowired
     private DocumentService documentService;
 
@@ -111,11 +120,12 @@ public class AppSetupTest_Integration {
             // Path to digiDoc configuration file, needed as parameter for receiveDocumentsFromDVK
             digiDocConfFilePath = AppSetupTest_Integration.class.getResource(DIGIDOC_CONF_FILE).getPath();
             // Path to the container v 1.0
-            containerFilePath = AppSetupTest_Integration.class.getResource(UtilsService.getContainerPath(CONTAINER_V_1_0)).getPath();
+            containerFilePath = UtilsService.getContainerPath(CONTAINER_V_1_0, TO_ADIT);
             containerFile = new File(containerFilePath);
 
         } catch (Exception e) {
             //todo: inform about problems with files
+            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!! There is a problem with container or/and  digidoc files." + e.getMessage());
         }
 
 
@@ -172,6 +182,13 @@ public class AppSetupTest_Integration {
         aditDocuments.add(aditDocument);
     }
 
+    @Test
+    //ADIT-7
+    public void testUpdateDocumentsFromDVK() throws Exception {
+        // Update document statuses from DVK
+        int updatedDocumentsCount = documentService.updateDocumentsFromDVK();
+    }
+
     @Ignore
     @Test
     public void receiveDocumentFromDVKClient_V2_Test() throws Exception {
@@ -183,7 +200,7 @@ public class AppSetupTest_Integration {
         String containerFile = "";
 
         // Create new PojoMessage with capsule v 1.0
-        PojoMessage newDvkMessage = UtilsService.prepareMessageBeforeInsert_V_2_1(dvkDAO, containerFile);
+        PojoMessage newDvkMessage = UtilsService.prepareAndSaveDvkMessage_V_2_1(dvkDAO, containerFile);
         // Save the message to DVK Client DB
         dvkDAO.updateDocument(newDvkMessage);
         // Check message was inserted into DVK Client DB
@@ -203,8 +220,14 @@ public class AppSetupTest_Integration {
     }
 
     @Test
-    public void sendDocumentToDVKClient() throws Exception {
-        // TODO: 1) Prepare a message 2) Insert to ADIT DB 3) DocumentService.sendToDVK 4) Asserts
+    public void sendDocumentToDVKClient_V1_Test() throws Exception {
+        // TODO: 1) Prepare a message
+        AditUser creatorUser = aditUserDAO.getUserByID(RIA_ADIT_USER_CODE);
+        AditUser creatorUserPerson = aditUserDAO.getUserByID(RIA_ADIT_PERSON_USER_CODE);
+
+        // TODO: 2) Insert to ADIT DB
+        // TODO: 3) DocumentService.sendToDVK
+        // TODO: 4) Asserts
     }
 
 
