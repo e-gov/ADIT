@@ -196,6 +196,8 @@ adit-war/sql/updates/1_0_60/update_triggers_1_0_60.sql -text
 adit-war/sql/updates/1_0_67/update_1_0_67.sql -text
 adit-war/sql/updates/1_0_70/update_1_0_70.sql -text
 adit-war/sql/updates/1_0_71/update_1_0_71.sql -text
+adit-war/sql/updates/1_0_72/rollback_1_0_72.sql -text
+adit-war/sql/updates/1_0_72/update_1_0_72.sql -text
 adit-war/sql/updates/1_0_8/update_1_0_8.sql -text
 adit-war/sql/updates/database_updates.sql -text
 adit-war/sql/usertype.dml.sql -text
