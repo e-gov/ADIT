@@ -105,19 +105,20 @@ public class ContainerVer2_1ToDocumentConverterImpl implements Converter<Contain
         if (decSender == null) {
             throw new IllegalStateException("Unable to get the sender from container");
         }
-
-        AditUser result = this.getAditUserDAO().getUserByID(decSender.getOrganisationCode());
-
-        if (result != null && !Util.isNullOrEmpty(result.getUserCode())) {
-            String senderCodeWithEePrefix = "EE" + decSender.getPersonalIdCode();
-            result = this.getAditUserDAO().getUserByID(senderCodeWithEePrefix);
-        }
+        AditUser result = this.getAditUserDAO().getUserByID(addPrefixIfNecessary(decSender.getOrganisationCode()));
 
         if (result == null || Util.isNullOrEmpty(result.getUserCode())) {
             throw new IllegalStateException("Unable to get the sender from database");
         }
 
         return result;
+    }
+
+    private String addPrefixIfNecessary(String code) {
+        if (code != null && !code.toUpperCase().startsWith("EE")) {
+            return "EE" + code;
+        }
+        return code;
     }
 
     private boolean isSigned(final List<File> files) {
