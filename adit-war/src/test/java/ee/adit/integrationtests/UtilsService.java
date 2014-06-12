@@ -21,6 +21,7 @@ import org.hibernate.criterion.Property;
 
 import java.io.*;
 import java.sql.Clob;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -79,6 +80,7 @@ public class UtilsService {
 
         } catch (Exception e) {
             logger.error(e.getMessage());
+            throw e;
 
         } finally {
 
@@ -186,8 +188,8 @@ public class UtilsService {
             }
 
         } catch (Exception e) {
-            //TODO: Smth to do with exceptions
             logger.error(e.getMessage());
+            throw  e;
 
         } finally {
             if (session != null) {
@@ -228,4 +230,12 @@ public class UtilsService {
         return UtilsService.class.getResource(containersPath + fileName).getPath();
     }
 
+    public static boolean compareStringsIgnoreCase(String str1, String str2) {
+        return !((str1 == null || str2 == null)) && str1.equalsIgnoreCase(str2);
+    }
+
+    public static boolean isToday(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        return (sdf.format(date).equals(sdf.format(new Date())));
+    }
 }

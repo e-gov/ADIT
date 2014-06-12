@@ -2,14 +2,16 @@ package ee.adit.integrationtests;
 
 import dvk.api.container.Container;
 import dvk.api.container.v1.ContainerVer1;
+import dvk.api.container.v1.DataFile;
+import dvk.api.container.v1.Saaja;
+import dvk.api.container.v2_1.ContainerVer2_1;
 import dvk.api.ml.PojoMessage;
 import ee.adit.dao.AditUserDAO;
 import ee.adit.dao.DocumentDAO;
 import ee.adit.dao.DocumentFileDAO;
 import ee.adit.dao.DocumentSharingDAO;
 import ee.adit.dao.dvk.DvkDAO;
-import ee.adit.dao.pojo.AditUser;
-import ee.adit.dao.pojo.Document;
+import ee.adit.dao.pojo.*;
 import ee.adit.service.DocumentService;
 import ee.adit.util.Util;
 import org.hibernate.criterion.DetachedCriteria;
@@ -25,9 +27,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author Hendrik Pärna
@@ -42,9 +42,12 @@ public class AppSetupTest_Integration {
     final static long DEFAULT_DHL_ID = 1;
     final static String DEFAULT_DOCUMENT_TITLE = "Integration Tests TestDocument";
     final static UUID DEFAULT_GUID = UUID.randomUUID();
-    final static String RIA_ADIT_USER_CODE = "EE70006317";
-    final static String RIA_ADIT_PERSON_USER_CODE = "EE38806190294";
-    final static String ICEFIRE_DVK_USER_CODE = "10885324";
+    final long DVK_STATUS_SENT = 3;
+    final String RIA_ADIT_USER_CODE = "";
+    final String RIA_ADIT_PERSON_USER_CODE = "";
+    final String DOCUMENT_SHARING_TYPE = "send_adit";
+    final int DOCUMENT_FILE_TYPE_ID = 1;
+
 
     //private static Logger logger = Logger.getLogger(UtilsService.class);
 
@@ -85,7 +88,7 @@ public class AppSetupTest_Integration {
             aditDocuments.clear();
         } catch (Exception e) {
             //TODO: Smth to do with exceptions
-            //logger.error(e.getMessage());
+            System.out.println("!!!!!!!!!!!!!!!!!!!! Can't do operations after the test");
         }
     }
 
@@ -107,10 +110,44 @@ public class AppSetupTest_Integration {
     //
     // Test receiveDocumentFromDVKClient with container v 1.0
     //
+//    @Test
+//    public void sendDocumentToDVKClient_V2_Test() throws Exception {
+//        final String DIGIDOC_CONF_FILE = "/jdigidoc.cfg";
+//        final String CONTAINER_V_2_1 = "containerVer2_1.xml";
+//
+//        String digiDocConfFilePath = null;
+//        String containerFilePath;
+//        File containerFile = null;
+//
+//        try {
+//            // Path to digiDoc configuration file, needed as parameter for receiveDocumentsFromDVK
+//            digiDocConfFilePath = AppSetupTest_Integration.class.getResource(DIGIDOC_CONF_FILE).getPath();
+//            // Path to the container v 1.0
+//            containerFilePath = UtilsService.getContainerPath(CONTAINER_V_2_1, TO_DVK);
+//            containerFile = new File(containerFilePath);
+//        } catch (Exception ex) {
+//            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!! There is a problem with the container or/and  digidoc files."
+//                    + ex.getMessage());
+//            throw ex;
+//        }
+//
+//        ContainerVer2_1 container = (ContainerVer2_1)
+//
+//
+//
+//
+//
+//    }
+
+
+
+    //
+    // Test receiveDocumentFromDVKClient with container v 1.0
+    //
     @Test
     public void receiveDocumentFromDVKClient_V1_Test() throws Exception {
         final String DIGIDOC_CONF_FILE = "/jdigidoc.cfg";
-        final String CONTAINER_V_1_0 = "ADIT_8_containerVer1_0_nok_dok_3.xml";
+        final String CONTAINER_V_1_0 = "containerVer1_0.xml";
 
         String digiDocConfFilePath = null;
         String containerFilePath;
@@ -125,7 +162,8 @@ public class AppSetupTest_Integration {
 
         } catch (Exception e) {
             //todo: inform about problems with files
-            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!! There is a problem with container or/and  digidoc files." + e.getMessage());
+            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!! There is a problem with the container or/and  digidoc files." + e.getMessage());
+            throw e;
         }
 
 
@@ -133,8 +171,25 @@ public class AppSetupTest_Integration {
 
         ContainerVer1 container = (ContainerVer1) UtilsService.getContainer(containerFile, Container.Version.Ver1);
 
+        Map<String, Long> usersFromContainer = new HashMap<String, Long>();
+        for (Saaja saaja : container.getTransport().getSaajad()) {
+            try {
+                usersFromContainer.put(saaja.getIsikukood(), aditUserDAO.getUsedSpaceForUser(saaja.getIsikukood()));
+            } catch (NullPointerException e) {
+                System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!! There is a problem with getting recipients");
+                throw e;
+            }
+        }
+
+
         // Create new PojoMessage with capsule v 1.0 and Save to DVK Client DB
-        PojoMessage dvkMessage = UtilsService.prepareAndSaveDvkMessage_V_1(dvkDAO, containerFile);
+        PojoMessage dvkMessage = null;
+        try {
+            dvkMessage = UtilsService.prepareAndSaveDvkMessage_V_1(dvkDAO, containerFile);
+        } catch (Exception e) {
+            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!! Can't prepare and save the DVK message");
+            throw e;
+        }
 
         // Check message was inserted into DVK Client DB
         Assert.notNull(dvkDAO.getMessage(dvkMessage.getDhlMessageId()));
@@ -149,34 +204,112 @@ public class AppSetupTest_Integration {
         Assert.isTrue(aditDocsWithDefaultDvkGuid.size() == 1);
 
         Document aditDocument = aditDocsWithDefaultDvkGuid.get(0);
-        aditDocument = UtilsService.getNonLazyInitializedDocument(documentDAO, aditDocument.getId());
+        try {
+            aditDocument = UtilsService.getNonLazyInitializedDocument(documentDAO, aditDocument.getId());
+        } catch (Exception e) {
+            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!! Can't get not lazy initialized document");
+            throw e;
+        }
 
         // Check document was inserted into ADIT DB
         Assert.notNull(aditDocument);
 
-        //
         // Check mapping
 
         // Table DOCUMENT
-        Assert.isTrue(dvkMessage.getTitle().equals(aditDocument.getTitle()));
-        Assert.isTrue(container.getTransport().getSaatjad().get(0).getRegNr().equals(Util.removeCountryPrefix(aditDocument.getCreatorCode())));
-        Assert.isTrue(DocumentService.DOCTYPE_LETTER.equals(aditDocument.getDocumentType()));
-        Assert.notNull(aditDocument.getCreatorCode());
+        Assert.isTrue(UtilsService.compareStringsIgnoreCase(dvkMessage.getTitle(), aditDocument.getTitle()));
+        Assert.isTrue(UtilsService.compareStringsIgnoreCase(DocumentService.DOCTYPE_LETTER, aditDocument.getDocumentType()));
+        Assert.isTrue(UtilsService.compareStringsIgnoreCase(aditDocument.getCreatorCode(), "EE" + container.getTransport().getSaatjad().get(0).getRegNr()));
+        // TODO: assert for CREATOR_NAME - understand how it should work
+        // Assert.isTrue(UtilsService.compareStringsIgnoreCase(
+        //        aditUserDAO.getUserByID("EE"+container.getTransport().getSaatjad().get(0).getIsikukood()).getFullName(),
+        //        aditDocument.getCreatorName()));
+        Assert.isTrue(UtilsService.isToday(aditDocument.getCreationDate()));
+        Assert.isTrue(UtilsService.isToday(aditDocument.getLastModifiedDate()));
+        Assert.isTrue(aditDocument.getDocumentDvkStatusId() == DVK_STATUS_SENT);
+        Assert.isTrue(aditDocument.getDvkId() == DEFAULT_DHL_ID);
+        // TODO: assert for PARENT_ID (Igor). Can't find PARENT_ID in aditDocument
+        // Assert.isTrue();
+        Assert.isTrue(aditDocument.getLocked());
+        Assert.isTrue(UtilsService.isToday(aditDocument.getLockingDate()));
+        // If first added file happens to be a DigiDoc container then
+        // extract files and signatures from container. Otherwise add
+        // container as a regular file.
+        Assert.isTrue(aditDocument.getSignable());
+        if (container.getSignedDoc().getDataFiles().get(0).getFileName().contains("ddoc")) {
+            Assert.isTrue(aditDocument.getSigned());
+        }
 
         // Table DOCUMENT_SHARING
         Assert.notNull(aditDocument.getDocumentSharings());
+        Assert.isTrue(aditDocument.getDocumentSharings().size() == container.getTransport().getSaajad().size());
+        // TODO: finish this mapping (stack - ???)
+        for (DocumentSharing documentSharing : aditDocument.getDocumentSharings()) {
+            int count = 0;
+            for (Saaja recipient : container.getTransport().getSaajad()) {
+                if (recipient.getIsikukood().equalsIgnoreCase(documentSharing.getUserCode())) {
+                    count++;
+                    if (count > 1) {
+                        throw new Exception();
+                    }
+                    AditUser aditUser = aditUserDAO.getUserByID(recipient.getIsikukood());
+                    Assert.isTrue(UtilsService.compareStringsIgnoreCase(aditUser.getUserCode(),
+                            documentSharing.getUserCode()));
+                    Assert.isTrue(UtilsService.compareStringsIgnoreCase(aditUser.getFullName(), documentSharing.getUserName()));
+                    Assert.isTrue(UtilsService.compareStringsIgnoreCase(documentSharing.getDocumentSharingType(), DOCUMENT_SHARING_TYPE));
+                    Assert.isTrue(UtilsService.isToday(documentSharing.getCreationDate()));
+                    Assert.isNull(documentSharing.getDvkFolder());
+                    // TODO assert for DVK_ID, ID, DOCUMENT_ID - understand ho it should work
+                }
+            }
+        }
 
         // Table DOCUMENT_FILE
+        // TODO: finish this mapping (stack - ???)
         Assert.notNull(aditDocument.getDocumentFiles());
+        for (DocumentFile documentFile : aditDocument.getDocumentFiles()) {
+            for (DataFile dataFile : container.getSignedDoc().getDataFiles()) {
+                if (dataFile.getFileId().equals(documentFile.getDdocDataFileId())) {
+                    // TODO: asserts for documentFile.getData (Blob) and String from dataFile - Do we need to do it?
+                    // TODO: asserts for DOCUMENT_FILE_TYPE_ID  (if ddoc)
+                    if (dataFile.getFileName().contains("ddoc")) {
+                        // TODO: is it correct?
+                        Assert.isTrue(documentFile.getDocumentFileTypeId() == DOCUMENT_FILE_TYPE_ID);
+                    }
+                    Assert.isTrue(!documentFile.getDeleted());
+                    Assert.isTrue(UtilsService.compareStringsIgnoreCase(documentFile.getContentType(), dataFile.getFileMimeType()));
+                    Assert.isTrue(UtilsService.compareStringsIgnoreCase(documentFile.getFileName(), dataFile.getFileName()));
+                    Assert.isTrue(UtilsService.compareStringsIgnoreCase(documentFile.getFileSizeBytes().toString(), dataFile.getFileSize()));
+                    Assert.notNull(UtilsService.isToday(documentFile.getLastModifiedDate()));
+                    if (dataFile.getFileName().contains("ddoc")) {
+                        // TODO: is it correct that just not null (low priority)
+                        Assert.notNull(documentFile.getFileDataInDdoc());
+                    }
+                }
+            }
+        }
 
         // Table SIGNATURE
-        Assert.notNull(aditDocument.getSignatures());
+        // TODO: Do it later
+//        Assert.notNull(aditDocument.getSignatures());
+//        for (Signature signature : aditDocument.getSignatures()){
+//
+//        }
 
         // Table DOCUMENT_HISTORY
         Assert.notNull(aditDocument.getDocumentHistories());
+        // TODO: finish it later
+//        for (DocumentHistory documentHistory : aditDocument.getDocumentHistories()) {
+//            // TODO: DOCUMENT_HISTORY_TYPE, DOCUMENT_HISTORY_DESCRIPTION_EXTRACT_FILE (Liza TODO)
+//            Assert.notNull(documentHistory.getEventDate());
+//        }
 
         // Table ADIT_USER
-
+        // TODO: understand why a quota doesn't decrease
+        for (DocumentSharing documentSharing : aditDocument.getDocumentSharings()) {
+            AditUser creatorUser = aditUserDAO.getUserByID(documentSharing.getUserCode());
+            Assert.isTrue(creatorUser.getDiskQuotaUsed() >= usersFromContainer.get(creatorUser.getUserCode()));
+        }
 
         dvkMessages.add(dvkMessage);
         aditDocuments.add(aditDocument);
