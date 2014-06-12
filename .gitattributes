@@ -631,6 +631,7 @@ adit-war/src/test/java/ee/adit/test/service/DocumentServiceTest.java -text
 adit-war/src/test/java/ee/adit/test/service/StubAditUserDAOForOrg.java -text
 adit-war/src/test/java/ee/adit/test/service/StubAditUserDAOForPerson.java -text
 adit-war/src/test/java/ee/adit/test/service/StubDocumentTypeDAO.java -text
+adit-war/src/test/java/ee/adit/test/util/DAOCollections.java -text
 adit-war/src/test/java/ee/adit/test/util/SimplifiedDigiDocParserTest.java -text
 adit-war/src/test/java/ee/adit/test/util/UtilTest.java -text
 adit-war/src/test/resources/ValidDigiDoc_2Files_1Signature.ddoc -text

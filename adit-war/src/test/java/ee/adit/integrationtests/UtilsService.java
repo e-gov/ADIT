@@ -4,30 +4,124 @@ import dvk.api.container.Container;
 import dvk.api.container.v1.ContainerVer1;
 import dvk.api.container.v1.Saaja;
 import dvk.api.container.v1.Saatja;
+import dvk.api.container.v2_1.ContainerVer2_1;
 import dvk.api.ml.PojoMessage;
 import ee.adit.dao.AditUserDAO;
 import ee.adit.dao.DocumentDAO;
 import ee.adit.dao.dvk.DvkDAO;
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
+import ee.adit.dao.pojo.DocumentFile;
 import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.service.DocumentService;
+import ee.adit.dvk.converter.ContainerVer2_1ToDocumentConverterImpl;
+import ee.adit.test.util.DAOCollections;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
+import org.hibernate.FlushMode;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Property;
 
 import java.io.*;
+import java.sql.Blob;
 import java.sql.Clob;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class UtilsService {
+    final static String DOCUMENT_SHARING_TYPE_SEND_TO_DVK = "send_dvk";
+    final static String DEFAULT_DOCUMENT_TITLE = "Integration Tests TestDocument Igor";
+    final static long DEFAULT_DHL_ID = 1;
+    final static UUID DEFAULT_GUID = UUID.randomUUID();
 
     private static Logger logger = Logger.getLogger(UtilsService.class);
+
+    public static Document prepareAndSaveAditDocument(DAOCollections daoCollections,
+                                                      ContainerVer2_1 container,
+                                                      DocumentService documentService) throws Exception {
+        Document document = null;
+        DocumentSharing documentSharing;
+        DocumentFile documentFile;
+
+        Session aditDBSession = null;
+        Session documentSharingSession = null;
+        Session documentFileSession = null;
+        Transaction transaction;
+
+        try {
+            // Crate a PojoMessage just to use convert method. Put some information to this message
+            PojoMessage pojoMessage = new PojoMessage();
+            pojoMessage.setDhlId(DEFAULT_DHL_ID);
+            pojoMessage.setTitle(DEFAULT_DOCUMENT_TITLE);
+            pojoMessage.setDhlGuid(DEFAULT_GUID.toString());
+
+            // Create a document, is based on the container
+            ContainerVer2_1ToDocumentConverterImpl containerVer2_1ToDocumentConverter =
+                    new ContainerVer2_1ToDocumentConverterImpl(pojoMessage);
+            containerVer2_1ToDocumentConverter.setAditUserDAO(daoCollections.getAditUserDAO());
+            containerVer2_1ToDocumentConverter.setDocumentService(documentService);
+            document = containerVer2_1ToDocumentConverter.convert(container);
+
+            // Save this document to the ADIT DB
+            aditDBSession = daoCollections.getDocumentDAO().getSessionFactory().openSession();
+            aditDBSession.setFlushMode(FlushMode.COMMIT);
+            transaction = aditDBSession.beginTransaction();
+            aditDBSession.save(document);
+            transaction.commit();
+
+            // Create a document sharing, related with this document
+            // TODO: probably, add some other information (fields). At this moment we have only mandatory fields,
+            // TODO: that, just to save succesfully to DHL_SHARING table
+            documentSharing = new DocumentSharing();
+            documentSharing.setDocumentId(document.getId());
+            documentSharing.setUserCode(document.getCreatorCode());
+            documentSharing.setDocumentSharingType(DOCUMENT_SHARING_TYPE_SEND_TO_DVK);
+
+            // Save this document sharing to the ADIT DB
+            documentSharingSession = daoCollections.getDocumentSharingDAO().getSessionFactory().openSession();
+            documentSharingSession.setFlushMode(FlushMode.COMMIT);
+            transaction = documentSharingSession.beginTransaction();
+            documentSharingSession.save(documentSharing);
+            transaction.commit();
+
+            // Create a document file, related with this document
+            documentFile = new DocumentFile();
+            documentFile.setDocument(document);
+            documentFile.setFileName(container.getFile().get(0).getFileName());
+            documentFile.setGuid(container.getFile().get(0).getFileGuid());
+            documentFile.setContentType(container.getFile().get(0).getMimeType());
+            documentFile.setFileSizeBytes((long) container.getFile().get(0).getFileSize());
+
+            // Save this document file to the ADIT DB
+            documentFileSession = daoCollections.getDocumentFileDAO().getSessionFactory().openSession();
+            documentFileSession.setFlushMode(FlushMode.COMMIT);
+            transaction = documentFileSession.beginTransaction();
+            // Create a Blob
+            Blob fileData = Hibernate.createBlob(container.getFile().get(0).getZipBase64Content().getBytes(),
+                    documentFileSession);
+            documentFile.setFileData(fileData);
+            documentFileSession.save(documentFile);
+            transaction.commit();
+
+        } catch (Exception ex) {
+            System.out.println("prepareAndSaveAditDocument() - exception: " + ex.getMessage());
+            ex.printStackTrace();
+            throw ex;
+        } finally {
+            try {
+                aditDBSession.close();
+                documentSharingSession.close();
+                documentFileSession.close();
+            } catch (NullPointerException ex1) {
+                System.out.println("Can't close some session, because it's null");
+            }
+        }
+
+        return document;
+    }
 
     public static PojoMessage prepareAndSaveDvkMessage_V_1(DvkDAO dvkDAO, File containerFile) throws Exception {
 

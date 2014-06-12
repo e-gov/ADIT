@@ -13,7 +13,7 @@ import ee.adit.dao.DocumentSharingDAO;
 import ee.adit.dao.dvk.DvkDAO;
 import ee.adit.dao.pojo.*;
 import ee.adit.service.DocumentService;
-import ee.adit.util.Util;
+import ee.adit.test.util.DAOCollections;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Property;
 import org.junit.After;
@@ -108,36 +108,70 @@ public class AppSetupTest_Integration {
     }
 
     //
-    // Test receiveDocumentFromDVKClient with container v 1.0
+    // Test sendDocumentToDVKClient with container v 2.1
     //
-//    @Test
-//    public void sendDocumentToDVKClient_V2_Test() throws Exception {
-//        final String DIGIDOC_CONF_FILE = "/jdigidoc.cfg";
-//        final String CONTAINER_V_2_1 = "containerVer2_1.xml";
-//
-//        String digiDocConfFilePath = null;
-//        String containerFilePath;
-//        File containerFile = null;
-//
-//        try {
-//            // Path to digiDoc configuration file, needed as parameter for receiveDocumentsFromDVK
-//            digiDocConfFilePath = AppSetupTest_Integration.class.getResource(DIGIDOC_CONF_FILE).getPath();
-//            // Path to the container v 1.0
-//            containerFilePath = UtilsService.getContainerPath(CONTAINER_V_2_1, TO_DVK);
-//            containerFile = new File(containerFilePath);
-//        } catch (Exception ex) {
-//            System.out.println(" There is a problem with the container or/and  digidoc files."
-//                    + ex.getMessage());
-//            throw ex;
-//        }
-//
-//        ContainerVer2_1 container = (ContainerVer2_1)
-//
-//
-//
-//
-//
-//    }
+    @Test
+    public void sendDocumentToDVKClient_V2_Test() throws Exception {
+        final String CONTAINER_V_2_1 = "containerVer2_1.xml";
+
+        String containerFilePath;
+        File containerFile;
+
+        try {
+            // Path to the container ver 2.1. Get the container
+            containerFilePath = UtilsService.getContainerPath(CONTAINER_V_2_1, TO_DVK);
+            containerFile = new File(containerFilePath);
+        } catch (Exception ex) {
+            System.out.println("There is a problem with the container"
+                    + ex.getMessage());
+            ex.printStackTrace();
+            throw ex;
+        }
+
+        // Create a container ver 2.1, based on XML file
+        ContainerVer2_1 container = (ContainerVer2_1)UtilsService.getContainer(containerFile, Container.Version.Ver2_1);
+        Assert.notNull(container);
+
+        // Create a document, based on the container and insert to ADIT DB
+        Document document;
+        // Gathering all necessary DAO objects to pass it
+        DAOCollections daoCollections = new DAOCollections(documentDAO, aditUserDAO, documentSharingDAO, documentFileDAO);
+        try {
+            document = UtilsService.prepareAndSaveAditDocument(daoCollections, container, documentService);
+        } catch (Exception ex) {
+            System.out.println("Can't save a document to ADIT DB");
+            ex.printStackTrace();
+            throw ex;
+        }
+
+        Assert.notNull(document);
+
+        // Send the document from ADIT to DVK UK
+        try {
+            documentService.sendDocumentsToDVK();
+        } catch (Exception ex) {
+            System.out.println("Can't send document to DVK");
+            ex.printStackTrace();
+            throw ex;
+        }
+
+        // Get a sent document from ADIT DB, and get a received message from DVK UK DB
+        // TODO: is it a good way? If do not refresh the document, still have the old values in the object "document"
+        // TODO: if use just document.getDvkId() with out a refresh - I get only an old value (id) - "1"
+        // TODO: but, currently, the value is 6xx (the real value of DVK_id), and it's a cause why I get this message again
+        Document sentAditDocument = documentDAO.getDocument(document.getId());
+        PojoMessage receivedDVKMessage = dvkDAO.getMessage(sentAditDocument.getDvkId());
+
+        Assert.notNull(sentAditDocument);
+        Assert.notNull(receivedDVKMessage);
+
+        Assert.notNull(sentAditDocument.getDocumentSharings());
+        Assert.isTrue(sentAditDocument.getDocumentSharings().size() > 0);
+
+        Assert.notNull(sentAditDocument.getDocumentFiles());
+
+        // TODO: do finally asserts
+    }
 
 
 
@@ -398,9 +432,5 @@ public class AppSetupTest_Integration {
             //TODO: Smth to do with exceptions
             //logger.error(e.getMessage());
         }
-
-
     }
-
-
 }
