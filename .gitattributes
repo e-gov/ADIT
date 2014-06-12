@@ -251,14 +251,21 @@ adit-war/src/main/java/ee/adit/dao/pojo/UserNotification.java -text
 adit-war/src/main/java/ee/adit/dao/pojo/UserNotificationId.java -text
 adit-war/src/main/java/ee/adit/dao/pojo/Usertype.java -text
 adit-war/src/main/java/ee/adit/dao/pojo/package-info.java -text
+adit-war/src/main/java/ee/adit/dvk/Container1_0Receiver.java -text
+adit-war/src/main/java/ee/adit/dvk/Container2_1Receiver.java -text
 adit-war/src/main/java/ee/adit/dvk/DeleteDocumentsFromDVKJob.java -text
+adit-war/src/main/java/ee/adit/dvk/DvkReceiver.java -text
+adit-war/src/main/java/ee/adit/dvk/DvkReceiverFactory.java -text
 adit-war/src/main/java/ee/adit/dvk/ReceiveJob.java -text
 adit-war/src/main/java/ee/adit/dvk/SendJob.java -text
 adit-war/src/main/java/ee/adit/dvk/UpdateStatusJob.java -text
 adit-war/src/main/java/ee/adit/dvk/UpdateStatusToDVKJob.java -text
 adit-war/src/main/java/ee/adit/dvk/UserSyncJob.java -text
+adit-war/src/main/java/ee/adit/dvk/converter/ContainerVer2_1ToDocumentConverterImpl.java -text
 adit-war/src/main/java/ee/adit/dvk/converter/Converter.java -text
-adit-war/src/main/java/ee/adit/dvk/converter/DocumentContainerVer2_1ConverterImpl.java -text
+adit-war/src/main/java/ee/adit/dvk/converter/DocumentToContainerVer2_1ConverterImpl.java -text
+adit-war/src/main/java/ee/adit/dvk/converter/containerdocument/OutputDocumentFileBuilder.java -text
+adit-war/src/main/java/ee/adit/dvk/converter/containerdocument/RecipientsBuilder.java -text
 adit-war/src/main/java/ee/adit/dvk/converter/documentcontainer/AccessBuilder.java -text
 adit-war/src/main/java/ee/adit/dvk/converter/documentcontainer/AccessConditionsCode.java -text
 adit-war/src/main/java/ee/adit/dvk/converter/documentcontainer/ContactInfoBuilder.java -text
@@ -609,8 +616,10 @@ adit-war/src/main/webapp/index.jsp -text
 adit-war/src/main/webapp/monitor.jsp -text
 adit-war/src/main/webapp/verify.jsp -text svneol=unset#text/plain
 adit-war/src/test/java/ee/adit/dvk/converter/AccessTest.java -text
+adit-war/src/test/java/ee/adit/dvk/converter/ContainerVer2_1ToDocumentConverterImplTest.java -text
 adit-war/src/test/java/ee/adit/dvk/converter/DocumentTestingUtil.java -text
 adit-war/src/test/java/ee/adit/dvk/converter/FileTest.java -text
+adit-war/src/test/java/ee/adit/dvk/converter/OutputDocumentFileBuilderTest.java -text
 adit-war/src/test/java/ee/adit/dvk/converter/ReceipientsTest.java -text
 adit-war/src/test/java/ee/adit/dvk/converter/RecordCreatorTest.java -text
 adit-war/src/test/java/ee/adit/dvk/converter/RecordMetadataTest.java -text

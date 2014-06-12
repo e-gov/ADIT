@@ -24,14 +24,14 @@ public class TransportTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testConvertWithNull() {
-        Converter<Document, ContainerVer2_1> converter = new DocumentContainerVer2_1ConverterImpl();
+        Converter<Document, ContainerVer2_1> converter = new DocumentToContainerVer2_1ConverterImpl();
         Document document = null;
         converter.convert(document);
     }
 
     @Test
     public void testDecSender_whenSenderIsPerson() throws Exception {
-        DocumentContainerVer2_1ConverterImpl converter = new DocumentContainerVer2_1ConverterImpl();
+        DocumentToContainerVer2_1ConverterImpl converter = new DocumentToContainerVer2_1ConverterImpl();
         converter.setAditUserDAO(new StubAditUserDAOForPerson());
         converter.setConfiguration(DocumentTestingUtil.createConfiguration());
         Document document = DocumentTestingUtil.createTestDocument();
@@ -47,7 +47,7 @@ public class TransportTest {
     @Test
     @Ignore
     public void testDecSender_whenSenderIsOrg() throws Exception {
-        DocumentContainerVer2_1ConverterImpl converter = new DocumentContainerVer2_1ConverterImpl();
+        DocumentToContainerVer2_1ConverterImpl converter = new DocumentToContainerVer2_1ConverterImpl();
         converter.setAditUserDAO(new StubAditUserDAOForOrg());
         converter.setConfiguration(DocumentTestingUtil.createConfiguration());
         Document document = DocumentTestingUtil.createTestDocument();
@@ -62,7 +62,7 @@ public class TransportTest {
 
     @Test
     public void testDecRecipient_whenSentToPerson() throws Exception {
-        DocumentContainerVer2_1ConverterImpl converter = new DocumentContainerVer2_1ConverterImpl();
+        DocumentToContainerVer2_1ConverterImpl converter = new DocumentToContainerVer2_1ConverterImpl();
         converter.setAditUserDAO(new StubAditUserDAOForPerson());
         converter.setConfiguration(DocumentTestingUtil.createConfiguration());
         Document document = DocumentTestingUtil.createTestDocument();
@@ -79,7 +79,7 @@ public class TransportTest {
 
     @Test
     public void testDecRecipient_whenSentToOrg() throws Exception {
-        DocumentContainerVer2_1ConverterImpl converter = new DocumentContainerVer2_1ConverterImpl();
+        DocumentToContainerVer2_1ConverterImpl converter = new DocumentToContainerVer2_1ConverterImpl();
         converter.setAditUserDAO(new StubAditUserDAOForOrg());
         converter.setConfiguration(DocumentTestingUtil.createConfiguration());
         Document document = DocumentTestingUtil.createTestDocument();

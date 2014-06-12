@@ -22,7 +22,7 @@ public class ReceipientsTest {
 
     @Test
     public void testRecipients() throws Exception {
-        DocumentContainerVer2_1ConverterImpl converter = new DocumentContainerVer2_1ConverterImpl();
+        DocumentToContainerVer2_1ConverterImpl converter = new DocumentToContainerVer2_1ConverterImpl();
         converter.setDocumentTypeDAO(new StubDocumentTypeDAO());
         converter.setAditUserDAO(new StubAditUserDAOForPerson());
         Document document = DocumentTestingUtil.createTestDocument();

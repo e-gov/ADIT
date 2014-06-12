@@ -20,7 +20,7 @@ public class RecordMetadataTest {
 
     @Test
     public void testGeneralDataAndRecordDateRegistered_whenNoSignaturesPresent() throws Exception {
-        DocumentContainerVer2_1ConverterImpl converter = new DocumentContainerVer2_1ConverterImpl();
+        DocumentToContainerVer2_1ConverterImpl converter = new DocumentToContainerVer2_1ConverterImpl();
         converter.setDocumentTypeDAO(new StubDocumentTypeDAO());
 
         Document document = DocumentTestingUtil.createTestDocument();
@@ -38,7 +38,7 @@ public class RecordMetadataTest {
 
     @Test
     public void testRecordDateRegisteredWhenSignaturesPresent() throws Exception {
-        DocumentContainerVer2_1ConverterImpl converter = new DocumentContainerVer2_1ConverterImpl();
+        DocumentToContainerVer2_1ConverterImpl converter = new DocumentToContainerVer2_1ConverterImpl();
         converter.setDocumentTypeDAO(new StubDocumentTypeDAO());
 
         Document document = DocumentTestingUtil.createTestDocument();

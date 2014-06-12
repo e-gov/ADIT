@@ -19,7 +19,7 @@ public class SignatureMetadataTest {
 
     @Test
     public void testSignatureVerificationDate() throws Exception {
-        DocumentContainerVer2_1ConverterImpl converter = new DocumentContainerVer2_1ConverterImpl();
+        DocumentToContainerVer2_1ConverterImpl converter = new DocumentToContainerVer2_1ConverterImpl();
         Document document = DocumentTestingUtil.createTestDocument();
         Set<Signature> signatures = new HashSet<Signature>();
         Signature s1 = new Signature();

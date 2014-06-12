@@ -15,7 +15,7 @@ public class RecordCreatorTest {
 
     @Test
     public void testOrganization() throws Exception {
-        DocumentContainerVer2_1ConverterImpl converter = new DocumentContainerVer2_1ConverterImpl();
+        DocumentToContainerVer2_1ConverterImpl converter = new DocumentToContainerVer2_1ConverterImpl();
         converter.setAditUserDAO(new StubAditUserDAOForOrg());
 
         Document document = DocumentTestingUtil.createTestDocument();
@@ -30,7 +30,7 @@ public class RecordCreatorTest {
 
     @Test
     public void testPerson() throws Exception {
-        DocumentContainerVer2_1ConverterImpl converter = new DocumentContainerVer2_1ConverterImpl();
+        DocumentToContainerVer2_1ConverterImpl converter = new DocumentToContainerVer2_1ConverterImpl();
         converter.setAditUserDAO(new StubAditUserDAOForPerson());
 
         Document document = DocumentTestingUtil.createTestDocument();
@@ -47,7 +47,7 @@ public class RecordCreatorTest {
 
     @Test
     public void testPersonForOrg() throws Exception {
-        DocumentContainerVer2_1ConverterImpl converter = new DocumentContainerVer2_1ConverterImpl();
+        DocumentToContainerVer2_1ConverterImpl converter = new DocumentToContainerVer2_1ConverterImpl();
         converter.setAditUserDAO(new StubAditUserDAOForPerson());
 
         Document document = DocumentTestingUtil.createTestDocument();

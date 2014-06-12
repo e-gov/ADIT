@@ -5,7 +5,6 @@ import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.DocumentFile;
 import ee.adit.test.service.StubAditUserDAOForOrg;
 import ee.adit.util.Configuration;
-import oracle.net.aso.e;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Test;
@@ -25,7 +24,7 @@ public class FileTest {
 
     @Test
     public void testFileCreation() throws Exception {
-        DocumentContainerVer2_1ConverterImpl converter = new DocumentContainerVer2_1ConverterImpl();
+        DocumentToContainerVer2_1ConverterImpl converter = new DocumentToContainerVer2_1ConverterImpl();
         converter.setAditUserDAO(new StubAditUserDAOForOrg());
         Configuration configuration = new Configuration();
         configuration.setTempDir(System.getProperty("java.io.tmpdir"));

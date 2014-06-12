@@ -126,7 +126,7 @@ public class AppSetupTest_Integration {
 //            containerFilePath = UtilsService.getContainerPath(CONTAINER_V_2_1, TO_DVK);
 //            containerFile = new File(containerFilePath);
 //        } catch (Exception ex) {
-//            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!! There is a problem with the container or/and  digidoc files."
+//            System.out.println(" There is a problem with the container or/and  digidoc files."
 //                    + ex.getMessage());
 //            throw ex;
 //        }
@@ -162,12 +162,12 @@ public class AppSetupTest_Integration {
 
         } catch (Exception e) {
             //todo: inform about problems with files
-            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!! There is a problem with the container or/and  digidoc files." + e.getMessage());
+            System.out.println("There is a problem with the container or/and  digidoc files." + e.getMessage());
             throw e;
         }
 
 
-        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!" + DEFAULT_GUID);
+        System.out.println("" + DEFAULT_GUID);
 
         ContainerVer1 container = (ContainerVer1) UtilsService.getContainer(containerFile, Container.Version.Ver1);
 
@@ -176,7 +176,7 @@ public class AppSetupTest_Integration {
             try {
                 usersFromContainer.put(saaja.getIsikukood(), aditUserDAO.getUsedSpaceForUser(saaja.getIsikukood()));
             } catch (NullPointerException e) {
-                System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!! There is a problem with getting recipients");
+                System.out.println("There is a problem with getting recipients");
                 throw e;
             }
         }
@@ -187,7 +187,7 @@ public class AppSetupTest_Integration {
         try {
             dvkMessage = UtilsService.prepareAndSaveDvkMessage_V_1(dvkDAO, containerFile);
         } catch (Exception e) {
-            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!! Can't prepare and save the DVK message");
+            System.out.println("Can't prepare and save the DVK message");
             throw e;
         }
 
@@ -207,7 +207,7 @@ public class AppSetupTest_Integration {
         try {
             aditDocument = UtilsService.getNonLazyInitializedDocument(documentDAO, aditDocument.getId());
         } catch (Exception e) {
-            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!! Can't get not lazy initialized document");
+            System.out.println("Can't get not lazy initialized document");
             throw e;
         }
 
