@@ -4,7 +4,13 @@ import dvk.api.container.Container;
 import dvk.api.container.v1.ContainerVer1;
 import dvk.api.container.v1.Saaja;
 import dvk.api.container.v1.Saatja;
+import dvk.api.container.v2_1.ContactInfo;
 import dvk.api.container.v2_1.ContainerVer2_1;
+import dvk.api.container.v2_1.DecRecipient;
+import dvk.api.container.v2_1.DecSender;
+import dvk.api.container.v2_1.OrganisationType;
+import dvk.api.container.v2_1.PersonType;
+import dvk.api.container.v2_1.Recipient;
 import dvk.api.ml.PojoMessage;
 import ee.adit.dao.AditUserDAO;
 import ee.adit.dao.DocumentDAO;
@@ -13,8 +19,8 @@ import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.DocumentFile;
 import ee.adit.dao.pojo.DocumentSharing;
-import ee.adit.service.DocumentService;
 import ee.adit.dvk.converter.ContainerVer2_1ToDocumentConverterImpl;
+import ee.adit.service.DocumentService;
 import ee.adit.test.util.DAOCollections;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
@@ -25,17 +31,20 @@ import org.hibernate.Transaction;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Property;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.InputStreamReader;
 import java.sql.Blob;
 import java.sql.Clob;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 public class UtilsService {
-    final static String DOCUMENT_SHARING_TYPE_SEND_TO_DVK = "send_dvk";
-    final static String DEFAULT_DOCUMENT_TITLE = "Integration Tests TestDocument Igor";
-    final static long DEFAULT_DHL_ID = 1;
-    final static UUID DEFAULT_GUID = UUID.randomUUID();
 
     private static Logger logger = Logger.getLogger(UtilsService.class);
 
@@ -54,9 +63,9 @@ public class UtilsService {
         try {
             // Crate a PojoMessage just to use convert method. Put some information to this message
             PojoMessage pojoMessage = new PojoMessage();
-            pojoMessage.setDhlId(DEFAULT_DHL_ID);
-            pojoMessage.setTitle(DEFAULT_DOCUMENT_TITLE);
-            pojoMessage.setDhlGuid(DEFAULT_GUID.toString());
+            pojoMessage.setDhlId(DocumentService_SendReceiveDvkTest_Integration.DEFAULT_DHL_ID);
+            pojoMessage.setTitle(DocumentService_SendReceiveDvkTest_Integration.DEFAULT_DOCUMENT_TITLE);
+            pojoMessage.setDhlGuid(DocumentService_SendReceiveDvkTest_Integration.DEFAULT_GUID.toString());
 
             // Create a document, is based on the container
             ContainerVer2_1ToDocumentConverterImpl containerVer2_1ToDocumentConverter =
@@ -78,7 +87,7 @@ public class UtilsService {
             documentSharing = new DocumentSharing();
             documentSharing.setDocumentId(document.getId());
             documentSharing.setUserCode(document.getCreatorCode());
-            documentSharing.setDocumentSharingType(DOCUMENT_SHARING_TYPE_SEND_TO_DVK);
+            documentSharing.setDocumentSharingType(DocumentService_SendReceiveDvkTest_Integration.DOCUMENT_SHARING_TYPE_SEND_TO_DVK);
 
             // Save this document sharing to the ADIT DB
             documentSharingSession = daoCollections.getDocumentSharingDAO().getSessionFactory().openSession();
@@ -111,13 +120,9 @@ public class UtilsService {
             ex.printStackTrace();
             throw ex;
         } finally {
-            try {
-                aditDBSession.close();
-                documentSharingSession.close();
-                documentFileSession.close();
-            } catch (NullPointerException ex1) {
-                System.out.println("Can't close some session, because it's null");
-            }
+            if (aditDBSession != null) aditDBSession.close();
+            if (documentSharingSession != null) documentSharingSession.close();
+            if (documentFileSession != null) documentFileSession.close();
         }
 
         return document;
@@ -137,7 +142,7 @@ public class UtilsService {
             // Set PojoMessage data using container data
             //
             dvkMessage.setIsIncoming(true);
-            dvkMessage.setTitle(AppSetupTest_Integration.DEFAULT_DOCUMENT_TITLE);
+            dvkMessage.setTitle(DocumentService_SendReceiveDvkTest_Integration.DEFAULT_DOCUMENT_TITLE);
 
             Saatja sender = container.getTransport().getSaatjad().get(0);
             dvkMessage.setSenderOrgCode(sender.getRegNr());
@@ -159,8 +164,8 @@ public class UtilsService {
             dvkMessage.setLocalItemId((long) 0);
             dvkMessage.setStatusUpdateNeeded((long) 0);
             dvkMessage.setDhlFolderName("/");
-            dvkMessage.setDhlId(AppSetupTest_Integration.DEFAULT_DHL_ID);
-            dvkMessage.setDhlGuid(AppSetupTest_Integration.DEFAULT_GUID.toString());
+            dvkMessage.setDhlId(DocumentService_SendReceiveDvkTest_Integration.DEFAULT_DHL_ID);
+            dvkMessage.setDhlGuid(DocumentService_SendReceiveDvkTest_Integration.DEFAULT_GUID.toString());
 
             // We use BufferedReader for containerFile instead of container.getContent(),
             // because may be errors in big files handling
@@ -187,8 +192,78 @@ public class UtilsService {
         return dvkMessage;
     }
 
-    public static PojoMessage prepareAndSaveDvkMessage_V_2_1(DvkDAO dvkDAO, String containerFilePath) throws Exception {
+    public static PojoMessage prepareAndSaveDvkMessage_V_2_1(DvkDAO dvkDAO, File containerFile) throws Exception {
+
         PojoMessage dvkMessage = new PojoMessage();
+        BufferedReader in = null;
+        Session dvkSession = null;
+
+        try {
+            // Get container v 2.1
+            ContainerVer2_1 container = (ContainerVer2_1) UtilsService.getContainer(containerFile, Container.Version.Ver2_1);
+
+            //
+            // Set PojoMessage data using container data
+            //
+            dvkMessage.setIsIncoming(true);
+            dvkMessage.setTitle(DocumentService_SendReceiveDvkTest_Integration.DEFAULT_DOCUMENT_TITLE);
+
+            DecSender sender = container.getTransport().getDecSender();
+            dvkMessage.setSenderOrgCode(sender.getOrganisationCode());
+            dvkMessage.setSenderPersonCode(sender.getPersonalIdCode());
+
+            List<ContactInfo> recordSenderInfo = Arrays.asList((ContactInfo) container.getRecordCreator(), container.getRecordSenderToDec());
+            OrganisationType senderOrganisationInfo = getOrganisationByCode(recordSenderInfo, sender.getOrganisationCode());
+            dvkMessage.setSenderOrgName(senderOrganisationInfo == null ? "" : senderOrganisationInfo.getName());
+            PersonType senderPersonInfo = getPersonByCode(recordSenderInfo, sender.getPersonalIdCode());
+            dvkMessage.setSenderName(senderPersonInfo == null ? "" : senderPersonInfo.getName());
+
+            DecRecipient firstRecipient = container.getTransport().getDecRecipient().get(0);
+            dvkMessage.setRecipientOrgCode(firstRecipient.getOrganisationCode());
+            dvkMessage.setRecipientPersonCode(firstRecipient.getPersonalIdCode());
+
+            List<ContactInfo> recordRecipientsInfo = new ArrayList<ContactInfo>();
+            for (Recipient recipient : container.getRecipient()) {
+                recordRecipientsInfo.add((ContactInfo) recipient);
+            }
+            OrganisationType recipientOrganisationInfo = getOrganisationByCode(recordRecipientsInfo, firstRecipient.getOrganisationCode());
+            dvkMessage.setRecipientOrgName(recipientOrganisationInfo == null ? "" : senderOrganisationInfo.getName());
+            PersonType recipientPersonInfo = getPersonByCode(recordSenderInfo, firstRecipient.getPersonalIdCode());
+            dvkMessage.setRecipientName(recipientPersonInfo == null ? "" : senderPersonInfo.getName());
+
+            Date date = new Date();
+            dvkMessage.setSendingDate(date);
+            dvkMessage.setReceivedDate(date);
+            dvkMessage.setSendingStatusId(DocumentService.DVK_STATUS_WAITING);
+            dvkMessage.setUnitId(0);
+            dvkMessage.setLocalItemId((long) 0);
+            dvkMessage.setStatusUpdateNeeded((long) 0);
+            dvkMessage.setDhlFolderName("/");
+            dvkMessage.setDhlId(DocumentService_SendReceiveDvkTest_Integration.DEFAULT_DHL_ID);
+            dvkMessage.setDhlGuid(DocumentService_SendReceiveDvkTest_Integration.DEFAULT_GUID.toString());
+
+            // We use BufferedReader for containerFile instead of container.getContent(),
+            // because may be errors in big files handling
+            dvkSession = dvkDAO.getSessionFactory().openSession();
+            in = new BufferedReader(new FileReader(containerFile));
+            Clob clob = Hibernate.createClob(in, containerFile.length(), dvkSession);
+            dvkMessage.setData(clob);
+
+            // Save message in DVK UK DB
+            dvkDAO.updateDocument(dvkMessage);
+
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            throw e;
+
+        } finally {
+
+            IOUtils.closeQuietly(in);
+
+            if (dvkSession != null) {
+                dvkSession.close();
+            }
+        }
         return dvkMessage;
     }
 
@@ -203,7 +278,7 @@ public class UtilsService {
             ContainerVer1 container = (ContainerVer1) getContainer(containerFile, Container.Version.Ver1);
 
             Saatja sender = container.getTransport().getSaatjad().get(0);
-            creator =  aditUserDAO.getUserByID(sender.getIsikukood());
+            creator = aditUserDAO.getUserByID(sender.getIsikukood());
 
             aditDoc.setCreatorCode(creator.getUserCode());
             aditDoc.setCreatorName(creator.getFullName());
@@ -211,7 +286,7 @@ public class UtilsService {
             aditDoc.setCreatorUserName(creatorUserPerson.getFullName());
 
 
-        } catch (Exception e){
+        } catch (Exception e) {
             logger.error(e.getMessage());
 
         } finally {
@@ -220,7 +295,6 @@ public class UtilsService {
 
         return aditDoc;
     }
-
 
 
     public static Container getContainer(File containerFile, Container.Version version) {
@@ -283,7 +357,7 @@ public class UtilsService {
 
         } catch (Exception e) {
             logger.error(e.getMessage());
-            throw  e;
+            throw e;
 
         } finally {
             if (session != null) {
@@ -303,6 +377,26 @@ public class UtilsService {
         return result;
     }
 
+    public static PersonType getPersonByCode(List<ContactInfo> usersInfo, String personCode) {
+        PersonType person = null;
+        for (ContactInfo contact : usersInfo) {
+            if (contact.getPerson() != null && compareStringsIgnoreCase(contact.getPerson().getPersonalIdCode(), personCode)) {
+                person = contact.getPerson();
+            }
+        }
+        return person;
+    }
+
+    public static OrganisationType getOrganisationByCode(List<ContactInfo> usersInfo, String organizationCode) {
+        OrganisationType organisation = null;
+        for (ContactInfo contact : usersInfo) {
+            if (contact.getOrganisation() != null && compareStringsIgnoreCase(contact.getOrganisation().getOrganisationCode(), organizationCode)) {
+                organisation = contact.getOrganisation();
+            }
+        }
+        return organisation;
+    }
+
     public static String readSQLToString(String filePath) throws Exception {
         StringBuilder fileData = new StringBuilder();
         BufferedReader reader = new BufferedReader(new InputStreamReader(
@@ -319,8 +413,8 @@ public class UtilsService {
         return fileData.toString();
     }
 
-    public static String getContainerPath(String fileName, String where){
-        String containersPath = AppSetupTest_Integration.CONTAINERS_PATH + where;
+    public static String getContainerPath(String fileName, String where) {
+        String containersPath = DocumentService_SendReceiveDvkTest_Integration.CONTAINERS_PATH + where;
         return UtilsService.class.getResource(containersPath + fileName).getPath();
     }
 
@@ -332,4 +426,12 @@ public class UtilsService {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         return (sdf.format(date).equals(sdf.format(new Date())));
     }
+
+    public static String addPrefixIfNecessary(String code) {
+        if (code != null && !code.toUpperCase().startsWith("EE")) {
+            return "EE" + code;
+        }
+        return code;
+    }
+
 }

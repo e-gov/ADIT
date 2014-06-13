@@ -1,8 +1,8 @@
 <DecContainer xmlns="http://www.riik.ee/schemas/deccontainer/vers_2_1/">
   <Transport>
     <DecSender>
-      <OrganisationCode>10885324</OrganisationCode>
-      <PersonalIdCode>36212240216</PersonalIdCode>
+      <OrganisationCode>70006317</OrganisationCode>
+      <PersonalIdCode>38806190294</PersonalIdCode>
     </DecSender>
     <DecRecipient>
       <OrganisationCode>adit</OrganisationCode>
@@ -10,6 +10,10 @@
     </DecRecipient>
   </Transport>
   <RecordCreator>
+    <Organisation>
+        <Name>Riigi Infosüsteemi Amet</Name>
+        <OrganisationCode>70006317</OrganisationCode>
+    </Organisation>
     <Person>
       <Name>Lauri Tammem?e</Name>
       <GivenName>Lauri</GivenName>
@@ -66,11 +70,11 @@
     </ContactData>
   </RecordSenderToDec>
   <Recipient>
-    <Organisation>
-      <Name>Riigi Infos?steemi Amet</Name>
-      <OrganisationCode>EE70006317</OrganisationCode>
+    <Person>
+      <Name>Janis Paju</Name>
+      <PersonalIdCode>EE37802080024</PersonalIdCode>
       <Residency>EE</Residency>
-    </Organisation>
+    </Person>
   </Recipient>
   <RecordMetadata>
     <RecordGuid>25892e17-80f6-415f-9c65-7395632f0234</RecordGuid>
