@@ -20,9 +20,11 @@ import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.DocumentFile;
 import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.dvk.converter.ContainerVer2_1ToDocumentConverterImpl;
+import ee.adit.dvk.converter.containerdocument.RecipientsBuilder;
 import ee.adit.service.DocumentService;
 import ee.adit.test.util.DAOCollections;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 import org.hibernate.FlushMode;
 import org.hibernate.Hibernate;
@@ -84,17 +86,24 @@ public class UtilsService {
             // Create a document sharing, related with this document
             // TODO: probably, add some other information (fields). At this moment we have only mandatory fields,
             // TODO: that, just to save succesfully to DHL_SHARING table
-            documentSharing = new DocumentSharing();
-            documentSharing.setDocumentId(document.getId());
-            documentSharing.setUserCode(document.getCreatorCode());
-            documentSharing.setDocumentSharingType(DocumentService_SendReceiveDvkTest_Integration.DOCUMENT_SHARING_TYPE_SEND_TO_DVK);
+//            documentSharing = new DocumentSharing();
+//            documentSharing.setDocumentId(document.getId());
+//            documentSharing.setUserCode(document.getCreatorCode());
+//            documentSharing.setDocumentSharingType(DocumentService_SendReceiveDvkTest_Integration.DOCUMENT_SHARING_TYPE_SEND_TO_DVK);
+            RecipientsBuilder recipientsBuilder = new RecipientsBuilder(container);
+            recipientsBuilder.setConfiguration(documentService.getConfiguration());
+            recipientsBuilder.setAditUserDAO(documentService.getAditUserDAO());
+
+            for (Pair<AditUser, Recipient> pair : recipientsBuilder.build()) {
+                documentService.sendDocument(document, pair.getLeft(), null, null, pair.getRight().getMessageForRecipient());
+            }
 
             // Save this document sharing to the ADIT DB
-            documentSharingSession = daoCollections.getDocumentSharingDAO().getSessionFactory().openSession();
-            documentSharingSession.setFlushMode(FlushMode.COMMIT);
-            transaction = documentSharingSession.beginTransaction();
-            documentSharingSession.save(documentSharing);
-            transaction.commit();
+//            documentSharingSession = daoCollections.getDocumentSharingDAO().getSessionFactory().openSession();
+//            documentSharingSession.setFlushMode(FlushMode.COMMIT);
+//            transaction = documentSharingSession.beginTransaction();
+//            documentSharingSession.save(documentSharing);
+//            transaction.commit();
 
             // Create a document file, related with this document
             documentFile = new DocumentFile();
@@ -434,4 +443,24 @@ public class UtilsService {
         return code;
     }
 
+    public static String clobToString(Clob clobData) {
+        if (clobData == null) {
+            return "";
+        }
+
+        StringBuffer stringBuffer = new StringBuffer();
+        String str = "";
+
+        try {
+            BufferedReader bufferRead = new BufferedReader(clobData.getCharacterStream());
+            while ((str = bufferRead.readLine()) != null) {
+                stringBuffer.append(str);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return "";
+        }
+
+        return stringBuffer.toString();
+    }
 }

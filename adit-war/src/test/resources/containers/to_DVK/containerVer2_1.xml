@@ -1,7 +1,7 @@
 <DecContainer xmlns="http://www.riik.ee/schemas/deccontainer/vers_2_1/">
   <Transport>
     <DecSender>
-      <OrganisationCode>EE38806190294</OrganisationCode>
+      <OrganisationCode>adit</OrganisationCode>
       <PersonalIdCode>EE70006317</PersonalIdCode>
     </DecSender>
     <DecRecipient>

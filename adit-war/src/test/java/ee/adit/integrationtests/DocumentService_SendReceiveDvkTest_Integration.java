@@ -6,6 +6,7 @@ import dvk.api.container.v1.DataFile;
 import dvk.api.container.v1.Saaja;
 import dvk.api.container.v2_1.ContainerVer2_1;
 import dvk.api.container.v2_1.DecRecipient;
+import dvk.api.container.v2_1.Transport;
 import dvk.api.ml.PojoMessage;
 import ee.adit.dao.AditUserDAO;
 import ee.adit.dao.DocumentDAO;
@@ -137,15 +138,15 @@ public class DocumentService_SendReceiveDvkTest_Integration {
         }
 
         // Create a container ver 2.1, based on XML file
-        ContainerVer2_1 container = (ContainerVer2_1) UtilsService.getContainer(containerFile, Container.Version.Ver2_1);
-        Assert.notNull(container);
+        ContainerVer2_1 containerInput = (ContainerVer2_1) UtilsService.getContainer(containerFile, Container.Version.Ver2_1);
+        Assert.notNull(containerInput);
 
         // Create a document, based on the container and insert to ADIT DB
         Document document;
         // Gathering all necessary DAO objects to pass it
         DAOCollections daoCollections = new DAOCollections(documentDAO, aditUserDAO, documentSharingDAO, documentFileDAO);
         try {
-            document = UtilsService.prepareAndSaveAditDocument(daoCollections, container, documentService);
+            document = UtilsService.prepareAndSaveAditDocument(daoCollections, containerInput, documentService);
         } catch (Exception ex) {
             System.out.println("Can't save a document to ADIT DB");
             ex.printStackTrace();
@@ -175,14 +176,27 @@ public class DocumentService_SendReceiveDvkTest_Integration {
 
         Assert.notNull(sentAditDocument.getDocumentSharings());
         Assert.isTrue(sentAditDocument.getDocumentSharings().size() > 0);
-
         Assert.notNull(sentAditDocument.getDocumentFiles());
+        Assert.notNull(receivedDVKMessage.getData());
 
-        // TODO: do finally asserts
+        // Get a container ver 2.1 from the received DVK document
+        // TODO: probably, we have other method to do conversion from Clob to String
+        ContainerVer2_1 containerOutput = ContainerVer2_1.parse(UtilsService.clobToString(receivedDVKMessage.getData()));
 
+        // Do asserts with an input container and an output container
+        Assert.notNull(containerInput);
+        Assert.notNull(containerOutput);
+        Transport transportInput = containerInput.getTransport();
+        Transport transportOutput = containerOutput.getTransport();
 
-
-
+        Assert.notNull(transportInput);
+        Assert.notNull(transportOutput);
+        Assert.notNull(transportInput.getDecSender());
+        Assert.notNull(transportOutput.getDecSender());
+        Assert.isTrue(UtilsService.compareStringsIgnoreCase(documentService.getConfiguration().getDvkOrgCode(),
+                                                            transportOutput.getDecSender().getOrganisationCode()));
+        Assert.isTrue(UtilsService.compareStringsIgnoreCase(transportInput.getDecSender().getOrganisationCode(),
+                                                            transportOutput.getDecSender().getPersonalIdCode()));
 
         dvkMessages.add(receivedDVKMessage);
         aditDocuments.add(document);

@@ -650,6 +650,7 @@ adit-war/src/test/resources/containers/to_DVK/containerVer2_1.xml -text
 adit-war/src/test/resources/ee/adit/dvk/converter/testFile.ods -text
 adit-war/src/test/resources/integration-tests.xml -text
 adit-war/src/test/resources/jdigidoc.cfg -text
+/adit.iml -text
 doc/adit_kasutusjuhend.odt -text
 doc/adit_kirjeldus.odt -text
 doc/adit_paigaldusjuhend.odt -text
