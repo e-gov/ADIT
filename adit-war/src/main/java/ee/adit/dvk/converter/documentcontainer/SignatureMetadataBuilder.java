@@ -13,6 +13,21 @@ import java.util.List;
  */
 public class SignatureMetadataBuilder {
 
+    private enum SignatureType {
+        DIGITAL_SIGNATURE("Digitaalallkiri"), DIGITAL_STAMP("Digitempel");
+
+        private String value;
+
+        SignatureType(String value) {
+            this.value = value;
+        }
+
+        @Override
+        public String toString() {
+            return value;
+        }
+    }
+
     private Document document;
 
     /**
@@ -34,10 +49,28 @@ public class SignatureMetadataBuilder {
             for (Signature signature: document.getSignatures()) {
                 SignatureMetadata signatureMetadata = new SignatureMetadata();
                 signatureMetadata.setSignatureVerificationDate(signature.getSigningDate());
+                signatureMetadata.setSignatureType(getSignatureType(signature.getSignerCode()));
                 result.add(signatureMetadata);
             }
         }
 
         return result;
+    }
+
+    private String getSignatureType(final String signerCode) {
+        String signatureType = null;
+
+        if (signerCode != null) {
+            if (signerCode.startsWith("3")
+                    || signerCode.startsWith("4")
+                    || signerCode.startsWith("5")
+                    || signerCode.startsWith("6")) {
+                signatureType = SignatureType.DIGITAL_SIGNATURE.value;
+            } else {
+                signatureType = SignatureType.DIGITAL_STAMP.value;
+            }
+        }
+
+        return signatureType;
     }
 }

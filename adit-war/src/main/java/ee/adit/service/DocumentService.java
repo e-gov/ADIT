@@ -1076,9 +1076,11 @@ public class DocumentService {
      * @param document  document
      * @param recipient user
      * @param dvkFolder DVK folder
+     * @param dvkId dvkId
+     * @param messageForRecipient message sent by the recipient
      * @return true, if sending succeeded
      */
-    public boolean sendDocument(Document document, AditUser recipient, String dvkFolder, Long dvkId) {
+    public boolean sendDocument(Document document, AditUser recipient, String dvkFolder, Long dvkId, String messageForRecipient) {
         boolean result = false;
 
         DocumentSharing documentSharing = new DocumentSharing();
@@ -1099,6 +1101,7 @@ public class DocumentService {
 
         documentSharing.setUserCode(recipient.getUserCode());
         documentSharing.setUserName(recipient.getFullName());
+        documentSharing.setComment(messageForRecipient);
 
         this.getDocumentSharingDAO().save(documentSharing);
 
@@ -1117,8 +1120,7 @@ public class DocumentService {
      * @return true, if sending succeeded
      */
     public boolean sendDocument(Document document, AditUser recipient) {
-
-        return sendDocument(document, recipient, null, null);
+        return sendDocument(document, recipient, null, null, null);
     }
 
     /**
@@ -1951,7 +1953,7 @@ public class DocumentService {
                         // Add record to sending table to make document
                         // available to recipient.
                         for (AditUser user : allRecipients) {
-                            this.sendDocument(aditDocument, user, null, dvkDocument.getDhlId());
+                            this.sendDocument(aditDocument, user, null, dvkDocument.getDhlId(), null);
                         }
 
                         // Update user quota limit

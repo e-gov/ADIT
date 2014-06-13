@@ -2,6 +2,7 @@ package ee.adit.dvk;
 
 import dvk.api.container.v2_1.ContainerVer2_1;
 import dvk.api.container.v2_1.DecRecipient;
+import dvk.api.container.v2_1.Recipient;
 import dvk.api.ml.PojoMessage;
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
@@ -14,6 +15,7 @@ import ee.adit.service.DocumentService;
 
 import java.util.Calendar;
 import java.util.List;
+import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * @author Hendrik Pärna
@@ -132,8 +134,8 @@ public class Container2_1Receiver implements DvkReceiver {
         recipientsBuilder.setAditUserDAO(documentService.getAditUserDAO());
         recipientsBuilder.setConfiguration(documentService.getConfiguration());
 
-        for (AditUser user : recipientsBuilder.build()) {
-            documentService.sendDocument(document, user, null, message.getDhlId());
+        for (Pair<AditUser, Recipient> pair : recipientsBuilder.build()) {
+            documentService.sendDocument(document, pair.getLeft(), null, message.getDhlId(), pair.getRight().getMessageForRecipient());
         }
     }
 }

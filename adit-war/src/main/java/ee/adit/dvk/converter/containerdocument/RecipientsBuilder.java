@@ -2,10 +2,12 @@ package ee.adit.dvk.converter.containerdocument;
 
 import dvk.api.container.v2_1.ContainerVer2_1;
 import dvk.api.container.v2_1.DecRecipient;
+import dvk.api.container.v2_1.Recipient;
 import ee.adit.dao.AditUserDAO;
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.util.Configuration;
 import ee.adit.util.Util;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
@@ -33,32 +35,34 @@ public class RecipientsBuilder {
      * Build a list of recipients.
      * @return recipients
      */
-    public List<AditUser> build() {
-        List<AditUser> allRecipients = new ArrayList<AditUser>();
+    public List<Pair<AditUser, Recipient>> build() {
+        List<Pair<AditUser, Recipient>> allRecipients = new ArrayList<Pair<AditUser, Recipient>>();
 
         // For every recipient - check if registered in ADIT
-        for (DecRecipient recipient: container.getTransport().getDecRecipient()) {
+        for (final Recipient recipient: container.getRecipient()) {
             // First of all make sure that this recipient is supposed to be found in ADIT
-            if (!Util.isNullOrEmpty(recipient.getOrganisationCode())
-                    && getConfiguration().getDvkOrgCode().equalsIgnoreCase(recipient.getOrganisationCode())) {
+            if (recipient.getOrganisation() != null && !Util.isNullOrEmpty(recipient.getOrganisation().getOrganisationCode())
+                    && getConfiguration().getDvkOrgCode().equalsIgnoreCase(recipient.getOrganisation().getOrganisationCode())) {
 
-                logger.info("Recipient: " + recipient.getOrganisationCode()
-                        + " Isikukood: '" + recipient.getPersonalIdCode() + "'.");
+                logger.info("Recipient: " + recipient.getOrganisation().getOrganisationCode());
+                if (recipient.getPerson() != null) {
+                    logger.info("Isikukood: " + recipient.getPerson().getPersonalIdCode());
+                }
 
                 // The ADIT internal recipient is always marked by
                 // the field <isikukood> in the DVK container,
                 // regardless if it is actually a person or an
                 // institution / company.
-                if (!Util.isNullOrEmpty(recipient.getOrganisationCode())
-                        && !Util.isNullOrEmpty(recipient.getPersonalIdCode())) {
+                if (!Util.isNullOrEmpty(recipient.getOrganisation().getOrganisationCode())
+                        && recipient.getPerson() != null && !Util.isNullOrEmpty(recipient.getPerson().getPersonalIdCode())) {
                     // The recipient is specified - check if it's a DVK user
-                    String personalIdCodeWithCountryPrefix = recipient.getPersonalIdCode().trim();
+                    String personalIdCodeWithCountryPrefix = recipient.getPerson().getPersonalIdCode().trim();
                     if (!personalIdCodeWithCountryPrefix.startsWith("EE")) {
                         personalIdCodeWithCountryPrefix = "EE" + personalIdCodeWithCountryPrefix;
                     }
 
                     logger.debug("Getting AditUser by personal code: " + personalIdCodeWithCountryPrefix);
-                    AditUser user = this.getAditUserDAO().getUserByID(personalIdCodeWithCountryPrefix);
+                    final AditUser user = this.getAditUserDAO().getUserByID(personalIdCodeWithCountryPrefix);
 
                     if (user != null && user.getActive()) {
                         // Check if user uses DVK
@@ -68,10 +72,25 @@ public class RecipientsBuilder {
                             // other users that use DVK, over DVK.
                             throw new IllegalStateException("User uses DVK - not allowed.");
                         } else {
-                            allRecipients.add(user);
+                            allRecipients.add(new Pair<AditUser, Recipient>() {
+                                @Override
+                                public AditUser getLeft() {
+                                    return user;
+                                }
+
+                                @Override
+                                public Recipient getRight() {
+                                    return recipient;
+                                }
+
+                                @Override
+                                public Recipient setValue(final Recipient value) {
+                                    throw new UnsupportedOperationException("No supported");
+                                }
+                            });
                         }
                     } else {
-                        throw new IllegalStateException("User not found. Personal code: " + recipient.getPersonalIdCode());
+                        throw new IllegalStateException("User not found. Personal code: " + personalIdCodeWithCountryPrefix);
                     }
                 }
             }
