@@ -1,5 +1,6 @@
 package ee.adit.dvk.converter.documentcontainer;
 
+import dvk.api.container.v2_1.ContactInfo;
 import dvk.api.container.v2_1.RecordSenderToDec;
 import ee.adit.dao.AditUserDAO;
 import ee.adit.dao.pojo.AditUser;
@@ -29,6 +30,11 @@ public class RecordSenderToDecBuilder {
      * @return recordSenderToDec
      */
     public RecordSenderToDec build() {
-        return (RecordSenderToDec) contactInfoBuilder.build();
+        ContactInfo contactInfo = contactInfoBuilder.build();
+        RecordSenderToDec recordSenderToDec = new RecordSenderToDec();
+        recordSenderToDec.setOrganisation(contactInfo.getOrganisation());
+        recordSenderToDec.setContactData(contactInfo.getContactData());
+        recordSenderToDec.setPerson(contactInfo.getPerson());
+        return recordSenderToDec;
     }
 }

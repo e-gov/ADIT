@@ -201,6 +201,7 @@ adit-war/sql/updates/1_0_72/update_1_0_72.sql -text
 adit-war/sql/updates/1_0_8/update_1_0_8.sql -text
 adit-war/sql/updates/database_updates.sql -text
 adit-war/sql/usertype.dml.sql -text
+adit-war/src/main/java/ee/adit/ContainerVer2_1Sender.java -text
 adit-war/src/main/java/ee/adit/dao/AccessRestrictionDAO.java -text
 adit-war/src/main/java/ee/adit/dao/AditUserDAO.java -text
 adit-war/src/main/java/ee/adit/dao/DocumentDAO.java -text
@@ -256,6 +257,7 @@ adit-war/src/main/java/ee/adit/dvk/Container2_1Receiver.java -text
 adit-war/src/main/java/ee/adit/dvk/DeleteDocumentsFromDVKJob.java -text
 adit-war/src/main/java/ee/adit/dvk/DvkReceiver.java -text
 adit-war/src/main/java/ee/adit/dvk/DvkReceiverFactory.java -text
+adit-war/src/main/java/ee/adit/dvk/DvkSender.java -text
 adit-war/src/main/java/ee/adit/dvk/ReceiveJob.java -text
 adit-war/src/main/java/ee/adit/dvk/SendJob.java -text
 adit-war/src/main/java/ee/adit/dvk/UpdateStatusJob.java -text
