@@ -134,8 +134,12 @@ public class Container2_1Receiver implements DvkReceiver {
         recipientsBuilder.setAditUserDAO(documentService.getAditUserDAO());
         recipientsBuilder.setConfiguration(documentService.getConfiguration());
 
-        for (Pair<AditUser, Recipient> pair : recipientsBuilder.build()) {
-            documentService.sendDocument(document, pair.getLeft(), null, message.getDhlId(), pair.getRight().getMessageForRecipient());
+        for (Pair<AditUser, String> aditUserMessageForRecipient : recipientsBuilder.build()) {
+            documentService.sendDocument(document,
+                    aditUserMessageForRecipient.getLeft(), null,
+                    message.getDhlId(), aditUserMessageForRecipient.getRight());
         }
     }
+
+
 }
