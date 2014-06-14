@@ -197,6 +197,25 @@ public class DocumentService_SendReceiveDvkTest_Integration {
                                                             transportOutput.getDecSender().getOrganisationCode()));
         Assert.isTrue(UtilsService.compareStringsIgnoreCase(transportInput.getDecSender().getOrganisationCode(),
                                                             transportOutput.getDecSender().getPersonalIdCode()));
+        // Do asserts with an input file and output file
+        Assert.notNull(containerInput.getFile().size() > 0);
+        Assert.notNull(containerOutput.getFile().size() > 0);
+        dvk.api.container.v2_1.File fileInput = containerInput.getFile().get(0);
+        dvk.api.container.v2_1.File fileOutput = containerOutput.getFile().get(0);
+        Assert.notNull(fileInput);
+        Assert.notNull(fileOutput);
+        Assert.isTrue(UtilsService.compareStringsIgnoreCase(fileInput.getFileName(), fileOutput.getFileName()));
+        Assert.isTrue(UtilsService.compareStringsIgnoreCase(fileInput.getFileGuid(), fileOutput.getFileGuid()));
+        Assert.isTrue(fileInput.getFileSize().equals(fileOutput.getFileSize()));
+        Assert.isTrue(UtilsService.compareStringsIgnoreCase(fileInput.getMimeType(), fileOutput.getMimeType()));
+        // TODO: this assert does not work. There are absolutely different contents
+        Assert.isTrue(UtilsService.compareStringsIgnoreCase(fileInput.getZipBase64Content(),
+                                                            fileOutput.getZipBase64Content()));
+
+        // Do container version assert
+        Assert.isTrue(UtilsService.compareStringsIgnoreCase(containerInput.getInternalVersion().toString(),
+                                                            containerOutput.getInternalVersion().toString()));
+
 
         dvkMessages.add(receivedDVKMessage);
         aditDocuments.add(document);

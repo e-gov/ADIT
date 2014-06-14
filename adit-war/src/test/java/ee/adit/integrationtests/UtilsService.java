@@ -84,26 +84,24 @@ public class UtilsService {
             transaction.commit();
 
             // Create a document sharing, related with this document
-            // TODO: probably, add some other information (fields). At this moment we have only mandatory fields,
-            // TODO: that, just to save succesfully to DHL_SHARING table
-//            documentSharing = new DocumentSharing();
-//            documentSharing.setDocumentId(document.getId());
-//            documentSharing.setUserCode(document.getCreatorCode());
-//            documentSharing.setDocumentSharingType(DocumentService_SendReceiveDvkTest_Integration.DOCUMENT_SHARING_TYPE_SEND_TO_DVK);
-            RecipientsBuilder recipientsBuilder = new RecipientsBuilder(container);
-            recipientsBuilder.setConfiguration(documentService.getConfiguration());
-            recipientsBuilder.setAditUserDAO(documentService.getAditUserDAO());
-
-            for (Pair<AditUser, Recipient> pair : recipientsBuilder.build()) {
-                documentService.sendDocument(document, pair.getLeft(), null, null, pair.getRight().getMessageForRecipient());
-            }
-
+//            // TODO: probably, add some other information (fields). At this moment we have only mandatory fields,
+//            // TODO: that, just to save succesfully to DHL_SHARING table
+            documentSharing = new DocumentSharing();
+            documentSharing.setDocumentId(document.getId());
+            documentSharing.setUserCode(container.getTransport().getDecSender().getPersonalIdCode());
+            documentSharing.setDocumentSharingType(DocumentService_SendReceiveDvkTest_Integration.DOCUMENT_SHARING_TYPE_SEND_TO_DVK);
+//            RecipientsBuilder recipientsBuilder = new RecipientsBuilder(container);
+//            recipientsBuilder.setConfiguration(documentService.getConfiguration());
+//            recipientsBuilder.setAditUserDAO(documentService.getAditUserDAO());
+//            List<Pair<AditUser, String>> pair = recipientsBuilder.build();
+//            documentService.sendDocument(document, pair.get(0).getLeft(), null, null, pair.get(0).
+//                    getRight());
             // Save this document sharing to the ADIT DB
-//            documentSharingSession = daoCollections.getDocumentSharingDAO().getSessionFactory().openSession();
-//            documentSharingSession.setFlushMode(FlushMode.COMMIT);
-//            transaction = documentSharingSession.beginTransaction();
-//            documentSharingSession.save(documentSharing);
-//            transaction.commit();
+            documentSharingSession = daoCollections.getDocumentSharingDAO().getSessionFactory().openSession();
+            documentSharingSession.setFlushMode(FlushMode.COMMIT);
+            transaction = documentSharingSession.beginTransaction();
+            documentSharingSession.save(documentSharing);
+            transaction.commit();
 
             // Create a document file, related with this document
             documentFile = new DocumentFile();
