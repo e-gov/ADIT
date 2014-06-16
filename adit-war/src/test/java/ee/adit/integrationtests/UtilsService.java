@@ -87,7 +87,8 @@ public class UtilsService {
             documentSharing = new DocumentSharing();
             documentSharing.setDocumentId(document.getId());
             documentSharing.setUserCode(recipient.getUserCode());
-            documentService.sendDocument(document, recipient, null, null, null);
+            documentService.sendDocument(document, recipient, null, null,
+                    DocumentService_SendReceiveDvkTest_Integration.DOCUMENT_SHARING_COMMENT);
 
             // Create a document file, related with this document
             documentFile = new DocumentFile();

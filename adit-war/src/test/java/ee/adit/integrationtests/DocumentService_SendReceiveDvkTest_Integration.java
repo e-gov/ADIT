@@ -58,6 +58,7 @@ public class DocumentService_SendReceiveDvkTest_Integration {
     final static String DOCUMENT_SHARING_TYPE_SEND_TO_DVK = "send_dvk";
     final static int DOCUMENT_FILE_TYPE_ID = 1;
     final static String ACCESS_CONDITIONS_CODE = "AK";
+    final static String DOCUMENT_SHARING_COMMENT = "Comment_example";
 
     //private static Logger logger = Logger.getLogger(UtilsService.class);
 
@@ -167,9 +168,6 @@ public class DocumentService_SendReceiveDvkTest_Integration {
         }
 
         // Get a sent document from ADIT DB, and get a received message from DVK UK DB
-        // TODO: is it a good way? If do not refresh the document, still have the old values in the object "document"
-        // TODO: if use just document.getDvkId() with out a refresh - I get only an old value (id) - "1"
-        // TODO: but, currently, the value is 6xx (the real value of DVK_id), and it's a cause why I get this message again
         Document sentAditDocument = documentDAO.getDocument(document.getId());
         PojoMessage receivedDVKMessage = dvkDAO.getMessage(sentAditDocument.getDvkId());
 
@@ -181,6 +179,8 @@ public class DocumentService_SendReceiveDvkTest_Integration {
         Assert.notNull(sentAditDocument.getDocumentFiles());
         Assert.notNull(receivedDVKMessage.getData());
         Assert.isTrue(UtilsService.compareStringsIgnoreCase(sentAditDocument.getGuid(), receivedDVKMessage.getDhlGuid()));
+        Object documentSharings[] = sentAditDocument.getDocumentSharings().toArray();
+        Assert.notNull(documentSharings);
 
         // Get a container ver 2.1 from the received DVK document
         ContainerVer2_1 containerOutput = ContainerVer2_1.parse(UtilsService.clobToString(receivedDVKMessage.getData()));
@@ -198,8 +198,7 @@ public class DocumentService_SendReceiveDvkTest_Integration {
         Assert.isTrue(UtilsService.compareStringsIgnoreCase(documentService.getConfiguration().getDvkOrgCode(),
                                                             transportOutput.getDecSender().getOrganisationCode()));
         Assert.isNull(transportOutput.getDecSender().getStructuralUnit());
-        // TODO: is it correct?
-        Assert.isTrue(UtilsService.compareStringsIgnoreCase("EE" + transportOutput.getDecSender().getPersonalIdCode(),
+        Assert.isTrue(UtilsService.compareStringsIgnoreCase(UtilsService.addPrefixIfNecessary(transportOutput.getDecSender().getPersonalIdCode()),
                                                             sentAditDocument.getCreatorCode()));
         Assert.notNull(transportOutput.getDecRecipient());
         Assert.notNull(transportInput.getDecRecipient());
@@ -224,7 +223,6 @@ public class DocumentService_SendReceiveDvkTest_Integration {
         Assert.isNull(containerOutput.getRecordCreator().getOrganisation().getPositionTitle());
 
         // Do asserts with RecordSenderToDec
-        Assert.notNull(containerInput.getRecordSenderToDec());
         Assert.notNull(containerOutput.getRecordSenderToDec());
         Assert.notNull(containerOutput.getRecordSenderToDec().getOrganisation());
         Assert.isTrue(UtilsService.compareStringsIgnoreCase(containerOutput.getRecordSenderToDec().getOrganisation().getName(),
@@ -237,17 +235,16 @@ public class DocumentService_SendReceiveDvkTest_Integration {
                 sentAditDocument.getCreatorCode().substring(0, Math.min(sentAditDocument.getCreatorCode().length(), 2))));
 
         // Do asserts with Recipient
-        Assert.notNull(containerInput.getRecipient());
         Assert.notNull(containerOutput.getRecipient());
         Assert.isTrue(containerOutput.getRecipient().size() > 0);
         AditUser recipient = aditUserDAO.getUserByID(containerInput.getTransport().getDecRecipient().get(0).getOrganisationCode());
         Assert.notNull(recipient);
         Assert.notNull(UtilsService.compareStringsIgnoreCase(containerOutput.getRecipient().get(0).getOrganisation().getName(),
                 recipient.getFullName()));
+        Assert.isTrue(UtilsService.compareStringsIgnoreCase(containerOutput.getRecipient().get(0).getMessageForRecipient(),
+                                                           ((DocumentSharing) documentSharings[0]).getComment()));
         Assert.notNull(UtilsService.compareStringsIgnoreCase(containerOutput.getRecipient().get(0).getOrganisation().getOrganisationCode(),
                 recipient.getDvkOrgCode()));
-        Object documentSharings[] = sentAditDocument.getDocumentSharings().toArray();
-        Assert.notNull(documentSharings);
         String documentSharingUserCode = ((DocumentSharing) documentSharings[0]).getUserCode();
         Assert.isTrue(UtilsService.compareStringsIgnoreCase(containerOutput.getRecipient().get(0).getOrganisation().getResidency(),
                 documentSharingUserCode.substring(0, Math.min(documentSharingUserCode.length(), 2))));
@@ -259,11 +256,12 @@ public class DocumentService_SendReceiveDvkTest_Integration {
                                                             sentAditDocument.getGuid()));
         Assert.isTrue(UtilsService.compareStringsIgnoreCase(containerInput.getRecordMetadata().getRecordTitle(),
                                                             containerOutput.getRecordMetadata().getRecordTitle()));
-        Assert.notNull(UtilsService.compareStringsIgnoreCase(containerInput.getRecordMetadata().getRecordGuid(), document.getGuid()));
         Assert.isTrue(UtilsService.compareStringsIgnoreCase(containerInput.getRecordMetadata().getRecordType(),
                                                             containerOutput.getRecordMetadata().getRecordType()));
-        Assert.notNull(containerOutput.getRecordMetadata().getRecordOriginalIdentifier());
-        Assert.notNull(containerOutput.getRecordMetadata().getRecordDateRegistered());
+        Assert.isTrue(UtilsService.compareStringsIgnoreCase(containerOutput.getRecordMetadata().getRecordOriginalIdentifier(),
+                Long.toString(sentAditDocument.getId())));
+        Assert.isTrue(UtilsService.isToday(containerOutput.getRecordMetadata().getRecordDateRegistered()));
+        // TODO: Document.content match with recordAbstract
 
         // Do asserts with Access
         Assert.isTrue(UtilsService.compareStringsIgnoreCase(containerOutput.getAccess().getAccessConditionsCode(),
