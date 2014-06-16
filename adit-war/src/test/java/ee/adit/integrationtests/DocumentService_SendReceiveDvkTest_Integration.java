@@ -146,7 +146,9 @@ public class DocumentService_SendReceiveDvkTest_Integration {
         // Gathering all necessary DAO objects to pass it
         DAOCollections daoCollections = new DAOCollections(documentDAO, aditUserDAO, documentSharingDAO, documentFileDAO);
         try {
-            document = UtilsService.prepareAndSaveAditDocument(daoCollections, containerInput, documentService);
+            AditUser recipent = null; //find the user
+
+            document = UtilsService.prepareAndSaveAditDocument(daoCollections, containerInput, recipent, documentService);
         } catch (Exception ex) {
             System.out.println("Can't save a document to ADIT DB");
             ex.printStackTrace();

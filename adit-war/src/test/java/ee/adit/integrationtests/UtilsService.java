@@ -51,7 +51,7 @@ public class UtilsService {
     private static Logger logger = Logger.getLogger(UtilsService.class);
 
     public static Document prepareAndSaveAditDocument(DAOCollections daoCollections,
-                                                      ContainerVer2_1 container,
+                                                      ContainerVer2_1 container, AditUser recipient,
                                                       DocumentService documentService) throws Exception {
         Document document = null;
         DocumentSharing documentSharing;
@@ -90,18 +90,14 @@ public class UtilsService {
             documentSharing.setDocumentId(document.getId());
             documentSharing.setUserCode(container.getTransport().getDecSender().getPersonalIdCode());
             documentSharing.setDocumentSharingType(DocumentService_SendReceiveDvkTest_Integration.DOCUMENT_SHARING_TYPE_SEND_TO_DVK);
-//            RecipientsBuilder recipientsBuilder = new RecipientsBuilder(container);
-//            recipientsBuilder.setConfiguration(documentService.getConfiguration());
-//            recipientsBuilder.setAditUserDAO(documentService.getAditUserDAO());
-//            List<Pair<AditUser, String>> pair = recipientsBuilder.build();
-//            documentService.sendDocument(document, pair.get(0).getLeft(), null, null, pair.get(0).
-//                    getRight());
+
+            documentService.sendDocument(document, recipient, null, null, null);
             // Save this document sharing to the ADIT DB
-            documentSharingSession = daoCollections.getDocumentSharingDAO().getSessionFactory().openSession();
+/*            documentSharingSession = daoCollections.getDocumentSharingDAO().getSessionFactory().openSession();
             documentSharingSession.setFlushMode(FlushMode.COMMIT);
             transaction = documentSharingSession.beginTransaction();
             documentSharingSession.save(documentSharing);
-            transaction.commit();
+            transaction.commit();*/
 
             // Create a document file, related with this document
             documentFile = new DocumentFile();
