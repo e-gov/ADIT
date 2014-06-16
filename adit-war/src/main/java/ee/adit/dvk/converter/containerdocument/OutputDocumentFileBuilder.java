@@ -66,7 +66,7 @@ public class OutputDocumentFileBuilder {
                     tempDocument.setContentType(dvkFile.getMimeType());
                     tempDocument.setName(dvkFile.getFileName());
                     tempDocument.setSizeBytes(dvkFile.getFileSize().longValue());
-
+                    tempDocument.setGuid(dvkFile.getFileGuid());
                     // Add the temporary file to the list
                     result.add(tempDocument);
                 }
