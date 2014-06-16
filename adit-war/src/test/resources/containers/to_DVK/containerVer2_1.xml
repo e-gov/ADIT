@@ -1,12 +1,12 @@
 <DecContainer xmlns="http://www.riik.ee/schemas/deccontainer/vers_2_1/">
   <Transport>
     <DecSender>
-      <OrganisationCode>adit</OrganisationCode>
-      <PersonalIdCode>EE70006317</PersonalIdCode>
+      <OrganisationCode>EE70006317</OrganisationCode>
+      <PersonalIdCode>EE38806190294</PersonalIdCode>
     </DecSender>
     <DecRecipient>
-      <OrganisationCode>adit</OrganisationCode>
-      <PersonalIdCode>EE70006317</PersonalIdCode>
+      <OrganisationCode>EE70006317</OrganisationCode>
+      <PersonalIdCode>EE39105200028</PersonalIdCode>
     </DecRecipient>
   </Transport>
   <RecordCreator>
@@ -67,8 +67,8 @@
   </RecordSenderToDec>
   <Recipient>
     <Organisation>
-      <Name>Icefire OÜ</Name>
-      <OrganisationCode>10885324</OrganisationCode>
+      <Name>Riigi Infosüsteemi Amet</Name>
+      <OrganisationCode>EE70006317</OrganisationCode>
       <Residency>EE</Residency>
     </Organisation>
   </Recipient>

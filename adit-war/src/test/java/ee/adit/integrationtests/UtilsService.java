@@ -66,7 +66,7 @@ public class UtilsService {
             // Crate a PojoMessage just to use convert method. Put some information to this message
             PojoMessage pojoMessage = new PojoMessage();
             pojoMessage.setDhlId(DocumentService_SendReceiveDvkTest_Integration.DEFAULT_DHL_ID);
-            pojoMessage.setTitle(DocumentService_SendReceiveDvkTest_Integration.DEFAULT_DOCUMENT_TITLE);
+            pojoMessage.setTitle(container.getRecordMetadata().getRecordTitle());
             pojoMessage.setDhlGuid(DocumentService_SendReceiveDvkTest_Integration.DEFAULT_GUID.toString());
 
             // Create a document, is based on the container
@@ -84,20 +84,10 @@ public class UtilsService {
             transaction.commit();
 
             // Create a document sharing, related with this document
-//            // TODO: probably, add some other information (fields). At this moment we have only mandatory fields,
-//            // TODO: that, just to save succesfully to DHL_SHARING table
             documentSharing = new DocumentSharing();
             documentSharing.setDocumentId(document.getId());
-            documentSharing.setUserCode(container.getTransport().getDecSender().getPersonalIdCode());
-            documentSharing.setDocumentSharingType(DocumentService_SendReceiveDvkTest_Integration.DOCUMENT_SHARING_TYPE_SEND_TO_DVK);
-
+            documentSharing.setUserCode(recipient.getUserCode());
             documentService.sendDocument(document, recipient, null, null, null);
-            // Save this document sharing to the ADIT DB
-/*            documentSharingSession = daoCollections.getDocumentSharingDAO().getSessionFactory().openSession();
-            documentSharingSession.setFlushMode(FlushMode.COMMIT);
-            transaction = documentSharingSession.beginTransaction();
-            documentSharingSession.save(documentSharing);
-            transaction.commit();*/
 
             // Create a document file, related with this document
             documentFile = new DocumentFile();
