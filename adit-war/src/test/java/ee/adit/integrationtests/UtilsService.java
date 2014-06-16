@@ -110,9 +110,9 @@ public class UtilsService {
             transaction.commit();
 
         } catch (Exception ex) {
-            System.out.println("prepareAndSaveAditDocument() - exception: " + ex.getMessage());
+            logger.error("prepareAndSaveAditDocument() - exception: " + ex.getMessage());
             ex.printStackTrace();
-            throw ex;
+            throw new RuntimeException(ex);
         } finally {
             if (aditDBSession != null) aditDBSession.close();
             if (documentSharingSession != null) documentSharingSession.close();
@@ -344,9 +344,11 @@ public class UtilsService {
 
             if (result.getDocumentFiles() == null || result.getDocumentFiles().size() == 0) {
                 logger.error("DocumentFiles - " + result.getDocumentFiles());
+                //throw new Exception("DocumentFiles wasn't retrieved");
             }
             if (result.getDocumentSharings() == null || result.getDocumentSharings().size() == 0) {
-                logger.error("DocumentFiles - " + result.getDocumentSharings());
+                logger.error("DocumentSharings - " + result.getDocumentSharings());
+                //throw new Exception("DocumentSharings wasn't retrieved");
             }
 
         } catch (Exception e) {
@@ -357,15 +359,6 @@ public class UtilsService {
             if (session != null) {
                 session.close();
             }
-        }
-
-        if (result.getDocumentFiles() == null || result.getDocumentFiles().size() == 0) {
-            logger.error("DocumentFiles - " + result.getDocumentFiles());
-            throw new Exception("DocumentFiles wasn't retrieved");
-        }
-        if (result.getDocumentSharings() == null || result.getDocumentSharings().size() == 0) {
-            logger.error("DocumentSharings - " + result.getDocumentSharings());
-            throw new Exception("DocumentSharings wasn't retrieved");
         }
 
         return result;

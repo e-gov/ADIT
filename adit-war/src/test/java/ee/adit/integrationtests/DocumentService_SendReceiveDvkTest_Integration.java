@@ -11,14 +11,17 @@ import dvk.api.ml.PojoMessage;
 import ee.adit.dao.AditUserDAO;
 import ee.adit.dao.DocumentDAO;
 import ee.adit.dao.DocumentFileDAO;
+import ee.adit.dao.DocumentHistoryDAO;
 import ee.adit.dao.DocumentSharingDAO;
 import ee.adit.dao.dvk.DvkDAO;
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.DocumentFile;
+import ee.adit.dao.pojo.DocumentHistory;
 import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.service.DocumentService;
 import ee.adit.test.util.DAOCollections;
+import org.apache.log4j.Logger;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Property;
 import org.junit.After;
@@ -36,6 +39,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -60,7 +64,7 @@ public class DocumentService_SendReceiveDvkTest_Integration {
     final static String ACCESS_CONDITIONS_CODE = "AK";
     final static String DOCUMENT_SHARING_COMMENT = "Comment_example";
 
-    //private static Logger logger = Logger.getLogger(UtilsService.class);
+    static Logger logger = Logger.getLogger(DocumentService_SendReceiveDvkTest_Integration.class.getName());
 
     @Autowired
     private DvkDAO dvkDAO;
@@ -70,6 +74,8 @@ public class DocumentService_SendReceiveDvkTest_Integration {
     private DocumentSharingDAO documentSharingDAO;
     @Autowired
     private DocumentFileDAO documentFileDAO;
+    @Autowired
+    private DocumentHistoryDAO documentHistoryDAO;
     @Autowired
     private AditUserDAO aditUserDAO;
     @Autowired
@@ -84,8 +90,8 @@ public class DocumentService_SendReceiveDvkTest_Integration {
             clearDvkDb(dvkMessages);
             clearAditDb(aditDocuments);
         } catch (Exception e) {
-            //TODO: Smth to do with exceptions
-            //logger.error(e.getMessage());
+            logger.error("beforeTest(). " + e.getMessage());
+            //throw new RuntimeException(e);
         }
     }
 
@@ -98,8 +104,8 @@ public class DocumentService_SendReceiveDvkTest_Integration {
             dvkMessages.clear();
             aditDocuments.clear();
         } catch (Exception e) {
-            //TODO: Smth to do with exceptions
-            System.out.println("!!!!!!!!!!!!!!!!!!!! Can't do operations after the test");
+            logger.error("afterTest(). " + e.getMessage());
+            //throw new RuntimeException(e);
         }
     }
 
@@ -133,10 +139,10 @@ public class DocumentService_SendReceiveDvkTest_Integration {
             containerFilePath = UtilsService.getContainerPath(CONTAINER_V_2_1, TO_DVK);
             containerFile = new File(containerFilePath);
         } catch (Exception ex) {
-            System.out.println("There is a problem with the container"
+            logger.error("There is a problem with the container"
                     + ex.getMessage());
             ex.printStackTrace();
-            throw ex;
+            throw new RuntimeException(ex);
         }
 
         // Create a container ver 2.1, based on XML file
@@ -151,9 +157,9 @@ public class DocumentService_SendReceiveDvkTest_Integration {
             AditUser recipent = aditUserDAO.getUserByID(containerInput.getTransport().getDecRecipient().get(0).getOrganisationCode()); //find the user
             document = UtilsService.prepareAndSaveAditDocument(daoCollections, containerInput, recipent, documentService);
         } catch (Exception ex) {
-            System.out.println("Can't save a document to ADIT DB");
+            logger.error("Can't save a document to ADIT DB");
             ex.printStackTrace();
-            throw ex;
+            throw new RuntimeException(ex);
         }
 
         Assert.notNull(document);
@@ -162,9 +168,9 @@ public class DocumentService_SendReceiveDvkTest_Integration {
         try {
             documentService.sendDocumentsToDVK();
         } catch (Exception ex) {
-            System.out.println("Can't send document to DVK");
+            logger.error("Can't send document to DVK");
             ex.printStackTrace();
-            throw ex;
+            throw new RuntimeException(ex);
         }
 
         // Get a sent document from ADIT DB, and get a received message from DVK UK DB
@@ -298,7 +304,7 @@ public class DocumentService_SendReceiveDvkTest_Integration {
     @Test
     public void receiveDocumentFromDVKClient_V1_Test() throws Exception {
         final String DIGIDOC_CONF_FILE = "/jdigidoc.cfg";
-        final String CONTAINER_V_1_0 = "containerVer1_0.xml";
+        final String CONTAINER_V_1_0 = "containerVer1_0_ddoc.xml";
 
         String digiDocConfFilePath = null;
         String containerFilePath;
@@ -312,14 +318,10 @@ public class DocumentService_SendReceiveDvkTest_Integration {
             containerFile = new java.io.File(containerFilePath);
 
         } catch (Exception e) {
-            //todo: inform about problems with files
-            System.out.println("There is a problem with the container or/and  digidoc files." + e.getMessage());
-            throw e;
+            throw new RuntimeException("There is a problem with the container or/and  digidoc files.", e);
         }
 
-
-        System.out.println("" + DEFAULT_GUID);
-
+        logger.debug("DEFAULT_GUID - " + DEFAULT_GUID);
         ContainerVer1 container = (ContainerVer1) UtilsService.getContainer(containerFile, Container.Version.Ver1);
 
         // Get recipients used space for further control
@@ -328,19 +330,20 @@ public class DocumentService_SendReceiveDvkTest_Integration {
             try {
                 usersFromContainer.put(saaja.getIsikukood(), aditUserDAO.getUsedSpaceForUser(saaja.getIsikukood()));
             } catch (NullPointerException e) {
-                System.out.println("There is a problem with getting recipients");
-                throw e;
+                throw new RuntimeException("There is a problem with getting recipients.", e);
             }
         }
 
+        Long senderUserPersonQuota = aditUserDAO.getUsedSpaceForUser(UtilsService.addPrefixIfNecessary(container.getTransport().getSaatjad().get(0).getIsikukood()));
+        Long senderUserOrganisationQuota = aditUserDAO.getUsedSpaceForUser(UtilsService.addPrefixIfNecessary(container.getTransport().getSaatjad().get(0).getRegNr()));
 
         // Create new PojoMessage with capsule v 1.0 and Save to DVK Client DB
         PojoMessage dvkMessage = null;
         try {
             dvkMessage = UtilsService.prepareAndSaveDvkMessage_V_1(dvkDAO, containerFile);
         } catch (Exception e) {
-            System.out.println("Can't prepare and save the DVK message");
-            throw e;
+            logger.error("Can't prepare and save the DVK message." + e.getMessage());
+            throw new RuntimeException(e);
         }
 
         // Check message was inserted into DVK Client DB
@@ -359,8 +362,8 @@ public class DocumentService_SendReceiveDvkTest_Integration {
         try {
             aditDocument = UtilsService.getNonLazyInitializedDocument(documentDAO, aditDocument.getId());
         } catch (Exception e) {
-            System.out.println("Can't get not lazy initialized document");
-            throw e;
+            logger.error("Can't get not lazy initialized document." + e.getMessage());
+            throw new RuntimeException(e);
         }
 
         // Check document was inserted into ADIT DB
@@ -419,7 +422,7 @@ public class DocumentService_SendReceiveDvkTest_Integration {
         // Table DOCUMENT_FILE
         // TODO: finish this mapping (stack - ???)
         Assert.notNull(aditDocument.getDocumentFiles());
-        for (DocumentFile documentFile : aditDocument.getDocumentFiles()) {
+/*        for (DocumentFile documentFile : aditDocument.getDocumentFiles()) {
             for (DataFile dataFile : container.getSignedDoc().getDataFiles()) {
                 if (dataFile.getFileId().equals(documentFile.getDdocDataFileId())) {
                     // TODO: asserts for documentFile.getData (Blob) and String from dataFile - Do we need to do it?
@@ -439,9 +442,7 @@ public class DocumentService_SendReceiveDvkTest_Integration {
                     }
                 }
             }
-        }
-
-
+        }*/
 
         // Table SIGNATURE
         // TODO: Do it later
@@ -451,19 +452,31 @@ public class DocumentService_SendReceiveDvkTest_Integration {
 //        }
 
         // Table DOCUMENT_HISTORY
-        Assert.notNull(aditDocument.getDocumentHistories());
+        aditDocument = documentDAO.getDocument(aditDocument.getId());
+        Set<DocumentHistory> documentHistories = aditDocument.getDocumentHistories();
+        Assert.notNull(documentHistories);
+
+
         // TODO: finish it later
 //        for (DocumentHistory documentHistory : aditDocument.getDocumentHistories()) {
 //            // TODO: DOCUMENT_HISTORY_TYPE, DOCUMENT_HISTORY_DESCRIPTION_EXTRACT_FILE (Liza TODO)
 //            Assert.notNull(documentHistory.getEventDate());
 //        }
 
-        // Table ADIT_USER
-        // TODO: understand why a quota doesn't decrease
         for (DocumentSharing documentSharing : aditDocument.getDocumentSharings()) {
-            AditUser creatorUser = aditUserDAO.getUserByID(documentSharing.getUserCode());
-            Assert.isTrue(creatorUser.getDiskQuotaUsed() >= usersFromContainer.get(creatorUser.getUserCode()));
+            AditUser recipientUser = aditUserDAO.getUserByID(documentSharing.getUserCode());
+            logger.debug("Recipient " + documentSharing.getUserCode() + " recipientUserQuota " + usersFromContainer.get(recipientUser.getUserCode()));
+            logger.debug("Recipient " + documentSharing.getUserCode() + " recipientUserQuota after receive from DVK " + recipientUser.getDiskQuotaUsed());
+
+            Assert.isTrue(recipientUser.getDiskQuotaUsed() >= usersFromContainer.get(recipientUser.getUserCode()));
         }
+
+        logger.debug("senderUserOrganisationQuota " + senderUserOrganisationQuota);
+        logger.debug("senderOrganisationQuota after receive from DVK " + senderUserOrganisationQuota);
+        logger.debug("senderUserPersonQuota " + senderUserPersonQuota);
+        logger.debug("senderUserPersonQuota  after receive from DVK " + senderUserPersonQuota);
+        // Assert.isTrue(usersFromContainer1.get(0) < aditUserDAO.getUserByID(aditDocument.getCreatorCode()).getDiskQuotaUsed());
+
         //Table DHL_MESSAGES
         Assert.notNull(dvkDAO.getMessage(dvkMessage.getDhlMessageId()).getLocalItemId());
 
@@ -478,7 +491,7 @@ public class DocumentService_SendReceiveDvkTest_Integration {
     @Test
     public void receiveDocumentFromDVKClient_V2_Test() throws Exception {
         final String DIGIDOC_CONF_FILE = "/jdigidoc.cfg";
-        final String CONTAINER_V_2_1 = "containerVer2_1.xml";
+        final String CONTAINER_V_2_1 = "containerVer2_1_ddoc.xml";
 
         String digiDocConfFilePath = null;
         String containerFilePath;
@@ -487,18 +500,16 @@ public class DocumentService_SendReceiveDvkTest_Integration {
         try {
             // Path to digiDoc configuration file, needed as parameter for receiveDocumentsFromDVK
             digiDocConfFilePath = DocumentService_SendReceiveDvkTest_Integration.class.getResource(DIGIDOC_CONF_FILE).getPath();
-            // Path to the container v 1.0
+            // Path to the 2.1 container file
             containerFilePath = UtilsService.getContainerPath(CONTAINER_V_2_1, TO_ADIT);
             containerFile = new java.io.File(containerFilePath);
 
         } catch (Exception e) {
-            //todo: inform about problems with files
-            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!! There is a problem with the container or/and  digidoc files." + e.getMessage());
-            throw e;
+            logger.error("There is a problem with the container or/and digidoc files. " + e.getMessage());
+            throw new RuntimeException(e);
         }
 
-        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!" + DEFAULT_GUID);
-
+        logger.debug("DEFAULT_GUID " + DEFAULT_GUID);
         ContainerVer2_1 container = (ContainerVer2_1) UtilsService.getContainer(containerFile, Container.Version.Ver2_1);
 
         // Get recipients used space for further control
@@ -506,19 +517,22 @@ public class DocumentService_SendReceiveDvkTest_Integration {
         for (DecRecipient saaja : container.getTransport().getDecRecipient()) {
             try {
                 usersFromContainer.put(saaja.getPersonalIdCode(), aditUserDAO.getUsedSpaceForUser(saaja.getPersonalIdCode()));
-            } catch (NullPointerException e) {
-                System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!! There is a problem with getting recipients");
-                throw e;
+            } catch (Exception e) {
+                logger.error("There is a problem with getting recipients. " + e.getMessage());
+                throw new RuntimeException(e);
             }
         }
+
+        Long senderUserPersonQuota = aditUserDAO.getUsedSpaceForUser(UtilsService.addPrefixIfNecessary(container.getTransport().getDecSender().getPersonalIdCode()));
+        Long senderUserOrganisationQuota = aditUserDAO.getUsedSpaceForUser(UtilsService.addPrefixIfNecessary(container.getTransport().getDecSender().getOrganisationCode()));
 
         // Create new PojoMessage with capsule v 2.1 and Save to DVK Client DB
         PojoMessage dvkMessage = null;
         try {
             dvkMessage = UtilsService.prepareAndSaveDvkMessage_V_2_1(dvkDAO, containerFile);
         } catch (Exception e) {
-            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!! Can't prepare and save the DVK message");
-            throw e;
+            logger.error("Can't prepare and save the DVK message. " + e.getMessage());
+            throw new RuntimeException(e);
         }
 
         // Check message was inserted into DVK Client DB
@@ -537,8 +551,8 @@ public class DocumentService_SendReceiveDvkTest_Integration {
         try {
             aditDocument = UtilsService.getNonLazyInitializedDocument(documentDAO, aditDocument.getId());
         } catch (Exception e) {
-            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!! Can't get not lazy initialized document");
-            throw e;
+            logger.error("Can't get not lazy initialized document. " + e.getMessage());
+            throw new RuntimeException(e);
         }
 
         // Check document was inserted into ADIT DB
@@ -559,36 +573,40 @@ public class DocumentService_SendReceiveDvkTest_Integration {
         // PARENT_ID will be not yet used in ADIT - JIRA ADIT-9
         Assert.isTrue(aditDocument.getLocked());
         Assert.isTrue(UtilsService.isToday(aditDocument.getLockingDate()));
-        // If first added file happens to be a DigiDoc container then
-        // extract files and signatures from container. Otherwise add
-        // container as a regular file.
         Assert.isTrue(aditDocument.getSignable());
-/*
-        if (container.getSignedDoc().getDataFiles().get(0).getFileName().contains("ddoc")) {
-            Assert.isTrue(aditDocument.getSigned());
-        }
-*/
+        if (container.getSignatureMetadata() != null) Assert.isTrue(aditDocument.getSigned());
+
         // Table DOCUMENT_SHARING
         Assert.notNull(aditDocument.getDocumentSharings());
         Assert.isTrue(aditDocument.getDocumentSharings().size() == container.getTransport().getDecRecipient().size());
+
+        HashMap<String, DocumentSharing> aditDocSharings = new HashMap<String, DocumentSharing>();
         for (DocumentSharing documentSharing : aditDocument.getDocumentSharings()) {
+            aditDocSharings.put(documentSharing.getUserCode(), documentSharing);
+        }
             for (DecRecipient recipient : container.getTransport().getDecRecipient()) {
-                if (UtilsService.compareStringsIgnoreCase(recipient.getPersonalIdCode(), documentSharing.getUserCode())) {
-                    AditUser aditUser = aditUserDAO.getUserByID(recipient.getPersonalIdCode());
-                    Assert.isTrue(UtilsService.compareStringsIgnoreCase(aditUser.getFullName(), documentSharing.getUserName()));
+            String recipientAditUserCode = UtilsService.addPrefixIfNecessary(recipient.getPersonalIdCode());
+            Assert.isTrue(aditDocSharings.containsKey(recipientAditUserCode));
+            DocumentSharing documentSharing = aditDocSharings.get(recipientAditUserCode);
+
                     Assert.isTrue(UtilsService.compareStringsIgnoreCase(documentSharing.getDocumentSharingType(), DOCUMENT_SHARING_TYPE_SEND_TO_ADIT));
                     Assert.isTrue(UtilsService.isToday(documentSharing.getCreationDate()));
-                    Assert.isNull(documentSharing.getDvkFolder());
+            Assert.isNull(documentSharing.getDvkFolder());//todo
                     Assert.isTrue(documentSharing.getDvkId() == DEFAULT_DHL_ID);
                 }
-            }
-        }
 
         // Table DOCUMENT_FILE
         Assert.notNull(aditDocument.getDocumentFiles());
+        HashMap<String, DocumentFile> aditDocFiles = new HashMap<String, DocumentFile>();
         for (DocumentFile documentFile : aditDocument.getDocumentFiles()) {
+            aditDocFiles.put(documentFile.getGuid(), documentFile);
+        }
+/*
             for (dvk.api.container.v2_1.File dataFile : container.getFile()) {
-                if (dataFile.getFileGuid().equals(documentFile.getGuid())) {
+            String fileGuid = dataFile.getFileGuid();
+            Assert.isTrue(aditDocFiles.containsKey(fileGuid));
+            DocumentFile documentFile = aditDocFiles.get(fileGuid);
+
                     // TODO: asserts for documentFile.getData (Blob) and String from dataFile - Do we need to do it?
                     // TODO: asserts for DOCUMENT_FILE_TYPE_ID  (if ddoc)
                     if (dataFile.getFileName().contains("ddoc")) {
@@ -605,16 +623,18 @@ public class DocumentService_SendReceiveDvkTest_Integration {
                         Assert.notNull(documentFile.getFileDataInDdoc());
                     }
                 }
-            }
-        }
-
+*/
 
         // Table SIGNATURE
         // TODO: Do it later
-//        Assert.notNull(aditDocument.getSignatures());
+        if (container.getSignatureMetadata() != null) {
+            Assert.notNull(aditDocument.getSignatures());
 //        for (Signature signature : aditDocument.getSignatures()){
 //
 //        }
+
+        }
+//
 
         // Table DOCUMENT_HISTORY
         Assert.notNull(aditDocument.getDocumentHistories());
@@ -627,9 +647,20 @@ public class DocumentService_SendReceiveDvkTest_Integration {
         // Table ADIT_USER
         // TODO: understand why a quota doesn't decrease
         for (DocumentSharing documentSharing : aditDocument.getDocumentSharings()) {
-            AditUser creatorUser = aditUserDAO.getUserByID(documentSharing.getUserCode());
-            Assert.isTrue(creatorUser.getDiskQuotaUsed() >= usersFromContainer.get(creatorUser.getUserCode()));
+            AditUser recipientUser = aditUserDAO.getUserByID(documentSharing.getUserCode());
+            logger.debug("Recipient " + documentSharing.getUserCode() + " recipientUserQuota " + usersFromContainer.get(recipientUser.getUserCode()));
+            logger.debug("Recipient " + documentSharing.getUserCode() + " recipientUserQuota after receive from DVK " + recipientUser.getDiskQuotaUsed());
+
+            Assert.isTrue(recipientUser.getDiskQuotaUsed() >= usersFromContainer.get(recipientUser.getUserCode()));
         }
+
+        logger.debug("senderUserOrganisationQuota " + senderUserOrganisationQuota);
+        logger.debug("senderOrganisationQuota after receive from DVK " + senderUserOrganisationQuota);
+        logger.debug("senderUserPersonQuota " + senderUserPersonQuota);
+        logger.debug("senderUserPersonQuota  after receive from DVK " + senderUserPersonQuota);
+        // Assert.isTrue(usersFromContainer1.get(0) < aditUserDAO.getUserByID(aditDocument.getCreatorCode()).getDiskQuotaUsed());
+
+
         //Table DHL_MESSAGES
         Assert.notNull(dvkDAO.getMessage(dvkMessage.getDhlMessageId()).getLocalItemId());
 
@@ -650,6 +681,7 @@ public class DocumentService_SendReceiveDvkTest_Integration {
 
         DetachedCriteria dcMessage = DetachedCriteria.forClass(PojoMessage.class, "dhlMessage");
 
+        try {
         if (dvkMsgs == null || dvkMsgs.size() == 0) {
             dcMessage.add(Property.forName("dhlMessage.dhlId").eq(DEFAULT_DHL_ID));
             dvkMsgs = dvkDAO.getHibernateTemplate().findByCriteria(dcMessage);
@@ -658,6 +690,10 @@ public class DocumentService_SendReceiveDvkTest_Integration {
         for (PojoMessage msg : dvkMsgs) {
             dvkDAO.getHibernateTemplate().delete(msg);
         }
+        } catch (Exception e) {
+            logger.error("clearDvkDb exception. " + e.getMessage());
+            throw new RuntimeException(e);
+    }
     }
 
     public void clearAditDb(List<Document> aditDocs) {
@@ -672,13 +708,14 @@ public class DocumentService_SendReceiveDvkTest_Integration {
 
             for (Document doc : aditDocs) {
                 doc = UtilsService.getNonLazyInitializedDocument(documentDAO, doc.getId());
+                documentHistoryDAO.getHibernateTemplate().deleteAll(doc.getDocumentHistories());
                 documentFileDAO.getHibernateTemplate().deleteAll(doc.getDocumentFiles());
                 documentSharingDAO.getHibernateTemplate().deleteAll(doc.getDocumentSharings());
                 documentDAO.getHibernateTemplate().delete(doc);
             }
         } catch (Exception e) {
-            //TODO: Smth to do with exceptions
-            //logger.error(e.getMessage());
+            logger.error("clearAditDb exception. " + e.getMessage());
+            //throw new RuntimeException(e);
         }
     }
 }
