@@ -55,6 +55,7 @@ public class DocumentService_SendReceiveDvkTest_Integration {
     final static String RIA_ADIT_USER_CODE = "";
     final static String RIA_ADIT_PERSON_USER_CODE = "";
     final static String DOCUMENT_SHARING_TYPE_SEND_TO_ADIT = "send_adit";
+    final static String DOCUMENT_SHARING_TYPE_SEND_TO_DVK = "send_dvk";
     final static int DOCUMENT_FILE_TYPE_ID = 1;
     final static String ACCESS_CONDITIONS_CODE = "AK";
 
@@ -166,6 +167,9 @@ public class DocumentService_SendReceiveDvkTest_Integration {
         }
 
         // Get a sent document from ADIT DB, and get a received message from DVK UK DB
+        // TODO: is it a good way? If do not refresh the document, still have the old values in the object "document"
+        // TODO: if use just document.getDvkId() with out a refresh - I get only an old value (id) - "1"
+        // TODO: but, currently, the value is 6xx (the real value of DVK_id), and it's a cause why I get this message again
         Document sentAditDocument = documentDAO.getDocument(document.getId());
         PojoMessage receivedDVKMessage = dvkDAO.getMessage(sentAditDocument.getDvkId());
 
