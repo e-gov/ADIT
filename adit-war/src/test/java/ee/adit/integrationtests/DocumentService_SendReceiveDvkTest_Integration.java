@@ -183,7 +183,6 @@ public class DocumentService_SendReceiveDvkTest_Integration {
         Assert.isTrue(UtilsService.compareStringsIgnoreCase(sentAditDocument.getGuid(), receivedDVKMessage.getDhlGuid()));
 
         // Get a container ver 2.1 from the received DVK document
-        // TODO: probably, we have other method to do conversion from Clob to String
         ContainerVer2_1 containerOutput = ContainerVer2_1.parse(UtilsService.clobToString(receivedDVKMessage.getData()));
 
         // Do asserts with an input container and an output container
@@ -198,27 +197,18 @@ public class DocumentService_SendReceiveDvkTest_Integration {
         Assert.notNull(transportOutput.getDecSender());
         Assert.isTrue(UtilsService.compareStringsIgnoreCase(documentService.getConfiguration().getDvkOrgCode(),
                                                             transportOutput.getDecSender().getOrganisationCode()));
-        // TODO: doesn't work
-//        Assert.isTrue(UtilsService.compareStringsIgnoreCase(transportInput.getDecSender().getOrganisationCode(),
-//                                                            transportOutput.getDecSender().getPersonalIdCode()));
-        // Do asserts with an input file and output file
-        Assert.notNull(containerInput.getFile().size() > 0);
-        Assert.notNull(containerOutput.getFile().size() > 0);
-        dvk.api.container.v2_1.File fileInput = containerInput.getFile().get(0);
-        dvk.api.container.v2_1.File fileOutput = containerOutput.getFile().get(0);
-        Assert.notNull(fileInput);
-        Assert.notNull(fileOutput);
-        Assert.isTrue(UtilsService.compareStringsIgnoreCase(fileInput.getFileName(), fileOutput.getFileName()));
-        Assert.isTrue(UtilsService.compareStringsIgnoreCase(fileInput.getFileGuid(), fileOutput.getFileGuid()));
-        Assert.isTrue(fileInput.getFileSize().equals(fileOutput.getFileSize()));
-        Assert.isTrue(UtilsService.compareStringsIgnoreCase(fileInput.getMimeType(), fileOutput.getMimeType()));
-        // TODO: this assert does not work. There are absolutely different contents
-        Assert.isTrue(UtilsService.compareStringsIgnoreCase(fileInput.getZipBase64Content(),
-                                                            fileOutput.getZipBase64Content()));
+        Assert.isNull(transportOutput.getDecSender().getStructuralUnit());
+        // TODO: is it correct?
+        Assert.isTrue(UtilsService.compareStringsIgnoreCase("EE" + transportOutput.getDecSender().getPersonalIdCode(),
+                                                            sentAditDocument.getCreatorCode()));
+        Assert.notNull(transportOutput.getDecRecipient());
+        Assert.notNull(transportInput.getDecRecipient());
+        Assert.isTrue(UtilsService.compareStringsIgnoreCase(transportOutput.getDecRecipient().get(0).getOrganisationCode(),
+                aditUserDAO.getUserByID(containerInput.getTransport().getDecRecipient().get(0).getOrganisationCode()).getDvkOrgCode()));
+        Assert.isNull(transportOutput.getDecRecipient().get(0).getStructuralUnit());
 
-        // Do container version assert
-        Assert.isTrue(UtilsService.compareStringsIgnoreCase(containerInput.getInternalVersion().toString(),
-                                                            containerOutput.getInternalVersion().toString()));
+        // Do asserts with DecMetaData
+        Assert.isNull(containerOutput.getDecMetadata());
 
         // Do asserts with RecordCreator
         AditUser sender = aditUserDAO.getUserByID(containerInput.getTransport().getDecSender().getOrganisationCode());
@@ -230,18 +220,21 @@ public class DocumentService_SendReceiveDvkTest_Integration {
                                                             sender.getDvkOrgCode()));
         Assert.isTrue(UtilsService.compareStringsIgnoreCase(containerOutput.getRecordCreator().getOrganisation().getResidency(),
                 sentAditDocument.getCreatorCode().substring(0, Math.min(sentAditDocument.getCreatorCode().length(), 2))));
+        Assert.isNull(containerOutput.getRecordCreator().getOrganisation().getStructuralUnit());
+        Assert.isNull(containerOutput.getRecordCreator().getOrganisation().getPositionTitle());
 
-
-        // Do asserts with RecordMetaData
-        Assert.notNull(containerInput.getRecordMetadata());
-        Assert.notNull(containerOutput.getRecordMetadata());
-        Assert.isTrue(UtilsService.compareStringsIgnoreCase(containerInput.getRecordMetadata().getRecordTitle(),
-                                                            containerOutput.getRecordMetadata().getRecordTitle()));
-        Assert.notNull(UtilsService.compareStringsIgnoreCase(containerInput.getRecordMetadata().getRecordGuid(), document.getGuid()));
-        Assert.isTrue(UtilsService.compareStringsIgnoreCase(containerInput.getRecordMetadata().getRecordType(),
-                                                            containerOutput.getRecordMetadata().getRecordType()));
-        Assert.notNull(containerOutput.getRecordMetadata().getRecordOriginalIdentifier());
-        Assert.notNull(containerOutput.getRecordMetadata().getRecordDateRegistered());
+        // Do asserts with RecordSenderToDec
+        Assert.notNull(containerInput.getRecordSenderToDec());
+        Assert.notNull(containerOutput.getRecordSenderToDec());
+        Assert.notNull(containerOutput.getRecordSenderToDec().getOrganisation());
+        Assert.isTrue(UtilsService.compareStringsIgnoreCase(containerOutput.getRecordSenderToDec().getOrganisation().getName(),
+                                                            sender.getFullName()));
+        Assert.isTrue(UtilsService.compareStringsIgnoreCase(containerOutput.getRecordSenderToDec().getOrganisation().getOrganisationCode(),
+                                                            sender.getDvkOrgCode()));
+        Assert.isNull(containerOutput.getRecordSenderToDec().getOrganisation().getStructuralUnit());
+        Assert.isNull(containerOutput.getRecordSenderToDec().getOrganisation().getPositionTitle());
+        Assert.isTrue(UtilsService.compareStringsIgnoreCase(containerOutput.getRecordSenderToDec().getOrganisation().getResidency(),
+                sentAditDocument.getCreatorCode().substring(0, Math.min(sentAditDocument.getCreatorCode().length(), 2))));
 
         // Do asserts with Recipient
         Assert.notNull(containerInput.getRecipient());
@@ -250,19 +243,52 @@ public class DocumentService_SendReceiveDvkTest_Integration {
         AditUser recipient = aditUserDAO.getUserByID(containerInput.getTransport().getDecRecipient().get(0).getOrganisationCode());
         Assert.notNull(recipient);
         Assert.notNull(UtilsService.compareStringsIgnoreCase(containerOutput.getRecipient().get(0).getOrganisation().getName(),
-                                                            recipient.getFullName()));
+                recipient.getFullName()));
         Assert.notNull(UtilsService.compareStringsIgnoreCase(containerOutput.getRecipient().get(0).getOrganisation().getOrganisationCode(),
-                                                             recipient.getDvkOrgCode()));
+                recipient.getDvkOrgCode()));
+        Object documentSharings[] = sentAditDocument.getDocumentSharings().toArray();
+        Assert.notNull(documentSharings);
+        String documentSharingUserCode = ((DocumentSharing) documentSharings[0]).getUserCode();
+        Assert.isTrue(UtilsService.compareStringsIgnoreCase(containerOutput.getRecipient().get(0).getOrganisation().getResidency(),
+                documentSharingUserCode.substring(0, Math.min(documentSharingUserCode.length(), 2))));
 
-
-
+        // Do asserts with RecordMetaData
+        Assert.notNull(containerInput.getRecordMetadata());
+        Assert.notNull(containerOutput.getRecordMetadata());
+        Assert.isTrue(UtilsService.compareStringsIgnoreCase(containerOutput.getRecordMetadata().getRecordGuid(),
+                                                            sentAditDocument.getGuid()));
+        Assert.isTrue(UtilsService.compareStringsIgnoreCase(containerInput.getRecordMetadata().getRecordTitle(),
+                                                            containerOutput.getRecordMetadata().getRecordTitle()));
+        Assert.notNull(UtilsService.compareStringsIgnoreCase(containerInput.getRecordMetadata().getRecordGuid(), document.getGuid()));
+        Assert.isTrue(UtilsService.compareStringsIgnoreCase(containerInput.getRecordMetadata().getRecordType(),
+                                                            containerOutput.getRecordMetadata().getRecordType()));
+        Assert.notNull(containerOutput.getRecordMetadata().getRecordOriginalIdentifier());
+        Assert.notNull(containerOutput.getRecordMetadata().getRecordDateRegistered());
 
         // Do asserts with Access
         Assert.isTrue(UtilsService.compareStringsIgnoreCase(containerOutput.getAccess().getAccessConditionsCode(),
                                                             ACCESS_CONDITIONS_CODE));
 
+        // Do asserts with an input file and output file
+        Assert.notNull(containerInput.getFile().size() > 0);
+        Assert.notNull(containerOutput.getFile().size() > 0);
+        dvk.api.container.v2_1.File fileInput = containerInput.getFile().get(0);
+        dvk.api.container.v2_1.File fileOutput = containerOutput.getFile().get(0);
+        Assert.notNull(fileInput);
+        Assert.notNull(fileOutput);
+        Assert.isTrue(UtilsService.compareStringsIgnoreCase(fileInput.getFileName(), fileOutput.getFileName()));
+        Assert.isTrue(UtilsService.compareStringsIgnoreCase(fileInput.getFileGuid(), fileOutput.getFileGuid()));
+        Assert.isTrue(fileInput.getFileSize().equals(fileOutput.getFileSize()));
+        Assert.isTrue(UtilsService.compareStringsIgnoreCase(fileInput.getMimeType(), fileOutput.getMimeType()));
+        Assert.isTrue(UtilsService.compareStringsIgnoreCase(fileInput.getZipBase64Content(),
+                                                            fileOutput.getZipBase64Content()));
 
+        // Do container version assert
+        Assert.notNull(containerOutput.getAccess());
+        Assert.isTrue(UtilsService.compareStringsIgnoreCase(containerInput.getInternalVersion().toString(),
+                containerOutput.getInternalVersion().toString()));
 
+        // Finally, clean the messages
         dvkMessages.add(receivedDVKMessage);
         aditDocuments.add(document);
     }
@@ -416,6 +442,8 @@ public class DocumentService_SendReceiveDvkTest_Integration {
                 }
             }
         }
+
+
 
         // Table SIGNATURE
         // TODO: Do it later
