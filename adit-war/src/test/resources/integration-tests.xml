@@ -155,7 +155,7 @@
         </property>
         <property name="dvkFolderForLetterType" value="/"/>
         <property name="dvkFolderForApplicationType" value="/"/>
-
+        <property name="doCheckTestCert" value="true"/>
     </bean>
 
     <bean id="documentService" class="ee.adit.service.DocumentService">

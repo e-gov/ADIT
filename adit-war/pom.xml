@@ -15,6 +15,7 @@
 
 	<properties>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <digidoc.tmp.dir>C:\\Users\\lisa\\TMP</digidoc.tmp.dir>
 
 		<!-- Edit this to match your destination environment -->
 		<!--<resourceDir>ria-dev-weblogic</resourceDir>-->
@@ -419,7 +420,7 @@
             </testResource>
             <testResource>
                 <directory>src/test/resources</directory>
-                <filtering>false</filtering>
+                <filtering>true</filtering>
             </testResource>
         </testResources>
         <resources>
