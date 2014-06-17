@@ -19,10 +19,11 @@ import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.DocumentFile;
 import ee.adit.dao.pojo.DocumentSharing;
+import ee.adit.dao.pojo.Signature;
 import ee.adit.dvk.converter.ContainerVer2_1ToDocumentConverterImpl;
-import ee.adit.dvk.converter.containerdocument.RecipientsBuilder;
 import ee.adit.service.DocumentService;
 import ee.adit.test.util.DAOCollections;
+import ee.sk.digidoc.SignedDoc;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
@@ -41,10 +42,7 @@ import java.io.InputStreamReader;
 import java.sql.Blob;
 import java.sql.Clob;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class UtilsService {
 
@@ -52,7 +50,8 @@ public class UtilsService {
 
     public static Document prepareAndSaveAditDocument(DAOCollections daoCollections,
                                                       ContainerVer2_1 container, AditUser recipient,
-                                                      DocumentService documentService) throws Exception {
+                                                      DocumentService documentService,
+                                                      String digiDocConfFilePath, String containerType) throws Exception {
         Document document = null;
         DocumentSharing documentSharing;
         DocumentFile documentFile;
@@ -74,9 +73,25 @@ public class UtilsService {
                     new ContainerVer2_1ToDocumentConverterImpl(pojoMessage);
             containerVer2_1ToDocumentConverter.setAditUserDAO(daoCollections.getAditUserDAO());
             containerVer2_1ToDocumentConverter.setDocumentService(documentService);
+            containerVer2_1ToDocumentConverter.setJdigidocCfgTmpFile(digiDocConfFilePath);
             document = containerVer2_1ToDocumentConverter.convert(container);
 
-            // Save this document to the ADIT DB
+            // Create a document signature, related with this document (if it's DDOC container)
+            if (UtilsService.compareStringsIgnoreCase(containerType,
+                    DocumentService_SendReceiveDvkTest_Integration.CONTAINER_TYPE_DDOC)) {
+                Signature signature = new Signature();
+                signature.setDocument(document);
+                signature.setCity(DocumentService_SendReceiveDvkTest_Integration.SIGNED_CITY);
+                signature.setCountry(DocumentService_SendReceiveDvkTest_Integration.SIGNED_COUNTRY);
+                signature.setSignerName(container.getSignatureMetadata().get(0).getSigner());
+                signature.setSigningDate(container.getSignatureMetadata().get(0).getSignatureVerificationDate());
+                signature.setSignerCode("EE23456783");
+                Set<Signature> signatures = new HashSet<Signature>();
+                signatures.add(signature);
+                document.setSignatures(signatures);
+            }
+
+            // Save this document to the ADIT DB (with signatures as well)
             aditDBSession = daoCollections.getDocumentDAO().getSessionFactory().openSession();
             aditDBSession.setFlushMode(FlushMode.COMMIT);
             transaction = aditDBSession.beginTransaction();
@@ -88,7 +103,7 @@ public class UtilsService {
             documentSharing.setDocumentId(document.getId());
             documentSharing.setUserCode(recipient.getUserCode());
             documentService.sendDocument(document, recipient, null, null,
-                    DocumentService_SendReceiveDvkTest_Integration.DOCUMENT_SHARING_COMMENT);
+                    container.getRecipient().get(0).getMessageForRecipient());
 
             // Create a document file, related with this document
             documentFile = new DocumentFile();

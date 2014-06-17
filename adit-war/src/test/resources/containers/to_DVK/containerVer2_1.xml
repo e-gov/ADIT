@@ -71,6 +71,7 @@
       <OrganisationCode>EE70006317</OrganisationCode>
       <Residency>EE</Residency>
     </Organisation>
+    <MessageForRecipient>Test message for recipient</MessageForRecipient>
   </Recipient>
   <RecordMetadata>
     <RecordGuid>25892e17-80f6-415f-9c65-7395632f0234</RecordGuid>
@@ -83,6 +84,12 @@
   <Access>
     <AccessConditionsCode>Avalik</AccessConditionsCode>
   </Access>
+    <SignatureMetadata>
+        <SignatureType>Digitaalallkiri</SignatureType>
+        <Signer>Jaan Priisalu</Signer>
+        <Verified>allkiri on kehtiv</Verified>
+        <SignatureVerificationDate>2012-11-15T10:51:51</SignatureVerificationDate>
+    </SignatureMetadata>
   <File>
     <FileGuid>25892e17-80f6-415f-9c65-7395632f0001</FileGuid>
     <RecordMainComponent>1</RecordMainComponent>

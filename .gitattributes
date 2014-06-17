@@ -657,6 +657,7 @@ adit-war/src/test/resources/containers/to_ADIT/containerVer1_0_ddoc.xml -text
 adit-war/src/test/resources/containers/to_ADIT/containerVer2_1.xml -text
 adit-war/src/test/resources/containers/to_ADIT/containerVer2_1_ddoc.xml -text
 adit-war/src/test/resources/containers/to_DVK/containerVer1_0.xml -text
+adit-war/src/test/resources/containers/to_DVK/containerVer2_1-ddoc.xml -text
 adit-war/src/test/resources/containers/to_DVK/containerVer2_1.xml -text
 adit-war/src/test/resources/ee/adit/dvk/converter/testFile.ods -text
 adit-war/src/test/resources/ee/adit/dvk/converter/testFile.xml -text
