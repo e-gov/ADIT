@@ -49,7 +49,13 @@ public class Container2_1Receiver implements DvkReceiver {
         saveDocumentToAdit(message, converter, document);
         sendToRecipients(message, document, containerVer2_1);
 
-        return false;
+        try {
+            documentService.getDvkDAO().updateDocumentLocalId(document.getId(), message.getDhlMessageId());
+        } catch (Exception e) {
+            throw new RuntimeException("Unable to update dhl_message_local_id in dvk client", e);
+        }
+
+        return true;
     }
 
     private ContainerVer2_1ToDocumentConverterImpl createConverter(
