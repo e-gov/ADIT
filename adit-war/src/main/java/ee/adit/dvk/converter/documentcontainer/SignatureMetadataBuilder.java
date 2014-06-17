@@ -4,6 +4,7 @@ import dvk.api.container.v2_1.SignatureMetadata;
 import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.Signature;
 
+import ee.adit.util.Util;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,10 +63,11 @@ public class SignatureMetadataBuilder {
         String signatureType = null;
 
         if (signerCode != null) {
-            if (signerCode.startsWith("3")
-                    || signerCode.startsWith("4")
-                    || signerCode.startsWith("5")
-                    || signerCode.startsWith("6")) {
+            String withoutPrefix = Util.removeCountryPrefix(signerCode);
+            if (withoutPrefix.startsWith("3")
+                    || withoutPrefix.startsWith("4")
+                    || withoutPrefix.startsWith("5")
+                    || withoutPrefix.startsWith("6")) {
                 signatureType = SignatureType.DIGITAL_SIGNATURE.value;
             } else {
                 signatureType = SignatureType.DIGITAL_STAMP.value;
