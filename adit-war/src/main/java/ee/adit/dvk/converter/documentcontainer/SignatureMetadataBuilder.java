@@ -50,6 +50,7 @@ public class SignatureMetadataBuilder {
                 SignatureMetadata signatureMetadata = new SignatureMetadata();
                 signatureMetadata.setSignatureVerificationDate(signature.getSigningDate());
                 signatureMetadata.setSignatureType(getSignatureType(signature.getSignerCode()));
+                signatureMetadata.setSigner(signature.getSignerName());
                 result.add(signatureMetadata);
             }
         }
