@@ -20,6 +20,7 @@ WHENEVER SQLERROR EXIT ROLLBACK SQL.SQLCODE
 
 -- Create database
 @@database.sql
+@@updates/database_updates.sql
 
 -- Create logging procedures
 @@log_proc.sql

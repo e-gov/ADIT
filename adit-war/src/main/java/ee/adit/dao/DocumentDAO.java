@@ -31,6 +31,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Property;
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.type.Type;
 import org.hibernate.Query;
 import org.springframework.context.MessageSource;
@@ -71,7 +72,7 @@ import ee.adit.util.Util;
  * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
  * @author Jaak Lember, Interinx, jaak@interinx.com
  */
-public class DocumentDAO extends HibernateDaoSupport {
+public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
 
     private static Logger logger = Logger.getLogger(DocumentDAO.class);
 
@@ -1454,5 +1455,33 @@ public class DocumentDAO extends HibernateDaoSupport {
             }
         }
         return docs.values();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<Document> findAllWaitingToBeSentToDVK() {
+        List<Document> results = new ArrayList<Document>();
+
+        Session session = null;
+        try {
+            session = this.getSessionFactory().openSession();
+            DetachedCriteria documentCriteria = DetachedCriteria.forClass(DocumentSharing.class)
+                    .add(Property.forName("documentSharingType").eq(DocumentService.SHARINGTYPE_SEND_DVK))
+                    .add(Restrictions.or(
+                            Property.forName("documentDvkStatus").isNull(),
+                            Property.forName("documentDvkStatus").eq("")))
+                    .setProjection(Property.forName("id"));
+
+            Criteria criteria = session.createCriteria(Document.class)
+                    .add(Property.forName("documentId").in(documentCriteria));
+            results = (List<Document>) criteria.list();
+        } catch (Exception e) {
+            throw new AditInternalException("Error while fetching DVK DocumentSharings: ", e);
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+        return results;
     }
 }

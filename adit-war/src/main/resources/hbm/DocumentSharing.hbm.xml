@@ -46,5 +46,8 @@
         <property name="dvkId" type="java.lang.Long">
             <column name="DVK_ID" precision="12" scale="0" />
         </property>
+        <property name="comment" type="string">
+            <column name="COMMENT_TEXT" />
+        </property>
     </class>
 </hibernate-mapping>

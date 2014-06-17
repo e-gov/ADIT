@@ -108,6 +108,10 @@ public class AditEndpointMapping extends AbstractQNameEndpointMapping {
             if (requestQName != null && "listMethods".equalsIgnoreCase(requestQName.getLocalPart())) {
                 logger.debug("Mapping to listMethods method. Ignoring SOAP headers.");
             } else {
+                logger.info("request" + request);
+                logger.info("request soap_header: " + request.getSoapHeader());
+                logger.info("request.envelope.header" + request.getEnvelope().getHeader());
+
                 if (request.getSoapHeader() == null) {
                 	throw new AditInternalException("Request has no SOAP headers!");
                 }
@@ -115,6 +119,8 @@ public class AditEndpointMapping extends AbstractQNameEndpointMapping {
             	Iterator<SoapHeaderElement> soapHeaderIterator = request.getSoapHeader().examineAllHeaderElements();
 
                 QName xteeRequestNameHeaderQName = new QName(Util.XTEE_NAMESPACE, XTEE_REQUEST_NAME_HEADER);
+
+                logger.info("soapHeaderIterator.hasNext(): " + soapHeaderIterator.hasNext());
 
                 while (soapHeaderIterator.hasNext()) {
                     SoapHeaderElement header = soapHeaderIterator.next();
@@ -125,6 +131,8 @@ public class AditEndpointMapping extends AbstractQNameEndpointMapping {
                         requestNameHeaderFound = true;
                         String localName = requestQName.getLocalPart();
                         XRoadQueryName queryName = Util.extractQueryName(requestNameHeaderValue);
+
+                        logger.debug("extracted queryname: " + queryName);
 
                         if (queryName == null || queryName.getName() == null) {
                             throw new AditInternalException(
@@ -156,6 +164,8 @@ public class AditEndpointMapping extends AbstractQNameEndpointMapping {
                 throw (AditInternalException) e;
             }
         }
+
+        logger.debug("result: " + result);
 
         return result;
     }

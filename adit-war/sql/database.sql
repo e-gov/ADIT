@@ -52,7 +52,7 @@ CREATE TABLE &&ADIT_SCHEMA..ADIT_USER
     usertype                    VARCHAR2(50) NOT NULL,         /* Reference to user type */
     active                      NUMBER(1) DEFAULT 1,           /* Indicates wheather or not the user is active. "1" = active, "0" = inactive. */
     dvk_org_code                VARCHAR2(50),                  /* This column contains a value only if user uses DEC to send and receive documents. Contains registry code of usesrs DEC organization. */
-    dvk_subdivision_short_name  VARCHAR2(50),                  /* This column contains a value only if user uses DEC to send and receive documents. Contains short name of users DEC subdivision. */
+    dvk_subdivision_short_name  VARCHAR2(60),                  /* This column contains a value only if user uses DEC to send and receive documents. Contains short name of users DEC subdivision. */
     dvk_occupation_short_name   VARCHAR2(50),                  /* This column contains a value only if user uses DEC to send and receive documents. Contains short name of users DEC occupation. */
     disk_quota                  NUMBER(18),                    /* User disk quota in bytes. Disk quota configured here overrides disk quota values configured on user type or application levels. */
     deactivation_date           DATE,                          /* Date and time when user account was deactivated */

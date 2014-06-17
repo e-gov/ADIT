@@ -4,7 +4,7 @@
 	<groupId>ee</groupId>
 	<artifactId>adit-war</artifactId>
 	<packaging>war</packaging>
-	<version>1.0.70</version>
+	<version>1.0.71</version>
 	<name>ADIT Web Application</name>
 
 	<parent>
@@ -15,6 +15,7 @@
 
 	<properties>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <digidoc.tmp.dir>C:\\Users\\lisa\\TMP</digidoc.tmp.dir>
 
 		<!-- Edit this to match your destination environment -->
 		<!--<resourceDir>ria-dev-weblogic</resourceDir>-->
@@ -68,6 +69,12 @@
 			<scope>system</scope>
 			<systemPath>${basedir}/lib/spring.jar</systemPath>
 		</dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>3.0.2.RELEASE</version>
+            <scope>test</scope>
+        </dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>servlet</artifactId>
@@ -291,13 +298,13 @@
 			<systemPath>${basedir}/lib/quartz-1.8.3.jar</systemPath>
 		</dependency>
 
-		<!-- DVKAPI -->
+		<!-- DVK-API -->
 		<dependency>
-			<groupId>ee.dvk</groupId>
+			<groupId>dvk</groupId>
 			<artifactId>api</artifactId>
-			<version>1.0.4</version>
+			<version>1.0.6</version>
 			<scope>system</scope>
-			<systemPath>${basedir}/lib/dvkapi.jar</systemPath>
+			<systemPath>${basedir}/lib/dvk-api-1.0.9.jar</systemPath>
 		</dependency>
 
 		<!-- FOP -->
@@ -368,15 +375,44 @@
 			<scope>system</scope>
 			<systemPath>${basedir}/lib/commons-compress-1.1.jar</systemPath>
 		</dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.3.2</version>
+        </dependency>
 
+        <!-- Testing -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.0</version>
-			<type>jar</type>
+			<version>4.6</version>
 			<scope>test</scope>
-			<optional>true</optional>
 		</dependency>
+        <dependency>
+            <groupId>commons-dbcp</groupId>
+            <artifactId>commons-dbcp</artifactId>
+            <version>1.2.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.9.5</version>
+        </dependency>
+        <!-- AOP dependency -->
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib</artifactId>
+            <version>2.2</version>
+            <scope>test</scope>
+        </dependency>
+ <!--       <dependency>
+            <groupId>ee.sk.digidoc</groupId>
+            <artifactId>JDCerts</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/jdcerts.jar</systemPath>
+        </dependency>-->
 	</dependencies>
 
 	<build>
@@ -384,7 +420,17 @@
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<testSourceDirectory>src/test/java</testSourceDirectory>
 		<testOutputDirectory>target/test-classes</testOutputDirectory>
-		<resources>
+        <testResources>
+            <testResource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+            </testResource>
+            <testResource>
+                <directory>src/test/resources</directory>
+                <filtering>true</filtering>
+            </testResource>
+        </testResources>
+        <resources>
 			<resource>
 				<directory>src/main/resources/castor-mapping</directory>
 				<filtering>false</filtering>
@@ -400,13 +446,13 @@
 				<filtering>false</filtering>
 				<targetPath>../adit/WEB-INF/classes/hbm</targetPath>
 			</resource>
-
 			<!-- Include all the environment specific configuration files -->
 			<resource>
 				<directory>src/main/resources/${resourceDir}</directory>
 				<targetPath>../adit/WEB-INF/classes</targetPath>
 				<excludes>
 					<exclude>adit-configuration.xml</exclude>
+                    <exclude>adit-datasource.xml</exclude>
 				</excludes>
 			</resource>
 			<resource>
@@ -414,6 +460,7 @@
 				<targetPath>../adit/WEB-INF</targetPath>
 				<includes>
 					<include>adit-configuration.xml</include>
+                    <include>adit-datasource.xml</include>
 				</includes>
 			</resource>
 			<!-- Include static resources -->
@@ -438,7 +485,7 @@
 					<include>adit-monitor-servlet.xml</include>
 					<include>adit-application.xml</include>
 					<include>adit-dao.xml</include>
-					<include>adit-datasource.xml</include>
+					<!--<include>adit-datasource.xml</include>-->
 					<include>adit-jobs.xml</include>
 					<include>adit-services.xml</include>
 					<include>adit-endpoints.xml</include>
@@ -509,7 +556,24 @@
 					<warFile>${basedir}/target/adit.war</warFile>
 				</configuration>
 			</plugin>
-
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>2.9</version>
+                <configuration>
+                    <includes>
+                        <include>**/integrationtests/*_Integration.java</include>
+                    </includes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 		</plugins>
 	</build>
 

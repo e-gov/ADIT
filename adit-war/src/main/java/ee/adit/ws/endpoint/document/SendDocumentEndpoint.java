@@ -173,7 +173,7 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
                             String dvkFolder = request.getDvkFolder();
 
                             // Add sharing information to database
-                            this.getDocumentService().sendDocument(doc, recipient, dvkFolder, null);
+                            this.getDocumentService().sendDocument(doc, recipient, dvkFolder, null, null);
 
 
                             //TODO: it is better to add dvkFolder to the Document object here

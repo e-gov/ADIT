@@ -1,0 +1,97 @@
+<dhl:dokument xmlns:dhl="http://www.riik.ee/schemas/dhl">
+<dhl:metainfo xmlns:ma="http://www.riik.ee/schemas/dhl-meta-automatic" xmlns:mm="http://www.riik.ee/schemas/dhl-meta-manual"><ma:dhl_id>39050</ma:dhl_id><ma:dhl_saabumisviis>xtee</ma:dhl_saabumisviis><ma:dhl_saabumisaeg>2013-11-20T14:26:23+02:00</ma:dhl_saabumisaeg><ma:dhl_saatmisviis>xtee</ma:dhl_saatmisviis><ma:dhl_saatmisaeg>2013-11-20T14:30:01+02:00</ma:dhl_saatmisaeg><ma:dhl_saatja_asutuse_nr>70006317</ma:dhl_saatja_asutuse_nr><ma:dhl_saatja_asutuse_nimi>Riigi Infosüsteemi Amet</ma:dhl_saatja_asutuse_nimi><ma:dhl_saatja_isikukood>EE38806190294</ma:dhl_saatja_isikukood><ma:dhl_saaja_asutuse_nr>adit</ma:dhl_saaja_asutuse_nr><ma:dhl_saaja_asutuse_nimi>Ametlike Dokumentide Infrastruktuuri Teenus</ma:dhl_saaja_asutuse_nimi><ma:dhl_saaja_isikukood>EE48612120224</ma:dhl_saaja_isikukood><ma:dhl_saatja_epost>lauri.tammemae@ria.ee</ma:dhl_saatja_epost><ma:dhl_saaja_epost>kristiina.ollema@eesti.ee</ma:dhl_saaja_epost><ma:dhl_kaust>/</ma:dhl_kaust>
+  <mm:koostaja_asutuse_nr>70006317</mm:koostaja_asutuse_nr>
+  <mm:saaja_asutuse_nr/>
+  <mm:koostaja_dokumendinimi>test</mm:koostaja_dokumendinimi>
+  <mm:koostaja_dokumendityyp/>
+  <mm:koostaja_dokumendinr>2012-01</mm:koostaja_dokumendinr> 
+  <mm:seotud_dokumendinr_koostajal>2012-01</mm:seotud_dokumendinr_koostajal> 
+  <mm:koostaja_kuupaev/>
+  <mm:koostaja_asutuse_nimi>Riigi Infosüsteemi Amet</mm:koostaja_asutuse_nimi>
+  <mm:autori_isikukood/>
+  <mm:seotud_dokumendinr_saajal>123</mm:seotud_dokumendinr_saajal>
+  <mm:saaja_isikukood>48612120224</mm:saaja_isikukood>
+</dhl:metainfo>
+<dhl:transport>
+<dhl:saatja>
+<dhl:regnr>70006317</dhl:regnr>
+<dhl:isikukood>EE38806190294</dhl:isikukood>
+<dhl:epost>lauri.tammemae@ria.ee</dhl:epost>
+<dhl:nimi>Riigi Infosüsteemi Amet</dhl:nimi>
+<dhl:osakonna_nimi/>
+</dhl:saatja>
+<dhl:saaja>
+<dhl:regnr>adit</dhl:regnr>
+<dhl:isikukood>EE48612120224</dhl:isikukood>
+<dhl:epost>kristiina.ollema@eesti.ee</dhl:epost>
+<dhl:nimi>Kristiina Ollema</dhl:nimi>
+</dhl:saaja>
+</dhl:transport>
+<dhl:ajalugu/>
+<dhl:metaxml xmlns="http://www.riik.ee/schemas/dhl/rkel_letter" schemaLocation="http://www.riik.ee/schemas/dhl/rkel_letter http://www.riik.ee/schemas/dhl/rkel_letter.xsd"><Addressees>
+<Addressee>
+<Organisation>
+<organisationName>Ametlike Dokumentide Infrastruktuuri Teenus</organisationName>
+<departmentName/>
+</Organisation>
+<Person>
+<firstname>Kristiina</firstname>
+<surname>Ollema</surname>
+<jobtitle/>
+<email/>
+<telephone/>
+</Person>
+</Addressee>
+</Addressees>
+<Author>
+<Organisation>
+<organisationName>Riigi Infosüsteemi Amet</organisationName>
+<departmentName/>
+</Organisation>
+<Person>
+<firstname/>
+<surname/>
+<jobtitle/>
+<email/>
+<telephone/>
+</Person>
+</Author>
+<Compilators>
+<Compilator>
+<firstname/>
+<surname/>
+<jobtitle/>
+<email/>
+<telephone/>
+</Compilator>
+</Compilators>
+<LetterMetaData>
+<SignDate/>
+<SenderIdentifier>12-5.3/2012-01</SenderIdentifier>
+<OriginalIdentifier>123</OriginalIdentifier>
+<Type/>
+<Language/>
+<Version/>
+<Title>test</Title>
+<Deadline/>
+<SenderSeriesTitle>12-5.3 test</SenderSeriesTitle>
+</LetterMetaData>
+</dhl:metaxml>
+<SignedDoc format="DIGIDOC-XML" version="1.3" xmlns="http://www.sk.ee/DigiDoc/v1.3.0#">
+<DataFile ContentType="EMBEDDED_BASE64" Filename="Teade.html" Id="D0" MimeType="" Size="834">
+PCFET0NUWVBFIEhUTUwgUFVCTElDICItLy9XM0MvL0RURCBIVE1MIDQuMCBUcmFuc2l0aW9uYWwv
+L0VOIj4KPEhUTUw+Cgk8SEVBRD4KCQk8TUVUQSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNv
+bnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD1VVEYtOCI+CgkJPFRJVExFPlZhc3R1czwvVElUTEU+
+Cgk8L0hFQUQ+Cgk8Qk9EWT4KTHAuIDxiPkthbGV2IFB1bGxvbmVuLjwvYj48YnIvPjxici8+ClNh
+YXRzaXRlIFRhcnR1IExpbm5hdmFsaXRzdXNlbGUgZWVzdGkuZWUgcG9ydGFhbGkga2F1ZHUgZG9r
+dW1lbmRpLjxici8+PGJyLz4KRG9rdW1lbnQgb24gcmVnaXN0cmVlcml0dWQgVGFydHUgTGlubmF2
+YWxpdHN1c2UgZG9rdW1lbmRpcmVnaXN0cmlzIGrDpHJnbWlzdGUgYW5kbWV0ZWdhOjxici8+CkRv
+a3VtZW5kaSBudW1iZXI6IDxiPjIwMTItMDAxMTc8L2I+Ljxici8+ClNhcmphIGluZGVrczogPGI+
+MTItNS4zIEtpcmphdmFoZXR1cyBob29sZHVzdmFqYWR1c2UgbcOkw6RyYW1pc2UgamEga29ycmFs
+ZGFtaXNlIGvDvHNpbXVzdGVzPC9iPjxici8+CkRva3VtZW5kaSBsaWlrOiA8Yj5BdmFsZHVzIC8g
+VGFvdGx1czwvYj48YnIvPgpUZWVtYTogPGI+SG9vbGR1c2UgbMO1cGV0YW1pbmUuPC9iPjxici8+
+CkRva3VtZW5kaSB0w6RodGFlZyBvbjogPGI+MDcuMTIuMjAxMjwvYj48YnIvPjxici8+CkRva3Vt
+ZW50IG9uIHN1dW5hdHVkIG1lbmV0bGVtaXNla3MgdMO2w7Z0YWphbGU6IEthbGV2IFB1bGxvbmVu
+L0xpbm5ha2FudHNlbGVpL1RhcnR1PGJyLz48YnIvPgpUYXJ0dSBMaW5uYXZhbGl0c3VzZSBkb2t1
+bWVuZGlyZWdpc3Rlci48YnIvPgoJPC9CT0RZPgo8L0hUTUw+
+</DataFile></SignedDoc></dhl:dokument>
