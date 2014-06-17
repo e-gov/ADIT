@@ -406,6 +406,13 @@
             <version>2.2</version>
             <scope>test</scope>
         </dependency>
+ <!--       <dependency>
+            <groupId>ee.sk.digidoc</groupId>
+            <artifactId>JDCerts</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/jdcerts.jar</systemPath>
+        </dependency>-->
 	</dependencies>
 
 	<build>

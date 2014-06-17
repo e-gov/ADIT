@@ -639,6 +639,15 @@ adit-war/src/test/java/ee/adit/test/util/UtilTest.java -text
 adit-war/src/test/resources/ValidDigiDoc_2Files_1Signature.ddoc -text
 adit-war/src/test/resources/ValidDigiDoc_3Files_NoSignatures.ddoc -text
 adit-war/src/test/resources/ValidDigiDoc_NoFiles_NoSignatures.ddoc -text
+adit-war/src/test/resources/certs/SK_Proxy_OCSP_Responder_2009.pem.cer -text
+adit-war/src/test/resources/certs/TEST-SK_2002.pem.crt -text
+adit-war/src/test/resources/certs/TEST-SK_OCSP_RESPONDER_2005.pem.cer -text
+adit-war/src/test/resources/certs/TEST_Juur-SK.pem.crt -text
+adit-war/src/test/resources/certs/TEST_of_EE_Certification_Centre_Root_CA.pem.crt -text
+adit-war/src/test/resources/certs/TEST_of_EID-SK_2011.pem.crt -text
+adit-war/src/test/resources/certs/TEST_of_ESTEID-SK_2011.pem.crt -text
+adit-war/src/test/resources/certs/TEST_of_KLASS3-SK_2010.pem.crt -text
+adit-war/src/test/resources/certs/TEST_of_SK_OCSP_RESPONDER_2011.pem.cer -text
 adit-war/src/test/resources/containers/to_ADIT/ADIT_8_containerVer1_0_nok_dok_1.xml -text
 adit-war/src/test/resources/containers/to_ADIT/ADIT_8_containerVer1_0_nok_dok_2.xml -text
 adit-war/src/test/resources/containers/to_ADIT/ADIT_8_containerVer1_0_nok_dok_3.xml -text
