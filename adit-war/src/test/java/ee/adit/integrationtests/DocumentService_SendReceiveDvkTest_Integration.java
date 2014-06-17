@@ -18,6 +18,7 @@ import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.DocumentFile;
 import ee.adit.dao.pojo.DocumentHistory;
 import ee.adit.dao.pojo.DocumentSharing;
+import ee.adit.dao.pojo.Signature;
 import ee.adit.service.DocumentService;
 import ee.adit.test.util.DAOCollections;
 import org.apache.log4j.Logger;
@@ -562,8 +563,8 @@ public class DocumentService_SendReceiveDvkTest_Integration {
             }
         }
 
-        Long senderUserPersonQuota = aditUserDAO.getUsedSpaceForUser(UtilsService.addPrefixIfNecessary(container.getTransport().getDecSender().getPersonalIdCode()));
-        Long senderUserOrganisationQuota = aditUserDAO.getUsedSpaceForUser(UtilsService.addPrefixIfNecessary(container.getTransport().getDecSender().getOrganisationCode()));
+        AditUser messageSender = aditUserDAO.getUserByID(UtilsService.addPrefixIfNecessary(container.getTransport().getDecSender().getOrganisationCode()));
+        Long senderUsedSpace = aditUserDAO.getUsedSpaceForUser(messageSender.getUserCode());
 
         // Create new PojoMessage with capsule v 2.1 and Save to DVK Client DB
         PojoMessage dvkMessage = null;
@@ -623,16 +624,21 @@ public class DocumentService_SendReceiveDvkTest_Integration {
         for (DocumentSharing documentSharing : aditDocument.getDocumentSharings()) {
             aditDocSharings.put(documentSharing.getUserCode(), documentSharing);
         }
-            for (DecRecipient recipient : container.getTransport().getDecRecipient()) {
+        for (DecRecipient recipient : container.getTransport().getDecRecipient()) {
             String recipientAditUserCode = UtilsService.addPrefixIfNecessary(recipient.getPersonalIdCode());
             Assert.isTrue(aditDocSharings.containsKey(recipientAditUserCode));
             DocumentSharing documentSharing = aditDocSharings.get(recipientAditUserCode);
 
-                    Assert.isTrue(UtilsService.compareStringsIgnoreCase(documentSharing.getDocumentSharingType(), DOCUMENT_SHARING_TYPE_SEND_TO_ADIT));
-                    Assert.isTrue(UtilsService.isToday(documentSharing.getCreationDate()));
+            Assert.isTrue(UtilsService.compareStringsIgnoreCase(documentSharing.getDocumentSharingType(), DOCUMENT_SHARING_TYPE_SEND_TO_ADIT));
+            Assert.isTrue(UtilsService.isToday(documentSharing.getCreationDate()));
             Assert.isNull(documentSharing.getDvkFolder());//todo
-                    Assert.isTrue(documentSharing.getDvkId() == DEFAULT_DHL_ID);
-                }
+            Assert.isTrue(documentSharing.getDvkId() == DEFAULT_DHL_ID);
+
+            // For number of recipients
+            if(container.getRecipient().get(0).getMessageForRecipient() != null) {
+                Assert.isTrue(UtilsService.compareStringsIgnoreCase(documentSharing.getComment(), container.getRecipient().get(0).getMessageForRecipient()));
+            }
+        }
 
         // Table DOCUMENT_FILE
         Assert.notNull(aditDocument.getDocumentFiles());
@@ -640,51 +646,55 @@ public class DocumentService_SendReceiveDvkTest_Integration {
         for (DocumentFile documentFile : aditDocument.getDocumentFiles()) {
             aditDocFiles.put(documentFile.getGuid(), documentFile);
         }
-/*
-            for (dvk.api.container.v2_1.File dataFile : container.getFile()) {
+        for (dvk.api.container.v2_1.File dataFile : container.getFile()) {
             String fileGuid = dataFile.getFileGuid();
             Assert.isTrue(aditDocFiles.containsKey(fileGuid));
             DocumentFile documentFile = aditDocFiles.get(fileGuid);
 
-                    // TODO: asserts for documentFile.getData (Blob) and String from dataFile - Do we need to do it?
-                    // TODO: asserts for DOCUMENT_FILE_TYPE_ID  (if ddoc)
-                    if (dataFile.getFileName().contains("ddoc")) {
-                        // TODO: is it correct?
-                        Assert.isTrue(documentFile.getDocumentFileTypeId() == DOCUMENT_FILE_TYPE_ID);
-                    }
-                    Assert.isTrue(!documentFile.getDeleted());
-                    Assert.isTrue(UtilsService.compareStringsIgnoreCase(documentFile.getContentType(), dataFile.getMimeType()));
-                    Assert.isTrue(UtilsService.compareStringsIgnoreCase(documentFile.getFileName(), dataFile.getFileName()));
-                    Assert.isTrue(documentFile.getFileSizeBytes() == dataFile.getFileSize().intValue());
-                    Assert.notNull(UtilsService.isToday(documentFile.getLastModifiedDate()));
-                    if (dataFile.getFileName().contains("ddoc")) {
-                        // TODO: is it correct that just not null (low priority)
-                        Assert.notNull(documentFile.getFileDataInDdoc());
-                    }
-                }
+ /*           if (dataFile.getFileName().contains("ddoc")) {
+                Assert.isTrue(documentFile.getDocumentFileTypeId() == DocumentService.FILETYPE_SIGNATURE_CONTAINER);
+            }
+            Assert.isTrue(!documentFile.getDeleted());
+            Assert.isTrue(UtilsService.compareStringsIgnoreCase(documentFile.getContentType(), dataFile.getMimeType()));
+            Assert.isTrue(UtilsService.compareStringsIgnoreCase(documentFile.getFileName(), dataFile.getFileName()));
+            Assert.isTrue(documentFile.getFileSizeBytes() == dataFile.getFileSize().intValue());
+            Assert.notNull(UtilsService.isToday(documentFile.getLastModifiedDate()));
+            if (dataFile.getFileName().contains("ddoc")) {
+                // TODO: is it correct that just not null (low priority)
+                Assert.notNull(documentFile.getFileDataInDdoc());
+            }
 */
+            // TODO: asserts for documentFile.getData (Blob) and String from dataFile
+       /*     Assert.isTrue(UtilsService.compareStringsIgnoreCase(dataFile.getZipBase64Content(),
+                    documentFile.getFileData().toString().getZipBase64Content()));*/
+        }
 
         // Table SIGNATURE
-        // TODO: Do it later
         if (container.getSignatureMetadata() != null) {
             Assert.notNull(aditDocument.getSignatures());
-//        for (Signature signature : aditDocument.getSignatures()){
-//
-//        }
+            Assert.isTrue(container.getSignatureMetadata().size() == aditDocument.getSignatures().size());
+            for (Signature signature : aditDocument.getSignatures()) {
+// TODO: Do it later
+
+            }
 
         }
-//
 
         // Table DOCUMENT_HISTORY
         Assert.notNull(aditDocument.getDocumentHistories());
-        // TODO: finish it later
-//        for (DocumentHistory documentHistory : aditDocument.getDocumentHistories()) {
-//            // TODO: DOCUMENT_HISTORY_TYPE, DOCUMENT_HISTORY_DESCRIPTION_EXTRACT_FILE (Liza TODO)
-//            Assert.notNull(documentHistory.getEventDate());
-//        }
+        DocumentHistory aditDocumentHistory = aditDocument.getDocumentHistories().toArray(new DocumentHistory[]{})[0];
+        Assert.isTrue(UtilsService.compareStringsIgnoreCase(aditDocumentHistory.getDocumentHistoryType(), DocumentService.HISTORY_TYPE_EXTRACT_FILE));
+        Assert.isTrue(UtilsService.compareStringsIgnoreCase(aditDocumentHistory.getDescription(), DocumentService.DOCUMENT_HISTORY_DESCRIPTION_EXTRACT_FILE));
+        Assert.isTrue(UtilsService.isToday(aditDocumentHistory.getEventDate()));
+        Assert.isTrue(UtilsService.compareStringsIgnoreCase(aditDocumentHistory.getUserCode(), aditDocument.getCreatorCode()));
+        Assert.isTrue(UtilsService.compareStringsIgnoreCase(aditDocumentHistory.getXteeUserCode(), aditDocument.getCreatorCode()));
+
 
         // Table ADIT_USER
-        // TODO: understand why a quota doesn't decrease
+        // TODO: update < with file size summa
+        Assert.isTrue(senderUsedSpace < aditUserDAO.getUsedSpaceForUser(messageSender.getUserCode()));
+
+
         for (DocumentSharing documentSharing : aditDocument.getDocumentSharings()) {
             AditUser recipientUser = aditUserDAO.getUserByID(documentSharing.getUserCode());
             logger.debug("Recipient " + documentSharing.getUserCode() + " recipientUserQuota " + usersFromContainer.get(recipientUser.getUserCode()));
@@ -693,15 +703,9 @@ public class DocumentService_SendReceiveDvkTest_Integration {
             Assert.isTrue(recipientUser.getDiskQuotaUsed() >= usersFromContainer.get(recipientUser.getUserCode()));
         }
 
-        logger.debug("senderUserOrganisationQuota " + senderUserOrganisationQuota);
-        logger.debug("senderOrganisationQuota after receive from DVK " + senderUserOrganisationQuota);
-        logger.debug("senderUserPersonQuota " + senderUserPersonQuota);
-        logger.debug("senderUserPersonQuota  after receive from DVK " + senderUserPersonQuota);
-        // Assert.isTrue(usersFromContainer1.get(0) < aditUserDAO.getUserByID(aditDocument.getCreatorCode()).getDiskQuotaUsed());
-
-
         //Table DHL_MESSAGES
-        Assert.notNull(dvkDAO.getMessage(dvkMessage.getDhlMessageId()).getLocalItemId());
+        PojoMessage messageUpdated = dvkDAO.getMessage(dvkMessage.getDhlMessageId());
+        Assert.isTrue(messageUpdated.getLocalItemId().equals(aditDocument.getId()));
 
         dvkMessages.add(dvkMessage);
         aditDocuments.add(aditDocument);
@@ -721,18 +725,18 @@ public class DocumentService_SendReceiveDvkTest_Integration {
         DetachedCriteria dcMessage = DetachedCriteria.forClass(PojoMessage.class, "dhlMessage");
 
         try {
-        if (dvkMsgs == null || dvkMsgs.size() == 0) {
-            dcMessage.add(Property.forName("dhlMessage.dhlId").eq(DEFAULT_DHL_ID));
-            dvkMsgs = dvkDAO.getHibernateTemplate().findByCriteria(dcMessage);
-        }
+            if (dvkMsgs == null || dvkMsgs.size() == 0) {
+                dcMessage.add(Property.forName("dhlMessage.dhlId").eq(DEFAULT_DHL_ID));
+                dvkMsgs = dvkDAO.getHibernateTemplate().findByCriteria(dcMessage);
+            }
 
-        for (PojoMessage msg : dvkMsgs) {
-            dvkDAO.getHibernateTemplate().delete(msg);
-        }
+            for (PojoMessage msg : dvkMsgs) {
+                dvkDAO.getHibernateTemplate().delete(msg);
+            }
         } catch (Exception e) {
             logger.error("clearDvkDb exception. " + e.getMessage());
             throw new RuntimeException(e);
-    }
+        }
     }
 
     public void clearAditDb(List<Document> aditDocs) {
@@ -750,6 +754,7 @@ public class DocumentService_SendReceiveDvkTest_Integration {
                 documentHistoryDAO.getHibernateTemplate().deleteAll(doc.getDocumentHistories());
                 documentFileDAO.getHibernateTemplate().deleteAll(doc.getDocumentFiles());
                 documentSharingDAO.getHibernateTemplate().deleteAll(doc.getDocumentSharings());
+                documentDAO.getHibernateTemplate().deleteAll(doc.getSignatures());
                 documentDAO.getHibernateTemplate().delete(doc);
             }
         } catch (Exception e) {

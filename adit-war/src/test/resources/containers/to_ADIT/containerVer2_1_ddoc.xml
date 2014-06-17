@@ -70,6 +70,7 @@
         </ContactData>
     </RecordSenderToDec>
     <Recipient>
+        <MessageForRecipient>Test Message for Recipient</MessageForRecipient>
         <Person>
             <Name>Janis Paju</Name>
             <PersonalIdCode>EE37802080024</PersonalIdCode>
@@ -294,8 +295,7 @@
             xSEIOnLYe4q4H7ry6moReKomtr8+xX43WnnXVy1QPipfiHOUbQfT2u4PT6rLRaqPY5kSqnulbdaG
             nsWJqpOWmbm5BJVBEvW0JiINnIJzC3RsZJm3Y3Ap3C5Xhatr8R7vwmsWFlg6xmVMsNMVSnTesvlQ
             0wMq0NkL3TdyNlANSZUAp3VVXcPXJr5MU6h5UJiEj6GrW6dizg/l9STrp9r0Obr8rHLgjxoJ/l3a
-            CXzt/piMgj+rrb1i2vfS28fk/UN23IZ//r+NAm9NTk0AAA==
-        </ZipBase64Content>
+            CXzt/piMgj+rrb1i2vfS28fk/UN23IZ//r+NAm9NTk0AAA==</ZipBase64Content>
     </File>
     <RecordTypeSpecificMetadata/>
     <DecMetadata>

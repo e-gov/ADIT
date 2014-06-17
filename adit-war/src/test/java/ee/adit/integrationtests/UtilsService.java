@@ -352,10 +352,10 @@ public class UtilsService {
         try {
             session = documentDAO.getSessionFactory().openSession();
             result = (Document) session.get(Document.class, docId);
-            result.getDocumentFiles();
-            result.getDocumentSharings();
-            result.getSignatures();
-            result.getDocumentHistories();
+            result.getDocumentFiles().toString();
+            result.getDocumentSharings().toString();
+            result.getSignatures().toString();
+            result.getDocumentHistories().toString();
 
             if (result.getDocumentFiles() == null || result.getDocumentFiles().size() == 0) {
                 logger.error("DocumentFiles - " + result.getDocumentFiles());
