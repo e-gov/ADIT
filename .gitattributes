@@ -628,7 +628,7 @@ adit-war/src/test/java/ee/adit/dvk/converter/RecordMetadataTest.java -text
 adit-war/src/test/java/ee/adit/dvk/converter/SignatureMetadataTest.java -text
 adit-war/src/test/java/ee/adit/dvk/converter/TransportTest.java -text
 adit-war/src/test/java/ee/adit/integrationtests/DocumentService_SendReceiveDvkTest_Integration.java -text
-adit-war/src/test/java/ee/adit/integrationtests/UtilsService.java -text
+adit-war/src/test/java/ee/adit/integrationtests/TestUtils.java -text
 adit-war/src/test/java/ee/adit/test/service/DocumentServiceTest.java -text
 adit-war/src/test/java/ee/adit/test/service/StubAditUserDAOForOrg.java -text
 adit-war/src/test/java/ee/adit/test/service/StubAditUserDAOForPerson.java -text

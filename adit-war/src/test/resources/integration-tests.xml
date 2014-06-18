@@ -170,4 +170,8 @@
         <property name="configuration" ref="configuration"/>
         <property name="dvkDAO" ref="dvkDAO"/>
     </bean>
+
+    <bean id="testUtils" class="ee.adit.integrationtests.TestUtils">
+        <property name="documentService" ref="documentService"/>
+    </bean>
 </beans>

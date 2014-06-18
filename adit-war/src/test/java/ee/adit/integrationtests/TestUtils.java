@@ -23,9 +23,7 @@ import ee.adit.dao.pojo.Signature;
 import ee.adit.dvk.converter.ContainerVer2_1ToDocumentConverterImpl;
 import ee.adit.service.DocumentService;
 import ee.adit.test.util.DAOCollections;
-import ee.sk.digidoc.SignedDoc;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 import org.hibernate.FlushMode;
 import org.hibernate.Hibernate;
@@ -44,14 +42,14 @@ import java.sql.Clob;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class UtilsService {
+public class TestUtils {
 
-    private static Logger logger = Logger.getLogger(UtilsService.class);
+    private static Logger logger = Logger.getLogger(TestUtils.class);
 
-    public static Document prepareAndSaveAditDocument(DAOCollections daoCollections,
-                                                      ContainerVer2_1 container, AditUser recipient,
-                                                      DocumentService documentService,
-                                                      String digiDocConfFilePath, String containerType) throws Exception {
+    private DocumentService documentService;
+
+    public Document prepareAndSaveAditDocument(ContainerVer2_1 container, AditUser recipient,
+                                               String digiDocConfFilePath, String containerType) throws Exception {
         Document document = null;
         DocumentSharing documentSharing;
         DocumentFile documentFile;
@@ -71,13 +69,13 @@ public class UtilsService {
             // Create a document, is based on the container
             ContainerVer2_1ToDocumentConverterImpl containerVer2_1ToDocumentConverter =
                     new ContainerVer2_1ToDocumentConverterImpl(pojoMessage);
-            containerVer2_1ToDocumentConverter.setAditUserDAO(daoCollections.getAditUserDAO());
+            containerVer2_1ToDocumentConverter.setAditUserDAO(documentService.getAditUserDAO());
             containerVer2_1ToDocumentConverter.setDocumentService(documentService);
             containerVer2_1ToDocumentConverter.setJdigidocCfgTmpFile(digiDocConfFilePath);
             document = containerVer2_1ToDocumentConverter.convert(container);
 
             // Create a document signature, related with this document (if it's DDOC container)
-            if (UtilsService.compareStringsIgnoreCase(containerType,
+            if (TestUtils.compareStringsIgnoreCase(containerType,
                     DocumentService_SendReceiveDvkTest_Integration.CONTAINER_TYPE_DDOC)) {
                 Signature signature = new Signature();
                 signature.setDocument(document);
@@ -92,7 +90,7 @@ public class UtilsService {
             }
 
             // Save this document to the ADIT DB (with signatures as well)
-            aditDBSession = daoCollections.getDocumentDAO().getSessionFactory().openSession();
+            aditDBSession = documentService.getDocumentDAO().getSessionFactory().openSession();
             aditDBSession.setFlushMode(FlushMode.COMMIT);
             transaction = aditDBSession.beginTransaction();
             aditDBSession.save(document);
@@ -114,7 +112,7 @@ public class UtilsService {
             documentFile.setFileSizeBytes((long) container.getFile().get(0).getFileSize());
 
             // Save this document file to the ADIT DB
-            documentFileSession = daoCollections.getDocumentFileDAO().getSessionFactory().openSession();
+            documentFileSession = documentService.getDocumentFileDAO().getSessionFactory().openSession();
             documentFileSession.setFlushMode(FlushMode.COMMIT);
             transaction = documentFileSession.beginTransaction();
             // Create a Blob
@@ -137,7 +135,8 @@ public class UtilsService {
         return document;
     }
 
-    public static PojoMessage prepareAndSaveDvkMessage_V_1(DvkDAO dvkDAO, File containerFile) throws Exception {
+    public PojoMessage prepareAndSaveDvkMessage_V_1(File containerFile) throws Exception {
+        DvkDAO dvkDAO = documentService.getDvkDAO();
 
         PojoMessage dvkMessage = new PojoMessage();
         BufferedReader in = null;
@@ -201,15 +200,15 @@ public class UtilsService {
         return dvkMessage;
     }
 
-    public static PojoMessage prepareAndSaveDvkMessage_V_2_1(DvkDAO dvkDAO, File containerFile) throws Exception {
-
+    public PojoMessage prepareAndSaveDvkMessage_V_2_1(File containerFile) throws Exception {
+        DvkDAO dvkDAO = documentService.getDvkDAO();
         PojoMessage dvkMessage = new PojoMessage();
         BufferedReader in = null;
         Session dvkSession = null;
 
         try {
             // Get container v 2.1
-            ContainerVer2_1 container = (ContainerVer2_1) UtilsService.getContainer(containerFile, Container.Version.Ver2_1);
+            ContainerVer2_1 container = (ContainerVer2_1) TestUtils.getContainer(containerFile, Container.Version.Ver2_1);
 
             //
             // Set PojoMessage data using container data
@@ -276,36 +275,6 @@ public class UtilsService {
         return dvkMessage;
     }
 
-    public static Document prepareAndSaveAditDocument_V_1_0(DocumentDAO documentDAO, AditUserDAO aditUserDAO,
-                                                            AditUser creatorUserPerson, String recipient, File containerFile) throws Exception {
-        Document aditDoc = null;
-        DocumentSharing aditDocSharing = null;
-        AditUser creator;
-
-        try {
-            // Get container v 1.0
-            ContainerVer1 container = (ContainerVer1) getContainer(containerFile, Container.Version.Ver1);
-
-            Saatja sender = container.getTransport().getSaatjad().get(0);
-            creator = aditUserDAO.getUserByID(sender.getIsikukood());
-
-            aditDoc.setCreatorCode(creator.getUserCode());
-            aditDoc.setCreatorName(creator.getFullName());
-            aditDoc.setCreatorUserCode(creatorUserPerson.getUserCode());
-            aditDoc.setCreatorUserName(creatorUserPerson.getFullName());
-
-
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-
-        } finally {
-
-        }
-
-        return aditDoc;
-    }
-
-
     public static Container getContainer(File containerFile, Container.Version version) {
         BufferedReader in = null;
         Container container = null;
@@ -325,32 +294,22 @@ public class UtilsService {
         return container;
     }
 
-    public static List<Document> getDocumentsByDvkId(DocumentDAO documentDAO, Long documentDvkId) {
-        List<Document> result;
-        DetachedCriteria dt = DetachedCriteria.forClass(Document.class, "document");
-        dt.add(Property.forName("document.dvkId").eq(documentDvkId));
-        result = documentDAO.getHibernateTemplate().findByCriteria(dt);
-
-        logger.info("There are " + result.size() + " Documents with dvk_id = " + documentDvkId + "found in ADIT DB");
-        return (result.isEmpty() ? null : result);
-    }
-
-    public static List<Document> getDocumentsByDvkGuid(DocumentDAO documentDAO, String documentGuid) {
+    public List<Document> getDocumentsByDvkGuid(String documentGuid) {
         List<Document> result;
         DetachedCriteria dt = DetachedCriteria.forClass(Document.class, "document");
         dt.add(Property.forName("document.guid").eq(documentGuid));
-        result = documentDAO.getHibernateTemplate().findByCriteria(dt);
+        result = documentService.getDocumentDAO().getHibernateTemplate().findByCriteria(dt);
 
         logger.info("There are " + result.size() + " Documents with dvk_guid = " + documentGuid + "found in ADIT DB");
         return (result.isEmpty() ? null : result);
     }
 
-    public static Document getNonLazyInitializedDocument(DocumentDAO documentDAO, Long docId) throws Exception {
+    public Document getNonLazyInitializedDocument(Long docId) throws Exception {
         Document result = null;
         Session session = null;
 
         try {
-            session = documentDAO.getSessionFactory().openSession();
+            session = documentService.getDocumentDAO().getSessionFactory().openSession();
             result = (Document) session.get(Document.class, docId);
             result.getDocumentFiles().toString();
             result.getDocumentSharings().toString();
@@ -399,25 +358,9 @@ public class UtilsService {
         return organisation;
     }
 
-    public static String readSQLToString(String filePath) throws Exception {
-        StringBuilder fileData = new StringBuilder();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(
-                new FileInputStream(filePath), "UTF-8"));
-        char[] buf = new char[1024];
-        int numRead;
-
-        while ((numRead = reader.read(buf)) != -1) {
-            String readData = String.valueOf(buf, 0, numRead);
-            fileData.append(readData);
-        }
-        reader.close();
-
-        return fileData.toString();
-    }
-
     public static String getContainerPath(String fileName, String where) {
         String containersPath = DocumentService_SendReceiveDvkTest_Integration.CONTAINERS_PATH + where;
-        return UtilsService.class.getResource(containersPath + fileName).getPath();
+        return TestUtils.class.getResource(containersPath + fileName).getPath();
     }
 
     public static boolean compareStringsIgnoreCase(String str1, String str2) {
@@ -436,24 +379,11 @@ public class UtilsService {
         return code;
     }
 
-    public static String clobToString(Clob clobData) {
-        if (clobData == null) {
-            return "";
-        }
+    public DocumentService getDocumentService() {
+        return documentService;
+    }
 
-        StringBuffer stringBuffer = new StringBuffer();
-        String str = "";
-
-        try {
-            BufferedReader bufferRead = new BufferedReader(clobData.getCharacterStream());
-            while ((str = bufferRead.readLine()) != null) {
-                stringBuffer.append(str);
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return "";
-        }
-
-        return stringBuffer.toString();
+    public void setDocumentService(DocumentService documentService) {
+        this.documentService = documentService;
     }
 }
