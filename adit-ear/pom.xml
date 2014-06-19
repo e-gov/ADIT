@@ -10,7 +10,7 @@
 	<parent>
 	    <groupId>ee</groupId>
 	    <artifactId>adit</artifactId>
-	    <version>1.0.72</version>
+	    <version>1.0.73</version>
 	</parent>
 
 	<build>
