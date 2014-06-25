@@ -12,8 +12,6 @@ import dvk.api.container.v2_1.OrganisationType;
 import dvk.api.container.v2_1.PersonType;
 import dvk.api.container.v2_1.Recipient;
 import dvk.api.ml.PojoMessage;
-import ee.adit.dao.AditUserDAO;
-import ee.adit.dao.DocumentDAO;
 import ee.adit.dao.dvk.DvkDAO;
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
@@ -22,7 +20,6 @@ import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.dao.pojo.Signature;
 import ee.adit.dvk.converter.ContainerVer2_1ToDocumentConverterImpl;
 import ee.adit.service.DocumentService;
-import ee.adit.test.util.DAOCollections;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.FlushMode;
@@ -34,17 +31,15 @@ import org.hibernate.criterion.Property;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileReader;
-import java.io.InputStreamReader;
 import java.sql.Blob;
 import java.sql.Clob;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class TestUtils {
+public class Utils {
 
-    private static Logger logger = Logger.getLogger(TestUtils.class);
+    private static Logger logger = Logger.getLogger(Utils.class);
 
     private DocumentService documentService;
 
@@ -75,7 +70,7 @@ public class TestUtils {
             document = containerVer2_1ToDocumentConverter.convert(container);
 
             // Create a document signature, related with this document (if it's DDOC container)
-            if (TestUtils.compareStringsIgnoreCase(containerType,
+            if (Utils.compareStringsIgnoreCase(containerType,
                     DocumentService_SendReceiveDvkTest_Integration.CONTAINER_TYPE_DDOC)) {
                 Signature signature = new Signature();
                 signature.setDocument(document);
@@ -208,7 +203,7 @@ public class TestUtils {
 
         try {
             // Get container v 2.1
-            ContainerVer2_1 container = (ContainerVer2_1) TestUtils.getContainer(containerFile, Container.Version.Ver2_1);
+            ContainerVer2_1 container = (ContainerVer2_1) Utils.getContainer(containerFile, Container.Version.Ver2_1);
 
             //
             // Set PojoMessage data using container data
@@ -360,7 +355,7 @@ public class TestUtils {
 
     public static String getContainerPath(String fileName, String where) {
         String containersPath = DocumentService_SendReceiveDvkTest_Integration.CONTAINERS_PATH + where;
-        return TestUtils.class.getResource(containersPath + fileName).getPath();
+        return Utils.class.getResource(containersPath + fileName).getPath();
     }
 
     public static boolean compareStringsIgnoreCase(String str1, String str2) {

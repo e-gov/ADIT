@@ -8,11 +8,6 @@ import dvk.api.container.v2_1.DecRecipient;
 import dvk.api.container.v2_1.Recipient;
 import dvk.api.container.v2_1.Transport;
 import dvk.api.ml.PojoMessage;
-import ee.adit.dao.AditUserDAO;
-import ee.adit.dao.DocumentDAO;
-import ee.adit.dao.DocumentFileDAO;
-import ee.adit.dao.DocumentHistoryDAO;
-import ee.adit.dao.DocumentSharingDAO;
 import ee.adit.dao.dvk.DvkDAO;
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
@@ -21,7 +16,6 @@ import ee.adit.dao.pojo.DocumentHistory;
 import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.dao.pojo.Signature;
 import ee.adit.service.DocumentService;
-import ee.adit.test.util.DAOCollections;
 import org.apache.log4j.Logger;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Property;
@@ -75,7 +69,7 @@ public class DocumentService_SendReceiveDvkTest_Integration {
     private static Logger logger = Logger.getLogger(DocumentService_SendReceiveDvkTest_Integration.class);
 
     @Autowired
-    private TestUtils testUtils;
+    private Utils utils;
 
     private List<PojoMessage> dvkMessages = new ArrayList<PojoMessage>();
     private List<Document> aditDocuments = new ArrayList<Document>();
@@ -107,7 +101,7 @@ public class DocumentService_SendReceiveDvkTest_Integration {
 
     @Test
     public void justTestAppContextSetup() throws Exception {
-        DocumentService documentService = testUtils.getDocumentService();
+        DocumentService documentService = utils.getDocumentService();
         Assert.notNull(documentService.getDvkDAO());
         Assert.notNull(documentService.getDvkDAO().getHibernateTemplate());
         Assert.notNull(documentService.getDvkDAO().getSessionFactory());
@@ -143,7 +137,7 @@ public class DocumentService_SendReceiveDvkTest_Integration {
             // TODO: take a digidoc file from Configuration
             digiDocConfFilePath = DocumentService_SendReceiveDvkTest_Integration.class.getResource(DIGIDOC_CONF_FILE).getPath();
             // Path to the container ver 2.1. Get the container
-            containerFilePath = TestUtils.getContainerPath(containerFileName, TO_DVK);
+            containerFilePath = Utils.getContainerPath(containerFileName, TO_DVK);
             containerFile = new File(containerFilePath);
 
             String containerType = CONTAINER_TYPE_NOT_DDOC;
@@ -151,10 +145,10 @@ public class DocumentService_SendReceiveDvkTest_Integration {
                 containerType = CONTAINER_TYPE_DDOC;
             }
 
-            DocumentService documentService = testUtils.getDocumentService();
+            DocumentService documentService = utils.getDocumentService();
 
             // Create a container ver 2.1, based on XML file
-            ContainerVer2_1 containerInput = (ContainerVer2_1) TestUtils.getContainer(containerFile, Container.Version.Ver2_1);
+            ContainerVer2_1 containerInput = (ContainerVer2_1) Utils.getContainer(containerFile, Container.Version.Ver2_1);
             Assert.notNull(containerInput);
 
             // Create a document, based on the container and insert to ADIT DB
@@ -162,13 +156,13 @@ public class DocumentService_SendReceiveDvkTest_Integration {
 
             AditUser recipent = documentService.getAditUserDAO().getUserByID(containerInput.getTransport().
                     getDecRecipient().get(0).getOrganisationCode());
-            document = testUtils.prepareAndSaveAditDocument(containerInput, recipent, digiDocConfFilePath, containerType);
+            document = utils.prepareAndSaveAditDocument(containerInput, recipent, digiDocConfFilePath, containerType);
 
             // Send the document from ADIT to DVK UK
             documentService.sendDocumentsToDVK();
 
             // Get a sent document from ADIT DB, and get a received message from DVK UK DB
-            Document sentAditDocument = testUtils.getNonLazyInitializedDocument(document.getId());
+            Document sentAditDocument = utils.getNonLazyInitializedDocument(document.getId());
             PojoMessage receivedDVKMessage = documentService.getDvkDAO().getMessage(sentAditDocument.getDvkId());
 
             Assert.notNull(sentAditDocument);
@@ -179,7 +173,7 @@ public class DocumentService_SendReceiveDvkTest_Integration {
             Assert.notNull(sentAditDocument.getDocumentFiles());
             Assert.isTrue(sentAditDocument.getDocumentFiles().size() > 0);
             Assert.notNull(receivedDVKMessage.getData());
-            Assert.isTrue(TestUtils.compareStringsIgnoreCase(sentAditDocument.getGuid(), receivedDVKMessage.getDhlGuid()));
+            Assert.isTrue(Utils.compareStringsIgnoreCase(sentAditDocument.getGuid(), receivedDVKMessage.getDhlGuid()));
             Set<DocumentSharing> documentSharings = sentAditDocument.getDocumentSharings();
             Assert.notNull(documentSharings);
 
@@ -195,15 +189,15 @@ public class DocumentService_SendReceiveDvkTest_Integration {
             Assert.notNull(transportOutput);
             Assert.notNull(transportInput.getDecSender());
             Assert.notNull(transportOutput.getDecSender());
-            Assert.isTrue(TestUtils.compareStringsIgnoreCase(documentService.getConfiguration().getDvkOrgCode(),
+            Assert.isTrue(Utils.compareStringsIgnoreCase(documentService.getConfiguration().getDvkOrgCode(),
                     transportOutput.getDecSender().getOrganisationCode()));
             Assert.isNull(transportOutput.getDecSender().getStructuralUnit());
-            Assert.isTrue(TestUtils.compareStringsIgnoreCase(TestUtils.addPrefixIfNecessary(transportOutput.
+            Assert.isTrue(Utils.compareStringsIgnoreCase(Utils.addPrefixIfNecessary(transportOutput.
                     getDecSender().getPersonalIdCode()),
                     sentAditDocument.getCreatorCode()));
             Assert.notNull(transportOutput.getDecRecipient());
             Assert.notNull(transportInput.getDecRecipient());
-            Assert.isTrue(TestUtils.compareStringsIgnoreCase(transportOutput.getDecRecipient().get(0).getOrganisationCode(),
+            Assert.isTrue(Utils.compareStringsIgnoreCase(transportOutput.getDecRecipient().get(0).getOrganisationCode(),
                     documentService.getAditUserDAO().getUserByID(containerInput.getTransport().getDecRecipient().get(0).
                             getOrganisationCode()).getDvkOrgCode()));
             Assert.isNull(transportOutput.getDecRecipient().get(0).getStructuralUnit());
@@ -215,12 +209,12 @@ public class DocumentService_SendReceiveDvkTest_Integration {
             AditUser sender = documentService.getAditUserDAO().getUserByID(containerInput.getTransport().getDecSender().getOrganisationCode());
             Assert.notNull(sender);
             Assert.notNull(containerOutput.getRecordCreator());
-            Assert.isTrue(TestUtils.compareStringsIgnoreCase(containerOutput.getRecordCreator().getOrganisation().getName(),
+            Assert.isTrue(Utils.compareStringsIgnoreCase(containerOutput.getRecordCreator().getOrganisation().getName(),
                     sender.getFullName()));
-            Assert.isTrue(TestUtils.compareStringsIgnoreCase(containerOutput.getRecordCreator().getOrganisation()
+            Assert.isTrue(Utils.compareStringsIgnoreCase(containerOutput.getRecordCreator().getOrganisation()
                     .getOrganisationCode(),
                     sender.getDvkOrgCode()));
-            Assert.isTrue(TestUtils.compareStringsIgnoreCase(containerOutput.getRecordCreator().getOrganisation().getResidency(),
+            Assert.isTrue(Utils.compareStringsIgnoreCase(containerOutput.getRecordCreator().getOrganisation().getResidency(),
                     sentAditDocument.getCreatorCode().substring(0, Math.min(sentAditDocument.getCreatorCode().length(), 2))));
             Assert.isNull(containerOutput.getRecordCreator().getOrganisation().getStructuralUnit());
             Assert.isNull(containerOutput.getRecordCreator().getOrganisation().getPositionTitle());
@@ -228,13 +222,13 @@ public class DocumentService_SendReceiveDvkTest_Integration {
             // Do asserts with RecordSenderToDec
             Assert.notNull(containerOutput.getRecordSenderToDec());
             Assert.notNull(containerOutput.getRecordSenderToDec().getOrganisation());
-            Assert.isTrue(TestUtils.compareStringsIgnoreCase(containerOutput.getRecordSenderToDec().getOrganisation().getName(),
+            Assert.isTrue(Utils.compareStringsIgnoreCase(containerOutput.getRecordSenderToDec().getOrganisation().getName(),
                     sender.getFullName()));
-            Assert.isTrue(TestUtils.compareStringsIgnoreCase(containerOutput.getRecordSenderToDec().getOrganisation().getOrganisationCode(),
+            Assert.isTrue(Utils.compareStringsIgnoreCase(containerOutput.getRecordSenderToDec().getOrganisation().getOrganisationCode(),
                     sender.getDvkOrgCode()));
             Assert.isNull(containerOutput.getRecordSenderToDec().getOrganisation().getStructuralUnit());
             Assert.isNull(containerOutput.getRecordSenderToDec().getOrganisation().getPositionTitle());
-            Assert.isTrue(TestUtils.compareStringsIgnoreCase(containerOutput.getRecordSenderToDec().getOrganisation().getResidency(),
+            Assert.isTrue(Utils.compareStringsIgnoreCase(containerOutput.getRecordSenderToDec().getOrganisation().getResidency(),
                     sentAditDocument.getCreatorCode().substring(0, Math.min(sentAditDocument.getCreatorCode().length(), 2))));
 
             // Do asserts with Recipient
@@ -245,48 +239,48 @@ public class DocumentService_SendReceiveDvkTest_Integration {
 
             AditUser recipient = documentService.getAditUserDAO().getUserByID(containerInput.getTransport().getDecRecipient().get(0).getOrganisationCode());
             Assert.notNull(recipient);
-            Assert.notNull(TestUtils.compareStringsIgnoreCase(containerOutput.getRecipient().get(0).getOrganisation().getName(),
+            Assert.notNull(Utils.compareStringsIgnoreCase(containerOutput.getRecipient().get(0).getOrganisation().getName(),
                     recipient.getFullName()));
-            Assert.isTrue(TestUtils.compareStringsIgnoreCase(containerOutput.getRecipient().get(0).getMessageForRecipient(),
+            Assert.isTrue(Utils.compareStringsIgnoreCase(containerOutput.getRecipient().get(0).getMessageForRecipient(),
                     documentSharing.getComment()));
-            Assert.notNull(TestUtils.compareStringsIgnoreCase(containerOutput.getRecipient().get(0).getOrganisation().getOrganisationCode(),
+            Assert.notNull(Utils.compareStringsIgnoreCase(containerOutput.getRecipient().get(0).getOrganisation().getOrganisationCode(),
                     recipient.getDvkOrgCode()));
             String documentSharingUserCode = documentSharing.getUserCode();
-            Assert.isTrue(TestUtils.compareStringsIgnoreCase(containerOutput.getRecipient().get(0).getOrganisation().getResidency(),
+            Assert.isTrue(Utils.compareStringsIgnoreCase(containerOutput.getRecipient().get(0).getOrganisation().getResidency(),
                     documentSharingUserCode.substring(0, Math.min(documentSharingUserCode.length(), 2))));
 
             // Do asserts with RecordMetaData
             Assert.notNull(containerOutput.getRecordMetadata());
-            Assert.isTrue(TestUtils.compareStringsIgnoreCase(containerOutput.getRecordMetadata().getRecordGuid(),
+            Assert.isTrue(Utils.compareStringsIgnoreCase(containerOutput.getRecordMetadata().getRecordGuid(),
                     sentAditDocument.getGuid()));
-            Assert.isTrue(TestUtils.compareStringsIgnoreCase(containerInput.getRecordMetadata().getRecordTitle(),
+            Assert.isTrue(Utils.compareStringsIgnoreCase(containerInput.getRecordMetadata().getRecordTitle(),
                     containerOutput.getRecordMetadata().getRecordTitle()));
-            Assert.isTrue(TestUtils.compareStringsIgnoreCase(containerInput.getRecordMetadata().getRecordType(),
+            Assert.isTrue(Utils.compareStringsIgnoreCase(containerInput.getRecordMetadata().getRecordType(),
                     containerOutput.getRecordMetadata().getRecordType()));
-            Assert.isTrue(TestUtils.compareStringsIgnoreCase(containerOutput.getRecordMetadata().getRecordOriginalIdentifier(),
+            Assert.isTrue(Utils.compareStringsIgnoreCase(containerOutput.getRecordMetadata().getRecordOriginalIdentifier(),
                     Long.toString(sentAditDocument.getId())));
 
-            if (TestUtils.compareStringsIgnoreCase(containerType, CONTAINER_TYPE_NOT_DDOC)) {
-                Assert.isTrue(TestUtils.isToday(containerOutput.getRecordMetadata().getRecordDateRegistered()));
-            } else if (TestUtils.compareStringsIgnoreCase(containerType, CONTAINER_TYPE_DDOC)) {
+            if (Utils.compareStringsIgnoreCase(containerType, CONTAINER_TYPE_NOT_DDOC)) {
+                Assert.isTrue(Utils.isToday(containerOutput.getRecordMetadata().getRecordDateRegistered()));
+            } else if (Utils.compareStringsIgnoreCase(containerType, CONTAINER_TYPE_DDOC)) {
                 int expectedResultOfCompare = 0;
                 Assert.isTrue(expectedResultOfCompare == (containerOutput.getRecordMetadata().getRecordDateRegistered().compareTo
                         (containerInput.getSignatureMetadata().get(0).getSignatureVerificationDate())));
             }
 
             // Do asserts with Access
-            Assert.isTrue(TestUtils.compareStringsIgnoreCase(containerOutput.getAccess().getAccessConditionsCode(),
+            Assert.isTrue(Utils.compareStringsIgnoreCase(containerOutput.getAccess().getAccessConditionsCode(),
                     ACCESS_CONDITIONS_CODE));
 
             // Do asserts with SignatureMetaData (if it's DDOC Container)
-            if (TestUtils.compareStringsIgnoreCase(containerType, CONTAINER_TYPE_DDOC)) {
+            if (Utils.compareStringsIgnoreCase(containerType, CONTAINER_TYPE_DDOC)) {
                 Assert.notNull(containerOutput.getSignatureMetadata());
                 Assert.isTrue(containerOutput.getSignatureMetadata().size() > 0);
-                Assert.isTrue(TestUtils.compareStringsIgnoreCase(containerOutput.getSignatureMetadata().get(0).getSignatureType(),
+                Assert.isTrue(Utils.compareStringsIgnoreCase(containerOutput.getSignatureMetadata().get(0).getSignatureType(),
                         SIGNATURE_TYPE_COMPANY));
                 Assert.isTrue(containerInput.getSignatureMetadata().get(0).getSignatureVerificationDate().equals
                         (containerOutput.getSignatureMetadata().get(0).getSignatureVerificationDate()));
-                Assert.isTrue(TestUtils.compareStringsIgnoreCase(containerInput.getSignatureMetadata().get(0).getSigner(),
+                Assert.isTrue(Utils.compareStringsIgnoreCase(containerInput.getSignatureMetadata().get(0).getSigner(),
                         containerOutput.getSignatureMetadata().get(0).getSigner()));
             }
 
@@ -297,16 +291,16 @@ public class DocumentService_SendReceiveDvkTest_Integration {
             dvk.api.container.v2_1.File fileOutput = containerOutput.getFile().get(0);
             Assert.notNull(fileInput);
             Assert.notNull(fileOutput);
-            Assert.isTrue(TestUtils.compareStringsIgnoreCase(fileInput.getFileName(), fileOutput.getFileName()));
-            Assert.isTrue(TestUtils.compareStringsIgnoreCase(fileInput.getFileGuid(), fileOutput.getFileGuid()));
+            Assert.isTrue(Utils.compareStringsIgnoreCase(fileInput.getFileName(), fileOutput.getFileName()));
+            Assert.isTrue(Utils.compareStringsIgnoreCase(fileInput.getFileGuid(), fileOutput.getFileGuid()));
             Assert.isTrue(fileInput.getFileSize().equals(fileOutput.getFileSize()));
-            Assert.isTrue(TestUtils.compareStringsIgnoreCase(fileInput.getMimeType(), fileOutput.getMimeType()));
-            Assert.isTrue(TestUtils.compareStringsIgnoreCase(fileInput.getZipBase64Content(),
+            Assert.isTrue(Utils.compareStringsIgnoreCase(fileInput.getMimeType(), fileOutput.getMimeType()));
+            Assert.isTrue(Utils.compareStringsIgnoreCase(fileInput.getZipBase64Content(),
                     fileOutput.getZipBase64Content()));
 
             // Do container version assert
             Assert.notNull(containerOutput.getAccess());
-            Assert.isTrue(TestUtils.compareStringsIgnoreCase(containerInput.getInternalVersion().toString(),
+            Assert.isTrue(Utils.compareStringsIgnoreCase(containerInput.getInternalVersion().toString(),
                     containerOutput.getInternalVersion().toString()));
 
             // Finally, clean the messages
@@ -332,7 +326,7 @@ public class DocumentService_SendReceiveDvkTest_Integration {
             // Path to digiDoc configuration file, needed as parameter for receiveDocumentsFromDVK
             digiDocConfFilePath = DocumentService_SendReceiveDvkTest_Integration.class.getResource(DIGIDOC_CONF_FILE).getPath();
             // Path to the container v 1.0
-            containerFilePath = TestUtils.getContainerPath(CONTAINER_V_1_0, TO_ADIT);
+            containerFilePath = Utils.getContainerPath(CONTAINER_V_1_0, TO_ADIT);
             containerFile = new java.io.File(containerFilePath);
 
         } catch (Exception e) {
@@ -340,9 +334,9 @@ public class DocumentService_SendReceiveDvkTest_Integration {
         }
 
         logger.debug("DEFAULT_GUID - " + DEFAULT_GUID);
-        ContainerVer1 container = (ContainerVer1) TestUtils.getContainer(containerFile, Container.Version.Ver1);
+        ContainerVer1 container = (ContainerVer1) Utils.getContainer(containerFile, Container.Version.Ver1);
 
-        DocumentService documentService = testUtils.getDocumentService();
+        DocumentService documentService = utils.getDocumentService();
 
         // Get recipients used space for further control
         Map<String, Long> usersFromContainer = new HashMap<String, Long>();
@@ -354,13 +348,13 @@ public class DocumentService_SendReceiveDvkTest_Integration {
             }
         }
 
-        Long senderUserPersonQuota = documentService.getAditUserDAO().getUsedSpaceForUser(TestUtils.addPrefixIfNecessary(container.getTransport().getSaatjad().get(0).getIsikukood()));
-        Long senderUserOrganisationQuota = documentService.getAditUserDAO().getUsedSpaceForUser(TestUtils.addPrefixIfNecessary(container.getTransport().getSaatjad().get(0).getRegNr()));
+        Long senderUserPersonQuota = documentService.getAditUserDAO().getUsedSpaceForUser(Utils.addPrefixIfNecessary(container.getTransport().getSaatjad().get(0).getIsikukood()));
+        Long senderUserOrganisationQuota = documentService.getAditUserDAO().getUsedSpaceForUser(Utils.addPrefixIfNecessary(container.getTransport().getSaatjad().get(0).getRegNr()));
 
         // Create new PojoMessage with capsule v 1.0 and Save to DVK Client DB
         PojoMessage dvkMessage = null;
         try {
-            dvkMessage = testUtils.prepareAndSaveDvkMessage_V_1(containerFile);
+            dvkMessage = utils.prepareAndSaveDvkMessage_V_1(containerFile);
         } catch (Exception e) {
             logger.error("Can't prepare and save the DVK message." + e.getMessage());
             throw new RuntimeException(e);
@@ -372,7 +366,7 @@ public class DocumentService_SendReceiveDvkTest_Integration {
         // Call receiveDocumentsFromDVK for all incoming messages
         documentService.receiveDocumentsFromDVK(digiDocConfFilePath);
 
-        List<Document> aditDocsWithDefaultDvkGuid = testUtils.getDocumentsByDvkGuid(DEFAULT_GUID.toString());
+        List<Document> aditDocsWithDefaultDvkGuid = utils.getDocumentsByDvkGuid(DEFAULT_GUID.toString());
 
         // Check there is only one document with DOCUMENT.DVK_GUID = DEFAULT_GUID in ADIT DB
         Assert.notNull(aditDocsWithDefaultDvkGuid);
@@ -380,7 +374,7 @@ public class DocumentService_SendReceiveDvkTest_Integration {
 
         Document aditDocument = aditDocsWithDefaultDvkGuid.get(0);
         try {
-            aditDocument = testUtils.getNonLazyInitializedDocument(aditDocument.getId());
+            aditDocument = utils.getNonLazyInitializedDocument(aditDocument.getId());
         } catch (Exception e) {
             logger.error("Can't get not lazy initialized document." + e.getMessage());
             throw new RuntimeException(e);
@@ -392,21 +386,21 @@ public class DocumentService_SendReceiveDvkTest_Integration {
         // Check mapping
 
         // Table DOCUMENT
-        Assert.isTrue(TestUtils.compareStringsIgnoreCase(dvkMessage.getTitle(), aditDocument.getTitle()));
-        Assert.isTrue(TestUtils.compareStringsIgnoreCase(DocumentService.DOCTYPE_LETTER, aditDocument.getDocumentType()));
-        Assert.isTrue(TestUtils.compareStringsIgnoreCase(aditDocument.getCreatorCode(), "EE" + container.getTransport().getSaatjad().get(0).getRegNr()));
+        Assert.isTrue(Utils.compareStringsIgnoreCase(dvkMessage.getTitle(), aditDocument.getTitle()));
+        Assert.isTrue(Utils.compareStringsIgnoreCase(DocumentService.DOCTYPE_LETTER, aditDocument.getDocumentType()));
+        Assert.isTrue(Utils.compareStringsIgnoreCase(aditDocument.getCreatorCode(), "EE" + container.getTransport().getSaatjad().get(0).getRegNr()));
         // TODO: assert for CREATOR_NAME - understand how it should work
-        // Assert.isTrue(TestUtils.compareStringsIgnoreCase(
+        // Assert.isTrue(Utils.compareStringsIgnoreCase(
         //        aditUserDAO.getUserByID("EE"+container.getTransport().getSaatjad().get(0).getIsikukood()).getFullName(),
         //        aditDocument.getCreatorName()));
-        Assert.isTrue(TestUtils.isToday(aditDocument.getCreationDate()));
-        Assert.isTrue(TestUtils.isToday(aditDocument.getLastModifiedDate()));
+        Assert.isTrue(Utils.isToday(aditDocument.getCreationDate()));
+        Assert.isTrue(Utils.isToday(aditDocument.getLastModifiedDate()));
         Assert.isTrue(aditDocument.getDocumentDvkStatusId() == DVK_STATUS_SENT);
         Assert.isTrue(aditDocument.getDvkId() == DEFAULT_DHL_ID);
         // TODO: assert for PARENT_ID (Igor). Can't find PARENT_ID in aditDocument
         // Assert.isTrue();
         Assert.isTrue(aditDocument.getLocked());
-        Assert.isTrue(TestUtils.isToday(aditDocument.getLockingDate()));
+        Assert.isTrue(Utils.isToday(aditDocument.getLockingDate()));
         // If first added file happens to be a DigiDoc container then
         // extract files and signatures from container. Otherwise add
         // container as a regular file.
@@ -428,11 +422,11 @@ public class DocumentService_SendReceiveDvkTest_Integration {
                         throw new Exception();
                     }
                     AditUser aditUser = documentService.getAditUserDAO().getUserByID(recipient.getIsikukood());
-                    Assert.isTrue(TestUtils.compareStringsIgnoreCase(aditUser.getUserCode(),
+                    Assert.isTrue(Utils.compareStringsIgnoreCase(aditUser.getUserCode(),
                             documentSharing.getUserCode()));
-                    Assert.isTrue(TestUtils.compareStringsIgnoreCase(aditUser.getFullName(), documentSharing.getUserName()));
-                    Assert.isTrue(TestUtils.compareStringsIgnoreCase(documentSharing.getDocumentSharingType(), DOCUMENT_SHARING_TYPE_SEND_TO_ADIT));
-                    Assert.isTrue(TestUtils.isToday(documentSharing.getCreationDate()));
+                    Assert.isTrue(Utils.compareStringsIgnoreCase(aditUser.getFullName(), documentSharing.getUserName()));
+                    Assert.isTrue(Utils.compareStringsIgnoreCase(documentSharing.getDocumentSharingType(), DOCUMENT_SHARING_TYPE_SEND_TO_ADIT));
+                    Assert.isTrue(Utils.isToday(documentSharing.getCreationDate()));
                     Assert.isNull(documentSharing.getDvkFolder());
                     // TODO assert for DVK_ID, ID, DOCUMENT_ID - understand ho it should work
                 }
@@ -452,10 +446,10 @@ public class DocumentService_SendReceiveDvkTest_Integration {
                         Assert.isTrue(documentFile.getDocumentFileTypeId() == DOCUMENT_FILE_TYPE_ID);
                     }
                     Assert.isTrue(!documentFile.getDeleted());
-                    Assert.isTrue(TestUtils.compareStringsIgnoreCase(documentFile.getContentType(), dataFile.getFileMimeType()));
-                    Assert.isTrue(TestUtils.compareStringsIgnoreCase(documentFile.getFileName(), dataFile.getFileName()));
-                    Assert.isTrue(TestUtils.compareStringsIgnoreCase(documentFile.getFileSizeBytes().toString(), dataFile.getFileSize()));
-                    Assert.notNull(TestUtils.isToday(documentFile.getLastModifiedDate()));
+                    Assert.isTrue(Utils.compareStringsIgnoreCase(documentFile.getContentType(), dataFile.getFileMimeType()));
+                    Assert.isTrue(Utils.compareStringsIgnoreCase(documentFile.getFileName(), dataFile.getFileName()));
+                    Assert.isTrue(Utils.compareStringsIgnoreCase(documentFile.getFileSizeBytes().toString(), dataFile.getFileSize()));
+                    Assert.notNull(Utils.isToday(documentFile.getLastModifiedDate()));
                     if (dataFile.getFileName().contains("ddoc")) {
                         // TODO: is it correct that just not null (low priority)
                         Assert.notNull(documentFile.getFileDataInDdoc());
@@ -521,7 +515,7 @@ public class DocumentService_SendReceiveDvkTest_Integration {
             // Path to digiDoc configuration file, needed as parameter for receiveDocumentsFromDVK
             digiDocConfFilePath = DocumentService_SendReceiveDvkTest_Integration.class.getResource(DIGIDOC_CONF_FILE).getPath();
             // Path to the 2.1 container file
-            containerFilePath = TestUtils.getContainerPath(CONTAINER_V_2_1, TO_ADIT);
+            containerFilePath = Utils.getContainerPath(CONTAINER_V_2_1, TO_ADIT);
             containerFile = new java.io.File(containerFilePath);
 
         } catch (Exception e) {
@@ -530,9 +524,9 @@ public class DocumentService_SendReceiveDvkTest_Integration {
         }
 
         logger.debug("DEFAULT_GUID " + DEFAULT_GUID);
-        ContainerVer2_1 container = (ContainerVer2_1) TestUtils.getContainer(containerFile, Container.Version.Ver2_1);
+        ContainerVer2_1 container = (ContainerVer2_1) Utils.getContainer(containerFile, Container.Version.Ver2_1);
 
-        DocumentService documentService = testUtils.getDocumentService();
+        DocumentService documentService = utils.getDocumentService();
 
         // Get recipients used space for further control
         Map<String, Long> usersFromContainer = new HashMap<String, Long>();
@@ -545,13 +539,13 @@ public class DocumentService_SendReceiveDvkTest_Integration {
             }
         }
 
-        AditUser messageSender = documentService.getAditUserDAO().getUserByID(TestUtils.addPrefixIfNecessary(container.getTransport().getDecSender().getOrganisationCode()));
+        AditUser messageSender = documentService.getAditUserDAO().getUserByID(Utils.addPrefixIfNecessary(container.getTransport().getDecSender().getOrganisationCode()));
         Long senderUsedSpace = documentService.getAditUserDAO().getUsedSpaceForUser(messageSender.getUserCode());
 
         // Create new PojoMessage with capsule v 2.1 and Save to DVK Client DB
         PojoMessage dvkMessage = null;
         try {
-            dvkMessage = testUtils.prepareAndSaveDvkMessage_V_2_1(containerFile);
+            dvkMessage = utils.prepareAndSaveDvkMessage_V_2_1(containerFile);
         } catch (Exception e) {
             logger.error("Can't prepare and save the DVK message. " + e.getMessage());
             throw new RuntimeException(e);
@@ -563,7 +557,7 @@ public class DocumentService_SendReceiveDvkTest_Integration {
         // Call receiveDocumentsFromDVK for all incoming messages
         documentService.receiveDocumentsFromDVK(digiDocConfFilePath);
 
-        List<Document> aditDocsWithDefaultDvkGuid = testUtils.getDocumentsByDvkGuid(DEFAULT_GUID.toString());
+        List<Document> aditDocsWithDefaultDvkGuid = utils.getDocumentsByDvkGuid(DEFAULT_GUID.toString());
 
         // Check there is only one document with DOCUMENT.DVK_GUID = DEFAULT_GUID in ADIT DB
         Assert.notNull(aditDocsWithDefaultDvkGuid);
@@ -571,7 +565,7 @@ public class DocumentService_SendReceiveDvkTest_Integration {
 
         Document aditDocument = aditDocsWithDefaultDvkGuid.get(0);
         try {
-            aditDocument = testUtils.getNonLazyInitializedDocument(aditDocument.getId());
+            aditDocument = utils.getNonLazyInitializedDocument(aditDocument.getId());
         } catch (Exception e) {
             logger.error("Can't get not lazy initialized document. " + e.getMessage());
             throw new RuntimeException(e);
@@ -582,19 +576,19 @@ public class DocumentService_SendReceiveDvkTest_Integration {
 
         // Check mapping
         // Table DOCUMENT
-        Assert.isTrue(TestUtils.compareStringsIgnoreCase(dvkMessage.getTitle(), aditDocument.getTitle()));
-        Assert.isTrue(TestUtils.compareStringsIgnoreCase(DocumentService.DOCTYPE_LETTER, aditDocument.getDocumentType()));
-        Assert.isTrue(TestUtils.compareStringsIgnoreCase(aditDocument.getCreatorCode(), TestUtils.addPrefixIfNecessary(container.getTransport().getDecSender().getOrganisationCode())));
+        Assert.isTrue(Utils.compareStringsIgnoreCase(dvkMessage.getTitle(), aditDocument.getTitle()));
+        Assert.isTrue(Utils.compareStringsIgnoreCase(DocumentService.DOCTYPE_LETTER, aditDocument.getDocumentType()));
+        Assert.isTrue(Utils.compareStringsIgnoreCase(aditDocument.getCreatorCode(), Utils.addPrefixIfNecessary(container.getTransport().getDecSender().getOrganisationCode())));
         if (dvkMessage.getSenderOrgName() != null && !dvkMessage.getSenderOrgName().isEmpty()) {
-            Assert.isTrue(TestUtils.compareStringsIgnoreCase(aditDocument.getCreatorName(), dvkMessage.getSenderOrgName()));
+            Assert.isTrue(Utils.compareStringsIgnoreCase(aditDocument.getCreatorName(), dvkMessage.getSenderOrgName()));
         }
-        Assert.isTrue(TestUtils.isToday(aditDocument.getCreationDate()));
-        Assert.isTrue(TestUtils.isToday(aditDocument.getLastModifiedDate()));
+        Assert.isTrue(Utils.isToday(aditDocument.getCreationDate()));
+        Assert.isTrue(Utils.isToday(aditDocument.getLastModifiedDate()));
         Assert.isTrue(aditDocument.getDocumentDvkStatusId() == DVK_STATUS_SENT);
         Assert.isTrue(aditDocument.getDvkId() == DEFAULT_DHL_ID);
         // PARENT_ID will be not yet used in ADIT - JIRA ADIT-9
         Assert.isTrue(aditDocument.getLocked());
-        Assert.isTrue(TestUtils.isToday(aditDocument.getLockingDate()));
+        Assert.isTrue(Utils.isToday(aditDocument.getLockingDate()));
         Assert.isTrue(aditDocument.getSignable());
         if (container.getSignatureMetadata() != null) Assert.isTrue(aditDocument.getSigned());
 
@@ -607,18 +601,18 @@ public class DocumentService_SendReceiveDvkTest_Integration {
             aditDocSharings.put(documentSharing.getUserCode(), documentSharing);
         }
         for (DecRecipient recipient : container.getTransport().getDecRecipient()) {
-            String recipientAditUserCode = TestUtils.addPrefixIfNecessary(recipient.getPersonalIdCode());
+            String recipientAditUserCode = Utils.addPrefixIfNecessary(recipient.getPersonalIdCode());
             Assert.isTrue(aditDocSharings.containsKey(recipientAditUserCode));
             DocumentSharing documentSharing = aditDocSharings.get(recipientAditUserCode);
 
-            Assert.isTrue(TestUtils.compareStringsIgnoreCase(documentSharing.getDocumentSharingType(), DOCUMENT_SHARING_TYPE_SEND_TO_ADIT));
-            Assert.isTrue(TestUtils.isToday(documentSharing.getCreationDate()));
+            Assert.isTrue(Utils.compareStringsIgnoreCase(documentSharing.getDocumentSharingType(), DOCUMENT_SHARING_TYPE_SEND_TO_ADIT));
+            Assert.isTrue(Utils.isToday(documentSharing.getCreationDate()));
             Assert.isNull(documentSharing.getDvkFolder());//todo
             Assert.isTrue(documentSharing.getDvkId() == DEFAULT_DHL_ID);
 
             // For number of recipients
             if(container.getRecipient().get(0).getMessageForRecipient() != null) {
-                Assert.isTrue(TestUtils.compareStringsIgnoreCase(documentSharing.getComment(), container.getRecipient().get(0).getMessageForRecipient()));
+                Assert.isTrue(Utils.compareStringsIgnoreCase(documentSharing.getComment(), container.getRecipient().get(0).getMessageForRecipient()));
             }
         }
 
@@ -637,17 +631,17 @@ public class DocumentService_SendReceiveDvkTest_Integration {
                 Assert.isTrue(documentFile.getDocumentFileTypeId() == DocumentService.FILETYPE_SIGNATURE_CONTAINER);
             }
             Assert.isTrue(!documentFile.getDeleted());
-            Assert.isTrue(TestUtils.compareStringsIgnoreCase(documentFile.getContentType(), dataFile.getMimeType()));
-            Assert.isTrue(TestUtils.compareStringsIgnoreCase(documentFile.getFileName(), dataFile.getFileName()));
+            Assert.isTrue(Utils.compareStringsIgnoreCase(documentFile.getContentType(), dataFile.getMimeType()));
+            Assert.isTrue(Utils.compareStringsIgnoreCase(documentFile.getFileName(), dataFile.getFileName()));
             Assert.isTrue(documentFile.getFileSizeBytes() == dataFile.getFileSize().intValue());
-            Assert.notNull(TestUtils.isToday(documentFile.getLastModifiedDate()));
+            Assert.notNull(Utils.isToday(documentFile.getLastModifiedDate()));
             if (dataFile.getFileName().contains("ddoc")) {
                 // TODO: is it correct that just not null (low priority)
                 Assert.notNull(documentFile.getFileDataInDdoc());
             }
 */
             // TODO: asserts for documentFile.getData (Blob) and String from dataFile
-       /*     Assert.isTrue(TestUtils.compareStringsIgnoreCase(dataFile.getZipBase64Content(),
+       /*     Assert.isTrue(Utils.compareStringsIgnoreCase(dataFile.getZipBase64Content(),
                     documentFile.getFileData().toString().getZipBase64Content()));*/
         }
 
@@ -665,11 +659,11 @@ public class DocumentService_SendReceiveDvkTest_Integration {
         // Table DOCUMENT_HISTORY
         Assert.notNull(aditDocument.getDocumentHistories());
         DocumentHistory aditDocumentHistory = aditDocument.getDocumentHistories().toArray(new DocumentHistory[]{})[0];
-        Assert.isTrue(TestUtils.compareStringsIgnoreCase(aditDocumentHistory.getDocumentHistoryType(), DocumentService.HISTORY_TYPE_EXTRACT_FILE));
-        Assert.isTrue(TestUtils.compareStringsIgnoreCase(aditDocumentHistory.getDescription(), DocumentService.DOCUMENT_HISTORY_DESCRIPTION_EXTRACT_FILE));
-        Assert.isTrue(TestUtils.isToday(aditDocumentHistory.getEventDate()));
-        Assert.isTrue(TestUtils.compareStringsIgnoreCase(aditDocumentHistory.getUserCode(), aditDocument.getCreatorCode()));
-        Assert.isTrue(TestUtils.compareStringsIgnoreCase(aditDocumentHistory.getXteeUserCode(), aditDocument.getCreatorCode()));
+        Assert.isTrue(Utils.compareStringsIgnoreCase(aditDocumentHistory.getDocumentHistoryType(), DocumentService.HISTORY_TYPE_EXTRACT_FILE));
+        Assert.isTrue(Utils.compareStringsIgnoreCase(aditDocumentHistory.getDescription(), DocumentService.DOCUMENT_HISTORY_DESCRIPTION_EXTRACT_FILE));
+        Assert.isTrue(Utils.isToday(aditDocumentHistory.getEventDate()));
+        Assert.isTrue(Utils.compareStringsIgnoreCase(aditDocumentHistory.getUserCode(), aditDocument.getCreatorCode()));
+        Assert.isTrue(Utils.compareStringsIgnoreCase(aditDocumentHistory.getXteeUserCode(), aditDocument.getCreatorCode()));
 
 
         // Table ADIT_USER
@@ -699,12 +693,12 @@ public class DocumentService_SendReceiveDvkTest_Integration {
     //ADIT-7
     public void testUpdateDocumentsFromDVK() throws Exception {
         // Update document statuses from DVK
-        int updatedDocumentsCount = testUtils.getDocumentService().updateDocumentsFromDVK();
+        int updatedDocumentsCount = utils.getDocumentService().updateDocumentsFromDVK();
     }
 
     public void clearDvkDb(List<PojoMessage> dvkMsgs) {
         DetachedCriteria dcMessage = DetachedCriteria.forClass(PojoMessage.class, "dhlMessage");
-        DvkDAO dvkDAO = testUtils.getDocumentService().getDvkDAO();
+        DvkDAO dvkDAO = utils.getDocumentService().getDvkDAO();
 
         if (dvkMsgs == null || dvkMsgs.size() == 0) {
             dcMessage.add(Property.forName("dhlMessage.dhlId").eq(DEFAULT_DHL_ID));
@@ -719,7 +713,7 @@ public class DocumentService_SendReceiveDvkTest_Integration {
     public void clearAditDb(List<Document> aditDocs) throws Exception {
 
         DetachedCriteria dcDocument = DetachedCriteria.forClass(Document.class, "document");
-        DocumentService documentService = testUtils.getDocumentService();
+        DocumentService documentService = utils.getDocumentService();
 
         if (aditDocs == null || aditDocs.size() == 0) {
             dcDocument.add(Property.forName("document.dvkId").eq(DEFAULT_DHL_ID));
@@ -727,7 +721,7 @@ public class DocumentService_SendReceiveDvkTest_Integration {
         }
 
         for (Document doc : aditDocs) {
-            doc = testUtils.getNonLazyInitializedDocument(doc.getId());
+            doc = utils.getNonLazyInitializedDocument(doc.getId());
             documentService.getDocumentHistoryDAO().getHibernateTemplate().deleteAll(doc.getDocumentHistories());
             documentService.getDocumentFileDAO().getHibernateTemplate().deleteAll(doc.getDocumentFiles());
             documentService.getDocumentSharingDAO().getHibernateTemplate().deleteAll(doc.getDocumentSharings());

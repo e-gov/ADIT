@@ -171,7 +171,7 @@
         <property name="dvkDAO" ref="dvkDAO"/>
     </bean>
 
-    <bean id="testUtils" class="ee.adit.integrationtests.TestUtils">
+    <bean id="testUtils" class="ee.adit.integrationtests.Utils">
         <property name="documentService" ref="documentService"/>
     </bean>
 </beans>
