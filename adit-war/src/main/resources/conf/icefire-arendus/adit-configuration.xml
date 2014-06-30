@@ -53,7 +53,7 @@
 		<property name="dvkSendFolder" value="/home/tomcat/adit/" />
 		<property name="dvkRecieveFolders">
 			<list>
-				<value>/home/tomcat/adit/</value>
+                <value>/</value>
 				<value>EVORMID</value>
 			</list>
 		</property>
