@@ -88,4 +88,8 @@
     <bean id="checkSignatures" class="java.lang.Boolean">
         <constructor-arg value="false"/>
     </bean>
+
+    <bean id="doCheckTestCert" class="java.lang.Boolean">
+        <constructor-arg value="true" />
+    </bean>
 </beans>

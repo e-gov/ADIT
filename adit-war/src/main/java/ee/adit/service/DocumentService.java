@@ -921,8 +921,10 @@ public class DocumentService {
             File digiDocContainer = new File(pathToContainer);
             if (digiDocContainer.exists()) {
                 try {
+                    logger.debug("digidocConfigFile: " + digidocConfigFile);
                     ConfigManager.init(digidocConfigFile);
                     SAXDigiDocFactory factory = new SAXDigiDocFactory();
+                    logger.debug("pathToContainer: " + pathToContainer);
                     SignedDoc ddocContainer = factory.readSignedDoc(pathToContainer);
 
                     int dataFilesCount = ddocContainer.countDataFiles();
@@ -962,6 +964,7 @@ public class DocumentService {
                             Signature ddocSignature = ddocContainer.getSignature(i);
 
                             // Convert DigiDoc signature to local signature
+
                             ee.adit.dao.pojo.Signature localSignature = convertDigiDocSignatureToLocalSignature(ddocSignature);
                             logger.info("Extracted signature of " + localSignature.getSignerName());
 
@@ -4596,7 +4599,9 @@ public class DocumentService {
             X509Certificate cert = signerCertificate.getCert();
             // String signerCode = SignedDoc.getSubjectPersonalCode(cert);
             String signerCode = Util.getSubjectSerialNumberFromCert(cert);
+            logger.debug("signerCode" + signerCode);
             String signerCountryCode = getSubjectCountryCode(cert);
+            logger.debug("signerCountryCode: " + signerCountryCode);
             String signerCodeWithCountryPrefix = "EE" + signerCode;
             if (!Util.isNullOrEmpty(signerCode) && !Util.isNullOrEmpty(signerCountryCode)) {
                 signerCodeWithCountryPrefix = (signerCode.startsWith(signerCountryCode)) ? signerCode : signerCountryCode + signerCode;

@@ -63,15 +63,15 @@
     <appender-ref ref="file" />
   </logger>
   <logger name="ee.adit.service">
-    <level value="INFO"></level>
+    <level value="DEBUG"></level>
     <appender-ref ref="file" />
   </logger>
   <logger name="dvk">
-    <level value="INFO"></level>
+    <level value="DEBUG"></level>
     <appender-ref ref="file" />
   </logger>
   <logger name="ee.adit.dvk">
-    <level value="INFO" />
+    <level value="DEBUG" />
     <appender-ref ref="dvk" />
     <!--<appender-ref ref="stdout" /> -->
   </logger>
