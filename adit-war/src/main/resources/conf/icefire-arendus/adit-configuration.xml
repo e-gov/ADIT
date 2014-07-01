@@ -66,6 +66,7 @@
         signatures to the same document is blocked.
         -->
         <property name="unfinishedSignatureLifetimeSeconds" value="300"/>
+        <property name="doCheckTestCert" ref="doCheckTestCert" />
 	</bean>
 
 	<bean id="monitorConfiguration" class="ee.adit.util.MonitorConfiguration">
