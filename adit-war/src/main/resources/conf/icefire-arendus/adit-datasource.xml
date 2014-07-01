@@ -87,14 +87,16 @@
 		</property>
 	</bean>
 
+    <!-- ADIT transaction manager -->
     <bean id="transactionManager"
-          class="org.springframework.transaction.jta.JtaTransactionManager">
-        <!--<property name="transactionSynchronizationRegistryName"
-                  value="java:comp/env/TransactionSynchronizationRegistry" />
-        <property name="transactionManagerName" value="java:comp/UserTransaction" />-->
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="aditDataSource" />
     </bean>
-
-	<tx:annotation-driven />
+    <!--
+        Enable the configuration of transactional behavior based on
+        annotations
+    -->
+    <tx:annotation-driven transaction-manager="transactionManager" />
 <!--
     <property name="transactionManagerName" value="java:comp/env/TransactionManager"/>
     <property name="transactionSynchronizationRegistryName" value="java:comp/env/TransactionSynchronizationRegistry"/>

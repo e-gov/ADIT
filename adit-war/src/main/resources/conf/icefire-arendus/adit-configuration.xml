@@ -11,12 +11,19 @@
 						http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
 
     <!-- Data sources -->
-    <bean id="aditDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
-        <property name="jndiName" value="java:/comp/env/jdbc/adit-arendus" />
+    <bean id="aditDVKDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+        <property name="url" value="jdbc:oracle:thin:@localhost:1521:XE"/>
+        <property name="username" value="adit_dvk_client"/>
+        <property name="password" value="adcpwd"/>
+        <property name="defaultAutoCommit" value="true"/>
     </bean>
 
-    <bean id="aditDVKDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
-        <property name="jndiName" value="java:/comp/env/jdbc/adit_dvk-arendus" />
+    <bean id="aditDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+        <property name="url" value="jdbc:oracle:thin:@localhost:1521:XE"/>
+        <property name="username" value="ADIT"/>
+        <property name="password" value="ADITA"/>
     </bean>
 
 	<!-- Configuration -->
