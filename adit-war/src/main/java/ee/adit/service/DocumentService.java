@@ -984,12 +984,12 @@ public class DocumentService {
                     throw ex;
                 } catch (DigiDocException ex) {
                     logger.error(ex, ex);
-                    AditCodedException aditCodedException = new AditCodedException("digidoc.extract.incorrectContainer");
+                    AditCodedException aditCodedException = new AditCodedException("digidoc.extract.incorrectContainer", ex);
                     aditCodedException.setParameters(new Object[]{});
                     throw aditCodedException;
                 } catch (Exception ex) {
                     logger.error(ex);
-                    AditCodedException aditCodedException = new AditCodedException("digidoc.extract.genericException");
+                    AditCodedException aditCodedException = new AditCodedException("digidoc.extract.genericException", ex);
                     aditCodedException.setParameters(new Object[]{});
                     throw aditCodedException;
                 }
@@ -1317,7 +1317,6 @@ public class DocumentService {
                     try {
                         PojoMessage dvkMessage = new PojoMessage();
                         dvkMessage.setIsIncoming(false);
-
                         if (dvkFolder == null) {
                             if (document.getDocumentType().equals("letter") && this.getConfiguration().getDvkFolderForLetterType() != null && !this.getConfiguration().getDvkFolderForLetterType().isEmpty()) {
 //                        		dvkMessage.setDhlFolderName(this.getConfiguration().getDvkSendFolder());
