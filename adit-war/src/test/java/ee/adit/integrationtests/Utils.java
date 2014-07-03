@@ -35,7 +35,13 @@ import java.io.FileReader;
 import java.sql.Blob;
 import java.sql.Clob;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 public class Utils {
 
@@ -68,6 +74,7 @@ public class Utils {
             containerVer2_1ToDocumentConverter.setDocumentService(documentService);
             containerVer2_1ToDocumentConverter.setJdigidocCfgTmpFile(digiDocConfFilePath);
             document = containerVer2_1ToDocumentConverter.convert(container);
+            document.setDocumentDvkStatusId(DocumentService.DVK_STATUS_SENDING);
 
             // Create a document signature, related with this document (if it's DDOC container)
             if (Utils.compareStringsIgnoreCase(containerType,
@@ -130,8 +137,9 @@ public class Utils {
         return document;
     }
 
-    public PojoMessage prepareAndSaveDvkMessage_V_1(File containerFile) throws Exception {
+    public PojoMessage prepareAndSaveDvkMessage_Container_1_0(File containerFile) throws Exception {
         DvkDAO dvkDAO = documentService.getDvkDAO();
+        UUID dhlGuid = UUID.randomUUID();
 
         PojoMessage dvkMessage = new PojoMessage();
         BufferedReader in = null;
@@ -168,7 +176,8 @@ public class Utils {
             dvkMessage.setStatusUpdateNeeded((long) 0);
             dvkMessage.setDhlFolderName("/");
             dvkMessage.setDhlId(DocumentService_SendReceiveDvkTest_Integration.DEFAULT_DHL_ID);
-            dvkMessage.setDhlGuid(DocumentService_SendReceiveDvkTest_Integration.DEFAULT_GUID.toString());
+            logger.info("prepareAndSaveDvkMessage_Container_1_0  - test dhlGuid" + dhlGuid);
+            dvkMessage.setDhlGuid(dhlGuid.toString());
 
             // We use BufferedReader for containerFile instead of container.getContent(),
             // because may be errors in big files handling
@@ -189,14 +198,16 @@ public class Utils {
             IOUtils.closeQuietly(in);
 
             if (dvkSession != null) {
+                //dvkSession.flush();
                 dvkSession.close();
             }
         }
         return dvkMessage;
     }
 
-    public PojoMessage prepareAndSaveDvkMessage_V_2_1(File containerFile) throws Exception {
+    public PojoMessage prepareAndSaveDvkMessage_Container_2_1(File containerFile) throws Exception {
         DvkDAO dvkDAO = documentService.getDvkDAO();
+        UUID dhlGuid = UUID.randomUUID();
         PojoMessage dvkMessage = new PojoMessage();
         BufferedReader in = null;
         Session dvkSession = null;
@@ -230,7 +241,7 @@ public class Utils {
                 recordRecipientsInfo.add((ContactInfo) recipient);
             }
             OrganisationType recipientOrganisationInfo = getOrganisationByCode(recordRecipientsInfo, firstRecipient.getOrganisationCode());
-            dvkMessage.setRecipientOrgName(recipientOrganisationInfo == null ? "" : senderOrganisationInfo.getName());
+            dvkMessage.setRecipientOrgName(recipientOrganisationInfo == null ? "" : recipientOrganisationInfo.getName());
             PersonType recipientPersonInfo = getPersonByCode(recordSenderInfo, firstRecipient.getPersonalIdCode());
             dvkMessage.setRecipientName(recipientPersonInfo == null ? "" : senderPersonInfo.getName());
 
@@ -243,7 +254,8 @@ public class Utils {
             dvkMessage.setStatusUpdateNeeded((long) 0);
             dvkMessage.setDhlFolderName("/");
             dvkMessage.setDhlId(DocumentService_SendReceiveDvkTest_Integration.DEFAULT_DHL_ID);
-            dvkMessage.setDhlGuid(DocumentService_SendReceiveDvkTest_Integration.DEFAULT_GUID.toString());
+            logger.info("prepareAndSaveDvkMessage_Container_2_1  - test dhlGuid" + dhlGuid);
+            dvkMessage.setDhlGuid(dhlGuid.toString());
 
             // We use BufferedReader for containerFile instead of container.getContent(),
             // because may be errors in big files handling
@@ -264,13 +276,14 @@ public class Utils {
             IOUtils.closeQuietly(in);
 
             if (dvkSession != null) {
+                //dvkSession.flush();
                 dvkSession.close();
             }
         }
         return dvkMessage;
     }
 
-    public static Container getContainer(File containerFile, Container.Version version) {
+    public static Container getContainer(File containerFile, Container.Version version) throws Exception {
         BufferedReader in = null;
         Container container = null;
 
@@ -279,7 +292,7 @@ public class Utils {
             container = Container.marshal(in, version);
 
         } catch (Exception e) {
-            //todo
+            throw e;
 
         } finally {
             IOUtils.closeQuietly(in);
@@ -336,7 +349,7 @@ public class Utils {
     public static PersonType getPersonByCode(List<ContactInfo> usersInfo, String personCode) {
         PersonType person = null;
         for (ContactInfo contact : usersInfo) {
-            if (contact.getPerson() != null && compareStringsIgnoreCase(contact.getPerson().getPersonalIdCode(), personCode)) {
+            if (person == null && contact != null && contact.getPerson() != null && compareStringsIgnoreCase(contact.getPerson().getPersonalIdCode(), personCode)) {
                 person = contact.getPerson();
             }
         }
@@ -346,7 +359,7 @@ public class Utils {
     public static OrganisationType getOrganisationByCode(List<ContactInfo> usersInfo, String organizationCode) {
         OrganisationType organisation = null;
         for (ContactInfo contact : usersInfo) {
-            if (contact.getOrganisation() != null && compareStringsIgnoreCase(contact.getOrganisation().getOrganisationCode(), organizationCode)) {
+            if (organisation == null && contact != null && contact.getOrganisation() != null && compareStringsIgnoreCase(contact.getOrganisation().getOrganisationCode(), organizationCode)) {
                 organisation = contact.getOrganisation();
             }
         }
