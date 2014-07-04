@@ -716,6 +716,12 @@
 					<element name="file_types" type="tns:arrayOfFileType" />
 					<element name="document_dvk_statuses" type="tns:arrayOfDocumentDvkStatus" />
 					<element name="document_workflow_statuses" type="tns:arrayOfDocumentWorkflowStatus" />
+					<element name="eform_use_id" type="integer">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Evormi kasutuselevõtu id.</xs:documentation>
+							<xs:documentation xml:lang="en">Eform use id</xs:documentation>
+						</xs:annotation>
+					</element>
 					<element name="has_been_viewed" type="boolean">
 						<xs:annotation>
 							<xs:documentation xml:lang="ee">Näitab, kas antud dokumenti
