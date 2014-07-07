@@ -529,36 +529,43 @@ adit-war/src/main/resources/castor-mapping/xsd.v2/dhl-meta-automatic.xsd -text
 adit-war/src/main/resources/castor-mapping/xsd.v2/dhl-meta-manual.xsd -text
 adit-war/src/main/resources/castor-mapping/xsd.v2/dhl.xsd -text
 adit-war/src/main/resources/conf/adit-arendus-tomcat-local/adit-configuration.xml -text
+adit-war/src/main/resources/conf/adit-arendus-tomcat-local/adit-datasource.xml -text
 adit-war/src/main/resources/conf/adit-arendus-tomcat-local/jdigidoc.cfg -text
 adit-war/src/main/resources/conf/adit-arendus-tomcat-local/log4j.xml -text
 adit-war/src/main/resources/conf/adit-arendus-tomcat-local/nsca_send_clear.cfg -text
 adit-war/src/main/resources/conf/adit-arendus-tomcat-local/xtee.properties -text
 adit-war/src/main/resources/conf/adit-arendus-tomcat/adit-configuration.xml -text
+adit-war/src/main/resources/conf/adit-arendus-tomcat/adit-datasource.xml -text
 adit-war/src/main/resources/conf/adit-arendus-tomcat/jdigidoc.cfg -text
 adit-war/src/main/resources/conf/adit-arendus-tomcat/log4j.xml -text
 adit-war/src/main/resources/conf/adit-arendus-tomcat/nsca_send_clear.cfg -text
 adit-war/src/main/resources/conf/adit-arendus-tomcat/xtee.properties -text
 adit-war/src/main/resources/conf/adit-arendus-wl-local/adit-configuration.xml -text svneol=unset#text/plain
+adit-war/src/main/resources/conf/adit-arendus-wl-local/adit-datasource.xml -text
 adit-war/src/main/resources/conf/adit-arendus-wl-local/jdigidoc.cfg -text
 adit-war/src/main/resources/conf/adit-arendus-wl-local/log4j.xml -text svneol=unset#text/plain
 adit-war/src/main/resources/conf/adit-arendus-wl-local/nsca_send_clear.cfg -text
 adit-war/src/main/resources/conf/adit-arendus-wl-local/xtee.properties -text svneol=unset#text/plain
 adit-war/src/main/resources/conf/adit-arendus/adit-configuration.xml -text
+adit-war/src/main/resources/conf/adit-arendus/adit-datasource.xml -text
 adit-war/src/main/resources/conf/adit-arendus/jdigidoc.cfg -text
 adit-war/src/main/resources/conf/adit-arendus/log4j.xml -text
 adit-war/src/main/resources/conf/adit-arendus/nsca_send_clear.cfg -text
 adit-war/src/main/resources/conf/adit-arendus/xtee.properties -text
 adit-war/src/main/resources/conf/adit-eeltoodang/adit-configuration.xml -text
+adit-war/src/main/resources/conf/adit-eeltoodang/adit-datasource.xml -text
 adit-war/src/main/resources/conf/adit-eeltoodang/jdigidoc.cfg -text
 adit-war/src/main/resources/conf/adit-eeltoodang/log4j.xml -text
 adit-war/src/main/resources/conf/adit-eeltoodang/nsca_send_clear.cfg -text
 adit-war/src/main/resources/conf/adit-eeltoodang/xtee.properties -text
 adit-war/src/main/resources/conf/adit-test/adit-configuration.xml -text
+adit-war/src/main/resources/conf/adit-test/adit-datasource.xml -text
 adit-war/src/main/resources/conf/adit-test/jdigidoc.cfg -text
 adit-war/src/main/resources/conf/adit-test/log4j.xml -text
 adit-war/src/main/resources/conf/adit-test/nsca_send_clear.cfg -text
 adit-war/src/main/resources/conf/adit-test/xtee.properties -text
 adit-war/src/main/resources/conf/adit-toodang/adit-configuration.xml -text
+adit-war/src/main/resources/conf/adit-toodang/adit-datasource.xml -text
 adit-war/src/main/resources/conf/adit-toodang/jdigidoc.cfg -text
 adit-war/src/main/resources/conf/adit-toodang/log4j.xml -text
 adit-war/src/main/resources/conf/adit-toodang/nsca_send_clear.cfg -text
@@ -570,6 +577,7 @@ adit-war/src/main/resources/conf/icefire-arendus/log4j.xml -text
 adit-war/src/main/resources/conf/icefire-arendus/nsca_send_clear.cfg -text
 adit-war/src/main/resources/conf/icefire-arendus/xtee.properties -text
 adit-war/src/main/resources/dev-dev-weblogic/adit-configuration.xml -text
+adit-war/src/main/resources/dev-dev-weblogic/adit-datasource.xml -text
 adit-war/src/main/resources/dev-dev-weblogic/jdigidoc.cfg -text
 adit-war/src/main/resources/dev-dev-weblogic/log4j.xml -text
 adit-war/src/main/resources/dev-dev-weblogic/nsca_send_clear.cfg -text
