@@ -13,10 +13,9 @@ import ee.adit.pojo.OutputDocumentFile;
 import ee.adit.service.DocumentService;
 import ee.adit.util.DigiDocExtractionResult;
 import ee.adit.util.Util;
-import org.apache.log4j.Logger;
-
 import java.util.Date;
 import java.util.List;
+import org.apache.log4j.Logger;
 
 /**
  * @author Hendrik Pärna
@@ -34,10 +33,11 @@ public class ContainerVer2_1ToDocumentConverterImpl implements Converter<Contain
 
     /**
      * Constructor.
+     *
      * @param pojoMessage dvk message
      */
     public ContainerVer2_1ToDocumentConverterImpl(final PojoMessage pojoMessage) {
-         this.pojoMessage = pojoMessage;
+        this.pojoMessage = pojoMessage;
     }
 
 
@@ -67,37 +67,61 @@ public class ContainerVer2_1ToDocumentConverterImpl implements Converter<Contain
         document.setCreatorName(senderUser.getFullName());
 
         List<OutputDocumentFile> documentFiles = new OutputDocumentFileBuilder(documentService.getConfiguration(), container).build();
-        getAndUpdateSignatures(documentFiles, document);
-
+        getAndUpdateSignatures(fillFileTypes(documentFiles), document);
 
         return document;
     }
 
+    /**
+     * Fill the fileType for Digidoc files.
+     * @param documentFiles
+     * @return
+     */
+    public List<OutputDocumentFile> fillFileTypes(List<OutputDocumentFile> documentFiles) {
+        if (documentFiles != null) {
+            for (OutputDocumentFile file : documentFiles) {
+                DigiDocExtractionResult digiDocExtractionResult = getDigiDocExtractionResult(file);
+                if (digiDocExtractionResult != null && digiDocExtractionResult.isSuccess()) {
+                    file.setFileType(DocumentService.FILETYPE_NAME_SIGNATURE_CONTAINER);
+                }
+            }
+        }
+
+        return documentFiles;
+    }
+
+    private DigiDocExtractionResult getDigiDocExtractionResult(OutputDocumentFile file) {
+        DigiDocExtractionResult result = null;
+        String extension = Util.getFileExtension(file.getName());
+
+        if (((file.getId() == null) || (file.getId() <= 0)) && "ddoc".equalsIgnoreCase(extension)) {
+            result = documentService.extractDigiDocContainer(file.getSysTempFile(), jdigidocCfgTmpFile);
+        }
+
+        return result;
+    }
+
     private void getAndUpdateSignatures(final List<OutputDocumentFile> outputDocumentFiles, final Document document) {
         if (outputDocumentFiles != null) {
-           for (OutputDocumentFile file: outputDocumentFiles) {
-               String extension = Util.getFileExtension(file.getName());
+            for (OutputDocumentFile file : outputDocumentFiles) {
+                DigiDocExtractionResult extractionResult = getDigiDocExtractionResult(file);
 
-               if (((file.getId() == null) || (file.getId() <= 0)) && "ddoc".equalsIgnoreCase(extension)) {
-                   DigiDocExtractionResult extractionResult = documentService.extractDigiDocContainer(file.getSysTempFile(), jdigidocCfgTmpFile);
-                   if (extractionResult.isSuccess()) {
-                       file.setFileType(DocumentService.FILETYPE_NAME_SIGNATURE_CONTAINER);
-                       document.setSigned((extractionResult.getSignatures() != null) && (extractionResult.getSignatures().size() > 0));
+                if (extractionResult != null && extractionResult.isSuccess()) {
+                    document.setSigned((extractionResult.getSignatures() != null) && (extractionResult.getSignatures().size() > 0));
 
-                       for (int i = 0; i < extractionResult.getFiles().size(); i++) {
-                           DocumentFile df = extractionResult.getFiles().get(i);
-                           df.setDocument(document);
-                           document.getDocumentFiles().add(df);
-                       }
+                    for (int i = 0; i < extractionResult.getFiles().size(); i++) {
+                        DocumentFile df = extractionResult.getFiles().get(i);
+                        df.setDocument(document);
+                        document.getDocumentFiles().add(df);
+                    }
 
-                       for (int i = 0; i < extractionResult.getSignatures().size(); i++) {
-                           ee.adit.dao.pojo.Signature sig = extractionResult.getSignatures().get(i);
-                           sig.setDocument(document);
-                           document.getSignatures().add(sig);
-                       }
-                   }
-               }
-           }
+                    for (int i = 0; i < extractionResult.getSignatures().size(); i++) {
+                        ee.adit.dao.pojo.Signature sig = extractionResult.getSignatures().get(i);
+                        sig.setDocument(document);
+                        document.getSignatures().add(sig);
+                    }
+                }
+            }
         }
     }
 
@@ -125,7 +149,7 @@ public class ContainerVer2_1ToDocumentConverterImpl implements Converter<Contain
         boolean result = false;
 
         if (files != null) {
-            for (File file: files) {
+            for (File file : files) {
                 if (file.getFileName().toLowerCase().contains(".ddoc")) {
                     result = true;
                     break;

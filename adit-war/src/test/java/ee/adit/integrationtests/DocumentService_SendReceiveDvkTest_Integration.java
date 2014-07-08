@@ -487,7 +487,6 @@ public class DocumentService_SendReceiveDvkTest_Integration {
     @Test
     @Parameters({
             "containerVer2_1_ddoc.xml"})
-
     public void receiveDocumentFromDVKClient_Container_2_1_Test(String containerFileName) throws Exception {
 
         // Path to digiDoc configuration file, needed as parameter for receiveDocumentsFromDVK
@@ -589,10 +588,10 @@ public class DocumentService_SendReceiveDvkTest_Integration {
                     "Received ADIT document doesn't have related DOCUMENT_FILE for file" + fileGuid);
             DocumentFile documentFile = getDocumentFiles.get(fileGuid);
 
-            /* TODO check how getDocumentFileTypeId done for capsule 1.0
+            //TODO: check how getDocumentFileTypeId done for capsule 1.0
             if (dataFile.getFileName().contains("ddoc")) {
                 Assert.isTrue(documentFile.getDocumentFileTypeId() == DocumentService.FILETYPE_SIGNATURE_CONTAINER);
-            }*/
+            }
             Assert.isTrue(!documentFile.getDeleted(),  "expected: received ADIT document not deleted, actual: document deleted = " + documentFile.getDeleted());
             Assert.isTrue(Utils.compareStringsIgnoreCase(documentFile.getContentType(), dataFile.getMimeType()),
                     "expected:" + dataFile.getMimeType() + ", actual:" + documentFile.getContentType());

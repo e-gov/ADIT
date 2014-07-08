@@ -99,7 +99,7 @@ public class Container2_1Receiver implements DvkReceiver {
         try {
             AditUser senderUser = converter.getSenderUser();
             SaveItemInternalResult saveResult = documentService.getDocumentDAO()
-                    .save(document, tempDocuments, Long.MAX_VALUE);
+                    .save(document, converter.fillFileTypes(tempDocuments), Long.MAX_VALUE);
 
             if (saveResult == null || !saveResult.isSuccess()) {
                 throw new RuntimeException("Unable to save document: dvkId" + message.getDhlId());
