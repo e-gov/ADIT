@@ -228,6 +228,9 @@ public class Utils {
 
             List<ContactInfo> recordSenderInfo = Arrays.asList((ContactInfo) container.getRecordCreator(), container.getRecordSenderToDec());
             OrganisationType senderOrganisationInfo = getOrganisationByCode(recordSenderInfo, sender.getOrganisationCode());
+
+            System.out.println("!!!!!!!!!!!!!!!!!prepareAndSaveDvkMessage_Container_2_1.senderOrganisationInfo.getName()" + senderOrganisationInfo.getName());
+
             dvkMessage.setSenderOrgName(senderOrganisationInfo == null ? "" : senderOrganisationInfo.getName());
             PersonType senderPersonInfo = getPersonByCode(recordSenderInfo, sender.getPersonalIdCode());
             dvkMessage.setSenderName(senderPersonInfo == null ? "" : senderPersonInfo.getName());
@@ -308,8 +311,29 @@ public class Utils {
         dt.add(Property.forName("document.guid").eq(documentGuid));
         result = documentService.getDocumentDAO().getHibernateTemplate().findByCriteria(dt);
 
+        System.out.println("!!!!!!!!!getDocumentsByDvkGuid!!!!!!!!!!" + result.get(0).getCreatorName());
+
+
         logger.info("There are " + result.size() + " Documents with dvk_guid = " + documentGuid + "found in ADIT DB");
         return (result.isEmpty() ? null : result);
+    }
+
+    public Document getDocumentsByDvkGuid_1(String documentGuid) {
+        Document result;
+        String sql = "from Document where guid = " + documentGuid;
+        Session session = null;
+
+        try {
+            session = documentService.getDocumentDAO().getSessionFactory().openSession();
+            session.beginTransaction();
+            result = (Document) session.createQuery(sql).uniqueResult();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+;
+        return result;
     }
 
     public Document getNonLazyInitializedDocument(Long docId) throws Exception {
@@ -366,13 +390,32 @@ public class Utils {
         return organisation;
     }
 
+    public static Recipient getRecipient_By_OrganisationCode_And_PersonCode(List<Recipient> recipients, String organizationCode, String personCode){
+        for (Recipient recipient : recipients) {
+            if (recipient.getOrganisation() == null ){
+                OrganisationType aditOrganization = new OrganisationType();
+                aditOrganization.setOrganisationCode("adit");
+                recipient.setOrganisation(aditOrganization);
+            }
+            if (compareStringsIgnoreCase(recipient.getOrganisation().getOrganisationCode(), organizationCode)
+                    && compareStringsIgnoreCase(recipient.getPerson().getPersonalIdCode(), personCode)) {
+                return recipient;
+            }
+        }
+        return null;
+    }
+
     public static String getContainerPath(String fileName, String where) {
         String containersPath = DocumentService_SendReceiveDvkTest_Integration.CONTAINERS_PATH + where;
         return Utils.class.getResource(containersPath + fileName).getPath();
     }
 
     public static boolean compareStringsIgnoreCase(String str1, String str2) {
-        return !((str1 == null || str2 == null)) && str1.equalsIgnoreCase(str2);
+        return str1 == null && str2 == null || !(str1 == null || str2 == null) && str1.equalsIgnoreCase(str2);
+    }
+
+    public static boolean compareObjects(Object obj1, Object obj2) {
+        return obj1 == null && obj2 == null || !(obj1 == null || obj2 == null) && obj1.equals(obj2);
     }
 
     public static boolean isToday(Date date) {
