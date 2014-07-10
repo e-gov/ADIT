@@ -38,7 +38,16 @@ public class ReceiveFromDvkTestParameter {
                 fileList.add(file);
             }
         }
+        return fileList;
+    }
 
+    public List<ContainerFile> getFileByName(String name){
+        List<ContainerFile> fileList = new ArrayList<ContainerFile>();
+        for (ContainerFile file : containerFiles){
+            if (Utils.compareStringsIgnoreCase(file.getName(), name)){
+                fileList.add(file);
+            }
+        }
         return fileList;
     }
 
