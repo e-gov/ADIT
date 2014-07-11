@@ -639,6 +639,7 @@ adit-war/src/test/java/ee/adit/dvk/converter/TransportTest.java -text
 adit-war/src/test/java/ee/adit/integrationtests/DocumentService_SendReceiveDvkTest_Integration.java -text
 adit-war/src/test/java/ee/adit/integrationtests/Parameters/ConfigurationConstants.java -text
 adit-war/src/test/java/ee/adit/integrationtests/Parameters/ContainerFile.java -text
+adit-war/src/test/java/ee/adit/integrationtests/Parameters/ContainerSignature.java -text
 adit-war/src/test/java/ee/adit/integrationtests/Parameters/ReceiveFromDvkTestParameter.java -text
 adit-war/src/test/java/ee/adit/integrationtests/Utils.java -text
 adit-war/src/test/java/ee/adit/test/service/DocumentServiceTest.java -text

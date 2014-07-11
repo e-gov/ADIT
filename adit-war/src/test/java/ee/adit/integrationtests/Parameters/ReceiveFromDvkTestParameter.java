@@ -19,11 +19,14 @@ public class ReceiveFromDvkTestParameter {
     public String xmlContainerFileName;
     public List<ContainerFile> containerFiles;
     public List<ContainerFile> filesInDdoc;
+    public List<ContainerSignature> signaturesInDdoc;
 
-    public ReceiveFromDvkTestParameter(String containerFileName, List<ContainerFile> filesInDocument, List<ContainerFile> filesInDdocContainer){
+    public ReceiveFromDvkTestParameter(String containerFileName, List<ContainerFile> filesInDocument,
+                                       List<ContainerFile> filesInDdocContainer, List<ContainerSignature> signatures){
         xmlContainerFileName = containerFileName;
         containerFiles = filesInDocument;
         filesInDdoc = filesInDdocContainer;
+        signaturesInDdoc = signatures;
     }
 
     public String getPathToXmlContainer() throws Exception{
@@ -61,5 +64,9 @@ public class ReceiveFromDvkTestParameter {
 
     public List<ContainerFile> getFilesInDdoc() {
         return filesInDdoc;
+    }
+
+    public List<ContainerSignature> getSignaturesInDdoc() {
+        return signaturesInDdoc;
     }
 }

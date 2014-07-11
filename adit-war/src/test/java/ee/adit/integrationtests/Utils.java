@@ -54,6 +54,7 @@ public class Utils {
         Document document = null;
         DocumentSharing documentSharing;
         DocumentFile documentFile;
+        UUID dhlGuid = UUID.randomUUID();
 
         Session aditDBSession = null;
         Session documentSharingSession = null;
@@ -65,7 +66,8 @@ public class Utils {
             PojoMessage pojoMessage = new PojoMessage();
             pojoMessage.setDhlId(DocumentService_SendReceiveDvkTest_Integration.DEFAULT_DHL_ID);
             pojoMessage.setTitle(container.getRecordMetadata().getRecordTitle());
-            pojoMessage.setDhlGuid(DocumentService_SendReceiveDvkTest_Integration.DEFAULT_GUID.toString());
+            pojoMessage.setDhlGuid(dhlGuid.toString());
+            logger.debug("DEFAULT_GUID " + dhlGuid);
 
             // Create a document, is based on the container
             ContainerVer2_1ToDocumentConverterImpl containerVer2_1ToDocumentConverter =
@@ -146,12 +148,9 @@ public class Utils {
         Session dvkSession = null;
 
         try {
-            // Get container v 1.0
             ContainerVer1 container = (ContainerVer1) getContainer(containerFile, Container.Version.Ver1);
 
-            //
             // Set PojoMessage data using container data
-            //
             dvkMessage.setIsIncoming(true);
             dvkMessage.setTitle(DocumentService_SendReceiveDvkTest_Integration.DEFAULT_DOCUMENT_TITLE);
 
@@ -198,7 +197,6 @@ public class Utils {
             IOUtils.closeQuietly(in);
 
             if (dvkSession != null) {
-                //dvkSession.flush();
                 dvkSession.close();
             }
         }
@@ -213,12 +211,9 @@ public class Utils {
         Session dvkSession = null;
 
         try {
-            // Get container v 2.1
             ContainerVer2_1 container = (ContainerVer2_1) Utils.getContainer(containerFile, Container.Version.Ver2_1);
 
-            //
             // Set PojoMessage data using container data
-            //
             dvkMessage.setIsIncoming(true);
             dvkMessage.setTitle(DocumentService_SendReceiveDvkTest_Integration.DEFAULT_DOCUMENT_TITLE);
 
@@ -279,7 +274,6 @@ public class Utils {
             IOUtils.closeQuietly(in);
 
             if (dvkSession != null) {
-                //dvkSession.flush();
                 dvkSession.close();
             }
         }
@@ -289,19 +283,12 @@ public class Utils {
     public static Container getContainer(File containerFile, Container.Version version) throws Exception {
         BufferedReader in = null;
         Container container = null;
-
         try {
             in = new BufferedReader(new FileReader(containerFile));
             container = Container.marshal(in, version);
-
-        } catch (Exception e) {
-            throw e;
-
         } finally {
             IOUtils.closeQuietly(in);
-
         }
-
         return container;
     }
 
@@ -316,24 +303,6 @@ public class Utils {
 
         logger.info("There are " + result.size() + " Documents with dvk_guid = " + documentGuid + "found in ADIT DB");
         return (result.isEmpty() ? null : result);
-    }
-
-    public Document getDocumentsByDvkGuid_1(String documentGuid) {
-        Document result;
-        String sql = "from Document where guid = " + documentGuid;
-        Session session = null;
-
-        try {
-            session = documentService.getDocumentDAO().getSessionFactory().openSession();
-            session.beginTransaction();
-            result = (Document) session.createQuery(sql).uniqueResult();
-        } finally {
-            if (session != null) {
-                session.close();
-            }
-        }
-;
-        return result;
     }
 
     public Document getNonLazyInitializedDocument(Long docId) throws Exception {
@@ -416,6 +385,20 @@ public class Utils {
 
     public static boolean compareObjects(Object obj1, Object obj2) {
         return obj1 == null && obj2 == null || !(obj1 == null || obj2 == null) && obj1.equals(obj2);
+    }
+
+    public static boolean compareDates(Date date1, Date date2) throws Exception{
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        if (date1 == null && date2 == null){
+            return true;
+        } else if (date1 == null || date2 == null){
+            return false;
+        } else {
+            date1 = formatter.parse(formatter.format(date1));
+            date2 = formatter.parse(formatter.format(date2));
+            logger.debug("date1: " + date1 + ", date2:" + date2);
+            return date1.equals(date2);
+        }
     }
 
     public static boolean isToday(Date date) {

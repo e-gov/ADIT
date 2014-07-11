@@ -14,7 +14,9 @@ import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.DocumentFile;
 import ee.adit.dao.pojo.DocumentHistory;
 import ee.adit.dao.pojo.DocumentSharing;
+import ee.adit.dao.pojo.Signature;
 import ee.adit.integrationtests.Parameters.ContainerFile;
+import ee.adit.integrationtests.Parameters.ContainerSignature;
 import ee.adit.integrationtests.Parameters.ReceiveFromDvkTestParameter;
 import ee.adit.service.DocumentService;
 import junitparams.JUnitParamsRunner;
@@ -35,11 +37,11 @@ import org.springframework.util.Assert;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
 /**
  * @author Hendrik Pärna
@@ -54,15 +56,10 @@ public class DocumentService_SendReceiveDvkTest_Integration {
     final static String DIGIDOC_CONF_FILE_NAME = "jdigidoc.cfg";
     final static long DEFAULT_DHL_ID = 1;
     final static String DEFAULT_DOCUMENT_TITLE = "Integration Tests TestDocument";
-    final static UUID DEFAULT_GUID = UUID.randomUUID();
     final static long DVK_STATUS_SENT = 3;
-    final static String RIA_ADIT_USER_CODE = "";
-    final static String RIA_ADIT_PERSON_USER_CODE = "";
     final static String DOCUMENT_SHARING_TYPE_SEND_TO_ADIT = "send_adit";
     final static String DOCUMENT_SHARING_TYPE_SEND_TO_DVK = "send_dvk";
-    final static int DOCUMENT_FILE_TYPE_ID = 1;
     final static String ACCESS_CONDITIONS_CODE = "AK";
-    final static String DOCUMENT_SHARING_COMMENT = "Comment_example";
     final static String SIGNED_COUNTRY = "Estonia";
     final static String SIGNED_CITY = "Tallinn";
     final static String SIGNATURE_TYPE_COMPANY = "Digitempel";
@@ -161,8 +158,6 @@ public class DocumentService_SendReceiveDvkTest_Integration {
 
             // Create a document, based on the container and insert to ADIT DB
             Document document;
-            logger.debug("DEFAULT_GUID " + DEFAULT_GUID);
-
             AditUser recipent = documentService.getAditUserDAO().getUserByID(containerInput.getTransport().
                     getDecRecipient().get(0).getOrganisationCode());
             document = utils.prepareAndSaveAditDocument(containerInput, recipent, digiDocConfFilePath, containerType);
@@ -332,8 +327,13 @@ public class DocumentService_SendReceiveDvkTest_Integration {
                                 new ContainerFile("2. Euroopa ja Venemaa 1815-1918.doc", (long) 87040, "D4", (long) 264918, (long) 382788),
                                 new ContainerFile("Kaitsepoliitika.docx", (long) 15722, "D1", (long) 28674, (long) 49966),
                                 new ContainerFile("F9-1 ddoc prooviks.ddoc", (long) 127249, "D3", (long) 92401, (long) 264721)
+                        ),
+                        Arrays.asList(
+                                new ContainerSignature(null, "EE48308212746", "MADISTE, KRISTEL", new GregorianCalendar(2013, 10, 5).getTime())
                         )
                 ));
+        parametersList.add(new ReceiveFromDvkTestParameter("containerVer1_0.xml", null, null, null));
+
         return parametersList;
     }
 
@@ -344,7 +344,7 @@ public class DocumentService_SendReceiveDvkTest_Integration {
         // Path to digiDoc configuration file, needed as parameter for receiveDocumentsFromDVK
         String digiDocConfFilePath = DocumentService_SendReceiveDvkTest_Integration.class.getResource("/" + DIGIDOC_CONF_FILE_NAME).getPath();
 
-        // Container 2.1
+        // Container 1.0
         String containerFilePath = testParameters.getPathToXmlContainer();
         java.io.File containerFile = new java.io.File(containerFilePath);
         ContainerVer1 container = (ContainerVer1) Utils.getContainer(containerFile, Container.Version.Ver1);
@@ -364,7 +364,7 @@ public class DocumentService_SendReceiveDvkTest_Integration {
 
         List<Document> aditDocsWithTestDvkGuid = utils.getDocumentsByDvkGuid(dvkMessage.getDhlGuid());
         Assert.notNull(aditDocsWithTestDvkGuid, "There is no documents in ADIT DB with test dvkGUID: " + dvkMessage.getDhlGuid());
-        Assert.isTrue(aditDocsWithTestDvkGuid.size() == 1, "There are more than one document in ADIT DB with test dvkGUID: " + dvkMessage.getDhlGuid());
+        Assert.isTrue(aditDocsWithTestDvkGuid.size() == 1, "There are " + aditDocsWithTestDvkGuid.size() + " documents in ADIT DB with test dvkGUID: " + dvkMessage.getDhlGuid());
 
         Document aditDocument = utils.getNonLazyInitializedDocument(aditDocsWithTestDvkGuid.get(0).getId());
         Assert.notNull(aditDocument, "Document wasn't received from DVK_UK DB");
@@ -436,25 +436,26 @@ public class DocumentService_SendReceiveDvkTest_Integration {
             Assert.isTrue(documentSharing.getDvkId() == DEFAULT_DHL_ID,
                     "documentSharing.dvkId expected:" + DEFAULT_DHL_ID + ", actual:" + documentSharing.getDvkId());
 // TODO utf 8
-           Assert.isTrue(Utils.compareStringsIgnoreCase(documentSharing.getUserName(), saaja.getNimi()),
-                    "documentSharing.userName, expected:" + saaja.getNimi() + ", actual:" + documentSharing.getUserName());
+            String username = saaja.getNimi() == null ? documentService.getAditUserDAO().getUserByID(Utils.addPrefixIfNecessary(saaja.getIsikukood())).getFullName() : saaja.getNimi();
+            Assert.isTrue(Utils.compareStringsIgnoreCase(documentSharing.getUserName(), username),
+                    "documentSharing.userName, expected:" + saaja.getNimi() + ", actual:" + username);
         }
 
         // Table DOCUMENT_FILE
         Assert.notNull(aditDocument.getDocumentFiles(), "Received ADIT document doesn't have related DOCUMENT_FILE records");
-        Assert.isTrue(aditDocument.getDocumentFiles().size() == testParameters.containerFiles.size() + testParameters.filesInDdoc.size(),
-                "Number of DOCUMENT_FILES records. expected:" + testParameters.containerFiles.size() + testParameters.filesInDdoc.size() + " ,actual:" + aditDocument.getDocumentFiles().size());
-
+        if (testParameters.containerFiles != null && testParameters.filesInDdoc != null) {
+            Assert.isTrue(aditDocument.getDocumentFiles().size() == testParameters.containerFiles.size() + testParameters.filesInDdoc.size(),
+                    "Number of DOCUMENT_FILES records. expected:" + testParameters.containerFiles.size() + testParameters.filesInDdoc.size() + " ,actual:" + aditDocument.getDocumentFiles().size());
+        }
         // Check DOCUMENT_FILE data with files in document container
         HashMap<String, DocumentFile> aditDocumentNotInDdocFilesByName = new HashMap<String, DocumentFile>();
         for (DocumentFile documentFile : aditDocument.getDocumentFiles()) {
-            if (!documentFile.getFileDataInDdoc()){
+            if (!documentFile.getFileDataInDdoc()) {
                 aditDocumentNotInDdocFilesByName.put(documentFile.getFileName(), documentFile);
             }
         }
-        Assert.isTrue(aditDocumentNotInDdocFilesByName.size() == testParameters.containerFiles.size() && aditDocumentNotInDdocFilesByName.size() == container.getSignedDoc().getDataFiles().size(),
-                "Number of DOCUMENT_FILES records with guid. expected:" + container.getSignedDoc().getDataFiles().size() + " or " + testParameters.containerFiles.size() +
-                        " ,actual:" + aditDocumentNotInDdocFilesByName.size());
+        Assert.isTrue(aditDocumentNotInDdocFilesByName.size() == container.getSignedDoc().getDataFiles().size(),
+                "Number of DOCUMENT_FILES records with guid. expected:" + container.getSignedDoc().getDataFiles().size() + " ,actual:" + aditDocumentNotInDdocFilesByName.size());
         for (dvk.api.container.v1.DataFile dataFile : container.getSignedDoc().getDataFiles()) {
             String fileName = dataFile.getFileName();
             Assert.isTrue(aditDocumentNotInDdocFilesByName.containsKey(fileName),
@@ -469,101 +470,117 @@ public class DocumentService_SendReceiveDvkTest_Integration {
             Assert.isTrue(Utils.isToday(documentFileByName.getLastModifiedDate()),
                     "DocumentFiles.lastModifiedDate, expected: current day, actual:" + documentFileByName.getLastModifiedDate());
 
-
 /*
-todo utf-8
-            List<ContainerFile> filesFromTestParametersByName = testParameters.getFileByName(fileName);
-            Assert.isTrue(filesFromTestParametersByName.size() == 1,
-                    "There are " + filesFromTestParametersByName.size() + " files with name: " + fileName + " in container or in incorrect test parameters: " + testParameters.getXmlContainerFileName());
-            Assert.isTrue(filesFromTestParametersByName.get(0).getSize().equals(documentFileByName.getFileSizeBytes()),
-                    "DocumentFiles.FileSizeBytes, expected: " + filesFromTestParametersByName.get(0).getSize() + ", actual:" + documentFileByName.getFileSizeBytes());
+            todo utf -8
+            if (testParameters.containerFiles != null) {
+                List<ContainerFile> filesFromTestParametersByName = testParameters.getFileByName(fileName);
+                Assert.isTrue(filesFromTestParametersByName.size() == 1,
+                        "There are " + filesFromTestParametersByName.size() + " files with name: " + fileName + " in container or in incorrect test parameters: " + testParameters.getXmlContainerFileName());
+                Assert.isTrue(filesFromTestParametersByName.get(0).getSize().equals(documentFileByName.getFileSizeBytes()),
+                        "DocumentFiles.FileSizeBytes, expected: " + filesFromTestParametersByName.get(0).getSize() + ", actual:" + documentFileByName.getFileSizeBytes());
 
-            Assert.isTrue(filesFromTestParametersByName.get(0).getFileDataInDdoc().equals(documentFileByName.getFileDataInDdoc()),
-                    "DocumentFiles.FileSizeBytes, expected: " + filesFromTestParametersByName.get(0).getFileDataInDdoc() + ", actual:" + documentFileByName.getFileDataInDdoc());
-            Assert.isTrue(Utils.compareStringsIgnoreCase(filesFromTestParametersByName.get(0).getDdocDataFileId(), documentFileByName.getDdocDataFileId()),
-                    "DocumentFiles.FileSizeBytes, expected: " + filesFromTestParametersByName.get(0).getDdocDataFileId() + ", actual:" + documentFileByName.getDdocDataFileId());
-            Assert.isTrue(Utils.compareObjects(filesFromTestParametersByName.get(0).getDdocDataFileStartOffset(), documentFileByName.getDdocDataFileStartOffset()),
-                    "DocumentFiles.FileSizeBytes, expected: " + filesFromTestParametersByName.get(0).getDdocDataFileStartOffset() + ", actual:" + documentFileByName.getDdocDataFileStartOffset());
-            Assert.isTrue(Utils.compareObjects(filesFromTestParametersByName.get(0).getDdocDataFileEndOffset(), documentFileByName.getDdocDataFileEndOffset()),
-                    "DocumentFiles.FileSizeBytes, expected: " + filesFromTestParametersByName.get(0).getDdocDataFileEndOffset() + ", actual:" + documentFileByName.getDdocDataFileEndOffset());
+                Assert.isTrue(filesFromTestParametersByName.get(0).getFileDataInDdoc().equals(documentFileByName.getFileDataInDdoc()),
+                        "DocumentFiles.FileDataInDdoc, expected: " + filesFromTestParametersByName.get(0).getFileDataInDdoc() + ", actual:" + documentFileByName.getFileDataInDdoc());
+                Assert.isTrue(Utils.compareStringsIgnoreCase(filesFromTestParametersByName.get(0).getDdocDataFileId(), documentFileByName.getDdocDataFileId()),
+                        "DocumentFiles.DdocDataFileId, expected: " + filesFromTestParametersByName.get(0).getDdocDataFileId() + ", actual:" + documentFileByName.getDdocDataFileId());
+                Assert.isTrue(Utils.compareObjects(filesFromTestParametersByName.get(0).getDdocDataFileStartOffset(), documentFileByName.getDdocDataFileStartOffset()),
+                        "DocumentFiles.DdocDataFileStartOffset, expected: " + filesFromTestParametersByName.get(0).getDdocDataFileStartOffset() + ", actual:" + documentFileByName.getDdocDataFileStartOffset());
+                Assert.isTrue(Utils.compareObjects(filesFromTestParametersByName.get(0).getDdocDataFileEndOffset(), documentFileByName.getDdocDataFileEndOffset()),
+                        "DocumentFiles.DdocDataFileEndOffset, expected: " + filesFromTestParametersByName.get(0).getDdocDataFileEndOffset() + ", actual:" + documentFileByName.getDdocDataFileEndOffset());
 
-            if (dataFile.getFileName().contains("ddoc")) {
-                Assert.isTrue(documentFileByName.getDocumentFileTypeId() == DocumentService.FILETYPE_SIGNATURE_CONTAINER,
-                        "DocumentFiles.documentFileTypeId, expected: " + DocumentService.FILETYPE_SIGNATURE_CONTAINER + ", actual: " + documentFileByName.getDocumentFileTypeId());
-            } else {
-                Assert.isTrue(documentFileByName.getDocumentFileTypeId() == DocumentService.FILETYPE_DOCUMENT_FILE,
-                        "DocumentFiles.documentFileTypeId, expected: " + DocumentService.FILETYPE_DOCUMENT_FILE + ", actual: " + documentFileByName.getDocumentFileTypeId());
+                if (dataFile.getFileName().contains("ddoc")) {
+                    Assert.isTrue(documentFileByName.getDocumentFileTypeId() == DocumentService.FILETYPE_SIGNATURE_CONTAINER,
+                            "DocumentFiles.documentFileTypeId, expected: " + DocumentService.FILETYPE_SIGNATURE_CONTAINER + ", actual: " + documentFileByName.getDocumentFileTypeId());
+                } else {
+                    Assert.isTrue(documentFileByName.getDocumentFileTypeId() == DocumentService.FILETYPE_DOCUMENT_FILE,
+                            "DocumentFiles.documentFileTypeId, expected: " + DocumentService.FILETYPE_DOCUMENT_FILE + ", actual: " + documentFileByName.getDocumentFileTypeId());
+                }
             }
 */
 
         }
         // Check DOCUMENT_FILE data with files in test parameters
-        HashMap<String, DocumentFile> aditDocumentFilesInDdoc = new HashMap<String, DocumentFile>();
-        // We need to count number of files manually as more than one file with same name and size may be in ddoc
-        int NumberOfAditDocumentFilesInDdoc = 0;
-        for (DocumentFile documentFile : aditDocument.getDocumentFiles()) {
-            System.out.println("documentFile.getFileDataInDdoc()" + documentFile.getFileDataInDdoc() + " documentFile.getFileName" + documentFile.getFileName());
-            if (documentFile.getFileDataInDdoc()){
-                aditDocumentFilesInDdoc.put(documentFile.getFileName() + documentFile.getDdocDataFileId() + documentFile.getFileSizeBytes().toString(), documentFile);
-                NumberOfAditDocumentFilesInDdoc ++ ;
+        if (testParameters.filesInDdoc != null) {
+            HashMap<String, DocumentFile> aditDocumentFilesInDdoc = new HashMap<String, DocumentFile>();
+            // We need to count number of files manually as more than one file with same name and size may be in ddoc
+            int NumberOfAditDocumentFilesInDdoc = 0;
+            for (DocumentFile documentFile : aditDocument.getDocumentFiles()) {
+                System.out.println("documentFile.getFileDataInDdoc()" + documentFile.getFileDataInDdoc() + " documentFile.getFileName" + documentFile.getFileName());
+                if (documentFile.getFileDataInDdoc()) {
+                    aditDocumentFilesInDdoc.put(documentFile.getFileName() + documentFile.getDdocDataFileId() + documentFile.getFileSizeBytes().toString(), documentFile);
+                    NumberOfAditDocumentFilesInDdoc++;
+                }
             }
-        }
-        Assert.isTrue(NumberOfAditDocumentFilesInDdoc == testParameters.filesInDdoc.size(),
-                "Number of DOCUMENT_FILES records for files in ddoc container. expected:" + container.getSignedDoc().getDataFiles().size() + " or " + testParameters.containerFiles.size() +
-                        " ,actual:" + NumberOfAditDocumentFilesInDdoc);
-        for (ContainerFile file : testParameters.getFilesInDdoc()) {
-            String fileInDdocKey = file.getName() + file.getDdocDataFileId() + file.getSize().toString();
-            Assert.isTrue(aditDocumentFilesInDdoc.containsKey(fileInDdocKey),
-                    "DocumentFiles doesn't contain file from test parameters, expected file: " + file.getName() + " " + file.getDdocDataFileId() + file.getSize().toString());
-            DocumentFile documentFileFromDdoc = aditDocumentFilesInDdoc.get(fileInDdocKey);
-            Assert.isTrue(!documentFileFromDdoc.getDeleted(),
-                    "DocumentFiles.deleted, expected: received ADIT document not deleted, actual: document deleted = " + documentFileFromDdoc.getDeleted());
-            Assert.isTrue(documentFileFromDdoc.getDocumentFileTypeId() == DocumentService.FILETYPE_DOCUMENT_FILE,
-                    "DocumentFiles.documentFileTypeId, expected: " + DocumentService.FILETYPE_DOCUMENT_FILE + ", actual: " + documentFileFromDdoc.getDocumentFileTypeId());
-            Assert.isTrue(file.getDdocDataFileStartOffset().equals(documentFileFromDdoc.getDdocDataFileStartOffset()),
-                    "DocumentFiles.FileSizeBytes, expected: " + file.getDdocDataFileStartOffset() + ", actual:" + documentFileFromDdoc.getDdocDataFileStartOffset());
-            Assert.isTrue(file.getDdocDataFileEndOffset().equals(documentFileFromDdoc.getDdocDataFileEndOffset()),
-                    "DocumentFiles.FileSizeBytes, expected: " + file.getDdocDataFileEndOffset() + ", actual:" + documentFileFromDdoc.getDdocDataFileEndOffset());
-            Assert.isTrue(Utils.isToday(documentFileFromDdoc.getLastModifiedDate()),
-                    "DocumentFiles.lastModifiedDate, expected: current day, actual:" + documentFileFromDdoc.getLastModifiedDate());
+            Assert.isTrue(NumberOfAditDocumentFilesInDdoc == testParameters.filesInDdoc.size(),
+                    "Number of DOCUMENT_FILES records for files in ddoc container. expected:" + container.getSignedDoc().getDataFiles().size() + " or " + testParameters.containerFiles.size() +
+                            " ,actual:" + NumberOfAditDocumentFilesInDdoc);
+            for (ContainerFile file : testParameters.getFilesInDdoc()) {
+                String fileInDdocKey = file.getName() + file.getDdocDataFileId() + file.getSize().toString();
+                Assert.isTrue(aditDocumentFilesInDdoc.containsKey(fileInDdocKey),
+                        "DocumentFiles doesn't contain file from test parameters, expected file: " + file.getName() + " " + file.getDdocDataFileId() + file.getSize().toString());
+                DocumentFile documentFileFromDdoc = aditDocumentFilesInDdoc.get(fileInDdocKey);
+                Assert.isTrue(!documentFileFromDdoc.getDeleted(),
+                        "DocumentFiles.deleted, expected: received ADIT document not deleted, actual: document deleted = " + documentFileFromDdoc.getDeleted());
+                Assert.isTrue(documentFileFromDdoc.getDocumentFileTypeId() == DocumentService.FILETYPE_DOCUMENT_FILE,
+                        "DocumentFiles.documentFileTypeId, expected: " + DocumentService.FILETYPE_DOCUMENT_FILE + ", actual: " + documentFileFromDdoc.getDocumentFileTypeId());
+                Assert.isTrue(file.getDdocDataFileStartOffset().equals(documentFileFromDdoc.getDdocDataFileStartOffset()),
+                        "DocumentFiles.FileSizeBytes, expected: " + file.getDdocDataFileStartOffset() + ", actual:" + documentFileFromDdoc.getDdocDataFileStartOffset());
+                Assert.isTrue(file.getDdocDataFileEndOffset().equals(documentFileFromDdoc.getDdocDataFileEndOffset()),
+                        "DocumentFiles.FileSizeBytes, expected: " + file.getDdocDataFileEndOffset() + ", actual:" + documentFileFromDdoc.getDdocDataFileEndOffset());
+                Assert.isTrue(Utils.isToday(documentFileFromDdoc.getLastModifiedDate()),
+                        "DocumentFiles.lastModifiedDate, expected: current day, actual:" + documentFileFromDdoc.getLastModifiedDate());
 
-                                // Check BLOB
+                // Check BLOB
 //            Assert.isTrue(documentFileFromDdoc.getFileData().length() == file.getSize(),
 //                    "File name: " + documentFileFromDdoc.getFileName() + ", DocumentFiles.FileData.length expected: " + file.getSize() + ", actual: " + documentFileFromDdoc.getFileData().length());
+            }
         }
 
         // Table SIGNATURE
-        /*
-                Impossible to verify signature data as long as it taken not from capsule, but from ddoc file itself
-        */
-
-        // Table DOCUMENT_HISTORY
-        Assert.isTrue(aditDocument.getDocumentHistories() != null && aditDocument.getDocumentHistories().size() != 0, "Received ADIT document doesn't have related DOCUMENT_HISTORY records");
-        DocumentHistory aditDocumentHistory = aditDocument.getDocumentHistories().toArray(new DocumentHistory[]{})[0];
-        Assert.isTrue(Utils.compareStringsIgnoreCase(aditDocumentHistory.getDocumentHistoryType(), DocumentService.HISTORY_TYPE_EXTRACT_FILE),
-                "expected:" + DocumentService.HISTORY_TYPE_EXTRACT_FILE + ", actual:" + aditDocumentHistory.getDocumentHistoryType());
-        Assert.isTrue(Utils.compareStringsIgnoreCase(aditDocumentHistory.getDescription(), DocumentService.DOCUMENT_HISTORY_DESCRIPTION_EXTRACT_FILE),
-                "expected:" + DocumentService.DOCUMENT_HISTORY_DESCRIPTION_EXTRACT_FILE + ", actual:" + aditDocumentHistory.getDescription());
-        Assert.isTrue(Utils.isToday(aditDocumentHistory.getEventDate()),
-                "expected: current day, actual:" + aditDocumentHistory.getEventDate());
-        Assert.isTrue(Utils.compareStringsIgnoreCase(aditDocumentHistory.getUserCode(), aditDocument.getCreatorCode()),
-                "expected:" + aditDocument.getCreatorCode() + ", actual:" + aditDocumentHistory.getUserCode());
-        Assert.isTrue(Utils.compareStringsIgnoreCase(aditDocumentHistory.getXteeUserCode(), aditDocument.getCreatorCode()),
-                "expected:" + aditDocument.getCreatorCode() + ", actual:" + aditDocumentHistory.getXteeUserCode());
-        Assert.isTrue(Utils.compareStringsIgnoreCase(aditDocumentHistory.getRemoteApplicationName(), null),
-                "expected: null, actual:" + aditDocumentHistory.getRemoteApplicationName());
-
-        // Table ADIT_USER
-        Long sumOfFilesSize = (long) 0;
-
-        for (ContainerFile file : testParameters.containerFiles) {
-            sumOfFilesSize = sumOfFilesSize + file.size;
+        if (container.getSignedDoc().getDataFiles().get(0).getFileName().contains("ddoc") && testParameters.signaturesInDdoc != null) {
+            Assert.isTrue(aditDocument.getSignatures() != null && aditDocument.getSignatures().size() != 0, "Received ADIT document doesn't have related SIGNATURE records");
+            Signature signature = aditDocument.getSignatures().toArray(new Signature[]{})[0];
+            ContainerSignature containerSignature = testParameters.getSignaturesInDdoc().get(0);
+            Assert.isTrue(Utils.compareStringsIgnoreCase(signature.getUserCode(), containerSignature.getUserCode()),
+                    "Signature.UserCode. expected:" + containerSignature.getUserCode() + ", actual:" + signature.getUserCode());
+            Assert.isTrue(Utils.compareStringsIgnoreCase(signature.getSignerCode(), containerSignature.getSignerCode()),
+                    "Signature.SignerCode. expected:" + containerSignature.getSignerCode() + ", actual:" + signature.getSignerCode());
+            Assert.isTrue(Utils.compareStringsIgnoreCase(signature.getSignerName(), containerSignature.getSignerName()),
+                    "Signature.SignerName. expected:" + containerSignature.getSignerName() + ", actual:" + signature.getSignerName());
+            Assert.isTrue(Utils.compareDates(signature.getSigningDate(), containerSignature.getSigningDate()),
+                    "Signature.SigningDate. expected:" + containerSignature.getSigningDate() + ", actual:" + signature.getSigningDate());
         }
 
-        Assert.isTrue((senderUsedSpace + sumOfFilesSize) == documentService.getAditUserDAO().getUsedSpaceForUser(messageSender.getUserCode()),
-                "expected:" + (senderUsedSpace + sumOfFilesSize) + ", actual:" + documentService.getAditUserDAO().getUsedSpaceForUser(messageSender.getUserCode()));
-        Assert.isTrue((senderUsedSpace + sumOfFilesSize) == documentService.getAditUserDAO().getUsedSpaceForUser(messageSender.getUserCode()),
-                "expected:" + (senderUsedSpace + sumOfFilesSize) + ", actual:" + documentService.getAditUserDAO().getUsedSpaceForUser(messageSender.getUserCode()));
+        // Table DOCUMENT_HISTORY
+        if (container.getSignedDoc().getDataFiles().get(0).getFileName().contains("ddoc")) {
+            Assert.isTrue(aditDocument.getDocumentHistories() != null && aditDocument.getDocumentHistories().size() != 0, "Received ADIT document doesn't have related DOCUMENT_HISTORY records");
+            DocumentHistory aditDocumentHistory = aditDocument.getDocumentHistories().toArray(new DocumentHistory[]{})[0];
+            Assert.isTrue(Utils.compareStringsIgnoreCase(aditDocumentHistory.getDocumentHistoryType(), DocumentService.HISTORY_TYPE_EXTRACT_FILE),
+                    "expected:" + DocumentService.HISTORY_TYPE_EXTRACT_FILE + ", actual:" + aditDocumentHistory.getDocumentHistoryType());
+            Assert.isTrue(Utils.compareStringsIgnoreCase(aditDocumentHistory.getDescription(), DocumentService.DOCUMENT_HISTORY_DESCRIPTION_EXTRACT_FILE),
+                    "expected:" + DocumentService.DOCUMENT_HISTORY_DESCRIPTION_EXTRACT_FILE + ", actual:" + aditDocumentHistory.getDescription());
+            Assert.isTrue(Utils.isToday(aditDocumentHistory.getEventDate()),
+                    "expected: current day, actual:" + aditDocumentHistory.getEventDate());
+            Assert.isTrue(Utils.compareStringsIgnoreCase(aditDocumentHistory.getUserCode(), aditDocument.getCreatorCode()),
+                    "expected:" + aditDocument.getCreatorCode() + ", actual:" + aditDocumentHistory.getUserCode());
+            Assert.isTrue(Utils.compareStringsIgnoreCase(aditDocumentHistory.getXteeUserCode(), aditDocument.getCreatorCode()),
+                    "expected:" + aditDocument.getCreatorCode() + ", actual:" + aditDocumentHistory.getXteeUserCode());
+            Assert.isTrue(Utils.compareStringsIgnoreCase(aditDocumentHistory.getRemoteApplicationName(), null),
+                    "expected: null, actual:" + aditDocumentHistory.getRemoteApplicationName());
+        }
+
+        // Table ADIT_USER
+        if (testParameters.containerFiles != null) {
+            Long sumOfFilesSize = (long) 0;
+            for (ContainerFile file : testParameters.containerFiles) {
+                sumOfFilesSize = sumOfFilesSize + file.size;
+            }
+            Assert.isTrue((senderUsedSpace + sumOfFilesSize) == documentService.getAditUserDAO().getUsedSpaceForUser(messageSender.getUserCode()),
+                    "expected:" + (senderUsedSpace + sumOfFilesSize) + ", actual:" + documentService.getAditUserDAO().getUsedSpaceForUser(messageSender.getUserCode()));
+        } else {
+            Assert.isTrue(senderUsedSpace < documentService.getAditUserDAO().getUsedSpaceForUser(messageSender.getUserCode()),
+                    "expected senderUsedSpace before test is less than senderUsedSpace after. SenderUsedSpace before test: " + senderUsedSpace + ", after:" + documentService.getAditUserDAO().getUsedSpaceForUser(messageSender.getUserCode()));
+        }
 
         //Table DHL_MESSAGES
         PojoMessage messageUpdated = documentService.getDvkDAO().getMessage(dvkMessage.getDhlMessageId());
@@ -593,8 +610,13 @@ todo utf-8
                         Arrays.asList(
                                 new ContainerFile("Ettepanek.doc", (long) 8674, "D0", (long) 289, (long) 12038),
                                 new ContainerFile("Ettepanek.doc", (long) 8674, "D0", (long) 289, (long) 12038)
+                        ),
+                        Arrays.asList(
+                                new ContainerSignature("EE38806190294", "EE38806190294", "TAMMEMÄE, LAURI", new GregorianCalendar(2013, 3, 4).getTime())
                         )
                 ));
+        parametersList.add(new ReceiveFromDvkTestParameter("containerVer2_1.xml", null, null, null));
+
         return parametersList;
     }
 
@@ -723,17 +745,18 @@ todo utf-8
 
         // Table DOCUMENT_FILE
         Assert.notNull(aditDocument.getDocumentFiles(), "Received ADIT document doesn't have related DOCUMENT_FILE records");
-        Assert.isTrue(aditDocument.getDocumentFiles().size() == testParameters.containerFiles.size() + testParameters.filesInDdoc.size(),
-                "Number of DOCUMENT_FILES records. expected:" + testParameters.containerFiles.size() + testParameters.filesInDdoc.size() + " ,actual:" + aditDocument.getDocumentFiles().size());
+        if (testParameters.containerFiles != null && testParameters.filesInDdoc != null) {
+            Assert.isTrue(aditDocument.getDocumentFiles().size() == testParameters.containerFiles.size() + testParameters.filesInDdoc.size(),
+                    "Number of DOCUMENT_FILES records. expected:" + (testParameters.containerFiles.size() + testParameters.filesInDdoc.size()) + " ,actual:" + aditDocument.getDocumentFiles().size());
+        }
 
         // Check DOCUMENT_FILE data with files in document container
         HashMap<String, DocumentFile> aditDocumentFilesWithGuid = new HashMap<String, DocumentFile>();
         for (DocumentFile documentFile : aditDocument.getDocumentFiles()) {
             if (documentFile.getGuid() != null) aditDocumentFilesWithGuid.put(documentFile.getGuid(), documentFile);
         }
-        Assert.isTrue(aditDocumentFilesWithGuid.size() == testParameters.containerFiles.size() && aditDocumentFilesWithGuid.size() == container.getFile().size(),
-                "Number of DOCUMENT_FILES records with guid. expected:" + container.getFile().size() + " or " + testParameters.containerFiles.size() +
-                        " ,actual:" + aditDocumentFilesWithGuid.size());
+        Assert.isTrue(aditDocumentFilesWithGuid.size() == container.getFile().size(),
+                "Number of DOCUMENT_FILES records with guid. expected:" + container.getFile().size() + " ,actual:" + aditDocumentFilesWithGuid.size());
         for (dvk.api.container.v2_1.File dataFile : container.getFile()) {
             String fileGuid = dataFile.getFileGuid();
             Assert.isTrue(aditDocumentFilesWithGuid.containsKey(fileGuid),
@@ -748,31 +771,32 @@ todo utf-8
             Assert.isTrue(Utils.isToday(documentFileWithGuid.getLastModifiedDate()),
                     "DocumentFiles.lastModifiedDate, expected: current day, actual:" + documentFileWithGuid.getLastModifiedDate());
 
-            List<ContainerFile> filesFromTestParametersByGuid = testParameters.getFileByGuid(fileGuid);
-            Assert.isTrue(filesFromTestParametersByGuid.size() == 1,
-                    "There are more than one file with guid: " + fileGuid + " in container or in incorrect test parameters: " + testParameters.getXmlContainerFileName());
-            Assert.isTrue(filesFromTestParametersByGuid.get(0).getSize().equals(documentFileWithGuid.getFileSizeBytes()),
-                    "DocumentFiles.FileSizeBytes, expected: " + filesFromTestParametersByGuid.get(0).getSize() + ", actual:" + documentFileWithGuid.getFileSizeBytes());
-            Assert.isTrue(filesFromTestParametersByGuid.get(0).getFileDataInDdoc().equals(documentFileWithGuid.getFileDataInDdoc()),
-                    "DocumentFiles.FileSizeBytes, expected: " + filesFromTestParametersByGuid.get(0).getFileDataInDdoc() + ", actual:" + documentFileWithGuid.getFileDataInDdoc());
-            Assert.isTrue(Utils.compareStringsIgnoreCase(filesFromTestParametersByGuid.get(0).getDdocDataFileId(), documentFileWithGuid.getDdocDataFileId()),
-                    "DocumentFiles.FileSizeBytes, expected: " + filesFromTestParametersByGuid.get(0).getDdocDataFileId() + ", actual:" + documentFileWithGuid.getDdocDataFileId());
-            Assert.isTrue(Utils.compareObjects(filesFromTestParametersByGuid.get(0).getDdocDataFileStartOffset(), documentFileWithGuid.getDdocDataFileStartOffset()),
-                    "DocumentFiles.FileSizeBytes, expected: " + filesFromTestParametersByGuid.get(0).getDdocDataFileStartOffset() + ", actual:" + documentFileWithGuid.getDdocDataFileStartOffset());
-            Assert.isTrue(Utils.compareObjects(filesFromTestParametersByGuid.get(0).getDdocDataFileEndOffset(), documentFileWithGuid.getDdocDataFileEndOffset()),
-                    "DocumentFiles.FileSizeBytes, expected: " + filesFromTestParametersByGuid.get(0).getDdocDataFileEndOffset() + ", actual:" + documentFileWithGuid.getDdocDataFileEndOffset());
+            if (testParameters.containerFiles != null) {
+                List<ContainerFile> filesFromTestParametersByGuid = testParameters.getFileByGuid(fileGuid);
+                Assert.isTrue(filesFromTestParametersByGuid.size() == 1,
+                        "There are more than one file with guid: " + fileGuid + " in container or in incorrect test parameters: " + testParameters.getXmlContainerFileName());
+                Assert.isTrue(filesFromTestParametersByGuid.get(0).getSize().equals(documentFileWithGuid.getFileSizeBytes()),
+                        "DocumentFiles.FileSizeBytes, expected: " + filesFromTestParametersByGuid.get(0).getSize() + ", actual:" + documentFileWithGuid.getFileSizeBytes());
+                Assert.isTrue(filesFromTestParametersByGuid.get(0).getFileDataInDdoc().equals(documentFileWithGuid.getFileDataInDdoc()),
+                        "DocumentFiles.FileSizeBytes, expected: " + filesFromTestParametersByGuid.get(0).getFileDataInDdoc() + ", actual:" + documentFileWithGuid.getFileDataInDdoc());
+                Assert.isTrue(Utils.compareStringsIgnoreCase(filesFromTestParametersByGuid.get(0).getDdocDataFileId(), documentFileWithGuid.getDdocDataFileId()),
+                        "DocumentFiles.FileSizeBytes, expected: " + filesFromTestParametersByGuid.get(0).getDdocDataFileId() + ", actual:" + documentFileWithGuid.getDdocDataFileId());
+                Assert.isTrue(Utils.compareObjects(filesFromTestParametersByGuid.get(0).getDdocDataFileStartOffset(), documentFileWithGuid.getDdocDataFileStartOffset()),
+                        "DocumentFiles.FileSizeBytes, expected: " + filesFromTestParametersByGuid.get(0).getDdocDataFileStartOffset() + ", actual:" + documentFileWithGuid.getDdocDataFileStartOffset());
+                Assert.isTrue(Utils.compareObjects(filesFromTestParametersByGuid.get(0).getDdocDataFileEndOffset(), documentFileWithGuid.getDdocDataFileEndOffset()),
+                        "DocumentFiles.FileSizeBytes, expected: " + filesFromTestParametersByGuid.get(0).getDdocDataFileEndOffset() + ", actual:" + documentFileWithGuid.getDdocDataFileEndOffset());
 
-            if (dataFile.getFileName().contains("ddoc")) {
-                Assert.isTrue(documentFileWithGuid.getDocumentFileTypeId() == DocumentService.FILETYPE_SIGNATURE_CONTAINER,
-                        "DocumentFiles.documentFileTypeId, expected: " + DocumentService.FILETYPE_SIGNATURE_CONTAINER + ", actual: " + documentFileWithGuid.getDocumentFileTypeId());
-            } else {
-                Assert.isTrue(documentFileWithGuid.getDocumentFileTypeId() == DocumentService.FILETYPE_DOCUMENT_FILE,
-                        "DocumentFiles.documentFileTypeId, expected: " + DocumentService.FILETYPE_DOCUMENT_FILE + ", actual: " + documentFileWithGuid.getDocumentFileTypeId());
-            }
+                if (dataFile.getFileName().contains("ddoc")) {
+                    Assert.isTrue(documentFileWithGuid.getDocumentFileTypeId() == DocumentService.FILETYPE_SIGNATURE_CONTAINER,
+                            "DocumentFiles.documentFileTypeId, expected: " + DocumentService.FILETYPE_SIGNATURE_CONTAINER + ", actual: " + documentFileWithGuid.getDocumentFileTypeId());
+                } else {
+                    Assert.isTrue(documentFileWithGuid.getDocumentFileTypeId() == DocumentService.FILETYPE_DOCUMENT_FILE,
+                            "DocumentFiles.documentFileTypeId, expected: " + DocumentService.FILETYPE_DOCUMENT_FILE + ", actual: " + documentFileWithGuid.getDocumentFileTypeId());
+                }
 
-            // Check BLOB
-            Assert.isTrue(documentFileWithGuid.getFileData().length() == filesFromTestParametersByGuid.get(0).getSize(),
-                    "DocumentFiles.FileData.length expected: " + filesFromTestParametersByGuid.get(0).getSize() + ", actual: " + documentFileWithGuid.getFileData().length());
+                // Check BLOB
+                Assert.isTrue(documentFileWithGuid.getFileData().length() == filesFromTestParametersByGuid.get(0).getSize(),
+                        "DocumentFiles.FileData.length expected: " + filesFromTestParametersByGuid.get(0).getSize() + ", actual: " + documentFileWithGuid.getFileData().length());
 /*
             byte[] bdata = documentFileWithGuid.getFileData().getBytes(1, (int) documentFileWithGuid.getFileData().length());
             String documentFileWithGuidBlobDataConvertedToString = new String(bdata);
@@ -780,81 +804,97 @@ todo utf-8
                     "DocumentFiles.FileData doesn't match to container ZipBase64Content");
 */
 
-        }
-        // Check DOCUMENT_FILE data with files in test parameters
-        HashMap<String, DocumentFile> aditDocumentFilesInDdoc = new HashMap<String, DocumentFile>();
-        // We need to count number of files manually as more than one file with same name and size may be in ddoc
-        int NumberOfAditDocumentFilesInDdoc = 0;
-        for (DocumentFile documentFile : aditDocument.getDocumentFiles()) {
-            System.out.println("documentFile.getFileDataInDdoc()" + documentFile.getFileDataInDdoc() + " documentFile.getFileName" + documentFile.getFileName());
-            if (documentFile.getFileDataInDdoc()) {
-                aditDocumentFilesInDdoc.put(documentFile.getFileName() + documentFile.getDdocDataFileId() + documentFile.getFileSizeBytes().toString(), documentFile);
-                NumberOfAditDocumentFilesInDdoc++;
             }
         }
-        Assert.isTrue(NumberOfAditDocumentFilesInDdoc == testParameters.filesInDdoc.size(),
-                "Number of DOCUMENT_FILES records for files in ddoc container. expected:" + container.getFile().size() + " or " + testParameters.containerFiles.size() +
-                        " ,actual:" + NumberOfAditDocumentFilesInDdoc);
-        for (ContainerFile file : testParameters.getFilesInDdoc()) {
-            String fileInDdocKey = file.getName() + file.getDdocDataFileId() + file.getSize().toString();
-            Assert.isTrue(aditDocumentFilesInDdoc.containsKey(fileInDdocKey),
-                    "DocumentFiles doesn't contain file from test parameters, expected file: " + file.getName() + " " + file.getDdocDataFileId() + file.getSize().toString());
-            DocumentFile documentFileFromDdoc = aditDocumentFilesInDdoc.get(fileInDdocKey);
-            Assert.isTrue(!documentFileFromDdoc.getDeleted(),
-                    "DocumentFiles.deleted, expected: received ADIT document not deleted, actual: document deleted = " + documentFileFromDdoc.getDeleted());
-            Assert.isTrue(documentFileFromDdoc.getDocumentFileTypeId() == DocumentService.FILETYPE_DOCUMENT_FILE,
-                    "DocumentFiles.documentFileTypeId, expected: " + DocumentService.FILETYPE_DOCUMENT_FILE + ", actual: " + documentFileFromDdoc.getDocumentFileTypeId());
-            Assert.isTrue(file.getDdocDataFileStartOffset().equals(documentFileFromDdoc.getDdocDataFileStartOffset()),
-                    "DocumentFiles.FileSizeBytes, expected: " + file.getDdocDataFileStartOffset() + ", actual:" + documentFileFromDdoc.getDdocDataFileStartOffset());
-            Assert.isTrue(file.getDdocDataFileEndOffset().equals(documentFileFromDdoc.getDdocDataFileEndOffset()),
-                    "DocumentFiles.FileSizeBytes, expected: " + file.getDdocDataFileEndOffset() + ", actual:" + documentFileFromDdoc.getDdocDataFileEndOffset());
-            Assert.isTrue(Utils.isToday(documentFileFromDdoc.getLastModifiedDate()),
-                    "DocumentFiles.lastModifiedDate, expected: current day, actual:" + documentFileFromDdoc.getLastModifiedDate());
+        // Check DOCUMENT_FILE data with files in test parameters
+        if (testParameters.filesInDdoc != null) {
+            HashMap<String, DocumentFile> aditDocumentFilesInDdoc = new HashMap<String, DocumentFile>();
+            // We need to count number of files manually as more than one file with same name and size may be in ddoc
+            int NumberOfAditDocumentFilesInDdoc = 0;
+            for (DocumentFile documentFile : aditDocument.getDocumentFiles()) {
+                System.out.println("documentFile.getFileDataInDdoc()" + documentFile.getFileDataInDdoc() + " documentFile.getFileName" + documentFile.getFileName());
+                if (documentFile.getFileDataInDdoc()) {
+                    aditDocumentFilesInDdoc.put(documentFile.getFileName() + documentFile.getDdocDataFileId() + documentFile.getFileSizeBytes().toString(), documentFile);
+                    NumberOfAditDocumentFilesInDdoc++;
+                }
+            }
+            Assert.isTrue(NumberOfAditDocumentFilesInDdoc == testParameters.filesInDdoc.size(),
+                    "Number of DOCUMENT_FILES records for files in ddoc container. expected:" + container.getFile().size() + " or " + testParameters.containerFiles.size() +
+                            " ,actual:" + NumberOfAditDocumentFilesInDdoc);
+            for (ContainerFile file : testParameters.getFilesInDdoc()) {
+                String fileInDdocKey = file.getName() + file.getDdocDataFileId() + file.getSize().toString();
+                Assert.isTrue(aditDocumentFilesInDdoc.containsKey(fileInDdocKey),
+                        "DocumentFiles doesn't contain file from test parameters, expected file: " + file.getName() + " " + file.getDdocDataFileId() + file.getSize().toString());
+                DocumentFile documentFileFromDdoc = aditDocumentFilesInDdoc.get(fileInDdocKey);
+                Assert.isTrue(!documentFileFromDdoc.getDeleted(),
+                        "DocumentFiles.deleted, expected: received ADIT document not deleted, actual: document deleted = " + documentFileFromDdoc.getDeleted());
+                Assert.isTrue(documentFileFromDdoc.getDocumentFileTypeId() == DocumentService.FILETYPE_DOCUMENT_FILE,
+                        "DocumentFiles.documentFileTypeId, expected: " + DocumentService.FILETYPE_DOCUMENT_FILE + ", actual: " + documentFileFromDdoc.getDocumentFileTypeId());
+                Assert.isTrue(file.getDdocDataFileStartOffset().equals(documentFileFromDdoc.getDdocDataFileStartOffset()),
+                        "DocumentFiles.FileSizeBytes, expected: " + file.getDdocDataFileStartOffset() + ", actual:" + documentFileFromDdoc.getDdocDataFileStartOffset());
+                Assert.isTrue(file.getDdocDataFileEndOffset().equals(documentFileFromDdoc.getDdocDataFileEndOffset()),
+                        "DocumentFiles.FileSizeBytes, expected: " + file.getDdocDataFileEndOffset() + ", actual:" + documentFileFromDdoc.getDdocDataFileEndOffset());
+                Assert.isTrue(Utils.isToday(documentFileFromDdoc.getLastModifiedDate()),
+                        "DocumentFiles.lastModifiedDate, expected: current day, actual:" + documentFileFromDdoc.getLastModifiedDate());
 
-            // Check BLOB
+                // Check BLOB
 //            Assert.isTrue(documentFileFromDdoc.getFileData().length() == file.getSize(),
 //                    "DocumentFiles.FileData.length expected: " + file.getSize() + ", actual: " + documentFileFromDdoc.getFileData().length());
+            }
         }
 
         // Table SIGNATURE
-        /*
-                Impossible to verify signature data as long as it taken not from capsule, but from ddoc file itself
-        */
-
-        // Table DOCUMENT_HISTORY
-        Assert.isTrue(aditDocument.getDocumentHistories() != null && aditDocument.getDocumentHistories().size() != 0, "Received ADIT document doesn't have related DOCUMENT_HISTORY records");
-        DocumentHistory aditDocumentHistory = aditDocument.getDocumentHistories().toArray(new DocumentHistory[]{})[0];
-        Assert.isTrue(Utils.compareStringsIgnoreCase(aditDocumentHistory.getDocumentHistoryType(), DocumentService.HISTORY_TYPE_EXTRACT_FILE),
-                "expected:" + DocumentService.HISTORY_TYPE_EXTRACT_FILE + ", actual:" + aditDocumentHistory.getDocumentHistoryType());
-        Assert.isTrue(Utils.compareStringsIgnoreCase(aditDocumentHistory.getDescription(), DocumentService.DOCUMENT_HISTORY_DESCRIPTION_EXTRACT_FILE),
-                "expected:" + DocumentService.DOCUMENT_HISTORY_DESCRIPTION_EXTRACT_FILE + ", actual:" + aditDocumentHistory.getDescription());
-        Assert.isTrue(Utils.isToday(aditDocumentHistory.getEventDate()),
-                "expected: current day, actual:" + aditDocumentHistory.getEventDate());
-        Assert.isTrue(Utils.compareStringsIgnoreCase(aditDocumentHistory.getUserCode(), aditDocument.getCreatorCode()),
-                "expected:" + aditDocument.getCreatorCode() + ", actual:" + aditDocumentHistory.getUserCode());
-        Assert.isTrue(Utils.compareStringsIgnoreCase(aditDocumentHistory.getXteeUserCode(), aditDocument.getCreatorCode()),
-                "expected:" + aditDocument.getCreatorCode() + ", actual:" + aditDocumentHistory.getXteeUserCode());
-        Assert.isTrue(Utils.compareStringsIgnoreCase(aditDocumentHistory.getRemoteApplicationName(), null),
-                "expected: null, actual:" + aditDocumentHistory.getRemoteApplicationName());
-
-        // Table ADIT_USER
-        Long sumOfFilesSize = (long) 0;
-
-        for (ContainerFile file : testParameters.containerFiles) {
-            sumOfFilesSize = sumOfFilesSize + file.size;
+        if (container.getFile().get(0).getFileName().contains("ddoc") && testParameters.signaturesInDdoc != null) {
+            // todo add verification of all signatures
+            Assert.isTrue(aditDocument.getSignatures() != null && aditDocument.getSignatures().size() != 0, "Received ADIT document doesn't have related SIGNATURE records");
+            Signature signature = aditDocument.getSignatures().toArray(new Signature[]{})[0];
+            ContainerSignature containerSignature = testParameters.getSignaturesInDdoc().get(0);
+            Assert.isTrue(Utils.compareStringsIgnoreCase(signature.getUserCode(), containerSignature.getUserCode()),
+                    "Signature.UserCode. expected:" + containerSignature.getUserCode() + ", actual:" + signature.getUserCode());
+            Assert.isTrue(Utils.compareStringsIgnoreCase(signature.getSignerCode(), containerSignature.getSignerCode()),
+                    "Signature.SignerCode. expected:" + containerSignature.getSignerCode() + ", actual:" + signature.getSignerCode());
+            Assert.isTrue(Utils.compareStringsIgnoreCase(signature.getSignerName(), containerSignature.getSignerName()),
+                    "Signature.SignerName. expected:" + containerSignature.getSignerName() + ", actual:" + signature.getSignerName());
+            Assert.isTrue(Utils.compareDates(signature.getSigningDate(), containerSignature.getSigningDate()),
+                    "Signature.SigningDate. expected:" + containerSignature.getSigningDate() + ", actual:" + signature.getSigningDate());
         }
 
-/*
+        // Table DOCUMENT_HISTORY
+        if (container.getFile().get(0).getFileName().contains("ddoc") && testParameters.signaturesInDdoc != null) {
+            Assert.isTrue(aditDocument.getDocumentHistories() != null && aditDocument.getDocumentHistories().size() != 0, "Received ADIT document doesn't have related DOCUMENT_HISTORY records");
+            DocumentHistory aditDocumentHistory = aditDocument.getDocumentHistories().toArray(new DocumentHistory[]{})[0];
+            Assert.isTrue(Utils.compareStringsIgnoreCase(aditDocumentHistory.getDocumentHistoryType(), DocumentService.HISTORY_TYPE_EXTRACT_FILE),
+                    "expected:" + DocumentService.HISTORY_TYPE_EXTRACT_FILE + ", actual:" + aditDocumentHistory.getDocumentHistoryType());
+            Assert.isTrue(Utils.compareStringsIgnoreCase(aditDocumentHistory.getDescription(), DocumentService.DOCUMENT_HISTORY_DESCRIPTION_EXTRACT_FILE),
+                    "expected:" + DocumentService.DOCUMENT_HISTORY_DESCRIPTION_EXTRACT_FILE + ", actual:" + aditDocumentHistory.getDescription());
+            Assert.isTrue(Utils.isToday(aditDocumentHistory.getEventDate()),
+                    "expected: current day, actual:" + aditDocumentHistory.getEventDate());
+            Assert.isTrue(Utils.compareStringsIgnoreCase(aditDocumentHistory.getUserCode(), aditDocument.getCreatorCode()),
+                    "expected:" + aditDocument.getCreatorCode() + ", actual:" + aditDocumentHistory.getUserCode());
+            Assert.isTrue(Utils.compareStringsIgnoreCase(aditDocumentHistory.getXteeUserCode(), aditDocument.getCreatorCode()),
+                    "expected:" + aditDocument.getCreatorCode() + ", actual:" + aditDocumentHistory.getXteeUserCode());
+            Assert.isTrue(Utils.compareStringsIgnoreCase(aditDocumentHistory.getRemoteApplicationName(), null),
+                    "expected: null, actual:" + aditDocumentHistory.getRemoteApplicationName());
+        }
+
+        // Table ADIT_USER
+        /*
 TODO: Currently 1.0 ja 2.1 take for used space into account only files in container. Size of files extracted from ddoc not accounted.
         for (ContainerFile file : testParameters.filesInDdoc){
             sumOfFilesSize = sumOfFilesSize + file.size;
         }
 */
-
-        Assert.isTrue((senderUsedSpace + sumOfFilesSize) == documentService.getAditUserDAO().getUsedSpaceForUser(messageSender.getUserCode()),
-                "expected:" + (senderUsedSpace + sumOfFilesSize) + ", actual:" + documentService.getAditUserDAO().getUsedSpaceForUser(messageSender.getUserCode()));
-        Assert.isTrue((senderUsedSpace + sumOfFilesSize) == documentService.getAditUserDAO().getUsedSpaceForUser(messageSender.getUserCode()),
-                "expected:" + (senderUsedSpace + sumOfFilesSize) + ", actual:" + documentService.getAditUserDAO().getUsedSpaceForUser(messageSender.getUserCode()));
+        if (testParameters.containerFiles != null) {
+            Long sumOfFilesSize = (long) 0;
+            for (ContainerFile file : testParameters.containerFiles) {
+                sumOfFilesSize = sumOfFilesSize + file.size;
+            }
+            Assert.isTrue((senderUsedSpace + sumOfFilesSize) == documentService.getAditUserDAO().getUsedSpaceForUser(messageSender.getUserCode()),
+                    "expected:" + (senderUsedSpace + sumOfFilesSize) + ", actual:" + documentService.getAditUserDAO().getUsedSpaceForUser(messageSender.getUserCode()));
+        } else {
+            Assert.isTrue(senderUsedSpace < documentService.getAditUserDAO().getUsedSpaceForUser(messageSender.getUserCode()),
+                    "expected senderUsedSpace before test is less than senderUsedSpace after. SenderUsedSpace before test: " + senderUsedSpace + ", after:" + documentService.getAditUserDAO().getUsedSpaceForUser(messageSender.getUserCode()));
+        }
 
         //Table DHL_MESSAGES
         PojoMessage messageUpdated = documentService.getDvkDAO().getMessage(dvkMessage.getDhlMessageId());
