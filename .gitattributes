@@ -452,6 +452,7 @@ adit-war/src/main/java/ee/adit/util/CustomXTeeServiceConfiguration.java -text
 adit-war/src/main/java/ee/adit/util/DVKUserSyncResult.java -text
 adit-war/src/main/java/ee/adit/util/DigiDocExtractionResult.java -text
 adit-war/src/main/java/ee/adit/util/FileSplitResult.java -text
+adit-war/src/main/java/ee/adit/util/JobStatusesCleaner.java -text
 adit-war/src/main/java/ee/adit/util/MonitorConfiguration.java -text
 adit-war/src/main/java/ee/adit/util/MonitorResult.java -text
 adit-war/src/main/java/ee/adit/util/NagiosLogger.java -text
@@ -637,6 +638,7 @@ adit-war/src/test/java/ee/adit/dvk/converter/RecordMetadataTest.java -text
 adit-war/src/test/java/ee/adit/dvk/converter/SignatureMetadataTest.java -text
 adit-war/src/test/java/ee/adit/dvk/converter/TransportTest.java -text
 adit-war/src/test/java/ee/adit/integrationtests/DocumentService_SendReceiveDvkTest_Integration.java -text
+adit-war/src/test/java/ee/adit/integrationtests/MaintenanceJobDAO_Integration.java -text
 adit-war/src/test/java/ee/adit/integrationtests/Parameters/ConfigurationConstants.java -text
 adit-war/src/test/java/ee/adit/integrationtests/Parameters/ContainerFile.java -text
 adit-war/src/test/java/ee/adit/integrationtests/Parameters/ContainerSignature.java -text

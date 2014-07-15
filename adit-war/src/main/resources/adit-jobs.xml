@@ -132,6 +132,24 @@
 		</property>
 	</bean>
 
+    <bean id="jobStatusesCleaner" class="org.springframework.scheduling.quartz.JobDetailBean">
+        <property name="jobClass" value="ee.adit.util.JobStatusesCleaner" />
+        <property name="jobDataAsMap">
+            <map>
+                <entry key="maintenanceJobDAO">
+                    <ref bean="maintenanceJobDAO" />
+                </entry>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="jobStatusesCleanerTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+        <property name="jobDetail" ref="jobStatusesCleaner" />
+        <property name="startDelay" value="30000" />
+        <property name="repeatCount" value="0" />
+        <property name="repeatInterval" value="100" />
+    </bean>
+
 	<bean id="dvkSendTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
 		<property name="jobDetail" ref="sendJobDetails" />
 		<property name="startDelay" value="60000" />
@@ -191,7 +209,7 @@
 				<ref bean="dvkSendTrigger"/>
 				<ref bean="dvkUpdateStatusTrigger"/>
 				<ref bean="dvkReceiveTrigger"/>
-
+                <ref bean="jobStatusesCleanerTrigger" />
 				<!--
 					<ref bean="dvkUpdateStatusToDVKTrigger"/>
 					<ref bean="DeleteDocumentsFromDVKJobTrigger"/>
