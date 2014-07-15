@@ -63,8 +63,8 @@
 			<scope>system</scope>
 			<systemPath>${basedir}/lib/spring-ws-1.5.9-all.jar</systemPath>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
+        <dependency>
+            <groupId>org.springframework</groupId>
 			<artifactId>spring</artifactId>
 			<version>3.0.2</version>
 			<scope>system</scope>
@@ -393,7 +393,6 @@
             <groupId>commons-dbcp</groupId>
             <artifactId>commons-dbcp</artifactId>
             <version>1.2.2</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
@@ -553,6 +552,7 @@
 				<configuration>
 					<source>1.6</source>
 					<target>1.6</target>
+                    <encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
 			<plugin>

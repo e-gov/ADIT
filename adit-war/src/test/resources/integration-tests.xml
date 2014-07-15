@@ -2,7 +2,8 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-						http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+						http://www.springframework.org/schema/beans/spring-beans-3.2.xsd http://www.springframework.org/schema/tx
+						http://www.springframework.org/schema/tx/spring-tx.xsd">
 
     <bean id="aditDVKDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
         <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
@@ -123,11 +124,16 @@
     </bean>
 
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="systemPropertiesMode" value="1" />
+    </bean>
+
+    <bean id="tmpDirPath" class="java.lang.System" factory-method="getProperty">
+        <constructor-arg index="0"><value>java.io.tmpdir</value></constructor-arg>
     </bean>
 
     <!-- Configuration -->
     <bean id="configuration" class="ee.adit.util.Configuration">
-        <property name="tempDir" value="${java.io.tmpdir}"/>
+        <property name="tempDir" ref="tmpDirPath"/>
         <property name="deleteTemporaryFiles" value="true"/>
 
         <!-- Default disk quota in bytes per user -->
