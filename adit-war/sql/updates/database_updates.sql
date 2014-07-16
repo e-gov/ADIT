@@ -21,3 +21,5 @@
 @1_0_60\update_triggers_1_0_60.sql
 @1_0_67\update_1_0_67.sql
 @1_0_70\update_1_0_70.sql
+@1_0_71\update_1_0_71.sql
+@1_0_72\update_1_0_72.sql
