@@ -15,7 +15,7 @@
         <OrganisationCode>10391131</OrganisationCode>
     </Organisation>
     <Person>
-      <Name>Anneli Tammem?e</Name>
+      <Name>Anneli Tammemäe</Name>
       <GivenName>Anneli</GivenName>
       <Surname>Tammem?e</Surname>
       <PersonalIdCode>EE48505130294</PersonalIdCode>
@@ -31,10 +31,10 @@
         <Country>Eesti</Country>
         <County>Harju maakond</County>
         <LocalGovernment>Tallinna linn</LocalGovernment>
-        <AdministrativeUnit>Mustam?e linnaosa</AdministrativeUnit>
-        <SmallPlace>P??sukese K?</SmallPlace>
+        <AdministrativeUnit>Mustamäe linnaosa</AdministrativeUnit>
+        <SmallPlace>Pääsukese KÜ</SmallPlace>
         <LandUnit/>
-        <Street>Mustam?e tee</Street>
+        <Street>Mustamäe tee</Street>
         <HouseNumber>248</HouseNumber>
         <BuildingPartNumber>62</BuildingPartNumber>
         <PostalCode>11212</PostalCode>
@@ -43,9 +43,9 @@
   </RecordCreator>
   <RecordSenderToDec>
     <Person>
-      <Name>Anneli Tammem?e</Name>
+      <Name>Anneli Tammemäe</Name>
       <GivenName>Anneli</GivenName>
-      <Surname>Tammem?e</Surname>
+      <Surname>Tammemäe</Surname>
       <PersonalIdCode>EE48505130294</PersonalIdCode>
       <Residency>EE</Residency>
     </Person>
@@ -59,10 +59,10 @@
         <Country>Eesti</Country>
         <County>Harju maakond</County>
         <LocalGovernment>Tallinna linn</LocalGovernment>
-        <AdministrativeUnit>Mustam?e linnaosa</AdministrativeUnit>
+        <AdministrativeUnit>Mustamäe linnaosa</AdministrativeUnit>
         <SmallPlace>P??sukese K?</SmallPlace>
         <LandUnit/>
-        <Street>Mustam?e tee</Street>
+        <Street>Mustamäe tee</Street>
         <HouseNumber>248</HouseNumber>
         <BuildingPartNumber>62</BuildingPartNumber>
         <PostalCode>11212</PostalCode>
@@ -70,6 +70,7 @@
     </ContactData>
   </RecordSenderToDec>
   <Recipient>
+    <RecipientRecordOriginalIdentifier></RecipientRecordOriginalIdentifier>
     <Person>
       <Name>Janis Paju</Name>
       <PersonalIdCode>EE37802080024</PersonalIdCode>

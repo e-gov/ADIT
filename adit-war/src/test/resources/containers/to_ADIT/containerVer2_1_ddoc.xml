@@ -6,11 +6,19 @@
         </DecSender>
         <DecRecipient>
             <OrganisationCode>adit</OrganisationCode>
+            <PersonalIdCode>EE35907312725</PersonalIdCode>
+        </DecRecipient>
+        <DecRecipient>
+            <OrganisationCode>adit</OrganisationCode>
             <PersonalIdCode>EE37802080024</PersonalIdCode>
         </DecRecipient>
         <DecRecipient>
             <OrganisationCode>10391131</OrganisationCode>
             <PersonalIdCode>EE37802080024</PersonalIdCode>
+        </DecRecipient>
+        <DecRecipient>
+            <OrganisationCode>adit</OrganisationCode>
+            <PersonalIdCode>EE30312829900</PersonalIdCode>
         </DecRecipient>
     </Transport>
     <RecordCreator>
@@ -74,6 +82,23 @@
         </ContactData>
     </RecordSenderToDec>
     <Recipient>
+        <RecipientRecordOriginalIdentifier>EE777777</RecipientRecordOriginalIdentifier>
+        <Person>
+            <Name>Ivar Suisalu</Name>
+            <PersonalIdCode>EE35907312725</PersonalIdCode>
+            <Residency>BE</Residency>
+        </Person>
+    </Recipient>
+    <Recipient>
+        <RecipientRecordOriginalIdentifier/>
+        <Person>
+            <Name>Uus kasutaja</Name>
+            <PersonalIdCode>EE30312829900</PersonalIdCode>
+            <Residency>BE</Residency>
+        </Person>
+    </Recipient>
+    <Recipient>
+        <RecipientRecordOriginalIdentifier>14073</RecipientRecordOriginalIdentifier>
         <MessageForRecipient>Wrong message for recipient</MessageForRecipient>
         <Organisation>
             <Name>Some organization</Name>
@@ -85,6 +110,7 @@
         </Person>
     </Recipient>
     <Recipient>
+        <RecipientRecordOriginalIdentifier>12627</RecipientRecordOriginalIdentifier>
         <MessageForRecipient>Test Message for Recipient</MessageForRecipient>
         <Person>
             <Name>Janis Paju</Name>
