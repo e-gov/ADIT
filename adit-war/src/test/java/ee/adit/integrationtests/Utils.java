@@ -221,11 +221,8 @@ public class Utils {
             dvkMessage.setSenderOrgCode(sender.getOrganisationCode());
             dvkMessage.setSenderPersonCode(sender.getPersonalIdCode());
 
-            List<ContactInfo> recordSenderInfo = Arrays.asList((ContactInfo) container.getRecordCreator(), container.getRecordSenderToDec());
+            List<ContactInfo> recordSenderInfo = Arrays.asList(container.getRecordCreator(), container.getRecordSenderToDec());
             OrganisationType senderOrganisationInfo = getOrganisationByCode(recordSenderInfo, sender.getOrganisationCode());
-
-            System.out.println("!!!!!!!!!!!!!!!!!prepareAndSaveDvkMessage_Container_2_1.senderOrganisationInfo.getName()" + senderOrganisationInfo.getName());
-
             dvkMessage.setSenderOrgName(senderOrganisationInfo == null ? "" : senderOrganisationInfo.getName());
             PersonType senderPersonInfo = getPersonByCode(recordSenderInfo, sender.getPersonalIdCode());
             dvkMessage.setSenderName(senderPersonInfo == null ? "" : senderPersonInfo.getName());
@@ -236,7 +233,7 @@ public class Utils {
 
             List<ContactInfo> recordRecipientsInfo = new ArrayList<ContactInfo>();
             for (Recipient recipient : container.getRecipient()) {
-                recordRecipientsInfo.add((ContactInfo) recipient);
+                recordRecipientsInfo.add(recipient);
             }
             OrganisationType recipientOrganisationInfo = getOrganisationByCode(recordRecipientsInfo, firstRecipient.getOrganisationCode());
             dvkMessage.setRecipientOrgName(recipientOrganisationInfo == null ? "" : recipientOrganisationInfo.getName());
@@ -297,10 +294,6 @@ public class Utils {
         DetachedCriteria dt = DetachedCriteria.forClass(Document.class, "document");
         dt.add(Property.forName("document.guid").eq(documentGuid));
         result = documentService.getDocumentDAO().getHibernateTemplate().findByCriteria(dt);
-
-        System.out.println("!!!!!!!!!getDocumentsByDvkGuid!!!!!!!!!!" + result.get(0).getCreatorName());
-
-
         logger.info("There are " + result.size() + " Documents with dvk_guid = " + documentGuid + "found in ADIT DB");
         return (result.isEmpty() ? null : result);
     }
@@ -359,11 +352,11 @@ public class Utils {
         return organisation;
     }
 
-    public static Recipient getRecipient_By_OrganisationCode_And_PersonCode(List<Recipient> recipients, String organizationCode, String personCode){
+    public Recipient getRecipient_By_OrganisationCode_And_PersonCode(List<Recipient> recipients, String organizationCode, String personCode) {
         for (Recipient recipient : recipients) {
-            if (recipient.getOrganisation() == null ){
+            if (recipient.getOrganisation() == null) {
                 OrganisationType aditOrganization = new OrganisationType();
-                aditOrganization.setOrganisationCode("adit");
+                aditOrganization.setOrganisationCode(documentService.getConfiguration().getDvkOrgCode());
                 recipient.setOrganisation(aditOrganization);
             }
             if (compareStringsIgnoreCase(recipient.getOrganisation().getOrganisationCode(), organizationCode)
@@ -387,11 +380,11 @@ public class Utils {
         return obj1 == null && obj2 == null || !(obj1 == null || obj2 == null) && obj1.equals(obj2);
     }
 
-    public static boolean compareDates(Date date1, Date date2) throws Exception{
+    public static boolean compareDates(Date date1, Date date2) throws Exception {
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        if (date1 == null && date2 == null){
+        if (date1 == null && date2 == null) {
             return true;
-        } else if (date1 == null || date2 == null){
+        } else if (date1 == null || date2 == null) {
             return false;
         } else {
             date1 = formatter.parse(formatter.format(date1));
@@ -411,6 +404,38 @@ public class Utils {
             return "EE" + code;
         }
         return code;
+    }
+
+    public ArrayList<Long> initRecipientsRecordOriginalIdentifiers(ContainerVer2_1 container) {
+        ArrayList<Long> result = new ArrayList<Long>();
+        for (DecRecipient decRecipient : container.getTransport().getDecRecipient()) {
+            Recipient recipient = null;
+            if (Utils.compareStringsIgnoreCase(decRecipient.getOrganisationCode(), documentService.getConfiguration().getDvkOrgCode())) {
+                recipient = getRecipient_By_OrganisationCode_And_PersonCode(container.getRecipient(), decRecipient.getOrganisationCode(), decRecipient.getPersonalIdCode());
+            }
+            if (recipient != null && recipient.getRecipientRecordOriginalIdentifier() != null && recipient.getRecipientRecordOriginalIdentifier().length() != 0) {
+                try {
+                    Long recipientRecordOriginalIdentifier = Long.valueOf(recipient.getRecipientRecordOriginalIdentifier());
+                    if (documentService.getDocumentDAO().getDocument(recipientRecordOriginalIdentifier) != null) {
+                        result.add(recipientRecordOriginalIdentifier);
+                    }
+                } catch (NumberFormatException e) {
+                    logger.info("Incorrect RecipientRecordOriginalIdentifier:" + recipient.getRecipientRecordOriginalIdentifier() +
+                            " for recipient person code:" + recipient.getPerson().getPersonalIdCode());
+                }
+            }
+        }
+        return result;
+    }
+
+    public static String getOriginalIdentifierFromContainer(ContainerVer1 container) {
+        String result;
+        try {
+            result = container.getMetaxml().getLetterMetaData().getOriginalIdentifier();
+        } catch(Exception e) {
+            result = null;
+        }
+        return result;
     }
 
     public DocumentService getDocumentService() {

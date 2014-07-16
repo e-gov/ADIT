@@ -12,16 +12,18 @@ import ee.adit.dvk.converter.containerdocument.RecipientsBuilder;
 import ee.adit.pojo.OutputDocumentFile;
 import ee.adit.pojo.SaveItemInternalResult;
 import ee.adit.service.DocumentService;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.log4j.Logger;
 
 import java.util.Calendar;
 import java.util.List;
-import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * @author Hendrik Pärna
  * @since 12.06.14
  */
 public class Container2_1Receiver implements DvkReceiver {
+    private static Logger logger = Logger.getLogger(Container2_1Receiver.class);
 
     private DocumentService documentService;
     private String jdigidocCfgTmpFile;
@@ -46,6 +48,7 @@ public class Container2_1Receiver implements DvkReceiver {
         //this must be after conversion, because we need the data which is created during the conversion itself
         validateMessage(message, containerVer2_1, converter);
 
+        initDocumentParentId(containerVer2_1, document, message);
         saveDocumentToAdit(message, converter, document);
         sendToRecipients(message, document, containerVer2_1);
 
@@ -140,12 +143,35 @@ public class Container2_1Receiver implements DvkReceiver {
         recipientsBuilder.setAditUserDAO(documentService.getAditUserDAO());
         recipientsBuilder.setConfiguration(documentService.getConfiguration());
 
-        for (Pair<AditUser, String> aditUserMessageForRecipient : recipientsBuilder.build()) {
+        for (Pair<AditUser, Recipient> aditUserRecipient : recipientsBuilder.build()) {
             documentService.sendDocument(document,
-                    aditUserMessageForRecipient.getLeft(), null,
-                    message.getDhlId(), aditUserMessageForRecipient.getRight());
+                    aditUserRecipient.getLeft(), null,
+                    message.getDhlId(), aditUserRecipient.getRight().getMessageForRecipient());
         }
     }
 
+    private void initDocumentParentId(final ContainerVer2_1 container, final Document document, final PojoMessage message) {
+        RecipientsBuilder recipientsBuilder = new RecipientsBuilder(container);
+        recipientsBuilder.setAditUserDAO(documentService.getAditUserDAO());
+        recipientsBuilder.setConfiguration(documentService.getConfiguration());
+
+        // Get the first not null RecipientRecordOriginalIdentifier found in adit recipients
+        for (Pair<AditUser, Recipient> aditUserRecipient : recipientsBuilder.build()) {
+            String recipientRecordOriginalIdentifier = aditUserRecipient.getRight().getRecipientRecordOriginalIdentifier();
+            if (recipientRecordOriginalIdentifier != null && recipientRecordOriginalIdentifier.length() != 0) {
+                try {
+                    Long parentId = Long.valueOf(recipientRecordOriginalIdentifier);
+                    Document parentDocument = documentService.getDocumentDAO().getDocument(parentId);
+                    if (parentDocument != null) {
+                        document.setDocument(parentDocument);
+                        return;
+                    }
+                } catch (NumberFormatException ex) {
+                    logger.info("Invalid related adit doc id: " +  recipientRecordOriginalIdentifier
+                            + " in dhl message - " + message.getDhlMessageId());
+                }
+            }
+        }
+    }
 
 }

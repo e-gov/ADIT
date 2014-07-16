@@ -319,17 +319,14 @@ public class DocumentService_SendReceiveDvkTest_Integration {
                 new ReceiveFromDvkTestParameter(
                         "containerVer1_0_ddoc.xml",
                         Arrays.asList(
-                                new ContainerFile(true, null, "Välispoliitika eesmärgid.ddoc", (long) 391194)
+                                new ContainerFile(true, null, "TEST1.ddoc", (long) 44569)
                         ),
                         Arrays.asList(
-                                new ContainerFile("poliitika eesmärgid.zip", (long) 31061, "D2", (long) 50151, (long) 92215),
-                                new ContainerFile("Välispoliitika eesmärgid.docx", (long) 20814, "D0", (long) 306, (long) 28492),
-                                new ContainerFile("2. Euroopa ja Venemaa 1815-1918.doc", (long) 87040, "D4", (long) 264918, (long) 382788),
-                                new ContainerFile("Kaitsepoliitika.docx", (long) 15722, "D1", (long) 28674, (long) 49966),
-                                new ContainerFile("F9-1 ddoc prooviks.ddoc", (long) 127249, "D3", (long) 92401, (long) 264721)
+                                new ContainerFile("TEST1.pdf", (long) 7786, "D0", (long) 276, (long) 10824),
+                                new ContainerFile("testdokument 3.pdf", (long) 19009, "D1", (long) 10995, (long) 36741)
                         ),
                         Arrays.asList(
-                                new ContainerSignature(null, "EE48308212746", "MADISTE, KRISTEL", new GregorianCalendar(2013, 10, 5).getTime())
+                                new ContainerSignature(null, "EE48208190319", "ALLERT, KÄRT", new GregorianCalendar(2014, 4, 12).getTime())
                         )
                 ));
         parametersList.add(new ReceiveFromDvkTestParameter("containerVer1_0.xml", null, null, null));
@@ -378,9 +375,6 @@ public class DocumentService_SendReceiveDvkTest_Integration {
         Assert.isTrue(Utils.compareStringsIgnoreCase(aditDocument.getCreatorCode(), Utils.addPrefixIfNecessary(container.getTransport().getSaatjad().get(0).getRegNr())),
                 "Document.CreatorCode expected:" + Utils.addPrefixIfNecessary(container.getTransport().getSaatjad().get(0).getRegNr()) + ", actual:" + aditDocument.getCreatorCode());
         if (dvkMessage.getSenderOrgName() != null && !dvkMessage.getSenderOrgName().isEmpty()) {
-
-            System.out.println("!!!!!!!!!!!!!!!!!expected:" + dvkMessage.getSenderOrgName() + ", actual:" + aditDocument.getCreatorName());
-
             // todo : problem with utf-8
             Assert.isTrue(Utils.compareStringsIgnoreCase(aditDocument.getCreatorName(), dvkMessage.getSenderOrgName()),
                     "Document.CreatorName expected:" + dvkMessage.getSenderOrgName() + ", actual:" + aditDocument.getCreatorName() +
@@ -395,9 +389,13 @@ public class DocumentService_SendReceiveDvkTest_Integration {
         Assert.isTrue(aditDocument.getDvkId() == DEFAULT_DHL_ID,
                 "Document.DvkId expected:" + DEFAULT_DHL_ID + ", actual:" + aditDocument.getDvkId());
 
-        // PARENT_ID will be not yet used in ADIT - JIRA ADIT-9
-        //Assert.isTrue(Utils.compareStringsIgnoreCase(aditDocument.getParentId(), Recipient.RecipientRecordOriginalIdentifier),
-        //        "expected: " + Recipient.RecipientRecordOriginalIdentifier + ", actual:" + aditDocument.getParentId());
+        String originalIdentifier = Utils.getOriginalIdentifierFromContainer(container);
+        if (originalIdentifier == null || originalIdentifier.length() == 0) {
+            Assert.isNull(aditDocument.getDocument());
+        } else {
+            Assert.isTrue(Utils.compareStringsIgnoreCase(String.valueOf(aditDocument.getDocument().getId()), originalIdentifier),
+                    "expected: " + originalIdentifier + ", actual:" + aditDocument.getDocument().getId());
+        }
 
         Assert.isTrue(aditDocument.getLocked(),
                 "Document.Locked expected: true, actual:" + aditDocument.getLocked());
@@ -470,8 +468,7 @@ public class DocumentService_SendReceiveDvkTest_Integration {
             Assert.isTrue(Utils.isToday(documentFileByName.getLastModifiedDate()),
                     "DocumentFiles.lastModifiedDate, expected: current day, actual:" + documentFileByName.getLastModifiedDate());
 
-/*
-            todo utf -8
+            //todo utf -8
             if (testParameters.containerFiles != null) {
                 List<ContainerFile> filesFromTestParametersByName = testParameters.getFileByName(fileName);
                 Assert.isTrue(filesFromTestParametersByName.size() == 1,
@@ -496,7 +493,6 @@ public class DocumentService_SendReceiveDvkTest_Integration {
                             "DocumentFiles.documentFileTypeId, expected: " + DocumentService.FILETYPE_DOCUMENT_FILE + ", actual: " + documentFileByName.getDocumentFileTypeId());
                 }
             }
-*/
 
         }
         // Check DOCUMENT_FILE data with files in test parameters
@@ -505,7 +501,6 @@ public class DocumentService_SendReceiveDvkTest_Integration {
             // We need to count number of files manually as more than one file with same name and size may be in ddoc
             int NumberOfAditDocumentFilesInDdoc = 0;
             for (DocumentFile documentFile : aditDocument.getDocumentFiles()) {
-                System.out.println("documentFile.getFileDataInDdoc()" + documentFile.getFileDataInDdoc() + " documentFile.getFileName" + documentFile.getFileName());
                 if (documentFile.getFileDataInDdoc()) {
                     aditDocumentFilesInDdoc.put(documentFile.getFileName() + documentFile.getDdocDataFileId() + documentFile.getFileSizeBytes().toString(), documentFile);
                     NumberOfAditDocumentFilesInDdoc++;
@@ -648,22 +643,14 @@ public class DocumentService_SendReceiveDvkTest_Integration {
         PojoMessage dvkMessage = utils.prepareAndSaveDvkMessage_Container_2_1(containerFile);
         dvkMessage = documentService.getDvkDAO().getMessage(dvkMessage.getDhlMessageId());
 
-        System.out.println("!!!!!!!!!!!!!!!!!receiveDocumentFromDVKClient_Container_2_1_Test.dvkMessage.getSenderOrgName()" + dvkMessage.getSenderOrgName());
-
         Assert.notNull(dvkMessage, "Message wasn't inserted into DVK_UK.DHL_MESSAGE table");
         logger.debug("DhlGuid for inserted message  - " + dvkMessage.getDhlGuid());
 
         documentService.receiveDocumentsFromDVK(digiDocConfFilePath);
 
-        System.out.println("!!!!!!!documentService.getDocumentDAO().getDocumentByGuid(dvkMessage.getDhlGuid()!!!!!!!!!!:" + documentService.getDocumentDAO().getDocumentByGuid(dvkMessage.getDhlGuid()).getCreatorName());
-        //System.out.println("!!!!!!!documentService.getDocumentDAO().getDocumentByGuid(dvkMessage.getDhlGuid()!!!!!!!!!!:" + utils.getDocumentsByDvkGuid_1(dvkMessage.getDhlGuid()).getCreatorName());
-        //System.out.println("!!!!!!!documentService.getDocumentDAO().getDocumentByDVKID(DEFAULT_DHL_ID)!!!!!!!!!!:" + documentService.getDocumentDAO().getDocumentByDVKID(DEFAULT_DHL_ID).getCreatorName());
-
         List<Document> aditDocsWithTestDvkGuid = utils.getDocumentsByDvkGuid(dvkMessage.getDhlGuid());
         Assert.notNull(aditDocsWithTestDvkGuid, "There is no documents in ADIT DB with test dvkGUID: " + dvkMessage.getDhlGuid());
         Assert.isTrue(aditDocsWithTestDvkGuid.size() == 1, "There are " + aditDocsWithTestDvkGuid.size() + " document in ADIT DB with test dvkGUID: " + dvkMessage.getDhlGuid());
-
-        System.out.println("!!!!!!!before getNonLazyInitializedDocument call!!!!!!!!!!expected:" + dvkMessage.getSenderOrgName() + ", actual:" + aditDocsWithTestDvkGuid.get(0).getCreatorName());
 
         Document aditDocument = utils.getNonLazyInitializedDocument(aditDocsWithTestDvkGuid.get(0).getId());
         Assert.notNull(aditDocument, "Document wasn't received from DVK_UK DB");
@@ -677,10 +664,7 @@ public class DocumentService_SendReceiveDvkTest_Integration {
         Assert.isTrue(Utils.compareStringsIgnoreCase(aditDocument.getCreatorCode(), Utils.addPrefixIfNecessary(container.getTransport().getDecSender().getOrganisationCode())),
                 "Document.CreatorCode expected:" + Utils.addPrefixIfNecessary(container.getTransport().getDecSender().getOrganisationCode()) + ", actual:" + aditDocument.getCreatorCode());
         if (dvkMessage.getSenderOrgName() != null && !dvkMessage.getSenderOrgName().isEmpty()) {
-
-            System.out.println("!!!!!!!!!!!!!!!!!expected:" + dvkMessage.getSenderOrgName() + ", actual:" + aditDocument.getCreatorName());
-
-// todo : problem with utf-8
+            // todo : problem with utf-8
             Assert.isTrue(Utils.compareStringsIgnoreCase(aditDocument.getCreatorName(), dvkMessage.getSenderOrgName()),
                     "Document.CreatorName expected:" + dvkMessage.getSenderOrgName() + ", actual:" + aditDocument.getCreatorName() +
                             "Document.CreatorName expected:" + dvkMessage.getSenderOrgName().hashCode() + ", actual:" + aditDocument.getCreatorName().hashCode());
@@ -694,9 +678,14 @@ public class DocumentService_SendReceiveDvkTest_Integration {
         Assert.isTrue(aditDocument.getDvkId() == DEFAULT_DHL_ID,
                 "Document.DvkId expected:" + DEFAULT_DHL_ID + ", actual:" + aditDocument.getDvkId());
 
-        // PARENT_ID will be not yet used in ADIT - JIRA ADIT-9
-        //Assert.isTrue(Utils.compareStringsIgnoreCase(aditDocument.getParentId(), Recipient.RecipientRecordOriginalIdentifier),
-        //        "expected: " + Recipient.RecipientRecordOriginalIdentifier + ", actual:" + aditDocument.getParentId());
+        // JIRA ADIT-9
+        ArrayList<Long> recipientsRecordOriginalIdentifiers = utils.initRecipientsRecordOriginalIdentifiers(container);
+        if (recipientsRecordOriginalIdentifiers != null && recipientsRecordOriginalIdentifiers.size() != 0) {
+            Assert.isTrue(recipientsRecordOriginalIdentifiers.contains(aditDocument.getDocument().getId()),
+                    "expected one of:" + recipientsRecordOriginalIdentifiers + ", actual:" + aditDocument.getDocument().getId());
+        } else {
+            Assert.isNull(aditDocument.getDocument());
+        }
 
         Assert.isTrue(aditDocument.getLocked(),
                 "Document.Locked expected: true, actual:" + aditDocument.getLocked());
@@ -734,7 +723,7 @@ public class DocumentService_SendReceiveDvkTest_Integration {
             Assert.isTrue(documentSharing.getDvkId() == DEFAULT_DHL_ID,
                     "documentSharing.dvkId expected:" + DEFAULT_DHL_ID + ", actual:" + documentSharing.getDvkId());
 
-            Recipient recipientInfo = Utils.getRecipient_By_OrganisationCode_And_PersonCode(container.getRecipient(), recipient.getOrganisationCode(), recipient.getPersonalIdCode());
+            Recipient recipientInfo = utils.getRecipient_By_OrganisationCode_And_PersonCode(container.getRecipient(), recipient.getOrganisationCode(), recipient.getPersonalIdCode());
             if (recipientInfo != null) {
                 Assert.isTrue(Utils.compareStringsIgnoreCase(documentSharing.getUserName(), recipientInfo.getPerson().getName()),
                         "documentSharing.userName, expected:" + recipientInfo.getPerson().getName() + ", actual:" + documentSharing.getUserName());
@@ -812,7 +801,6 @@ public class DocumentService_SendReceiveDvkTest_Integration {
             // We need to count number of files manually as more than one file with same name and size may be in ddoc
             int NumberOfAditDocumentFilesInDdoc = 0;
             for (DocumentFile documentFile : aditDocument.getDocumentFiles()) {
-                System.out.println("documentFile.getFileDataInDdoc()" + documentFile.getFileDataInDdoc() + " documentFile.getFileName" + documentFile.getFileName());
                 if (documentFile.getFileDataInDdoc()) {
                     aditDocumentFilesInDdoc.put(documentFile.getFileName() + documentFile.getDdocDataFileId() + documentFile.getFileSizeBytes().toString(), documentFile);
                     NumberOfAditDocumentFilesInDdoc++;

@@ -35,8 +35,8 @@ public class RecipientsBuilder {
      * Build a list of recipients.
      * @return recipients
      */
-    public List<Pair<AditUser, String>> build() {
-        List<Pair<AditUser, String>> allRecipients = new ArrayList<Pair<AditUser, String>>();
+    public List<Pair<AditUser, Recipient>> build() {
+        List<Pair<AditUser, Recipient>> allRecipients = new ArrayList<Pair<AditUser, Recipient>>();
 
         // For every recipient - check if registered in ADIT
         for (final DecRecipient recipient: container.getTransport().getDecRecipient()) {
@@ -70,19 +70,19 @@ public class RecipientsBuilder {
                             // other users that use DVK, over DVK.
                             throw new IllegalStateException("User uses DVK - not allowed.");
                         } else {
-                            allRecipients.add(new Pair<AditUser, String>() {
+                            allRecipients.add(new Pair<AditUser, Recipient>() {
                                 @Override
                                 public AditUser getLeft() {
                                     return user;
                                 }
 
                                 @Override
-                                public String getRight() {
-                                    return findMessageForRecipientFromContainer(recipient, container);
+                                public Recipient getRight() {
+                                    return findAppropriateRecipientFromContainer(recipient, container);
                                 }
 
                                 @Override
-                                public String setValue(final String value) {
+                                public Recipient setValue(final Recipient value) {
                                     return null;
                                 }
                             });
@@ -97,14 +97,14 @@ public class RecipientsBuilder {
         return allRecipients;
     }
 
-    private String findMessageForRecipientFromContainer(final DecRecipient decRecipient, final ContainerVer2_1 containerVer2_1) {
-        String result = null;
+    private Recipient findAppropriateRecipientFromContainer(final DecRecipient decRecipient, final ContainerVer2_1 containerVer2_1) {
+        Recipient result = null;
 
         if (containerVer2_1.getRecipient() != null) {
             for (Recipient recipient: containerVer2_1.getRecipient()) {
                 if (recipient.getPerson() != null
                         && recipient.getPerson().getPersonalIdCode().equalsIgnoreCase(decRecipient.getPersonalIdCode())) {
-                    result = recipient.getMessageForRecipient();
+                    result = recipient;
                 }
             }
         }
