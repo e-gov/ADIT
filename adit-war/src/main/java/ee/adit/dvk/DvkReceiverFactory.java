@@ -28,6 +28,7 @@ public class DvkReceiverFactory {
      * @return correct implementation
      */
     public DvkReceiver getReceiver(final PojoMessage message) {
+        //TODO: Loading whole clob into String could cause problem in case of big document
         String xml = documentService.readFromClob(message.getData());
 
         DvkReceiver dvkReceiver;
