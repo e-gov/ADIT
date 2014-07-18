@@ -679,6 +679,7 @@ adit-war/src/test/resources/ee/adit/dvk/converter/testFile.xml -text
 adit-war/src/test/resources/integration-tests.xml -text
 adit-war/src/test/resources/jdigidoc.cfg -text
 adit-war/src/test/resources/log4j.xml -text
+adit-war/versionHistory.txt -text
 doc/adit_kasutusjuhend.odt -text
 doc/adit_kirjeldus.odt -text
 doc/adit_paigaldusjuhend.odt -text
