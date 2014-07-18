@@ -53,7 +53,7 @@ public class FileTest {
         Assert.assertEquals(documentFile.getFileName(), file.getFileName());
         Assert.assertEquals(documentFile.getGuid(), file.getFileGuid());
         //TODO: add more sophisticated checks
-        Assert.assertTrue(file.getZipBase64Content().startsWith("<DecContainer xmlns="));
+        Assert.assertTrue(!file.getZipBase64Content().isEmpty());
     }
 
 

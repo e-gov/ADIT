@@ -59,7 +59,8 @@ public class FileBuilder {
         try {
             InputStream inputStream = documentFile.getFileData().getBinaryStream();
             String binaryContentsFile = Util.createTemporaryFile(inputStream, configuration.getTempDir());
-            result = Util.getFileContents(new java.io.File(binaryContentsFile));
+            String gzAndBase64EncodedFile = Util.gzipAndBase64Encode(binaryContentsFile, configuration.getTempDir(), true);
+            result = Util.getFileContents(new java.io.File(gzAndBase64EncodedFile));
         } catch (Exception e) {
             logger.error("Unable to create the gzipped and base64 encoded file contents: ", e);
         }
