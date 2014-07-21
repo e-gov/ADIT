@@ -106,6 +106,7 @@ adit-war/lib/commons-io-1.3.1.jar -text
 adit-war/lib/commons-logging-1.1.1.jar -text
 adit-war/lib/dom4j-1.6.1.jar -text
 adit-war/lib/dvk-api-1.0.10.jar -text
+adit-war/lib/dvk-api-1.0.11.jar -text
 adit-war/lib/dvk-api-1.0.6.jar -text
 adit-war/lib/dvk-api-1.0.9.jar -text
 adit-war/lib/dvkapi.jar -text
@@ -663,6 +664,8 @@ adit-war/src/test/resources/certs/TEST_of_EID-SK_2011.pem.crt -text
 adit-war/src/test/resources/certs/TEST_of_ESTEID-SK_2011.pem.crt -text
 adit-war/src/test/resources/certs/TEST_of_KLASS3-SK_2010.pem.crt -text
 adit-war/src/test/resources/certs/TEST_of_SK_OCSP_RESPONDER_2011.pem.cer -text
+adit-war/src/test/resources/containers/to_ADIT/ADIT-14-12288.xml -text
+adit-war/src/test/resources/containers/to_ADIT/ADIT-14-12289.xml -text
 adit-war/src/test/resources/containers/to_ADIT/ADIT_8_containerVer1_0_nok_dok_1.xml -text
 adit-war/src/test/resources/containers/to_ADIT/ADIT_8_containerVer1_0_nok_dok_2.xml -text
 adit-war/src/test/resources/containers/to_ADIT/ADIT_8_containerVer1_0_nok_dok_3.xml -text

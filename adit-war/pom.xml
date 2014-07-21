@@ -306,7 +306,7 @@
 			<artifactId>api</artifactId>
 			<version>1.0.6</version>
 			<scope>system</scope>
-			<systemPath>${basedir}/lib/dvk-api-1.0.10.jar</systemPath>
+			<systemPath>${basedir}/lib/dvk-api-1.0.11.jar</systemPath>
 		</dependency>
 
 		<!-- FOP -->

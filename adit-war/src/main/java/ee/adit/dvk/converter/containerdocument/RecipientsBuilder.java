@@ -70,22 +70,26 @@ public class RecipientsBuilder {
                             // other users that use DVK, over DVK.
                             throw new IllegalStateException("User uses DVK - not allowed.");
                         } else {
-                            allRecipients.add(new Pair<AditUser, Recipient>() {
-                                @Override
-                                public AditUser getLeft() {
-                                    return user;
-                                }
+                            final Recipient recipientFromContainer = findAppropriateRecipientFromContainer(recipient, container);
 
-                                @Override
-                                public Recipient getRight() {
-                                    return findAppropriateRecipientFromContainer(recipient, container);
-                                }
+                            if (recipientFromContainer != null) {
+                                allRecipients.add(new Pair<AditUser, Recipient>() {
+                                    @Override
+                                    public AditUser getLeft() {
+                                        return user;
+                                    }
 
-                                @Override
-                                public Recipient setValue(final Recipient value) {
-                                    return null;
-                                }
-                            });
+                                    @Override
+                                    public Recipient getRight() {
+                                        return recipientFromContainer;
+                                    }
+
+                                    @Override
+                                    public Recipient setValue(final Recipient value) {
+                                        return null;
+                                    }
+                                });
+                            }
                         }
                     } else {
                         throw new IllegalStateException("User not found. Personal code: " + recipient.getPersonalIdCode());
@@ -101,12 +105,7 @@ public class RecipientsBuilder {
         Recipient result = null;
 
         if (containerVer2_1.getRecipient() != null) {
-            for (Recipient recipient: containerVer2_1.getRecipient()) {
-                if (recipient.getPerson() != null
-                        && recipient.getPerson().getPersonalIdCode().equalsIgnoreCase(decRecipient.getPersonalIdCode())) {
-                    result = recipient;
-                }
-            }
+            result = containerVer2_1.getRecipient(decRecipient);
         }
 
         return result;

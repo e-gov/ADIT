@@ -2,6 +2,7 @@ package ee.adit.dvk;
 
 import dvk.api.ml.PojoMessage;
 import ee.adit.service.DocumentService;
+import java.util.regex.Pattern;
 
 /**
  * @author Hendrik Pärna
@@ -33,9 +34,12 @@ public class DvkReceiverFactory {
 
         DvkReceiver dvkReceiver;
 
-        if (xml.startsWith("<DecContainer")) {
+        Pattern decContainerPattern = Pattern.compile(Pattern.quote("<DecContainer"), Pattern.CASE_INSENSITIVE);
+        Pattern dhlPattern = Pattern.compile(Pattern.quote("<dhl:dokument"), Pattern.CASE_INSENSITIVE);
+
+        if (decContainerPattern.matcher(xml).find()) {
            dvkReceiver = new Container2_1Receiver(documentService, jdigidocCfgTmpFile);
-        } else if (xml.startsWith("<dhl")) {
+        } else if (dhlPattern.matcher(xml).find()) {
            dvkReceiver = new Container1_0Receiver(documentService, jdigidocCfgTmpFile);
         } else {
             throw new IllegalStateException("Unable to decide which container should be parsed!");
