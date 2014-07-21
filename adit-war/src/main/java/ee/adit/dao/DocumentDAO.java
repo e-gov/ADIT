@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import java.util.UUID;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
@@ -800,7 +801,9 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
 
                     documentFile.setFileDataInDdoc((attachmentFile.getDdocDataFileStartOffset() != null) && (attachmentFile.getDdocDataFileStartOffset() > 0));
                     documentFile.setDocumentFileTypeId(DocumentService.resolveFileTypeId(attachmentFile.getFileType()));
-                    documentFile.setGuid(attachmentFile.getGuid());
+
+                    String guid = attachmentFile.getGuid() != null ? attachmentFile.getGuid() : UUID.randomUUID().toString();
+                    documentFile.setGuid(guid);
                     documentFile.setContentType(attachmentFile.getContentType());
                     documentFile.setDeleted(false);
                     documentFile.setDescription(attachmentFile.getDescription());
