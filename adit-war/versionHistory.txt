@@ -1,6 +1,8 @@
-1.0.73
+1.0.74
 - ADIT-15
 - ADIT-14 (12289 fixed)
+
+1.0.73
 - Gzipping and base64 encoding was missing when container was created.
 - Hardcoded schema name changed to substitution variable &&ADIT_SCHEMA
 - ADIT-9
