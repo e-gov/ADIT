@@ -1501,7 +1501,7 @@ public class DocumentService {
         Session session = null;
 
         try {
-            final String sqlQuery = "select doc from Document doc, DocumentSharing docSharing where docSharing.documentSharingType = 'send_dvk' and (docSharing.documentDvkStatus is null or docSharing.documentDvkStatus = "
+            final String sqlQuery = "select distinct doc from Document doc, DocumentSharing docSharing where docSharing.documentSharingType = 'send_dvk' and (docSharing.documentDvkStatus is null or docSharing.documentDvkStatus = "
                     + DocumentService.DVK_STATUS_MISSING + ") and docSharing.documentId = doc.id";
             logger.info("Starting to send documents to DVK. Using org.code '" + this.getConfiguration().getDvkOrgCode() + "'");
             logger.debug("Fetching documents for sending to DVK...");
