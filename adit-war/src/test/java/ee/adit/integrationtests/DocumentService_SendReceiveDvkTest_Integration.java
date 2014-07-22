@@ -158,9 +158,13 @@ public class DocumentService_SendReceiveDvkTest_Integration {
 
             // Create a document, based on the container and insert to ADIT DB
             Document document;
-            AditUser recipent = documentService.getAditUserDAO().getUserByID(containerInput.getTransport().
-                    getDecRecipient().get(0).getOrganisationCode());
-            document = utils.prepareAndSaveAditDocument(containerInput, recipent, digiDocConfFilePath, containerType);
+            List<DecRecipient> decRecipients = containerInput.getTransport().getDecRecipient();
+            ArrayList<AditUser> recipients = new ArrayList<AditUser>();
+            for (DecRecipient decRecipient : decRecipients) {
+                AditUser aditUser = documentService.getAditUserDAO().getUserByID(Utils.addPrefixIfNecessary(decRecipient.getOrganisationCode()));
+                if (aditUser != null) recipients.add(aditUser);
+            }
+            document = utils.prepareAndSaveAditDocument(containerInput, recipients, digiDocConfFilePath, containerType);
 
             // Send the document from ADIT to DVK UK
             documentService.sendDocumentsToDVK();

@@ -49,7 +49,7 @@ public class Utils {
 
     private DocumentService documentService;
 
-    public Document prepareAndSaveAditDocument(ContainerVer2_1 container, AditUser recipient,
+    public Document prepareAndSaveAditDocument(ContainerVer2_1 container, ArrayList<AditUser> recipients,
                                                String digiDocConfFilePath, String containerType) throws Exception {
         Document document = null;
         DocumentSharing documentSharing;
@@ -101,11 +101,13 @@ public class Utils {
             transaction.commit();
 
             // Create a document sharing, related with this document
+            for (AditUser recipient : recipients) {
             documentSharing = new DocumentSharing();
             documentSharing.setDocumentId(document.getId());
             documentSharing.setUserCode(recipient.getUserCode());
             documentService.sendDocument(document, recipient, null, null,
                     container.getRecipient().get(0).getMessageForRecipient());
+            }
 
             // Create a document file, related with this document
             documentFile = new DocumentFile();
