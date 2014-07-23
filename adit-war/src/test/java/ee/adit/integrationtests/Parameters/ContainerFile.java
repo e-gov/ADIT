@@ -1,5 +1,11 @@
 package ee.adit.integrationtests.Parameters;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
+
+import java.io.File;
+import java.net.URLDecoder;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Liza Leo
@@ -17,6 +23,8 @@ public class ContainerFile {
     public Long ddocDataFileStartOffset;
     public Long ddocDataFileEndOffset;
 
+    private static Logger logger = org.apache.log4j.Logger.getLogger(ContainerFile.class);
+
     /**
      * Construstor for files in document container
      *
@@ -25,9 +33,9 @@ public class ContainerFile {
      * @param fileName
      * @param fileSize
      */
-    public ContainerFile(Boolean isDdocFile, String fileGuid, String fileName, Long fileSize){
+    public ContainerFile(Boolean isDdocFile, String fileGuid, String fileName, Long fileSize) {
         isDdoc = isDdocFile;
-        guid = (fileGuid != null)? fileGuid : "";
+        guid = (fileGuid != null) ? fileGuid : "";
         name = fileName;
         size = fileSize;
         fileDataInDdoc = false;
@@ -38,8 +46,11 @@ public class ContainerFile {
      *
      * @param fileName
      * @param fileSize
+     * @param ddocFileId
+     * @param startOffset
+     * @param endOffset
      */
-    public ContainerFile(String fileName, Long fileSize, String ddocFileId, Long startOffset, Long endOffset){
+    public ContainerFile(String fileName, Long fileSize, String ddocFileId, Long startOffset, Long endOffset) {
         isDdoc = false;
         guid = null;
         name = fileName;
@@ -48,6 +59,31 @@ public class ContainerFile {
         ddocDataFileId = ddocFileId;
         ddocDataFileStartOffset = startOffset;
         ddocDataFileEndOffset = endOffset;
+    }
+
+    public String getFileContent() {
+        String fileContent = "";
+        try {
+            String containersPath = ConfigurationConstants.CONTAINERS_PATH + ConfigurationConstants.TO_ADIT;
+            File file = new File(URLDecoder.decode(ContainerFile.class.getResource(containersPath + this.name).getPath(), "UTF-8"));
+            fileContent = FileUtils.readFileToString(file, "UTF-8");
+        } catch (Exception ex) {
+            logger.error(ex.getMessage());
+        }
+        return fileContent;
+    }
+
+    public byte[] getBinaryFileContent() {
+        byte[] fileContent = null;
+        try {
+            String containersPath = ConfigurationConstants.CONTAINERS_PATH + ConfigurationConstants.TO_ADIT;
+            File file = new File(URLDecoder.decode(ContainerFile.class.getResource(containersPath + this.name).getPath(), "UTF-8"));
+            fileContent = FileUtils.readFileToByteArray(file);
+
+        } catch (Exception ex) {
+            logger.error(ex.getMessage());
+        }
+        return fileContent;
     }
 
     public Boolean getDdoc() {

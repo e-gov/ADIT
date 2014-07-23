@@ -786,16 +786,17 @@ public class DocumentService_SendReceiveDvkTest_Integration {
                 List<ContainerFile> filesFromTestParametersByGuid = testParameters.getFileByGuid(fileGuid);
                 Assert.isTrue(filesFromTestParametersByGuid.size() == 1,
                         "There are more than one file with guid: " + fileGuid + " in container or in incorrect test parameters: " + testParameters.getXmlContainerFileName());
-                Assert.isTrue(filesFromTestParametersByGuid.get(0).getSize().equals(documentFileWithGuid.getFileSizeBytes()),
-                        "DocumentFiles.FileSizeBytes, expected: " + filesFromTestParametersByGuid.get(0).getSize() + ", actual:" + documentFileWithGuid.getFileSizeBytes());
-                Assert.isTrue(filesFromTestParametersByGuid.get(0).getFileDataInDdoc().equals(documentFileWithGuid.getFileDataInDdoc()),
-                        "DocumentFiles.FileSizeBytes, expected: " + filesFromTestParametersByGuid.get(0).getFileDataInDdoc() + ", actual:" + documentFileWithGuid.getFileDataInDdoc());
-                Assert.isTrue(Utils.compareStringsIgnoreCase(filesFromTestParametersByGuid.get(0).getDdocDataFileId(), documentFileWithGuid.getDdocDataFileId()),
-                        "DocumentFiles.FileSizeBytes, expected: " + filesFromTestParametersByGuid.get(0).getDdocDataFileId() + ", actual:" + documentFileWithGuid.getDdocDataFileId());
-                Assert.isTrue(Utils.compareObjects(filesFromTestParametersByGuid.get(0).getDdocDataFileStartOffset(), documentFileWithGuid.getDdocDataFileStartOffset()),
-                        "DocumentFiles.FileSizeBytes, expected: " + filesFromTestParametersByGuid.get(0).getDdocDataFileStartOffset() + ", actual:" + documentFileWithGuid.getDdocDataFileStartOffset());
-                Assert.isTrue(Utils.compareObjects(filesFromTestParametersByGuid.get(0).getDdocDataFileEndOffset(), documentFileWithGuid.getDdocDataFileEndOffset()),
-                        "DocumentFiles.FileSizeBytes, expected: " + filesFromTestParametersByGuid.get(0).getDdocDataFileEndOffset() + ", actual:" + documentFileWithGuid.getDdocDataFileEndOffset());
+                ContainerFile fileFromTestParametersByGuid = filesFromTestParametersByGuid.get(0);
+                Assert.isTrue(fileFromTestParametersByGuid.getSize().equals(documentFileWithGuid.getFileSizeBytes()),
+                        "DocumentFiles.FileSizeBytes, expected: " + fileFromTestParametersByGuid.getSize() + ", actual:" + documentFileWithGuid.getFileSizeBytes());
+                Assert.isTrue(fileFromTestParametersByGuid.getFileDataInDdoc().equals(documentFileWithGuid.getFileDataInDdoc()),
+                        "DocumentFiles.FileSizeBytes, expected: " + fileFromTestParametersByGuid.getFileDataInDdoc() + ", actual:" + documentFileWithGuid.getFileDataInDdoc());
+                Assert.isTrue(Utils.compareStringsIgnoreCase(fileFromTestParametersByGuid.getDdocDataFileId(), documentFileWithGuid.getDdocDataFileId()),
+                        "DocumentFiles.FileSizeBytes, expected: " + fileFromTestParametersByGuid.getDdocDataFileId() + ", actual:" + documentFileWithGuid.getDdocDataFileId());
+                Assert.isTrue(Utils.compareObjects(fileFromTestParametersByGuid.getDdocDataFileStartOffset(), documentFileWithGuid.getDdocDataFileStartOffset()),
+                        "DocumentFiles.FileSizeBytes, expected: " + fileFromTestParametersByGuid.getDdocDataFileStartOffset() + ", actual:" + documentFileWithGuid.getDdocDataFileStartOffset());
+                Assert.isTrue(Utils.compareObjects(fileFromTestParametersByGuid.getDdocDataFileEndOffset(), documentFileWithGuid.getDdocDataFileEndOffset()),
+                        "DocumentFiles.FileSizeBytes, expected: " + fileFromTestParametersByGuid.getDdocDataFileEndOffset() + ", actual:" + documentFileWithGuid.getDdocDataFileEndOffset());
 
                 if (dataFile.getFileName().contains("ddoc")) {
                     Assert.isTrue(documentFileWithGuid.getDocumentFileTypeId() == DocumentService.FILETYPE_SIGNATURE_CONTAINER,
@@ -806,18 +807,22 @@ public class DocumentService_SendReceiveDvkTest_Integration {
                 }
 
                 // Check BLOB
-                Assert.isTrue(documentFileWithGuid.getFileData().length() == filesFromTestParametersByGuid.get(0).getSize(),
-                        "DocumentFiles.FileData.length expected: " + filesFromTestParametersByGuid.get(0).getSize() + ", actual: " + documentFileWithGuid.getFileData().length());
-/*
-            byte[] bdata = documentFileWithGuid.getFileData().getBytes(1, (int) documentFileWithGuid.getFileData().length());
-            String documentFileWithGuidBlobDataConvertedToString = new String(bdata);
-            Assert.isTrue(documentFileWithGuidBlobDataConvertedToString.equals(dataFile.getZipBase64Content()),
-                    "DocumentFiles.FileData doesn't match to container ZipBase64Content");
-*/
+                Assert.isTrue(documentFileWithGuid.getFileData().length() == fileFromTestParametersByGuid.getSize(),
+                        "DocumentFiles.FileData.length expected: " + fileFromTestParametersByGuid.getSize() + ", actual: " + documentFileWithGuid.getFileData().length());
 
+                byte[] bdata = documentFileWithGuid.getFileData().getBytes(1, (int) documentFileWithGuid.getFileData().length());
+                if (fileFromTestParametersByGuid.getName().contains(".ddoc") || fileFromTestParametersByGuid.getName().contains(".txt")) {
+                    String documentFileWithGuidBlobDataConvertedToString = new String(bdata);
+                    Assert.isTrue(Utils.compareStringsIgnoreCase(documentFileWithGuidBlobDataConvertedToString, fileFromTestParametersByGuid.getFileContent()),
+                            "DocumentFiles.FileData doesn't match to container ZipBase64Content. File name:" + documentFileWithGuid.getFileName());
+                } else {
+                    //TODO: binary file content is not equal
+                    //Assert.isTrue(Utils.compareObjects(bdata, fileFromTestParametersByGuid.getBinaryFileContent()),
+                    //        "DocumentFiles.FileData doesn't match to container ZipBase64Content. File name:" + documentFileWithGuid.getFileName());
+                }
             }
         }
-        // Check DOCUMENT_FILE data with files in test parameters
+        // Check DOCUMENT_FILE data with files in ddoc container (test parameters)
         if (testParameters.filesInDdoc != null) {
             HashMap<String, DocumentFile> aditDocumentFilesInDdoc = new HashMap<String, DocumentFile>();
             // We need to count number of files manually as more than one file with same name and size may be in ddoc
