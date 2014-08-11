@@ -670,6 +670,9 @@ adit-war/src/test/resources/containers/to_ADIT/ADIT_8_containerVer1_0_nok_dok_1.
 adit-war/src/test/resources/containers/to_ADIT/ADIT_8_containerVer1_0_nok_dok_2.xml -text
 adit-war/src/test/resources/containers/to_ADIT/ADIT_8_containerVer1_0_nok_dok_3.xml -text
 adit-war/src/test/resources/containers/to_ADIT/ADIT_8_containerVer1_0_ok_dok_1.xml -text
+adit-war/src/test/resources/containers/to_ADIT/Ettepanek.doc -text
+adit-war/src/test/resources/containers/to_ADIT/Ettepaneku[!!-~]edastus.ddoc -text
+adit-war/src/test/resources/containers/to_ADIT/Vastus[!!-~]ettepanekule.ddoc -text
 adit-war/src/test/resources/containers/to_ADIT/containerVer1_0.xml -text
 adit-war/src/test/resources/containers/to_ADIT/containerVer1_0_ddoc.xml -text
 adit-war/src/test/resources/containers/to_ADIT/containerVer2_1.xml -text

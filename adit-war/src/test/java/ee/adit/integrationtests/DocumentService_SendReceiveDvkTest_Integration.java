@@ -624,16 +624,6 @@ public class DocumentService_SendReceiveDvkTest_Integration {
                         )
                 ));
         parametersList.add(new ReceiveFromDvkTestParameter("containerVer2_1.xml", null, null, null));
-        parametersList.add(
-                new ReceiveFromDvkTestParameter(
-                        "ADIT-14-12289.xml",
-                        Arrays.asList(
-                                new ContainerFile(false, "B90CB69C-8BCA-4C0B-A8EC-1939A7AF8E10", "KiriEdastus-20140430-00050_template.rtf", (long) 33478)
-                        ),
-                        null,//no files in ddoc
-                        null //no signatures
-                ));
-
         return parametersList;
     }
 
