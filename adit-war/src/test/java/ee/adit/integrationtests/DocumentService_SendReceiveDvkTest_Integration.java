@@ -328,23 +328,30 @@ public class DocumentService_SendReceiveDvkTest_Integration {
                 new ReceiveFromDvkTestParameter(
                         "containerVer1_0_ddoc.xml",
                         Arrays.asList(
-                                new ContainerFile(true, null, "TEST1.ddoc", (long) 44569)
+                                new ContainerFile(true, null, "TEST1.ddoc", 44569L)
                         ),
                         Arrays.asList(
-                                new ContainerFile("TEST1.pdf", (long) 7786, "D0", (long) 276, (long) 10824),
-                                new ContainerFile("testdokument 3.pdf", (long) 19009, "D1", (long) 10995, (long) 36741)
+                                new ContainerFile("TEST1.pdf", 7786L, "D0", 276L, 10824L),
+                                new ContainerFile("testdokument 3.pdf", 19009L, "D1", 10995L, 36741L)
                         ),
                         Arrays.asList(
                                 new ContainerSignature(null, "EE48208190319", "ALLERT, KÄRT", new GregorianCalendar(2014, 4, 12).getTime())
                         )
                 ));
-        parametersList.add(new ReceiveFromDvkTestParameter("containerVer1_0.xml", null, null, null));
-        //
+        parametersList.add(
+                new ReceiveFromDvkTestParameter(
+                        "containerVer1_0.xml",
+                        Arrays.asList(
+                                new ContainerFile(false, "966c2c3c-dff9-4bb7-a25c-034c602185c4", "Test_dokument.pdf", 117089L)
+                        ),
+                        null,//no files in ddoc
+                        null //no signatures
+                ));
         parametersList.add(
                 new ReceiveFromDvkTestParameter(
                         "ADIT-14-12288.xml",
                         Arrays.asList(
-                                new ContainerFile(false, null, "KiriEdastus-20140430-00050_template.rtf", (long) 7443)
+                                new ContainerFile(false, null, "KiriEdastus-20140430-00050_template.rtf", 7443L)
                         ),
                         null,//no files in ddoc
                         null //no signatures
@@ -393,7 +400,6 @@ public class DocumentService_SendReceiveDvkTest_Integration {
         Assert.isTrue(Utils.compareStringsIgnoreCase(aditDocument.getCreatorCode(), Utils.addPrefixIfNecessary(container.getTransport().getSaatjad().get(0).getRegNr())),
                 "Document.CreatorCode expected:" + Utils.addPrefixIfNecessary(container.getTransport().getSaatjad().get(0).getRegNr()) + ", actual:" + aditDocument.getCreatorCode());
         if (dvkMessage.getSenderOrgName() != null && !dvkMessage.getSenderOrgName().isEmpty()) {
-            // todo : problem with utf-8
             Assert.isTrue(Utils.compareStringsIgnoreCase(aditDocument.getCreatorName(), dvkMessage.getSenderOrgName()),
                     "Document.CreatorName expected:" + dvkMessage.getSenderOrgName() + ", actual:" + aditDocument.getCreatorName() +
                             "Document.CreatorName expected:" + dvkMessage.getSenderOrgName().hashCode() + ", actual:" + aditDocument.getCreatorName().hashCode());
@@ -448,10 +454,9 @@ public class DocumentService_SendReceiveDvkTest_Integration {
                     "documentSharing.documentSharingType expected:" + DOCUMENT_SHARING_TYPE_SEND_TO_ADIT + ", actual:" + documentSharing.getDocumentSharingType());
             Assert.isTrue(Utils.isToday(documentSharing.getCreationDate()),
                     "documentSharing.creationDate expected: current day, actual:" + aditDocument.getCreationDate());
-            Assert.isNull(documentSharing.getDvkFolder());//todo
+            Assert.isNull(documentSharing.getDvkFolder());// as designed
             Assert.isTrue(documentSharing.getDvkId() == DEFAULT_DHL_ID,
                     "documentSharing.dvkId expected:" + DEFAULT_DHL_ID + ", actual:" + documentSharing.getDvkId());
-// TODO utf 8
             String username = saaja.getNimi() == null ? documentService.getAditUserDAO().getUserByID(Utils.addPrefixIfNecessary(saaja.getIsikukood())).getFullName() : saaja.getNimi();
             Assert.isTrue(Utils.compareStringsIgnoreCase(documentSharing.getUserName(), username),
                     "documentSharing.userName, expected:" + saaja.getNimi() + ", actual:" + username);
@@ -486,7 +491,6 @@ public class DocumentService_SendReceiveDvkTest_Integration {
             Assert.isTrue(Utils.isToday(documentFileByName.getLastModifiedDate()),
                     "DocumentFiles.lastModifiedDate, expected: current day, actual:" + documentFileByName.getLastModifiedDate());
 
-            //todo utf -8
             if (testParameters.containerFiles != null) {
                 List<ContainerFile> filesFromTestParametersByName = testParameters.getFileByName(fileName);
                 Assert.isTrue(filesFromTestParametersByName.size() == 1,
@@ -509,6 +513,21 @@ public class DocumentService_SendReceiveDvkTest_Integration {
                 } else {
                     Assert.isTrue(documentFileByName.getDocumentFileTypeId() == DocumentService.FILETYPE_DOCUMENT_FILE,
                             "DocumentFiles.documentFileTypeId, expected: " + DocumentService.FILETYPE_DOCUMENT_FILE + ", actual: " + documentFileByName.getDocumentFileTypeId());
+                }
+
+                // Check BLOB
+                Assert.isTrue(documentFileByName.getFileData().length() == filesFromTestParametersByName.get(0).getSize(),
+                        "DocumentFiles.FileData.length expected: " + filesFromTestParametersByName.get(0).getSize() + ", actual: " + documentFileByName.getFileData().length());
+                if (filesFromTestParametersByName.get(0).isResourceExists()) {
+                    byte[] bdata = documentFileByName.getFileData().getBytes(1, (int) documentFileByName.getFileData().length());
+                    if (filesFromTestParametersByName.get(0).getName().contains(".ddoc") || filesFromTestParametersByName.get(0).getName().contains(".txt")) {
+                        String documentFileWithGuidBlobDataConvertedToString = new String(bdata, "UTF-8");
+                        Assert.isTrue(Utils.compareStringsIgnoreCase(documentFileWithGuidBlobDataConvertedToString, filesFromTestParametersByName.get(0).getFileContent()),
+                                "DocumentFiles.FileData doesn't match to container ZipBase64Content. File name:" + documentFileByName.getFileName());
+                    } else {
+                        Assert.isTrue(Utils.compareByteArray(bdata, filesFromTestParametersByName.get(0).getBinaryFileContent()),
+                                "DocumentFiles.FileData doesn't match to container ZipBase64Content. File name:" + documentFileByName.getFileName());
+                    }
                 }
             }
 
@@ -542,10 +561,7 @@ public class DocumentService_SendReceiveDvkTest_Integration {
                         "DocumentFiles.FileSizeBytes, expected: " + file.getDdocDataFileEndOffset() + ", actual:" + documentFileFromDdoc.getDdocDataFileEndOffset());
                 Assert.isTrue(Utils.isToday(documentFileFromDdoc.getLastModifiedDate()),
                         "DocumentFiles.lastModifiedDate, expected: current day, actual:" + documentFileFromDdoc.getLastModifiedDate());
-
-                // Check BLOB
-//            Assert.isTrue(documentFileFromDdoc.getFileData().length() == file.getSize(),
-//                    "File name: " + documentFileFromDdoc.getFileName() + ", DocumentFiles.FileData.length expected: " + file.getSize() + ", actual: " + documentFileFromDdoc.getFileData().length());
+                // Impossible to check blob content, as this files are just placeholders
             }
         }
 
@@ -616,9 +632,9 @@ public class DocumentService_SendReceiveDvkTest_Integration {
                 new ReceiveFromDvkTestParameter(
                         "containerVer2_1_ddoc.xml",
                         Arrays.asList(
-                                new ContainerFile(true, "25892e17-80f6-415f-9c65-7395632f0223", "Ettepaneku edastus.ddoc", (long) 19790),
-                                new ContainerFile(false, "25892e17-80f6-415f-9c65-7395632f0001", "Ettepanek.doc", (long) 8674),
-                                new ContainerFile(false, "30891e17-66f4-468f-9c79-8315632f0314", "Vastus ettepanekule.ddoc", (long) 19790)
+                                new ContainerFile(true, "25892e17-80f6-415f-9c65-7395632f0223", "Ettepaneku edastus.ddoc", 19790L),
+                                new ContainerFile(false, "25892e17-80f6-415f-9c65-7395632f0001", "Ettepanek.doc", 8674L),
+                                new ContainerFile(false, "30891e17-66f4-468f-9c79-8315632f0314", "Vastus ettepanekule.ddoc", 19790L)
                         ),
                         Arrays.asList(
                                 new ContainerFile("Ettepanek.doc", (long) 8674, "D0", (long) 289, (long) 12038),
@@ -628,7 +644,42 @@ public class DocumentService_SendReceiveDvkTest_Integration {
                                 new ContainerSignature("EE38806190294", "EE38806190294", "TAMMEMÄE, LAURI", new GregorianCalendar(2013, 3, 4).getTime())
                         )
                 ));
-        parametersList.add(new ReceiveFromDvkTestParameter("containerVer2_1.xml", null, null, null));
+        parametersList.add(
+                new ReceiveFromDvkTestParameter(
+                        "containerVer2_1.xml",
+                        Arrays.asList(
+                                new ContainerFile(false, "25892e17-80f6-415f-9c65-7395632f0001", "Ettepanek.doc", 8674L)
+                        ),
+                        null,//no files in ddoc
+                        null //no signatures
+                ));
+        // TODO: Sisemine ADIT-2
+/*        parametersList.add(
+                new ReceiveFromDvkTestParameter(
+                        "containerVer2_1_ddoc_xsd_minimum.xml",
+                        Arrays.asList(
+                                new ContainerFile(true, "25892e17-80f6-415f-9c65-7395632f0223", "Ettepaneku edastus.ddoc", 19790L),
+                                new ContainerFile(false, "25892e17-80f6-415f-9c65-7395632f0001", "Ettepanek.doc", 8674L),
+                                new ContainerFile(false, "30891e17-66f4-468f-9c79-8315632f0314", "Vastus ettepanekule.ddoc", 19790L)
+                        ),
+                        Arrays.asList(
+                                new ContainerFile("Ettepanek.doc", (long) 8674, "D0", (long) 289, (long) 12038),
+                                new ContainerFile("Ettepanek.doc", (long) 8674, "D0", (long) 289, (long) 12038)
+                        ),
+                        Arrays.asList(
+                                new ContainerSignature("EE38806190294", "EE38806190294", "TAMMEMÄE, LAURI", new GregorianCalendar(2013, 3, 4).getTime())
+                        )
+                ));*/
+        parametersList.add(
+                new ReceiveFromDvkTestParameter(
+                        "ADIT-14-12289.xml",
+                        Arrays.asList(
+                                new ContainerFile(false, "B90CB69C-8BCA-4C0B-A8EC-1939A7AF8E10", "KiriEdastus-20140430-00050_template.rtf", (long) 33478)
+                        ),
+                        null,//no files in ddoc
+                        null //no signatures
+                ));
+
         return parametersList;
     }
 
@@ -681,7 +732,6 @@ public class DocumentService_SendReceiveDvkTest_Integration {
         Assert.isTrue(Utils.compareStringsIgnoreCase(aditDocument.getCreatorCode(), Utils.addPrefixIfNecessary(container.getTransport().getDecSender().getOrganisationCode())),
                 "Document.CreatorCode expected:" + Utils.addPrefixIfNecessary(container.getTransport().getDecSender().getOrganisationCode()) + ", actual:" + aditDocument.getCreatorCode());
         if (dvkMessage.getSenderOrgName() != null && !dvkMessage.getSenderOrgName().isEmpty()) {
-            // todo : problem with utf-8
             Assert.isTrue(Utils.compareStringsIgnoreCase(aditDocument.getCreatorName(), dvkMessage.getSenderOrgName()),
                     "Document.CreatorName expected:" + dvkMessage.getSenderOrgName() + ", actual:" + aditDocument.getCreatorName() +
                             "Document.CreatorName expected:" + dvkMessage.getSenderOrgName().hashCode() + ", actual:" + aditDocument.getCreatorName().hashCode());
@@ -736,7 +786,7 @@ public class DocumentService_SendReceiveDvkTest_Integration {
                     "documentSharing.documentSharingType expected:" + DOCUMENT_SHARING_TYPE_SEND_TO_ADIT + ", actual:" + documentSharing.getDocumentSharingType());
             Assert.isTrue(Utils.isToday(documentSharing.getCreationDate()),
                     "documentSharing.creationDate expected: current day, actual:" + aditDocument.getCreationDate());
-            Assert.isNull(documentSharing.getDvkFolder());//todo
+            Assert.isNull(documentSharing.getDvkFolder());// as was designed for capsule 1.0
             Assert.isTrue(documentSharing.getDvkId() == DEFAULT_DHL_ID,
                     "documentSharing.dvkId expected:" + DEFAULT_DHL_ID + ", actual:" + documentSharing.getDvkId());
 
@@ -804,16 +854,16 @@ public class DocumentService_SendReceiveDvkTest_Integration {
                 // Check BLOB
                 Assert.isTrue(documentFileWithGuid.getFileData().length() == fileFromTestParametersByGuid.getSize(),
                         "DocumentFiles.FileData.length expected: " + fileFromTestParametersByGuid.getSize() + ", actual: " + documentFileWithGuid.getFileData().length());
-
-                byte[] bdata = documentFileWithGuid.getFileData().getBytes(1, (int) documentFileWithGuid.getFileData().length());
-                if (fileFromTestParametersByGuid.getName().contains(".ddoc") || fileFromTestParametersByGuid.getName().contains(".txt")) {
-                    String documentFileWithGuidBlobDataConvertedToString = new String(bdata);
-                    Assert.isTrue(Utils.compareStringsIgnoreCase(documentFileWithGuidBlobDataConvertedToString, fileFromTestParametersByGuid.getFileContent()),
-                            "DocumentFiles.FileData doesn't match to container ZipBase64Content. File name:" + documentFileWithGuid.getFileName());
-                } else {
-                    //TODO: binary file content is not equal
-                    //Assert.isTrue(Utils.compareObjects(bdata, fileFromTestParametersByGuid.getBinaryFileContent()),
-                    //        "DocumentFiles.FileData doesn't match to container ZipBase64Content. File name:" + documentFileWithGuid.getFileName());
+                if (fileFromTestParametersByGuid.isResourceExists()) {
+                    byte[] bdata = documentFileWithGuid.getFileData().getBytes(1, (int) documentFileWithGuid.getFileData().length());
+                    if (fileFromTestParametersByGuid.getName().contains(".ddoc") || fileFromTestParametersByGuid.getName().contains(".txt")) {
+                        String documentFileWithGuidBlobDataConvertedToString = new String(bdata, "UTF-8");
+                        Assert.isTrue(Utils.compareStringsIgnoreCase(documentFileWithGuidBlobDataConvertedToString, fileFromTestParametersByGuid.getFileContent()),
+                                "DocumentFiles.FileData doesn't match to container ZipBase64Content. File name:" + documentFileWithGuid.getFileName());
+                    } else {
+                        Assert.isTrue(Utils.compareByteArray(bdata, fileFromTestParametersByGuid.getBinaryFileContent()),
+                                "DocumentFiles.FileData doesn't match to container ZipBase64Content. File name:" + documentFileWithGuid.getFileName());
+                    }
                 }
             }
         }
@@ -846,10 +896,7 @@ public class DocumentService_SendReceiveDvkTest_Integration {
                         "DocumentFiles.FileSizeBytes, expected: " + file.getDdocDataFileEndOffset() + ", actual:" + documentFileFromDdoc.getDdocDataFileEndOffset());
                 Assert.isTrue(Utils.isToday(documentFileFromDdoc.getLastModifiedDate()),
                         "DocumentFiles.lastModifiedDate, expected: current day, actual:" + documentFileFromDdoc.getLastModifiedDate());
-
-                // Check BLOB
-//            Assert.isTrue(documentFileFromDdoc.getFileData().length() == file.getSize(),
-//                    "DocumentFiles.FileData.length expected: " + file.getSize() + ", actual: " + documentFileFromDdoc.getFileData().length());
+                // Impossible to check blob content, as this files are just placeholders
             }
         }
 
@@ -888,12 +935,8 @@ public class DocumentService_SendReceiveDvkTest_Integration {
         }
 
         // Table ADIT_USER
-        /*
-TODO: Currently 1.0 ja 2.1 take for used space into account only files in container. Size of files extracted from ddoc not accounted.
-        for (ContainerFile file : testParameters.filesInDdoc){
-            sumOfFilesSize = sumOfFilesSize + file.size;
-        }
-*/
+
+        // Currently 1.0 ja 2.1 take for used space into account only files in container. Size of files extracted from ddoc not accounted.
         if (testParameters.containerFiles != null) {
             Long sumOfFilesSize = (long) 0;
             for (ContainerFile file : testParameters.containerFiles) {

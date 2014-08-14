@@ -30,6 +30,11 @@ import org.hibernate.Transaction;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Property;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.InputStreamReader;
 import java.io.*;
 import java.sql.Blob;
 import java.sql.Clob;
@@ -285,7 +290,7 @@ public class Utils {
         BufferedReader in = null;
         Container container = null;
         try {
-            in = new BufferedReader(new FileReader(containerFile));
+            in = new BufferedReader(new InputStreamReader(new FileInputStream(containerFile), "UTF8"));
             container = Container.marshal(in, version);
         } finally {
             IOUtils.closeQuietly(in);
@@ -393,6 +398,14 @@ public class Utils {
         return obj1 == null && obj2 == null || !(obj1 == null || obj2 == null) && obj1.equals(obj2);
     }
 
+    public static boolean compareByteArray(byte[] arr1, byte[] arr2) {
+        if (arr1 == null && arr2 == null) {
+            return true;
+        } else {
+            return Arrays.equals(arr1, arr2);
+        }
+    }
+
     public static boolean compareDates(Date date1, Date date2) throws Exception {
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         if (date1 == null && date2 == null) {
@@ -445,7 +458,7 @@ public class Utils {
         String result;
         try {
             result = container.getMetaxml().getLetterMetaData().getOriginalIdentifier();
-        } catch(Exception e) {
+        } catch (Exception e) {
             result = null;
         }
         return result;

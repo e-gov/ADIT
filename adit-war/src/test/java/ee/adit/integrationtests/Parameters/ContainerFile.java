@@ -1,9 +1,12 @@
 package ee.adit.integrationtests.Parameters;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.net.URLDecoder;
 
 /**
@@ -14,6 +17,7 @@ import java.net.URLDecoder;
  */
 
 public class ContainerFile {
+    public final static String RECEIVE_FROM_DVK_PARAMETER_FILES_FOLDER = ConfigurationConstants.CONTAINERS_PATH + ConfigurationConstants.TO_ADIT;
     public Boolean isDdoc;
     public String guid;
     public String name;
@@ -61,11 +65,19 @@ public class ContainerFile {
         ddocDataFileEndOffset = endOffset;
     }
 
+    public boolean isResourceExists(){
+        try {
+            File file = new File(URLDecoder.decode(ContainerFile.class.getResource(RECEIVE_FROM_DVK_PARAMETER_FILES_FOLDER + this.name).getPath(), "UTF-8"));
+            return file.exists();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public String getFileContent() {
         String fileContent = "";
         try {
-            String containersPath = ConfigurationConstants.CONTAINERS_PATH + ConfigurationConstants.TO_ADIT;
-            File file = new File(URLDecoder.decode(ContainerFile.class.getResource(containersPath + this.name).getPath(), "UTF-8"));
+            File file = new File(URLDecoder.decode(ContainerFile.class.getResource(RECEIVE_FROM_DVK_PARAMETER_FILES_FOLDER + this.name).getPath(), "UTF-8"));
             fileContent = FileUtils.readFileToString(file, "UTF-8");
         } catch (Exception ex) {
             logger.error(ex.getMessage());
@@ -76,8 +88,7 @@ public class ContainerFile {
     public byte[] getBinaryFileContent() {
         byte[] fileContent = null;
         try {
-            String containersPath = ConfigurationConstants.CONTAINERS_PATH + ConfigurationConstants.TO_ADIT;
-            File file = new File(URLDecoder.decode(ContainerFile.class.getResource(containersPath + this.name).getPath(), "UTF-8"));
+            File file = new File(URLDecoder.decode(ContainerFile.class.getResource(RECEIVE_FROM_DVK_PARAMETER_FILES_FOLDER + this.name).getPath(), "UTF-8"));
             fileContent = FileUtils.readFileToByteArray(file);
 
         } catch (Exception ex) {
