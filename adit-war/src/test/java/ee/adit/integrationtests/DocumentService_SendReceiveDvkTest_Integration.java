@@ -253,34 +253,32 @@ public class DocumentService_SendReceiveDvkTest_Integration {
         // Do asserts with Recipient
         if (containerInput.getRecipient() != null) {
             Assert.isTrue(containerOutput.getRecipient().size() > 0);
-//            TODO: finish it later
-//            Map<String, OrganisationType> recipientsFromInputContainer = new HashMap<String, OrganisationType>();
-//            for (Recipient inputRecipient: containerInput.getRecipient()) {
-//                recipientsFromInputContainer.put(inputRecipient.getOrganisation().getOrganisationCode(), inputRecipient.getOrganisation());
-//            }
-//
-//            for (Recipient outputRecipient: containerOutput.getRecipient()) {
-//                String outputRecipientOrgCode = Utils.addPrefixIfNecessary(outputRecipient.getOrganisation().getOrganisationCode());
-//                Assert.isTrue(recipientsFromInputContainer.containsKey(outputRecipientOrgCode));
-//                OrganisationType inputRecipientOrganisation = recipientsFromInputContainer.get(outputRecipientOrgCode);
-//                OrganisationType outputRecipientOrganisation = outputRecipient.getOrganisation();
-//                DocumentSharing documentSharing = documentSharings.iterator().next();
-//                AditUser recipient = documentService.getAditUserDAO().getUserByID(containerInput.getTransport().getDecRecipient().get(0).getOrganisationCode());
-//            }
-            DocumentSharing documentSharing = documentSharings.iterator().next();
-            List<Recipient> recipientsFromContainer = containerOutput.getRecipient();
+            Map<String, Recipient> recipientsFromInputContainer = new HashMap<String, Recipient>();
+            for (Recipient recipientFromInputContainer : containerInput.getRecipient()) {
+                recipientsFromInputContainer.put(recipientFromInputContainer.getOrganisation().getOrganisationCode(),
+                                                    recipientFromInputContainer);                
+            }
+            
+            for (Recipient outputRecipient : containerOutput.getRecipient()) {
+                String recipientFromOutputContainerOrgCode = Utils.addPrefixIfNecessary(outputRecipient.getOrganisation().getOrganisationCode());
+                Assert.isTrue(recipientsFromInputContainer.containsKey(recipientFromOutputContainerOrgCode));
+                Recipient inputRecipient = recipientsFromInputContainer.get(recipientFromOutputContainerOrgCode);
+                Assert.isTrue(decRecipientsFromInputContainer.containsKey(Utils.addPrefixIfNecessary(inputRecipient.getOrganisation().getOrganisationCode())));
+                AditUser recipient = documentService.getAditUserDAO().getUserByID(decRecipientsFromInputContainer.get(Utils.addPrefixIfNecessary
+                                        (inputRecipient.getOrganisation().getOrganisationCode())).getOrganisationCode());
+                Assert.notNull(recipient);
+                DocumentSharing documentSharing = documentSharings.iterator().next();
+                Assert.notNull(Utils.compareStringsIgnoreCase(outputRecipient.getOrganisation().getName(),
+                        recipient.getFullName()));
+                Assert.isTrue(Utils.compareStringsIgnoreCase(outputRecipient.getMessageForRecipient(),
+                        documentSharing.getComment()));
+                Assert.notNull(Utils.compareStringsIgnoreCase(outputRecipient.getOrganisation().getOrganisationCode(),
+                        recipient.getDvkOrgCode()));
+                String documentSharingUserCode = documentSharing.getUserCode();
+                Assert.isTrue(Utils.compareStringsIgnoreCase(outputRecipient.getOrganisation().getResidency(),
+                        documentSharingUserCode.substring(0, Math.min(documentSharingUserCode.length(), 2))));
 
-            AditUser recipient = documentService.getAditUserDAO().getUserByID(containerInput.getTransport().getDecRecipient().get(0).getOrganisationCode());
-            Assert.notNull(recipient);
-            Assert.notNull(Utils.compareStringsIgnoreCase(containerOutput.getRecipient().get(0).getOrganisation().getName(),
-                    recipient.getFullName()));
-            Assert.isTrue(Utils.compareStringsIgnoreCase(containerOutput.getRecipient().get(0).getMessageForRecipient(),
-                    documentSharing.getComment()));
-            Assert.notNull(Utils.compareStringsIgnoreCase(containerOutput.getRecipient().get(0).getOrganisation().getOrganisationCode(),
-                    recipient.getDvkOrgCode()));
-            String documentSharingUserCode = documentSharing.getUserCode();
-            Assert.isTrue(Utils.compareStringsIgnoreCase(containerOutput.getRecipient().get(0).getOrganisation().getResidency(),
-                    documentSharingUserCode.substring(0, Math.min(documentSharingUserCode.length(), 2))));
+            }
         }
 
         // Do asserts with RecordMetaData

@@ -79,11 +79,11 @@
     </Recipient>
     <Recipient>
         <Organisation>
-            <Name>IceFire Test company</Name>
+            <Name>Nortal AS</Name>
             <OrganisationCode>EE10391131</OrganisationCode>
             <Residency>EE</Residency>
         </Organisation>
-        <MessageForRecipient>Test message for recipient IceFire</MessageForRecipient>
+        <MessageForRecipient>Test message for recipient</MessageForRecipient>
     </Recipient>
     <RecordMetadata>
         <RecordGuid>25892e17-80f6-415f-9c65-7395632f0234</RecordGuid>
