@@ -3,10 +3,7 @@ package ee.adit.integrationtests;
 import dvk.api.container.Container;
 import dvk.api.container.v1.ContainerVer1;
 import dvk.api.container.v1.Saaja;
-import dvk.api.container.v2_1.ContainerVer2_1;
-import dvk.api.container.v2_1.DecRecipient;
-import dvk.api.container.v2_1.Recipient;
-import dvk.api.container.v2_1.Transport;
+import dvk.api.container.v2_1.*;
 import dvk.api.ml.PojoMessage;
 import ee.adit.dao.dvk.DvkDAO;
 import ee.adit.dao.pojo.AditUser;
@@ -190,6 +187,8 @@ public class DocumentService_SendReceiveDvkTest_Integration {
         Transport transportOutput = containerOutput.getTransport();
 
         Assert.notNull(transportOutput);
+
+        // Do asserts with DecSender
         Assert.notNull(transportInput.getDecSender());
         Assert.notNull(transportOutput.getDecSender());
         Assert.isTrue(Utils.compareStringsIgnoreCase(documentService.getConfiguration().getDvkOrgCode(),
@@ -198,12 +197,24 @@ public class DocumentService_SendReceiveDvkTest_Integration {
         Assert.isTrue(Utils.compareStringsIgnoreCase(Utils.addPrefixIfNecessary(transportOutput.
                 getDecSender().getPersonalIdCode()),
                 sentAditDocument.getCreatorCode()));
+
+        // Do asserts with DecRecipients
         Assert.notNull(transportOutput.getDecRecipient());
         Assert.notNull(transportInput.getDecRecipient());
-        Assert.isTrue(Utils.compareStringsIgnoreCase(transportOutput.getDecRecipient().get(0).getOrganisationCode(),
-                documentService.getAditUserDAO().getUserByID(containerInput.getTransport().getDecRecipient().get(0).
-                        getOrganisationCode()).getDvkOrgCode()));
-        Assert.isNull(transportOutput.getDecRecipient().get(0).getStructuralUnit());
+
+        // Gather all recipients from the input container
+        Map<String, DecRecipient> decRecipientsFromInputContainer = new HashMap<String, DecRecipient>();
+        for (DecRecipient inputDecRecipient: transportInput.getDecRecipient()) {
+            decRecipientsFromInputContainer.put(inputDecRecipient.getOrganisationCode(), inputDecRecipient);
+        }
+
+        for (DecRecipient outputDecRecipient: transportOutput.getDecRecipient()) {
+            String outputDecRecipientCode = Utils.addPrefixIfNecessary(outputDecRecipient.getOrganisationCode());
+            Assert.isTrue(decRecipientsFromInputContainer.containsKey(outputDecRecipientCode));
+            DecRecipient inputDecRecipient = decRecipientsFromInputContainer.get(outputDecRecipientCode);
+            Assert.isTrue(Utils.compareStringsIgnoreCase(outputDecRecipient.getOrganisationCode(),
+                    documentService.getAditUserDAO().getUserByID(inputDecRecipient.getOrganisationCode()).getDvkOrgCode()));
+        }
 
         // Do asserts with DecMetaData
         Assert.isNull(containerOutput.getDecMetadata());
@@ -241,8 +252,21 @@ public class DocumentService_SendReceiveDvkTest_Integration {
 
         // Do asserts with Recipient
         if (containerInput.getRecipient() != null) {
-            Assert.notNull(containerOutput.getRecipient());
             Assert.isTrue(containerOutput.getRecipient().size() > 0);
+//            TODO: finish it later
+//            Map<String, OrganisationType> recipientsFromInputContainer = new HashMap<String, OrganisationType>();
+//            for (Recipient inputRecipient: containerInput.getRecipient()) {
+//                recipientsFromInputContainer.put(inputRecipient.getOrganisation().getOrganisationCode(), inputRecipient.getOrganisation());
+//            }
+//
+//            for (Recipient outputRecipient: containerOutput.getRecipient()) {
+//                String outputRecipientOrgCode = Utils.addPrefixIfNecessary(outputRecipient.getOrganisation().getOrganisationCode());
+//                Assert.isTrue(recipientsFromInputContainer.containsKey(outputRecipientOrgCode));
+//                OrganisationType inputRecipientOrganisation = recipientsFromInputContainer.get(outputRecipientOrgCode);
+//                OrganisationType outputRecipientOrganisation = outputRecipient.getOrganisation();
+//                DocumentSharing documentSharing = documentSharings.iterator().next();
+//                AditUser recipient = documentService.getAditUserDAO().getUserByID(containerInput.getTransport().getDecRecipient().get(0).getOrganisationCode());
+//            }
             DocumentSharing documentSharing = documentSharings.iterator().next();
             List<Recipient> recipientsFromContainer = containerOutput.getRecipient();
 

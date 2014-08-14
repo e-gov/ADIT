@@ -8,6 +8,10 @@
             <OrganisationCode>EE70006317</OrganisationCode>
             <PersonalIdCode>EE39105200028</PersonalIdCode>
         </DecRecipient>
+        <DecRecipient>
+            <OrganisationCode>EE10391131</OrganisationCode>
+            <PersonalIdCode>EE37802080024</PersonalIdCode>
+        </DecRecipient>
     </Transport>
     <RecordCreator>
         <Person>
@@ -72,6 +76,14 @@
             <Residency>EE</Residency>
         </Organisation>
         <MessageForRecipient>Test message for recipient</MessageForRecipient>
+    </Recipient>
+    <Recipient>
+        <Organisation>
+            <Name>IceFire Test company</Name>
+            <OrganisationCode>EE10391131</OrganisationCode>
+            <Residency>EE</Residency>
+        </Organisation>
+        <MessageForRecipient>Test message for recipient IceFire</MessageForRecipient>
     </Recipient>
     <RecordMetadata>
         <RecordGuid>25892e17-80f6-415f-9c65-7395632f0234</RecordGuid>
