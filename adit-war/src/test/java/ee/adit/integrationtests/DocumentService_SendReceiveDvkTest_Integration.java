@@ -121,7 +121,7 @@ public class DocumentService_SendReceiveDvkTest_Integration {
     // Test sendDocumentToDVKClient with container v 2.1
     //
     @Test
-    @Parameters({"containerVer2_1-ddoc.xml"})
+    @Parameters({"containerVer2_1-ddoc.xml", "containerVer2_1.xml"})
     public void sendDocumentToDVKClient_V2_Test(String containerFileName) throws Exception {
         final String DIGIDOC_CONF_FILE = "/jdigidoc.cfg";
 
@@ -306,6 +306,9 @@ public class DocumentService_SendReceiveDvkTest_Integration {
         if (containerInput.getAccess() != null) {
             Assert.isTrue(Utils.compareStringsIgnoreCase(containerOutput.getAccess().getAccessConditionsCode(),
                     ACCESS_CONDITIONS_CODE));
+            Assert.notNull(containerOutput.getAccess());
+            Assert.isTrue(Utils.compareStringsIgnoreCase(containerInput.getInternalVersion().toString(),
+                    containerOutput.getInternalVersion().toString()));
         }
 
         // Do asserts with SignatureMetaData (if it's DDOC Container)
@@ -321,25 +324,25 @@ public class DocumentService_SendReceiveDvkTest_Integration {
         }
 
         // Do asserts with an input file and output file
+        Assert.notNull(containerInput.getFile());
+        Assert.notNull(containerOutput.getFile());
         Assert.notNull(containerInput.getFile().size() > 0);
         Assert.notNull(containerOutput.getFile().size() > 0);
-        dvk.api.container.v2_1.File fileInput = containerInput.getFile().get(0);
-        dvk.api.container.v2_1.File fileOutput = containerOutput.getFile().get(0);
-        Assert.notNull(fileInput);
-        Assert.notNull(fileOutput);
         //TODO: Problem is here. Look ADIT-1 problem
-//      Assert.isTrue(Utils.compareStringsIgnoreCase(fileInput.getFileName(), fileOutput.getFileName()));
-//      Assert.isTrue(Utils.compareStringsIgnoreCase(fileInput.getFileGuid(), fileOutput.getFileGuid()));
-//      Assert.isTrue(fileInput.getFileSize().equals(fileOutput.getFileSize()));
-//      Assert.isTrue(Utils.compareStringsIgnoreCase(fileInput.getMimeType(), fileOutput.getMimeType()));
-//      String fileInputAfterUnbaseAndUnpack = Utils.unbaseAndUnpackData(fileInput.getZipBase64Content());
-//      String fileOutputAfterUnbaseAndUnpack = Utils.unbaseAndUnpackData(fileOutput.getZipBase64Content());
-//      Assert.isTrue(Utils.compareStringsIgnoreCase(fileInput.getZipBase64Content().replaceAll("            ", ""), fileOutput.getZipBase64Content()));
-
-        // Do container version assert
-        Assert.notNull(containerOutput.getAccess());
-        Assert.isTrue(Utils.compareStringsIgnoreCase(containerInput.getInternalVersion().toString(),
-                containerOutput.getInternalVersion().toString()));
+//        Map<String, dvk.api.container.v2_1.File> filesFromInputContainer = new HashMap<String, dvk.api.container.v2_1.File>();
+//        for (dvk.api.container.v2_1.File inputFile : containerInput.getFile()) {
+//            filesFromInputContainer.put(inputFile.getFileGuid(), inputFile);
+//        }
+//
+//        for (dvk.api.container.v2_1.File outputFile : containerOutput.getFile()) {
+//            String outputFileCode = outputFile.getFileGuid();
+//            Assert.isTrue(filesFromInputContainer.containsKey(outputFileCode));
+//            dvk.api.container.v2_1.File inputFile = filesFromInputContainer.get(outputFileCode);
+//            Assert.isTrue(Utils.compareStringsIgnoreCase(inputFile.getFileName(), outputFile.getFileName()));
+//            Assert.isTrue(inputFile.getFileSize().equals(outputFile.getFileSize()));
+//            Assert.isTrue(Utils.compareStringsIgnoreCase(inputFile.getMimeType(), outputFile.getMimeType()));
+//            Assert.isTrue(Utils.compareStringsIgnoreCase(inputFile.getZipBase64Content(), outputFile.getZipBase64Content()));
+//        }
 
         // Finally, clean the messages
         dvkMessages.add(receivedDVKMessage);
