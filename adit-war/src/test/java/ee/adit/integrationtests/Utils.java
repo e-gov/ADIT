@@ -20,6 +20,7 @@ import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.dao.pojo.Signature;
 import ee.adit.dvk.converter.ContainerVer2_1ToDocumentConverterImpl;
 import ee.adit.service.DocumentService;
+import org.apache.commons.codec.binary.Base64InputStream;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.FlushMode;
@@ -29,19 +30,12 @@ import org.hibernate.Transaction;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Property;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import java.io.*;
 import java.sql.Blob;
 import java.sql.Clob;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
+import java.util.zip.GZIPInputStream;
 
 public class Utils {
 
@@ -60,6 +54,7 @@ public class Utils {
         Session documentSharingSession = null;
         Session documentFileSession = null;
         Transaction transaction;
+        FileInputStream unzippedDataFileInputStream = null;
 
         try {
             // Crate a PojoMessage just to use convert method. Put some information to this message
@@ -116,14 +111,20 @@ public class Utils {
             documentFile.setGuid(container.getFile().get(0).getFileGuid());
             documentFile.setContentType(container.getFile().get(0).getMimeType());
             documentFile.setFileSizeBytes((long) container.getFile().get(0).getFileSize());
+            documentFile.setDocumentFileTypeId(2L);
+            documentFile.setFileDataInDdoc(false);
 
             // Save this document file to the ADIT DB
             documentFileSession = documentService.getDocumentFileDAO().getSessionFactory().openSession();
             documentFileSession.setFlushMode(FlushMode.COMMIT);
             transaction = documentFileSession.beginTransaction();
+
             // Create a Blob
-            Blob fileData = Hibernate.createBlob(container.getFile().get(0).getZipBase64Content().getBytes(),
-                    documentFileSession);
+            String unzippedDataFileName = unbaseAndUnpackData(container.getFile().get(0).getZipBase64Content());
+            File unzippedDataFile = new File(unzippedDataFileName);
+            unzippedDataFileInputStream = new FileInputStream(unzippedDataFileName);
+            Blob fileData = Hibernate.createBlob(unzippedDataFileInputStream, unzippedDataFile.length(), documentFileSession);
+
             documentFile.setFileData(fileData);
             documentFileSession.save(documentFile);
             transaction.commit();
@@ -136,6 +137,7 @@ public class Utils {
             if (aditDBSession != null) aditDBSession.close();
             if (documentSharingSession != null) documentSharingSession.close();
             if (documentFileSession != null) documentFileSession.close();
+            unzippedDataFileInputStream.close();
         }
 
         return document;
@@ -299,6 +301,15 @@ public class Utils {
         logger.info("There are " + result.size() + " Documents with dvk_guid = " + documentGuid + "found in ADIT DB");
         return (result.isEmpty() ? null : result);
     }
+    
+    public List<PojoMessage> getDocumentFromDvkClientByGuid(String documentGuid) {
+        List<PojoMessage> result;
+        DetachedCriteria dt = DetachedCriteria.forClass(PojoMessage.class, "pojoMessage");
+        dt.add(Property.forName("pojoMessage.dhlGuid").eq(documentGuid));
+        result = documentService.getDvkDAO().getHibernateTemplate().findByCriteria(dt);
+        logger.info("There are " + result.size() + " Documents with dvk_guid = " + documentGuid + "found in DVK DB");
+        return (result.isEmpty() ? null : result);
+    }
 
     public Document getNonLazyInitializedDocument(Long docId) throws Exception {
         Document result = null;
@@ -446,5 +457,37 @@ public class Utils {
 
     public void setDocumentService(DocumentService documentService) {
         this.documentService = documentService;
+    }
+    
+    public static String unbaseAndUnpackData(String content) throws Exception {
+        String tmpDir = System.getProperty("java.io.tmpdir");
+        String unzippedDataFileName = tmpDir + "fromBase" + generateRandomFileName();
+        logger.debug("Unpack and unzip file name: " + unzippedDataFileName);
+
+        ByteArrayInputStream zipBase64ContentInputStream = new ByteArrayInputStream(
+                content.getBytes("UTF-8"));
+        Base64InputStream base64InputStream = new Base64InputStream(zipBase64ContentInputStream, false, 76, "\n".getBytes());
+
+
+        FileOutputStream unzippedDataFileOutputStream = new FileOutputStream(
+                unzippedDataFileName);
+        GZIPInputStream gzipInputStream = new GZIPInputStream(base64InputStream);
+        IOUtils.copy(gzipInputStream, unzippedDataFileOutputStream);
+        base64InputStream.close();
+        gzipInputStream.close();
+        zipBase64ContentInputStream.close();
+        unzippedDataFileOutputStream.close();
+
+        return unzippedDataFileName;
+    }
+
+    public static String generateRandomFileName() {
+        StringBuffer result = new StringBuffer();
+        Random r = new Random();
+        for (int i = 0; i < 30; i++) {
+            result.append(r.nextInt(10));
+        }
+        result.append(".dat");
+        return result.toString();
     }
 }
