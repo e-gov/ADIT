@@ -208,49 +208,56 @@ public class DocumentService_SendReceiveDvkTest_Integration {
         // Do asserts with DecMetaData
         Assert.isNull(containerOutput.getDecMetadata());
 
-        // Do asserts with RecordCreator
         AditUser sender = documentService.getAditUserDAO().getUserByID(containerInput.getTransport().getDecSender().getOrganisationCode());
-        Assert.notNull(sender);
-        Assert.notNull(containerOutput.getRecordCreator());
-        Assert.isTrue(Utils.compareStringsIgnoreCase(containerOutput.getRecordCreator().getOrganisation().getName(),
-                sender.getFullName()));
-        Assert.isTrue(Utils.compareStringsIgnoreCase(containerOutput.getRecordCreator().getOrganisation()
-                .getOrganisationCode(),
-                sender.getDvkOrgCode()));
-        Assert.isTrue(Utils.compareStringsIgnoreCase(containerOutput.getRecordCreator().getOrganisation().getResidency(),
-                sentAditDocument.getCreatorCode().substring(0, Math.min(sentAditDocument.getCreatorCode().length(), 2))));
-        Assert.isNull(containerOutput.getRecordCreator().getOrganisation().getStructuralUnit());
-        Assert.isNull(containerOutput.getRecordCreator().getOrganisation().getPositionTitle());
+
+        // Do asserts with RecordCreator
+        if (containerInput.getRecordCreator() != null) {
+            Assert.notNull(sender);
+            Assert.notNull(containerOutput.getRecordCreator());
+            Assert.isTrue(Utils.compareStringsIgnoreCase(containerOutput.getRecordCreator().getOrganisation().getName(),
+                    sender.getFullName()));
+            Assert.isTrue(Utils.compareStringsIgnoreCase(containerOutput.getRecordCreator().getOrganisation()
+                    .getOrganisationCode(),
+                    sender.getDvkOrgCode()));
+            Assert.isTrue(Utils.compareStringsIgnoreCase(containerOutput.getRecordCreator().getOrganisation().getResidency(),
+                    sentAditDocument.getCreatorCode().substring(0, Math.min(sentAditDocument.getCreatorCode().length(), 2))));
+            Assert.isNull(containerOutput.getRecordCreator().getOrganisation().getStructuralUnit());
+            Assert.isNull(containerOutput.getRecordCreator().getOrganisation().getPositionTitle());
+        }
 
         // Do asserts with RecordSenderToDec
-        Assert.notNull(containerOutput.getRecordSenderToDec());
-        Assert.notNull(containerOutput.getRecordSenderToDec().getOrganisation());
-        Assert.isTrue(Utils.compareStringsIgnoreCase(containerOutput.getRecordSenderToDec().getOrganisation().getName(),
-                sender.getFullName()));
-        Assert.isTrue(Utils.compareStringsIgnoreCase(containerOutput.getRecordSenderToDec().getOrganisation().getOrganisationCode(),
-                sender.getDvkOrgCode()));
-        Assert.isNull(containerOutput.getRecordSenderToDec().getOrganisation().getStructuralUnit());
-        Assert.isNull(containerOutput.getRecordSenderToDec().getOrganisation().getPositionTitle());
-        Assert.isTrue(Utils.compareStringsIgnoreCase(containerOutput.getRecordSenderToDec().getOrganisation().getResidency(),
-                sentAditDocument.getCreatorCode().substring(0, Math.min(sentAditDocument.getCreatorCode().length(), 2))));
+        if (containerInput.getRecordSenderToDec() != null) {
+            Assert.notNull(containerOutput.getRecordSenderToDec());
+            Assert.notNull(containerOutput.getRecordSenderToDec().getOrganisation());
+            Assert.isTrue(Utils.compareStringsIgnoreCase(containerOutput.getRecordSenderToDec().getOrganisation().getName(),
+                    sender.getFullName()));
+            Assert.isTrue(Utils.compareStringsIgnoreCase(containerOutput.getRecordSenderToDec().getOrganisation().getOrganisationCode(),
+                    sender.getDvkOrgCode()));
+            Assert.isNull(containerOutput.getRecordSenderToDec().getOrganisation().getStructuralUnit());
+            Assert.isNull(containerOutput.getRecordSenderToDec().getOrganisation().getPositionTitle());
+            Assert.isTrue(Utils.compareStringsIgnoreCase(containerOutput.getRecordSenderToDec().getOrganisation().getResidency(),
+                    sentAditDocument.getCreatorCode().substring(0, Math.min(sentAditDocument.getCreatorCode().length(), 2))));
+        }
 
         // Do asserts with Recipient
-        Assert.notNull(containerOutput.getRecipient());
-        Assert.isTrue(containerOutput.getRecipient().size() > 0);
-        DocumentSharing documentSharing = documentSharings.iterator().next();
-        List<Recipient> recipientsFromContainer = containerOutput.getRecipient();
+        if (containerInput.getRecipient() != null) {
+            Assert.notNull(containerOutput.getRecipient());
+            Assert.isTrue(containerOutput.getRecipient().size() > 0);
+            DocumentSharing documentSharing = documentSharings.iterator().next();
+            List<Recipient> recipientsFromContainer = containerOutput.getRecipient();
 
-        AditUser recipient = documentService.getAditUserDAO().getUserByID(containerInput.getTransport().getDecRecipient().get(0).getOrganisationCode());
-        Assert.notNull(recipient);
-        Assert.notNull(Utils.compareStringsIgnoreCase(containerOutput.getRecipient().get(0).getOrganisation().getName(),
-                recipient.getFullName()));
-        Assert.isTrue(Utils.compareStringsIgnoreCase(containerOutput.getRecipient().get(0).getMessageForRecipient(),
-                documentSharing.getComment()));
-        Assert.notNull(Utils.compareStringsIgnoreCase(containerOutput.getRecipient().get(0).getOrganisation().getOrganisationCode(),
-                recipient.getDvkOrgCode()));
-        String documentSharingUserCode = documentSharing.getUserCode();
-        Assert.isTrue(Utils.compareStringsIgnoreCase(containerOutput.getRecipient().get(0).getOrganisation().getResidency(),
-                documentSharingUserCode.substring(0, Math.min(documentSharingUserCode.length(), 2))));
+            AditUser recipient = documentService.getAditUserDAO().getUserByID(containerInput.getTransport().getDecRecipient().get(0).getOrganisationCode());
+            Assert.notNull(recipient);
+            Assert.notNull(Utils.compareStringsIgnoreCase(containerOutput.getRecipient().get(0).getOrganisation().getName(),
+                    recipient.getFullName()));
+            Assert.isTrue(Utils.compareStringsIgnoreCase(containerOutput.getRecipient().get(0).getMessageForRecipient(),
+                    documentSharing.getComment()));
+            Assert.notNull(Utils.compareStringsIgnoreCase(containerOutput.getRecipient().get(0).getOrganisation().getOrganisationCode(),
+                    recipient.getDvkOrgCode()));
+            String documentSharingUserCode = documentSharing.getUserCode();
+            Assert.isTrue(Utils.compareStringsIgnoreCase(containerOutput.getRecipient().get(0).getOrganisation().getResidency(),
+                    documentSharingUserCode.substring(0, Math.min(documentSharingUserCode.length(), 2))));
+        }
 
         // Do asserts with RecordMetaData
         Assert.notNull(containerOutput.getRecordMetadata());
@@ -272,8 +279,10 @@ public class DocumentService_SendReceiveDvkTest_Integration {
         }
 
         // Do asserts with Access
-        Assert.isTrue(Utils.compareStringsIgnoreCase(containerOutput.getAccess().getAccessConditionsCode(),
-                ACCESS_CONDITIONS_CODE));
+        if (containerInput.getAccess() != null) {
+            Assert.isTrue(Utils.compareStringsIgnoreCase(containerOutput.getAccess().getAccessConditionsCode(),
+                    ACCESS_CONDITIONS_CODE));
+        }
 
         // Do asserts with SignatureMetaData (if it's DDOC Container)
         if (Utils.compareStringsIgnoreCase(containerType, CONTAINER_TYPE_DDOC)) {
