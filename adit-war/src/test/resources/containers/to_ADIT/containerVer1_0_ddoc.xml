@@ -1,6 +1,6 @@
 <dhl:dokument xmlns:dhl="http://www.riik.ee/schemas/dhl"
               xmlns:ma="http://www.riik.ee/schemas/dhl-meta-automatic"
-              xmlns:mm="http://www.riik.ee/schemas/dhl-meta-manual"
+              xmlns:mm="http://www.riik.ee/schemas/dhl-meta-manual" xmlns:rkel="http://www.riik.ee/schemas/dhl/rkel_letter"
         >
     <dhl:metainfo>
         <ma:dhl_id>9415</ma:dhl_id>
@@ -34,6 +34,53 @@
             <dhl:nimi>Anneli Tammemae</dhl:nimi>
         </dhl:saatja>
     </dhl:transport>
+    <dhl:metaxml>
+        <rkel:Author/>
+        <rkel:Compilator>
+            <rkel:jobtitle/>
+            <rkel:firstname>Lauri</rkel:firstname>
+            <rkel:surname>Tammem?e</rkel:surname>
+            <rkel:telephone>3726630276</rkel:telephone>
+            <rkel:email>lauri.tammemae@ria.ee</rkel:email>
+        </rkel:Compilator>
+        <rkel:Addressees>
+            <rkel:Addressee>
+                <rkel:Organisation>
+                    <rkel:organisationName>Riigi Infos?steemi Amet</rkel:organisationName>
+                    <rkel:departmentName/>
+                </rkel:Organisation>
+            </rkel:Addressee>
+        </rkel:Addressees>
+        <rkel:LetterMetaData>
+            <rkel:OriginalIdentifier/>
+            <rkel:Type>Kiri</rkel:Type>
+            <rkel:SenderIdentifier>213465</rkel:SenderIdentifier>
+            <rkel:SignDate>2012-11-11</rkel:SignDate>
+            <rkel:Title>Ettepanek</rkel:Title>
+            <rkel:Language>EE</rkel:Language>
+            <rkel:Deadline/>
+            <rkel:AccessRights>
+                <rkel:Restriction>Avalik</rkel:Restriction>
+                <rkel:BeginDate/>
+                <rkel:EndDate/>
+                <rkel:Reason/>
+            </rkel:AccessRights>
+        </rkel:LetterMetaData>
+        <rkel:Signatures>
+            <rkel:Signature>
+                <rkel:Person>
+                    <rkel:jobtitle/>
+                    <rkel:firstname>Lauri</rkel:firstname>
+                    <rkel:surname>Tammem?e</rkel:surname>
+                    <rkel:telephone>3726630276</rkel:telephone>
+                    <rkel:email>lauri.tammemae@ria.ee</rkel:email>
+                </rkel:Person>
+                <rkel:SignatureData>
+                    <rkel:SignatureDate>2012-11-12</rkel:SignatureDate>
+                </rkel:SignatureData>
+            </rkel:Signature>
+        </rkel:Signatures>
+    </dhl:metaxml>
     <SignedDoc xmlns="http://www.sk.ee/DigiDoc/v1.3.0#" version="1.3" format="DIGIDOC-XML">
         <DataFile ContentType="EMBEDDED_BASE64" Filename="TEST1.ddoc" Id="D0" MimeType="application/octet-stream"
                   Size="44569">

@@ -138,11 +138,11 @@
 	<class name="dvk.api.container.SignatureInfo">
 		<map-to xml="SignatureData" ns-uri="http://www.riik.ee/schemas/dhl/rkel_letter" ns-prefix="rkel" />
 
-		<field name="signatureDate" type="date" handler="dvk.api.container.SignatureDateHandler">
+		<field name="signatureDate" type="string" handler="dvk.api.container.SignatureDateHandler">
 			<bind-xml name="SignatureDate" node="element" />
 		</field>
 
-		<field name="signatureTime" type="date" handler="dvk.api.container.SignatureTimeHandler">
+		<field name="signatureTime" type="string" handler="dvk.api.container.SignatureTimeHandler">
 			<bind-xml name="SignatureTime" node="element" />
 		</field>
 	</class>
