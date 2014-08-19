@@ -65,7 +65,12 @@ public class OutputDocumentFileBuilder {
                     tempDocument.setSysTempFile(decodedTempFile);
                     tempDocument.setContentType(dvkFile.getMimeType());
                     tempDocument.setName(dvkFile.getFileName());
-                    tempDocument.setSizeBytes(dvkFile.getFileSize().longValue());
+                    // according to xsd FileSize is optional
+                    if (dvkFile.getFileSize() != null) {
+                        tempDocument.setSizeBytes(dvkFile.getFileSize().longValue());
+                    } else {
+                        tempDocument.setSizeBytes(0L);
+                    }
                     tempDocument.setGuid(dvkFile.getFileGuid());
                     // Add the temporary file to the list
                     result.add(tempDocument);
