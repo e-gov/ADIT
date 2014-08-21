@@ -3,6 +3,7 @@ package ee.adit.dvk.converter.documentcontainer;
 import dvk.api.container.v2_1.File;
 import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.DocumentFile;
+import ee.adit.service.DocumentService;
 import ee.adit.util.Configuration;
 import ee.adit.util.Util;
 import org.apache.log4j.Logger;
@@ -40,13 +41,18 @@ public class FileBuilder {
 
         if (document.getDocumentFiles() != null) {
             for (DocumentFile documentFile: document.getDocumentFiles()) {
-                File file = new File();
-                file.setFileGuid(documentFile.getGuid());
-                file.setFileName(documentFile.getFileName());
-                file.setFileSize(documentFile.getFileSizeBytes().intValue());
-                file.setMimeType(documentFile.getContentType());
-                file.setZipBase64Content(getGZippedBase64FileContent(documentFile));
-                files.add(file);
+                // Check should these files be sent
+                if ((documentFile.getFileDataInDdoc() == null || !documentFile.getFileDataInDdoc()) &&
+                   ((documentFile.getDocumentFileTypeId() == DocumentService.FILETYPE_SIGNATURE_CONTAINER) ||
+                    (documentFile.getDocumentFileTypeId() == DocumentService.FILETYPE_DOCUMENT_FILE))) {
+                        File file = new File();
+                        file.setFileGuid(documentFile.getGuid());
+                        file.setFileName(documentFile.getFileName());
+                        file.setFileSize(documentFile.getFileSizeBytes().intValue());
+                        file.setMimeType(documentFile.getContentType());
+                        file.setZipBase64Content(getGZippedBase64FileContent(documentFile));
+                        files.add(file);
+                }
             }
         }
 
@@ -67,5 +73,4 @@ public class FileBuilder {
 
         return result;
     }
-
 }

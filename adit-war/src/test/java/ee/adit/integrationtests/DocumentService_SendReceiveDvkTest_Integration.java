@@ -32,6 +32,9 @@ import org.springframework.test.context.TestContextManager;
 import org.springframework.util.Assert;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.GregorianCalendar;
@@ -216,7 +219,7 @@ public class DocumentService_SendReceiveDvkTest_Integration {
                     documentService.getAditUserDAO().getUserByID(inputDecRecipient.getOrganisationCode()).getDvkOrgCode()));
         }
 
-        // Do asserts with DecMetaData
+        // Do asserts with DecMetaData blocks
         Assert.isNull(containerOutput.getDecMetadata());
 
         AditUser sender = documentService.getAditUserDAO().getUserByID(containerInput.getTransport().getDecSender().getOrganisationCode());
@@ -250,7 +253,7 @@ public class DocumentService_SendReceiveDvkTest_Integration {
                     sentAditDocument.getCreatorCode().substring(0, Math.min(sentAditDocument.getCreatorCode().length(), 2))));
         }
 
-        // Do asserts with Recipient
+        // Do asserts with Recipients
         if (containerInput.getRecipient() != null) {
             Assert.isTrue(containerOutput.getRecipient().size() > 0);
             Map<String, Recipient> recipientsFromInputContainer = new HashMap<String, Recipient>();
@@ -321,26 +324,28 @@ public class DocumentService_SendReceiveDvkTest_Integration {
                     containerOutput.getSignatureMetadata().get(0).getSigner()));
         }
 
-        // Do asserts with an input file and output file
+        // Do asserts with input and output files
         Assert.notNull(containerInput.getFile());
         Assert.notNull(containerOutput.getFile());
         Assert.notNull(containerInput.getFile().size() > 0);
         Assert.notNull(containerOutput.getFile().size() > 0);
-        //TODO: Problem is here. Look ADIT-1 problem
-//        Map<String, dvk.api.container.v2_1.File> filesFromInputContainer = new HashMap<String, dvk.api.container.v2_1.File>();
-//        for (dvk.api.container.v2_1.File inputFile : containerInput.getFile()) {
-//            filesFromInputContainer.put(inputFile.getFileGuid(), inputFile);
-//        }
-//
-//        for (dvk.api.container.v2_1.File outputFile : containerOutput.getFile()) {
-//            String outputFileCode = outputFile.getFileGuid();
-//            Assert.isTrue(filesFromInputContainer.containsKey(outputFileCode));
-//            dvk.api.container.v2_1.File inputFile = filesFromInputContainer.get(outputFileCode);
-//            Assert.isTrue(Utils.compareStringsIgnoreCase(inputFile.getFileName(), outputFile.getFileName()));
-//            Assert.isTrue(inputFile.getFileSize().equals(outputFile.getFileSize()));
-//            Assert.isTrue(Utils.compareStringsIgnoreCase(inputFile.getMimeType(), outputFile.getMimeType()));
-//            Assert.isTrue(Utils.compareStringsIgnoreCase(inputFile.getZipBase64Content(), outputFile.getZipBase64Content()));
-//        }
+        Map<String, dvk.api.container.v2_1.File> filesFromInputContainer = new HashMap<String, dvk.api.container.v2_1.File>();
+        for (dvk.api.container.v2_1.File inputFile : containerInput.getFile()) {
+            filesFromInputContainer.put(inputFile.getFileGuid(), inputFile);
+        }
+
+        for (dvk.api.container.v2_1.File outputFile : containerOutput.getFile()) {
+            String outputFileCode = outputFile.getFileGuid();
+            Assert.isTrue(filesFromInputContainer.containsKey(outputFileCode));
+            dvk.api.container.v2_1.File inputFile = filesFromInputContainer.get(outputFileCode);
+            Assert.isTrue(Utils.compareStringsIgnoreCase(inputFile.getFileName(), outputFile.getFileName()));
+            Assert.isTrue(inputFile.getFileSize().equals(outputFile.getFileSize()));
+            Assert.isTrue(Utils.compareStringsIgnoreCase(inputFile.getMimeType(), outputFile.getMimeType()));
+            // Compare input and output files as byte arrays
+            Path inputFilePath = Paths.get(Utils.unbaseAndUnpackData(inputFile.getZipBase64Content()));
+            Path outputFilePath = Paths.get(Utils.unbaseAndUnpackData(outputFile.getZipBase64Content()));
+            Assert.isTrue(Utils.compareByteArray(Files.readAllBytes(inputFilePath), Files.readAllBytes(outputFilePath)));
+        }
 
         // Finally, clean the messages
         dvkMessages.add(receivedDVKMessage);

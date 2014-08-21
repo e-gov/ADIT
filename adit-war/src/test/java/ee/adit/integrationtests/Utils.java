@@ -109,30 +109,30 @@ public class Utils {
                     container.getRecipient().get(0).getMessageForRecipient());
             }
 
-            // Create a document file, related with this document
-            documentFile = new DocumentFile();
-            documentFile.setDocument(document);
-            documentFile.setFileName(container.getFile().get(0).getFileName());
-            documentFile.setGuid(container.getFile().get(0).getFileGuid());
-            documentFile.setContentType(container.getFile().get(0).getMimeType());
-            documentFile.setFileSizeBytes((long) container.getFile().get(0).getFileSize());
-            documentFile.setDocumentFileTypeId(2L);
-            documentFile.setFileDataInDdoc(false);
+            // Create a Blob for all files
+            for (dvk.api.container.v2_1.File fileToInsert : container.getFile()) {
+                // Create a document file, related with this document
+                documentFile = new DocumentFile();
+                documentFile.setDocument(document);
+                documentFile.setFileName(fileToInsert.getFileName());
+                documentFile.setGuid(fileToInsert.getFileGuid());
+                documentFile.setContentType(fileToInsert.getMimeType());
+                documentFile.setFileSizeBytes((long) fileToInsert.getFileSize());
+                documentFile.setDocumentFileTypeId(2L);
+                documentFile.setFileDataInDdoc(false);
 
-            // Save this document file to the ADIT DB
-            documentFileSession = documentService.getDocumentFileDAO().getSessionFactory().openSession();
-            documentFileSession.setFlushMode(FlushMode.COMMIT);
-            transaction = documentFileSession.beginTransaction();
-
-            // Create a Blob
-            String unzippedDataFileName = unbaseAndUnpackData(container.getFile().get(0).getZipBase64Content());
-            File unzippedDataFile = new File(unzippedDataFileName);
-            unzippedDataFileInputStream = new FileInputStream(unzippedDataFileName);
-            Blob fileData = Hibernate.createBlob(unzippedDataFileInputStream, unzippedDataFile.length(), documentFileSession);
-
-            documentFile.setFileData(fileData);
-            documentFileSession.save(documentFile);
-            transaction.commit();
+                // Save this document file to the ADIT DB
+                documentFileSession = documentService.getDocumentFileDAO().getSessionFactory().openSession();
+                documentFileSession.setFlushMode(FlushMode.COMMIT);
+                transaction = documentFileSession.beginTransaction();
+                String unzippedDataFileName = unbaseAndUnpackData(fileToInsert.getZipBase64Content());
+                File unzippedDataFile = new File(unzippedDataFileName);
+                unzippedDataFileInputStream = new FileInputStream(unzippedDataFileName);
+                Blob fileData = Hibernate.createBlob(unzippedDataFileInputStream, unzippedDataFile.length(), documentFileSession);
+                documentFile.setFileData(fileData);
+                documentFileSession.save(documentFile);
+                transaction.commit();
+            }
 
         } catch (Exception ex) {
             logger.error("prepareAndSaveAditDocument() - exception: " + ex.getMessage());
