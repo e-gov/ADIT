@@ -1,9 +1,11 @@
+1.0.75
+- ADIT-12 castor mappings updated
+
 1.0.74
 - ADIT-15
 - ADIT-14 (12289 fixed)
 - DVK-API 1.0.11 kasutusele võtmine
 - ADIT-16
-- ADIT-12 castor mappings updated
 
 
 1.0.73
