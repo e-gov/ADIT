@@ -27,6 +27,10 @@
 		<field name="signatures" type="dvk.api.container.ArrayOfSignature">
 			<bind-xml name="rkel:Signatures" node="element" xmlns:rkel="http://www.riik.ee/schemas/dhl/rkel_letter" />
 		</field>
+
+        <field name="signeddoc" type="string">
+            <bind-xml name="rkel:signeddoc" node="element" xmlns:rkel="http://www.riik.ee/schemas/dhl/rkel_letter" />
+        </field>
 	</class>
 	<!--
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -122,7 +126,7 @@
 	<class name="dvk.api.container.IntellectualPropertyRights">
 		<map-to xml="IntellectualPropertyRights" ns-uri="http://www.riik.ee/schemas/dhl/rkel_letter" ns-prefix="rkel" />
 
-		<field name="copyrightEndDate" type="date">
+		<field name="copyrightEndDate" type="string" handler="dvk.api.container.IntellectualPropertyRightsCopyrightEndDateHander">
 			<bind-xml name="CopyrightEndDate" node="element" />
 		</field>
 
@@ -186,11 +190,11 @@
 			<bind-xml name="Restriction" node="element" />
 		</field>
 
-		<field name="beginDate" type="date">
+		<field name="beginDate" type="string" handler="dvk.api.container.AccessRightsBeginDateHandler">
 			<bind-xml name="BeginDate" node="element" />
 		</field>
 
-		<field name="endDate" type="date">
+		<field name="endDate" type="string" handler="dvk.api.container.AccessRightsEndDateHandler">
 			<bind-xml name="EndDate" node="element" />
 		</field>
 
@@ -246,8 +250,8 @@
 			<bind-xml name="Title" node="element" />
 		</field>
 
-		<field name="deadline" type="date">
-			<bind-xml name="" node="element" />
+		<field name="deadline" type="string" handler="dvk.api.container.LetterMetadataDeadlineHandler">
+			<bind-xml name="Deadline" node="element" />
 		</field>
 
 		<field name="enclosure" type="dvk.api.container.Enclosure">

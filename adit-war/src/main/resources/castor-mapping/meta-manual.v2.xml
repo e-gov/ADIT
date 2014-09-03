@@ -236,11 +236,11 @@
 			<bind-xml name="piirang" node="element" />
 		</field>
 
-		<field name="piirangAlgus" type="date">
+		<field name="piirangAlgus" type="string" handler="dvk.api.container.v2.JuurdepaasPiirangPiirangAlgusHandler">
 			<bind-xml name="piirang_algus" node="element" />
 		</field>
 
-		<field name="piirangLopp" type="date">
+		<field name="piirangLopp" type="string" handler="dvk.api.container.v2.JuurdepaasPiirangPiirangLoppHandler">
 			<bind-xml name="piirang_lopp" node="element" />
 		</field>
 

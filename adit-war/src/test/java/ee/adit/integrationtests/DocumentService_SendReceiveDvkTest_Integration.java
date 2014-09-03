@@ -354,6 +354,30 @@ public class DocumentService_SendReceiveDvkTest_Integration {
 
     private List<ReceiveFromDvkTestParameter> parametersForReceiveDocumentFromDVKClient_Container_1_0_Test() {
         List<ReceiveFromDvkTestParameter> parametersList = new ArrayList<ReceiveFromDvkTestParameter>();
+        parametersList.add(new ReceiveFromDvkTestParameter(
+                "ADIT_12_vigane_dok_1.xml",
+                Arrays.asList(new ContainerFile(false, null, "evorm.ddoc", 18402L)),
+                null,
+                null
+        ));
+        parametersList.add(new ReceiveFromDvkTestParameter(
+                "ADIT_12_vigane_dok_2.xml",
+                Arrays.asList(new ContainerFile(false, null, "evorm.ddoc", 17584L)),
+                null,
+                null
+        ));
+        parametersList.add(new ReceiveFromDvkTestParameter(
+                "ADIT_12_vigane_dok_3.xml",
+                Arrays.asList(new ContainerFile(false, null, "evorm.ddoc", 20175L)),
+                null,
+                null
+        ));
+        parametersList.add(new ReceiveFromDvkTestParameter(
+                "ADIT_12_vigane_dok_4.xml",
+                Arrays.asList(new ContainerFile(false, null, "14U-SR1179.ddoc", 58273L)),
+                null,
+                null
+        ));
         parametersList.add(
                 new ReceiveFromDvkTestParameter(
                         "containerVer1_0_ddoc.xml",
@@ -386,6 +410,7 @@ public class DocumentService_SendReceiveDvkTest_Integration {
                         null,//no files in ddoc
                         null //no signatures
                 ));
+
         return parametersList;
     }
 
@@ -431,8 +456,8 @@ public class DocumentService_SendReceiveDvkTest_Integration {
                 "Document.CreatorCode expected:" + Utils.addPrefixIfNecessary(container.getTransport().getSaatjad().get(0).getRegNr()) + ", actual:" + aditDocument.getCreatorCode());
         if (dvkMessage.getSenderOrgName() != null && !dvkMessage.getSenderOrgName().isEmpty()) {
             Assert.isTrue(Utils.compareStringsIgnoreCase(aditDocument.getCreatorName(), dvkMessage.getSenderOrgName()),
-                    "Document.CreatorName expected:" + dvkMessage.getSenderOrgName() + ", actual:" + aditDocument.getCreatorName() +
-                            "Document.CreatorName expected:" + dvkMessage.getSenderOrgName().hashCode() + ", actual:" + aditDocument.getCreatorName().hashCode());
+                    " Document.CreatorName expected:" + dvkMessage.getSenderOrgName() + ", actual:" + aditDocument.getCreatorName() +
+                            " Document.CreatorName expected:" + dvkMessage.getSenderOrgName().hashCode() + ", actual:" + aditDocument.getCreatorName().hashCode());
         }
         Assert.isTrue(Utils.isToday(aditDocument.getCreationDate()),
                 "Document.CreationDate expected: current day, actual:" + aditDocument.getCreationDate());
