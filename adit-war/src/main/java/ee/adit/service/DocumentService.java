@@ -3635,7 +3635,6 @@ public class DocumentService {
                 // who executed current query
                 String certPersonalIdCode = Util.getSubjectSerialNumberFromCert(cert);
                 String userCodeWithoutCountryPrefix = Util.getPersonalIdCodeWithoutCountryPrefix(xroadUser.getUserCode());
-                ;
                 if (!userCodeWithoutCountryPrefix.equalsIgnoreCase(certPersonalIdCode)) {
                     logger.info("Attempted to sign document " + documentId + " by person \"" + certPersonalIdCode
                             + "\" while logged in as person \"" + userCodeWithoutCountryPrefix + "\"");
@@ -3848,6 +3847,7 @@ public class DocumentService {
                 signatureContainerDraft.setFileSizeBytes(length);
                 signatureContainerDraft.setFileData(containerData);
                 signatureContainerDraft.setLastModifiedDate(new Date());
+                signatureContainerDraft.setGuid(UUID.randomUUID().toString());
 
                 doc.setLocked(true);
                 doc.setLockingDate(new Date());
@@ -4141,6 +4141,7 @@ public class DocumentService {
                 signatureContainer.setDocument(doc);
                 signatureContainer.setDocumentFileTypeId(FILETYPE_SIGNATURE_CONTAINER);
                 signatureContainer.setFileName(Util.convertToLegalFileName(doc.getTitle(), "ddoc", null));
+                signatureContainer.setGuid(UUID.randomUUID().toString());
                 doc.getDocumentFiles().add(signatureContainer);
             }
             signatureContainer.setFileSizeBytes(length);
