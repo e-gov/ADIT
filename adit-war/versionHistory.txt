@@ -1,3 +1,7 @@
+1.0.76
+- ADIT-15
+- Old DVK-Api versions removed
+
 1.0.75
 - ADIT-12 castor mappings updated
 
