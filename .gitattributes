@@ -85,7 +85,6 @@ adit-war/doc/testMessages/shareDocument.v1/shareDocument.v1.xml -text
 adit-war/doc/testMessages/unJoin.v1.xml -text
 adit-war/doc/weblogic-readme.txt -text
 adit-war/doc/xtee_generate_objects_readme.txt -text
-adit-war/lib/JDigiDoc.jar -text
 adit-war/lib/NagiosAppender-1.5.1.jar -text
 adit-war/lib/antlr-2.7.6.jar -text
 adit-war/lib/asm-attrs.jar -text
@@ -118,6 +117,7 @@ adit-war/lib/javassist-3.9.0.GA.jar -text
 adit-war/lib/jce-1_2_2.zip -text
 adit-war/lib/jce_policy-1_4_2.zip -text
 adit-war/lib/jdcerts.jar -text
+adit-war/lib/jdigidoc-3.8.1-709.jar -text
 adit-war/lib/jta-1.1.jar -text
 adit-war/lib/log4j-1.2.16.jar -text
 adit-war/lib/ojdbc6.jar -text
