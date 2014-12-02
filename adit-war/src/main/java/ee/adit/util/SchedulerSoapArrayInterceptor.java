@@ -1,5 +1,6 @@
 package ee.adit.util;
 
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -15,6 +16,7 @@ import org.springframework.ws.client.WebServiceClientException;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -66,10 +68,12 @@ public class SchedulerSoapArrayInterceptor implements ClientInterceptor {
     public boolean handleRequest(MessageContext mc) throws WebServiceClientException {
         if (mc.getRequest() instanceof SaajSoapMessage) {
             SOAPMessage msg = ((SaajSoapMessage) mc.getRequest()).getSaajMessage();
+            
             try {
                 addSoapEncAttributes(msg);
+                removeNamespacePrefixes(msg);
             } catch (Exception ex) {
-                logger.error(ex);
+                logger.error(ex, ex);
             }
         }
         return true;
@@ -290,6 +294,40 @@ public class SchedulerSoapArrayInterceptor implements ClientInterceptor {
         } catch (Exception ex) {
             logger.error(ex);
             return "";
+        }
+    }
+    
+    
+    /**
+     * Remove namespace prefixes from SOAP body.
+     * 
+     * @param body SOAP body
+     * @throws ParserConfigurationException
+     */
+    private void removeNamespacePrefixes(SOAPMessage msg) throws SOAPException  {
+    	SOAPBody body = msg.getSOAPBody();
+        logger.debug("Removing namespace prefixes...");
+        Node fc = body.getFirstChild();
+        renameNamespaceRecursive(fc, fc.getNamespaceURI());
+
+    }
+        
+    public static void renameNamespaceRecursive(Node node, String namespace) {
+        Document document = node.getOwnerDocument();
+        if (node.getNodeType() == Node.ELEMENT_NODE && !node.getNodeName().equals("teav:lisaSyndmus")) {
+        	String nodeName = node.getNodeName();
+        	if(nodeName.equals("teav:lugejad")) {
+        		Element el = (Element) node;
+        		el.removeAttribute("SOAP-ENC:arrayType");
+        		el.removeAttribute("xsi:type");
+        	}
+        	nodeName = nodeName.substring(5);
+            document.renameNode(node, null, nodeName);
+            
+        }
+        NodeList list = node.getChildNodes();
+        for (int i = 0; i < list.getLength(); ++i) {
+            renameNamespaceRecursive(list.item(i), namespace);
         }
     }
 }
