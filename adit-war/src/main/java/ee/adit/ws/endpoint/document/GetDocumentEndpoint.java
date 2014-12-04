@@ -537,7 +537,7 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
                     new Object[] {}, Locale.ENGLISH);
             additionalInformationForLog = LogService.REQUEST_LOG_SUCCESS + ": " + additionalMessage;
 
-            if (request != null && request.isIncludeFileContents()) {
+            if (request != null && (request.isIncludeFileContents() != null && request.isIncludeFileContents())) {
                 additionalInformationForLog = additionalInformationForLog + ("(Including files)");
             }
 

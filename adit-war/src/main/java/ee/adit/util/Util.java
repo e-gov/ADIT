@@ -1,6 +1,7 @@
 package ee.adit.util;
 
 import java.io.BufferedInputStream;
+
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -103,6 +104,12 @@ public final class Util {
 
     
     public static final String DIGIDOC_STAMP_ISSUER = "KLASS3-SK";
+    
+    //extensions which are allowed to use
+    public static final String[] BDOC_FILE_EXTENSIONS = {"bdoc", "asice", "sce"};
+    public static final String BDOC_PRIMARY_EXTENSION = "bdoc";
+    public static final String DDOC_FILE_EXTENSION = "ddoc";
+    
     /**
      * Base64 encodes the specified string.
      *
@@ -497,6 +504,7 @@ public final class Util {
 
         return base64DecodedFile;
     }
+
 
     /**
      * Creates a temporary file from input stream.
@@ -1901,4 +1909,27 @@ public final class Util {
     public static String getSubjectSerialNumberFromCert (X509Certificate cert) {
     	return getDetailFromCert(cert, BCStyle.SERIALNUMBER);
     }
+    /**
+     * Determines if filename is BDOC
+     * @param filename
+     * @return
+     */
+    public static Boolean isBdocFile (String filename) {
+    	String extension = Util.getFileExtension(filename);
+    	return isBdocExtension(extension);
+    }
+    /**
+     * Determines if extension is BDOC
+     * @param extension
+     * @return
+     */
+    public static Boolean isBdocExtension (String extension) {
+    	for (String ext : BDOC_FILE_EXTENSIONS) {
+    		if(extension.equalsIgnoreCase(ext)) {
+    			return true;
+    		}
+    	}
+    	return false;
+    }
+    
 }

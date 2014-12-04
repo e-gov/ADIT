@@ -55,19 +55,30 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
     	
     	if (version == 1) {
             return v1(requestObject);
-        } else {
+        } if (version == 2) {
+            return v2(requestObject);
+        }else {
             throw new AditInternalException("This method does not support version specified: " + version);
         }
     }
-
+    
+    protected Object v1 (Object requestObject) {
+    	logger.debug("prepareSignature.v1 invoked.");
+    	return prepareSignature(requestObject, false);
+    }
+    
+    protected Object v2 (Object requestObject) {
+    	logger.debug("prepareSignature.v2 invoked.");
+    	return prepareSignature(requestObject, true);
+    }
     /**
-     * Executes "V1" version of "prepareSignature" request.
+     * Executes common logic vor V1 and V2 version of "prepareSignature" request.
      *
      * @param requestObject
      *            Request body object
      * @return Response body object
      */
-    protected Object v1(Object requestObject) {
+    protected Object prepareSignature(Object requestObject, Boolean preferBdoc) {
         PrepareSignatureResponse response = new PrepareSignatureResponse();
         ArrayOfMessage messages = new ArrayOfMessage();
         Calendar requestDate = Calendar.getInstance();
@@ -75,7 +86,7 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
         Long documentId = null;
 
         try {
-            logger.debug("prepareSignature.v1 invoked.");
+            
             InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream(getDigidocConfigurationFile());
             String jdigidocCfgTmpFile = Util.createTemporaryFile(input, getConfiguration().getTempDir());
             logger.debug("JDigidoc.cfg file created as a temporary file: '" + jdigidocCfgTmpFile + "'");
@@ -136,7 +147,7 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
             
             PrepareSignatureInternalResult sigResult = this.documentService.prepareSignature(doc.getId(), request
                     .getManifest(), request.getCountry(), request.getState(), request.getCity(), request.getZip(),
-                    certFile, jdigidocCfgTmpFile, this.getConfiguration().getTempDir(), xroadRequestUser);
+                    certFile, jdigidocCfgTmpFile, this.getConfiguration().getTempDir(), xroadRequestUser, preferBdoc);
 
             if (sigResult.isSuccess()) {
             	response.setSignatureId(sigResult.getSignatureId());

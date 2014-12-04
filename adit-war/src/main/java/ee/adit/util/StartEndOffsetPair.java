@@ -9,6 +9,7 @@ public class StartEndOffsetPair {
 	private long start;
 	private long end;
 	private byte[] dataMd5Hash;
+	private Boolean bdocOrigin = false;
 	
 	public long getStart() {
 		return start;
@@ -27,5 +28,11 @@ public class StartEndOffsetPair {
 	}
 	public void setDataMd5Hash(byte[] dataMd5Hash) {
 		this.dataMd5Hash = dataMd5Hash;
+	}
+	public Boolean getBdocOrigin() {
+		return bdocOrigin;
+	}
+	public void setBdocOrigin(Boolean bdocOrigin) {
+		this.bdocOrigin = bdocOrigin;
 	}
 }
