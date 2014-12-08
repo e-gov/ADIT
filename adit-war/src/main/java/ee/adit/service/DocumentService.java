@@ -3941,7 +3941,12 @@ public class DocumentService {
             for (int i = 0; i < dataFileCount; i++) {
                 DataFile df = sdoc.getDataFile(i);
                 if (df != null) {
-                    byte[] fileDigest = df.getDigest();
+                    byte[] fileDigest;
+                    if(sdoc.getFormat().equals(SignedDoc.FORMAT_BDOC)) {
+                    	fileDigest = df.getDigestValueOfType(SignedDoc.SHA256_DIGEST_TYPE);
+                    } else {
+                    	fileDigest = df.getDigest();
+                    }
                     String digestAsHexString = Util.convertToHexString(fileDigest);
                     result.getDataFileHash().add(new DataFileHash(df.getId(), digestAsHexString));
                 } else {
@@ -4134,22 +4139,34 @@ public class DocumentService {
             boolean isSignatureElement = false;
             String signatureValueAsString = new String(sigValue, "UTF-8");
             if (!Util.isNullOrEmpty(signatureValueAsString)
-                    && signatureValueAsString.startsWith("<Signature")) {
+                    && (signatureValueAsString.startsWith("<Signature") /*ddoc signature*/
+                    		|| signatureValueAsString.startsWith("<?xml") /*bdoc signature*/)) {
                 isSignatureElement = true;
             }
 
             String containerFileName = Util.generateRandomFileNameWithoutExtension();
             containerFileName = temporaryFilesDir + File.separator + containerFileName + "_CSv1.adit";
             if (isSignatureElement) {
-                // Write container to temporary file
-                sdoc.writeToFile(new File(containerFileName));
-
-                // Replace pending signature with confirmed signature
-                replaceSignatureInDigiDocContainer(containerFileName, sig.getId(), signatureValueAsString);
-
-                // Reload container
-                sdoc = factory.readSignedDoc(containerFileName);
-                sdoc.getSignature(activeSignatureIndex++);
+            	if(sdoc.getFormat().equals(SignedDoc.FORMAT_BDOC)) {
+            		try{
+            		 fs = new FileInputStream(signatureFileName);
+                     factory.readSignature(sdoc, fs);
+                     sdoc.removeSignature(activeSignatureIndex);
+                     sig = sdoc.getSignature(activeSignatureIndex++);
+                     sdoc.writeToFile(new File(containerFileName));   
+            		}finally {
+            			Util.safeCloseStream(fs);
+            		}
+            	} else {
+            		 // Write container to temporary file
+                    sdoc.writeToFile(new File(containerFileName));
+                    // Replace pending signature with confirmed signature
+                    replaceSignatureInDigiDocContainer(containerFileName, sig.getId(), signatureValueAsString);
+                    // Reload container
+                    sdoc = factory.readSignedDoc(containerFileName);
+                    sdoc.getSignature(activeSignatureIndex++);
+            	}
+            	
             } else {
                 // Decode signature value if it is HEX encoded
                 sigValue = convertSignatureValueToByteArray(sigValue);
