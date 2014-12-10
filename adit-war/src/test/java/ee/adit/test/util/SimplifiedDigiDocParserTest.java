@@ -42,7 +42,7 @@ public class SimplifiedDigiDocParserTest extends TestCase {
 	public void testFindDigiDocDataFileOffsets_3FilesNoSignatures() {
 		String pathToDigiDoc = (new File("target/test-classes/ValidDigiDoc_3Files_NoSignatures.ddoc")).getAbsolutePath();
 		try {
-			Hashtable<String,StartEndOffsetPair> result = SimplifiedDigiDocParser.findDigiDocDataFileOffsets(pathToDigiDoc, false);
+			Hashtable<String,StartEndOffsetPair> result = SimplifiedDigiDocParser.findDDocDataFileOffsets(pathToDigiDoc);
 			assertEquals(3, result.size());
 			
 			StartEndOffsetPair d0 = result.get("D0");
@@ -70,7 +70,7 @@ public class SimplifiedDigiDocParserTest extends TestCase {
 	public void testFindDigiDocDataFileOffsets_NoFilesNoSignatures() {
 		String pathToDigiDoc = (new File("target/test-classes/ValidDigiDoc_NoFiles_NoSignatures.ddoc")).getAbsolutePath();
 		try {
-			Hashtable<String,StartEndOffsetPair> result = SimplifiedDigiDocParser.findDigiDocDataFileOffsets(pathToDigiDoc, false);
+			Hashtable<String,StartEndOffsetPair> result = SimplifiedDigiDocParser.findDDocDataFileOffsets(pathToDigiDoc);
 			assertEquals(0, result.size());
 		} catch (Exception ex) {
 			fail(ex.getMessage());
