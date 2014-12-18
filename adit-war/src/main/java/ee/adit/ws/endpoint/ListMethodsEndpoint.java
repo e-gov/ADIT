@@ -67,6 +67,7 @@ public class ListMethodsEndpoint extends AbstractAditBaseEndpoint {
         result.addItem(producerName + ".markDocumentViewed.v1");
         result.addItem(producerName + ".modifyStatus.v1");
         result.addItem(producerName + ".prepareSignature.v1");
+        result.addItem(producerName + ".prepareSignature.v2");
         result.addItem(producerName + ".saveDocument.v1");
         result.addItem(producerName + ".saveDocumentFile.v1");
         result.addItem(producerName + ".sendDocument.v1");
