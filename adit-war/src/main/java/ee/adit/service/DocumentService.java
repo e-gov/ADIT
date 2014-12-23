@@ -4164,7 +4164,7 @@ public class DocumentService {
                     replaceSignatureInDigiDocContainer(containerFileName, sig.getId(), signatureValueAsString);
                     // Reload container
                     sdoc = factory.readSignedDoc(containerFileName);
-                    sdoc.getSignature(activeSignatureIndex++);
+                    sig = sdoc.getSignature(activeSignatureIndex++);
             	}
             	
             } else {
