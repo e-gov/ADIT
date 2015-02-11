@@ -25,6 +25,7 @@ public class FileBuilder {
 
     /**
      * Constructor.
+     *
      * @param document {@link Document}
      */
     public FileBuilder(final Document document, final Configuration configuration) {
@@ -34,24 +35,27 @@ public class FileBuilder {
 
     /**
      * Creates a list of {@link File}.
+     *
      * @return list of files
      */
     public List<File> build() {
         List<File> files = new ArrayList<File>();
 
         if (document.getDocumentFiles() != null) {
-            for (DocumentFile documentFile: document.getDocumentFiles()) {
+            for (DocumentFile documentFile : document.getDocumentFiles()) {
                 // Check should these files be sent
+                // Take files that are not DDOC files, not deleted, and file type is FILETYPE_SIGNATURE_CONTAINER or FILETYPE_DOCUMENT_FILE
                 if ((documentFile.getFileDataInDdoc() == null || !documentFile.getFileDataInDdoc()) &&
-                   ((documentFile.getDocumentFileTypeId() == DocumentService.FILETYPE_SIGNATURE_CONTAINER) ||
-                    (documentFile.getDocumentFileTypeId() == DocumentService.FILETYPE_DOCUMENT_FILE))) {
-                        File file = new File();
-                        file.setFileGuid(documentFile.getGuid());
-                        file.setFileName(documentFile.getFileName());
-                        file.setFileSize(documentFile.getFileSizeBytes().intValue());
-                        file.setMimeType(documentFile.getContentType());
-                        file.setZipBase64Content(getGZippedBase64FileContent(documentFile));
-                        files.add(file);
+                        (documentFile.getDeleted() == null || !documentFile.getDeleted()) &&
+                        ((documentFile.getDocumentFileTypeId() == DocumentService.FILETYPE_SIGNATURE_CONTAINER) ||
+                        (documentFile.getDocumentFileTypeId() == DocumentService.FILETYPE_DOCUMENT_FILE))) {
+                    File file = new File();
+                    file.setFileGuid(documentFile.getGuid());
+                    file.setFileName(documentFile.getFileName());
+                    file.setFileSize(documentFile.getFileSizeBytes().intValue());
+                    file.setMimeType(documentFile.getContentType());
+                    file.setZipBase64Content(getGZippedBase64FileContent(documentFile));
+                    files.add(file);
                 }
             }
         }
