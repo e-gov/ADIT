@@ -97,8 +97,9 @@ CREATE TABLE &&ADIT_SCHEMA..DOCUMENT
     invisible_to_owner      NUMBER(1,0) NULL,           /* Indicates if this document has been made invisible to its owner. Is used when document has been sent to someone else and owner wants to delete it from his/her own view. */
     signed                  NUMBER(1,0) NULL,           /* Indicates if this document has been signed. */
     migrated                NUMBER (1,0),               /* Indicates if this document has been migrated from state portal */
+    eform_use_id            NUMBER(12,0),               /* E-form ID. Is used only in case of E-form */
     files_size_bytes        NUMBER(18,0) DEFAULT 0,     /* Total size of files in bytes, needed for transient mapping */
-    sender_receiver         VARCHAR(50)                 /* Sender/receiver transient column, needed for transient mapping */
+    sender_receiver         VARCHAR2(50)                /* Sender/receiver transient column, needed for transient mapping */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
 COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT                          IS 'Document data';
@@ -126,6 +127,7 @@ COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.deleted                 IS 'Indicates 
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.invisible_to_owner      IS 'Indicates if this document has been made invisible to its owner. Is used when document has been sent to someone else and owner wants to delete it from his/her own view.';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.signed                  IS 'Indicates if this document has been signed.';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.migrated                IS 'Indicates if this document has been migrated from state portal';
+COMMENT ON COLUMN &&ADIT_SCHEMA..document.eform_use_id            IS 'EFORM usage ID. Filled only when document type is EFORM.';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.files_size_bytes        IS 'Total size of files in bytes, needed for transient mapping';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT.sender_receiver         IS 'Sender/receiver transient column, needed for transient mapping';
 
@@ -152,10 +154,10 @@ CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_FILE
     deleted                      NUMBER(1) DEFAULT 0,               /* Indicates if this file is deleted (contents removed) */
     document_file_type_id        NUMBER(18) DEFAULT (1) NOT NULL,   /* File type ID */
     file_data_in_ddoc            NUMBER(1,0) NULL,                  /* Shows whether or not file contents should be aquired from signature container */
-    ddoc_datafile_id             VARCHAR2(5) NULL,                  /* ID of corresponding DataFile in signature container */
+    ddoc_datafile_id             VARCHAR2(200) NULL,                /* ID of corresponding DataFile in signature container */
     ddoc_datafile_start_offset   NUMBER(18) NULL,                   /* First character index of current file in corresponding signature container */
     ddoc_datafile_end_offset     NUMBER(18) NULL,                   /* Last character index of current file in corresponding signature container */
-    last_modified_date           DATE                               /* Date and time of last modification */
+    last_modified_date           DATE NULL                          /* Date and time of last modification */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
 COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_FILE                               IS 'Document files';
@@ -226,9 +228,11 @@ CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING
     creation_date     DATE,                        /* Date and time of sharing */
     dvk_status_id     NUMBER(12),                  /* DEC status ID of document. Is used when document has been sent using DEC */
     wf_status_id      NUMBER(12),                  /* Workflow status ID. Is used for feedback from recipient to sender. */
-    last_access_date  DATE,                        /* Date and time the document was last accessed by recipient. */
-	deleted           NUMBER(1,0) NULL,            /* Document has been deleted by the user to whom it was sent. */
-	dvk_folder		  VARCHAR2(1000)			   /* DVK dokumendi kausta nimi */	
+    first_access_date DATE,                        /* Date and time the document was first time accessed by recipient. */
+	  deleted           NUMBER(1,0) NULL,            /* Document has been deleted by the user to whom it was sent. */
+	  dvk_folder	  	  VARCHAR2(1000),	             /* DVK dokumendi kausta nimi */
+	  dvk_id            NUMBER (12, 0),
+	  comment_text      CLOB                         /* Hange_149265_276141_Lisa 1 */
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
 COMMENT ON TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING                    IS 'Document sharing data';
@@ -241,9 +245,9 @@ COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.task_description  IS 'Purpose 
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.creation_date     IS 'Date and time of sharing';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.dvk_status_id     IS 'DEC status ID of document. Is used when document has been sent using DEC';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.wf_status_id      IS 'Workflow status ID. Is used for feedback from recipient to sender.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.last_access_date  IS 'Date and time the document was last accessed by recipient.';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.first_access_date IS 'Date and time the document was first time accessed by recipient.';
 COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.deleted           IS 'Document has been deleted by the user to whom it was sent.';
-COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.dvk_folder		IS 'DVK dokumendi kausta nimi';
+COMMENT ON COLUMN &&ADIT_SCHEMA..DOCUMENT_SHARING.dvk_folder		    IS 'DVK dokumendi kausta nimi';
 
 CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING_TYPE
 (
@@ -382,8 +386,8 @@ CREATE TABLE &&ADIT_SCHEMA..SIGNATURE
     ID              NUMBER(12) NOT NULL,             /* Unique identifier */
     user_code       VARCHAR2(50),                    /* Code of user who gave this signature */
     document_id     NUMBER(12) NOT NULL,             /* ID of document this signature belongs to */
-    signer_role     VARCHAR2(200),                    /* Signers role */
-    resolution      VARCHAR2(200),                   /* Signers resolution */
+    signer_role     VARCHAR2(200 BYTE),                    /* Signers role */
+    resolution      VARCHAR2(200 BYTE),                   /* Signers resolution */
     country         VARCHAR2(100),                   /* Signature production place - country */
     county          VARCHAR2(100),                   /* Signature production place - state/county */
     city            VARCHAR2(100),                   /* Signature production place - town */
