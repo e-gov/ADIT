@@ -166,11 +166,14 @@ adit-war/sql/log_triggers.sql -text
 adit-war/sql/maintenance_job.dml.sql -text
 adit-war/sql/monitoring_data.dml.sql -text
 adit-war/sql/notification_type.dml.sql -text
+adit-war/sql/postgresql_create_database.sql -text
+adit-war/sql/postgresql_drop_database.sql -text
 adit-war/sql/run.sql -text
 adit-war/sql/run_dml.sql -text
 adit-war/sql/synonyms.sql -text
 adit-war/sql/testdata/adit_user.dml.sql -text
 adit-war/sql/testdata/create_tablespaces.sql -text
+adit-war/sql/testdata/postgresql_insert_testdata.sql -text
 adit-war/sql/testdata/remote_application.dml.sql -text
 adit-war/sql/updates/1_0_17/update_1_0_17.sql -text
 adit-war/sql/updates/1_0_23/update_1_0_23.sql -text
