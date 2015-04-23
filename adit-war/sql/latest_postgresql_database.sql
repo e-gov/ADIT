@@ -1,6 +1,7 @@
 SET search_path = adit, pg_catalog;
 ALTER TABLE ONLY adit.document DROP CONSTRAINT IF EXISTS parent_document_id;
 DROP TRIGGER IF EXISTS tr_user_notification_log ON adit.user_notification;
+DROP TRIGGER IF EXISTS tr_user_contact_log ON user_contact;
 DROP TRIGGER IF EXISTS tr_usertype_log ON adit.usertype;
 DROP TRIGGER IF EXISTS tr_signature_log ON adit.signature;
 DROP TRIGGER IF EXISTS tr_remote_application_log ON adit.remote_application;
@@ -47,6 +48,7 @@ SET search_path = aditlog, pg_catalog;
 DROP FUNCTION IF EXISTS aditlog.get_current_setting (variable_name varchar);
 SET search_path = adit, pg_catalog;
 DROP FUNCTION IF EXISTS adit.trigger_fct_tr_user_notification_log ();
+DROP FUNCTION IF EXISTS adit.trigger_fct_tr_user_contact_log ();
 DROP FUNCTION IF EXISTS adit.trigger_fct_tr_usertype_log ();
 DROP FUNCTION IF EXISTS adit.trigger_fct_tr_signature_log ();
 DROP FUNCTION IF EXISTS adit.trigger_fct_tr_remote_application_log ();
@@ -5860,6 +5862,55 @@ $body$
 LANGUAGE plpgsql
 SECURITY DEFINER;
 --
+-- Definition for function trigger_fct_tr_user_contact_log : 
+--
+CREATE FUNCTION trigger_fct_tr_user_contact_log(
+)
+RETURNS trigger
+AS 
+$body$
+DECLARE
+  operation varchar(100);
+  USER_CONTACT_new ADIT.USER_CONTACT%ROWTYPE;
+  USER_CONTACT_old ADIT.USER_CONTACT%ROWTYPE;
+BEGIN
+
+  if TG_OP = 'INSERT' then
+    operation := 'INSERT';
+  else
+    if TG_OP = 'UPDATE' then
+      operation := 'UPDATE';
+    else
+      operation := 'DELETE';
+    end if;
+  end if;
+
+  if TG_OP != 'DELETE' then
+	  USER_CONTACT_new.ID := NEW.ID;
+	  USER_CONTACT_new.USER_CODE := NEW.USER_CODE;
+	  USER_CONTACT_new.CONTACT_CODE := NEW.CONTACT_CODE;
+	  USER_CONTACT_new.LAST_USED_DATE := NEW.LAST_USED_DATE;
+  end if;
+  
+  if TG_OP != 'INSERT' then
+	  USER_CONTACT_old.ID := OLD.ID;
+	  USER_CONTACT_old.USER_CODE := OLD.USER_CODE;
+	  USER_CONTACT_old.CONTACT_CODE := OLD.CONTACT_CODE;
+	  USER_CONTACT_old.LAST_USED_DATE := OLD.LAST_USED_DATE;
+  end if;
+  
+  PERFORM ADITLOG.LOG_USER_CONTACT(
+    USER_CONTACT_new,
+    USER_CONTACT_old,
+    operation
+  );
+
+RETURN NEW;
+END
+$body$
+LANGUAGE plpgsql
+SECURITY DEFINER;
+--
 -- Definition for function get_current_setting (OID = 24766) : 
 --
 SET search_path = aditlog, pg_catalog;
@@ -6012,3 +6063,11 @@ CREATE TRIGGER tr_user_notification_log
     AFTER INSERT OR DELETE OR UPDATE ON adit.user_notification
     FOR EACH ROW
     EXECUTE PROCEDURE adit.trigger_fct_tr_user_notification_log ();
+	
+--
+-- Definition for trigger tr_user_contact_log : 
+--
+CREATE TRIGGER tr_user_contact_log
+	AFTER INSERT OR DELETE OR UPDATE ON adit.user_contact
+	FOR EACH ROW
+	EXECUTE PROCEDURE adit.trigger_fct_tr_user_contact_log();

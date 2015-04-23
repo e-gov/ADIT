@@ -161,6 +161,7 @@ adit-war/sql/dvk/insert_test_message.dml.sql -text
 adit-war/sql/file_type.dml.sql -text
 adit-war/sql/grant.sql -text
 adit-war/sql/latest_postgresql_database.sql -text
+adit-war/sql/latest_test_schema_postgresql_database.sql -text
 adit-war/sql/log_proc.sql -text
 adit-war/sql/log_proc_body.sql -text
 adit-war/sql/log_triggers.sql -text
