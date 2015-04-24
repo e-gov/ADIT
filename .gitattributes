@@ -168,6 +168,9 @@ adit-war/sql/log_triggers.sql -text
 adit-war/sql/maintenance_job.dml.sql -text
 adit-war/sql/monitoring_data.dml.sql -text
 adit-war/sql/notification_type.dml.sql -text
+adit-war/sql/ora2pg/ora2pg_INSERT_DATA.conf -text
+adit-war/sql/ora2pg/ora2pg_INSERT_DATA_document_file.conf -text
+adit-war/sql/ora2pg/ora2pg_INSERT_TYPE.conf -text
 adit-war/sql/run.sql -text
 adit-war/sql/run_dml.sql -text
 adit-war/sql/synonyms.sql -text
