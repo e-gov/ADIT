@@ -171,6 +171,8 @@ adit-war/sql/notification_type.dml.sql -text
 adit-war/sql/ora2pg/ora2pg_INSERT_DATA.conf -text
 adit-war/sql/ora2pg/ora2pg_INSERT_DATA_document_file.conf -text
 adit-war/sql/ora2pg/ora2pg_INSERT_TYPE.conf -text
+adit-war/sql/ora2pg/ora2pg_orig.conf -text
+adit-war/sql/ora2pg/ora2pg_orig_and_type_diff.txt -text
 adit-war/sql/run.sql -text
 adit-war/sql/run_dml.sql -text
 adit-war/sql/synonyms.sql -text
