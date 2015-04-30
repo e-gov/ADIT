@@ -7,7 +7,7 @@ increment=$4
 dataLimit=$5
 sequence=$6
 
-sed -i s/"^ALLOW.*/ALLOW $tableName/" $confFileLocation
+sed -i s/"^ALLOW[ \t].*/ALLOW $tableName/" $confFileLocation
 sed -i s/"^DATA_LIMIT.*/DATA_LIMIT $dataLimit/" $confFileLocation
 
 # sequence value example: SELECT $sequence.nextval FROM dual;
