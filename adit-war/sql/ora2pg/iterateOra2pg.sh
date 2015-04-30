@@ -19,7 +19,7 @@ if [ -z "$sequence" ];
 then
         sqlSentence="SELECT max(id) FROM  $tableName;"
 else
-        sqlSentence="SELECT $sequence.nextval FROM dual;"
+        sqlSentence="SELECT ${sequence}_ID_SEQ.nextval FROM dual;"
 fi
 
 maxId=`LD_LIBRARY_PATH=/opt/instantclient/ /opt/instantclient/sqlplus -S "ADIT/quGnpUCqTEIy@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(Host=10.0.13.66)(Port=1521))(CONNECT_DATA=(SERVICE_NAME=adit.arendus.kit)))" << EOF
