@@ -1,10 +1,8 @@
 package ee.adit.dao;
 
-import ee.adit.dao.pojo.MaintenanceJob;
-import ee.adit.exception.AditInternalException;
 import java.sql.SQLException;
-
 import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
@@ -13,7 +11,9 @@ import org.hibernate.Session;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+import ee.adit.dao.pojo.MaintenanceJob;
 import ee.adit.dao.pojo.SetJobRunningStatusResult;
+import ee.adit.exception.AditInternalException;
 
 /**
  * Maintenance job data access class. Provides methods for retrieving and manipulating
@@ -48,13 +48,17 @@ public class MaintenanceJobDAO extends HibernateDaoSupport {
         logger.debug("setJobRunningStatus starting...");
         SetJobRunningStatusResult result = (SetJobRunningStatusResult) getHibernateTemplate().execute(
                 new HibernateCallback() {
-                    public Object doInHibernate(Session session) throws HibernateException, SQLException {
+                    @Override
+					public Object doInHibernate(Session session) throws HibernateException, SQLException {
                         Query q = session.getNamedQuery("SET_JOB_RUNNING_STATUS");
+                        session.connection().setAutoCommit(false);
                         q.setLong("jobId", jobId);
-                        q.setBoolean("isRunning", isRunning);
+                        q.setLong("isRunning", isRunning ? 1 : 0);
 
                         logger.debug("Executing stored procedure SET_JOB_RUNNING_STATUS");
-                        return q.uniqueResult();
+                        Object uniqueResult = q.uniqueResult();
+                        session.connection().setAutoCommit(true);
+                        return uniqueResult;
                     }
                 });
 
@@ -79,7 +83,7 @@ public class MaintenanceJobDAO extends HibernateDaoSupport {
         try {
             session = this.getSessionFactory().openSession();
             Criteria criteria = session.createCriteria(MaintenanceJob.class);
-            return (List<MaintenanceJob>) criteria.list();
+            return criteria.list();
         } catch (Exception e) {
             throw new AditInternalException("Error while fetching DVK DocumentSharings: ", e);
         } finally {

@@ -300,9 +300,9 @@
         <dependency>
             <groupId>dvk</groupId>
             <artifactId>api</artifactId>
-            <version>1.0.12</version>
+            <version>1.0.13</version>
             <scope>system</scope>
-            <systemPath>${basedir}/lib/dvk-api-1.0.12.jar</systemPath>
+            <systemPath>${basedir}/lib/dvk-api-1.0.13.jar</systemPath>
         </dependency>
 
         <!-- FOP -->

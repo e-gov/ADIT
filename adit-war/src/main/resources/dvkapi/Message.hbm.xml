@@ -10,7 +10,7 @@
 				<param name="sequence">SQ_DHL_MESSAGE_ID</param>
 			</generator>
         </id>
-        <property name="isIncoming" type="boolean">
+        <property name="isIncoming" type="org.hibernate.type.NumericBooleanType">
             <column name="IS_INCOMING" precision="1" scale="0" not-null="true" />
         </property>
         <property name="data" type="clob">

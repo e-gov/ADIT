@@ -403,7 +403,7 @@ public class DocumentService {
                         logger.debug("Signature documentFile id: "
                                 + file.getId());
                         try {
-                            stream = file.getFileData().getBinaryStream();
+                            stream = new ByteArrayInputStream(file.getFileData());
                             Boolean isBdoc = Util.isBdocFile(file.getFileName());
                             SignedDoc sdoc = factory.readSignedDocFromStreamOfType(
                                     stream, isBdoc, null);
@@ -644,7 +644,7 @@ public class DocumentService {
                     // If first added file happens to be a DigiDoc container then
                     // extract files and signatures from container. Otherwise add
                     // container as a regular file.
-                    if (((file.getId() == null) || (file.getId() <= 0)) && 
+                    if (((file.getId() == null) || (file.getId() <= 0)) &&
                     		("ddoc".equalsIgnoreCase(extension) || Util.isBdocExtension(extension))) {
                         DigiDocExtractionResult extractionResult = extractDigiDocContainer(file.getSysTempFile(), digidocConfigFile);
                         if (extractionResult.isSuccess()) {
@@ -732,7 +732,7 @@ public class DocumentService {
                 // extract files and signatures from container. Otherwise add
                 // container as a regular file.
                 boolean involvedSignatureContainerExtraction = false;
-                if ((maxId <= 0) && 
+                if ((maxId <= 0) &&
                 		("ddoc".equalsIgnoreCase(extension)|| Util.isBdocExtension(extension))) {
                     DigiDocExtractionResult extractionResult = extractDigiDocContainer(file.getSysTempFile(), digidocConfigFile);
                     if (extractionResult.isSuccess()) {
@@ -937,7 +937,7 @@ public class DocumentService {
                     }
                     int dataFilesCount = ddocContainer.countDataFiles();
                     if (dataFilesCount > 0) {
-                    	
+
                         Hashtable<String, StartEndOffsetPair> dataFileOffsets = SimplifiedDigiDocParser.findDigiDocDataFileOffsets(pathToContainer, isBdoc, tempDir);
                         for (int i = 0; i < dataFilesCount; i++) {
                             DataFile ddocDataFile = ddocContainer.getDataFile(i);
@@ -947,7 +947,7 @@ public class DocumentService {
                             localFile.setFileName(ddocDataFile.getFileName());
                             localFile.setFileSizeBytes(ddocDataFile.getSize());
                             localFile.setLastModifiedDate(new Date());
-                            
+
                            // localFile.setFileData(Hibernate.createBlob(ddocDataFile.getBody()));
                             StartEndOffsetPair currentFileOffsets = dataFileOffsets.get(ddocDataFile.getId());
                             if (currentFileOffsets != null) {
@@ -955,7 +955,7 @@ public class DocumentService {
                                 localFile.setDdocDataFileId(ddocDataFile.getId());
                                 localFile.setDdocDataFileStartOffset(currentFileOffsets.getStart());
                                 localFile.setDdocDataFileEndOffset(currentFileOffsets.getEnd());
-                                localFile.setFileData(Hibernate.createBlob(currentFileOffsets.getDataMd5Hash()));
+                                localFile.setFileData(currentFileOffsets.getDataMd5Hash());
                             } else {
                                 logger.error("Failed to find DataFile offsets for data file " + ddocDataFile.getId());
                                 AditCodedException aditCodedException = new AditCodedException("digidoc.extract.genericException");
@@ -1296,7 +1296,7 @@ public class DocumentService {
                             // Create a temporary file from the ADIT file and
                             // add a reference to the DVK file
                             try {
-                                InputStream inputStream = f.getFileData().getBinaryStream();
+                                InputStream inputStream = new ByteArrayInputStream(f.getFileData());
                                 String temporaryFile = Util.createTemporaryFile(inputStream, tempDir);
                                 dvkFile.setFile(new File(temporaryFile));
                                 dvkFiles.add(dvkFile);
@@ -1519,7 +1519,7 @@ public class DocumentService {
 
             Query query = session.createQuery(sqlQuery);
             @SuppressWarnings("unchecked")
-            List<Document> documents = (List<Document>) query.list();
+            List<Document> documents = query.list();
 
             logger.info(documents.size() + " documents need to be sent to DVK.");
 
@@ -1914,7 +1914,7 @@ public class DocumentService {
                     // If first added file happens to be a DigiDoc container then
                     // extract files and signatures from container. Otherwise add
                     // container as a regular file.
-                    if (((file.getId() == null) || (file.getId() <= 0)) && 
+                    if (((file.getId() == null) || (file.getId() <= 0)) &&
                     		("ddoc".equalsIgnoreCase(extension)|| Util.isBdocExtension(extension))) {
                         DigiDocExtractionResult extractionResult = extractDigiDocContainer(file.getSysTempFile(), digidocConfigFile);
                         if (extractionResult.isSuccess()) {
@@ -3699,18 +3699,18 @@ public class DocumentService {
                     InputStream containerAsStream = null;
                     try {
                         if (usingExistingDraft) {
-                            containerAsStream = signatureContainerDraft.getFileData().getBinaryStream();
+                            containerAsStream = new ByteArrayInputStream(signatureContainerDraft.getFileData());
                             isBdoc = Util.isBdocFile(signatureContainerDraft.getFileName());
                         } else {
-                            containerAsStream = signatureContainer.getFileData().getBinaryStream();
+                            containerAsStream = new ByteArrayInputStream(signatureContainerDraft.getFileData());
                             isBdoc = Util.isBdocFile(signatureContainer.getFileName());
                         }
                         sdoc = factory.readSignedDocFromStreamOfType(containerAsStream, isBdoc);
-                        
+
                     } finally {
                         Util.safeCloseStream(containerAsStream);
                     }
-                   
+
                     // Make sure that document is not already signed
                     // by the same person.
                     int removeSignatureAtIndex = -1;
@@ -3793,10 +3793,10 @@ public class DocumentService {
                             InputStream blobDataStream = null;
                             FileOutputStream fileOutputStream = null;
                             try {
-                                
+
                                 	 byte[] buffer = new byte[10240];
                                      int len = 0;
-                                     blobDataStream = docFile.getFileData().getBinaryStream();
+                                     blobDataStream = new ByteArrayInputStream(docFile.getFileData());
                                      fileOutputStream = new FileOutputStream(outputFileName);
                                      while ((len = blobDataStream.read(buffer)) > 0) {
                                          fileOutputStream.write(buffer, 0, len);
@@ -3810,7 +3810,7 @@ public class DocumentService {
                                      docFile.setDdocDataFileId(df.getId());
                                 // }
                                 // Add file to signature container
-                                
+
                             } catch (IOException ex) {
                                 throw new HibernateException(ex);
                             } finally {
@@ -3868,7 +3868,8 @@ public class DocumentService {
                 long length = (new File(containerFileName)).length();
                 // Blob containerData = Hibernate.createBlob(fileInputStream,
                 // length, session);
-                Blob containerData = Hibernate.createBlob(fileInputStream, length);
+//                Blob containerData = Hibernate.createBlob(fileInputStream, length);
+                byte[] containerData = new byte[fileInputStream.available()];
 
                 if (signatureContainerDraft == null) {
                     signatureContainerDraft = new DocumentFile();
@@ -3882,7 +3883,7 @@ public class DocumentService {
                 signatureContainerDraft.setFileData(containerData);
                 signatureContainerDraft.setLastModifiedDate(new Date());
                 signatureContainerDraft.setGuid(UUID.randomUUID().toString());
-                String extension;  
+                String extension;
                 if (isBdoc) {
                 	extension = Util.BDOC_PRIMARY_EXTENSION;
                 } else {
@@ -4090,8 +4091,8 @@ public class DocumentService {
             ConfigManager.init(digidocConfigFile);
             SAXDigiDocFactory factory = new SAXDigiDocFactory();
             Boolean isBdoc = Util.isBdocFile(signatureContainerDraft.getFileName());
-            
-            SignedDoc sdoc = factory.readSignedDocFromStreamOfType(signatureContainerDraft.getFileData().getBinaryStream(), isBdoc);
+
+            SignedDoc sdoc = factory.readSignedDocFromStreamOfType(new ByteArrayInputStream(signatureContainerDraft.getFileData()), isBdoc);
 
             File signatureFile = new File(signatureFileName);
             if (!signatureFile.exists()) {
@@ -4153,7 +4154,7 @@ public class DocumentService {
                      factory.readSignature(sdoc, fs);
                      sdoc.removeSignature(activeSignatureIndex);
                      sig = sdoc.getSignature(activeSignatureIndex++);
-                     sdoc.writeToFile(new File(containerFileName));   
+                     sdoc.writeToFile(new File(containerFileName));
             		}finally {
             			Util.safeCloseStream(fs);
             		}
@@ -4166,11 +4167,11 @@ public class DocumentService {
                     sdoc = factory.readSignedDoc(containerFileName);
                     sig = sdoc.getSignature(activeSignatureIndex++);
             	}
-            	
+
             } else {
                 // Decode signature value if it is HEX encoded
                 sigValue = convertSignatureValueToByteArray(sigValue);
-                
+
                 sig.setOrigContent(null);
                 sig.setSignatureValue(sigValue);
                 sig.getConfirmation();
@@ -4188,7 +4189,8 @@ public class DocumentService {
             long length = (new File(containerFileName)).length();
             // Blob containerData = Hibernate.createBlob(fileInputStream,
             // length, session);
-            Blob containerData = Hibernate.createBlob(fileInputStream, length);
+//            Blob containerData = Hibernate.createBlob(fileInputStream, length);
+            byte[] containerData = new byte[fileInputStream.available()];
 
             boolean wasSignedBefore = true;
             if (signatureContainer == null) {
@@ -4512,7 +4514,7 @@ public class DocumentService {
                 InputStream blobDataStream = null;
                 FileOutputStream fileOutputStream = null;
                 try {
-                    blobDataStream = docFile.getFileData().getBinaryStream();
+                    blobDataStream = new ByteArrayInputStream(docFile.getFileData());
                     fileOutputStream = new FileOutputStream(outputFileName);
 
                     byte[] buffer = new byte[10240];

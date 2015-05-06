@@ -116,6 +116,11 @@
     	<appender-ref ref="file" />
     </logger>
 
+<!-- 	<logger name="org.hibernate.type"> -->
+<!--     	<level value="TRACE"/> -->
+<!--     	<appender-ref ref="file" /> -->
+<!--     </logger> -->
+
     <root>
 		<level value="error" />
 		<appender-ref ref="stdout" />

@@ -52,28 +52,28 @@
         <property name="documentWfStatusId" type="java.lang.Long">
             <column name="DOCUMENT_WF_STATUS_ID" precision="12" scale="0" />
         </property>
-        <property name="locked" type="java.lang.Boolean">
+        <property name="locked" type="org.hibernate.type.NumericBooleanType">
             <column name="LOCKED" precision="1" scale="0" />
         </property>
         <property name="lockingDate" type="timestamp">
             <column name="LOCKING_DATE" length="7" />
         </property>
-        <property name="signable" type="java.lang.Boolean">
+        <property name="signable" type="org.hibernate.type.NumericBooleanType">
             <column name="SIGNABLE" precision="1" scale="0" />
         </property>
-        <property name="deflated" type="java.lang.Boolean">
+        <property name="deflated" type="org.hibernate.type.NumericBooleanType">
             <column name="DEFLATED" precision="1" scale="0" />
         </property>
         <property name="deflateDate" type="timestamp">
             <column name="DEFLATE_DATE" length="7" />
         </property>
-        <property name="deleted" type="java.lang.Boolean">
+        <property name="deleted" type="org.hibernate.type.NumericBooleanType">
             <column name="DELETED" precision="1" scale="0" />
         </property>
-        <property name="invisibleToOwner" type="java.lang.Boolean">
+        <property name="invisibleToOwner" type="org.hibernate.type.NumericBooleanType">
             <column name="INVISIBLE_TO_OWNER" precision="1" scale="0" />
         </property>
-        <property name="signed" type="java.lang.Boolean">
+        <property name="signed" type="org.hibernate.type.NumericBooleanType">
             <column name="SIGNED" precision="1" scale="0" />
         </property>
         <property name="filesSizeBytes" type="long" insert="false">

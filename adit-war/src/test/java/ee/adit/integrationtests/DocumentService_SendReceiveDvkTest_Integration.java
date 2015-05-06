@@ -1,5 +1,6 @@
 package ee.adit.integrationtests;
 
+
 import dvk.api.container.Container;
 import dvk.api.container.v1.ContainerVer1;
 import dvk.api.container.v1.Saaja;
@@ -27,7 +28,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.ContextConfiguration; 
 import org.springframework.test.context.TestContextManager;
 import org.springframework.util.Assert;
 
@@ -155,7 +156,9 @@ public class DocumentService_SendReceiveDvkTest_Integration {
         ArrayList<AditUser> recipients = new ArrayList<AditUser>();
         for (DecRecipient decRecipient : decRecipients) {
             AditUser aditUser = documentService.getAditUserDAO().getUserByID(Utils.addPrefixIfNecessary(decRecipient.getOrganisationCode()));
-            if (aditUser != null) recipients.add(aditUser);
+            if (aditUser != null) {
+				recipients.add(aditUser);
+			}
         }
         document = utils.prepareAndSaveAditDocument(containerInput, recipients, digiDocConfFilePath, containerType);
 
@@ -259,9 +262,9 @@ public class DocumentService_SendReceiveDvkTest_Integration {
             Map<String, Recipient> recipientsFromInputContainer = new HashMap<String, Recipient>();
             for (Recipient recipientFromInputContainer : containerInput.getRecipient()) {
                 recipientsFromInputContainer.put(recipientFromInputContainer.getOrganisation().getOrganisationCode(),
-                                                    recipientFromInputContainer);                
+                                                    recipientFromInputContainer);
             }
-            
+
             for (Recipient outputRecipient : containerOutput.getRecipient()) {
                 String recipientFromOutputContainerOrgCode = Utils.addPrefixIfNecessary(outputRecipient.getOrganisation().getOrganisationCode());
                 Assert.isTrue(recipientsFromInputContainer.containsKey(recipientFromOutputContainerOrgCode));
@@ -482,9 +485,10 @@ public class DocumentService_SendReceiveDvkTest_Integration {
                 "Document.LockingDate expected: current day, actual:" + aditDocument.getLockingDate());
         Assert.isTrue(aditDocument.getSignable(),
                 "Document.Signable expected: true, actual:" + aditDocument.getSignable());
-        if (container.getSignedDoc().getDataFiles().get(0).getFileName().contains("ddoc"))
-            Assert.isTrue(aditDocument.getSigned(),
+        if (container.getSignedDoc().getDataFiles().get(0).getFileName().contains("ddoc")) {
+			Assert.isTrue(aditDocument.getSigned(),
                     "Document.Signed expected: true, actual:" + aditDocument.getSigned());
+		}
 
         // Table DOCUMENT_SHARING
         Assert.notNull(aditDocument.getDocumentSharings(), "Received ADIT document doesn't have related DOCUMENT_SHARING records");
@@ -570,11 +574,11 @@ public class DocumentService_SendReceiveDvkTest_Integration {
                             "DocumentFiles.documentFileTypeId, expected: " + DocumentService.FILETYPE_DOCUMENT_FILE + ", actual: " + documentFileByName.getDocumentFileTypeId());
                 }
 
-                // Check BLOB
-                Assert.isTrue(documentFileByName.getFileData().length() == filesFromTestParametersByName.get(0).getSize(),
-                        "DocumentFiles.FileData.length expected: " + filesFromTestParametersByName.get(0).getSize() + ", actual: " + documentFileByName.getFileData().length());
+                // Check BYTEA
+                Assert.isTrue(documentFileByName.getFileData().length == filesFromTestParametersByName.get(0).getSize(),
+                        "DocumentFiles.FileData.length expected: " + filesFromTestParametersByName.get(0).getSize() + ", actual: " + documentFileByName.getFileData().length);
                 if (filesFromTestParametersByName.get(0).isResourceExists()) {
-                    byte[] bdata = documentFileByName.getFileData().getBytes(1, (int) documentFileByName.getFileData().length());
+                    byte[] bdata = documentFileByName.getFileData();
                     if (filesFromTestParametersByName.get(0).getName().contains(".ddoc") || filesFromTestParametersByName.get(0).getName().contains(".txt")) {
                         String documentFileWithGuidBlobDataConvertedToString = new String(bdata, "UTF-8");
                         Assert.isTrue(Utils.compareStringsIgnoreCase(documentFileWithGuidBlobDataConvertedToString, filesFromTestParametersByName.get(0).getFileContent()),
@@ -815,8 +819,10 @@ public class DocumentService_SendReceiveDvkTest_Integration {
                 "Document.LockingDate expected: current day, actual:" + aditDocument.getLockingDate());
         Assert.isTrue(aditDocument.getSignable(),
                 "Document.Signable expected: true, actual:" + aditDocument.getSignable());
-        if (container.getSignatureMetadata() != null) Assert.isTrue(aditDocument.getSigned(),
-                "Document.Signed expected: true, actual:" + aditDocument.getSigned());
+        if (container.getSignatureMetadata() != null) {
+			Assert.isTrue(aditDocument.getSigned(),
+			        "Document.Signed expected: true, actual:" + aditDocument.getSigned());
+		}
 
         // Table DOCUMENT_SHARING
         Assert.notNull(aditDocument.getDocumentSharings(), "Received ADIT document doesn't have related DOCUMENT_SHARING records");
@@ -864,7 +870,9 @@ public class DocumentService_SendReceiveDvkTest_Integration {
         // Check DOCUMENT_FILE data with files in document container
         HashMap<String, DocumentFile> aditDocumentFilesWithGuid = new HashMap<String, DocumentFile>();
         for (DocumentFile documentFile : aditDocument.getDocumentFiles()) {
-            if (documentFile.getGuid() != null) aditDocumentFilesWithGuid.put(documentFile.getGuid(), documentFile);
+            if (documentFile.getGuid() != null) {
+				aditDocumentFilesWithGuid.put(documentFile.getGuid(), documentFile);
+			}
         }
         Assert.isTrue(aditDocumentFilesWithGuid.size() == container.getFile().size(),
                 "Number of DOCUMENT_FILES records with guid. expected:" + container.getFile().size() + " ,actual:" + aditDocumentFilesWithGuid.size());
@@ -906,11 +914,11 @@ public class DocumentService_SendReceiveDvkTest_Integration {
                             "DocumentFiles.documentFileTypeId, expected: " + DocumentService.FILETYPE_DOCUMENT_FILE + ", actual: " + documentFileWithGuid.getDocumentFileTypeId());
                 }
 
-                // Check BLOB
-                Assert.isTrue(documentFileWithGuid.getFileData().length() == fileFromTestParametersByGuid.getSize(),
-                        "DocumentFiles.FileData.length expected: " + fileFromTestParametersByGuid.getSize() + ", actual: " + documentFileWithGuid.getFileData().length());
+                // Check BYTEA
+                Assert.isTrue(documentFileWithGuid.getFileData().length == fileFromTestParametersByGuid.getSize(),
+                        "DocumentFiles.FileData.length expected: " + fileFromTestParametersByGuid.getSize() + ", actual: " + documentFileWithGuid.getFileData().length);
                 if (fileFromTestParametersByGuid.isResourceExists()) {
-                    byte[] bdata = documentFileWithGuid.getFileData().getBytes(1, (int) documentFileWithGuid.getFileData().length());
+                    byte[] bdata = documentFileWithGuid.getFileData();
                     if (fileFromTestParametersByGuid.getName().contains(".ddoc") || fileFromTestParametersByGuid.getName().contains(".txt")) {
                         String documentFileWithGuidBlobDataConvertedToString = new String(bdata, "UTF-8");
                         Assert.isTrue(Utils.compareStringsIgnoreCase(documentFileWithGuidBlobDataConvertedToString, fileFromTestParametersByGuid.getFileContent()),

@@ -3,6 +3,7 @@
 	<name>Adit</name>
 	<comment></comment>
 	<projects>
+		<project>adit-war</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

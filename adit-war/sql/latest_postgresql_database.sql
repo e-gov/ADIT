@@ -1159,13 +1159,16 @@ GRANT SELECT, UPDATE, INSERT ON adit.usertype TO adit_user;
 --
 -- Definition for function set_job_running_status (OID = 16706) : 
 --
+SET search_path = adit, pg_catalog;
 CREATE FUNCTION adit.set_job_running_status (
   job_id bigint,
   is_running bigint
 )
-RETURNS varchar
+RETURNS refcursor
 AS 
 $body$
+DECLARE
+	result_rc refcursor;
 BEGIN
     update  maintenance_job
     set     is_running = SET_JOB_RUNNING_STATUS.is_running
@@ -1173,9 +1176,13 @@ BEGIN
             and maintenance_job.is_running <> SET_JOB_RUNNING_STATUS.is_running;
 
     if found then
-        return 'ok';
+	open result_rc for
+        select  'ok' as result_code;
+        return result_rc;
     else
-        return 'job_is_aready_in_given_state';
+	open result_rc for
+        select  'job_is_aready_in_given_state' as result_code;
+        return result_rc;
     end if;
 end;
 $body$
@@ -4816,11 +4823,11 @@ CREATE FUNCTION adit.deflate_file (
   mark_deleted bigint,
   fail_if_signature bigint
 )
-RETURNS varchar
+RETURNS refcursor
 AS 
 $body$
 DECLARE
-
+result_rc refcursor;
 item_count bigint := 0;
 
 BEGIN
@@ -4853,22 +4860,32 @@ BEGIN
 	                if ((item_count = 0) or (DEFLATE_FILE.fail_if_signature <> 1)) then
 	                	-- Calculate MD5 hash
 	                    update	document_file
-	                    set	    file_data = md5(coalesce(file_data::text, '')),
+	                    set	    file_data = md5(coalesce(file_data::text, ''))::bytea,
 	                            deleted = (case when DEFLATE_FILE.mark_deleted = 1 then 1 else document_file.deleted end)
 	                    where   id = DEFLATE_FILE.file_id;
 
-	                    return 'ok';
+	                    open result_rc for
+			    select  'ok' as result_code;
+			    return result_rc;
                     else
-	                    return 'cannot_delete_signature_container';
+			    open result_rc for
+			    select  'cannot_delete_signature_container' as result_code;
+	                    return result_rc;
                     end if;
                 else
-                    return 'already_deleted';
+	            open result_rc for
+		    select  'already_deleted' as result_code;
+                    return result_rc;
                 end if;
             else
-                return 'file_does_not_belong_to_document';
+                open result_rc for
+	        select  'file_does_not_belong_to_document' as result_code;
+                return result_rc;
             end if;
     else
-        return 'file_does_not_exist';
+	open result_rc for
+	select  'file_does_not_exist' as result_code;
+        return result_rc;
     end if;
 end;
 $body$
@@ -4883,10 +4900,11 @@ CREATE FUNCTION adit.remove_signed_file_contents (
   ddoc_start_offset bigint,
   ddoc_end_offset bigint
 )
-RETURNS varchar
+RETURNS refcursor
 AS 
 $body$
 DECLARE
+result_rc refcursor;
 item_count bigint := 0;
 BEGIN
     select  count(*)
@@ -4918,24 +4936,34 @@ BEGIN
                     if (item_count > 0) then
 	                    -- Calculate MD5 hash
 	                    update  document_file
-	                    set	    file_data = md5(coalesce(file_data::text, '')),
+	                    set	    file_data = md5(coalesce(file_data::text, ''))::bytea,
 	                            ddoc_datafile_start_offset = REMOVE_SIGNED_FILE_CONTENTS.ddoc_start_offset,
 	                            ddoc_datafile_end_offset = REMOVE_SIGNED_FILE_CONTENTS.ddoc_end_offset,
 	                            file_data_in_ddoc = 1
 	                    where   id = REMOVE_SIGNED_FILE_CONTENTS.file_id;
 
-	                    return 'ok';
+	                    open result_rc for
+			    select  'ok' as result_code;
+			    return result_rc;
 	                else
-	                    return 'file_data_already_moved';
+			    open result_rc for
+			    select  'file_data_already_moved' as result_code;
+	                    return result_rc;
 	                end if;
                 else
-                    return 'file_is_deleted';
+                    open result_rc for
+		    select  'file_is_deleted' as result_code;
+                    return result_rc;
                 end if;
             else
-                return 'file_does_not_belong_to_document';
+		open result_rc for
+		select  'file_does_not_belong_to_document' as result_code;
+                return result_rc;
             end if;
     else
-        return 'file_does_not_exist';
+	open result_rc for
+	select  'file_does_not_exist' as result_code;
+        return result_rc;
     end if;
 end;
 $body$

@@ -1,16 +1,18 @@
 package ee.adit.dvk.converter.documentcontainer;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.log4j.Logger;
+
 import dvk.api.container.v2_1.File;
 import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.DocumentFile;
 import ee.adit.service.DocumentService;
 import ee.adit.util.Configuration;
 import ee.adit.util.Util;
-import org.apache.log4j.Logger;
-
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Hendrik Pärna
@@ -67,7 +69,7 @@ public class FileBuilder {
         String result = null;
 
         try {
-            InputStream inputStream = documentFile.getFileData().getBinaryStream();
+            InputStream inputStream = new ByteArrayInputStream(documentFile.getFileData());
             String binaryContentsFile = Util.createTemporaryFile(inputStream, configuration.getTempDir());
             String gzAndBase64EncodedFile = Util.gzipAndBase64Encode(binaryContentsFile, configuration.getTempDir(), true);
             result = Util.getFileContents(new java.io.File(gzAndBase64EncodedFile));

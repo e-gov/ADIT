@@ -2,7 +2,6 @@ package ee.adit.dao.pojo;
 
 // Generated 21.06.2010 14:02:03 by Hibernate Tools 3.2.4.GA
 
-import java.sql.Blob;
 import java.util.Date;
 
 import ee.adit.service.DocumentService;
@@ -20,7 +19,7 @@ public class DocumentFile implements java.io.Serializable {
     private String fileName;
     private String contentType;
     private String description;
-    private Blob fileData;
+    private byte[] fileData;
     private Long fileSizeBytes;
     private Boolean deleted;
     private long documentFileTypeId = DocumentService.FILETYPE_DOCUMENT_FILE;
@@ -40,7 +39,7 @@ public class DocumentFile implements java.io.Serializable {
     }
 
     public DocumentFile(long id, Document document, String fileName, String contentType, String description,
-            Blob fileData, Long fileSizeBytes, Boolean deleted, long documentFileTypeId, String ddocDataFileId,
+    		byte[] fileData, Long fileSizeBytes, Boolean deleted, long documentFileTypeId, String ddocDataFileId,
             Long ddocDataFileStartOffset, Long ddocDataFileEndOffset, Boolean fileDataInDdoc,
             Date lastModifiedDate) {
         this.id = id;
@@ -109,11 +108,11 @@ public class DocumentFile implements java.io.Serializable {
         this.description = description;
     }
 
-    public Blob getFileData() {
+    public byte[] getFileData() {
         return this.fileData;
     }
 
-    public void setFileData(Blob fileData) {
+    public void setFileData(byte[] fileData) {
         this.fileData = fileData;
     }
 
@@ -188,5 +187,5 @@ public class DocumentFile implements java.io.Serializable {
 	public void setGuid(String guid) {
 		this.guid = guid;
 	}
-	
+
 }

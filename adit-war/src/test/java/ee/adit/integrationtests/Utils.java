@@ -128,7 +128,8 @@ public class Utils {
                 String unzippedDataFileName = unbaseAndUnpackData(fileToInsert.getZipBase64Content());
                 File unzippedDataFile = new File(unzippedDataFileName);
                 unzippedDataFileInputStream = new FileInputStream(unzippedDataFileName);
-                Blob fileData = Hibernate.createBlob(unzippedDataFileInputStream, unzippedDataFile.length(), documentFileSession);
+                byte[] fileData = new byte[unzippedDataFileInputStream.available()];
+                unzippedDataFileInputStream.read(fileData);                
                 documentFile.setFileData(fileData);
                 documentFileSession.save(documentFile);
                 transaction.commit();

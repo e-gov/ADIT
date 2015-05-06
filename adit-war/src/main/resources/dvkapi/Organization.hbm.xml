@@ -11,10 +11,10 @@
         <property name="orgName" type="string">
             <column name="ORG_NAME" length="100" not-null="true" />
         </property>
-        <property name="dhlCapable" type="boolean">
+        <property name="dhlCapable" type="org.hibernate.type.NumericBooleanType">
             <column name="DHL_CAPABLE" precision="1" scale="0" not-null="true" />
         </property>
-        <property name="dhlDirectCapable" type="boolean">
+        <property name="dhlDirectCapable" type="org.hibernate.type.NumericBooleanType">
             <column name="DHL_DIRECT_CAPABLE" precision="1" scale="0" not-null="true" />
         </property>
         <property name="dhlDirectProducerName" type="string">

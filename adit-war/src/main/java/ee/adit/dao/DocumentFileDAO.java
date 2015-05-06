@@ -51,13 +51,16 @@ public class DocumentFileDAO extends HibernateDaoSupport {
                 new HibernateCallback() {
                     public Object doInHibernate(Session session) throws HibernateException, SQLException {
                         Query q = session.getNamedQuery("DEFLATE_FILE");
+                        session.connection().setAutoCommit(false);
                         q.setLong("documentId", documentId);
                         q.setLong("fileId", fileId);
-                        q.setBoolean("markDeleted", markDeleted);
-                        q.setBoolean("failIfSignature", failIfSignature);
-
+                        q.setLong("markDeleted", markDeleted ? 1 : 0);
+                        q.setLong("failIfSignature", failIfSignature ? 1 : 0);
                         logger.debug("Executing stored procedure DEFLATE_FILE");
-                        return q.uniqueResult();
+                        
+                        Object uniqueResult = q.uniqueResult();
+                        session.connection().setAutoCommit(true);
+                        return uniqueResult;
                     }
                 });
 
@@ -92,13 +95,16 @@ public class DocumentFileDAO extends HibernateDaoSupport {
             new HibernateCallback() {
                 public Object doInHibernate(Session session) throws HibernateException, SQLException {
                     Query q = session.getNamedQuery("REMOVE_SIGNED_FILE_CONTENTS");
+                    session.connection().setAutoCommit(false);
                     q.setLong("documentId", documentId);
                     q.setLong("fileId", fileId);
                     q.setLong("ddocStartOffset", dataStartOffset);
                     q.setLong("ddocEndOffset", dataEndOffset);
 
                     logger.debug("Executing stored procedure REMOVE_SIGNED_FILE_CONTENTS");
-                    return q.uniqueResult();
+                    Object uniqueResult = q.uniqueResult();
+                    session.connection().setAutoCommit(true);
+                    return uniqueResult;
                 }
             });
 

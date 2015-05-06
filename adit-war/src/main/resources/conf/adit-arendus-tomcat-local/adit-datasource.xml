@@ -44,10 +44,9 @@
 		</property>
 		<property name="hibernateProperties">
 			<props>
-				<prop key="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</prop>
+				<prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</prop>
+				<prop key="hibernate.connection.driver_class">org.postgresql.Driver</prop>
 				<prop key="hibernate.cache.provider_class">org.hibernate.cache.NoCacheProvider</prop>
-				<prop key="hibernate.current_session_context_class">org.hibernate.context.JTASessionContext</prop>
-				<prop key="hibernate.transaction.manager_lookup_class">org.hibernate.transaction.WeblogicTransactionManagerLookup</prop>
 				<prop key="hibernate.show.sql">true</prop>
 			</props>
 		</property>
@@ -70,10 +69,9 @@
 		</property>
 		<property name="hibernateProperties">
 			<props>
-				<prop key="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</prop>
+				<prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</prop>
+				<prop key="hibernate.connection.driver_class">org.postgresql.Driver</prop>
 				<prop key="hibernate.cache.provider_class">org.hibernate.cache.NoCacheProvider</prop>
-				<prop key="hibernate.current_session_context_class">org.hibernate.context.JTASessionContext</prop>
-				<prop key="hibernate.transaction.manager_lookup_class">org.hibernate.transaction.WeblogicTransactionManagerLookup</prop>
                 <prop key="hibernate.connection.autocommit">false</prop>
                 <prop key="hibernate.connection.useUnicode">true</prop>
                 <prop key="hibernate.connection.characterEncoding">UTF-8</prop>
@@ -83,13 +81,13 @@
 	</bean>
 
 	<!-- ADIT transaction manager -->
-	<bean id="transactionManager"
-		class="org.springframework.transaction.jta.WebLogicJtaTransactionManager" />
+	<bean class="org.springframework.jdbc.datasource.DataSourceTransactionManager" id="transactionManager"><property ref="aditDataSource" name="dataSource"/></bean>
 
 	<!--
 		Enable the configuration of transactional behavior based on
 		annotations
 	-->
 	<tx:annotation-driven transaction-manager="transactionManager" />
+	
 
 </beans>

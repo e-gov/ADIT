@@ -10,7 +10,7 @@
         <property name="name" type="string">
             <column name="NAME" length="100" />
         </property>
-        <property name="running" type="boolean">
+        <property name="running" type="org.hibernate.type.NumericBooleanType">
             <column name="IS_RUNNING" precision="1" scale="0" />
         </property>
     </class>

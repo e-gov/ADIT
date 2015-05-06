@@ -209,7 +209,7 @@ public class ScheduleClient {
         try {
 
             logger.debug("Setting messageFactory for addEvent call.");
-            System.setProperty("javax.xml.soap.MessageFactory", "weblogic.xml.saaj.MessageFactoryImpl");
+            System.setProperty("javax.xml.soap.MessageFactory", "com.sun.xml.messaging.saaj.soap.ver1_1.SOAPMessageFactory1_1Impl");
 
             LisaSyndmusDocument doc = LisaSyndmusDocument.Factory.newInstance();
             LisaSyndmus req = doc.addNewLisaSyndmus();

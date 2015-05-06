@@ -1,19 +1,19 @@
 package ee.adit.dvk.converter;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+
+import org.apache.commons.io.IOUtils;
+import org.junit.Assert;
+import org.junit.Test;
+
 import dvk.api.container.v2_1.File;
 import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.DocumentFile;
 import ee.adit.test.service.StubAditUserDAOForOrg;
 import ee.adit.util.Configuration;
-import java.sql.Blob;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-import javax.sql.rowset.serial.SerialBlob;
-import org.apache.commons.io.IOUtils;
-import org.junit.Assert;
-import org.junit.Test;
 
 /**
  * @author Hendrik Pärna
@@ -37,8 +37,7 @@ public class FileTest {
         documentFile.setGuid(UUID.randomUUID().toString());
 
         byte[] bytes = IOUtils.toByteArray(FileTest.class.getResourceAsStream("testFile.xml"));
-        Blob blob = new SerialBlob(bytes);
-        documentFile.setFileData(blob);
+        documentFile.setFileData(bytes);
 
         Set<DocumentFile> documentFiles = new HashSet<DocumentFile>();
         documentFiles.add(documentFile);
