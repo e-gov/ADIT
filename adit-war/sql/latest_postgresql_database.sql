@@ -7,7 +7,7 @@ DROP TRIGGER IF EXISTS tr_signature_log ON adit.signature;
 DROP TRIGGER IF EXISTS tr_remote_application_log ON adit.remote_application;
 DROP TRIGGER IF EXISTS tr_notification_type_log ON adit.notification_type;
 DROP TRIGGER IF EXISTS tr_notification_log ON adit.notification;
-DROP TRIGGER IF EXISTS tr_doc_dvk_status_log ON adit.document_dvk_status;
+DROP TRIGGER IF EXISTS tr_document_dvk_status_log ON adit.document_dvk_status;
 DROP TRIGGER IF EXISTS tr_document_wf_status_log ON adit.document_wf_status;
 DROP TRIGGER IF EXISTS tr_document_type_log ON adit.document_type;
 DROP TRIGGER IF EXISTS tr_document_sharing_type_log ON adit.document_sharing_type;
@@ -54,7 +54,7 @@ DROP FUNCTION IF EXISTS adit.trigger_fct_tr_signature_log ();
 DROP FUNCTION IF EXISTS adit.trigger_fct_tr_remote_application_log ();
 DROP FUNCTION IF EXISTS adit.trigger_fct_tr_notification_type_log ();
 DROP FUNCTION IF EXISTS adit.trigger_fct_tr_notification_log ();
-DROP FUNCTION IF EXISTS adit.trigger_fct_tr_doc_dvk_status_log ();
+DROP FUNCTION IF EXISTS adit.trigger_fct_tr_document_dvk_status_log ();
 DROP FUNCTION IF EXISTS adit.trigger_fct_tr_document_wf_status_log ();
 DROP FUNCTION IF EXISTS adit.trigger_fct_tr_document_type_log ();
 DROP FUNCTION IF EXISTS adit.trigger_fct_tr_document_sharing_type_log ();
@@ -5537,9 +5537,9 @@ $body$
 LANGUAGE plpgsql
 SECURITY DEFINER;
 --
--- Definition for function trigger_fct_tr_doc_dvk_status_log (OID = 24725) : 
+-- Definition for function trigger_fct_tr_document_dvk_status_log (OID = 24725) : 
 --
-CREATE FUNCTION adit.trigger_fct_tr_doc_dvk_status_log (
+CREATE FUNCTION adit.trigger_fct_tr_document_dvk_status_log (
 )
 RETURNS trigger
 AS 
@@ -6043,12 +6043,12 @@ CREATE TRIGGER tr_document_wf_status_log
     FOR EACH ROW
     EXECUTE PROCEDURE adit.trigger_fct_tr_document_wf_status_log ();
 --
--- Definition for trigger tr_doc_dvk_status_log (OID = 24778) : 
+-- Definition for trigger tr_document_dvk_status_log (OID = 24778) : 
 --
-CREATE TRIGGER tr_doc_dvk_status_log
+CREATE TRIGGER tr_document_dvk_status_log
     AFTER INSERT OR DELETE OR UPDATE ON adit.document_dvk_status
     FOR EACH ROW
-    EXECUTE PROCEDURE adit.trigger_fct_tr_doc_dvk_status_log ();
+    EXECUTE PROCEDURE adit.trigger_fct_tr_document_dvk_status_log ();
 --
 -- Definition for trigger tr_notification_log (OID = 24779) : 
 --
