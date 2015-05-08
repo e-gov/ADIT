@@ -104,6 +104,7 @@ adit-war/lib/commons-compress-1.3.jar -text
 adit-war/lib/commons-io-1.3.1.jar -text
 adit-war/lib/commons-logging-1.1.1.jar -text
 adit-war/lib/dom4j-1.6.1.jar -text
+adit-war/lib/dvk-api-1.0.14.jar -text
 adit-war/lib/dvkapi.jar -text
 adit-war/lib/esteidtestcerts.jar -text
 adit-war/lib/fop.jar -text
