@@ -3,13 +3,13 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>adit-war</artifactId>
     <packaging>war</packaging>
-    <version>1.0.86</version>
+    <version>1.0.87</version>
     <name>ADIT Web Application</name>
 
     <parent>
         <groupId>ee</groupId>
         <artifactId>adit</artifactId>
-        <version>1.0.86</version>
+        <version>1.0.87</version>
     </parent>
 
     <properties>
@@ -200,13 +200,13 @@
 
 
         <!-- Oracle -->
-        <dependency>
-            <groupId>java</groupId>
-            <artifactId>ojdbc</artifactId>
-            <version>1.6</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/ojdbc6.jar</systemPath>
-        </dependency>
+<!--         <dependency> -->
+<!--             <groupId>java</groupId> -->
+<!--             <artifactId>ojdbc</artifactId> -->
+<!--             <version>1.6</version> -->
+<!--             <scope>system</scope> -->
+<!--             <systemPath>${basedir}/lib/ojdbc6.jar</systemPath> -->
+<!--         </dependency> -->
 
         <!-- Codec -->
         <dependency>
@@ -300,9 +300,9 @@
         <dependency>
             <groupId>dvk</groupId>
             <artifactId>api</artifactId>
-            <version>1.0.13</version>
+            <version>1.0.14</version>
             <scope>system</scope>
-            <systemPath>${basedir}/lib/dvk-api-1.0.13.jar</systemPath>
+            <systemPath>${basedir}/lib/dvk-api-1.0.14.jar</systemPath>
         </dependency>
 
         <!-- FOP -->
@@ -560,8 +560,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>1.7</source>
+                    <target>1.7</target>
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>

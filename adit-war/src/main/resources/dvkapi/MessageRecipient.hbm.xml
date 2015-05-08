@@ -53,7 +53,7 @@
 		<property name="faultDetail" type="string">
 			<column name="FAULT_DETAIL" length="2000" />
 		</property>
-		<property name="metaxml" type="clob">
+		<property name="metaxml" type="string">
 			<column name="METAXML" />
 		</property>
 		<property name="dhlId" type="big_decimal">

@@ -184,7 +184,7 @@ public class DocumentService_SendReceiveDvkTest_Integration {
         Assert.notNull(documentSharings);
 
         // Get a container ver 2.1 from the received DVK document
-        ContainerVer2_1 containerOutput = ContainerVer2_1.parse(documentService.readFromClob(receivedDVKMessage.getData()));
+        ContainerVer2_1 containerOutput = ContainerVer2_1.parse(receivedDVKMessage.getData());
 
         // Do asserts with an input container and an output container
         Assert.notNull(containerInput);

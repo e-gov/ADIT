@@ -9,12 +9,16 @@ import ee.adit.dvk.DvkSender;
 import ee.adit.dvk.converter.DocumentToContainerVer2_1ConverterImpl;
 import ee.adit.service.DocumentService;
 import ee.adit.util.Util;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.sql.Clob;
 import java.util.Set;
+
 import org.apache.log4j.Logger;
 import org.hibernate.FlushMode;
 import org.hibernate.Hibernate;
@@ -70,15 +74,15 @@ public class ContainerVer2_1Sender implements DvkSender {
 
             // Write the temporary file to the database
             InputStream is = new FileInputStream(temporaryFile);
-            Writer clobWriter = dvkMessageToUpdate.getData().setCharacterStream(1);
-
+            Writer dataWriter = new StringWriter();
             byte[] buf = new byte[1024];
             int len;
             while ((len = is.read(buf)) > 0) {
-                clobWriter.write(new String(buf, 0, len, "UTF-8"));
+            	dataWriter.write(new String(buf, 0, len, "UTF-8"));
             }
             is.close();
-            clobWriter.close();
+            dataWriter.close();
+            dvkMessageToUpdate.setData(dataWriter.toString());
 
             // Commit to DVK database
             dvkTransaction.commit();
@@ -157,8 +161,7 @@ public class ContainerVer2_1Sender implements DvkSender {
         }
 
         // Insert data as stream
-        Clob clob = Hibernate.createClob(" ", dvkSession);
-        dvkMessage.setData(clob);
+        dvkMessage.setData(" ");
         return dvkMessage;
     }
 

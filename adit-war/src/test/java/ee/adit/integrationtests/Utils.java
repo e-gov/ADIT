@@ -192,8 +192,7 @@ public class Utils {
             // because may be errors in big files handling
             dvkSession = dvkDAO.getSessionFactory().openSession();
             in = new BufferedReader(new FileReader(containerFile));
-            Clob clob = Hibernate.createClob(in, containerFile.length(), dvkSession);
-            dvkMessage.setData(clob);
+            dvkMessage.setData(in.toString());
 
             // Save message in DVK UK DB
             dvkDAO.updateDocument(dvkMessage);
@@ -266,8 +265,7 @@ public class Utils {
             // because may be errors in big files handling
             dvkSession = dvkDAO.getSessionFactory().openSession();
             in = new BufferedReader(new FileReader(containerFile));
-            Clob clob = Hibernate.createClob(in, containerFile.length(), dvkSession);
-            dvkMessage.setData(clob);
+            dvkMessage.setData(in.toString());
 
             // Save message in DVK UK DB
             dvkDAO.updateDocument(dvkMessage);

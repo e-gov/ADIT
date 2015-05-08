@@ -13,7 +13,7 @@
         <property name="isIncoming" type="org.hibernate.type.NumericBooleanType">
             <column name="IS_INCOMING" precision="1" scale="0" not-null="true" />
         </property>
-        <property name="data" type="clob">
+        <property name="data" type="string">
             <column name="DATA" not-null="true" />
         </property>
         <property name="title" type="string">
@@ -85,7 +85,7 @@
         <property name="statusUpdateNeeded" type="java.lang.Long">
             <column name="STATUS_UPDATE_NEEDED" precision="10" scale="0" />
         </property>
-        <property name="metaxml" type="clob">
+        <property name="metaxml" type="string">
             <column name="METAXML" />
         </property>
         <property name="queryId" type="string">

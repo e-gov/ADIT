@@ -47,8 +47,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.*;
 import java.security.cert.X509Certificate;
-import java.sql.Blob;
-import java.sql.Clob;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -1371,8 +1369,7 @@ public class DocumentService {
                         }
 
                         // Insert data as stream
-                        Clob clob = Hibernate.createClob(" ", dvkSession);
-                        dvkMessage.setData(clob);
+                        dvkMessage.setData(" ");
 
                         logger.debug("Saving document to DVK database");
                         dvkMessageID = (Long) dvkSession.save(dvkMessage);
@@ -1412,15 +1409,17 @@ public class DocumentService {
 
                         // Write the temporary file to the database
                         InputStream is = new FileInputStream(temporaryFile);
-                        Writer clobWriter = dvkMessageToUpdate.getData().setCharacterStream(1);
+                        Writer dataWriter = new StringWriter();
 
                         byte[] buf = new byte[1024];
                         int len;
                         while ((len = is.read(buf)) > 0) {
-                            clobWriter.write(new String(buf, 0, len, "UTF-8"));
+                        	dataWriter.write(new String(buf, 0, len, "UTF-8"));
                         }
                         is.close();
-                        clobWriter.close();
+                        dataWriter.close();
+                        
+                        dvkMessageToUpdate.setData(dataWriter.toString());
 
                         // Commit to DVK database
                         dvkTransaction2.commit();
@@ -2063,22 +2062,22 @@ public class DocumentService {
     public ContainerVer2 getDVKContainer(PojoMessage document) throws AditInternalException {
         ContainerVer2 result = null;
 
-        // Write the clob data to a temporary file
-        Reader clobReader = null;
+        // Write the string data to a temporary file
+        Reader dataReader  = null;
         FileWriter fileWriter = null;
         try {
-            clobReader = document.getData().getCharacterStream();
+        	dataReader  = new StringReader(document.getData());
             String tmpFile = this.getConfiguration().getTempDir() + File.separator + Util.generateRandomFileName();
             fileWriter = new FileWriter(tmpFile);
 
             char[] cbuf = new char[1024];
             int readCount = 0;
-            while ((readCount = clobReader.read(cbuf)) > 0) {
+            while ((readCount = dataReader .read(cbuf)) > 0) {
                 fileWriter.write(cbuf, 0, readCount);
             }
 
             fileWriter.close();
-            clobReader.close();
+            dataReader.close();
 
             result = ContainerVer2.parseFile(tmpFile);
 
@@ -2102,9 +2101,9 @@ public class DocumentService {
                 }
             }
 
-            if (clobReader != null) {
+            if (dataReader != null) {
                 try {
-                    clobReader.close();
+                	dataReader.close();
                 } catch (Exception e) {
                     logger.warn("Error while closing Clob reader: ", e);
                 }
@@ -2125,16 +2124,16 @@ public class DocumentService {
         ContainerVer1 result = null;
 
         StringBuilder sb = new StringBuilder(1024 * 1024 * 5);
-        Reader clobReader = null;
+        Reader dataReader = null;
         try {
-            clobReader = document.getData().getCharacterStream();
+        	dataReader = new StringReader(document.getData());
 
             char[] cbuf = new char[1024];
             int readCount = 0;
-            while ((readCount = clobReader.read(cbuf)) > 0) {
+            while ((readCount = dataReader.read(cbuf)) > 0) {
                 sb.append(cbuf, 0, readCount);
             }
-            clobReader.close();
+            dataReader.close();
 
             result = ContainerVer1.parse(sb.toString());
 
@@ -2149,9 +2148,9 @@ public class DocumentService {
             logger.error("XML of container that could not be processed: " + sb.toString());
             throw new AditInternalException("Exception while reading DVK container from database: ", e);
         } finally {
-            if (clobReader != null) {
+            if (dataReader != null) {
                 try {
-                    clobReader.close();
+                	dataReader.close();
                 } catch (Exception e) {
                     logger.warn("Error while closing Clob reader: ", e);
                 }
@@ -2169,7 +2168,7 @@ public class DocumentService {
      */
     public ContainerVer2_1 getDVKContainer2_1(final PojoMessage document) {
         try {
-            return ContainerVer2_1.parse(readFromClob(document.getData()));
+            return ContainerVer2_1.parse(document.getData());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -2602,7 +2601,7 @@ public class DocumentService {
      */
     public void deleteDVKDocument(PojoMessage message, Session session) {
         logger.debug("Deleting document. DHL_ID: " + message.getDhlId());
-        message.setData(Hibernate.createClob(DocumentService.DVKBLOBMESSAGE_DELETE, session));
+        message.setData(DocumentService.DVKBLOBMESSAGE_DELETE);
         message.setFaultCode(DocumentService.DVK_FAULT_CODE_FOR_DELETED);
         session.update(message);
     }
@@ -3024,8 +3023,7 @@ public class DocumentService {
                 dvkSession = this.getDocumentDAO().getSessionFactory().openSession();
                 dvkTransaction = dvkSession.beginTransaction();
 
-                Clob clob = Hibernate.createClob(" ", dvkSession);
-                message.setData(clob);
+                message.setData(" ");
 
                 dvkMessageID = (Long) dvkSession.save(message);
                 message.setData(null);
@@ -3062,15 +3060,16 @@ public class DocumentService {
 
                 // Write the temporary file to the database
                 InputStream is = new FileInputStream(temporaryFile);
-                Writer clobWriter = dvkMessageToUpdate.getData().setCharacterStream(1);
+                Writer dataWriter = new StringWriter();
 
                 byte[] buf = new byte[1024];
                 int len;
                 while ((len = is.read(buf)) > 0) {
-                    clobWriter.write(new String(buf, 0, len, "UTF-8"));
+                	dataWriter.write(new String(buf, 0, len, "UTF-8"));
                 }
                 is.close();
-                clobWriter.close();
+                dataWriter.close();
+                dvkMessageToUpdate.setData(dataWriter.toString());
 
                 // Commit to DVK database
                 dvkTransaction2.commit();
@@ -3248,8 +3247,7 @@ public class DocumentService {
                 dvkSession = this.getDocumentDAO().getSessionFactory().openSession();
                 dvkTransaction = dvkSession.beginTransaction();
 
-                Clob clob = Hibernate.createClob(" ", dvkSession);
-                message.setData(clob);
+                message.setData(" ");
 
                 dvkMessageID = (Long) dvkSession.save(message);
                 message.setData(null);
@@ -3286,15 +3284,17 @@ public class DocumentService {
 
                 // Write the temporary file to the database
                 InputStream is = new FileInputStream(temporaryFile);
-                Writer clobWriter = dvkMessageToUpdate.getData().setCharacterStream(1);
+                Writer dataWriter = new StringWriter();
 
                 byte[] buf = new byte[1024];
                 int len;
                 while ((len = is.read(buf)) > 0) {
-                    clobWriter.write(new String(buf, 0, len, "UTF-8"));
+                	dataWriter.write(new String(buf, 0, len, "UTF-8"));
                 }
                 is.close();
-                clobWriter.close();
+                dataWriter.close();
+                
+                dvkMessageToUpdate.setData(dataWriter.toString());
 
                 // Commit to DVK database
                 dvkTransaction2.commit();
@@ -3322,7 +3322,7 @@ public class DocumentService {
                     }
                 }
                 throw new DataRetrievalFailureException(
-                        "Error while adding message to DVK Client database (CLOB update): ", e);
+                        "Error while adding message to DVK Client database (String update): ", e);
             } finally {
                 if (dvkSession2 != null) {
                     dvkSession2.close();

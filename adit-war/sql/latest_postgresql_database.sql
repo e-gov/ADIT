@@ -1128,6 +1128,8 @@ COMMENT ON COLUMN adit.remote_application.organization_code IS 'Registry code of
 COMMENT ON COLUMN adit.remote_application.can_read IS 'Indicates whether or not this application is allowed to read data';
 COMMENT ON COLUMN adit.remote_application.can_write IS 'Indicates whether or not this application is allowed to modify data';
 
+GRANT USAGE ON SCHEMA adit TO adit_user;
+
 GRANT SELECT, UPDATE, INSERT ON adit.access_restriction TO adit_user;
 GRANT SELECT, UPDATE, INSERT ON adit.adit_log TO adit_user;
 GRANT SELECT, UPDATE, INSERT ON adit.adit_user TO adit_user;
@@ -1153,8 +1155,22 @@ GRANT SELECT, UPDATE, INSERT ON adit.user_contact TO adit_user;
 GRANT SELECT, UPDATE, INSERT, DELETE ON adit.user_notification TO adit_user;
 GRANT SELECT, UPDATE, INSERT ON adit.usertype TO adit_user;
 
+GRANT USAGE ON SEQUENCE adit.adit_log_id_seq TO adit_user;
+GRANT USAGE ON SEQUENCE adit.document_file_id_seq TO adit_user;
+GRANT USAGE ON SEQUENCE adit.document_history_id_seq TO adit_user;
+GRANT USAGE ON SEQUENCE adit.document_id_seq TO adit_user;
+GRANT USAGE ON SEQUENCE adit.document_sharing_id_seq TO adit_user;
+GRANT USAGE ON SEQUENCE adit.download_request_log_id_seq TO adit_user;
+GRANT USAGE ON SEQUENCE adit.error_log_id_seq TO adit_user;
+GRANT USAGE ON SEQUENCE adit.metadata_request_log_id_seq TO adit_user;
+GRANT USAGE ON SEQUENCE adit.notification_id_seq TO adit_user;
+GRANT USAGE ON SEQUENCE adit.request_log_id_seq TO adit_user;
+GRANT USAGE ON SEQUENCE adit.signature_id_seq TO adit_user;
+GRANT USAGE ON SEQUENCE adit.user_contact_id_seq TO adit_user;
 
-
+GRANT EXECUTE ON FUNCTION adit.set_job_running_status(bigint, bigint) TO adit_user;
+GRANT EXECUTE ON FUNCTION adit.remove_signed_file_contents(bigint, bigint, bigint, bigint) TO adit_user;
+GRANT EXECUTE ON FUNCTION adit.deflate_file(bigint, bigint, bigint, bigint) TO adit_user;
 
 --
 -- Definition for function set_job_running_status (OID = 16706) : 
