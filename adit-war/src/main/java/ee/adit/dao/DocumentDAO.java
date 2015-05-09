@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,6 +19,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.UUID;
@@ -33,6 +35,7 @@ import org.hibernate.Transaction;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.impl.SessionFactoryImpl;
 import org.hibernate.type.Type;
 import org.springframework.context.MessageSource;
 import org.springframework.dao.DataAccessException;
@@ -196,6 +199,27 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
                     Iterator<DocumentFile> iterator = doc.getDocumentFiles().iterator();
                     logger.error("GET_DOCUMENT " + new String(iterator.next().getFileData()));
                     
+                    Field f;
+					try {
+						f = SessionFactoryImpl.class.getDeclaredField("properties");
+						f.setAccessible(true);
+	                    Properties p = (Properties) f.get(session.getSessionFactory());
+	                    
+	                    logger.error("GET_DOCUMENT " + p);
+					} catch (SecurityException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (NoSuchFieldException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IllegalArgumentException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IllegalAccessException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
                     return dbDocumentToOutputDocument(doc, fileIdList, includeSignatures, includeSharings,
                             includeFileContents, fileTypes, temporaryFilesDir, filesNotFoundMessageBase,
                             currentRequestUserCode, documentRetentionDeadlineDays, digidocConfigFile);
