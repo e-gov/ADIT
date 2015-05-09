@@ -1150,6 +1150,9 @@ public class DocumentService {
     public void addHistoryEvent(String applicationName, long documentId, String userCode, String historyType,
                                 String xteeUserCode, String xteeUserName, String description, String userName, Date eventDate) {
         // Add history event
+    	if (applicationName == null || applicationName.isEmpty()) {
+    		applicationName = "Riigiportaal";
+    	}
         DocumentHistory documentHistory = new DocumentHistory();
         documentHistory.setRemoteApplicationName(applicationName);
         documentHistory.setDocumentId(documentId);
