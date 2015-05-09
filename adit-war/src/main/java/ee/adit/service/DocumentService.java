@@ -1,7 +1,6 @@
 package ee.adit.service;
 
 import dvk.api.container.ArrayOfSignature;
-
 import dvk.api.container.LetterMetaData;
 import dvk.api.container.Metaxml;
 import dvk.api.container.Person;
@@ -35,6 +34,7 @@ import ee.sk.digidoc.Signature;
 import ee.sk.digidoc.factory.DigiDocGenFactory;
 import ee.sk.digidoc.factory.SAXDigiDocFactory;
 import ee.sk.utils.ConfigManager;
+
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.fop.apps.MimeConstants;
@@ -47,6 +47,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.*;
 import java.security.cert.X509Certificate;
+import java.sql.Clob;
 import java.sql.SQLException;
 import java.util.*;
 

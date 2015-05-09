@@ -282,7 +282,7 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
             	if (docFile.getDocumentFileTypeId() == DocumentService.FILETYPE_SIGNATURE_CONTAINER) {
                 	signatureContainerFile = docFile;
                 }
-
+            	
             	boolean fileMatchesRequestedId = (fileIdList == null) || fileIdList.isEmpty() || fileIdList.contains(docFile.getId());
             	boolean fileTypeWasRequested = DocumentService.fileIsOfRequestedType(docFile.getDocumentFileTypeId(), fileTypes);
             	boolean fileIsNeededForZipArchive = buildZipArchive && (docFile.getDocumentFileTypeId() == DocumentService.FILETYPE_DOCUMENT_FILE);
@@ -327,7 +327,11 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
 	                            while ((len = blobDataStream.read(buffer)) > 0) {
 	                                fileOutputStream.write(buffer, 0, len);
 	                                currentFileBytes += len;
+	                                logger.error("getDocument.v1 Successfully retreived:" + new String(buffer));
 	                            }
+	                            
+	                            
+	                            
 	                            logger.debug("Successfully retreived " + currentFileBytes + " bytes. Was expecting " + docFile.getFileSizeBytes() + " bytes.");
 	                        } catch (IOException ex) {
 	                        	logger.debug("Exception occured while reading file " + docFile.getId() + " from database.", ex);
