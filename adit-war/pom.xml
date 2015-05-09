@@ -198,16 +198,6 @@
             <systemPath>${basedir}/lib/jta-1.1.jar</systemPath>
         </dependency>
 
-
-        <!-- Oracle -->
-<!--         <dependency> -->
-<!--             <groupId>java</groupId> -->
-<!--             <artifactId>ojdbc</artifactId> -->
-<!--             <version>1.6</version> -->
-<!--             <scope>system</scope> -->
-<!--             <systemPath>${basedir}/lib/ojdbc6.jar</systemPath> -->
-<!--         </dependency> -->
-
 		<dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>

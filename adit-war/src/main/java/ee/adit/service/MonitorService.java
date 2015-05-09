@@ -661,13 +661,7 @@ public class MonitorService {
             customXTeeConsumer.setWebServiceTemplate(webServiceTemplate);
             customXTeeConsumer.setServiceConfiguration(xTeeServiceConfiguration);
             customXTeeConsumer.setMsgCallbackFactory(new CustomMessageCallbackFactory());
-            
-//            logger.error("GET_DOCUMENT database:" + this.getConfiguration().getXteeProducerName());
-            logger.error("GET_DOCUMENT idCode:" + this.getMonitorConfiguration().getUserCode());
-            logger.error("GET_DOCUMENT institution:" + this.getMonitorConfiguration().getInstitutionCode());
-            logger.error("GET_DOCUMENT securityServer:" + serviceURI);
-            logger.error("GET_DOCUMENT infosysteem:" + this.getMonitorConfiguration().getRemoteApplicationShortName());
-            
+                        
             GetDocumentResponseMonitor response = (GetDocumentResponseMonitor) customXTeeConsumer.sendRequest(request);
 
             if (response != null) {

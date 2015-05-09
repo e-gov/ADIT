@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
-import ee.adit.dao.pojo.DocumentFile;
 import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditInternalException;
@@ -89,8 +88,6 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
         try {
             logger.debug("getDocument.v1 invoked.");
             GetDocumentRequest request = (GetDocumentRequest) requestObject;
-            logger.error("getDocument.v1 securityServer:" + request.getDocumentId());
-            logger.error("getDocument.v1 isIncludeFileContents:" + request.isIncludeFileContents());
             //that parameter is not used in this version
             request.setDvkId(null);
             if (request != null) {
@@ -126,13 +123,6 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
             AditUser xroadRequestUser = Util.getXroadUserFromXroadHeader(user, this.getHeader(), this.getUserService());
 
             Document doc = checkRightsAndGetDocument(request, applicationName, user);
-            
-            logger.error("getDocument.v1 checkRightsAndGetDocument:" + doc.getId());
-//            Iterator<DocumentFile> iterator = doc.getDocumentFiles().iterator();
-//            DocumentFile firstFile = iterator.next();
-//            logger.error("getDocument.v1 toString:" + firstFile.toString());
-//            logger.error("getDocument.v1 getContentType:" + firstFile.getContentType());
-//            logger.error("getDocument.v1 getContentType:" + firstFile.getFileName());
             
             boolean saveDocument = false;
 
