@@ -122,6 +122,7 @@ adit-war/lib/jta-1.1.jar -text
 adit-war/lib/log4j-1.2.16.jar -text
 adit-war/lib/ojdbc6.jar -text
 adit-war/lib/orai18n.jar -text
+adit-war/lib/postgresql-9.4-1201.jdbc41.jar -text
 adit-war/lib/quartz-1.8.3.jar -text
 adit-war/lib/riigiportaal-types.jar -text
 adit-war/lib/saaj-api.jar -text

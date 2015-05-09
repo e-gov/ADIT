@@ -208,6 +208,14 @@
 <!--             <systemPath>${basedir}/lib/ojdbc6.jar</systemPath> -->
 <!--         </dependency> -->
 
+		<dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>9.4-1201-jdbc41</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/postgresql-9.4-1201.jdbc41.jar</systemPath>
+        </dependency>
+
         <!-- Codec -->
         <dependency>
             <groupId>commons</groupId>
