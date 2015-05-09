@@ -193,6 +193,9 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
                 @Override
                 public Object doInHibernate(Session session) throws HibernateException, SQLException {
                     Document doc = (Document) session.get(Document.class, documentId);
+                    Iterator<DocumentFile> iterator = doc.getDocumentFiles().iterator();
+                    logger.error("GET_DOCUMENT " + new String(iterator.next().getFileData()));
+                    
                     return dbDocumentToOutputDocument(doc, fileIdList, includeSignatures, includeSharings,
                             includeFileContents, fileTypes, temporaryFilesDir, filesNotFoundMessageBase,
                             currentRequestUserCode, documentRetentionDeadlineDays, digidocConfigFile);
