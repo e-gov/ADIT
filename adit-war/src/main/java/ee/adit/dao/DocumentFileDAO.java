@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
@@ -51,6 +52,7 @@ public class DocumentFileDAO extends HibernateDaoSupport {
                 new HibernateCallback() {
                     public Object doInHibernate(Session session) throws HibernateException, SQLException {
                         Query q = session.getNamedQuery("DEFLATE_FILE");
+                        session.beginTransaction();
                         session.connection().setAutoCommit(false);
                         q.setLong("documentId", documentId);
                         q.setLong("fileId", fileId);
@@ -59,7 +61,7 @@ public class DocumentFileDAO extends HibernateDaoSupport {
                         logger.debug("Executing stored procedure DEFLATE_FILE");
                         
                         Object uniqueResult = q.uniqueResult();
-                        session.connection().setAutoCommit(true);
+                        session.getTransaction().commit();
                         return uniqueResult;
                     }
                 });
