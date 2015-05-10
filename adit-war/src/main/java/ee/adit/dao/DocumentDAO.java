@@ -1034,26 +1034,32 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
 			final String digidocConfigFile) throws SQLException {
 
 		Map<String, Object> parameterMap = new HashMap<String, Object>();
-		if (param.isHasBeenViewed() != null && param.isHasBeenViewed() == true) {
-			parameterMap.put("hasBeenViewed", Arrays.asList(1, Hibernate.INTEGER).toArray());
-		} else {
+		if (param.isHasBeenViewed() == null) {
+			parameterMap.put("hasBeenViewed", Arrays.asList(null, Hibernate.INTEGER).toArray());
+		} else if (param.isHasBeenViewed() == false) {
 			parameterMap.put("hasBeenViewed", Arrays.asList(0, Hibernate.INTEGER).toArray());
+		} else if (param.isHasBeenViewed() == true) {
+			parameterMap.put("hasBeenViewed", Arrays.asList(1, Hibernate.INTEGER).toArray());
 		}
 		parameterMap.put("userCode", Arrays.asList(userCode, Hibernate.STRING).toArray());
 		parameterMap.put("searchPhrase", Arrays.asList(param.getSearchPhrase() == null || param.getSearchPhrase().length() == 0 ? null : "%" + param.getSearchPhrase().toLowerCase() + "%", Hibernate.STRING).toArray());
-		if (param.isIsDeflated() != null && param.isIsDeflated() == true) {
-			parameterMap.put("deflated", Arrays.asList(1, Hibernate.INTEGER).toArray());
-		} else {
+		if (param.isIsDeflated() == null) {
+			parameterMap.put("deflated", Arrays.asList(null, Hibernate.INTEGER).toArray());
+		} else if(param.isIsDeflated() == false) {
 			parameterMap.put("deflated", Arrays.asList(0, Hibernate.INTEGER).toArray());
+		} else if(param.isIsDeflated() == true) {
+			parameterMap.put("deflated", Arrays.asList(1, Hibernate.INTEGER).toArray());
 		}
 		parameterMap.put("periodStart", Arrays.asList(param.getPeriodStart() == null ? null : param.getPeriodStart().toDate(), Hibernate.DATE).toArray());
 		parameterMap.put("periodEnd", Arrays.asList(param.getPeriodEnd() == null ? null : param.getPeriodEnd().toDate(), Hibernate.DATE).toArray());
 		parameterMap.put("folder", Arrays.asList(param.getFolder() == null || param.getFolder().length() == 0 ? null : param.getFolder().toLowerCase(), Hibernate.STRING).toArray());
 		parameterMap.put("eformUseId", Arrays.asList(param.getEformUseId(), Hibernate.LONG).toArray());
-		if (param.getSigned() != null && param.getSigned() == true) {
-			parameterMap.put("signed", Arrays.asList(1, Hibernate.INTEGER).toArray());
-		} else {
+		if (param.getSigned() == null) {
+			parameterMap.put("signed", Arrays.asList(null, Hibernate.INTEGER).toArray());
+		} else if(param.getSigned() == false) {
 			parameterMap.put("signed", Arrays.asList(0, Hibernate.INTEGER).toArray());
+		} else if(param.getSigned() == true) {
+			parameterMap.put("signed", Arrays.asList(1, Hibernate.INTEGER).toArray());
 		}
 
 		StringBuilder selectSql = new StringBuilder("SELECT * FROM (\r\n");
