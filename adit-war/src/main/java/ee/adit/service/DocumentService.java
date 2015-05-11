@@ -3709,6 +3709,7 @@ public class DocumentService {
                             containerAsStream = new ByteArrayInputStream(signatureContainerDraft.getFileData());
                             isBdoc = Util.isBdocFile(signatureContainer.getFileName());
                         }
+                        
                         sdoc = factory.readSignedDocFromStreamOfType(containerAsStream, isBdoc);
 
                     } finally {
@@ -3874,6 +3875,7 @@ public class DocumentService {
                 // length, session);
 //                Blob containerData = Hibernate.createBlob(fileInputStream, length);
                 byte[] containerData = new byte[fileInputStream.available()];
+                fileInputStream.read(containerData, 0, fileInputStream.available());
 
                 if (signatureContainerDraft == null) {
                     signatureContainerDraft = new DocumentFile();
@@ -4095,7 +4097,7 @@ public class DocumentService {
             ConfigManager.init(digidocConfigFile);
             SAXDigiDocFactory factory = new SAXDigiDocFactory();
             Boolean isBdoc = Util.isBdocFile(signatureContainerDraft.getFileName());
-
+            
             SignedDoc sdoc = factory.readSignedDocFromStreamOfType(new ByteArrayInputStream(signatureContainerDraft.getFileData()), isBdoc);
 
             File signatureFile = new File(signatureFileName);
@@ -4191,10 +4193,8 @@ public class DocumentService {
                 logger.error("Error reading digidoc container file: ", e);
             }
             long length = (new File(containerFileName)).length();
-            // Blob containerData = Hibernate.createBlob(fileInputStream,
-            // length, session);
-//            Blob containerData = Hibernate.createBlob(fileInputStream, length);
             byte[] containerData = new byte[fileInputStream.available()];
+            fileInputStream.read(containerData, 0, fileInputStream.available());
 
             boolean wasSignedBefore = true;
             if (signatureContainer == null) {
