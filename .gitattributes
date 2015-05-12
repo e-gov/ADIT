@@ -704,9 +704,11 @@ adit-war/src/test/resources/jdigidoc.cfg -text
 adit-war/src/test/resources/log4j.xml -text
 adit-war/versionHistory.txt -text
 doc/ADIT_paigaldusjuhend_lisa.txt -text
+doc/adit_andmebaasi_paigaldusjuhend.docx -text
 doc/adit_kasutusjuhend.odt -text
 doc/adit_kirjeldus.odt -text
 doc/adit_paigaldusjuhend.odt -text
+doc/adit_rakenduse_paigaldusjuhend.docx -text
 doc/adit_riskianalüüs.odt -text
 doc/adit_taasteplaan.odt -text
 /pom.xml -text
