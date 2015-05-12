@@ -3706,10 +3706,10 @@ public class DocumentService {
                             containerAsStream = new ByteArrayInputStream(signatureContainerDraft.getFileData());
                             isBdoc = Util.isBdocFile(signatureContainerDraft.getFileName());
                         } else {
-                            containerAsStream = new ByteArrayInputStream(signatureContainerDraft.getFileData());
+                            containerAsStream = new ByteArrayInputStream(signatureContainer.getFileData());
                             isBdoc = Util.isBdocFile(signatureContainer.getFileName());
                         }
-                        
+                          
                         sdoc = factory.readSignedDocFromStreamOfType(containerAsStream, isBdoc);
 
                     } finally {
