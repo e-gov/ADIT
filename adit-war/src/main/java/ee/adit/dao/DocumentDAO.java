@@ -1139,11 +1139,11 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
 				"							)\r\n" +
 				"						)\r\n" +
 				"						AND (\r\n" +
-				"							:periodStart IS NULL\r\n" +
+				"							CAST(:periodStart AS TIMESTAMP) IS NULL\r\n" +
 				"							OR CAST(d.last_modified_date AS DATE) >= :periodStart\r\n" +
 				"						)\r\n" +
 				"						AND (\r\n" +
-				"							:periodEnd IS NULL\r\n" +
+				"							CAST(:periodEnd AS TIMESTAMP) IS NULL\r\n" +
 				"							OR CAST(d.last_modified_date AS DATE) <= :periodEnd\r\n" +
 				"						)\r\n" +
 				"						AND (:eformUseId IS NULL OR d.eform_use_id = :eformUseId)\r\n" +

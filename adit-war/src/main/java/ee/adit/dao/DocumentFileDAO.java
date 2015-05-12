@@ -52,7 +52,6 @@ public class DocumentFileDAO extends HibernateDaoSupport {
                 new HibernateCallback() {
                     public Object doInHibernate(Session session) throws HibernateException, SQLException {
                         Query q = session.getNamedQuery("DEFLATE_FILE");
-                        Transaction tx = session.beginTransaction();
                         session.connection().setAutoCommit(false);
                         q.setLong("documentId", documentId);
                         q.setLong("fileId", fileId);
@@ -61,7 +60,7 @@ public class DocumentFileDAO extends HibernateDaoSupport {
                         logger.debug("Executing stored procedure DEFLATE_FILE");
                         
                         Object uniqueResult = q.uniqueResult();
-                        tx.commit();
+                        session.connection().setAutoCommit(true);
                         return uniqueResult;
                     }
                 });

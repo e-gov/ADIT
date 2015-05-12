@@ -48,6 +48,7 @@
 				<prop key="hibernate.connection.driver_class">org.postgresql.Driver</prop>
 				<prop key="hibernate.cache.provider_class">org.hibernate.cache.NoCacheProvider</prop>
 				<prop key="hibernate.show.sql">false</prop>
+				<prop key="hibernate.connection.autocommit">false</prop>
 				<prop key="hibernate.connection.useUnicode">true</prop>
 				<prop key="hibernate.connection.characterEncoding">UTF-8</prop>
                 <prop key="hibernate.connection.charSet">UTF-8</prop>
