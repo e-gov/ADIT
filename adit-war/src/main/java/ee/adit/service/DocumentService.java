@@ -4147,6 +4147,7 @@ public class DocumentService {
                 fs = null;
             }
             
+            logger.error("**** signatureFileName :: " + signatureFileName);
             logger.error("**** sigValue string :: " + new String(sigValue));
             logger.error("**** sigValue.length :: " + sigValue.length);
             
