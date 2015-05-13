@@ -4109,6 +4109,7 @@ public class DocumentService {
             DocumentFile signatureContainer = findSignatureContainer(doc);
             
             logger.error("**** documentId :: " + documentId);
+            logger.error("**** signatureFileName :: " + signatureFileName);
             
 
             if ((signatureContainerDraft == null) || (signatureContainerDraft.getFileData() == null)) {
@@ -4146,6 +4147,7 @@ public class DocumentService {
                 fs = null;
             }
             
+            logger.error("**** sigValue string :: " + new String(sigValue));
             logger.error("**** sigValue.length :: " + sigValue.length);
             
             // Find unfinished Signature from container
@@ -4258,6 +4260,7 @@ public class DocumentService {
             logger.error("**** wasSignedBefore :: " + wasSignedBefore);
             
             logger.error("**** containerData :: " + containerData);
+            logger.error("**** containerData string :: " + new String(containerData));
             
             logger.error("**** containerData.length :: " + containerData.length);
             
