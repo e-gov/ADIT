@@ -471,7 +471,7 @@ WITH (oids = false);
 -- Definition for sequence adit_log_id_seq (OID = 24593) : 
 --
 CREATE SEQUENCE adit.adit_log_id_seq
-    START WITH 8711977
+    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -480,7 +480,7 @@ CREATE SEQUENCE adit.adit_log_id_seq
 -- Definition for sequence document_file_id_seq (OID = 24595) : 
 --
 CREATE SEQUENCE adit.document_file_id_seq
-    START WITH 143565
+    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -489,7 +489,7 @@ CREATE SEQUENCE adit.document_file_id_seq
 -- Definition for sequence document_history_id_seq (OID = 24597) : 
 --
 CREATE SEQUENCE adit.document_history_id_seq
-    START WITH 1331493
+    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -498,7 +498,7 @@ CREATE SEQUENCE adit.document_history_id_seq
 -- Definition for sequence document_id_seq (OID = 24599) : 
 --
 CREATE SEQUENCE adit.document_id_seq
-    START WITH 84779
+    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -507,7 +507,7 @@ CREATE SEQUENCE adit.document_id_seq
 -- Definition for sequence document_sharing_id_seq (OID = 24601) : 
 --
 CREATE SEQUENCE adit.document_sharing_id_seq
-    START WITH 77231
+    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -516,7 +516,7 @@ CREATE SEQUENCE adit.document_sharing_id_seq
 -- Definition for sequence download_request_log_id_seq (OID = 24603) : 
 --
 CREATE SEQUENCE adit.download_request_log_id_seq
-    START WITH 1348477
+    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -525,7 +525,7 @@ CREATE SEQUENCE adit.download_request_log_id_seq
 -- Definition for sequence error_log_id_seq (OID = 24605) : 
 --
 CREATE SEQUENCE adit.error_log_id_seq
-    START WITH 83635
+    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -534,7 +534,7 @@ CREATE SEQUENCE adit.error_log_id_seq
 -- Definition for sequence metadata_request_log_id_seq (OID = 24607) : 
 --
 CREATE SEQUENCE adit.metadata_request_log_id_seq
-    START WITH 45665
+    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -543,7 +543,7 @@ CREATE SEQUENCE adit.metadata_request_log_id_seq
 -- Definition for sequence notification_id_seq (OID = 24609) : 
 --
 CREATE SEQUENCE adit.notification_id_seq
-    START WITH 719
+    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -552,7 +552,7 @@ CREATE SEQUENCE adit.notification_id_seq
 -- Definition for sequence request_log_id_seq (OID = 24611) : 
 --
 CREATE SEQUENCE adit.request_log_id_seq
-    START WITH 4429660
+    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -561,7 +561,7 @@ CREATE SEQUENCE adit.request_log_id_seq
 -- Definition for sequence signature_id_seq (OID = 24613) : 
 --
 CREATE SEQUENCE adit.signature_id_seq
-    START WITH 7064
+    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
@@ -570,7 +570,7 @@ CREATE SEQUENCE adit.signature_id_seq
 -- Definition for sequence user_contact_id_seq (OID = 24615) : 
 --
 CREATE SEQUENCE adit.user_contact_id_seq
-    START WITH 146
+    START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE

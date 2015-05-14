@@ -3629,14 +3629,6 @@ public class DocumentService {
 
         PrepareSignatureInternalResult result = new PrepareSignatureInternalResult();
         result.setSuccess(true);
-        
-        logger.error("**** prepareSignature documentId :: " + documentId);
-        logger.error("**** prepareSignature manifest :: " + manifest);
-        logger.error("**** prepareSignature country :: " + country);
-        logger.error("**** prepareSignature state :: " + state);
-        logger.error("**** prepareSignature city :: " + city);
-        logger.error("**** prepareSignature zip :: " + zip);
-        
         Session session = null;
         Transaction tx = null;
         //first of all put isBdoc equal input parameter, but later we will change it according to existing container if necessary
@@ -3693,19 +3685,14 @@ public class DocumentService {
                 } else if ((signatureContainer != null) && (signatureContainer.getFileData() != null)) {
                     readExistingContainer = true;
                 }
-                
-                logger.error("**** readExistingContainer :: " + readExistingContainer);
-                
                 SignedDoc sdoc = null;
                 if (!readExistingContainer) {
                     logger.debug("Creating new signature container.");
                     if (isBdoc) {
                     	sdoc = new SignedDoc(SignedDoc.FORMAT_BDOC, SignedDoc.BDOC_VERSION_2_1);
                     	sdoc.setProfile(SignedDoc.BDOC_PROFILE_TM);
-                    	logger.error("**** readExistingContainer :: 11");
                     } else {
                     	sdoc = new SignedDoc(SignedDoc.FORMAT_DIGIDOC_XML, SignedDoc.VERSION_1_3);
-                    	logger.error("**** readExistingContainer :: 22");
                     }
                 } else {
                     logger.debug("Loading existing signature container");
@@ -3713,7 +3700,6 @@ public class DocumentService {
 
                     InputStream containerAsStream = null;
                     try {
-                    	logger.error("**** usingExistingDraft :: " + usingExistingDraft);
                         if (usingExistingDraft) {
                             containerAsStream = new ByteArrayInputStream(signatureContainerDraft.getFileData());
                             isBdoc = Util.isBdocFile(signatureContainerDraft.getFileName());
@@ -3773,10 +3759,6 @@ public class DocumentService {
                     claimedRoles = new String[]{manifest};
                 }
                 SignatureProductionPlace address = null;
-                logger.error("**** country :: " + country);
-                logger.error("**** state :: " + state);
-                logger.error("**** city :: " + city);
-                logger.error("**** zip :: " + zip);
                 if (((country != null) && (country.length() > 0)) || ((state != null) && (state.length() > 0))
                         || ((city != null) && (city.length() > 0)) || ((zip != null) && (zip.length() > 0))) {
 
@@ -3857,13 +3839,8 @@ public class DocumentService {
                         }
                     }
                 }
-                
-                logger.error("**** Add signature and calculate digest address :: " + address);
-                
                 // Add signature and calculate digest
                 Signature sig = sdoc.prepareSignature(cert, claimedRoles, address);
-                
-                logger.error("**** sig :: " + sig);
                 byte[] digest = sig.calculateSignedInfoDigest();
                 result.setSignatureHash(Util.convertToHexString(digest));
                 result.setSignatureId(sig.getId());
@@ -4107,11 +4084,6 @@ public class DocumentService {
             Document doc = (Document) session.get(Document.class, documentId);
             DocumentFile signatureContainerDraft = findSignatureContainerDraft(doc);
             DocumentFile signatureContainer = findSignatureContainer(doc);
-            
-            logger.error("**** documentId :: " + documentId);
-            logger.error("**** signatureFileName :: " + signatureFileName);
-            
-
             if ((signatureContainerDraft == null) || (signatureContainerDraft.getFileData() == null)) {
                 AditCodedException aditCodedException = new AditCodedException("request.confirmSignature.signatureNotPrepared");
                 aditCodedException.setParameters(new Object[]{});
@@ -4126,7 +4098,6 @@ public class DocumentService {
 
             File signatureFile = new File(signatureFileName);
             if (!signatureFile.exists()) {
-            	logger.error("**** !signatureFile.exists() :: ");
                 AditCodedException aditCodedException = new AditCodedException("request.confirmSignature.missingSignature");
                 aditCodedException.setParameters(new Object[]{});
                 throw aditCodedException;
@@ -4146,11 +4117,6 @@ public class DocumentService {
                 Util.safeCloseStream(fs);
                 fs = null;
             }
-            
-            logger.error("**** signatureFileName :: " + signatureFileName);
-            logger.error("**** sigValue string :: " + new String(sigValue));
-            logger.error("**** sigValue.length :: " + sigValue.length);
-            
             // Find unfinished Signature from container
             Signature sig = null;
             int activeSignatureIndex = -1;
@@ -4162,10 +4128,6 @@ public class DocumentService {
                     break;
                 }
             }
-            
-            logger.error("**** sig :: " + sig);
-            logger.error("**** sdoc.countSignatures() :: " + sdoc.countSignatures());
-            logger.error("**** sdoc :: " + sdoc);
 
             if (sig == null) {
                 AditCodedException aditCodedException = new AditCodedException("request.confirmSignature.signatureNotPrepared");
@@ -4183,16 +4145,11 @@ public class DocumentService {
                     		|| signatureValueAsString.startsWith("<?xml") /*bdoc signature*/)) {
                 isSignatureElement = true;
             }
-            
-            logger.error("**** isSignatureElement :: " + isSignatureElement);
-            logger.error("**** signatureValueAsString :: " + signatureValueAsString);
 
             String containerFileName = Util.generateRandomFileNameWithoutExtension();
             containerFileName = temporaryFilesDir + File.separator + containerFileName + "_CSv1.adit";
             if (isSignatureElement) {
-            	logger.error("**** isSignatureElement :: " + isSignatureElement);
             	if(sdoc.getFormat().equals(SignedDoc.FORMAT_BDOC)) {
-            		logger.error("**** sdoc.getFormat().equals(SignedDoc.FORMAT_BDOC) :: " + sdoc.getFormat().equals(SignedDoc.FORMAT_BDOC));
             		try{
             		 fs = new FileInputStream(signatureFileName);
                      factory.readSignature(sdoc, fs);
@@ -4203,7 +4160,6 @@ public class DocumentService {
             			Util.safeCloseStream(fs);
             		}
             	} else {
-            		logger.error("**** sdoc.getFormat().equals(SignedDoc.FORMAT_BDOC) :: " + sdoc.getFormat().equals(SignedDoc.FORMAT_BDOC));
             		 // Write container to temporary file
                     sdoc.writeToFile(new File(containerFileName));
                     // Replace pending signature with confirmed signature
@@ -4215,7 +4171,6 @@ public class DocumentService {
 
             } else {
                 // Decode signature value if it is HEX encoded
-            	logger.error("**** isSignatureElement :: " + isSignatureElement);
                 sigValue = convertSignatureValueToByteArray(sigValue);
 
                 sig.setOrigContent(null);
@@ -4235,10 +4190,6 @@ public class DocumentService {
             long length = (new File(containerFileName)).length();
             byte[] containerData = new byte[fileInputStream.available()];
             fileInputStream.read(containerData, 0, fileInputStream.available());
-            
-            logger.error("**** signatureContainer :: " + signatureContainer);
-            
-            
             boolean wasSignedBefore = true;
             if (signatureContainer == null) {
                 wasSignedBefore = false;
@@ -4257,14 +4208,6 @@ public class DocumentService {
                 signatureContainer.setGuid(UUID.randomUUID().toString());
                 doc.getDocumentFiles().add(signatureContainer);
             }
-            
-            logger.error("**** wasSignedBefore :: " + wasSignedBefore);
-            
-            logger.error("**** containerData :: " + containerData);
-            logger.error("**** containerData string :: " + new String(containerData));
-            
-            logger.error("**** containerData.length :: " + containerData.length);
-            
             signatureContainer.setFileSizeBytes(length);
             signatureContainer.setFileData(containerData);
             signatureContainer.setLastModifiedDate(new Date());
@@ -4290,9 +4233,6 @@ public class DocumentService {
                 aditCodedException.setParameters(new Object[]{aditSig.getSignerName()});
                 throw aditCodedException;
             }
-            
-            logger.error("verificationErrors.size() " + verificationErrors.size());
-            
             aditSig.setUserCode(currentUser.getUserCode());
             aditSig.setUserName(currentUser.getFullName());
 
