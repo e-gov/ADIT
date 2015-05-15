@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 21.06.2010 14:02:04 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="ee.adit.dao.pojo.RemoteApplication" table="REMOTE_APPLICATION" schema="ADIT">
+        <id name="shortName" type="string">
+            <column name="SHORT_NAME" length="50" />
+            <generator class="assigned" />
+        </id>
+        <property name="name" type="string">
+            <column name="NAME" length="50" />
+        </property>
+        <property name="organizationCode" type="string">
+            <column name="ORGANIZATION_CODE" length="50" not-null="true" />
+        </property>
+        <property name="canRead" type="java.lang.Boolean">
+            <column name="CAN_READ" precision="1" scale="0" />
+        </property>
+        <property name="canWrite" type="java.lang.Boolean">
+            <column name="CAN_WRITE" precision="1" scale="0" />
+        </property>
+        <set name="accessRestrictions" inverse="true" lazy="true" table="ACCESS_RESTRICTION" fetch="select">
+            <key>
+                <column name="REMOTE_APPLICATION" length="50" not-null="true" />
+            </key>
+            <one-to-many class="ee.adit.dao.pojo.AccessRestriction" />
+        </set>
+        <set name="documentHistories" inverse="true" lazy="true" table="DOCUMENT_HISTORY" fetch="select">
+            <key>
+                <column name="REMOTE_APPLICATION" length="50" />
+            </key>
+            <one-to-many class="ee.adit.dao.pojo.DocumentHistory" />
+        </set>
+    </class>
+</hibernate-mapping>

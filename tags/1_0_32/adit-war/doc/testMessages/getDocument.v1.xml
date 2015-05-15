@@ -1,0 +1,16 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+	xmlns:xtee="http://x-tee.riik.ee/xsd/xtee.xsd" xmlns:adit="http://producers.adit.xtee.riik.ee/producer/adit"
+	xmlns:adit1="http://www.riik.ee/adit/">
+	<soapenv:Header>
+		<xtee:nimi>adit.getDocument.v1</xtee:nimi>
+		<xtee:id>kala</xtee:id>
+		<xtee:isikukood>38005130332</xtee:isikukood>
+		<xtee:andmekogu>adit</xtee:andmekogu>
+		<xtee:asutus>12345678</xtee:asutus>
+	</soapenv:Header>
+	<soapenv:Body>
+		<adit:getDocument>
+			<keha>test</keha>
+		</adit:getDocument>
+	</soapenv:Body>
+</soapenv:Envelope>

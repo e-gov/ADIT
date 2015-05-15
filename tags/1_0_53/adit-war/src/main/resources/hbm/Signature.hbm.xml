@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 21.06.2010 14:02:04 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="ee.adit.dao.pojo.Signature" table="SIGNATURE" >
+        <id name="id" type="long">
+            <column name="ID" precision="12" scale="0" />
+            <generator class="sequence">
+            	<param name="sequence">SIGNATURE_ID_SEQ</param>
+            </generator>
+        </id>
+        <many-to-one name="document" class="ee.adit.dao.pojo.Document" fetch="select">
+            <column name="DOCUMENT_ID" precision="12" scale="0" not-null="true" />
+        </many-to-one>
+        <property name="userCode" type="string">
+            <column name="USER_CODE" length="50" />
+        </property>
+        <property name="signerRole" type="string">
+            <column name="SIGNER_ROLE" length="50" />
+        </property>
+        <property name="resolution" type="string">
+            <column name="RESOLUTION" length="100" />
+        </property>
+        <property name="country" type="string">
+            <column name="COUNTRY" length="100" />
+        </property>
+        <property name="county" type="string">
+            <column name="COUNTY" length="100" />
+        </property>
+        <property name="city" type="string">
+            <column name="CITY" length="100" />
+        </property>
+        <property name="postIndex" type="string">
+            <column name="POST_INDEX" length="50" />
+        </property>
+        <property name="signerCode" type="string">
+            <column name="SIGNER_CODE" length="20" />
+        </property>
+        <property name="signerName" type="string">
+            <column name="SIGNER_NAME" length="100" />
+        </property>
+        <property name="signingDate" type="timestamp">
+            <column name="SIGNING_DATE" length="7" />
+        </property>
+        <property name="userName" type="string">
+            <column name="USER_NAME" />
+        </property>
+    </class>
+</hibernate-mapping>

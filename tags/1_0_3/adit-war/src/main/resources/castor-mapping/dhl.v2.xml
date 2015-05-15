@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapping>
+	<include href="commons.xml" />
+	<include href="transport.v2.xml" />
+	<include href="meta-manual.v2.xml" />
+	<include href="meta-automatic.v2.xml" />
+	<include href="metaxml.xml" />
+	<!--
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Container2
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	-->
+	<class name="dvk.api.container.v2.ContainerVer2">
+		<map-to xml="dokument" ns-uri="http://www.riik.ee/schemas/dhl/2010/2" ns-prefix="dhl" />
+
+		<field name="version" type="integer">
+			<bind-xml name="konteineri_versioon" node="attribute" />
+		</field>
+
+		<field name="metainfo" type="dvk.api.container.v2.Metainfo">
+			<bind-xml name="metainfo" />
+		</field>
+
+		<field name="transport" type="dvk.api.container.v2.Transport">
+			<bind-xml name="transport" />
+		</field>
+
+		<field name="ajalugu" type="dvk.api.container.v2.Ajalugu">
+			<bind-xml name="ajalugu" />
+		</field>
+		
+		<field name="failideKonteiner" type="dvk.api.container.v2.FailideKonteiner">
+			<bind-xml name="failid" />
+		</field>
+	</class>
+	<!--
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Metainfo
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	-->
+	<class name="dvk.api.container.v2.Metainfo">
+		<map-to xml="metainfo" />
+
+		<field name="metaManual" type="dvk.api.container.v2.MetaManual">
+			<bind-xml name="mm:metainfo" xmlns:mm="http://www.riik.ee/schemas/dhl-meta-manual/2010/2" />
+		</field>
+
+		<field name="metaAutomatic" type="dvk.api.container.v2.MetaAutomatic">
+			<bind-xml name="ma:metainfo" xmlns:ma="http://www.riik.ee/schemas/dhl-meta-automatic" />
+		</field>
+	</class>
+	<!--
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		FailideKonteiner
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	-->
+	<class name="dvk.api.container.v2.FailideKonteiner">
+		<map-to xml="dokument" ns-uri="http://www.riik.ee/schemas/dhl/2010/2" ns-prefix="dhl" />
+
+		<field name="kokku" type="short">
+			<!-- Mandatory  -->
+			<bind-xml name="kokku" />
+		</field>
+
+		<field name="failid" type="dvk.api.container.v2.Fail" collection="arraylist">
+			<bind-xml name="fail" />
+		</field>
+	</class>
+
+	<!--
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Fail
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	-->
+	<class name="dvk.api.container.v2.Fail">
+		<map-to xml="Fail" ns-uri="http://www.riik.ee/schemas/dhl/2010/2" ns-prefix="dhl" />
+
+		<field name="jrkNr" type="short">
+			<!-- Mandatory  -->
+			<bind-xml name="jrknr" />
+		</field>
+
+		<field name="failPealkiri" type="string">
+			<bind-xml name="fail_pealkiri" />
+		</field>
+
+		<field name="failSuurus" type="long">
+			<!-- Mandatory  -->
+			<bind-xml name="fail_suurus" />
+		</field>
+
+		<field name="failTyyp" type="string">
+			<!-- Mandatory  -->
+			<bind-xml name="fail_tyyp" />
+		</field>
+
+		<field name="failNimi" type="string">
+			<!-- Mandatory  -->
+			<bind-xml name="fail_nimi" />
+		</field>
+
+		<field name="zipBase64Sisu" type="string">
+			<!-- Mandatory  -->
+			<bind-xml name="zip_base64_sisu" />
+		</field>
+
+		<field name="krypteering" type="boolean">
+			<bind-xml name="krypteering" />
+		</field>
+
+		<field name="pohiDokument" type="boolean">
+			<bind-xml name="pohi_dokument" />
+		</field>
+
+		<field name="pohiDokumentKonteineris" type="string">
+			<bind-xml name="pohi_dokument_konteineris" />
+		</field>
+	</class>
+	<!--
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Ajalugu
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	-->
+
+	<class name="dvk.api.container.v2.Ajalugu">
+		<map-to xml="ajalugu" ns-uri="http://www.riik.ee/schemas/dhl/2010/2" ns-prefix="dhl" />
+
+		<field name="metainfo" type="dvk.api.container.v2.Metainfo">
+			<bind-xml name="metainfo" />
+		</field>
+
+		<field name="transport" type="dvk.api.container.v2.Transport">
+			<bind-xml name="transport" />
+		</field>
+
+		<field name="metaxml" type="dvk.api.container.Metaxml">
+			<bind-xml name="metaxml" />
+		</field>
+	</class>
+	<!--
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		metainfo.koostajaKuupaev.dateHandler
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	-->
+	<field-handler name="metainfo.koostajaKuupaev.dateHandler" class="dvk.api.container.CustomDateHandler">
+		<param name="fieldName" value="koostajaKuupaev" />
+		<param name="info" value="DateHandler for Metainfo.KoostajaKuupaev" />
+	</field-handler>
+	<!--
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		metaxml.letterMetaData.signDate.dateHandler
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	-->
+	<field-handler name="metaxml.letterMetaData.signDate.dateHandler" class="dvk.api.container.CustomDateHandler">
+		<param name="fieldName" value="signDate" />
+		<param name="info" value="DateHandler for LetterMetaData.SignDate" />
+	</field-handler>
+</mapping>

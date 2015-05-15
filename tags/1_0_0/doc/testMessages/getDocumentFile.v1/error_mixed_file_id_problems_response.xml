@@ -1,0 +1,27 @@
+<SOAP-ENV:Envelope SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:adit="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xtee="http://x-tee.riik.ee/xsd/xtee.xsd">
+   <SOAP-ENV:Header>
+      <xtee:asutus xsi:type="xsd:string">12345678</xtee:asutus>
+      <xtee:isikukood xsi:type="xsd:string">EE38005130332</xtee:isikukood>
+      <xtee:id xsi:type="xsd:string">12345678</xtee:id>
+      <xtee:nimi xsi:type="xsd:string">ametlikud-dokumendid.getDocumentFile.v1</xtee:nimi>
+      <xtee:andmekogu xsi:type="xsd:string">ametlikud-dokumendid</xtee:andmekogu>
+   </SOAP-ENV:Header>
+   <SOAP-ENV:Body>
+      <adit:GetDocumentFileResponse>
+         <paring>
+            <adit:document_id>19</adit:document_id>
+            <adit:file_id_list>
+               <adit:file_id>20</adit:file_id>
+               <adit:file_id>-100</adit:file_id>
+               <adit:file_id>44</adit:file_id>
+            </adit:file_id_list>
+         </paring>
+         <keha>
+            <success>false</success>
+            <adit:messages>
+               <adit:message lang="en">Following files do not exist or are deleted: 20,-100</adit:message>
+            </adit:messages>
+         </keha>
+      </adit:GetDocumentFileResponse>
+   </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>

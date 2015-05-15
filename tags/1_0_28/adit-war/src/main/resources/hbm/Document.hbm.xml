@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 21.06.2010 14:02:04 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="ee.adit.dao.pojo.Document" table="DOCUMENT" schema="ADIT">
+        <id name="id" type="long">
+            <column name="ID" precision="12" scale="0" />
+            <generator class="sequence">
+            	<param name="sequence">document_id_seq</param>
+            </generator>
+        </id>
+        <property name="documentType" type="string">
+            <column name="TYPE" length="50" not-null="true" />
+        </property>
+        <many-to-one name="document" class="ee.adit.dao.pojo.Document" fetch="select">
+            <column name="PARENT_ID" precision="12" scale="0" />
+        </many-to-one>
+        <property name="guid" type="string">
+            <column name="GUID" length="50" />
+        </property>
+        <property name="title" type="string">
+            <column name="TITLE" />
+        </property>
+        <property name="creatorCode" type="string">
+            <column name="CREATOR_CODE" length="50" not-null="true" />
+        </property>
+        <property name="creatorName" type="string">
+            <column name="CREATOR_NAME" length="255" />
+        </property>
+        <property name="creatorUserCode" type="string">
+            <column name="CREATOR_USER_CODE" length="50" />
+        </property>
+        <property name="creatorUserName" type="string">
+            <column name="CREATOR_USER_NAME" length="255" />
+        </property>
+        <property name="creationDate" type="timestamp">
+            <column name="CREATION_DATE" length="7" />
+        </property>
+        <property name="remoteApplication" type="string">
+            <column name="REMOTE_APPLICATION" length="50" />
+        </property>
+        <property name="lastModifiedDate" type="timestamp">
+            <column name="LAST_MODIFIED_DATE" length="7" />
+        </property>
+        <property name="documentDvkStatusId" type="java.lang.Long">
+            <column name="DOCUMENT_DVK_STATUS_ID" precision="12" scale="0" />
+        </property>
+        <property name="dvkId" type="java.lang.Long">
+            <column name="DVK_ID" precision="12" scale="0" />
+        </property>
+        <property name="documentWfStatusId" type="java.lang.Long">
+            <column name="DOCUMENT_WF_STATUS_ID" precision="12" scale="0" />
+        </property>
+        <property name="locked" type="java.lang.Boolean">
+            <column name="LOCKED" precision="1" scale="0" />
+        </property>
+        <property name="lockingDate" type="timestamp">
+            <column name="LOCKING_DATE" length="7" />
+        </property>
+        <property name="signable" type="java.lang.Boolean">
+            <column name="SIGNABLE" precision="1" scale="0" />
+        </property>
+        <property name="deflated" type="java.lang.Boolean">
+            <column name="DEFLATED" precision="1" scale="0" />
+        </property>
+        <property name="deflateDate" type="timestamp">
+            <column name="DEFLATE_DATE" length="7" />
+        </property>
+        <property name="deleted" type="java.lang.Boolean">
+            <column name="DELETED" precision="1" scale="0" />
+        </property>
+        <property name="invisibleToOwner" type="java.lang.Boolean">
+            <column name="INVISIBLE_TO_OWNER" precision="1" scale="0" />
+        </property>
+        <property name="signed" type="java.lang.Boolean">
+            <column name="SIGNED" precision="1" scale="0" />
+        </property>
+        <set name="documents" inverse="true" lazy="true" table="DOCUMENT" fetch="select">
+            <key>
+                <column name="PARENT_ID" precision="12" scale="0" />
+            </key>
+            <one-to-many class="ee.adit.dao.pojo.Document" />
+        </set>
+        <set name="documentFiles" inverse="true" lazy="true" table="DOCUMENT_FILE" fetch="select" cascade="save-update">
+            <key>
+                <column name="DOCUMENT_ID" precision="12" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="ee.adit.dao.pojo.DocumentFile" />
+        </set>
+        <set name="signatures" inverse="true" lazy="true" table="SIGNATURE" fetch="select" cascade="save-update">
+            <key>
+                <column name="DOCUMENT_ID" precision="12" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="ee.adit.dao.pojo.Signature" />
+        </set>
+        <set name="documentHistories" inverse="true" lazy="false" cascade="save-update" table="DOCUMENT_HISTORY" fetch="select">
+            <key>
+                <column name="DOCUMENT_ID" precision="12" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="ee.adit.dao.pojo.DocumentHistory" />
+        </set>
+        <set name="documentSharings" inverse="true" cascade="all-delete-orphan" lazy="false" table="DOCUMENT_SHARING" fetch="select">
+            <key>
+                <column name="DOCUMENT_ID" precision="12" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="ee.adit.dao.pojo.DocumentSharing" />
+        </set>
+    </class>
+</hibernate-mapping>

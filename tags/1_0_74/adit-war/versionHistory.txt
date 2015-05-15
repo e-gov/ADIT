@@ -1,0 +1,13 @@
+1.0.73
+- ADIT-15
+- ADIT-14 (12289 fixed)
+- Gzipping and base64 encoding was missing when container was created.
+- Hardcoded schema name changed to substitution variable &&ADIT_SCHEMA
+- ADIT-9
+- ADIT-13
+- Integratsioonitestide UTF-8 probleemine parendamine
+- documentFileTypeId täitmine ddoc failide korral
+- Datasource conf lisatud kõikidesse profiilidesse
+- Integratsioonitestite parendused
+- DocumentService'i exceptionite haldust parandatud
+- dvk-api-1.0.10 kasutusele võtmine

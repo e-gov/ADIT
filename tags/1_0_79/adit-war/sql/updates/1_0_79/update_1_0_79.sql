@@ -1,0 +1,1 @@
+alter table &&ADIT_SCHEMA..document_file MODIFY   ddoc_datafile_id varchar2(200);

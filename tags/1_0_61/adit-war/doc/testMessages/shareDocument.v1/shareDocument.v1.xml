@@ -1,0 +1,23 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xtee="http://x-tee.riik.ee/xsd/xtee.xsd" xmlns:adit="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid">
+   <soapenv:Header>
+     <xtee:nimi>ametlikud-dokumendid.shareDocument.v1</xtee:nimi>
+      <xtee:id>00000000000000</xtee:id>
+      <xtee:isikukood>EE38407054916</xtee:isikukood>
+      <xtee:andmekogu>ametlikud-dokumendid</xtee:andmekogu>
+      <xtee:asutus>12345678</xtee:asutus>
+      <adit:infosysteem>KOV</adit:infosysteem>
+   </soapenv:Header>
+   <soapenv:Body>
+      <adit:ShareDocument>
+         <keha>
+            <adit:document_id>4</adit:document_id>
+            <adit:recipient_list>
+               <adit:code>EE38407089745</adit:code>
+	       	   <adit:code>99954321</adit:code>
+            </adit:recipient_list>
+            <adit:reason_for_sharing>Teadmiseks</adit:reason_for_sharing>
+            <adit:shared_for_signing>false</adit:shared_for_signing>
+         </keha>
+      </adit:ShareDocument>
+   </soapenv:Body>
+</soapenv:Envelope>

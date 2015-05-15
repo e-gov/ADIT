@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+                                         "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+	<session-factory name="hibernate.session-factory.Oracle">
+		<property name="hibernate.connection.driver_class">oracle.jdbc.driver.OracleDriver</property>
+		<property name="hibernate.connection.url">jdbc:oracle:thin:@localhost:1521:XE</property>
+		<property name="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</property>
+		<property name="hibernate.connection.username">dvkclient</property>
+		<property name="hibernate.connection.password">dvkclient123</property>
+		<property name="connection.autocommit">false</property>
+		<property name="show_sql">false</property>
+		<property name="use_outer_join">false</property>
+		<property name="hibernate.cache.use_second_level_cache">false</property>
+		<property name="cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
+		<property name="current_session_context_class">thread</property>
+		<property name="hibernate.c3p0.min_size">5</property>
+		<property name="hibernate.c3p0.max_size">20</property>
+		<property name="hibernate.c3p0.timeout">1800</property>
+		<property name="hibernate.c3p0.max_statements">50</property>
+		<property name="hibernate.connection.pool_size">10</property>
+		<!-- <property name="hibernate.hbm2ddl.auto">update</property> -->
+		<!-- Mapping files -->
+		<mapping resource="dvkapi/Counter.hbm.xml"/>
+		<mapping resource="dvkapi/Subdivision.hbm.xml"/>
+		<mapping resource="dvkapi/Occupation.hbm.xml"/>
+		<mapping resource="dvkapi/Organization.hbm.xml"/>
+		<mapping resource="dvkapi/SettingsFolders.hbm.xml"/>
+		<mapping resource="dvkapi/Settings.hbm.xml"/>
+		<mapping resource="dvkapi/Message.hbm.xml"/>
+		<mapping resource="dvkapi/MessageRecipient.hbm.xml"/>
+	</session-factory>
+</hibernate-configuration>

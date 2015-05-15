@@ -1,0 +1,49 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>ee</groupId>
+	<artifactId>adit-ear</artifactId>
+	<packaging>ear</packaging>
+	<version>1.0.48</version>
+	<name>ADIT Enterprise Application</name>
+
+	<parent>
+	    <groupId>ee</groupId>
+	    <artifactId>adit</artifactId>
+	    <version>1.0.48</version>
+	</parent>
+
+	<build>
+		<finalName>${conf}-${version}</finalName>
+
+		<resources>
+			<resource>
+				<directory>src/main/webapp/META-INF</directory>
+				<targetPath>../${conf}-${version}/META-INF</targetPath>
+				<includes>
+					<include>application.xml</include>
+					<include>weblogic-application.xml</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>../adit-war/target</directory>
+				<targetPath>../${conf}-${version}</targetPath>
+				<includes>
+					<include>adit.war</include>
+				</includes>
+			</resource>
+		</resources>
+
+		<plugins>
+			<!-- EAR -->
+			<plugin>
+				<artifactId>maven-ear-plugin</artifactId>
+				<version>2.4.2</version>
+				<configuration>
+					<generateApplicationXml>false</generateApplicationXml>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

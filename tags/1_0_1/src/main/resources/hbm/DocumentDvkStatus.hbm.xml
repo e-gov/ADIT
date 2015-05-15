@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 21.06.2010 14:02:04 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="ee.adit.dao.pojo.DocumentDvkStatus" table="DOCUMENT_DVK_STATUS" schema="ADIT">
+        <id name="id" type="long">
+            <column name="ID" precision="12" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="description" type="string">
+            <column name="DESCRIPTION" length="4000" />
+        </property>
+        <set name="documentSharings" inverse="true" lazy="true" table="DOCUMENT_SHARING" fetch="select">
+            <key>
+                <column name="DVK_STATUS_ID" precision="12" scale="0" />
+            </key>
+            <one-to-many class="ee.adit.dao.pojo.DocumentSharing" />
+        </set>
+    </class>
+</hibernate-mapping>

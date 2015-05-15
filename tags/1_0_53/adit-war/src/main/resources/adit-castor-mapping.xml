@@ -1,0 +1,1458 @@
+<?xml version="1.0"?>
+<!DOCTYPE mapping PUBLIC "-//EXOLAB/Castor Mapping DTD Version 1.0//EN" "http://castor.org/mapping.dtd">
+<mapping>
+	<!-- listMethods -->
+	<class name="ee.adit.pojo.ListMethodsRequest">
+		<map-to xml="listMethods" ns-uri="http://x-tee.riik.ee/xsd/xtee.xsd"/>
+	</class>
+
+	<class name="ee.adit.pojo.ListMethodsResponse">
+		<map-to xml="keha"/>
+		<field name="item" type="java.lang.String" collection="arraylist">
+			<bind-xml name="item"/>
+		</field>
+	</class>
+
+	<!-- Join -->
+	<class name="ee.adit.pojo.JoinRequest">
+		<map-to xml="join" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
+		<field name="userType" type="java.lang.String">
+			<bind-xml name="userType" location="keha" />
+		</field>
+		<field name="userName" type="java.lang.String">
+			<bind-xml name="userName" location="keha" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.JoinResponse">
+		<map-to xml="keha" />
+		<field name="success" type="ee.adit.pojo.Success" >
+		</field>
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
+			<bind-xml name="messages" />
+		</field>
+	</class>
+
+	<!-- UnJoin -->
+	<class name="ee.adit.pojo.UnJoinRequest">
+		<map-to xml="unJoin" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
+		<field name="keha" type="java.lang.String">
+			<bind-xml name="keha" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.UnJoinResponse">
+		<map-to xml="keha"/>
+		<field name="success" type="ee.adit.pojo.Success" >
+		</field>
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
+			<bind-xml name="messages" />
+		</field>
+	</class>
+
+	<!-- GetJoined -->
+	<class name="ee.adit.pojo.GetJoinedRequest">
+		<map-to xml="getJoined" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
+		<field name="maxResults" type="java.math.BigInteger">
+			<bind-xml name="maxResults" location="keha" />
+		</field>
+		<field name="startIndex" type="java.math.BigInteger">
+			<bind-xml name="startIndex" location="keha" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.GetJoinedResponse">
+		<map-to xml="keha" />
+		<field name="success" type="ee.adit.pojo.Success" >
+		</field>
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
+			<bind-xml name="messages" />
+		</field>
+		<field name="userList" type="ee.adit.pojo.UserList">
+			<bind-xml name="userList" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.GetJoinedResponseAttachment">
+		<map-to xml="getJoinedResponseAttachmentV1" />
+		<field name="total" type="java.lang.Integer">
+			<bind-xml name="total" location="user_list" />
+		</field>
+		<field name="users" type="ee.adit.pojo.GetJoinedResponseAttachmentUser" collection="arraylist">
+			<bind-xml name="user" location="user_list" />
+		</field>
+	</class>
+
+ 	<class name="ee.adit.pojo.GetJoinedResponseAttachmentUser">
+ 		<map-to xml="user" />
+ 		<field name="code" type="java.lang.String">
+			<bind-xml name="code" />
+		</field>
+		<field name="name" type="java.lang.String">
+			<bind-xml name="name" />
+		</field>
+		<field name="type" type="java.lang.String">
+			<bind-xml name="type" />
+		</field>
+ 	</class>
+ 	
+	<!-- GetUserContacts -->
+	<class name="ee.adit.pojo.GetUserContactsRequest">
+		<map-to xml="getUserContacts" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
+	</class>
+
+	<class name="ee.adit.pojo.GetUserContactsResponse">
+		<map-to xml="keha" />
+		<field name="success" type="ee.adit.pojo.Success" >
+		</field>
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
+			<bind-xml name="messages" />
+		</field>
+		<field name="userContactList" type="ee.adit.pojo.UserContactList">
+			<bind-xml name="userContactList" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.GetUserContactsResponseAttachment">
+		<map-to xml="getUserContactsResponseAttachmentV1" />
+		<field name="total" type="java.lang.Integer">
+			<bind-xml name="total" location="user_contact_list" />
+		</field>
+		 <field name="userContacts" type="ee.adit.pojo.GetUserContactsResponseAttachmentUserContact" collection="arraylist">
+			<bind-xml name="user_contact" location="user_contact_list" />
+		</field>
+	</class>
+
+ 	<class name="ee.adit.pojo.GetUserContactsResponseAttachmentUserContact">
+ 		<map-to xml="user_contact" />
+ 		<field name="code" type="java.lang.String">
+			<bind-xml name="code" />
+		</field>
+		<field name="name" type="java.lang.String">
+			<bind-xml name="name" />
+		</field>
+		<field name="type" type="java.lang.String">
+			<bind-xml name="type" />
+		</field>
+ 	</class>
+
+ 	<!-- GetUserInfo -->
+ 	<class name="ee.adit.pojo.GetUserInfoRequest">
+		<map-to xml="getUserInfo" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
+		<field name="userList" type="ee.adit.pojo.GetUserInfoRequestUserList">
+			<bind-xml name="userList" location="keha" />
+		</field>
+	</class>
+
+ 	<class name="ee.adit.pojo.GetUserInfoRequestUserList">
+		<map-to xml="userList" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
+		<field name="href" type="java.lang.String">
+			<bind-xml name="href" node="attribute" />
+		</field>
+	</class>
+
+ 	<class name="ee.adit.pojo.GetUserInfoRequestAttachmentUserList">
+		<map-to xml="getUserInfoRequestAttachmentV1" />
+		<field name="codes" type="java.lang.String" collection="arraylist">
+			<bind-xml name="code" location="user_list"/>
+		</field>
+	</class>
+
+ 	<class name="ee.adit.pojo.GetUserInfoResponse">
+		<map-to xml="keha" />
+		<field name="success" type="ee.adit.pojo.Success" >
+		</field>
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
+			<bind-xml name="messages" />
+		</field>
+		<field name="userList" type="ee.adit.pojo.UserList">
+			<bind-xml name="userList" />
+		</field>
+	</class>
+
+ 	<class name="ee.adit.pojo.GetUserInfoResponseAttachment">
+ 		<map-to xml="getUserInfoResponseAttachmentV1" />
+ 		<field name="userList" type="ee.adit.pojo.GetUserInfoResponseAttachmentUser" collection="arraylist">
+			<bind-xml name="user" location="user_list" />
+		</field>
+ 	</class>
+
+ 	<class name="ee.adit.pojo.GetUserInfoResponseAttachmentUser">
+ 		<map-to xml="user" />
+ 		<field name="userCode" type="java.lang.String">
+			<bind-xml name="code" />
+		</field>
+ 		<field name="name" type="java.lang.String">
+			<bind-xml name="name" />
+		</field>
+		<field name="hasJoined" type="boolean">
+			<bind-xml name="has_joined" />
+		</field>
+		<field name="freeSpace" type="java.lang.Long">
+			<bind-xml name="free_space_bytes" />
+		</field>
+		<field name="usedSpace" type="java.lang.Long">
+			<bind-xml name="used_space_bytes" />
+		</field>
+		<field name="canRead" type="boolean">
+			<bind-xml name="can_read" />
+		</field>
+		<field name="canWrite" type="boolean">
+			<bind-xml name="can_write" />
+		</field>
+		<field name="usesDVK" type="boolean">
+			<bind-xml name="uses_dvk" />
+		</field>
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
+			<bind-xml name="messages" />
+		</field>
+ 	</class>
+
+ 	<!-- GetNotifications -->
+	<class name="ee.adit.pojo.GetNotificationsRequest">
+		<map-to xml="getNotifications" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
+	</class>
+
+	<class name="ee.adit.pojo.GetNotificationsResponse">
+		<map-to xml="keha" />
+		<field name="success" type="boolean" >
+		</field>
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
+			<bind-xml name="messages" />
+		</field>
+		<field name="notifications" type="ee.adit.pojo.ArrayOfNotification">
+			<bind-xml name="notifications" />
+		</field>
+		<field name="notificationsActive" type="java.lang.Boolean">
+			<bind-xml name="notifications_active" />
+		</field>
+		<field name="addressList" type="ee.adit.pojo.ArrayOfEmailAddress">
+			<bind-xml name="address_list" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.ArrayOfNotification">
+		<field name="notification" type="ee.adit.pojo.Notification" collection="arraylist" />
+	</class>
+
+ 	<class name="ee.adit.pojo.Notification">
+ 		<map-to xml="notification" />
+		<field name="type" type="java.lang.String">
+			<bind-xml name="type" type="string" />
+		</field>
+		<field name="active" type="boolean">
+			<bind-xml name="active" type="boolean" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.ArrayOfEmailAddress">
+		<field name="emailAddress" type="ee.adit.pojo.EmailAddress" collection="arraylist">
+			<bind-xml name="email_address" />
+		</field>
+	</class>
+
+ 	<class name="ee.adit.pojo.EmailAddress">
+		<field name="address" type="java.lang.String"/>
+		<field name="redirectedTo" type="java.lang.String"/>
+	</class>
+
+ 	 <!-- SetNotifications -->
+	<class name="ee.adit.pojo.SetNotificationsRequest">
+		<map-to xml="setNotifications" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
+		<field name="notifications" type="ee.adit.pojo.ArrayOfNotification">
+			<bind-xml name="notifications" location="keha" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.SetNotificationsResponse">
+		<map-to xml="keha" />
+		<field name="success" type="boolean" >
+		</field>
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
+			<bind-xml name="messages" />
+		</field>
+	</class>
+
+
+ 	<!-- Document global -->
+ 	<class name="ee.adit.pojo.OutputDocumentFile">
+		<map-to xml="file"/>
+		<field name="id" type="java.lang.Long">
+			<bind-xml name="id"/>
+		</field>
+		<field name="name" type="java.lang.String">
+			<bind-xml name="name"/>
+		</field>
+		<field name="contentType" type="java.lang.String">
+			<bind-xml name="content_type"/>
+		</field>
+		<field name="description" type="java.lang.String">
+			<bind-xml name="description"/>
+		</field>
+		<field name="sizeBytes" type="java.lang.Long">
+			<bind-xml name="size_bytes"/>
+		</field>
+		<field name="fileType" type="java.lang.String">
+			<bind-xml name="file_type"/>
+		</field>
+		<field name="sysTempFile" type="java.lang.String">
+			<bind-xml name="sysTempFile"/>
+		</field>
+	</class>
+
+ 	<class name="ee.adit.pojo.OutputDocumentFilesList">
+		<map-to xml="document_files"/>
+		<field name="totalFiles" type="java.lang.Integer">
+			<bind-xml name="total_files"/>
+		</field>
+		<field name="totalBytes" type="java.lang.Long">
+			<bind-xml name="total_bytes"/>
+		</field>
+		<field name="files" type="ee.adit.pojo.OutputDocumentFile" collection="arraylist">
+			<bind-xml name="file" location="document_files"/>
+		</field>
+	</class>
+
+ 	<class name="ee.adit.pojo.DocumentSignatureList">
+		<map-to xml="signatures"/>
+		<field name="signatures" type="ee.adit.pojo.Signature" collection="arraylist">
+			<bind-xml name="signature" />
+		</field>
+	</class>
+
+ 	<class name="ee.adit.pojo.Signature">
+		<map-to xml="signature"/>
+		<field name="signerCode" type="java.lang.String">
+			<bind-xml name="signer_code"/>
+		</field>
+		<field name="signerName" type="java.lang.String">
+			<bind-xml name="signer_name"/>
+		</field>
+		<field name="manifest" type="java.lang.String">
+			<bind-xml name="manifest"/>
+		</field>
+		<field name="country" type="java.lang.String">
+			<bind-xml name="country"/>
+		</field>
+		<field name="state" type="java.lang.String">
+			<bind-xml name="state"/>
+		</field>
+		<field name="city" type="java.lang.String">
+			<bind-xml name="city"/>
+		</field>
+		<field name="zip" type="java.lang.String">
+			<bind-xml name="zip"/>
+		</field>
+		<field name="signingDate" type="java.util.Date">
+			<bind-xml name="signing_date"/>
+		</field>
+		<field name="userCode" type="java.lang.String">
+			<bind-xml name="user_code"/>
+		</field>
+		<field name="userName" type="java.lang.String">
+			<bind-xml name="user_name"/>
+		</field>
+	</class>
+
+ 	<class name="ee.adit.pojo.DocumentSharingData">
+		<map-to xml="shared_to"/>
+		<field name="userList" type="ee.adit.pojo.DocumentSharingRecipient" collection="arraylist">
+			<bind-xml name="user" />
+		</field>
+	</class>
+
+ 	<class name="ee.adit.pojo.DocumentSharingRecipient">
+		<map-to xml="user"/>
+		<field name="code" type="java.lang.String">
+			<bind-xml name="code"/>
+		</field>
+		<field name="name" type="java.lang.String">
+			<bind-xml name="name"/>
+		</field>
+		<field name="hasBeenViewed" type="java.lang.Boolean">
+			<bind-xml name="has_been_viewed"/>
+		</field>
+		<field name="openedTime" type="java.util.Date">
+			<bind-xml name="opened_time"/>
+		</field>
+		<field name="workflowStatusId" type="java.lang.Long">
+			<bind-xml name="workflow_status_id"/>
+		</field>
+		<field name="sharedTime" type="java.util.Date">
+			<bind-xml name="shared_time"/>
+		</field>
+		<field name="reasonForSharing" type="java.lang.String">
+			<bind-xml name="reason_for_sharing"/>
+		</field>
+		<field name="sharedForSigning" type="java.lang.Boolean">
+			<bind-xml name="shared_for_signing"/>
+		</field>
+	</class>
+
+ 	<class name="ee.adit.pojo.DocumentSendingData">
+		<map-to xml="sent_to"/>
+		<field name="sentTime" type="java.util.Date">
+			<bind-xml name="sent_time"/>
+		</field>
+		<field name="userList" type="ee.adit.pojo.DocumentSendingRecipient" collection="arraylist">
+			<bind-xml name="user" />
+		</field>
+	</class>
+
+ 	<class name="ee.adit.pojo.DocumentSendingRecipient">
+		<map-to xml="user"/>
+		<field name="code" type="java.lang.String">
+			<bind-xml name="code"/>
+		</field>
+		<field name="name" type="java.lang.String">
+			<bind-xml name="name"/>
+		</field>
+		<field name="hasBeenViewed" type="java.lang.Boolean">
+			<bind-xml name="has_been_viewed"/>
+		</field>
+		<field name="openedTime" type="java.util.Date">
+			<bind-xml name="opened_time"/>
+		</field>
+		<field name="workflowStatusId" type="java.lang.Long">
+			<bind-xml name="workflow_status_id"/>
+		</field>
+		<field name="dvkStatusId" type="java.lang.Long">
+			<bind-xml name="dvk_status_id"/>
+		</field>
+	</class>
+
+ 	<class name="ee.adit.pojo.OutputDocument">
+		<map-to xml="document"/>
+		<field name="id" type="java.lang.Long">
+			<bind-xml name="id"/>
+		</field>
+		<field name="guid" type="java.lang.String">
+			<bind-xml name="guid"/>
+		</field>
+		<field name="title" type="java.lang.String">
+			<bind-xml name="title"/>
+		</field>
+		<field name="folder" type="java.lang.String">
+			<bind-xml name="folder"/>
+		</field>
+		<field name="hasBeenViewed" type="java.lang.Boolean">
+			<bind-xml name="has_been_viewed"/>
+		</field>
+		<field name="documentType" type="java.lang.String">
+			<bind-xml name="document_type"/>
+		</field>
+		<field name="creatorCode" type="java.lang.String">
+			<bind-xml name="creator_code"/>
+		</field>
+		<field name="creatorName" type="java.lang.String">
+			<bind-xml name="creator_name"/>
+		</field>
+		<field name="creatorUserCode" type="java.lang.String">
+			<bind-xml name="creator_user_code"/>
+		</field>
+		<field name="creatorUserName" type="java.lang.String">
+			<bind-xml name="creator_user_name"/>
+		</field>
+		<field name="created" type="java.util.Date">
+			<bind-xml name="created"/>
+		</field>
+		<field name="creatorApplication" type="java.lang.String">
+			<bind-xml name="creator_application"/>
+		</field>
+		<field name="lastModified" type="java.util.Date">
+			<bind-xml name="last_modified"/>
+		</field>
+		<field name="dvkStatusId" type="java.lang.Long">
+			<bind-xml name="dvk_status_id"/>
+		</field>
+		<field name="dvkId" type="java.lang.Long">
+			<bind-xml name="dvk_id"/>
+		</field>
+		<field name="workflowStatusId" type="java.lang.Long">
+			<bind-xml name="workflow_status_id"/>
+		</field>
+		<field name="lastAccessed" type="java.util.Date">
+			<bind-xml name="last_accessed"/>
+		</field>
+		<field name="previousDocumentId" type="java.lang.Long">
+			<bind-xml name="previous_document_id"/>
+		</field>
+		<field name="previousDocumentGuid" type="java.lang.String">
+			<bind-xml name="previous_document_guid"/>
+		</field>
+		<field name="locked" type="java.lang.Boolean">
+			<bind-xml name="locked"/>
+		</field>
+		<field name="lockingDate" type="java.util.Date">
+			<bind-xml name="locking_date"/>
+		</field>
+		<field name="signable" type="java.lang.Boolean">
+			<bind-xml name="signable"/>
+		</field>
+		<field name="deflated" type="java.lang.Boolean">
+			<bind-xml name="deflated"/>
+		</field>
+		<field name="deflatingDate" type="java.util.Date">
+			<bind-xml name="deflating_date"/>
+		</field>
+		<field name="removeDate" type="org.exolab.castor.types.Date">
+			<bind-xml name="remove_date"/>
+		</field>
+		<field name="signed" type="java.lang.Boolean">
+			<bind-xml name="signed"/>
+		</field>
+		<field name="signatures" type="ee.adit.pojo.DocumentSignatureList">
+			<bind-xml name="signatures" />
+		</field>
+		<field name="sentTo" type="ee.adit.pojo.DocumentSendingData">
+			<bind-xml name="sent_to" />
+		</field>
+		<field name="sharedTo" type="ee.adit.pojo.DocumentSharingData">
+			<bind-xml name="shared_to" />
+		</field>
+		<field name="files" type="ee.adit.pojo.OutputDocumentFilesList">
+			<bind-xml name="document_files" />
+		</field>
+	</class>
+
+ 	<!-- GetDocumentList -->
+ 	<class name="ee.adit.pojo.GetDocumentListRequest">
+		<map-to xml="getDocumentList" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
+		<field name="folder" type="java.lang.String">
+			<bind-xml name="folder" location="keha" />
+		</field>
+		<field name="dvkFolder" type="java.lang.String">
+			<bind-xml name="dvk_folder" location="keha" />
+		</field>
+		<field name="documentTypes" type="ee.adit.pojo.ArrayOfDocumentType">
+			<bind-xml name="document_types" location="keha" />
+		</field>
+		<field name="fileTypes" type="ee.adit.pojo.ArrayOfFileType">
+			<bind-xml name="file_types" location="keha" />
+		</field>
+		<field name="documentDvkStatuses" type="ee.adit.pojo.ArrayOfDocumentDvkStatus">
+			<bind-xml name="document_dvk_statuses" location="keha" />
+		</field>
+		<field name="documentWorkflowStatuses" type="ee.adit.pojo.ArrayOfDocumentWorkflowStatus">
+			<bind-xml name="document_workflow_statuses" location="keha" />
+		</field>
+		<field name="hasBeenViewed" type="java.lang.Boolean">
+			<bind-xml name="has_been_viewed" location="keha" />
+		</field>
+		<field name="isDeflated" type="java.lang.Boolean">
+			<bind-xml name="is_deflated" location="keha" />
+		</field>
+		<field name="creatorApplications" type="ee.adit.pojo.ArrayOfCreatorApplication">
+			<bind-xml name="creator_applications" location="keha" />
+		</field>
+		<field name="searchPhrase" type="java.lang.String">
+			<bind-xml name="search_phrase" location="keha" />
+		</field>
+		<field name="periodStart" type="org.exolab.castor.types.Date">
+			<bind-xml name="period_start" location="keha" />
+		</field>
+		<field name="periodEnd" type="org.exolab.castor.types.Date">
+			<bind-xml name="period_end" location="keha" />
+		</field>
+		<field name="maxResults" type="java.lang.Long">
+			<bind-xml name="max_results" location="keha" />
+		</field>
+		<field name="startIndex" type="java.lang.Long">
+			<bind-xml name="start_index" location="keha" />
+		</field>
+		<field name="sortBy" type="java.lang.String">
+			<bind-xml name="sort_by" location="keha" />
+		</field>
+		<field name="SortOrder" type="java.lang.String">
+			<bind-xml name="sort_order" location="keha" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.GetDocumentListResponse">
+		<map-to xml="keha" />
+		<field name="success" type="java.lang.Boolean" >
+		</field>
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
+			<bind-xml name="messages" />
+		</field>
+		<field name="documentList" type="ee.adit.pojo.GetDocumentListResponseList">
+			<bind-xml name="documentList" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.GetDocumentListResponseList">
+		<map-to xml="documentList" />
+		<field name="href" type="java.lang.String">
+			<bind-xml name="href" node="attribute" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.GetDocumentListResponseAttachment">
+		<map-to xml="getDocumentListResponseAttachmentV1" />
+		<field name="total" type="java.lang.Integer">
+			<bind-xml name="total" location="document_list" />
+		</field>
+		<field name="documentList" type="ee.adit.pojo.OutputDocument" collection="arraylist">
+			<bind-xml name="document" location="document_list" />
+		</field>
+	</class>
+
+
+ 	<!-- GetDocument -->
+ 	<class name="ee.adit.pojo.GetDocumentRequest">
+		<map-to xml="getDocument" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
+		<field name="documentId" type="long">
+			<bind-xml name="document_id" location="keha" />
+		</field>
+		<field name="includeFileContents" type="java.lang.Boolean">
+			<bind-xml name="include_file_contents" location="keha" />
+		</field>
+		<field name="fileTypes" type="ee.adit.pojo.ArrayOfFileType">
+			<bind-xml name="file_types" location="keha" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.GetDocumentResponse">
+		<map-to xml="keha" />
+		<field name="success" type="java.lang.Boolean" >
+		</field>
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
+			<bind-xml name="messages" />
+		</field>
+		<field name="document" type="ee.adit.pojo.GetDocumentResponseDocument">
+			<bind-xml name="document" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.GetDocumentResponseDocument">
+		<map-to xml="document" />
+		<field name="href" type="java.lang.String">
+			<bind-xml name="href" node="attribute" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.GetDocumentResponseAttachment">
+		<map-to xml="getDocumentResponseAttachmentV1" />
+		<field name="document" type="ee.adit.pojo.OutputDocument">
+			<bind-xml name="document" />
+		</field>
+	</class>
+
+ 	<!-- GetDocumentFile -->
+ 	<class name="ee.adit.pojo.GetDocumentFileRequest">
+		<map-to xml="getDocumentFile" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
+		<field name="documentId" type="long">
+			<bind-xml name="document_id" location="keha" />
+		</field>
+		<field name="fileIdList" type="ee.adit.pojo.ArrayOfFileId">
+			<bind-xml name="file_id_list" location="keha" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.GetDocumentFileResponse">
+		<map-to xml="keha" />
+		<field name="success" type="java.lang.Boolean" >
+		</field>
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
+			<bind-xml name="messages" />
+		</field>
+		<field name="files" type="ee.adit.pojo.GetDocumentFileResponseFiles">
+			<bind-xml name="files" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.GetDocumentFileResponseFiles">
+		<map-to xml="files" />
+		<field name="href" type="java.lang.String">
+			<bind-xml name="href" node="attribute" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.GetDocumentFileResponseAttachment">
+		<map-to xml="getDocumentFileResponseAttachmentV1" />
+		<field name="files" type="ee.adit.pojo.OutputDocumentFile" collection="arraylist">
+			<bind-xml name="file" location="files"/>
+		</field>
+	</class>
+
+ 	<!-- SaveDocument -->
+ 	<class name="ee.adit.pojo.SaveDocumentRequest">
+		<map-to xml="saveDocument" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
+		<field name="document" type="ee.adit.pojo.SaveDocumentRequestDocument">
+			<bind-xml name="document" location="keha" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.SaveDocumentRequestDocument">
+		<map-to xml="document" />
+		<field name="href" type="java.lang.String">
+			<bind-xml name="href" node="attribute" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.SaveDocumentRequestAttachment">
+		<map-to xml="saveDocumentRequestAttachmentV1" />
+		<field name="id" type="java.lang.Long">
+			<bind-xml name="id" location="document" />
+		</field>
+		<field name="guid" type="java.lang.String">
+			<bind-xml name="guid" location="document" />
+		</field>
+		<field name="title" type="java.lang.String">
+			<bind-xml name="title" location="document" />
+		</field>
+		<field name="documentType" type="java.lang.String">
+			<bind-xml name="document_type" location="document" />
+		</field>
+		<field name="previousDocumentID" type="java.lang.Long">
+			<bind-xml name="previous_document_id" location="document" />
+		</field>
+		<field name="files" type="ee.adit.pojo.OutputDocumentFile" collection="arraylist">
+			<bind-xml name="file" location="document/files"/>
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.SaveDocumentResponse">
+		<map-to xml="keha" />
+		<field name="success" type="ee.adit.pojo.Success" >
+		</field>
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage" >
+			<bind-xml name="messages" />
+		</field>
+		<field name="documentId" type="long">
+			<bind-xml name="document_id" />
+		</field>
+		<field name="document" type="ee.adit.pojo.SaveDocumentRequestDocument">
+			<bind-xml name="document" />
+		</field>
+	</class>
+
+ 	<!-- SaveDocumentFile -->
+ 	<class name="ee.adit.pojo.SaveDocumentFileRequest">
+		<map-to xml="saveDocumentFile" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
+		<field name="documentId" type="java.lang.Long">
+			<bind-xml name="document_id" location="keha" />
+		</field>
+		<field name="file" type="ee.adit.pojo.SaveDocumentFileRequestFile">
+			<bind-xml name="file" location="keha" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.SaveDocumentFileRequestFile">
+		<map-to xml="file" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
+		<field name="href" type="java.lang.String">
+			<bind-xml name="href" node="attribute" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.SaveDocumentFileRequestAttachment">
+		<map-to xml="saveDocumentFileAttachmentV1" />
+		<field name="file" type="ee.adit.pojo.OutputDocumentFile">
+			<bind-xml name="file" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.SaveDocumentFileResponse">
+		<map-to xml="keha" />
+		<field name="success" type="boolean" >
+		</field>
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
+			<bind-xml name="messages" />
+		</field>
+		<field name="fileId" type="java.lang.Long">
+			<bind-xml name="file_id" />
+		</field>
+		<field name="file" type="ee.adit.pojo.SaveDocumentFileRequestFile">
+			<bind-xml name="file" />
+		</field>
+	</class>
+
+	<!-- DeleteDocumentFile -->
+	<class name="ee.adit.pojo.DeleteDocumentFileRequest">
+		<map-to xml="deleteDocumentFile" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
+		<field name="documentId" type="long">
+			<bind-xml name="document_id" location="keha" />
+		</field>
+		<field name="fileId" type="long">
+			<bind-xml name="file_id" location="keha" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.DeleteDocumentFileResponse">
+		<map-to xml="keha" />
+		<field name="success" type="ee.adit.pojo.Success" >
+		</field>
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
+			<bind-xml name="messages" />
+		</field>
+	</class>
+
+	<!-- DeleteDocument -->
+	<class name="ee.adit.pojo.DeleteDocumentRequest">
+		<map-to xml="deleteDocument" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
+		<field name="documentId" type="long">
+			<bind-xml name="document_id" location="keha" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.DeleteDocumentResponse">
+		<map-to xml="keha" />
+		<field name="success" type="ee.adit.pojo.Success" >
+		</field>
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
+			<bind-xml name="messages" />
+		</field>
+	</class>
+
+	<!-- DeleteDocuments -->
+	<class name="ee.adit.pojo.DeleteDocumentsRequest">
+		<map-to xml="deleteDocuments" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
+		<field name="documents" type="ee.adit.pojo.ArrayOfDocumentId">
+			<bind-xml name="documents" location="keha" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.DeleteDocumentsResponse">
+		<map-to xml="keha" />
+		<field name="success" type="ee.adit.pojo.Success" >
+		</field>
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
+			<bind-xml name="messages" />
+		</field>
+		<field name="documents" type="ee.adit.pojo.ArrayOfDocumentActionStatus">
+			<bind-xml name="documents" />
+		</field>
+	</class>
+
+	<!-- DeflateDocument -->
+	<class name="ee.adit.pojo.DeflateDocumentRequest">
+		<map-to xml="deflateDocument" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
+		<field name="documentId" type="long">
+			<bind-xml name="document_id" location="keha" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.DeflateDocumentResponse">
+		<map-to xml="keha" />
+		<field name="success" type="ee.adit.pojo.Success" >
+		</field>
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
+			<bind-xml name="messages" />
+		</field>
+	</class>
+
+	<!-- PrepareSignature -->
+	<class name="ee.adit.pojo.PrepareSignatureRequest">
+		<map-to xml="prepareSignature" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
+		<field name="documentId" type="java.lang.Long">
+			<bind-xml name="document_id" location="keha" />
+		</field>
+		<field name="manifest" type="java.lang.String">
+			<bind-xml name="manifest" location="keha" />
+		</field>
+		<field name="country" type="java.lang.String">
+			<bind-xml name="country" location="keha" />
+		</field>
+		<field name="state" type="java.lang.String">
+			<bind-xml name="state" location="keha" />
+		</field>
+		<field name="city" type="java.lang.String">
+			<bind-xml name="city" location="keha" />
+		</field>
+		<field name="zip" type="java.lang.String">
+			<bind-xml name="zip" location="keha" />
+		</field>
+		<field name="signerCertificate" type="ee.adit.pojo.PrepareSignatureRequestCert">
+			<bind-xml name="signer_certificate" location="keha" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.PrepareSignatureRequestCert">
+		<map-to xml="signer_certificate" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
+		<field name="href" type="java.lang.String">
+			<bind-xml name="href" node="attribute" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.PrepareSignatureResponse">
+		<map-to xml="keha" />
+		<field name="success" type="boolean" >
+		</field>
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
+			<bind-xml name="messages" />
+		</field>
+        <field name="signatureId" type="java.lang.String">
+            <bind-xml name="signature_id" />
+        </field>
+		<field name="signatureHash" type="java.lang.String">
+			<bind-xml name="signature_hash" />
+		</field>
+        <field name="dataFileHashes" type="ee.adit.pojo.ArrayOfDataFileHash">
+            <bind-xml name="data_file_hashes" />
+        </field>
+	</class>
+
+	<!-- ConfirmSignature -->
+	<class name="ee.adit.pojo.ConfirmSignatureRequest">
+		<map-to xml="confirmSignature" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
+		<field name="documentId" type="java.lang.Long">
+			<bind-xml name="document_id" location="keha" />
+		</field>
+		<field name="signature" type="ee.adit.pojo.ConfirmSignatureRequestSignature">
+			<bind-xml name="signature" location="keha" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.ConfirmSignatureRequestSignature">
+		<map-to xml="signature" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
+		<field name="href" type="java.lang.String">
+			<bind-xml name="href" node="attribute" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.ConfirmSignatureResponse">
+		<map-to xml="keha" />
+		<field name="success" type="boolean" >
+		</field>
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
+			<bind-xml name="messages" />
+		</field>
+	</class>
+
+
+ 	<!-- ShareDocument -->
+	<class name="ee.adit.pojo.ShareDocumentRequest">
+		<map-to xml="shareDocument" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
+		<field name="documentId" type="java.lang.Long">
+			<bind-xml name="document_id" location="keha" />
+		</field>
+		<field name="recipientList" type="ee.adit.pojo.ArrayOfUserCode">
+			<bind-xml name="recipient_list" location="keha" />
+		</field>
+		<field name="reasonForSharing" type="java.lang.String">
+			<bind-xml name="reason_for_sharing" location="keha" />
+		</field>
+		<field name="sharedForSigning" type="java.lang.Boolean">
+			<bind-xml name="shared_for_signing" location="keha" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.ShareDocumentResponse">
+		<map-to xml="keha" />
+		<field name="success" type="boolean" >
+		</field>
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
+			<bind-xml name="messages" />
+		</field>
+		<field name="recipientList" type="ee.adit.pojo.ArrayOfRecipientStatus">
+			<bind-xml name="recipient_list" />
+		</field>
+	</class>
+
+ 	<!-- UnShareDocument -->
+	<class name="ee.adit.pojo.UnShareDocumentRequest">
+		<map-to xml="unShareDocument" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
+		<field name="documentId" type="java.lang.Long">
+			<bind-xml name="document_id" location="keha" />
+		</field>
+		<field name="recipientList" type="ee.adit.pojo.ArrayOfUserCode">
+			<bind-xml name="recipient_list" location="keha" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.UnShareDocumentResponse">
+		<map-to xml="keha" />
+		<field name="success" type="boolean" >
+		</field>
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
+			<bind-xml name="messages" />
+		</field>
+		<field name="recipientList" type="ee.adit.pojo.ArrayOfRecipientStatus">
+			<bind-xml name="recipient_list" />
+		</field>
+	</class>
+
+ 	<!-- MarkDocumentViewed -->
+	<class name="ee.adit.pojo.MarkDocumentViewedRequest">
+		<map-to xml="markDocumentViewed" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
+		<field name="documentId" type="java.lang.Long">
+			<bind-xml name="document_id" location="keha" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.MarkDocumentViewedResponse">
+		<map-to xml="keha" />
+		<field name="success" type="boolean" >
+		</field>
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
+			<bind-xml name="messages" />
+		</field>
+	</class>
+
+ 	<!-- ModifyStatus -->
+	<class name="ee.adit.pojo.ModifyStatusRequest">
+		<map-to xml="modifyStatus" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
+		<field name="documentId" type="java.lang.Long">
+			<bind-xml name="document_id" location="keha" />
+		</field>
+		<field name="documentStatusId" type="java.lang.Long">
+			<bind-xml name="document_status_id" location="keha" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.ModifyStatusResponse">
+		<map-to xml="keha" />
+		<field name="success" type="boolean" >
+		</field>
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
+			<bind-xml name="messages" />
+		</field>
+	</class>
+
+ 	<!-- GetDocumentHistory -->
+	<class name="ee.adit.pojo.GetDocumentHistoryRequest">
+		<map-to xml="getDocumentHistory" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
+		<field name="documentId" type="java.lang.Long">
+			<bind-xml name="document_id" location="keha" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.GetDocumentHistoryResponse">
+		<map-to xml="keha" />
+		<field name="success" type="boolean" >
+		</field>
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
+			<bind-xml name="messages" />
+		</field>
+		<field name="documentHistoryList" type="ee.adit.pojo.GetDocumentHistoryResponseDocument">
+			<bind-xml name="document_history_list" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.GetDocumentHistoryResponseDocument">
+		<map-to xml="document_history_list" />
+		<field name="href" type="java.lang.String">
+			<bind-xml name="href" node="attribute" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.GetDocumentHistoryResponseAttachment">
+		<map-to xml="getDocumentHistoryResponseAttachmentV1" />
+		<field name="id" type="java.lang.Long">
+			<bind-xml name="id" location="document" />
+		</field>
+		<field name="guid" type="java.lang.String">
+			<bind-xml name="guid" location="document" />
+		</field>
+		<field name="activityList" type="ee.adit.pojo.Activity" collection="arraylist">
+			<bind-xml name="activity" location="document/activity_list" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.Activity">
+		<map-to xml="activity" />
+		<field name="time" type="java.util.Date" />
+		<field name="type" type="java.lang.String" />
+		<field name="actors" type="ee.adit.pojo.ActivityActor" collection="arraylist">
+			<bind-xml name="actor" location="actors" />
+		</field>
+		<field name="subjects" type="ee.adit.pojo.ActivitySubject" collection="arraylist">
+			<bind-xml name="subject" location="subjects" />
+		</field>
+		<field name="description" type="java.lang.String" />
+		<field name="application" type="java.lang.String" />
+	</class>
+
+	<class name="ee.adit.pojo.ActivityActor">
+		<map-to xml="actor" />
+		<field name="code" type="java.lang.String" />
+		<field name="name" type="java.lang.String" />
+		<field name="userCode" type="java.lang.String">
+			<bind-xml name="user_code" />
+		</field>
+		<field name="userName" type="java.lang.String">
+			<bind-xml name="user_name" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.ActivitySubject">
+		<map-to xml="subject" />
+		<field name="code" type="java.lang.String" />
+		<field name="name" type="java.lang.String" />
+	</class>
+
+ 	<!-- SendDocument -->
+ 	<class name="ee.adit.pojo.SendDocumentRequest">
+		<map-to xml="sendDocument" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
+		<field name="documentId" type="java.lang.Long">
+			<bind-xml name="document_id" location="keha" />
+		</field>
+		<field name="recipientList" type="ee.adit.pojo.ArrayOfUserCode">
+			<bind-xml name="recipient_list" location="keha" />
+		</field>
+		<field name="dvkFolder" type="java.lang.String">
+			<bind-xml name="dvk_folder" location="keha"/>
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.SendDocumentResponse">
+		<map-to xml="keha" />
+		<field name="success" type="boolean" >
+		</field>
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
+			<bind-xml name="messages" />
+		</field>
+		<field name="recipientList" type="ee.adit.pojo.ArrayOfRecipientStatus">
+			<bind-xml name="recipient_list" />
+		</field>
+	</class>
+
+ 	<!-- Common -->
+ 	<class name="ee.adit.pojo.Success">
+		<map-to xml="success" />
+		<field name="success" type="java.lang.Boolean" container="true">
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.ArrayOfMessage">
+		<map-to xml="messages" />
+		<field name="message" type="ee.adit.pojo.Message" collection="arraylist">
+			<bind-xml name="message" QName-prefix="adit" />
+		</field>
+	</class>
+
+ 	<class name="ee.adit.pojo.Message">
+		<map-to xml="message" />
+		<field name="value" type="java.lang.String" container="true">
+		</field>
+		<field name="lang" type="java.lang.String">
+			<bind-xml name="lang" node="attribute"/>
+		</field>
+	</class>
+
+    <class name="ee.adit.pojo.ArrayOfDataFileHash">
+        <map-to xml="data_file_hashes" />
+        <field name="dataFileHash" type="ee.adit.pojo.DataFileHash" collection="arraylist">
+            <bind-xml name="data_file_hash" />
+        </field>
+    </class>
+
+    <class name="ee.adit.pojo.DataFileHash">
+        <map-to xml="data_file_hash" />
+        <field name="value" type="java.lang.String" container="true">
+        </field>
+        <field name="dataFileId" type="java.lang.String">
+            <bind-xml name="data_file_id" node="attribute"/>
+        </field>
+    </class>
+
+ 	<class name="ee.adit.pojo.UserList">
+		<map-to xml="userList" />
+		<field name="href" type="java.lang.String">
+			<bind-xml name="href" node="attribute"/>
+		</field>
+	</class>
+
+ 	<class name="ee.adit.pojo.UserContactList">
+		<map-to xml="userContactList" />
+		<field name="href" type="java.lang.String">
+			<bind-xml name="href" node="attribute"/>
+		</field>
+	</class>
+	
+	<class name="ee.adit.pojo.ArrayOfFileId">
+		<map-to xml="file_id_list" />
+		<field name="fileId" type="java.lang.Long" collection="arraylist">
+			<bind-xml name="file_id" />
+		</field>
+	</class>
+	
+	<class name="ee.adit.pojo.ArrayOfDocumentId">
+		<map-to xml="documents" />
+		<field name="documentId" type="java.lang.Long" collection="arraylist">
+			<bind-xml name="document_id" />
+		</field>
+	</class>
+	
+	<class name="ee.adit.pojo.ArrayOfUserCode">
+		<map-to xml="recipient_list" />
+		<field name="code" type="java.lang.String" collection="arraylist">
+			<bind-xml name="code" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.RecipientStatus">
+		<map-to xml="recipient" />
+		<field name="code" type="java.lang.String" />
+		<field name="success" type="boolean" />
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage" />
+	</class>
+
+	<class name="ee.adit.pojo.ArrayOfRecipientStatus">
+		<map-to xml="recipient_list" />
+		<field name="recipient" type="ee.adit.pojo.RecipientStatus" collection="arraylist" />
+	</class>
+
+	<class name="ee.adit.pojo.ArrayOfDocumentType">
+		<field name="documentType" type="java.lang.String" collection="arraylist">
+			<bind-xml name="document_type" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.ArrayOfFileType">
+		<field name="fileType" type="java.lang.String" collection="arraylist">
+			<bind-xml name="file_type" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.ArrayOfDocumentDvkStatus">
+		<field name="statusId" type="java.lang.Long" collection="arraylist">
+			<bind-xml name="status_id" />
+		</field>
+	</class>
+	
+ 	<class name="ee.adit.pojo.DocumentActionStatus">
+		<map-to xml="document" />
+		<field name="documentId" type="java.lang.Long">
+			<bind-xml name="document_id"/>
+		</field>
+		<field name="success" type="boolean" />
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessage" />
+	</class>
+	
+	<class name="ee.adit.pojo.ArrayOfDocumentActionStatus">
+		<map-to xml="documents" />
+		<field name="document" type="ee.adit.pojo.DocumentActionStatus" collection="arraylist" />
+	</class>
+	
+	<class name="ee.adit.pojo.ArrayOfDocumentWorkflowStatus">
+		<field name="statusId" type="java.lang.Long" collection="arraylist">
+			<bind-xml name="status_id" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.ArrayOfCreatorApplication">
+		<field name="creatorApplication" type="java.lang.String" collection="arraylist">
+			<bind-xml name="creator_application" />
+		</field>
+	</class>
+
+	<!-- Monitoring request/response messages -->
+
+	<class name="ee.adit.pojo.SaveDocumentRequestAttachmentMonitor">
+		<map-to xml="saveDocumentRequestAttachmentV1" />
+		<field name="id" type="java.lang.Long">
+			<bind-xml name="id" location="document" />
+		</field>
+		<field name="guid" type="java.lang.String">
+			<bind-xml name="guid" location="document" />
+		</field>
+		<field name="title" type="java.lang.String">
+			<bind-xml name="title" location="document" />
+		</field>
+		<field name="documentType" type="java.lang.String">
+			<bind-xml name="document_type" location="document" />
+		</field>
+		<field name="previousDocumentID" type="java.lang.Long">
+			<bind-xml name="previous_document_id" location="document" />
+		</field>
+		<field name="files" type="ee.adit.pojo.OutputDocumentFileMonitor" collection="arraylist">
+			<bind-xml name="file" location="document/files"/>
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.OutputDocumentFileMonitor">
+		<map-to xml="file"/>
+		<field name="id" type="java.lang.Long">
+			<bind-xml name="id"/>
+		</field>
+		<field name="name" type="java.lang.String">
+			<bind-xml name="name"/>
+		</field>
+		<field name="contentType" type="java.lang.String">
+			<bind-xml name="content_type"/>
+		</field>
+		<field name="description" type="java.lang.String">
+			<bind-xml name="description"/>
+		</field>
+		<field name="sizeBytes" type="java.lang.Long">
+			<bind-xml name="size_bytes"/>
+		</field>
+		<field name="fileType" type="java.lang.String">
+			<bind-xml name="file_type"/>
+		</field>
+		<field name="data" type="java.lang.String">
+			<bind-xml name="data"/>
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.SaveDocumentResponseMonitor">
+		<map-to xml="saveDocumentResponse" />
+		<field name="keha" type="ee.adit.pojo.SaveDocumentResponseMonitorKeha" >
+			<bind-xml name="keha" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.SaveDocumentResponseMonitorKeha">
+		<map-to xml="keha" />
+		<field name="success" type="boolean" >
+		</field>
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessageMonitor">
+			<bind-xml name="messages" />
+		</field>
+		<field name="documentId" type="long">
+			<bind-xml name="document_id" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.ArrayOfMessageMonitor">
+		<map-to xml="messages" />
+		<field name="message" type="java.lang.String" collection="arraylist">
+			<bind-xml name="message" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.GetDocumentResponseMonitor">
+		<map-to xml="getDocumentResponse" />
+		<field name="success" type="java.lang.Boolean">
+			<bind-xml location="keha" />
+		</field>
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessageMonitor">
+			<bind-xml name="messages" location="keha" />
+		</field>
+		<field name="document" type="ee.adit.pojo.GetDocumentResponseDocument">
+			<bind-xml name="document" location="keha" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.GetUserInfoResponseMonitor">
+		<map-to xml="getUserInfoResponse" />
+		<field name="success" type="java.lang.Boolean" >
+			<bind-xml location="keha" />
+		</field>
+		<field name="messages" type="ee.adit.pojo.ArrayOfMessageMonitor">
+			<bind-xml name="messages" location="keha" />
+		</field>
+		<field name="userList" type="ee.adit.pojo.UserList">
+			<bind-xml name="userList" location="keha" />
+		</field>
+	</class>
+
+	<!-- Notifications -->
+	<class name="ee.adit.pojo.notification.LisaSyndmusRequest">
+		<map-to xml="lisaSyndmus" ns-uri="http://producers.teavituskalender.xtee.riik.ee/producer/teavituskalender"/>
+		<field name="nahtavOmanikule" type="java.lang.Boolean" >
+			<bind-xml name="nahtavOmanikule" location="keha" />
+		</field>
+		<field name="kirjeldus" type="java.lang.String">
+			<bind-xml name="kirjeldus" location="keha" />
+		</field>
+		<field name="tahtsus" type="java.lang.String">
+			<bind-xml name="tahtsus" location="keha" />
+		</field>
+		<field name="syndmuseTyyp" type="java.lang.String">
+			<bind-xml name="syndmuseTyyp" location="keha" />
+		</field>
+		<field name="liik" type="java.lang.String">
+			<bind-xml name="liik" location="keha" />
+		</field>
+		<field name="lugejad" type="ee.adit.pojo.notification.LisaSyndmusRequestLugejad" >
+			<bind-xml location="keha" />
+		</field>
+		<field name="algus" type="java.lang.String">
+			<bind-xml name="algus" location="keha" />
+		</field>
+		<field name="lopp" type="java.lang.String">
+			<bind-xml name="lopp" location="keha" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.notification.LisaSyndmusRequestLugejad">
+		<map-to xml="lugejad" ns-uri="http://producers.teavituskalender.xtee.riik.ee/producer/teavituskalender" ns-prefix="ns5"/>
+		<field name="kasutajad" type="ee.adit.pojo.notification.LisaSyndmusRequestKasutaja" collection="arraylist" >
+			<bind-xml name="kasutaja" />
+		</field>
+		<field name="xsiType" type="java.lang.String">
+			<bind-xml name="xsi:type" node="attribute" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" />
+		</field>
+		<field name="type" type="java.lang.String">
+			<bind-xml name="SOAP-ENC:arrayType" node="attribute" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.notification.LisaSyndmusRequestKasutaja">
+		<map-to xml="kasutaja" ns-uri="http://producers.teavituskalender.xtee.riik.ee/producer/teavituskalender"/>
+		<field name="kood" type="java.lang.String" >
+			<bind-xml name="kood" />
+		</field>
+		<field name="kasutajaTyyp" type="java.lang.String">
+			<bind-xml name="kasutajaTyyp" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.notification.LisaSyndmusResponse">
+		<map-to xml="lisaSyndmusResponse" ns-uri="http://producers.teavituskalender.xtee.riik.ee/producer/teavituskalender" ns-prefix="tkal"/>
+		<field name="tulemus" type="ee.adit.pojo.notification.LisaSyndmusResponseTulemus" >
+			<bind-xml name="tulemus" location="keha" />
+		</field>
+		<field name="syndmusId" type="java.lang.Integer">
+			<bind-xml name="syndmusId" location="keha" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.notification.LisaSyndmusResponseTulemus">
+		<map-to xml="tulemus" ns-uri="http://producers.teavituskalender.xtee.riik.ee/producer/teavituskalender" ns-prefix="tkal" />
+		<field name="tulemuseKood" type="java.lang.Integer" >
+			<bind-xml name="tulemuseKood" location="keha" />
+		</field>
+		<field name="tulemuseKoodType" type="java.lang.String" >
+			<bind-xml name="xsi:type" location="keha/tulemuseKood" node="attribute" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" />
+		</field>
+		<field name="tulemuseTekst" type="java.lang.String">
+			<bind-xml name="tulemuseTekst" location="keha" />
+		</field>
+		<field name="tulemuseTekstType" type="java.lang.String" >
+			<bind-xml name="xsi:type" location="keha/tulemuseTekst" node="attribute" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.SaveDocumentRequestMonitor">
+		<map-to xml="saveDocument" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" ns-prefix="adit" />
+		<field name="document" type="ee.adit.pojo.SaveDocumentRequestDocument">
+			<bind-xml name="document" location="keha" QName-prefix="adit" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.SaveDocumentRequestDocumentMonitor">
+		<map-to xml="document" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" ns-prefix="adit" />
+		<field name="href" type="java.lang.String">
+			<bind-xml name="href" node="attribute" QName-prefix="adit" />
+		</field>
+	</class>
+
+	<class name="ee.adit.pojo.GetDocumentRequestMonitor">
+		<map-to xml="getDocument" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" ns-prefix="adit" />
+		<field name="documentId" type="long">
+			<bind-xml name="document_id" location="keha" QName-prefix="adit" />
+		</field>
+		<field name="includeFileContents" type="java.lang.Boolean">
+			<bind-xml name="include_file_contents" location="keha" QName-prefix="adit" />
+		</field>
+	</class>
+
+	<!-- GetUserInfo -->
+ 	<class name="ee.adit.pojo.GetUserInfoRequestMonitor">
+		<map-to xml="getUserInfo" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" ns-prefix="adit" />
+		<field name="userList" type="ee.adit.pojo.GetUserInfoRequestUserListMonitor">
+			<bind-xml name="userList" location="keha" QName-prefix="adit" />
+		</field>
+	</class>
+
+ 	<class name="ee.adit.pojo.GetUserInfoRequestUserListMonitor">
+		<map-to xml="userList" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" ns-prefix="adit" />
+		<field name="href" type="java.lang.String">
+			<bind-xml name="href" node="attribute" QName-prefix="adit" />
+		</field>
+	</class>
+
+</mapping>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapping>
+	<!--
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Transport
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	-->
+	<class name="dvk.api.container.v2.Transport">
+		<map-to xml="transport" ns-uri="http://www.riik.ee/schemas/dhl/2010/2" ns-prefix="dhl" />
+
+		<field name="saajad" type="dvk.api.container.v2.Saaja" collection="arraylist">
+			<bind-xml name="saaja" node="element" />
+		</field>
+
+		<field name="saatjad" type="dvk.api.container.v2.Saatja" collection="arraylist">
+			<bind-xml name="saatja" node="element" />
+		</field>
+	</class>
+
+	<!--
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Saaja
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	-->
+	<class name="dvk.api.container.v2.Saaja">
+		<map-to xml="saaja" ns-uri="http://www.riik.ee/schemas/dhl/2010/2" ns-prefix="dhl" />
+
+		<field name="regNr" type="string">
+			<bind-xml name="regnr" node="element" />
+		</field>
+
+		<field name="asutuseNimi" type="string">
+			<bind-xml name="asutuse_nimi" node="element" />
+		</field>
+
+		<field name="allyksuseLyhinimetus" type="string">
+			<bind-xml name="allyksuse_lyhinimetus" node="element" />
+		</field>
+
+		<field name="ametikohaLyhinimetus" type="string">
+			<bind-xml name="ametikoha_lyhinimetus" node="element" />
+		</field>
+
+		<field name="allyksuseNimetus" type="string">
+			<bind-xml name="allyksuse_nimetus" node="element" />
+		</field>
+
+		<field name="isikukood" type="string">
+			<bind-xml name="isikukood" node="element" />
+		</field>
+
+		<field name="ametikohaNimetus" type="string">
+			<bind-xml name="ametikoha_nimetus" node="element" />
+		</field>
+
+		<field name="epost" type="string">
+			<bind-xml name="epost" node="element" />
+		</field>
+
+		<field name="nimi" type="string">
+			<bind-xml name="nimi" node="element" />
+		</field>
+
+		<field name="osakonnaKood" type="string">
+			<bind-xml name="osakonna_kood" node="element" />
+		</field>
+
+		<field name="osakonnaNimi" type="string">
+			<bind-xml name="osakonna_nimi" node="element" />
+		</field>
+	</class>
+	<!--
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Saatja
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	-->
+	<class name="dvk.api.container.v2.Saatja">
+		<map-to xml="saatja" ns-uri="http://www.riik.ee/schemas/dhl/2010/2" ns-prefix="dhl" />
+
+		<field name="regNr" type="string">
+			<bind-xml name="regnr" node="element" />
+		</field>
+
+		<field name="asutuseNimi" type="string">
+			<bind-xml name="asutuse_nimi" node="element" />
+		</field>
+
+		<field name="allyksuseLyhinimetus" type="string">
+			<bind-xml name="allyksuse_lyhinimetus" node="element" />
+		</field>
+
+		<field name="ametikohaLyhinimetus" type="string">
+			<bind-xml name="ametikoha_lyhinimetus" node="element" />
+		</field>
+
+		<field name="allyksuseNimetus" type="string">
+			<bind-xml name="allyksuse_nimetus" node="element" />
+		</field>
+
+		<field name="isikukood" type="string">
+			<bind-xml name="isikukood" node="element" />
+		</field>
+
+		<field name="ametikohaNimetus" type="string">
+			<bind-xml name="ametikoha_nimetus" node="element" />
+		</field>
+
+		<field name="epost" type="string">
+			<bind-xml name="epost" node="element" />
+		</field>
+
+		<field name="nimi" type="string">
+			<bind-xml name="nimi" node="element" />
+		</field>
+
+		<field name="osakonnaKood" type="string">
+			<bind-xml name="osakonna_kood" node="element" />
+		</field>
+
+		<field name="osakonnaNimi" type="string">
+			<bind-xml name="osakonna_nimi" node="element" />
+		</field>
+	</class>
+</mapping>

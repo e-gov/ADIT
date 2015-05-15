@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dhl:dokument
+    xmlns:mm="http://www.riik.ee/schemas/dhl-meta-manual/2010/2"
+    xmlns:ma="http://www.riik.ee/schemas/dhl-meta-automatic"
+    xmlns:dhl="http://www.riik.ee/schemas/dhl/2010/2"
+    xmlns:rkel="http://www.riik.ee/schemas/dhl/rkel_letter" konteineri_versioon="2">
+    <dhl:metainfo>
+        <mm:metainfo>
+            <mm:dokument_liik>letter</mm:dokument_liik>
+            <mm:dokument_pealkiri>Kiri ADIT-isse</mm:dokument_pealkiri>
+            <mm:dokument_guid>4CED7CC2-E484-4410-8740-53D4C42FF12C</mm:dokument_guid>
+        </mm:metainfo>
+    </dhl:metainfo>
+    <dhl:transport>
+        <dhl:saaja>
+            <dhl:regnr>10111249</dhl:regnr>
+            <dhl:isikukood>EE38407054916</dhl:isikukood>
+            <dhl:nimi>Marko Kurm</dhl:nimi>
+        </dhl:saaja>
+    </dhl:transport>
+    <dhl:failid>
+        <dhl:kokku>3</dhl:kokku>
+        <dhl:fail>
+            <dhl:jrknr>0</dhl:jrknr>
+            <dhl:fail_suurus>223</dhl:fail_suurus>
+            <dhl:fail_tyyp>text/plain</dhl:fail_tyyp>
+            <dhl:fail_nimi>avaldus1.txt</dhl:fail_nimi>
+            <dhl:zip_base64_sisu>UEsDBBQACAAIAJBp/TwAAAAAAAAAAAAAAAAjAAAANDIzNTMwMzUxMjUxOTMxMjU2MzMxMDA3
+MTA4NjY1LmFkaXRNjksKwkAMhtcWeoccQMpYvEAXboqC4AkCM7Sx8yhNMif2CnZtunOXfPyv
+8TuFinCnnLFiJGHlU+86d+16d3Ft0zaDca98nE+MmqESVRJMKBoFBCdkQY+QKCuspRhM++41
+qwcJxLR+rCNC/C8JsGAWDtEE9pjYQsQcS5lr2M7Aqowe3ggbmm/FGLtjQ9vcKBd4KHmdyOa9
+YGCVY+Cos0VYWmBKIRj5AVBLBwg/nk0TpwAAAN8AAABQSwECFAAUAAgACACQaf08P55NE6cA
+AADfAAAAIwAAAAAAAAAAAAAAAAAAAAAANDIzNTMwMzUxMjUxOTMxMjU2MzMxMDA3MTA4NjY1
+LmFkaXRQSwUGAAAAAAEAAQBRAAAA+AAAAAAA
+</dhl:zip_base64_sisu>
+            <dhl:krypteering>false</dhl:krypteering>
+            <dhl:pohi_dokument>false</dhl:pohi_dokument>
+        </dhl:fail>
+        <dhl:fail>
+            <dhl:jrknr>1</dhl:jrknr>
+            <dhl:fail_suurus>223</dhl:fail_suurus>
+            <dhl:fail_tyyp>text/plain</dhl:fail_tyyp>
+            <dhl:fail_nimi>avaldus3.txt</dhl:fail_nimi>
+            <dhl:zip_base64_sisu>UEsDBBQACAAIAJBp/TwAAAAAAAAAAAAAAAAjAAAANTUxNDkwNzIyOTAyOTg1Mjg3MDc5MzMy
+ODg3NTc5LmFkaXRNjksKwkAMhtcWeoccQMpYvEAXboqC4AkCM7Sx8yhNMif2CnZtunOXfPyv
+8TuFinCnnLFiJGHlU+86d+16d3Ft0zaDca98nE+MmqESVRJMKBoFBCdkQY+QKCuspRhM++41
+qwcJxLR+rCNC/C8JsGAWDtEE9pjYQsQcS5lr2M7Aqowe3ggbmm/FGLtjQ9vcKBd4KHmdyOa9
+YGCVY+Cos0VYWmBKIRj5AVBLBwg/nk0TpwAAAN8AAABQSwECFAAUAAgACACQaf08P55NE6cA
+AADfAAAAIwAAAAAAAAAAAAAAAAAAAAAANTUxNDkwNzIyOTAyOTg1Mjg3MDc5MzMyODg3NTc5
+LmFkaXRQSwUGAAAAAAEAAQBRAAAA+AAAAAAA
+</dhl:zip_base64_sisu>
+            <dhl:krypteering>false</dhl:krypteering>
+            <dhl:pohi_dokument>false</dhl:pohi_dokument>
+        </dhl:fail>
+        <dhl:fail>
+            <dhl:jrknr>2</dhl:jrknr>
+            <dhl:fail_suurus>223</dhl:fail_suurus>
+            <dhl:fail_tyyp>text/plain</dhl:fail_tyyp>
+            <dhl:fail_nimi>avaldus2.txt</dhl:fail_nimi>
+            <dhl:zip_base64_sisu>UEsDBBQACAAIAJBp/TwAAAAAAAAAAAAAAAAjAAAAMjUxMDk0Njg2MTI2MzIzOTI1ODkyMzM3
+Njk3MTE2LmFkaXRNjksKwkAMhtcWeoccQMpYvEAXboqC4AkCM7Sx8yhNMif2CnZtunOXfPyv
+8TuFinCnnLFiJGHlU+86d+16d3Ft0zaDca98nE+MmqESVRJMKBoFBCdkQY+QKCuspRhM++41
+qwcJxLR+rCNC/C8JsGAWDtEE9pjYQsQcS5lr2M7Aqowe3ggbmm/FGLtjQ9vcKBd4KHmdyOa9
+YGCVY+Cos0VYWmBKIRj5AVBLBwg/nk0TpwAAAN8AAABQSwECFAAUAAgACACQaf08P55NE6cA
+AADfAAAAIwAAAAAAAAAAAAAAAAAAAAAAMjUxMDk0Njg2MTI2MzIzOTI1ODkyMzM3Njk3MTE2
+LmFkaXRQSwUGAAAAAAEAAQBRAAAA+AAAAAAA
+</dhl:zip_base64_sisu>
+            <dhl:krypteering>false</dhl:krypteering>
+            <dhl:pohi_dokument>false</dhl:pohi_dokument>
+        </dhl:fail>
+    </dhl:failid>
+</dhl:dokument>

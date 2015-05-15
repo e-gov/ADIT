@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapping>
+    <class name="dvk.api.container.v2_1.ContainerVer2_1">
+        <map-to xml="DecContainer" ns-uri="http://www.riik.ee/schemas/deccontainer/vers_2_1/" />
+
+        <field name="Transport" type="dvk.api.container.v2_1.Transport">
+            <bind-xml name="Transport" />
+        </field>
+
+        <field name="Initiator" type="dvk.api.container.v2_1.Initiator">
+            <bind-xml name="Initiator" />
+        </field>
+
+        <field name="RecordCreator" type="dvk.api.container.v2_1.RecordCreator">
+            <bind-xml name="RecordCreator" />
+        </field>
+
+        <field name="RecordSenderToDec" type="dvk.api.container.v2_1.RecordSenderToDec">
+            <bind-xml name="RecordSenderToDec" />
+        </field>
+
+        <field name="Recipient" type="dvk.api.container.v2_1.Recipient" collection="arraylist">
+            <bind-xml name="Recipient" node="element" />
+        </field>
+
+        <field name="RecordMetadata" type="dvk.api.container.v2_1.RecordMetadata">
+            <bind-xml name="RecordMetadata" />
+        </field>
+
+        <field name="Access" type="dvk.api.container.v2_1.Access">
+            <bind-xml name="Access" />
+        </field>
+
+        <field name="SignatureMetadata" type="dvk.api.container.v2_1.SignatureMetadata" collection="arraylist">
+            <bind-xml name="SignatureMetadata" node="element" />
+        </field>
+
+        <field name="File" type="dvk.api.container.v2_1.File" collection="arraylist">
+            <bind-xml name="File" node="element" />
+        </field>
+
+        <field name="RecordTypeSpecificMetadata" type="string">
+            <bind-xml name="RecordTypeSpecificMetadata" node="element"/>
+        </field>
+
+        <field name="DecMetadata" type="dvk.api.container.v2_1.DecMetadata">
+            <bind-xml name="DecMetadata" />
+        </field>
+    </class>
+
+    <class name="dvk.api.container.v2_1.Transport">
+        <map-to xml="Transport" ns-uri="http://www.riik.ee/schemas/deccontainer/vers_2_1/"/>
+
+        <field name="DecSender" type="dvk.api.container.v2_1.DecSender">
+            <bind-xml name="DecSender" />
+        </field>
+
+        <field name="DecRecipient" type="dvk.api.container.v2_1.DecRecipient" collection="arraylist">
+            <bind-xml name="DecRecipient" node="element" />
+        </field>
+    </class>
+
+    <class name="dvk.api.container.v2_1.DecSender">
+        <map-to xml="DecSender" ns-uri="http://www.riik.ee/schemas/deccontainer/vers_2_1/"/>
+
+        <field name="OrganisationCode" type="string">
+            <bind-xml name="OrganisationCode" node="element" />
+        </field>
+
+        <field name="StructuralUnit" type="string">
+            <bind-xml name="StructuralUnit" node="element" />
+        </field>
+
+        <field name="PersonalIdCode" type="string">
+            <bind-xml name="PersonalIdCode" node="element" />
+        </field>
+    </class>
+
+    <class name="dvk.api.container.v2_1.DecRecipient">
+        <map-to xml="DecRecipient" ns-uri="http://www.riik.ee/schemas/deccontainer/vers_2_1/"/>
+
+        <field name="OrganisationCode" type="string">
+            <bind-xml name="OrganisationCode" node="element" />
+        </field>
+
+        <field name="StructuralUnit" type="string">
+            <bind-xml name="StructuralUnit" node="element" />
+        </field>
+
+        <field name="PersonalIdCode" type="string">
+            <bind-xml name="PersonalIdCode" node="element" />
+        </field>
+    </class>
+
+    <class name="dvk.api.container.v2_1.DecMetadata">
+        <map-to xml="DecMetadata" ns-uri="http://www.riik.ee/schemas/deccontainer/vers_2_1/"/>
+
+        <field name="DecId" type="string">
+            <bind-xml name="DecId" node="element" />
+        </field>
+
+        <field name="DecFolder" type="string">
+            <bind-xml name="DecFolder" node="element" />
+        </field>
+
+        <field name="DecReceiptDate" type="date">
+            <bind-xml name="DecReceiptDate" node="element" />
+        </field>
+    </class>
+
+    <class name="dvk.api.container.v2_1.Initiator">
+        <map-to xml="Initiator" ns-uri="http://www.riik.ee/schemas/deccontainer/vers_2_1/"/>
+
+        <field name="InitiatorRecordOriginalIdentifier" type="string">
+            <bind-xml name="InitiatorRecordOriginalIdentifier" node="element" />
+        </field>
+
+        <field name="InitiatorRecordDate" type="date">
+            <bind-xml name="InitiatorRecordDate" node="element" />
+        </field>
+
+        <field name="Organisation" type="dvk.api.container.v2_1.OrganisationType">
+            <bind-xml name="Organisation" />
+        </field>
+
+        <field name="Person" type="dvk.api.container.v2_1.PersonType">
+            <bind-xml name="Person" />
+        </field>
+
+        <field name="ContactData" type="dvk.api.container.v2_1.ContactDataType">
+            <bind-xml name="ContactData" />
+        </field>
+    </class>
+
+    <class name="dvk.api.container.v2_1.OrganisationType">
+        <map-to xml="Organisation" ns-uri="http://www.riik.ee/schemas/deccontainer/vers_2_1/"/>
+
+        <field name="Name" type="string">
+            <bind-xml name="Name" node="element" />
+        </field>
+
+        <field name="OrganisationCode" type="string">
+            <bind-xml name="OrganisationCode" node="element" />
+        </field>
+
+        <field name="StructuralUnit" type="string">
+            <bind-xml name="StructuralUnit" node="element" />
+        </field>
+
+        <field name="PositionTitle" type="string">
+            <bind-xml name="PositionTitle" node="element" />
+        </field>
+
+        <field name="Residency" type="string">
+            <bind-xml name="Residency" node="element" />
+        </field>
+    </class>
+
+    <class name="dvk.api.container.v2_1.PersonType">
+        <map-to xml="Person" ns-uri="http://www.riik.ee/schemas/deccontainer/vers_2_1/"/>
+
+        <field name="Name" type="string">
+            <bind-xml name="Name" node="element" />
+        </field>
+
+        <field name="GivenName" type="string">
+            <bind-xml name="GivenName" node="element" />
+        </field>
+
+        <field name="Surname" type="string">
+            <bind-xml name="Surname" node="element" />
+        </field>
+
+        <field name="PersonalIdCode" type="string">
+            <bind-xml name="PersonalIdCode" node="element" />
+        </field>
+
+        <field name="Residency" type="string">
+            <bind-xml name="Residency" node="element" />
+        </field>
+    </class>
+
+    <class name="dvk.api.container.v2_1.ContactDataType">
+        <map-to xml="ContactData" ns-uri="http://www.riik.ee/schemas/deccontainer/vers_2_1/"/>
+
+        <field name="Adit" type="boolean">
+            <bind-xml name="Adit" node="element" />
+        </field>
+
+        <field name="Phone" type="string">
+            <bind-xml name="Phone" node="element" />
+        </field>
+
+        <field name="Email" type="string">
+            <bind-xml name="Email" node="element" />
+        </field>
+
+        <field name="WebPage" type="string">
+            <bind-xml name="WebPage" node="element" />
+        </field>
+
+        <field name="MessagingAddress" type="string">
+            <bind-xml name="MessagingAddress" node="element" />
+        </field>
+
+        <field name="PostalAddress" type="dvk.api.container.v2_1.PostalAddressType">
+            <bind-xml name="PostalAddress" />
+        </field>
+    </class>
+
+    <class name="dvk.api.container.v2_1.PostalAddressType">
+        <map-to xml="PostalAddress" ns-uri="http://www.riik.ee/schemas/deccontainer/vers_2_1/"/>
+
+        <field name="Country" type="string">
+            <bind-xml name="Country" node="element" />
+        </field>
+
+        <field name="County" type="string">
+            <bind-xml name="County" node="element" />
+        </field>
+
+        <field name="LocalGovernment" type="string">
+            <bind-xml name="LocalGovernment" node="element" />
+        </field>
+
+
+        <field name="AdministrativeUnit" type="string">
+            <bind-xml name="AdministrativeUnit" node="element" />
+        </field>
+
+        <field name="SmallPlace" type="string">
+            <bind-xml name="SmallPlace" node="element" />
+        </field>
+
+        <field name="LandUnit" type="string">
+            <bind-xml name="LandUnit" node="element" />
+        </field>
+
+        <field name="Street" type="string">
+            <bind-xml name="Street" node="element" />
+        </field>
+
+        <field name="HouseNumber" type="string">
+            <bind-xml name="HouseNumber" node="element" />
+        </field>
+
+        <field name="BuildingPartNumber" type="string">
+            <bind-xml name="BuildingPartNumber" node="element" />
+        </field>
+
+        <field name="PostalCode" type="string" handler="dvk.api.container.v2_1.PostalAddressTypePostalCodeHandler">
+            <bind-xml name="PostalCode" node="element" />
+        </field>
+    </class>
+
+    <class name="dvk.api.container.v2_1.RecordCreator">
+        <map-to xml="RecordCreator" ns-uri="http://www.riik.ee/schemas/deccontainer/vers_2_1/"/>
+
+        <field name="Organisation" type="dvk.api.container.v2_1.OrganisationType">
+            <bind-xml name="Organisation" />
+        </field>
+
+        <field name="Person" type="dvk.api.container.v2_1.PersonType">
+            <bind-xml name="Person" />
+        </field>
+
+        <field name="ContactData" type="dvk.api.container.v2_1.ContactDataType">
+            <bind-xml name="ContactData" />
+        </field>
+    </class>
+
+    <class name="dvk.api.container.v2_1.RecordSenderToDec">
+        <map-to xml="RecordSenderToDec" ns-uri="http://www.riik.ee/schemas/deccontainer/vers_2_1/"/>
+
+        <field name="Organisation" type="dvk.api.container.v2_1.OrganisationType">
+            <bind-xml name="Organisation" />
+        </field>
+
+        <field name="Person" type="dvk.api.container.v2_1.PersonType">
+            <bind-xml name="Person" />
+        </field>
+
+        <field name="ContactData" type="dvk.api.container.v2_1.ContactDataType">
+            <bind-xml name="ContactData" />
+        </field>
+    </class>
+
+    <class name="dvk.api.container.v2_1.Recipient">
+        <map-to xml="Recipient" ns-uri="http://www.riik.ee/schemas/deccontainer/vers_2_1/"/>
+
+        <field name="RecipientRecordGuid" type="string">
+            <bind-xml name="RecipientRecordGuid" node="element" />
+        </field>
+
+        <field name="RecipientRecordOriginalIdentifier" type="string">
+            <bind-xml name="RecipientRecordOriginalIdentifier" node="element" />
+        </field>
+
+        <field name="MessageForRecipient" type="string">
+            <bind-xml name="MessageForRecipient" node="element" />
+        </field>
+
+        <field name="Organisation" type="dvk.api.container.v2_1.OrganisationType">
+            <bind-xml name="Organisation" />
+        </field>
+
+        <field name="Person" type="dvk.api.container.v2_1.PersonType">
+            <bind-xml name="Person" />
+        </field>
+
+        <field name="ContactData" type="dvk.api.container.v2_1.ContactDataType">
+            <bind-xml name="ContactData" />
+        </field>
+    </class>
+
+    <class name="dvk.api.container.v2_1.RecordMetadata">
+        <map-to xml="RecordMetadata" ns-uri="http://www.riik.ee/schemas/deccontainer/vers_2_1/"/>
+
+        <field name="RecordGuid" type="string">
+            <bind-xml name="RecordGuid" node="element" />
+        </field>
+
+        <field name="RecordType" type="string">
+            <bind-xml name="RecordType" node="element" />
+        </field>
+
+        <field name="RecordOriginalIdentifier" type="string">
+            <bind-xml name="RecordOriginalIdentifier" node="element" />
+        </field>
+
+        <field name="RecordDateRegistered" type="date">
+            <bind-xml name="RecordDateRegistered" node="element" />
+        </field>
+
+        <field name="RecordTitle" type="string">
+            <bind-xml name="RecordTitle" node="element" />
+        </field>
+
+        <field name="RecordLanguage" type="string">
+            <bind-xml name="RecordLanguage" node="element" />
+        </field>
+
+        <field name="RecordAbstract" type="string">
+            <bind-xml name="RecordAbstract" node="element" />
+        </field>
+
+        <field name="ReplyDueDate" type="string" handler="dvk.api.container.v2_1.RecordMetadataReplyDueDateHandler">
+            <bind-xml name="ReplyDueDate" node="element" />
+        </field>
+    </class>
+
+    <class name="dvk.api.container.v2_1.Access">
+        <map-to xml="Access" ns-uri="http://www.riik.ee/schemas/deccontainer/vers_2_1/"/>
+
+        <field name="AccessConditionsCode" type="string" handler="dvk.api.container.v2_1.AccessConditionsCodeHandler">
+            <bind-xml name="AccessConditionsCode" node="element" />
+        </field>
+
+        <field name="AccessRestriction" type="dvk.api.container.v2_1.AccessRestriction" collection="arraylist">
+            <bind-xml name="AccessRestriction" node="element" />
+        </field>
+    </class>
+
+    <class name="dvk.api.container.v2_1.AccessRestriction">
+        <map-to xml="AccessRestriction" ns-uri="http://www.riik.ee/schemas/deccontainer/vers_2_1/"/>
+
+        <field name="RestrictionIdentifier" type="string" >
+            <bind-xml name="RestrictionIdentifier" node="element" />
+        </field>
+
+        <field name="RestrictionBeginDate" type="string" handler="dvk.api.container.v2_1.AccessRestrictionBeginDateHandler">
+            <bind-xml name="RestrictionBeginDate" node="element" />
+        </field>
+
+        <field name="RestrictionEndDate" type="string" handler="dvk.api.container.v2_1.AccessRestrictionEndDateHandler">
+            <bind-xml name="RestrictionEndDate" node="element" />
+        </field>
+
+        <field name="RestrictionEndEvent" type="string" >
+            <bind-xml name="RestrictionEndEvent" node="element" />
+        </field>
+
+        <field name="RestrictionInvalidSince" type="string" handler="dvk.api.container.v2_1.AccessRestrictionInvalidSinceHandler">
+            <bind-xml name="RestrictionInvalidSince" node="element" />
+        </field>
+
+        <field name="RestrictionBasis" type="string" >
+            <bind-xml name="RestrictionBasis" node="element" />
+        </field>
+
+        <field name="InformationOwner" type="string" >
+            <bind-xml name="InformationOwner" node="element" />
+        </field>
+    </class>
+
+    <class name="dvk.api.container.v2_1.SignatureMetadata">
+        <map-to xml="SignatureMetadata" ns-uri="http://www.riik.ee/schemas/deccontainer/vers_2_1/"/>
+
+        <field name="SignatureType" type="string" >
+            <bind-xml name="SignatureType" node="element" />
+        </field>
+
+        <field name="Signer" type="string" >
+            <bind-xml name="Signer" node="element" />
+        </field>
+
+        <field name="Verified" type="string" >
+            <bind-xml name="Verified" node="element" />
+        </field>
+
+        <field name="SignatureVerificationDate" type="date" >
+            <bind-xml name="SignatureVerificationDate" node="element" />
+        </field>
+    </class>
+
+    <class name="dvk.api.container.v2_1.File">
+        <map-to xml="File" ns-uri="http://www.riik.ee/schemas/deccontainer/vers_2_1/"/>
+
+        <field name="FileGuid" type="string" >
+            <bind-xml name="FileGuid" node="element" />
+        </field>
+
+        <field name="RecordMainComponent" type="boolean" >
+            <bind-xml name="RecordMainComponent" node="element" />
+        </field>
+
+        <field name="FileName" type="string" >
+            <bind-xml name="FileName" node="element" />
+        </field>
+
+        <field name="MimeType" type="string" >
+            <bind-xml name="MimeType" node="element" />
+        </field>
+
+        <field name="FileSize" type="integer" >
+            <bind-xml name="FileSize" node="element" />
+        </field>
+
+        <field name="ZipBase64Content" type="string" >
+            <bind-xml name="ZipBase64Content" node="element" />
+        </field>
+    </class>
+
+</mapping>

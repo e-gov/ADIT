@@ -1,0 +1,38 @@
+16c16
+< ORACLE_HOME	/usr/local/oracle/10g
+---
+> ORACLE_HOME	oracle_dbhome_location #C:\app\oracle\product\11.2.0\dbhome_1
+19,21c19,21
+< ORACLE_DSN	dbi:Oracle:host=mydb.mydom.fr;sid=SIDNAME
+< ORACLE_USER	system
+< ORACLE_PWD	manager
+---
+> ORACLE_DSN	dbi:Oracle:host=server_ip;port=server_port;SERVICE_NAME=service_name
+> ORACLE_USER	username
+> ORACLE_PWD	password
+26c26
+< USER_GRANTS     0
+---
+> USER_GRANTS     1
+29c29
+< DEBUG		0
+---
+> DEBUG		1
+35c35
+< #SCHEMA		SCHEMA_NAME
+---
+> SCHEMA		ADIT
+80c80
+< TYPE		TABLE
+---
+> TYPE		INSERT
+87c87
+< #ALLOW		TABLE_TEST
+---
+> ALLOW		document_file_type document_sharing_type document_history_type document_type notification_type usertype remote_application document_dvk_status document_wf_status maintenance_job
+150a151
+> #WHERE id = 1377
+412c413
+< #LONGREADLEN	1047552
+---
+> LONGREADLEN	104755200

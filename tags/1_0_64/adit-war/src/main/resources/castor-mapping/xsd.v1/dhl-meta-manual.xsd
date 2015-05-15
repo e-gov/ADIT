@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<xs:schema targetNamespace="http://www.riik.ee/schemas/dhl-meta-manual" xmlns:tns="http://www.riik.ee/schemas/dhl-meta-manual" xmlns:dhlma="http://www.riik.ee/schemas/dhl-meta-automatic" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified" attributeFormDefault="unqualified">
+	<xs:import namespace="http://www.riik.ee/schemas/dhl-meta-automatic" schemaLocation="dhl-meta-automatic.xsd"/>
+	<xs:element name="koostaja_asutuse_nr" type="xs:string">
+	</xs:element>
+	<xs:element name="saaja_asutuse_nr" type="xs:string">
+	</xs:element>
+	<xs:element name="koostaja_dokumendinimi" type="xs:string">
+	</xs:element>
+	<xs:element name="koostaja_dokumendityyp" type="xs:string">
+	</xs:element>
+	<xs:element name="koostaja_votmesona" type="xs:string">
+	</xs:element>
+	<xs:element name="koostaja_dokumendinr" type="xs:string">
+	</xs:element>
+	<xs:element name="koostaja_kuupaev" type="xs:string">
+	</xs:element>
+	<xs:element name="koostaja_asutuse_nimi" type="xs:string">
+	</xs:element>
+	<xs:element name="koostaja_asutuse_kontakt" type="xs:string">
+	</xs:element>
+	<xs:element name="autori_osakond" type="xs:string">
+	</xs:element>
+	<xs:element name="autori_isikukood" type="xs:string">
+	</xs:element>
+	<xs:element name="autori_nimi" type="xs:string">
+	</xs:element>
+	<xs:element name="autori_kontakt" type="xs:string">
+	</xs:element>
+    <xs:element name="seotud_dhl_id" type="dhlma:dhlDokIDType">
+    </xs:element>
+	<xs:element name="seotud_dokumendinr_koostajal" type="xs:string">
+	</xs:element>
+	<xs:element name="seotud_dokumendinr_saajal" type="xs:string">
+	</xs:element>
+	<xs:element name="saatja_dokumendinr" type="xs:string">
+	</xs:element>
+	<xs:element name="saatja_kuupaev" type="xs:string">
+	</xs:element>
+	<xs:element name="saatja_asutuse_kontakt" type="xs:string">
+	</xs:element>
+	<xs:element name="saaja_isikukood" type="xs:string">
+	</xs:element>
+	<xs:element name="saaja_nimi" type="xs:string">
+	</xs:element>
+	<xs:element name="saaja_osakond" type="xs:string">
+	</xs:element>
+	<xs:element name="saatja_defineeritud">
+	</xs:element>
+	<xs:attribute name="valjanimi" type="xs:string" />
+	<xs:element name="koostaja_failinimi">
+	</xs:element>
+	<xs:element name="koostaja_kataloog">
+	</xs:element>
+	<xs:element name="koostaja_kokkuvote">
+	</xs:element>
+    <xs:element name="sisu_id">
+    </xs:element>
+</xs:schema>

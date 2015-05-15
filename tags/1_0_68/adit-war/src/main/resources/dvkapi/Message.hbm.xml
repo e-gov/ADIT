@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 7.02.2010 22:22:31 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="dvk.api.ml.PojoMessage" table="DHL_MESSAGE">
+        <id name="dhlMessageId" type="long">
+            <column name="DHL_MESSAGE_ID" precision="10" scale="0" />
+            <generator class="sequence">
+				<param name="sequence">SQ_DHL_MESSAGE_ID</param>
+			</generator>
+        </id>
+        <property name="isIncoming" type="boolean">
+            <column name="IS_INCOMING" precision="1" scale="0" not-null="true" />
+        </property>
+        <property name="data" type="clob">
+            <column name="DATA" not-null="true" />
+        </property>
+        <property name="title" type="string">
+            <column name="TITLE" length="1000" />
+        </property>
+        <property name="senderOrgCode" type="string">
+            <column name="SENDER_ORG_CODE" length="20" />
+        </property>
+        <property name="senderOrgName" type="string">
+            <column name="SENDER_ORG_NAME" length="100" />
+        </property>
+        <property name="senderPersonCode" type="string">
+            <column name="SENDER_PERSON_CODE" length="20" />
+        </property>
+        <property name="senderName" type="string">
+            <column name="SENDER_NAME" length="100" />
+        </property>
+        <property name="recipientOrgCode" type="string">
+            <column name="RECIPIENT_ORG_CODE" length="20" />
+        </property>
+        <property name="recipientOrgName" type="string">
+            <column name="RECIPIENT_ORG_NAME" length="100" />
+        </property>
+        <property name="recipientPersonCode" type="string">
+            <column name="RECIPIENT_PERSON_CODE" length="20" />
+        </property>
+        <property name="recipientName" type="string">
+            <column name="RECIPIENT_NAME" length="100" />
+        </property>
+        <property name="caseName" type="string">
+            <column name="CASE_NAME" length="250" />
+        </property>
+        <property name="dhlFolderName" type="string">
+            <column name="DHL_FOLDER_NAME" length="1000" />
+        </property>
+        <property name="sendingStatusId" type="long">
+            <column name="SENDING_STATUS_ID" precision="10" scale="0" not-null="true" />
+        </property>
+        <property name="unitId" type="long">
+            <column name="UNIT_ID" precision="10" scale="0" not-null="true" />
+        </property>
+        <property name="dhlId" type="java.lang.Long">
+            <column name="DHL_ID" precision="10" scale="0" />
+        </property>
+        <property name="sendingDate" type="date">
+            <column name="SENDING_DATE" length="7" />
+        </property>
+        <property name="receivedDate" type="date">
+            <column name="RECEIVED_DATE" length="7" />
+        </property>
+        <property name="localItemId" type="java.lang.Long">
+            <column name="LOCAL_ITEM_ID" precision="10" scale="0" />
+        </property>
+        <property name="recipientStatusId" type="java.lang.Long">
+            <column name="RECIPIENT_STATUS_ID" precision="10" scale="0" />
+        </property>
+        <property name="faultCode" type="string">
+            <column name="FAULT_CODE" length="50" />
+        </property>
+        <property name="faultActor" type="string">
+            <column name="FAULT_ACTOR" length="250" />
+        </property>
+        <property name="faultString" type="string">
+            <column name="FAULT_STRING" length="500" />
+        </property>
+        <property name="faultDetail" type="string">
+            <column name="FAULT_DETAIL" length="2000" />
+        </property>
+        <property name="statusUpdateNeeded" type="java.lang.Long">
+            <column name="STATUS_UPDATE_NEEDED" precision="10" scale="0" />
+        </property>
+        <property name="metaxml" type="clob">
+            <column name="METAXML" />
+        </property>
+        <property name="queryId" type="string">
+            <column name="QUERY_ID" length="50" />
+        </property>
+        <property name="proxyOrgCode" type="string">
+            <column name="PROXY_ORG_CODE" length="20" />
+        </property>
+        <property name="proxyOrgName" type="string">
+            <column name="PROXY_ORG_NAME" length="100" />
+        </property>
+        <property name="proxyPersonCode" type="string">
+            <column name="PROXY_PERSON_CODE" length="20" />
+        </property>
+        <property name="proxyName" type="string">
+            <column name="PROXY_NAME" length="100" />
+        </property>
+        <property name="recipientDepartmentNr" type="string">
+            <column name="RECIPIENT_DEPARTMENT_NR" length="100" />
+        </property>
+        <property name="recipientDepartmentName" type="string">
+            <column name="RECIPIENT_DEPARTMENT_NAME" length="500" />
+        </property>
+        <property name="recipientEmail" type="string">
+            <column name="RECIPIENT_EMAIL" length="100" />
+        </property>
+        <property name="recipientDivisionId" type="big_decimal">
+            <column name="RECIPIENT_DIVISION_ID" precision="38" scale="0" />
+        </property>
+        <property name="recipientDivisionName" type="string">
+            <column name="RECIPIENT_DIVISION_NAME" length="100" />
+        </property>
+        <property name="recipientPositionId" type="big_decimal">
+            <column name="RECIPIENT_POSITION_ID" precision="38" scale="0" />
+        </property>
+        <property name="recipientPositionName" type="string">
+            <column name="RECIPIENT_POSITION_NAME" length="100" />
+        </property>
+        <property name="dhlGuid" type="string">
+            <column name="DHL_GUID" length="100" />
+        </property>
+    </class>
+	<sql-query name="CreateNewMessage" callable="true">
+	    <return alias="new_msg" class="dvk.api.ml.PojoMessage">
+	    </return>
+	    { ? = call insert_new_row('msg', '') }
+	</sql-query>
+</hibernate-mapping>

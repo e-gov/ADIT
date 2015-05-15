@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 7.02.2010 22:22:31 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="dvk.api.ml.PojoSubdivision" table="DHL_SUBDIVISION">
+        <id name="subdivisionCode" type="big_decimal">
+            <column name="SUBDIVISION_CODE" precision="38" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="subdivisionName" type="string">
+            <column name="SUBDIVISION_NAME" length="100" not-null="true" />
+        </property>
+        <property name="orgCode" type="string">
+            <column name="ORG_CODE" length="20" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

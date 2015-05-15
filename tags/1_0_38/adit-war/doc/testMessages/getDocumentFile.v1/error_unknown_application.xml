@@ -1,0 +1,20 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xtee="http://x-tee.riik.ee/xsd/xtee.xsd" xmlns:adit="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid">
+   <soapenv:Header>
+      <xtee:nimi>ametlikud-dokumendid.getDocumentFile.v1</xtee:nimi>
+      <xtee:id>12345678</xtee:id>
+      <xtee:isikukood>EE38005130332</xtee:isikukood>
+      <xtee:andmekogu>ametlikud-dokumendid</xtee:andmekogu>
+      <xtee:asutus>12345678</xtee:asutus>
+    <adit:infosysteem>unknown</adit:infosysteem>
+   </soapenv:Header>
+   <soapenv:Body>
+      <adit:GetDocumentFile>
+         <keha>
+            <adit:document_id>19</adit:document_id>
+            <adit:file_id_list>
+               <adit:file_id>44</adit:file_id>
+            </adit:file_id_list>
+         </keha>
+      </adit:GetDocumentFile>
+   </soapenv:Body>
+</soapenv:Envelope>

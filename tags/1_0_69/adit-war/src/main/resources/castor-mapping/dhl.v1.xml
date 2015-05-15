@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mapping>
+	<include href="commons.xml" />
+	<include href="transport.v1.xml" />
+	<include href="metaxml.xml" />
+	<!--
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Container1
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	-->
+	<class name="dvk.api.container.v1.ContainerVer1">
+		<map-to xml="dokument" ns-uri="http://www.riik.ee/schemas/dhl" />
+
+		<field name="metainfo" type="dvk.api.container.v1.Metainfo">
+			<bind-xml name="metainfo" />
+		</field>
+
+		<field name="transport" type="dvk.api.container.v1.Transport">
+			<bind-xml name="transport" />
+		</field>
+
+		<field name="ajalugu" type="dvk.api.container.v1.Ajalugu">
+			<bind-xml name="ajalugu" />
+		</field>
+
+		<field name="metaxml" type="dvk.api.container.Metaxml">
+			<bind-xml name="metaxml" />
+		</field>
+
+		<field name="signedDoc" type="dvk.api.container.v1.SignedDoc">
+			<bind-xml name="SignedDoc" xmlns="http://www.sk.ee/DigiDoc/v1.3.0#" ns-prefix="" />
+		</field>
+	</class>
+	<!--
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Metainfo
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	-->
+	<class name="dvk.api.container.v1.Metainfo">
+		<map-to xml="metainfo" />
+
+		<field name="dhlId" type="int">
+			<bind-xml name="dhl_id" node="element" xmlns="http://www.riik.ee/schemas/dhl-meta-automatic" />
+		</field>
+
+		<field name="dhlSaabumisviis" type="string">
+			<bind-xml name="dhl_saabumisviis" node="element" xmlns="http://www.riik.ee/schemas/dhl-meta-automatic" />
+		</field>
+
+		<field name="dhlSaabumisaeg" type="date">
+			<bind-xml name="dhl_saabumisaeg" node="element" xmlns="http://www.riik.ee/schemas/dhl-meta-automatic" />
+		</field>
+
+		<field name="dhlSaatmisviis" type="string">
+			<bind-xml name="dhl_saatmisviis" node="element" xmlns="http://www.riik.ee/schemas/dhl-meta-automatic" />
+		</field>
+
+		<field name="dhlSaatmisaeg" type="date">
+			<bind-xml name="dhl_saatmisaeg" node="element" xmlns="http://www.riik.ee/schemas/dhl-meta-automatic" />
+		</field>
+
+		<field name="dhlSaatjaAsutuseNr" type="string">
+			<bind-xml name="dhl_saatja_asutuse_nr" node="element" xmlns="http://www.riik.ee/schemas/dhl-meta-automatic" />
+		</field>
+
+		<field name="dhlSaatjaAsutuseNimi" type="string">
+			<bind-xml name="dhl_saatja_asutuse_nimi" node="element" xmlns="http://www.riik.ee/schemas/dhl-meta-automatic" />
+		</field>
+
+		<field name="dhlSaatjaIsikukood" type="string">
+			<bind-xml name="dhl_saatja_isikukood" node="element" xmlns="http://www.riik.ee/schemas/dhl-meta-automatic" />
+		</field>
+
+		<field name="dhlSaajaAsutuseNr" type="string">
+			<bind-xml name="dhl_saaja_asutuse_nr" node="element" xmlns="http://www.riik.ee/schemas/dhl-meta-automatic" />
+		</field>
+
+		<field name="dhlSaajaAsutuseNimi" type="string">
+			<bind-xml name="dhl_saaja_asutuse_nimi" node="element" xmlns="http://www.riik.ee/schemas/dhl-meta-automatic" />
+		</field>
+
+		<field name="dhlSaajaIsikukood" type="string">
+			<bind-xml name="dhl_saaja_isikukood" node="element" xmlns="http://www.riik.ee/schemas/dhl-meta-automatic" />
+		</field>
+
+		<field name="dhlSaatjaEpost" type="string">
+			<bind-xml name="dhl_saatja_epost" node="element" xmlns="http://www.riik.ee/schemas/dhl-meta-automatic" />
+		</field>
+
+		<field name="dhlSaajaEpost" type="string">
+			<bind-xml name="dhl_saaja_epost" node="element" xmlns="http://www.riik.ee/schemas/dhl-meta-automatic" />
+		</field>
+
+		<field name="dhlEmailHeader" type="dvk.api.container.DhlEmailHeader">
+			<bind-xml name="dhl_email_header" node="element" xmlns="http://www.riik.ee/schemas/dhl-meta-automatic" />
+		</field>
+
+		<field name="dhlKaust" type="string">
+			<bind-xml name="dhl_kaust" node="element" xmlns="http://www.riik.ee/schemas/dhl-meta-automatic" />
+		</field>
+
+
+
+		<field name="koostajaAsutuseNr" type="string">
+			<bind-xml name="koostaja_asutuse_nr" node="element" xmlns="http://www.riik.ee/schemas/dhl-meta-manual" />
+		</field>
+
+		<field name="saajaAsutuseNr" type="string">
+			<bind-xml name="saaja_asutuse_nr" node="element" xmlns="http://www.riik.ee/schemas/dhl-meta-manual" />
+		</field>
+
+		<field name="koostajaDokumendinimi" type="string">
+			<bind-xml name="koostaja_dokumendinimi" node="element" xmlns="http://www.riik.ee/schemas/dhl-meta-manual" />
+		</field>
+
+		<field name="koostajaDokumendityyp" type="string">
+			<bind-xml name="koostaja_dokumendityyp" node="element" xmlns="http://www.riik.ee/schemas/dhl-meta-manual" />
+		</field>
+
+		<field name="koostajaVotmesona" type="string">
+			<bind-xml name="koostaja_votmesona" node="element" xmlns="http://www.riik.ee/schemas/dhl-meta-manual" />
+		</field>
+
+		<field name="koostajaDokumendinr" type="string">
+			<bind-xml name="koostaja_dokumendinr" node="element" xmlns="http://www.riik.ee/schemas/dhl-meta-manual" />
+		</field>
+
+		<field name="koostajaKuupaev" type="string">
+			<bind-xml name="koostaja_kuupaev" node="element" xmlns="http://www.riik.ee/schemas/dhl-meta-manual" />
+		</field>
+
+		<field name="koostajaAsutuseNimi" type="string">
+			<bind-xml name="koostaja_asutuse_nimi" node="element" xmlns="http://www.riik.ee/schemas/dhl-meta-manual" />
+		</field>
+
+		<field name="koostajaAsutuseKontakt" type="string">
+			<bind-xml name="koostaja_asutuse_kontakt" node="element" xmlns="http://www.riik.ee/schemas/dhl-meta-manual" />
+		</field>
+
+		<field name="autoriOsakond" type="string">
+			<bind-xml name="autori_osakond" node="element" xmlns="http://www.riik.ee/schemas/dhl-meta-manual" />
+		</field>
+
+		<field name="autoriIsikukood" type="string">
+			<bind-xml name="autori_isikukood" node="element" xmlns="http://www.riik.ee/schemas/dhl-meta-manual" />
+		</field>
+
+		<field name="autoriNimi" type="string">
+			<bind-xml name="autori_nimi" node="element" xmlns="http://www.riik.ee/schemas/dhl-meta-manual" />
+		</field>
+
+		<field name="autoriKontakt" type="string">
+			<bind-xml name="autori_kontakt" node="element" xmlns="http://www.riik.ee/schemas/dhl-meta-manual" />
+		</field>
+
+		<field name="seotudDhlId" type="string">
+			<bind-xml name="seotud_dhl_id" node="element" xmlns="http://www.riik.ee/schemas/dhl-meta-manual" />
+		</field>
+
+		<field name="seotudDokumendiNrKoostajal" type="string">
+			<bind-xml name="seotud_dokumendinr_koostajal" node="element" xmlns="http://www.riik.ee/schemas/dhl-meta-manual" />
+		</field>
+
+		<field name="seotudDokumendinrSaajal" type="string">
+			<bind-xml name="seotud_dokumendinr_saajal" node="element" xmlns="http://www.riik.ee/schemas/dhl-meta-manual" />
+		</field>
+
+		<field name="saatjaKuupaev" type="date">
+			<bind-xml name="saatja_kuupaev" node="element" xmlns="http://www.riik.ee/schemas/dhl-meta-manual" />
+		</field>
+
+		<field name="saatjaDokumendinr" type="string">
+			<bind-xml name="saatja_dokumendinr" node="element" xmlns="http://www.riik.ee/schemas/dhl-meta-manual" />
+		</field>
+
+		<field name="saatjaAsutuseKontakt" type="string">
+			<bind-xml name="saatja_asutuse_kontakt" node="element" xmlns="http://www.riik.ee/schemas/dhl-meta-manual" />
+		</field>
+
+		<field name="saajaIsikukood" type="string">
+			<bind-xml name="saaja_isikukood" node="element" xmlns="http://www.riik.ee/schemas/dhl-meta-manual" />
+		</field>
+
+		<field name="saajaNimi" type="string">
+			<bind-xml name="saaja_nimi" node="element" xmlns="http://www.riik.ee/schemas/dhl-meta-manual" />
+		</field>
+
+		<field name="saajaOsakond" type="string">
+			<bind-xml name="saaja_osakond" node="element" xmlns="http://www.riik.ee/schemas/dhl-meta-manual" />
+		</field>
+
+		<field name="koostajaFailinimi" type="string">
+			<bind-xml name="koostaja_failinimi" node="element" xmlns="http://www.riik.ee/schemas/dhl-meta-manual" />
+		</field>
+
+		<field name="koostajaKataloog" type="string">
+			<bind-xml name="koostaja_kataloog" node="element" xmlns="http://www.riik.ee/schemas/dhl-meta-manual" />
+		</field>
+
+		<field name="koostajaKokkuvote" type="string">
+			<bind-xml name="koostaja_kokkuvote" node="element" xmlns="http://www.riik.ee/schemas/dhl-meta-manual" />
+		</field>
+
+		<field name="sisuId" type="string">
+			<bind-xml name="sisu_id" node="element" xmlns="http://www.riik.ee/schemas/dhl-meta-manual" />
+		</field>
+
+		<field name="saatjaDefineeritud" type="dvk.api.container.SaatjaDefineeritud" collection="arraylist">
+			<bind-xml name="saatja_defineeritud" node="element" xmlns="http://www.riik.ee/schemas/dhl-meta-manual" />
+		</field>
+	</class>
+	<!--
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		DhlEmailHeader
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	-->
+	<class name="dvk.api.container.DhlEmailHeader">
+		<map-to xml="dhl_email_header" />
+
+		<field name="text" type="string">
+			<bind-xml name="dhl_email_header" node="text" />
+		</field>
+
+		<field name="name" type="string">
+			<bind-xml name="name" node="attribute" />
+		</field>
+	</class>
+	<!--
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Document
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	-->
+	<class name="dvk.api.container.v1.SignedDoc">
+		<map-to xml="SignedDoc" xmlns="http://www.sk.ee/DigiDoc/v1.3.0#" />
+
+		<field name="ddocNamespace" type="string"><!-- adds attribute with DigiDoc namespace -->
+			<bind-xml name="xmlns" node="attribute" />
+		</field>
+
+		<field name="format" type="string">
+			<bind-xml name="format" node="attribute" />
+		</field>
+
+		<field name="version" type="string">
+			<bind-xml name="version" node="attribute" />
+		</field>
+
+		<field name="dataFiles" type="dvk.api.container.v1.DataFile" collection="arraylist">
+			<bind-xml name="DataFile" node="element" xmlns="http://www.sk.ee/DigiDoc/v1.3.0#" />
+		</field>
+	</class>
+
+	<class name="dvk.api.container.v1.DataFile">
+		<map-to xml="DataFile" xmlns="http://www.sk.ee/DigiDoc/v1.3.0#" />
+
+		<field name="fileBase64Content" type="string" >
+			<bind-xml node="text"/>
+		</field>
+
+		<field name="fileContentType" type="string">
+			<bind-xml name="ContentType" node="attribute" />
+		</field>
+
+		<field name="fileName" type="string">
+			<bind-xml name="Filename" node="attribute" />
+		</field>
+
+		<field name="fileId" type="string">
+			<bind-xml name="Id" node="attribute" />
+		</field>
+
+		<field name="fileMimeType" type="string">
+			<bind-xml name="MimeType" node="attribute" />
+		</field>
+
+		<field name="fileSize" type="string">
+			<bind-xml name="Size" node="attribute" />
+		</field>
+
+		<field name="ddocNamespace" type="string">
+			<bind-xml name="xmlns" node="attribute" />
+		</field>
+	</class>
+	<!--
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		AddressType
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	-->
+	<class name="dvk.api.container.v1.AddressType">
+		<field name="regNr" type="string">
+			<bind-xml name="regnr" node="element" />
+		</field>
+
+		<field name="asutuseNimi" type="string">
+			<bind-xml name="asutuse_nimi" node="element" />
+		</field>
+
+		<field name="allyksuseKood" type="string">
+			<bind-xml name="allyksuse_kood" node="element" />
+		</field>
+
+		<field name="allyksuseNimetus" type="string">
+			<bind-xml name="allyksuse_nimetus" node="element" />
+		</field>
+
+		<field name="isikukood" type="string">
+			<bind-xml name="isikukood" node="element" />
+		</field>
+
+		<field name="ametikohaKood" type="long">
+			<bind-xml name="ametikoha_kood" node="element" />
+		</field>
+
+		<field name="ametikohaNimetus" type="string">
+			<bind-xml name="ametikoha_nimetus" node="element" />
+		</field>
+
+		<field name="epost" type="string">
+			<bind-xml name="epost" node="element" />
+		</field>
+
+		<field name="nimi" type="string">
+			<bind-xml name="nimi" node="element" />
+		</field>
+
+		<field name="osakonnaKood" type="string">
+			<bind-xml name="osakonna_kood" node="element" />
+		</field>
+
+		<field name="osakonnaNimi" type="string">
+			<bind-xml name="osakonna_nimi" node="element" />
+		</field>
+	</class>
+</mapping>

@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+						http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <bean id="aditDVKDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+        <property name="url" value="jdbc:oracle:thin:@srv-dvk.icefire:1521:XE"/>
+        <property name="username" value="adit_dvk_client"/>
+        <property name="password" value="adcpwd"/>
+        <property name="defaultAutoCommit" value="true"/>
+    </bean>
+
+    <bean id="aditDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+        <property name="url" value="jdbc:oracle:thin:@srv-dvk.icefire:1521:XE"/>
+        <property name="username" value="ADIT"/>
+        <property name="password" value="ADITA"/>
+    </bean>
+
+    <bean id="sessionFactory"
+          class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+        <property name="dataSource" ref="aditDataSource"/>
+        <property name="mappingLocations">
+            <list>
+                <value>classpath*:hbm/AccessRestriction.hbm.xml</value>
+                <value>classpath*:hbm/AditLog.hbm.xml</value>
+                <value>classpath*:hbm/AditUser.hbm.xml</value>
+                <value>classpath*:hbm/Document.hbm.xml</value>
+                <value>classpath*:hbm/DocumentDvkStatus.hbm.xml</value>
+                <value>classpath*:hbm/DocumentFile.hbm.xml</value>
+                <value>classpath*:hbm/DocumentFileDeflateResult.hbm.xml</value>
+                <value>classpath*:hbm/DocumentHistory.hbm.xml</value>
+                <value>classpath*:hbm/DocumentHistoryType.hbm.xml</value>
+                <value>classpath*:hbm/DocumentSharing.hbm.xml</value>
+                <value>classpath*:hbm/DocumentSharingType.hbm.xml</value>
+                <value>classpath*:hbm/DocumentType.hbm.xml</value>
+                <value>classpath*:hbm/DocumentWfStatus.hbm.xml</value>
+                <value>classpath*:hbm/DownloadRequestLog.hbm.xml</value>
+                <value>classpath*:hbm/ErrorLog.hbm.xml</value>
+                <value>classpath*:hbm/MaintenanceJob.hbm.xml</value>
+                <value>classpath*:hbm/MetadataRequestLog.hbm.xml</value>
+                <value>classpath*:hbm/Notification.hbm.xml</value>
+                <value>classpath*:hbm/NotificationType.hbm.xml</value>
+                <value>classpath*:hbm/RemoteApplication.hbm.xml</value>
+                <value>classpath*:hbm/RequestLog.hbm.xml</value>
+                <value>classpath*:hbm/SetJobRunningStatusResult.hbm.xml</value>
+                <value>classpath*:hbm/Signature.hbm.xml</value>
+                <value>classpath*:hbm/UserContact.hbm.xml</value>
+                <value>classpath*:hbm/UserNotification.hbm.xml</value>
+                <value>classpath*:hbm/Usertype.hbm.xml</value>
+            </list>
+        </property>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</prop>
+                <prop key="hibernate.cache.provider_class">org.hibernate.cache.NoCacheProvider</prop>
+                <!--<prop key="hibernate.current_session_context_class">org.hibernate.context.JTASessionContext</prop>
+                <prop key="hibernate.transaction.manager_lookup_class">
+                    org.hibernate.transaction.WeblogicTransactionManagerLookup
+                </prop>-->
+                <prop key="hibernate.connection.autocommit">false</prop>
+                <prop key="hibernate.connection.useUnicode">true</prop>
+                <prop key="hibernate.connection.characterEncoding">UTF-8</prop>
+                <prop key="hibernate.connection.charSet">UTF-8</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="dvkSessionFactory"
+          class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+        <property name="dataSource" ref="aditDVKDataSource"/>
+        <!--        <property name="mappingJarLocations">
+                    <value>classpath:dvk-api-*.jar</value>
+                </property>-->
+        <property name="mappingLocations">
+            <list>
+                <value>classpath*:dvkapi/Counter.hbm.xml</value>
+                <value>classpath*:dvkapi/Message.hbm.xml</value>
+                <value>classpath*:dvkapi/MessageRecipient.hbm.xml</value>
+                <value>classpath*:dvkapi/Occupation.hbm.xml</value>
+                <value>classpath*:dvkapi/Organization.hbm.xml</value>
+                <value>classpath*:dvkapi/Settings.hbm.xml</value>
+                <value>classpath*:dvkapi/SettingsFolders.hbm.xml</value>
+                <value>classpath*:dvkapi/Subdivision.hbm.xml</value>
+            </list>
+        </property>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</prop>
+                <prop key="hibernate.cache.provider_class">org.hibernate.cache.NoCacheProvider</prop>
+                <!--<prop key="hibernate.current_session_context_class">org.hibernate.context.JTASessionContext</prop>
+                <prop key="hibernate.transaction.manager_lookup_class">
+                    org.hibernate.transaction.WeblogicTransactionManagerLookup
+                </prop>-->
+                <prop key="hibernate.connection.autocommit">true</prop>
+                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.format_sql">true</prop>
+                <prop key="hibernate.connection.useUnicode">true</prop>
+                <prop key="hibernate.connection.characterEncoding">UTF-8</prop>
+                <prop key="hibernate.connection.charSet">UTF-8</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- ADIT transaction manager -->
+    <bean id="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="aditDataSource" />
+    </bean>
+    <!--
+        Enable the configuration of transactional behavior based on
+        annotations
+    -->
+    <tx:annotation-driven transaction-manager="transactionManager" />
+
+    <import resource="classpath:adit-dao.xml"/>
+
+    <bean id="messageSource"
+          class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basenames">
+            <list>
+                <value>messages</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="messageService" class="ee.adit.service.MessageService">
+        <property name="messageSource" ref="messageSource"/>
+        <property name="configuration" ref="configuration"/>
+    </bean>
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    </bean>
+
+    <!-- Configuration -->
+    <bean id="configuration" class="ee.adit.util.Configuration">
+        <property name="tempDir" value="${java.io.tmpdir}"/>
+        <property name="deleteTemporaryFiles" value="true"/>
+
+        <!-- Default disk quota in bytes per user -->
+        <property name="globalDiskQuota" value="10240000"/>
+
+        <property name="dvkOrgCode" value="adit"/>
+        <property name="xteeInstitution" value="adit"/>
+
+        <!-- DVK folder names -->
+        <property name="dvkSendFolder" value="/"/>
+        <property name="dvkRecieveFolders">
+            <list>
+                <value>/</value>
+                <value>EVORMID</value>
+            </list>
+        </property>
+        <property name="dvkFolderForLetterType" value="/"/>
+        <property name="dvkFolderForApplicationType" value="/"/>
+        <property name="doCheckTestCert" value="true"/>
+    </bean>
+
+    <bean id="documentService" class="ee.adit.service.DocumentService">
+        <property name="messageSource" ref="messageSource"/>
+        <property name="documentTypeDAO" ref="documentTypeDAO"/>
+        <property name="documentDAO" ref="documentDAO"/>
+        <property name="documentFileDAO" ref="documentFileDAO"/>
+        <property name="documentWfStatusDAO" ref="documentWfStatusDAO"/>
+        <property name="documentSharingDAO" ref="documentSharingDAO"/>
+        <property name="documentHistoryDAO" ref="documentHistoryDAO"/>
+        <property name="aditUserDAO" ref="aditUserDAO"/>
+        <property name="configuration" ref="configuration"/>
+        <property name="dvkDAO" ref="dvkDAO"/>
+    </bean>
+</beans>

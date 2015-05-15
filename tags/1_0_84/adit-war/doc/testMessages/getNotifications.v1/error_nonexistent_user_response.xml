@@ -1,0 +1,20 @@
+<SOAP-ENV:Envelope SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:amet="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xtee="http://x-tee.riik.ee/xsd/xtee.xsd">
+   <SOAP-ENV:Header>
+      <xtee:asutus xsi:type="xsd:string">12345678</xtee:asutus>
+      <xtee:isikukood xsi:type="xsd:string">XY38005130332</xtee:isikukood>
+      <xtee:id xsi:type="xsd:string">00000000000000</xtee:id>
+      <xtee:nimi xsi:type="xsd:string">ametlikud-dokumendid.getNotifications.v1</xtee:nimi>
+      <xtee:andmekogu xsi:type="xsd:string">ametlikud-dokumendid</xtee:andmekogu>
+   </SOAP-ENV:Header>
+   <SOAP-ENV:Body>
+      <amet:GetNotificationsResponse>
+         <paring/>
+         <xtee:keha>
+            <success>false</success>
+            <ns1:messages xmlns:ns1="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid">
+               <ns1:message lang="en">User does not exist: XY38005130332</ns1:message>
+            </ns1:messages>
+         </xtee:keha>
+      </amet:GetNotificationsResponse>
+   </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>

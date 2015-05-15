@@ -1,0 +1,497 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>ee</groupId>
+	<artifactId>adit-war</artifactId>
+	<packaging>war</packaging>
+	<version>1.0.29</version>
+	<name>ADIT Web Application</name>
+
+	<parent>
+		<groupId>ee</groupId>
+		<artifactId>adit</artifactId>
+		<version>1.0.29</version>
+	</parent>
+
+	<properties>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+		<!-- Edit this to match your destination environment -->
+		<!--<resourceDir>ria-dev-weblogic</resourceDir>-->
+		<!--<resourceDir>ria-test-weblogic</resourceDir>-->
+		<!--<resourceDir>ria-live-weblogic</resourceDir>-->
+		<!--<resourceDir>dev-dev-weblogic</resourceDir>-->
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>ee.webmedia</groupId>
+			<artifactId>xtee-server</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/xtee-server-1.0-RC1.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>ee.webmedia</groupId>
+			<artifactId>xtee-client</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/xtee-client-1.0-RC1.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>ee.ria</groupId>
+			<artifactId>teavituskalender-types</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/teavituskalender-types.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>ee.ria</groupId>
+			<artifactId>riigiportaal-types</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/riigiportaal-types.jar</systemPath>
+		</dependency>
+
+		<!-- Spring -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>ws</artifactId>
+			<version>1.5.9</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/spring-ws-1.5.9-all.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring</artifactId>
+			<version>3.0.2</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/spring.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>servlet</artifactId>
+			<version>2.5.6</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/spring-webmvc.jar</systemPath>
+		</dependency>
+
+
+		<!-- Castor -->
+		<dependency>
+			<groupId>org.castor</groupId>
+			<artifactId>castor</artifactId>
+			<version>1.3.1</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/castor-1.3.1.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>org.castor</groupId>
+			<artifactId>core</artifactId>
+			<version>1.3.1</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/castor-1.3.1-core.jar</systemPath>
+		</dependency>
+
+
+		<!-- WSDL -->
+		<dependency>
+			<groupId>java</groupId>
+			<artifactId>wsdl4j</artifactId>
+			<version>1.6.1</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/wsdl4j-1.6.1.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>java</groupId>
+			<artifactId>wsdl4j-qname</artifactId>
+			<version>1.6.1</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/wsdl4j-qname-1.6.1.jar</systemPath>
+		</dependency>
+
+		<!-- Logging -->
+		<dependency>
+			<groupId>org.apache</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.16</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/log4j-1.2.16.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>org.apache</groupId>
+			<artifactId>log4j.nagios</artifactId>
+			<version>1.5.1</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/NagiosAppender-1.5.1.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>org.apache</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.1.1</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/commons-logging-1.1.1.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>slf4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.6.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/slf4j-log4j12-1.5.8.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>java</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.5.10</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/slf4j-api-1.5.8.jar</systemPath>
+		</dependency>
+
+		<!-- Hibernate -->
+		<dependency>
+			<groupId>java</groupId>
+			<artifactId>antlr</artifactId>
+			<version>2.7.6</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/antlr-2.7.6.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>java</groupId>
+			<artifactId>commons-collections</artifactId>
+			<version>3.1</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/commons-collections-3.1.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>java</groupId>
+			<artifactId>dom4j</artifactId>
+			<version>1.6.1</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/dom4j-1.6.1.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>java</groupId>
+			<artifactId>hibernate3</artifactId>
+			<version>1.6.1</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/hibernate3.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>java</groupId>
+			<artifactId>javassist</artifactId>
+			<version>3.9.0.GA</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/javassist-3.9.0.GA.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>java</groupId>
+			<artifactId>jta</artifactId>
+			<version>1.1</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/jta-1.1.jar</systemPath>
+		</dependency>
+
+
+		<!-- Oracle -->
+		<dependency>
+			<groupId>java</groupId>
+			<artifactId>ojdbc</artifactId>
+			<version>1.6</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/ojdbc6.jar</systemPath>
+		</dependency>
+
+		<!-- Codec -->
+		<dependency>
+			<groupId>commons</groupId>
+			<artifactId>codec</artifactId>
+			<version>1.4</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/commons-codec-1.4.jar</systemPath>
+		</dependency>
+
+		<!-- DigiDoc -->
+		<dependency>
+			<groupId>ee.sk.digidoc</groupId>
+			<artifactId>DigiDocLib</artifactId>
+			<version>2.3.19</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/JDigiDoc.jar</systemPath>
+		</dependency>
+
+
+		<dependency>
+			<groupId>xerces</groupId>
+			<artifactId>impl</artifactId>
+			<version>2.9.1</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/xercesImpl-2.9.1.jar</systemPath>
+		</dependency>
+
+
+		<dependency>
+			<groupId>xml</groupId>
+			<artifactId>apis</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/xml-apis.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>xmlbeans</groupId>
+			<artifactId>qname</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/xmlbeans-qname.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>xmlParser</groupId>
+			<artifactId>apis</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/xmlParserAPIs.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>xml</groupId>
+			<artifactId>sec</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/xmlsec.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>xml</groupId>
+			<artifactId>tinyxmlcanonicalizer</artifactId>
+			<version>0.9.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/tinyxmlcanonicalizer-0.9.0.jar</systemPath>
+		</dependency>
+
+		<!-- XmlBeans -->
+		<dependency>
+			<groupId>org.apache</groupId>
+			<artifactId>XMLBeans</artifactId>
+			<version>2.4.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/xbean.jar</systemPath>
+		</dependency>
+
+		<!-- Quartz -->
+		<dependency>
+			<groupId>org.quartz</groupId>
+			<artifactId>scheduler</artifactId>
+			<version>1.8.3</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/quartz-1.8.3.jar</systemPath>
+		</dependency>
+
+		<!-- DVKAPI -->
+		<dependency>
+			<groupId>ee.dvk</groupId>
+			<artifactId>api</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/dvkapi.jar</systemPath>
+		</dependency>
+
+		<!-- FOP -->
+		<dependency>
+			<groupId>org.apache</groupId>
+			<artifactId>fop</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/fop.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>xmlgraphics</groupId>
+			<artifactId>commons</artifactId>
+			<version>1.4</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/xmlgraphics-commons-1.4.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>org.apache</groupId>
+			<artifactId>avalon-framework</artifactId>
+			<version>4.2.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/avalon-framework-4.2.0.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>org.apache</groupId>
+			<artifactId>batik</artifactId>
+			<version>1.7</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/batik-all-1.7.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>org.apache</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>1.3.1</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/commons-io-1.3.1.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<groupId>java</groupId>
+			<artifactId>ee</artifactId>
+			<version>1.3.1</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/j2ee.jar</systemPath>
+		</dependency>
+
+		<!-- SAAJ 1.3.2 -->
+		<dependency>
+			<groupId>com.sun</groupId>
+			<artifactId>saaj-api</artifactId>
+			<version>1.3.2</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/saaj-api.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>com.sun</groupId>
+			<artifactId>saaj-impl</artifactId>
+			<version>1.3.2</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/saaj-impl.jar</systemPath>
+		</dependency>
+
+		<dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-compress</artifactId>
+		    <version>1.1</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/commons-compress-1.1.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.0</version>
+			<type>jar</type>
+			<scope>test</scope>
+			<optional>true</optional>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<finalName>adit-${version}</finalName>
+		<sourceDirectory>src/main/java</sourceDirectory>
+		<testSourceDirectory>src/test/java</testSourceDirectory>
+		<testOutputDirectory>target/test-classes</testOutputDirectory>
+		<resources>
+			<resource>
+				<directory>src/main/resources/castor-mapping</directory>
+				<filtering>false</filtering>
+				<targetPath>../adit-${version}/WEB-INF/classes/castor-mapping</targetPath>
+			</resource>
+			<resource>
+				<directory>src/main/resources/dvkapi</directory>
+				<filtering>false</filtering>
+				<targetPath>../adit-${version}/WEB-INF/classes/dvkapi</targetPath>
+			</resource>
+			<resource>
+				<directory>src/main/resources/hbm</directory>
+				<filtering>false</filtering>
+				<targetPath>../adit-${version}/WEB-INF/classes/hbm</targetPath>
+			</resource>
+
+			<!-- Include all the environment specific configuration files -->
+			<resource>
+				<directory>src/main/resources/${resourceDir}</directory>
+				<targetPath>../adit-${version}/WEB-INF/classes</targetPath>
+				<excludes>
+					<exclude>adit-configuration.xml</exclude>
+				</excludes>
+			</resource>
+			<resource>
+				<directory>src/main/resources/${resourceDir}</directory>
+				<targetPath>../adit-${version}/WEB-INF</targetPath>
+				<includes>
+					<include>adit-configuration.xml</include>
+				</includes>
+			</resource>
+			<!-- Include static resources -->
+			<resource>
+				<directory>src/main/resources</directory>
+				<targetPath>../adit-${version}/WEB-INF/classes</targetPath>
+				<includes>
+					<include>adit-castor-mapping.xml</include>
+					<include>DVKresponseMessage.xsl</include>
+					<include>messages_en.properties</include>
+					<include>messages_et.properties</include>
+					<include>messages_ru.properties</include>
+					<include>adit.wsdl</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<targetPath>../adit-${version}/WEB-INF</targetPath>
+				<includes>
+					<include>adit.xsd</include>
+					<include>adit-servlet.xml</include>
+					<include>adit-monitor-servlet.xml</include>
+					<include>adit-application.xml</include>
+					<include>adit-dao.xml</include>
+					<include>adit-datasource.xml</include>
+					<include>adit-jobs.xml</include>
+					<include>adit-services.xml</include>
+					<include>adit-endpoints.xml</include>
+				</includes>
+			</resource>
+
+			<resource>
+				<directory>${basedir}/sql</directory>
+				<filtering>false</filtering>
+				<targetPath>../adit-${version}/sql</targetPath>
+			</resource>
+			<resource>
+				<directory>${basedir}/lib</directory>
+				<includes>
+					<include>*</include>
+				</includes>
+				<targetPath>../adit-${version}/WEB-INF/lib</targetPath>
+			</resource>
+		</resources>
+		<plugins>
+			<!-- Compiler -->
+			<plugin>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.1-beta-1</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>tomcat-maven-plugin</artifactId>
+				<configuration>
+					<server>tomcat6</server>
+					<warFile>${basedir}/target/adit-${version}.war</warFile>
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</build>
+
+	<reporting>
+		<plugins>
+
+			<!-- CheckStyle -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<configLocation>doc/adit_cs_checks.xml</configLocation>
+					<encoding>UTF-8</encoding>
+					<excludes>ee/adit/pojo/*,ee/adit/dao/pojo/*,ee/adit/pojo/notification/*</excludes>
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</reporting>
+
+</project>

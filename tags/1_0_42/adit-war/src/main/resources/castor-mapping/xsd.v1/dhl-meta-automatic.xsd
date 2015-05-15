@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema targetNamespace="http://www.riik.ee/schemas/dhl-meta-automatic" xmlns:tns="http://www.riik.ee/schemas/dhl-meta-automatic" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified" attributeFormDefault="unqualified">
+	<xs:element name="dhl_id" type="tns:dhlDokIDType">
+		<xs:annotation>
+			<xs:documentation>hoidla sisene unikaalne id</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="dhl_saabumisviis" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>esialgu string email või string xtee</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="dhl_saabumisaeg" type="xs:dateTime">
+		<xs:annotation>
+			<xs:documentation>hoidlasse saabumise aeg CCYY-MM-DDThh:mm:ss</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="dhl_saatmisviis" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>esialgu string email või string xtee</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="dhl_saatmisaeg" type="xs:dateTime">
+		<xs:annotation>
+			<xs:documentation>hoidlast saatmise aeg CCYY-MM-DDThh:mm:ss</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="dhl_saatja_asutuse_nr" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>registrinr turvaserverist (ainult xteest tulnud)</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="dhl_saatja_asutuse_nimi" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>asutuse nimi turvaserverist (ainult xteest tulnud)</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="dhl_saatja_isikukood" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>isikukood turvaserverist (ainult xteest tulnud)</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="dhl_saaja_asutuse_nr" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>registrinr turvaserverile (xteega saadetud)</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="dhl_saaja_asutuse_nimi" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>asutuse nimi turvaserverile (xteega saadetud)</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="dhl_saaja_isikukood" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>saaja kood turvaserverile (xteega saadetud)</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="dhl_saatja_epost" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>saatja eposti aadress (tulnud epostiga)</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="dhl_saaja_epost" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>epost, kellele saadeti (saadetud epostiga)</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="dhl_email_header">
+		<xs:annotation>
+			<xs:documentation>E-posti header. Nimi on atribuudis "name", sisu on elemendi sisus</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="name" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="dhl_kaust" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>Kausta, milles antud dokumenti DVK-s asub, täisnimi.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="dhlDokTaisnimiType">
+		<xs:annotation>
+			<xs:documentation>Dokumendi asukohatee andmetüüp</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:simpleType name="dhlDokIDType">
+		<xs:annotation>
+			<xs:documentation>DHL dokumendi seesmise ID andmetüüp</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+</xs:schema>

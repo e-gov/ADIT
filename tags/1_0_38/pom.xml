@@ -1,0 +1,29 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>ee</groupId>
+	<artifactId>adit</artifactId>
+	<packaging>pom</packaging>
+	<version>1.0.38</version>
+	<name>ADIT Main Build</name>
+
+	<modules>
+		<module>adit-war</module>
+		<module>adit-ear</module>
+	</modules>
+
+	<properties>
+		<!-- Encoding for source files -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- Default configuration -->
+        <conf>adit-toodang</conf>
+
+		<!-- Specifies which configuration resources to use in the build -->
+		<resourceDir>conf/${conf}</resourceDir>
+
+		<!-- X-Road producer name of current build -->
+		<producerName>ametlikud-dokumendid</producerName>
+	</properties>
+
+</project>

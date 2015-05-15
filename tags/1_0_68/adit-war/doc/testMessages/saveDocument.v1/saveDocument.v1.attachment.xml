@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<saveDocumentRequestAttachmentV1>
+	<document>
+	    <id/>
+	    <guid>19d71714-0d93-292a-b254-3a06a4f24002</guid>
+	    <title>Avaldus Jõgeva Linnavalitsusele</title>
+	    <document_type>application</document_type>
+	    <previous_document_id/>
+	    <files>
+	        <file>
+	            <id/>
+	            <name>avaldus1.txt</name>
+	            <content_type>text/plain</content_type>
+	            <description>Avaldus tekstifailina</description>
+	            <size_bytes>300</size_bytes>
+	            <data>
+	                SvVnZXZhIExpbm5hdmFsaXRzdXMJMjAuMDQuMjAxMA0KDQpBdmFsZHVzDQoNClBh
+	                bHVuIHZpaXZpdGFtYXR1bHQgdGFnYXN0YWRhIG1pbnUgcG9vbHQgbfb2ZHVudWQg
+	                dGVpc2lw5GV2YWwgbGlubmF2YWxpdHN1c2Uga2FudHNlbGVpc3NlIHVudXN0YXR1
+	                ZCBrb2h2ZXIsIHN1dXNhZCBqYSByYW5uYXBhbGwuDQoNCg0KRWlubyBNdWlkdWdp
+	                DQpBUyBBc3V0dXMNCkp1aGF0dXNlIGVzaW1lZXMNCg==
+	            </data>
+	        </file>
+	        <file>
+	            <id/>
+	            <name>avaldus2.txt</name>
+	            <content_type>text/plain</content_type>
+	            <description>Avaldus tekstifailina</description>
+	            <size_bytes>300</size_bytes>
+	            <data>
+	                SvVnZXZhIExpbm5hdmFsaXRzdXMJMjAuMDQuMjAxMA0KDQpBdmFsZHVzDQoNClBh
+	                bHVuIHZpaXZpdGFtYXR1bHQgdGFnYXN0YWRhIG1pbnUgcG9vbHQgbfb2ZHVudWQg
+	                dGVpc2lw5GV2YWwgbGlubmF2YWxpdHN1c2Uga2FudHNlbGVpc3NlIHVudXN0YXR1
+	                ZCBrb2h2ZXIsIHN1dXNhZCBqYSByYW5uYXBhbGwuDQoNCg0KRWlubyBNdWlkdWdp
+	                DQpBUyBBc3V0dXMNCkp1aGF0dXNlIGVzaW1lZXMNCg==
+	            </data>
+	        </file>
+	        <file>
+	            <id/>
+	            <name>avaldus3.txt</name>
+	            <content_type>text/plain</content_type>
+	            <description>Avaldus tekstifailina</description>
+	            <size_bytes>300</size_bytes>
+	            <data>
+	                SvVnZXZhIExpbm5hdmFsaXRzdXMJMjAuMDQuMjAxMA0KDQpBdmFsZHVzDQoNClBh
+	                bHVuIHZpaXZpdGFtYXR1bHQgdGFnYXN0YWRhIG1pbnUgcG9vbHQgbfb2ZHVudWQg
+	                dGVpc2lw5GV2YWwgbGlubmF2YWxpdHN1c2Uga2FudHNlbGVpc3NlIHVudXN0YXR1
+	                ZCBrb2h2ZXIsIHN1dXNhZCBqYSByYW5uYXBhbGwuDQoNCg0KRWlubyBNdWlkdWdp
+	                DQpBUyBBc3V0dXMNCkp1aGF0dXNlIGVzaW1lZXMNCg==
+	            </data>
+	        </file>
+	    </files>
+	</document>
+</saveDocumentRequestAttachmentV1>

@@ -1,0 +1,2 @@
+ALTER TABLE &&ADIT_SCHEMA..document ADD (eform_use_id number(12,0));
+COMMENT ON COLUMN &&ADIT_SCHEMA..document.eform_use_id IS 'Evormi kasutuselevõtu ID. Täidetakse ainult kui tegemist on evormi vormiandmetega.';

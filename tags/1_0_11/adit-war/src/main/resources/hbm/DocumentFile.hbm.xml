@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 21.06.2010 14:02:04 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="ee.adit.dao.pojo.DocumentFile" table="DOCUMENT_FILE" schema="ADIT">
+        <id name="id" type="long">
+            <column name="ID" precision="12" scale="0" />
+            <generator class="sequence">
+            	<param name="sequence">document_file_id_seq</param>
+            </generator>
+        </id>
+        <many-to-one name="document" class="ee.adit.dao.pojo.Document" fetch="select">
+            <column name="DOCUMENT_ID" precision="12" scale="0" not-null="true" />
+        </many-to-one>
+        <property name="fileName" type="string">
+            <column name="FILE_NAME" not-null="true" />
+        </property>
+        <property name="contentType" type="string">
+            <column name="CONTENT_TYPE" />
+        </property>
+        <property name="description" type="string">
+            <column name="DESCRIPTION" length="4000" />
+        </property>
+        <property name="fileData" type="blob">
+            <column name="FILE_DATA" />
+        </property>
+        <property name="fileSizeBytes" type="long">
+            <column name="FILE_SIZE_BYTES" precision="38" scale="0" />
+        </property>
+        <property name="deleted" type="java.lang.Boolean">
+            <column name="DELETED" precision="1" scale="0" />
+        </property>
+    </class>
+	<sql-query name="DEFLATE_FILE" callable="true">
+		<return class="ee.adit.dao.pojo.DocumentFileDeflateResult">
+			<return-property name="resultCode" column="result_code" />
+		</return>
+	  	{ call DEFLATE_FILE(?, :documentId , :fileId, :markDeleted) }
+	 </sql-query>
+</hibernate-mapping>

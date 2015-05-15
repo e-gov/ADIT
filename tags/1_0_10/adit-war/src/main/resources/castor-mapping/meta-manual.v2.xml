@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapping>
+	<!--
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		MetaManual
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	-->
+	<class name="dvk.api.container.v2.MetaManual">
+		<map-to xml="metainfo" ns-uri="http://www.riik.ee/schemas/dhl-meta-manual/2010/2" ns-prefix="mm" />
+
+		<field name="koostajaAsutuseNr" type="string">
+			<bind-xml name="koostaja_asutuse_nr" node="element" />
+		</field>
+
+		<field name="saajaAsutuseNr" type="string">
+			<bind-xml name="saaja_asutuse_nr" node="element" />
+		</field>
+
+		<field name="koostajaDokumendinimi" type="string">
+			<bind-xml name="koostaja_dokumendinimi" node="element" />
+		</field>
+
+		<field name="koostajaDokumendityyp" type="string">
+			<bind-xml name="koostaja_dokumendityyp" node="element" />
+		</field>
+
+		<field name="koostajaVotmesona" type="string">
+			<bind-xml name="koostaja_votmesona" node="element" />
+		</field>
+
+		<field name="koostajaDokumendinr" type="string">
+			<bind-xml name="koostaja_dokumendinr" node="element" />
+		</field>
+
+		<field name="koostajaKuupaev" type="string">
+			<bind-xml name="koostaja_kuupaev" node="element" />
+		</field>
+
+		<field name="koostajaAsutuseNimi" type="string">
+			<bind-xml name="koostaja_asutuse_nimi" node="element" />
+		</field>
+
+		<field name="koostajaAsutuseKontakt" type="string">
+			<bind-xml name="koostaja_asutuse_kontakt" node="element" />
+		</field>
+
+		<field name="autoriOsakond" type="string">
+			<bind-xml name="autori_osakond" node="element" />
+		</field>
+
+		<field name="autoriIsikukood" type="string">
+			<bind-xml name="autori_isikukood" node="element" />
+		</field>
+
+		<field name="autoriNimi" type="string">
+			<bind-xml name="autori_nimi" node="element" />
+		</field>
+
+		<field name="autoriKontakt" type="string">
+			<bind-xml name="autori_kontakt" node="element" />
+		</field>
+
+		<field name="seotudDhlId" type="string">
+			<!-- type="dhlma:dhlDokIDType" -->
+			<bind-xml name="seotud_dhl_id" node="element" />
+		</field>
+
+		<field name="seotudDokumendiNrKoostajal" type="string">
+			<bind-xml name="seotud_dokumendinr_koostajal" node="element" />
+		</field>
+
+		<field name="seotudDokumendinrSaajal" type="string">
+			<bind-xml name="seotud_dokumendinr_saajal" node="element" />
+		</field>
+
+		<field name="saatjaDokumendinr" type="string">
+			<bind-xml name="saatja_dokumendinr" node="element" />
+		</field>
+
+		<field name="saatjaAsutuseKontakt" type="string">
+			<bind-xml name="saatja_asutuse_kontakt" node="element" />
+		</field>
+
+		<field name="saajaIsikukood" type="string">
+			<bind-xml name="saaja_isikukood" node="element" />
+		</field>
+
+		<field name="saajaNimi" type="string">
+			<bind-xml name="saaja_nimi" node="element" />
+		</field>
+
+		<field name="saajaOsakond" type="string">
+			<bind-xml name="saaja_osakond" node="element" />
+		</field>
+
+		<field name="koostajaFailinimi" type="string">
+			<bind-xml name="koostaja_failinimi" node="element" />
+		</field>
+
+		<field name="koostajaKataloog" type="other">
+			<bind-xml name="koostaja_kataloog" node="element" />
+		</field>
+
+		<field name="koostajaKokkuvote" type="other">
+			<bind-xml name="koostaja_kokkuvote" node="element" />
+		</field>
+
+		<field name="sisuId" type="other">
+			<bind-xml name="sisu_id" node="element" />
+		</field>
+
+		<field name="test" type="boolean">
+			<bind-xml name="test" node="element" />
+		</field>
+
+		<field name="dokumentLiik" type="string">
+			<bind-xml name="dokument_liik" node="element" />
+		</field>
+
+		<field name="dokumentKeel" type="string">
+			<bind-xml name="dokument_keel" node="element" />
+		</field>
+
+		<field name="dokumentPealkiri" type="string">
+			<bind-xml name="dokument_pealkiri" node="element" />
+		</field>
+
+		<field name="versioonNumber" type="string">
+			<bind-xml name="versioon_number" node="element" />
+		</field>
+
+		<field name="dokumentGuid" type="string">
+			<bind-xml name="dokument_guid" node="element" />
+		</field>
+
+		<field name="dokumentViit" type="string">
+			<bind-xml name="dokument_viit" node="element" />
+		</field>
+
+		<field name="kuupaevRegistreerimine" type="date">
+			<bind-xml name="kuupaev_registreerimine" node="element" />
+		</field>
+
+		<field name="kuupaevSaatmine" type="date">
+			<bind-xml name="kuupaev_saatmine" node="element" />
+		</field>
+
+		<field name="tahtaeg" type="date">
+			<bind-xml name="tahtaeg" node="element" />
+		</field>
+
+		<field name="saatjaKontekst" type="dvk.api.container.v2.SaatjaKontekst">
+			<bind-xml name="saatja_kontekst" node="element" />
+		</field>
+
+		<field name="juurdepaasPiirang" type="dvk.api.container.v2.JuurdepaasPiirang">
+			<bind-xml name="juurdepaas_piirang" node="element" />
+		</field>
+
+		<field name="ipr" type="dvk.api.container.v2.IPR">
+			<bind-xml name="ipr" node="element" />
+		</field>
+
+		<field name="koostajad" type="dvk.api.container.v2.Koostaja" collection="arraylist">
+			<bind-xml name="koostaja" node="element" location="koostajad" />
+		</field>
+
+		<field name="saatjaDefineeritud" type="dvk.api.container.SaatjaDefineeritud">
+			<bind-xml name="saatja_defineeritud" node="element" />
+		</field>
+
+	</class>
+	<!--
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		SaatjaKontekst
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		If this is a response document, information about the original document is held here
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	-->
+	<class name="dvk.api.container.v2.SaatjaKontekst">
+		<map-to xml="saatja_kontekst" />
+
+		<field name="seosviit" type="string">
+			<bind-xml name="seosviit" node="element" />
+		</field>
+
+		<field name="kuupaevSaatjaRegistreerimine" type="date">
+			<bind-xml name="kuupaev_saatja_registreerimine" node="element" />
+		</field>
+
+		<field name="dokumentSaatjaGuid" type="string">
+			<bind-xml name="dokument_saatja_guid" node="element" />
+		</field>
+	</class>
+	<!--
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Koostaja
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Document compiler
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	-->
+	<class name="dvk.api.container.v2.Koostaja">
+		<map-to xml="koostaja" />
+
+		<field name="eesnimi" type="string">
+			<bind-xml name="eesnimi" node="element" />
+		</field>
+
+		<field name="perenimi" type="string">
+			<bind-xml name="perenimi" node="element" />
+		</field>
+
+		<field name="ametinimetus" type="string">
+			<bind-xml name="ametinimetus" node="element" />
+		</field>
+
+		<field name="epost" type="string">
+			<bind-xml name="epost" node="element" />
+		</field>
+
+		<field name="telefon" type="string">
+			<bind-xml name="telefon" node="element" />
+		</field>
+	</class>
+	<!--
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		JuurdepaasPiirang
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Document's access restrictions
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	-->
+	<class name="dvk.api.container.v2.JuurdepaasPiirang">
+		<map-to xml="juurdepaas_piirang" />
+
+		<field name="piirang" type="string">
+			<bind-xml name="piirang" node="element" />
+		</field>
+
+		<field name="piirangAlgus" type="date">
+			<bind-xml name="piirang_algus" node="element" />
+		</field>
+
+		<field name="piirangLopp" type="date">
+			<bind-xml name="piirang_lopp" node="element" />
+		</field>
+
+		<field name="piirangAlus" type="string">
+			<bind-xml name="piirang_alus" node="element" />
+		</field>
+	</class>
+	<!--
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		IPR
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Intellectual property information
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	-->
+	<class name="dvk.api.container.v2.IPR">
+		<map-to xml="ipr" />
+
+		<field name="iprTahtaeg" type="date">
+			<bind-xml name="ipr_tahtaeg" node="element" />
+		</field>
+
+		<field name="iprOmanik" type="string">
+			<bind-xml name="ipr_omanik" node="element" />
+		</field>
+
+		<field name="reprodutseerimineKeelatud" type="boolean">
+			<bind-xml name="reprodutseerimine_keelatud" node="element" />
+		</field>
+	</class>
+</mapping>

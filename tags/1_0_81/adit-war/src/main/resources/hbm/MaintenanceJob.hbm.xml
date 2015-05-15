@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="ee.adit.dao.pojo.MaintenanceJob" table="MAINTENANCE_JOB" >
+        <id name="id" type="long">
+            <column name="ID" precision="12" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="name" type="string">
+            <column name="NAME" length="100" />
+        </property>
+        <property name="running" type="boolean">
+            <column name="IS_RUNNING" precision="1" scale="0" />
+        </property>
+    </class>
+    <sql-query name="SET_JOB_RUNNING_STATUS" callable="true">
+        <return class="ee.adit.dao.pojo.SetJobRunningStatusResult">
+            <return-property name="resultCode" column="result_code" />
+        </return>
+        { call SET_JOB_RUNNING_STATUS(?, :jobId, :isRunning) }
+    </sql-query>
+</hibernate-mapping>

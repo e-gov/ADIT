@@ -1,0 +1,31 @@
+1.0.78
+-Fixed jdigidoc.conf for adit-arendus, adit-test and adit-toodang
+
+1.0.77
+-Upgraded JDigiDoc.jar to a newer version, to fix a security issue.
+
+1.0.76
+- ADIT-15
+- Old DVK-Api versions removed
+
+1.0.75
+- ADIT-12 castor mappings updated
+
+1.0.74
+- ADIT-15
+- ADIT-14 (12289 fixed)
+- DVK-API 1.0.11 kasutusele võtmine
+- ADIT-16
+
+
+1.0.73
+- Gzipping and base64 encoding was missing when container was created.
+- Hardcoded schema name changed to substitution variable &&ADIT_SCHEMA
+- ADIT-9
+- ADIT-13
+- Integratsioonitestide UTF-8 probleemine parendamine
+- documentFileTypeId täitmine ddoc failide korral
+- Datasource conf lisatud kõikidesse profiilidesse
+- Integratsioonitestite parendused
+- DocumentService'i exceptionite haldust parandatud
+- dvk-api-1.0.10 kasutusele võtmine

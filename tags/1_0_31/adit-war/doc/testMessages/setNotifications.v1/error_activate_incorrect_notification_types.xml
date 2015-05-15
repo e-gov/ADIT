@@ -1,0 +1,26 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xtee="http://x-tee.riik.ee/xsd/xtee.xsd" xmlns:amet="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid">
+   <soapenv:Header>
+     <xtee:nimi>ametlikud-dokumendid.setNotifications.v1</xtee:nimi>
+      <xtee:id>00000000000000</xtee:id>
+      <xtee:isikukood>EE38005130332</xtee:isikukood>
+      <xtee:andmekogu>ametlikud-dokumendid</xtee:andmekogu>
+      <xtee:asutus>12345678</xtee:asutus>
+      <amet:infosysteem>kovtp</amet:infosysteem>
+   </soapenv:Header>
+   <soapenv:Body>
+      <amet:SetNotifications>
+         <keha>
+            <amet:notifications>
+               <amet:notification>
+                  <amet:type>pudru</amet:type>
+                  <amet:active>true</amet:active>
+               </amet:notification>
+               <amet:notification>
+                  <amet:type>kapsad</amet:type>
+                  <amet:active>true</amet:active>
+               </amet:notification>
+            </amet:notifications>
+         </keha>
+      </amet:SetNotifications>
+   </soapenv:Body>
+</soapenv:Envelope>

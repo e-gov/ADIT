@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+						http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+						http://www.springframework.org/schema/context
+						http://www.springframework.org/schema/context/spring-context-2.5.xsd
+						http://www.springframework.org/schema/tx
+						http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+	
+	<!-- Configuration -->
+	<bean id="configuration" class="ee.adit.util.Configuration">
+		<property name="getJoinedMaxResults" value="2"/>
+		<property name="tempDir" value="tmp"/>
+		<property name="deleteTemporaryFiles" value="true"/>
+		<property name="schedulerEventTypeName" value="Minu dokumentide teavitus"/>
+		<property name="dvkResponseMessageStylesheet" value="DVKresponseMessage.xsl"/>
+		<property name="globalDiskQuota" value="10240000"/>
+		<property name="locales">
+			<list>
+				<value>en_us</value>
+				<value>et_ee</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="monitorConfiguration" class="ee.adit.util.MonitorConfiguration">
+		<property name="aditServiceUrl" value="http://localhost:7007/adit/service" />
+		<property name="remoteApplicationShortName" value="MONITOR_TEST_APP" />
+		<property name="userCode" value="EE00000000000" />
+		<property name="institutionCode" value="123456789" />
+		<property name="testDocumentId" value="999999999999" />
+		<property name="dvkTestDocumentID" value="9999999999" />
+		<property name="testDocumentFileId" value="999999999999" />
+		<property name="testUserCode" value="EE00000000000" />
+		<property name="documentSaveInterval" value="60000" />
+		<property name="documentSendToDvkInterval" value="60000" />
+		<property name="documentSendToAditInterval" value="60000" />
+		<property name="notificationSendInterval" value="60000" />
+		<property name="errorInterval" value="60000" />
+	</bean>
+	
+</beans>

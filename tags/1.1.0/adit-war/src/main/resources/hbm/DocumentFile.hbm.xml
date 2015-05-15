@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 21.06.2010 14:02:04 by Hibernate Tools 3.2.4.GA -->
+<hibernate-mapping>
+    <class name="ee.adit.dao.pojo.DocumentFile" table="DOCUMENT_FILE" >
+        <id name="id" type="long">
+            <column name="ID" precision="12" scale="0" />
+            <generator class="sequence">
+            	<param name="sequence">document_file_id_seq</param>
+            </generator>
+        </id>
+        <property name="guid" type="string">
+            <column name="GUID" length="50"/>
+        </property>
+        <many-to-one name="document" class="ee.adit.dao.pojo.Document" fetch="select">
+            <column name="DOCUMENT_ID" precision="12" scale="0" not-null="true" />
+        </many-to-one>
+        <property name="fileName" type="string">
+            <column name="FILE_NAME" not-null="true" />
+        </property>
+        <property name="contentType" type="string">
+            <column name="CONTENT_TYPE" />
+        </property>
+        <property name="description" type="string">
+            <column name="DESCRIPTION" length="4000" />
+        </property>
+        <property name="fileData" type="org.hibernate.type.BinaryType">
+            <column name="FILE_DATA" />
+        </property>
+        <property name="fileSizeBytes" type="long">
+            <column name="FILE_SIZE_BYTES" precision="38" scale="0" />
+        </property>
+        <property name="deleted" type="org.hibernate.type.NumericBooleanType">
+            <column name="DELETED" precision="1" scale="0" />
+        </property>
+        <property name="documentFileTypeId" type="long">
+            <column name="DOCUMENT_FILE_TYPE_ID" precision="12" scale="0" not-null="true" />
+        </property>
+        <property name="ddocDataFileId" type="string">
+            <column name="DDOC_DATAFILE_ID" length="5" />
+        </property>
+        <property name="ddocDataFileStartOffset" type="java.lang.Long">
+            <column name="DDOC_DATAFILE_START_OFFSET" precision="12" scale="0" />
+        </property>
+        <property name="ddocDataFileEndOffset" type="java.lang.Long">
+            <column name="DDOC_DATAFILE_END_OFFSET" precision="12" scale="0" />
+        </property>
+        <property name="fileDataInDdoc" type="org.hibernate.type.NumericBooleanType">
+            <column name="FILE_DATA_IN_DDOC" precision="1" scale="0" />
+        </property>
+        <property name="lastModifiedDate" type="timestamp">
+            <column name="LAST_MODIFIED_DATE" length="7" />
+        </property>
+    </class>
+	<sql-query name="DEFLATE_FILE" callable="true">
+		<return class="ee.adit.dao.pojo.DocumentFileDeflateResult">
+			<return-property name="resultCode" column="result_code" />
+		</return>
+	  	{ call DEFLATE_FILE(?, :documentId , :fileId, :markDeleted, :failIfSignature) }
+	 </sql-query>
+	<sql-query name="REMOVE_SIGNED_FILE_CONTENTS" callable="true">
+		<return class="ee.adit.dao.pojo.DocumentFileDeflateResult">
+			<return-property name="resultCode" column="result_code" />
+		</return>
+	  	{ call REMOVE_SIGNED_FILE_CONTENTS(?, :documentId , :fileId, :ddocStartOffset, :ddocEndOffset) }
+	 </sql-query>
+</hibernate-mapping>
