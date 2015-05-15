@@ -1,5 +1,4 @@
 SET search_path = adit, pg_catalog;
-ALTER TABLE ONLY adit.document DROP CONSTRAINT IF EXISTS parent_document_id;
 DROP TRIGGER IF EXISTS tr_user_notification_log ON adit.user_notification;
 DROP TRIGGER IF EXISTS tr_user_contact_log ON user_contact;
 DROP TRIGGER IF EXISTS tr_usertype_log ON adit.usertype;
