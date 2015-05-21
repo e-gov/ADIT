@@ -2393,18 +2393,7 @@ public class DocumentService {
                         String sharingUserCode = documentSharing.getUserCode();
                         String sharingUserCodeWithoutCountryPrefix = Util.removeCountryPrefix(sharingUserCode);
                         long sharingDvkStatus = (documentSharing.getDocumentDvkStatus() == null) ? 0 : documentSharing.getDocumentDvkStatus().longValue();
-                        
-                        logger.debug("allDocumentSharingsSent " + allDocumentSharingsSent);
-                        logger.debug("messageRecipient " + messageRecipient);
-                        logger.debug("sharingUserCodeWithoutCountryPrefix " + sharingUserCodeWithoutCountryPrefix);
-                        logger.debug("sharingUserCode " + sharingUserCode);
-                        logger.debug("sharingUserCodeWithoutCountryPrefix " + sharingUserCodeWithoutCountryPrefix);
-                        logger.debug("sharingUserCode " + sharingUserCode);
-                        
-                        logger.debug("documentSharing " + documentSharing);
-                        logger.debug("dvkDocument " + dvkDocument);
-                        logger.debug("document " + document);
-                        
+                                                
                         if (sharingUserCodeWithoutCountryPrefix.equalsIgnoreCase(messageRecipient.getRecipientOrgCode())
                                 || sharingUserCode.equalsIgnoreCase(messageRecipient.getRecipientOrgCode())
                                 || sharingUserCodeWithoutCountryPrefix.equalsIgnoreCase(messageRecipient.getRecipientPersonCode())
@@ -2413,20 +2402,12 @@ public class DocumentService {
                             // If the statuses differ or dvk id differ, update the one in ADIT
                             // database
                             boolean updateNeeded = false;
-                            
-                            logger.debug("(documentSharing.getDvkId() == null && dvkDocument.getDhlId() != null) " + (documentSharing.getDvkId() == null && dvkDocument.getDhlId() != null));
-                            logger.debug("(documentSharing.getDvkId() == null) " + (documentSharing.getDvkId() == null));
-                            logger.debug("(dvkDocument.getDhlId() != null) " + (dvkDocument.getDhlId() != null));
                             if (documentSharing.getDvkId() == null && dvkDocument.getDhlId() != null) {
                                 updateNeeded = true;
                                 documentSharing.setDvkId(dvkDocument.getDhlId());
                                 logger.debug("DocumentSharing DVK id updated, DVK id: "
                                         + dvkDocument.getDhlId());
                             }
-                            
-                            logger.debug("(sharingDvkStatus != messageRecipient.getSendingStatusId()) " + (sharingDvkStatus != messageRecipient.getSendingStatusId()));
-                            logger.debug("(sharingDvkStatus) " + sharingDvkStatus);
-                            logger.debug("(messageRecipient.getSendingStatusId()) " + messageRecipient.getSendingStatusId());
                             if (sharingDvkStatus != messageRecipient.getSendingStatusId()) {
                                 documentSharing.setDocumentDvkStatus(messageRecipient.getSendingStatusId());
                                 updateNeeded = true;
@@ -2440,23 +2421,15 @@ public class DocumentService {
                             }
                         }
                         
-                        logger.debug("allDocumentSharingsSent " + allDocumentSharingsSent);
-                        logger.debug("documentSharing.getDocumentDvkStatus() " + documentSharing.getDocumentDvkStatus());
-                        logger.debug("DocumentService.DVK_STATUS_SENT " + DocumentService.DVK_STATUS_SENT);
-                        logger.debug("(documentSharing.getDocumentDvkStatus() != DocumentService.DVK_STATUS_SENT) " + (documentSharing.getDocumentDvkStatus() != DocumentService.DVK_STATUS_SENT));
-
                         if (!documentSharing.getDocumentDvkStatus().equals(DocumentService.DVK_STATUS_SENT)) {
                             allDocumentSharingsSent = false;
                         }
                     }
                     
-                    logger.debug("allDocumentSharingsSent " + allDocumentSharingsSent);
                     // If all documentSharings statuses are "sent" then update
                     // the document's dvk status
                     if (allDocumentSharingsSent) {
                         // Update document DVK status ID
-                    	logger.debug("document " + document);
-                    	logger.debug("document.getDocumentDvkStatusId() " + document.getDocumentDvkStatusId());
                         document.setDocumentDvkStatusId(DocumentService.DVK_STATUS_SENT);
                         this.getDocumentDAO().update(document);
                         logger.debug("All DVK sharings for this document updated to 'sent'. Updating document DVK status.");

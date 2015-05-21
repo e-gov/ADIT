@@ -926,12 +926,12 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
         Session session = null;
         Transaction transaction = null;
         try {
-        	logger.debug("document update " + document);
+
             session = this.getSessionFactory().getCurrentSession();
             transaction = session.beginTransaction();
             session.saveOrUpdate(document);
             transaction.commit();
-            logger.debug("document done " + document);
+
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
