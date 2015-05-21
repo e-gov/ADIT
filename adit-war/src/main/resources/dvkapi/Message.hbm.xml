@@ -13,7 +13,7 @@
         <property name="isIncoming" type="org.hibernate.type.NumericBooleanType">
             <column name="IS_INCOMING" precision="1" scale="0" not-null="true" />
         </property>
-        <property name="data" type="text">
+        <property name="data" type="string">
             <column name="DATA" not-null="true" />
         </property>
         <property name="title" type="string">

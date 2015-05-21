@@ -2393,7 +2393,14 @@ public class DocumentService {
                         String sharingUserCode = documentSharing.getUserCode();
                         String sharingUserCodeWithoutCountryPrefix = Util.removeCountryPrefix(sharingUserCode);
                         long sharingDvkStatus = (documentSharing.getDocumentDvkStatus() == null) ? 0 : documentSharing.getDocumentDvkStatus().longValue();
-
+                        
+                        logger.debug("allDocumentSharingsSent " + allDocumentSharingsSent);
+                        logger.debug("messageRecipient " + messageRecipient);
+                        logger.debug("sharingUserCodeWithoutCountryPrefix " + sharingUserCodeWithoutCountryPrefix);
+                        logger.debug("sharingUserCode " + sharingUserCode);
+                        logger.debug("sharingUserCodeWithoutCountryPrefix " + sharingUserCodeWithoutCountryPrefix);
+                        logger.debug("sharingUserCode " + sharingUserCode);
+                        
                         if (sharingUserCodeWithoutCountryPrefix.equalsIgnoreCase(messageRecipient.getRecipientOrgCode())
                                 || sharingUserCode.equalsIgnoreCase(messageRecipient.getRecipientOrgCode())
                                 || sharingUserCodeWithoutCountryPrefix.equalsIgnoreCase(messageRecipient.getRecipientPersonCode())
@@ -2420,16 +2427,24 @@ public class DocumentService {
                                 this.getDocumentSharingDAO().update(documentSharing, true);
                             }
                         }
+                        
+                        logger.debug("allDocumentSharingsSent " + allDocumentSharingsSent);
+                        logger.debug("documentSharing.getDocumentDvkStatus() " + documentSharing.getDocumentDvkStatus());
+                        logger.debug("DocumentService.DVK_STATUS_SENT " + DocumentService.DVK_STATUS_SENT);
+                        logger.debug("(documentSharing.getDocumentDvkStatus() != DocumentService.DVK_STATUS_SENT) " + (documentSharing.getDocumentDvkStatus() != DocumentService.DVK_STATUS_SENT));
 
                         if (documentSharing.getDocumentDvkStatus() != DocumentService.DVK_STATUS_SENT) {
                             allDocumentSharingsSent = false;
                         }
                     }
-
+                    
+                    logger.debug("allDocumentSharingsSent " + allDocumentSharingsSent);
                     // If all documentSharings statuses are "sent" then update
                     // the document's dvk status
                     if (allDocumentSharingsSent) {
                         // Update document DVK status ID
+                    	logger.debug("document " + document);
+                    	logger.debug("document.getDocumentDvkStatusId() " + document.getDocumentDvkStatusId());
                         document.setDocumentDvkStatusId(DocumentService.DVK_STATUS_SENT);
                         this.getDocumentDAO().update(document);
                         logger.debug("All DVK sharings for this document updated to 'sent'. Updating document DVK status.");
