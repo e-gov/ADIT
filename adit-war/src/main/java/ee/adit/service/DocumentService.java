@@ -2401,6 +2401,10 @@ public class DocumentService {
                         logger.debug("sharingUserCodeWithoutCountryPrefix " + sharingUserCodeWithoutCountryPrefix);
                         logger.debug("sharingUserCode " + sharingUserCode);
                         
+                        logger.debug("documentSharing " + documentSharing);
+                        logger.debug("dvkDocument " + dvkDocument);
+                        logger.debug("document " + document);
+                        
                         if (sharingUserCodeWithoutCountryPrefix.equalsIgnoreCase(messageRecipient.getRecipientOrgCode())
                                 || sharingUserCode.equalsIgnoreCase(messageRecipient.getRecipientOrgCode())
                                 || sharingUserCodeWithoutCountryPrefix.equalsIgnoreCase(messageRecipient.getRecipientPersonCode())
@@ -2409,12 +2413,20 @@ public class DocumentService {
                             // If the statuses differ or dvk id differ, update the one in ADIT
                             // database
                             boolean updateNeeded = false;
+                            
+                            logger.debug("(documentSharing.getDvkId() == null && dvkDocument.getDhlId() != null) " + (documentSharing.getDvkId() == null && dvkDocument.getDhlId() != null));
+                            logger.debug("(documentSharing.getDvkId() == null) " + (documentSharing.getDvkId() == null));
+                            logger.debug("(dvkDocument.getDhlId() != null) " + (dvkDocument.getDhlId() != null));
                             if (documentSharing.getDvkId() == null && dvkDocument.getDhlId() != null) {
                                 updateNeeded = true;
                                 documentSharing.setDvkId(dvkDocument.getDhlId());
                                 logger.debug("DocumentSharing DVK id updated, DVK id: "
                                         + dvkDocument.getDhlId());
                             }
+                            
+                            logger.debug("(sharingDvkStatus != messageRecipient.getSendingStatusId()) " + (sharingDvkStatus != messageRecipient.getSendingStatusId()));
+                            logger.debug("(sharingDvkStatus) " + sharingDvkStatus);
+                            logger.debug("(messageRecipient.getSendingStatusId()) " + messageRecipient.getSendingStatusId());
                             if (sharingDvkStatus != messageRecipient.getSendingStatusId()) {
                                 documentSharing.setDocumentDvkStatus(messageRecipient.getSendingStatusId());
                                 updateNeeded = true;
