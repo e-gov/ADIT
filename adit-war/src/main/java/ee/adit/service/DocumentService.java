@@ -2445,7 +2445,7 @@ public class DocumentService {
                         logger.debug("DocumentService.DVK_STATUS_SENT " + DocumentService.DVK_STATUS_SENT);
                         logger.debug("(documentSharing.getDocumentDvkStatus() != DocumentService.DVK_STATUS_SENT) " + (documentSharing.getDocumentDvkStatus() != DocumentService.DVK_STATUS_SENT));
 
-                        if (documentSharing.getDocumentDvkStatus() != DocumentService.DVK_STATUS_SENT) {
+                        if (!documentSharing.getDocumentDvkStatus().equals(DocumentService.DVK_STATUS_SENT)) {
                             allDocumentSharingsSent = false;
                         }
                     }
