@@ -3,13 +3,13 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>adit-ear</artifactId>
 	<packaging>ear</packaging>
-	<version>1.1.13</version>
+	<version>1.1.14</version>
 	<name>ADIT Enterprise Application</name>
 
 	<parent>
 	    <groupId>ee</groupId>
 	    <artifactId>adit</artifactId>
-	    <version>1.1.13</version>
+	    <version>1.1.14</version>
 	</parent>
 
 	<build>
