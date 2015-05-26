@@ -44,14 +44,16 @@ public class RecipientBuilder {
 
         if (documentSharings != null) {
             for (DocumentSharing documentSharing : documentSharings) {
-                AditUser recipientUser = aditUserDAO.getUserByID(documentSharing.getUserCode());
-                ContactInfo contactInfo = new ContactInfoBuilder(document, recipientUser).build();
-                Recipient recipient = new Recipient();
-                recipient.setPerson(contactInfo.getPerson());
-                recipient.setContactData(contactInfo.getContactData());
-                recipient.setOrganisation(contactInfo.getOrganisation());
-                recipient.setMessageForRecipient(documentSharing.getComment());
-                results.add(recipient);
+            	if (documentSharing.isDocumentReadySendToDvk()) {
+	                AditUser recipientUser = aditUserDAO.getUserByID(documentSharing.getUserCode());
+	                ContactInfo contactInfo = new ContactInfoBuilder(document, recipientUser).build();
+	                Recipient recipient = new Recipient();
+	                recipient.setPerson(contactInfo.getPerson());
+	                recipient.setContactData(contactInfo.getContactData());
+	                recipient.setOrganisation(contactInfo.getOrganisation());
+	                recipient.setMessageForRecipient(documentSharing.getComment());
+	                results.add(recipient);
+            	}
             }
         }
 

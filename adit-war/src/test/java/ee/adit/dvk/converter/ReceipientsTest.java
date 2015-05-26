@@ -3,8 +3,10 @@ package ee.adit.dvk.converter;
 import dvk.api.container.v2_1.Recipient;
 import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.DocumentSharing;
+import ee.adit.service.DocumentService;
 import ee.adit.test.service.StubAditUserDAOForPerson;
 import ee.adit.test.service.StubDocumentTypeDAO;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -29,6 +31,8 @@ public class ReceipientsTest {
 
         DocumentSharing documentSharing = new DocumentSharing();
         documentSharing.setUserCode("someCode");
+        documentSharing.setDocumentSharingType(DocumentService.SHARINGTYPE_SEND_DVK);
+        documentSharing.setDocumentDvkStatus(DocumentService.DVK_STATUS_MISSING);
         document.setId(1);
         document.setCreationDate(new Date());
         document.setTitle("My title");

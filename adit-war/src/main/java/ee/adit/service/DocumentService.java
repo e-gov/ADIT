@@ -1527,6 +1527,7 @@ public class DocumentService {
             logger.info(documents.size() + " documents need to be sent to DVK.");
 
             for (Document document: documents) {
+            	logger.info("Sending document with ID " + document.getId() + " to DVK");
                 try {
                     DvkSender dvkSender = new ContainerVer2_1Sender(this);
 
@@ -1550,7 +1551,7 @@ public class DocumentService {
                     aditTransaction.commit();
                     result++;
                 } catch (Exception e) {
-                    throw new AditInternalException("Error while sending documents to DVK Client database: ", e);
+                	logger.error("Error while sending document with ID " + document.getId() + " to DVK Client database: ", e);
                 }
             }
         } finally {

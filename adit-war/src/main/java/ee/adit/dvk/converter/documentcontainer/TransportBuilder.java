@@ -50,7 +50,7 @@ public class TransportBuilder {
 
         Set<DocumentSharing> documentSharings = document.getDocumentSharings();
         for (DocumentSharing documentSharing : documentSharings) {
-            if (isDocumentReadyForSharing(documentSharing)) {
+        	if (documentSharing.isDocumentReadySendToDvk()) {
                 AditUser recipient = aditUserDAO.getUserByID(documentSharing.getUserCode());
                 DecRecipient decRecipient = new DecRecipient();
                 decRecipient.setOrganisationCode(recipient.getDvkOrgCode());
@@ -60,16 +60,5 @@ public class TransportBuilder {
         transport.setDecRecipient(recipients);
 
         return transport;
-    }
-
-    private boolean isDocumentReadyForSharing(final DocumentSharing documentSharing) {
-        boolean result = false;
-        if (DocumentService.SHARINGTYPE_SEND_DVK.equalsIgnoreCase(documentSharing.getDocumentSharingType())
-                && (DocumentService.DVK_STATUS_WAITING.equals(documentSharing.getDocumentDvkStatus())
-                || DocumentService.DVK_STATUS_MISSING.equals(documentSharing.getDocumentDvkStatus())
-                || documentSharing.getDocumentDvkStatus() == null)) {
-            result = true;
-        }
-        return result;
     }
 }

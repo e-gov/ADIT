@@ -930,6 +930,7 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
             session = this.getSessionFactory().getCurrentSession();
             transaction = session.beginTransaction();
             session.saveOrUpdate(document);
+            transaction.commit();
 
         } catch (Exception e) {
             if (transaction != null) {
