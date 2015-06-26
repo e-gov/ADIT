@@ -66,6 +66,8 @@
 			<element name="deleteDocumentsResponse" type="tns:deleteDocumentsResponse" />
 			<element name="prepareSignatureRequest" type="tns:prepareSignatureRequest" />
 			<element name="prepareSignatureResponse" type="tns:prepareSignatureResponse" />
+			<element name="prepareSignatureV2Request" type="tns:prepareSignatureV2Request" />
+			<element name="prepareSignatureV2Response" type="tns:prepareSignatureV2Response" />
 			<element name="confirmSignatureRequest" type="tns:confirmSignatureRequest" />
 			<element name="confirmSignatureResponse" type="tns:confirmSignatureResponse" />
 			<element name="shareDocumentRequest" type="tns:shareDocumentRequest" />
@@ -1358,6 +1360,110 @@
 				</sequence>
 			</complexType>
 			<complexType name="prepareSignatureResponse">
+				<xs:annotation>
+					<xs:documentation xml:lang="ee">Päringu "prepareSignature"
+						vastus</xs:documentation>
+					<xs:documentation xml:lang="en">"prepareSignature" request
+						response</xs:documentation>
+				</xs:annotation>
+				<sequence>
+					<element name="success" type="tns:success" />
+					<element name="messages" type="tns:arrayOfMessage" />
+                    <element name="signature_id" type="string">
+                        <xs:annotation>
+                            <xs:documentation xml:lang="ee">Allkirja ID
+                            </xs:documentation>
+                            <xs:documentation xml:lang="en">Signature ID
+                            </xs:documentation>
+                        </xs:annotation>
+                    </element>
+					<element name="signature_hash" type="string">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Allkirja räsikood
+							</xs:documentation>
+							<xs:documentation xml:lang="en">Signature hash
+							</xs:documentation>
+						</xs:annotation>
+					</element>
+		            <element name="data_file_hashes" type="tns:arrayOfDataFileHash">
+		                <xs:annotation>
+		                    <xs:documentation xml:lang="ee">Allkirja konteineris
+		                    sisalduvate andmefailide räsikoodid</xs:documentation>
+		                    <xs:documentation xml:lang="en">Hash codes of data files
+		                    contained by signature container</xs:documentation>
+		                </xs:annotation>
+		            </element>
+				</sequence>
+			</complexType>
+			
+			<complexType name="prepareSignatureV2Request">
+				<xs:annotation>
+					<xs:documentation xml:lang="ee">Päring "prepareSignature"
+					</xs:documentation>
+					<xs:documentation xml:lang="en">"prepareSignature" request
+					</xs:documentation>
+				</xs:annotation>
+				<sequence>
+					<element name="document_id" type="integer">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Dokumendi identifikaator
+							</xs:documentation>
+							<xs:documentation xml:lang="en">Document identificator
+							</xs:documentation>
+						</xs:annotation>
+					</element>
+					<element name="manifest" type="string">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Manifest</xs:documentation>
+							<xs:documentation xml:lang="en">Manifest</xs:documentation>
+						</xs:annotation>
+					</element>
+					<element name="country" type="string">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Allkirjastamise asukoht -
+								riik</xs:documentation>
+							<xs:documentation xml:lang="en">Signing location - country
+							</xs:documentation>
+						</xs:annotation>
+					</element>
+					<element name="state" type="string">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Allkirjastamise asukoht -
+								osariik</xs:documentation>
+							<xs:documentation xml:lang="en">Signing location - state
+							</xs:documentation>
+						</xs:annotation>
+					</element>
+					<element name="city" type="string">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Allkirjastamise asukoht -
+								linn</xs:documentation>
+							<xs:documentation xml:lang="en">Signing location - city
+							</xs:documentation>
+						</xs:annotation>
+					</element>
+					<element name="zip" type="string">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Allkirjastamise asukoht -
+								postikood</xs:documentation>
+							<xs:documentation xml:lang="en">Signing location - zip code
+							</xs:documentation>
+						</xs:annotation>
+					</element>
+					<element name="signer_certificate">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Allkirjastaja sertifikaat
+							</xs:documentation>
+							<xs:documentation xml:lang="en">Signer certificate
+							</xs:documentation>
+						</xs:annotation>
+						<complexType>
+							<attribute name="href" type="tns:href" />
+						</complexType>
+					</element>
+				</sequence>
+			</complexType>
+			<complexType name="prepareSignatureV2Response">
 				<xs:annotation>
 					<xs:documentation xml:lang="ee">Päringu "prepareSignature"
 						vastus</xs:documentation>
@@ -2952,6 +3058,10 @@
 		<wsdl:part name="keha" type="tns:prepareSignatureResponse">
 		</wsdl:part>
 	</wsdl:message>
+	<wsdl:message name="prepareSignatureV2Response">
+		<wsdl:part name="keha" type="tns:prepareSignatureV2Response">
+		</wsdl:part>
+	</wsdl:message>
 	<wsdl:message name="unJoinResponse">
 		<wsdl:part name="keha" type="tns:unJoinResponse">
 		</wsdl:part>
@@ -3112,6 +3222,10 @@
 	</wsdl:message>
 	<wsdl:message name="prepareSignatureRequest">
 		<wsdl:part name="keha" type="tns:prepareSignatureRequest">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="prepareSignatureV2Request">
+		<wsdl:part name="keha" type="tns:prepareSignatureV2Request">
 		</wsdl:part>
 	</wsdl:message>
 	<wsdl:message name="getDocumentRequest">
@@ -3375,6 +3489,16 @@
 			<wsdl:input message="tns:prepareSignatureRequest" name="prepareSignatureRequest">
 			</wsdl:input>
 			<wsdl:output message="tns:prepareSignatureResponse" name="prepareSignatureResponse">
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="prepareSignature">
+			<xs:documentation>
+				<xtee:title>Allkirja ettevalmistamine</xtee:title>
+				<xtee:notes>Valmistab ette dokumendile antava allkirja</xtee:notes>
+			</xs:documentation>
+			<wsdl:input message="tns:prepareSignatureV2Request" name="prepareSignatureV2Request">
+			</wsdl:input>
+			<wsdl:output message="tns:prepareSignatureV2Response" name="prepareSignatureV2Response">
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="getDocumentHistory">
@@ -4499,6 +4623,56 @@
 					use="literal" />
 			</wsdl:input>
 			<wsdl:output name="prepareSignatureResponse">
+				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
+					part="asutus" use="literal">
+				</soap:header>
+				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
+					part="andmekogu" use="literal">
+				</soap:header>
+				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
+					part="isikukood" use="literal">
+				</soap:header>
+				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
+					part="id" use="literal">
+				</soap:header>
+				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
+					part="nimi" use="literal">
+				</soap:header>
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
+					part="infosysteem" use="literal">
+				</soap:header>
+				<soap:body
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
+					use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="prepareSignature">
+			<xtee:version>v2</xtee:version>
+			<soap:operation soapAction="" />
+			<wsdl:input name="prepareSignatureV2Request">
+				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
+					part="asutus" use="literal">
+				</soap:header>
+				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
+					part="andmekogu" use="literal">
+				</soap:header>
+				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
+					part="isikukood" use="literal">
+				</soap:header>
+				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
+					part="id" use="literal">
+				</soap:header>
+				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
+					part="nimi" use="literal">
+				</soap:header>
+				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
+					part="infosysteem" use="literal">
+				</soap:header>
+				<soap:body
+					namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@"
+					use="literal" />
+			</wsdl:input>
+			<wsdl:output name="prepareSignatureV2Response">
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
 					part="asutus" use="literal">
 				</soap:header>
