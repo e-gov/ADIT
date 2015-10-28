@@ -51,7 +51,6 @@ import java.sql.Clob;
 import java.sql.SQLException;
 import java.util.*;
 
-
 /**
  * Implements business logic for document processing. Provides methods for
  * processing documents (saving, retrieving, performing checks, etc.). Where
@@ -87,6 +86,11 @@ public class DocumentService {
      * Document sharing type code - send using ADIT.
      */
     public static final String SHARINGTYPE_SEND_ADIT = "send_adit";
+
+    /**
+     * Document sharing type code - send using ADIT.
+     */
+    public static final String SHARINGTYPE_SEND_EMAIL = "send_email";
 
     /**
      * Document DVK status - missing.
@@ -449,7 +453,8 @@ public class DocumentService {
         }
         logger.debug("Signed documents check is finished");
     }
-
+    
+    
     /**
      * Checks if document metadata is sufficient and correct for creating a new
      * document.
@@ -525,6 +530,7 @@ public class DocumentService {
         }
     }
 
+    
     /**
      * Retrieves a list of valid document types.
      *
@@ -627,7 +633,9 @@ public class DocumentService {
                 document.setTitle(attachmentDocument.getTitle());
                 document.setCreatorUserCode(creatorUserCode);
                 document.setCreatorUserName(creatorUserName);
+
                 document.setEformUseId(attachmentDocument.getEformUseId());
+                document.setContent(attachmentDocument.getContent());
                 Document parent = null;
                 if (attachmentDocument.getPreviousDocumentID() != null) {
                     parent = docDao.getDocument(attachmentDocument.getPreviousDocumentID());
@@ -1092,6 +1100,37 @@ public class DocumentService {
      * @param messageForRecipient message sent by the recipient
      * @return true, if sending succeeded
      */
+    public boolean sendDocumentByEmail(Document document, String recipientEmail) {
+        boolean result = false;
+
+        DocumentSharing documentSharing = new DocumentSharing();
+        documentSharing.setDocumentId(document.getId());
+        documentSharing.setCreationDate(new Date());
+        documentSharing.setDocumentSharingType(DocumentService.SHARINGTYPE_SEND_EMAIL);
+
+        documentSharing.setUserEmail(recipientEmail);
+
+        this.getDocumentSharingDAO().save(documentSharing);
+
+        if (documentSharing.getId() == 0) {
+            throw new AditInternalException("Could not add document sharing information to database.");
+        }
+
+        return result;
+    }
+
+    /**
+     * Sends document to the specified user.
+     *
+     * @param document
+     *            document
+     * @param recipient
+     *            user
+     * @param dvkFolder
+     *            DVK folder
+     * @return true, if sending succeeded
+     */
+
     public boolean sendDocument(Document document, AditUser recipient, String dvkFolder, Long dvkId, String messageForRecipient) {
         boolean result = false;
 
@@ -3446,7 +3485,7 @@ public class DocumentService {
             Iterator<DocumentSharing> it = doc.getDocumentSharings().iterator();
             while (it.hasNext()) {
                 DocumentSharing sharing = it.next();
-                if (sharing.getUserCode().equalsIgnoreCase(userCode)) {
+                if (sharing.getUserCode() != null && sharing.getUserCode().equalsIgnoreCase(userCode)) {
                     if (sharing.getDocumentSharingType().equalsIgnoreCase(DocumentService.SHARINGTYPE_SHARE)
                             || sharing.getDocumentSharingType().equalsIgnoreCase(DocumentService.SHARINGTYPE_SIGN)) {
                         // doc.getDocumentSharings().remove(sharing); // NB! DO NOT
@@ -3652,6 +3691,7 @@ public class DocumentService {
                 // who executed current query
                 String certPersonalIdCode = Util.getSubjectSerialNumberFromCert(cert);
                 String userCodeWithoutCountryPrefix = Util.getPersonalIdCodeWithoutCountryPrefix(xroadUser.getUserCode());
+                
                 if (!userCodeWithoutCountryPrefix.equalsIgnoreCase(certPersonalIdCode)) {
                     logger.info("Attempted to sign document " + documentId + " by person \"" + certPersonalIdCode
                             + "\" while logged in as person \"" + userCodeWithoutCountryPrefix + "\"");
@@ -3669,6 +3709,7 @@ public class DocumentService {
                         return result;
                     }
                 }
+
                 // Load document
                 Document doc = (Document) session.get(Document.class, documentId);
 
@@ -3714,7 +3755,7 @@ public class DocumentService {
                     } finally {
                         Util.safeCloseStream(containerAsStream);
                     }
-
+                    
                     // Make sure that document is not already signed
                     // by the same person.
                     int removeSignatureAtIndex = -1;
@@ -4057,7 +4098,8 @@ public class DocumentService {
 
         return result;
     }
-
+    
+    
     /**
      * Adds user signature data to pending signature in specified documents
      * signature container. After adding signature to container, gets a
@@ -4118,6 +4160,7 @@ public class DocumentService {
                 Util.safeCloseStream(fs);
                 fs = null;
             }
+            
             // Find unfinished Signature from container
             Signature sig = null;
             int activeSignatureIndex = -1;
@@ -4129,7 +4172,7 @@ public class DocumentService {
                     break;
                 }
             }
-
+            
             if (sig == null) {
                 AditCodedException aditCodedException = new AditCodedException("request.confirmSignature.signatureNotPrepared");
                 aditCodedException.setParameters(new Object[]{});
@@ -4147,8 +4190,9 @@ public class DocumentService {
                 isSignatureElement = true;
             }
 
-            String containerFileName = Util.generateRandomFileNameWithoutExtension();
-            containerFileName = temporaryFilesDir + File.separator + containerFileName + "_CSv1.adit";
+
+			String containerFileName = Util.generateRandomFileNameWithoutExtension();
+			containerFileName = temporaryFilesDir + File.separator + containerFileName + "_CSv1.adit";
             if (isSignatureElement) {
             	if(sdoc.getFormat().equals(SignedDoc.FORMAT_BDOC)) {
             		try{
@@ -4706,6 +4750,7 @@ public class DocumentService {
         return result;
     }
 
+    
     /**
      * Finds signature container from document files list.
      *
@@ -4840,7 +4885,7 @@ public class DocumentService {
             Iterator<DocumentSharing> it = documentSharings.iterator();
             while (it.hasNext()) {
                 DocumentSharing sharing = it.next();
-                if (userCode.equalsIgnoreCase(sharing.getUserCode())
+                if (sharing.getUserCode() != null && userCode.equalsIgnoreCase(sharing.getUserCode())
                         && (sharing.getDocumentSharingType().equalsIgnoreCase(DocumentService.SHARINGTYPE_SHARE) || sharing
                         .getDocumentSharingType().equalsIgnoreCase(DocumentService.SHARINGTYPE_SIGN))) {
                     result = true;
@@ -4862,7 +4907,6 @@ public class DocumentService {
     public static boolean documentSignedBySharing(Set<ee.adit.dao.pojo.Signature> documentSignatures, DocumentSharing sharing) {
         boolean result = false;
 
-
         Iterator<ee.adit.dao.pojo.Signature> it = documentSignatures.iterator();
         while (it.hasNext()) {
             ee.adit.dao.pojo.Signature signature = it.next();
@@ -4871,11 +4915,10 @@ public class DocumentService {
                 break;
             }
         }
-
-
         return result;
     }
-
+    
+    
     /**
      * Helper method to determine if document has been sent to given user.
      *
@@ -4901,7 +4944,8 @@ public class DocumentService {
 
         return result;
     }
-
+    
+    
     /**
      * Helper method to determine if file with given type ID should be returned
      * when given list of file types was requested.
@@ -4917,7 +4961,6 @@ public class DocumentService {
                 || (requestedTypes.getFileType().size() < 1)
                 || (requestedTypes.getFileType().contains(fileTypeName)));
     }
-
 
     public Long findDocumentDvkIdForUser(Document doc, AditUser user) {
         Long result = null;
@@ -4937,7 +4980,8 @@ public class DocumentService {
         }
         return result;
     }
-
+    
+    
     public MessageSource getMessageSource() {
         return messageSource;
     }

@@ -36,6 +36,7 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 import javax.security.auth.x500.X500Principal;
+
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -51,11 +52,13 @@ import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
 import org.apache.fop.apps.MimeConstants;
 import org.apache.log4j.Logger;
+
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.x500.RDN;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.style.BCStyle;
 import org.bouncycastle.asn1.x500.style.IETFUtils;
+
 import org.castor.core.util.Base64Decoder;
 import org.castor.core.util.Base64Encoder;
 
@@ -102,14 +105,14 @@ public final class Util {
      */
     public static final int RANDOM_ID_LENGTH = 30;
 
-    
     public static final String DIGIDOC_STAMP_ISSUER = "KLASS3-SK";
-    
+
     //extensions which are allowed to use
     public static final String[] BDOC_FILE_EXTENSIONS = {"bdoc", "asice", "sce"};
     public static final String BDOC_PRIMARY_EXTENSION = "bdoc";
     public static final String DDOC_FILE_EXTENSION = "ddoc";
-    
+
+
     /**
      * Base64 encodes the specified string.
      *
@@ -1886,7 +1889,7 @@ public final class Util {
 
     	return result;
     }
-    
+
     private static String getDetailFromCert (X509Certificate cert, ASN1ObjectIdentifier identifier) {
     	  String result = null;
     	  if(cert!=null) {
@@ -1900,7 +1903,9 @@ public final class Util {
 	          result = (rdn==null?null:(IETFUtils.valueToString(rdn.getFirst().getValue())));
     	  }
     	  return result;
-    }    
+    }
+    	  
+
     /**
      * Finds serialnumber from certificate, which is user code or company registry code
      * @param cert
@@ -1909,6 +1914,8 @@ public final class Util {
     public static String getSubjectSerialNumberFromCert (X509Certificate cert) {
     	return getDetailFromCert(cert, BCStyle.SERIALNUMBER);
     }
+
+    
     /**
      * Determines if filename is BDOC
      * @param filename
@@ -1931,5 +1938,6 @@ public final class Util {
     	}
     	return false;
     }
-    
+
 }
+

@@ -85,6 +85,9 @@
         <property name="eformUseId" type="java.lang.Long">
             <column name="EFORM_USE_ID" precision="12" scale="0" />
         </property>
+        <property name="content" type="string">
+            <column name="CONTENT" length="4000" />
+        </property>
         <set name="documents" inverse="true" lazy="true" table="DOCUMENT" fetch="select">
             <key>
                 <column name="PARENT_ID" precision="12" scale="0" />

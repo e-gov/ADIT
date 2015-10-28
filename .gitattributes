@@ -313,6 +313,7 @@ adit-war/src/main/java/ee/adit/pojo/ArrayOfMessageMonitor.java -text
 adit-war/src/main/java/ee/adit/pojo/ArrayOfNotification.java -text
 adit-war/src/main/java/ee/adit/pojo/ArrayOfRecipientStatus.java -text
 adit-war/src/main/java/ee/adit/pojo/ArrayOfUserCode.java -text
+adit-war/src/main/java/ee/adit/pojo/ArrayOfUserEmail.java -text
 adit-war/src/main/java/ee/adit/pojo/ConfirmSignatureRequest.java -text
 adit-war/src/main/java/ee/adit/pojo/ConfirmSignatureRequestSignature.java -text
 adit-war/src/main/java/ee/adit/pojo/ConfirmSignatureResponse.java -text

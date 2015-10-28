@@ -52,7 +52,7 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
     @Override
     protected Object invokeInternal(Object requestObject, int version) throws Exception {
     	logger.debug("prepareSignature invoked. Version: " + version);
-    	
+
     	if (version == 1) {
             return v1(requestObject);
         } if (version == 2) {
@@ -144,7 +144,6 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
                 throw aditCodedException;
             }
 
-            
             PrepareSignatureInternalResult sigResult = this.documentService.prepareSignature(doc.getId(), request
                     .getManifest(), request.getCountry(), request.getState(), request.getCity(), request.getZip(),
                     certFile, jdigidocCfgTmpFile, this.getConfiguration().getTempDir(), xroadRequestUser, preferBdoc);
@@ -326,7 +325,7 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
                 Iterator<DocumentSharing> it = doc.getDocumentSharings().iterator();
                 while (it.hasNext()) {
                     DocumentSharing sharing = it.next();
-                    if (sharing.getUserCode().equalsIgnoreCase(user.getUserCode())
+                    if (sharing.getUserCode() != null && sharing.getUserCode().equalsIgnoreCase(user.getUserCode())
                         && DocumentService.SHARINGTYPE_SIGN.equalsIgnoreCase(sharing.getDocumentSharingType())) {
                         // Check whether the document is marked as deleted by recipient
                         if ((sharing.getDeleted() != null) && sharing.getDeleted()) {

@@ -267,7 +267,22 @@
 			</element>
 		</sequence>
 	</complexType>
-
+			
+	<complexType name="arrayOfUserEmail">
+		<annotation>
+			<documentation xml:lang="ee">Kasutajate emailide massiiv</documentation>
+			<documentation xml:lang="en">Array of user emails</documentation>
+		</annotation>
+		<sequence>
+			<element maxOccurs="unbounded" minOccurs="0" name="email" type="string">
+				<annotation>
+					<documentation xml:lang="ee">Kasutaja email</documentation>
+					<documentation xml:lang="en">User email</documentation>
+				</annotation>
+			</element>
+		</sequence>
+	</complexType>
+	
 	<complexType name="recipientStatus">
 		<annotation>
 	      	<documentation xml:lang="ee">Vastuvõtja(adressaat) staatus</documentation>
@@ -624,6 +639,8 @@
 						<enumeration value="title"/>
 						<enumeration value="file_size"/>
 						<enumeration value="sender_receiver"/>
+						<enumeration value="sender"/>
+						<enumeration value="receiver"/>
 					</restriction>
 				</simpleType>
 			</element>
@@ -1268,6 +1285,7 @@
 		    	</annotation>
 			</element>
 			<element name="recipient_list" type="tns:arrayOfUserCode"/>
+			<element name="recipient_email_list" type="tns:arrayOfUserEmail"/>
 			<element name="dvk_folder" type="string">
 				<annotation>
 					<documentation xml:lang="ee">DVK dokumentide kaust

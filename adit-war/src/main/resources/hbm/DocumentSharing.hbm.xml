@@ -23,7 +23,7 @@
             <column name="DOCUMENT_ID" precision="12" scale="0" not-null="true" />
         </property>
         <property name="userCode" type="string">
-            <column name="USER_CODE" length="50" not-null="true" />
+            <column name="USER_CODE" length="50" />
         </property>
         <property name="userName" type="string">
             <column name="USER_NAME" length="255" />
@@ -48,6 +48,9 @@
         </property>
         <property name="comment" type="string">
             <column name="COMMENT_TEXT" />
+        </property>
+        <property name="userEmail" type="string">
+            <column name="USER_EMAIL" length="255" />
         </property>
     </class>
 </hibernate-mapping>

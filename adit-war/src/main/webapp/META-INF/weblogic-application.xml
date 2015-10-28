@@ -17,7 +17,6 @@
 		<package-name>org.bouncycastle.ocsp.*</package-name>
 		<package-name>org.bouncycastle.util.*</package-name>
 		<package-name>org.bouncycastle.x509.*</package-name>
-		
 	</prefer-application-packages>
 
 </weblogic-application>

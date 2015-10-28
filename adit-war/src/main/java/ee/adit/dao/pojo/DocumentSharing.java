@@ -26,6 +26,7 @@ public class DocumentSharing implements java.io.Serializable {
     private String dvkFolder;
     private Long dvkId;
     private String comment;
+    private String userEmail;
 
     public DocumentSharing() {
     }
@@ -149,7 +150,7 @@ public class DocumentSharing implements java.io.Serializable {
 	public void setDvkFolder(String dvkFolder) {
 		this.dvkFolder = dvkFolder;
 	}
-	
+
 	public Long getDvkId() {
 		return dvkId;
 	}
@@ -158,6 +159,15 @@ public class DocumentSharing implements java.io.Serializable {
 		this.dvkId = dvkId;
 	}
 
+	public String getUserEmail() {
+		return userEmail;
+	}
+
+	public void setUserEmail(String userEmail) {
+		this.userEmail = userEmail;
+	}
+	
+	
     public String getComment() {
         return comment;
     }
@@ -165,7 +175,7 @@ public class DocumentSharing implements java.io.Serializable {
     public void setComment(String comment) {
         this.comment = comment;
     }
-    
+
     public boolean isDocumentReadySendToDvk() {
         boolean result = false;
         if (DocumentService.SHARINGTYPE_SEND_DVK.equalsIgnoreCase(this.getDocumentSharingType())

@@ -121,7 +121,7 @@ public class GetDocumentRequest {
 	public void setDocumentGuid(String documentGuid) {
 		this.documentGuid = documentGuid;
 	}
-    
+
 	/**
      * Gets the value of the documentId property.
      * 
@@ -137,4 +137,5 @@ public class GetDocumentRequest {
     public void setDvkId(Long value) {
         this.dvkId = value;
     }
+
 }

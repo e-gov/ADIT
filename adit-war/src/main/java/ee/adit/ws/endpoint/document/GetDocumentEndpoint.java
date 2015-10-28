@@ -1,6 +1,7 @@
 package ee.adit.ws.endpoint.document;
 
 import java.io.InputStream;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -88,8 +89,10 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
         try {
             logger.debug("getDocument.v1 invoked.");
             GetDocumentRequest request = (GetDocumentRequest) requestObject;
+
             //that parameter is not used in this version
             request.setDvkId(null);
+            
             if (request != null) {
                 documentId = request.getDocumentId();
                 if (documentId == null) {
@@ -148,7 +151,7 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
                     Iterator<DocumentSharing> it = doc.getDocumentSharings().iterator();
                     while (it.hasNext()) {
                         DocumentSharing sharing = it.next();
-                        if (sharing.getUserCode().equalsIgnoreCase(user.getUserCode())) {
+                        if (sharing.getUserCode() != null && sharing.getUserCode().equalsIgnoreCase(user.getUserCode())) {
                             // Check whether the document is marked as deleted by recipient
                             if ((sharing.getDeleted() != null) && sharing.getDeleted()) {
                                 AditCodedException aditCodedException = new AditCodedException("document.deleted");
@@ -323,8 +326,6 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
         return response;
     }
 
-    
-    
     /**
      * Executes "V2" version of "getDocument" request.
      *
@@ -582,7 +583,7 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
         return response;
     }
     
-    
+
     @Override
     protected Object getResultForGenericException(Exception ex) {
         super.logError(null, Calendar.getInstance().getTime(), LogService.ERROR_LOG_LEVEL_FATAL, "ERROR: "

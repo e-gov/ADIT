@@ -48,7 +48,7 @@
 		<property name="xteeInstitution" value="adit" />
 		<property name="xteeSecurityServer" value="http://10.0.14.15/cgi-bin/consumer_proxy" />
 		<property name="xteeIdCode" value="EE38806190294" />
-		
+
 		<!-- DVK folder names -->
 		<property name="dvkSendFolder" value="/" />
 		<property name="dvkRecieveFolders">
@@ -66,7 +66,7 @@
         signatures to the same document is blocked.
         -->
         <property name="unfinishedSignatureLifetimeSeconds" value="300"/>
-        <property name="doCheckTestCert" value="true"/>    
+        <property name="doCheckTestCert" value="true"/>
 	</bean>
 
 	<bean id="monitorConfiguration" class="ee.adit.util.MonitorConfiguration">

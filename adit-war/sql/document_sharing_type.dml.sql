@@ -31,3 +31,11 @@ INSERT INTO &&ADIT_SCHEMA..document_sharing_type (
 	'send_adit',
 	'Dokumendi saatmine ADIT kaudu (ADIT kasutajale)'
 );
+
+INSERT INTO &&ADIT_SCHEMA..DOCUMENT_SHARING_TYPE (
+	SHORT_NAME,
+	DESCRIPTION
+) VALUES (
+	'send_email',
+	'Documendi saatmine meiliga'
+);

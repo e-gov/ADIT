@@ -486,12 +486,18 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
                         sharingData.getUserList().add(rec);
                     } else {
                         DocumentSendingRecipient rec = new DocumentSendingRecipient();
-                        rec.setCode(sharing.getUserCode());
-                        rec.setHasBeenViewed((sharing.getFirstAccessDate() != null));
-                        rec.setName(sharing.getUserName());
-                        rec.setOpenedTime(sharing.getFirstAccessDate());
-                        rec.setWorkflowStatusId(sharing.getDocumentWfStatus());
-                        rec.setDvkStatusId(sharing.getDocumentDvkStatus());
+
+                        if (sharing.getDocumentSharingType().equalsIgnoreCase(DocumentService.SHARINGTYPE_SEND_EMAIL)) {
+                            rec.setEmail(sharing.getUserEmail());
+                        } else {
+	                        rec.setCode(sharing.getUserCode());
+	                        rec.setHasBeenViewed((sharing.getFirstAccessDate() != null));
+	                        rec.setName(sharing.getUserName());
+	                        rec.setOpenedTime(sharing.getFirstAccessDate());
+	                        rec.setWorkflowStatusId(sharing.getDocumentWfStatus());
+	                        rec.setDvkStatusId(sharing.getDocumentDvkStatus());
+                        }
+
                         sendingData.getUserList().add(rec);
 
                         // There should be possible to have only one sending per document.
@@ -547,6 +553,7 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
         result.setSignable(doc.getSignable());
         result.setSigned(doc.getSigned());
         result.setTitle(doc.getTitle());
+        result.setContent(doc.getContent());
         result.setWorkflowStatusId(doc.getDocumentWfStatusId());
         result.setFilesSizeBytes(doc.getFilesSizeBytes());
         result.setSenderReceiver(doc.getSenderReceiver());
@@ -592,17 +599,16 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
             	for (Document childDocument : doc.getDocuments()) {
     				if (childDocument.getDocumentSharings() != null && !childDocument.getDocumentSharings().isEmpty()) {
     					for (DocumentSharing sharing : childDocument.getDocumentSharings()) {
-							if (!Boolean.TRUE.equals(sharing.getDeleted()) && doc.getCreatorCode().equals(sharing.getUserCode())) {
+							if (!Boolean.TRUE.equals(sharing.getDeleted()) && sharing.getUserCode() != null && doc.getCreatorCode().equals(sharing.getUserCode())) {
 								hasSentReply = true;
 								break;
 							}
-						}
-
+    					}
     				}
     				if (hasSentReply) {
     					break;
     				}
-    			}
+            	}
             }
         }
         result.setHasSentReply(hasSentReply);
@@ -620,7 +626,7 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
                 Iterator it = doc.getDocumentSharings().iterator();
                 while (it.hasNext()) {
                     DocumentSharing sharing = (DocumentSharing) it.next();
-                    if (currentRequestUserCode.equalsIgnoreCase(sharing.getUserCode())) {
+                    if (sharing.getUserCode() != null && currentRequestUserCode.equalsIgnoreCase(sharing.getUserCode())) {
                     	result.setHasBeenViewed(sharing.getFirstAccessDate() != null);
                     	break;
                     }
@@ -892,7 +898,7 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
         return result;
     }
 
-
+    
     /**
      * Fetch documents which have signatures.
      *
@@ -916,7 +922,7 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
         return result;
     }
 
-
+    
     /**
      * Update existing document.
      *
@@ -1005,6 +1011,10 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
 			return "files_size_bytes";
 		} else if ("sender_receiver".equalsIgnoreCase(xmlName)) {
 			return "LOWER(sender_receiver)";
+		} else if ("sender".equalsIgnoreCase(xmlName)) {
+			return "LOWER(sender)";
+		} else if ("receiver".equalsIgnoreCase(xmlName)) {
+			return "LOWER(receiver)";
 		} else {
 			return null;
 		}
@@ -1352,6 +1362,7 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
 		}
 	}
 
+	
     /**
      * Fetches document from database by dhl id
      * @param dhlId
@@ -1382,6 +1393,7 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
         }
         return result;
     }
+
 
     /**
      * Fetches documents from database by list of dhl ids

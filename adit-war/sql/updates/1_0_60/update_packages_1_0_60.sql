@@ -49,7 +49,7 @@ PACKAGE BODY      &&ADIT_SCHEMA..ADITLOG AS
     
     -- remote_application changed
     IF(NVL(access_restriction_new.remote_application, 0) != NVL(access_restriction_old.remote_application, 0)) THEN
-    
+
       INSERT INTO &&ADIT_SCHEMA..adit_log(
         table_name,
         column_name,

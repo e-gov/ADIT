@@ -109,7 +109,7 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
                     DocumentSharing sharing = (DocumentSharing) it.next();
                     if ((request.getRecipientList() == null) || (request.getRecipientList().getCode() == null)
                             || (request.getRecipientList().getCode().size() < 1)
-                            || (request.getRecipientList().getCode().contains(sharing.getUserCode()))) {
+                            || (sharing.getUserCode() != null && (request.getRecipientList().getCode().contains(sharing.getUserCode())))) {
 
                         if (sharing.getDocumentSharingType().equalsIgnoreCase(DocumentService.SHARINGTYPE_SHARE)
                                 || sharing.getDocumentSharingType().equalsIgnoreCase(DocumentService.SHARINGTYPE_SIGN)) {

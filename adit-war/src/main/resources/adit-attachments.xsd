@@ -302,7 +302,6 @@
 		</xs:sequence>
 	</xs:complexType>
 
-
 	<!-- getDocumentFile attachments -->
 	<xs:element name="getDocumentFileResponseAttachmentV1" type="getDocumentFileResponseAttachmentV1Type" />
 	<xs:complexType name="getDocumentFileResponseAttachmentV1Type">
@@ -647,6 +646,14 @@
 					<xs:documentation xml:lang="en">Previous document
 						identificator (if the document is a response to another
 						document)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="content" type="xs:string">
+				<xs:annotation>
+					<xs:documentation xml:lang="ee">Dokumendi sisu
+					</xs:documentation>
+					<xs:documentation xml:lang="en">Document content
+					</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="files" type="subDocumentFilesType" />
@@ -1208,6 +1215,14 @@
 					<xs:documentation xml:lang="ee">Kasutaja nimi
 					</xs:documentation>
 					<xs:documentation xml:lang="en">User name
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="email" type="xs:string">
+				<xs:annotation>
+					<xs:documentation xml:lang="ee">Kasutaja email
+					</xs:documentation>
+					<xs:documentation xml:lang="en">User email
 					</xs:documentation>
 				</xs:annotation>
 			</xs:element>

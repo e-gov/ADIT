@@ -431,7 +431,7 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
                 Iterator<DocumentSharing> it = doc.getDocumentSharings().iterator();
                 while (it.hasNext()) {
                     DocumentSharing sharing = it.next();
-                    if (sharing.getUserCode().equalsIgnoreCase(user.getUserCode())) {
+                    if (sharing.getUserCode() != null && sharing.getUserCode().equalsIgnoreCase(user.getUserCode())) {
                         // Check whether the document is marked as deleted by recipient
                         if ((sharing.getDeleted() != null) && sharing.getDeleted()) {
                             AditCodedException aditCodedException = new AditCodedException("document.deleted");

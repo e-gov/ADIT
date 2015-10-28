@@ -38,6 +38,7 @@ public class Document implements java.io.Serializable {
     private Long filesSizeBytes;
     private String senderReceiver;
     private Long eformUseId;
+    private String content;
     private Set<Document> documents = new HashSet<Document>(0);
     private Set<DocumentFile> documentFiles = new HashSet<DocumentFile>(0);
     private Set<Signature> signatures = new HashSet<Signature>(0);
@@ -277,6 +278,14 @@ public class Document implements java.io.Serializable {
 
     public Long getEformUseId() {
 		return eformUseId;
+	}
+    
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
 	}
 
 	public void setEformUseId(Long eformUseId) {

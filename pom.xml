@@ -25,5 +25,4 @@
 		<!-- X-Road producer name of current build -->
 		<producerName>ametlikud-dokumendid</producerName>
 	</properties>
-	
 </project>

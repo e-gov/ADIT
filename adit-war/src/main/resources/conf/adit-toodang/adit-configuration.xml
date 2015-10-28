@@ -48,7 +48,7 @@
 		<property name="xteeInstitution" value="adit" />
 		<property name="xteeSecurityServer" value="http://10.0.1.23/cgi-bin/consumer_proxy" />
 		<property name="xteeIdCode" value="EE38806190294" />
-		
+
 		<!-- DVK folder names -->
 		<property name="dvkSendFolder" value="/" />
 		<property name="dvkRecieveFolders">
@@ -59,14 +59,14 @@
 		</property>
 		<property name="dvkFolderForLetterType" value="/" />
 		<property name="dvkFolderForApplicationType" value="/" />
-		
+
         <!--
         Specifies how many seconds the system waits for unfinished digital
         signatures to be finished. During this period initiating additional
         signatures to the same document is blocked.
         -->
         <property name="unfinishedSignatureLifetimeSeconds" value="300"/>
-                <property name="doCheckTestCert" value="true"/>    
+		<property name="doCheckTestCert" value="true"/>
 	</bean>
 
 	<bean id="monitorConfiguration" class="ee.adit.util.MonitorConfiguration">
@@ -85,6 +85,7 @@
 		<property name="errorInterval" value="60000" />
 		<property name="errorLevel" value="FATAL" />
 	</bean>
+
 	<bean id="checkSignatures" class="java.lang.Boolean">
 		  <constructor-arg value="true"/>
 	</bean>
