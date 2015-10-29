@@ -8,13 +8,9 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
-import ee.adit.dao.pojo.AccessRestriction;
 import ee.adit.dao.pojo.AditUser;
-import ee.adit.dao.pojo.DocumentSharing;
-import ee.adit.dao.pojo.DocumentType;
 import ee.adit.dao.pojo.UserContact;
 import ee.adit.exception.AditInternalException;
-import ee.adit.service.DocumentService;
 
 /**
  * User contact data access class. Provides methods for retrieving and manipulating

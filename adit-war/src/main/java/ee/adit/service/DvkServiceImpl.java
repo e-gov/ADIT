@@ -1,7 +1,6 @@
 package ee.adit.service;
 
 import ee.adit.dao.DocumentDAO;
-import ee.adit.dao.DocumentSharingDAO;
 import ee.adit.dao.pojo.Document;
 import ee.adit.util.Configuration;
 import org.apache.log4j.Logger;

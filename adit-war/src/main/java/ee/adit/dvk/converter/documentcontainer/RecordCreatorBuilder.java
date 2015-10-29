@@ -4,9 +4,6 @@ import dvk.api.container.v2_1.*;
 import ee.adit.dao.AditUserDAO;
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
-import ee.adit.pojo.PersonName;
-import ee.adit.service.UserService;
-import ee.adit.util.Util;
 
 /**
  * @author Hendrik Pärna

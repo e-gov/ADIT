@@ -4,7 +4,6 @@ import javax.xml.namespace.QName;
 
 import org.apache.log4j.Logger;
 
-import ee.adit.ws.endpoint.user.GetJoinedEndpoint;
 import ee.webmedia.xtee.XTeeHeader;
 
 /**

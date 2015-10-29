@@ -7,8 +7,6 @@ import ee.adit.dao.AditUserDAO;
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.DocumentSharing;
-import ee.adit.service.DocumentService;
-import ee.adit.service.UserService;
 import ee.adit.util.Configuration;
 import ee.adit.util.Util;
 

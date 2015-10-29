@@ -5,9 +5,6 @@ import ee.adit.dao.AditUserDAO;
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.DocumentSharing;
-import ee.adit.pojo.PersonName;
-import ee.adit.service.UserService;
-import ee.adit.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;

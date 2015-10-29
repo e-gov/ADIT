@@ -13,15 +13,12 @@ import ee.adit.util.Util;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.sql.Clob;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.hibernate.FlushMode;
-import org.hibernate.Hibernate;
 import org.hibernate.LockOptions;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

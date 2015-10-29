@@ -6,7 +6,6 @@ import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.DocumentType;
 import ee.adit.dao.pojo.Signature;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Set;
 

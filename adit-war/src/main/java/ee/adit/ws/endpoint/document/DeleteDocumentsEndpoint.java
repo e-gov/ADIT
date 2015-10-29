@@ -19,7 +19,6 @@ import ee.adit.pojo.DeleteDocumentsRequest;
 import ee.adit.pojo.DeleteDocumentsResponse;
 import ee.adit.pojo.DocumentActionStatus;
 import ee.adit.pojo.Message;
-import ee.adit.pojo.RecipientStatus;
 import ee.adit.pojo.Success;
 import ee.adit.service.DocumentService;
 import ee.adit.service.LogService;

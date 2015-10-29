@@ -25,7 +25,6 @@ import ee.adit.dao.UsertypeDAO;
 import ee.adit.dao.dvk.DvkDAO;
 import ee.adit.dao.pojo.AccessRestriction;
 import ee.adit.dao.pojo.AditUser;
-import ee.adit.dao.pojo.DocumentFile;
 import ee.adit.dao.pojo.NotificationType;
 import ee.adit.dao.pojo.RemoteApplication;
 import ee.adit.dao.pojo.UserContact;

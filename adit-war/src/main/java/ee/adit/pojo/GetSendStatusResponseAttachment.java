@@ -3,8 +3,6 @@ package ee.adit.pojo;
 import java.util.List;
 
 
-import ee.adit.pojo.DocumentSharingRecipientStatus;
-
 public class GetSendStatusResponseAttachment {
     private List<DocumentSendStatus> documents;
 
