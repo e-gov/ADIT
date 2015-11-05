@@ -232,10 +232,9 @@ CREATE TABLE &&ADIT_SCHEMA..DOCUMENT_SHARING
     wf_status_id      NUMBER(12),                  /* Workflow status ID. Is used for feedback from recipient to sender. */
     first_access_date DATE,                        /* Date and time the document was first time accessed by recipient. */
 	deleted           NUMBER(1,0) NULL,            /* Document has been deleted by the user to whom it was sent. */
-	dvk_folder	  	  VARCHAR2(1000),	             /* DVK dokumendi kausta nimi */
+	dvk_folder	  	  VARCHAR2(1000),              /* DVK dokumendi kausta nimi */
 	dvk_id            NUMBER (12, 0),
-	comment_text      CLOB                         /* Hange_149265_276141_Lisa 1 */
-	dvk_folder		  VARCHAR2(1000),			   /* DVK dokumendi kausta nimi */
+	comment_text      CLOB,                        /* Hange_149265_276141_Lisa 1 */
 	user_email		  VARCHAR2(255)				   /* Recipient email if document is sent by email*/
 ) TABLESPACE &&ADIT_TABLE_TABLESPACE.;
 
