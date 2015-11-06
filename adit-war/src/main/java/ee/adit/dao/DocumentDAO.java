@@ -1074,93 +1074,97 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
 
 		StringBuilder selectSql = new StringBuilder("SELECT * FROM (\r\n");
 		StringBuilder countSql = new StringBuilder("SELECT count(*) total FROM (\r\n");
-		StringBuilder sql = new StringBuilder(
-				"	SELECT results.*, row_number() over() AS rnum FROM (\r\n" +
-//				"		SELECT documents.*, id_size_shared.file_size files_size_bytes, CASE WHEN documents.creator_code != :userCode THEN documents.creator_name ELSE id_size_shared.shared_to END sender_receiver FROM (\r\n" +
+		StringBuilder sql = new StringBuilder( 
+				"	SELECT results.id, results.guid, results.title, results.type, results.creator_code, results.creator_name, " +
+				"			results.creator_user_code, results.creator_user_name, results.creation_date, results.remote_application, " +
+				"			results.last_modified_date, results.document_dvk_status_id, results.dvk_id, results.document_wf_status_id, " +
+				"			results.parent_id, results.locked, results.locking_date, results.signable, results.deflated, " +
+				"			results.deflate_date, results.deleted, results.invisible_to_owner, results.signed, results.migrated, " +
+				"			results.eform_use_id, results.content, results.files_size_bytes, results.sender_receiver, " +
+				"			rownum rnum FROM (\r\n" +//				"		SELECT documents.*, id_size_shared.file_size files_size_bytes, CASE WHEN documents.creator_code != :userCode THEN documents.creator_name ELSE id_size_shared.shared_to END sender_receiver FROM (\r\n" +
 				"		SELECT documents.id, documents.guid, documents.title, documents.type, documents.creator_code, documents.creator_name, " +
 				"				documents.creator_user_code, documents.creator_user_name, documents.creation_date, documents.remote_application, " +
 				"				documents.last_modified_date, documents.document_dvk_status_id, documents.dvk_id, documents.document_wf_status_id, " +
 				"				documents.parent_id, documents.locked, documents.locking_date, documents.signable, documents.deflated, " +
-				"				documents.deflate_date, documents.deleted, documents.invisible_to_owner, documents.signed, documents.migrated, " +
-				"				documents.eform_use_id, " +
+				"				documents.deflate_date, documents.deleted, documents.invisible_to_owner, documents.signed, documents.migrated, " +				"				documents.eform_use_id, documents.content, " +
 				"				id_size_shared.file_size files_size_bytes, " +
-				"				CASE WHEN documents.creator_code != :userCode THEN documents.creator_name ELSE id_size_shared.shared_to END sender_receiver" +
+				"				CASE WHEN documents.creator_code != :userCode THEN documents.creator_name ELSE id_size_shared.shared_to END sender_receiver, " +
+				"				documents.creator_name sender, " +
+				"				id_size_shared.shared_to receiver" +
 				"		FROM (\r\n" +
-//				"			SELECT id_size.id, id_size.file_size, LISTAGG(sharings.user_name, ', ') WITHIN GROUP (ORDER BY LOWER(sharings.user_name)) shared_to FROM (\r\n" +
-				"			SELECT id_size.id, id_size.file_size, STRING_AGG(sharings.user_name, ', ' ORDER BY LOWER(sharings.user_name)) AS shared_to FROM (\r\n" +
-				"				SELECT ids.id, sum(files.file_size_bytes) as file_size FROM (\r\n" +
-				"					SELECT\r\n" +
-				"						DISTINCT d.id\r\n" +
-				"					FROM document d\r\n" +
-				"					LEFT JOIN document_sharing ds ON ds.document_id = d.id\r\n" +
-				"					LEFT JOIN document_file df ON df.document_id = d.id\r\n" +
-				"					LEFT JOIN document_history dh ON dh.document_id = d.id AND :hasBeenViewed IS NOT NULL AND dh.document_history_type = 'mark_viewed' AND dh.user_code = :userCode\r\n" +
-				"					LEFT JOIN signature s ON s.document_id = d.id AND :searchPhrase IS NOT NULL\r\n" +
-				"					WHERE\r\n" +
-				"						COALESCE(d.deleted, 0) = 0\r\n" +
-				"						AND (d.creator_code != :userCode OR COALESCE(d.invisible_to_owner, 0) = 0)\r\n" +
-				"						AND (\r\n" +
-				"							(d.creator_code = :userCode)\r\n" +
-				"							OR (\r\n" +
-				"								COALESCE(ds.deleted, 0) = 0\r\n" +
-				"								AND ds.user_code = :userCode\r\n" +
-				"							)\r\n" +
-				"						)\r\n" +
-				"						AND (\r\n" +
-				"							('local' != COALESCE(:folder, 'X'))\r\n" +
-				"							OR ('local' = :folder AND d.creator_code = :userCode AND ds.id IS NULL)\r\n" +
-				"						)\r\n" +
-				"						AND (\r\n" +
-				"							('incoming' != COALESCE(:folder, 'X'))\r\n" +
-				"							OR ('incoming' = :folder AND d.creator_code != :userCode AND ds.id IS NOT NULL)\r\n" +
-				"						)\r\n" +
-				"						AND (\r\n" +
-				"							('outgoing' != COALESCE(:folder, 'X'))\r\n" +
-				"							OR ('outgoing' = :folder AND d.creator_code = :userCode AND ds.id IS NOT NULL)\r\n" +
-				"						)\r\n" +
-				"						AND (\r\n" +
-				"							(:hasBeenViewed IS NULL)\r\n" +
-				"							OR (\r\n" +
-				"								1 = :hasBeenViewed\r\n" +
-				"								AND (\r\n" +
-				"									d.creator_code = :userCode\r\n" +
-				"									OR dh.id IS NOT NULL\r\n" +
-				"								)\r\n" +
-				"							)\r\n" +
-				"							OR (\r\n" +
-				"								0 = :hasBeenViewed\r\n" +
-				"								AND d.creator_code != :userCode\r\n" +
-				"								AND dh.id IS NULL\r\n" +
-				"							)\r\n" +
-				"						)\r\n" +
-				"						AND (:deflated IS NULL OR COALESCE(d.deflated, 0) = :deflated)\r\n" +
-				"						AND (\r\n" +
-				"							:searchPhrase IS NULL\r\n" +
-				"							OR (\r\n" +
-				"								LOWER(d.title) LIKE :searchPhrase\r\n" +
-				"								OR LOWER(d.creator_code) LIKE :searchPhrase\r\n" +
-				"								OR LOWER(d.creator_name) LIKE :searchPhrase\r\n" +
-				"								OR LOWER(s.signer_code) LIKE :searchPhrase\r\n" +
-				"								OR LOWER(s.signer_name) LIKE :searchPhrase\r\n" +
-				"								OR LOWER(ds.user_code) LIKE :searchPhrase\r\n" +
-				"								OR LOWER(ds.user_name) LIKE :searchPhrase\r\n" +
-				"								OR LOWER(df.file_name) LIKE :searchPhrase\r\n" +
-				"								OR LOWER(df.description) LIKE :searchPhrase\r\n" +
-				"							)\r\n" +
-				"						)\r\n" +
-				"						AND (\r\n" +
-				"							CAST(:periodStart AS TIMESTAMP) IS NULL\r\n" +
-				"							OR CAST(d.last_modified_date AS DATE) >= :periodStart\r\n" +
-				"						)\r\n" +
-				"						AND (\r\n" +
-				"							CAST(:periodEnd AS TIMESTAMP) IS NULL\r\n" +
-				"							OR CAST(d.last_modified_date AS DATE) <= :periodEnd\r\n" +
+				"			SELECT id_size.id, id_size.file_size, LISTAGG(COALESCE(sharings.user_name, sharings.user_email), ', ') WITHIN GROUP (ORDER BY LOWER(sharings.user_name)) shared_to FROM (\r\n" +				"				SELECT ids.id, sum(files.file_size_bytes) as file_size FROM (\r\n" + 
+				"					SELECT\r\n" + 
+				"						DISTINCT d.id\r\n" + 
+				"					FROM document d\r\n" + 
+				"					LEFT JOIN document_sharing ds ON ds.document_id = d.id\r\n" + 
+				"					LEFT JOIN document_file df ON df.document_id = d.id\r\n" + 
+				"					LEFT JOIN document_history dh ON dh.document_id = d.id AND :hasBeenViewed IS NOT NULL AND dh.document_history_type = 'mark_viewed' AND dh.user_code = :userCode\r\n" + 
+				"					LEFT JOIN signature s ON s.document_id = d.id AND :searchPhrase IS NOT NULL\r\n" + 
+				"					WHERE\r\n" + 
+				"						COALESCE(d.deleted, 0) = 0\r\n" + 
+				"						AND (d.creator_code != :userCode OR COALESCE(d.invisible_to_owner, 0) = 0)\r\n" + 
+				"						AND (\r\n" + 
+				"							(d.creator_code = :userCode)\r\n" + 
+				"							OR (\r\n" + 
+				"								COALESCE(ds.deleted, 0) = 0\r\n" + 
+				"								AND ds.user_code = :userCode\r\n" + 
+				"							)\r\n" + 
+				"						)\r\n" + 
+				"						AND (\r\n" + 
+				"							('local' != COALESCE(:folder, 'X'))\r\n" + 
+				"							OR ('local' = :folder AND d.creator_code = :userCode AND ds.id IS NULL)\r\n" + 
+				"						)\r\n" + 
+				"						AND (\r\n" + 
+				"							('incoming' != COALESCE(:folder, 'X'))\r\n" + 
+				"							OR ('incoming' = :folder AND d.creator_code != :userCode AND ds.id IS NOT NULL)\r\n" + 
+				"						)\r\n" + 
+				"						AND (\r\n" + 
+				"							('outgoing' != COALESCE(:folder, 'X'))\r\n" + 
+				"							OR ('outgoing' = :folder AND d.creator_code = :userCode AND ds.id IS NOT NULL)\r\n" + 
+				"						)\r\n" + 
+				"						AND (\r\n" + 
+				"							(:hasBeenViewed IS NULL)\r\n" + 
+				"							OR (\r\n" + 
+				"								1 = :hasBeenViewed\r\n" + 
+				"								AND (\r\n" + 
+				"									d.creator_code = :userCode\r\n" + 
+				"									OR dh.id IS NOT NULL\r\n" + 
+				"								)\r\n" + 
+				"							)\r\n" + 
+				"							OR (\r\n" + 
+				"								0 = :hasBeenViewed\r\n" + 
+				"								AND d.creator_code != :userCode\r\n" + 
+				"								AND dh.id IS NULL\r\n" + 
+				"							)\r\n" + 
+				"						)\r\n" + 
+				"						AND (:deflated IS NULL OR COALESCE(d.deflated, 0) = :deflated)\r\n" + 
+				"						AND (\r\n" + 
+				"							:searchPhrase IS NULL\r\n" + 
+				"							OR (\r\n" + 
+				"								LOWER(d.title) LIKE :searchPhrase\r\n" + 
+				"								OR LOWER(d.creator_code) LIKE :searchPhrase\r\n" + 
+				"								OR LOWER(d.creator_name) LIKE :searchPhrase\r\n" + 
+				"								OR LOWER(s.signer_code) LIKE :searchPhrase\r\n" + 
+				"								OR LOWER(s.signer_name) LIKE :searchPhrase\r\n" + 
+				"								OR LOWER(ds.user_code) LIKE :searchPhrase\r\n" + 
+				"								OR LOWER(ds.user_name) LIKE :searchPhrase\r\n" + 
+				"								OR LOWER(df.file_name) LIKE :searchPhrase\r\n" + 
+				"								OR LOWER(df.description) LIKE :searchPhrase\r\n" + 
+				"							)\r\n" + 
+				"						)\r\n" + 
+				"						AND (\r\n" + 
+				"							:periodStart IS NULL\r\n" + 
+				"							OR CAST(d.last_modified_date AS DATE) >= :periodStart\r\n" + 
+				"						)\r\n" + 
+				"						AND (\r\n" + 
+				"							:periodEnd IS NULL\r\n" + 
+				"							OR CAST(d.last_modified_date AS DATE) <= :periodEnd\r\n" + 
 				"						)\r\n" +
 				"						AND (:eformUseId IS NULL OR d.eform_use_id = :eformUseId)\r\n" +
 				"						AND (:signed IS NULL OR COALESCE(d.signed, 0) = :signed)");
 
 		// no NULL support in IN
-
+		
 		// Document type
 		List<String> documentTypes = new ArrayList<String>();
 		if ((param.getDocumentTypes() != null) && (param.getDocumentTypes().getDocumentType() != null)
