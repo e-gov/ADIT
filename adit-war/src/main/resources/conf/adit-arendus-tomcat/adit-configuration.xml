@@ -12,11 +12,11 @@
 
     <!-- Data sources -->
     <bean id="aditDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
-        <property name="jndiName" value="jdbc/adit-arendus" />
+        <property name="jndiName" value="java:comp/env/jdbc/adit-arendus-postgres" />
     </bean>
 
     <bean id="aditDVKDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
-        <property name="jndiName" value="jdbc/adit_dvk-arendus" />
+        <property name="jndiName" value="java:comp/env/jdbc/adit_dvk-arendus-postgres" />
     </bean>
 
 	<!-- Configuration -->
@@ -39,16 +39,16 @@
 
 		<property name="locales">
 			<list>
-                <value>et_ee</value>
-                <value>en_us</value>
-                <value>ru_ru</value>
+				<value>et_ee</value>
+				<value>en_us</value>
+				<value>ru_ru</value>
 			</list>
 		</property>
-        <property name="dvkOrgCode" value="adit" />
-        <property name="xteeInstitution" value="adit" />
-        <property name="xteeSecurityServer" value="http://10.0.14.15/cgi-bin/consumer_proxy" />
-        <property name="xteeIdCode" value="EE38806190294" />
-
+		<property name="dvkOrgCode" value="adit" />
+		<property name="xteeInstitution" value="adit" />
+		<property name="xteeSecurityServer" value="http://10.0.14.15/cgi-bin/consumer_proxy" />
+		<property name="xteeIdCode" value="EE38806190294" />
+		
 		<!-- DVK folder names -->
 		<property name="dvkSendFolder" value="/" />
 		<property name="dvkRecieveFolders">
@@ -66,11 +66,11 @@
         signatures to the same document is blocked.
         -->
         <property name="unfinishedSignatureLifetimeSeconds" value="300"/>
-        <property name="doCheckTestCert" value="true"/>
+        <property name="doCheckTestCert" value="true"/>    
 	</bean>
 
 	<bean id="monitorConfiguration" class="ee.adit.util.MonitorConfiguration">
-		<property name="aditServiceUrl" value="http://localhost:7007/adit/service" />
+		<property name="aditServiceUrl" value="http://10.0.13.232:8080/adit/service" />
 		<property name="remoteApplicationShortName" value="MONITOR_TEST_APP" />
 		<property name="userCode" value="EE00000000000" />
 		<property name="institutionCode" value="123456789" />
@@ -88,5 +88,4 @@
 	<bean id="checkSignatures" class="java.lang.Boolean">
 		  <constructor-arg value="true"/>
 	</bean>
-
 </beans>
