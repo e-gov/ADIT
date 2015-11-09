@@ -1081,18 +1081,22 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
 				"			results.parent_id, results.locked, results.locking_date, results.signable, results.deflated, " +
 				"			results.deflate_date, results.deleted, results.invisible_to_owner, results.signed, results.migrated, " +
 				"			results.eform_use_id, results.content, results.files_size_bytes, results.sender_receiver, " +
-				"			rownum rnum FROM (\r\n" +//				"		SELECT documents.*, id_size_shared.file_size files_size_bytes, CASE WHEN documents.creator_code != :userCode THEN documents.creator_name ELSE id_size_shared.shared_to END sender_receiver FROM (\r\n" +
+				"			rownum rnum FROM (\r\n" +
+//				"		SELECT documents.*, id_size_shared.file_size files_size_bytes, CASE WHEN documents.creator_code != :userCode THEN documents.creator_name ELSE id_size_shared.shared_to END sender_receiver FROM (\r\n" +
 				"		SELECT documents.id, documents.guid, documents.title, documents.type, documents.creator_code, documents.creator_name, " +
 				"				documents.creator_user_code, documents.creator_user_name, documents.creation_date, documents.remote_application, " +
 				"				documents.last_modified_date, documents.document_dvk_status_id, documents.dvk_id, documents.document_wf_status_id, " +
 				"				documents.parent_id, documents.locked, documents.locking_date, documents.signable, documents.deflated, " +
-				"				documents.deflate_date, documents.deleted, documents.invisible_to_owner, documents.signed, documents.migrated, " +				"				documents.eform_use_id, documents.content, " +
+				"				documents.deflate_date, documents.deleted, documents.invisible_to_owner, documents.signed, documents.migrated, " +				
+				"				documents.eform_use_id, documents.content, " +
 				"				id_size_shared.file_size files_size_bytes, " +
 				"				CASE WHEN documents.creator_code != :userCode THEN documents.creator_name ELSE id_size_shared.shared_to END sender_receiver, " +
 				"				documents.creator_name sender, " +
 				"				id_size_shared.shared_to receiver" +
 				"		FROM (\r\n" +
-				"			SELECT id_size.id, id_size.file_size, LISTAGG(COALESCE(sharings.user_name, sharings.user_email), ', ') WITHIN GROUP (ORDER BY LOWER(sharings.user_name)) shared_to FROM (\r\n" +				"				SELECT ids.id, sum(files.file_size_bytes) as file_size FROM (\r\n" + 
+//				"			SELECT id_size.id, id_size.file_size, LISTAGG(COALESCE(sharings.user_name, sharings.user_email), ', ') WITHIN GROUP (ORDER BY LOWER(sharings.user_name)) shared_to FROM (\r\n" +
+				"			SELECT id_size.id, id_size.file_size, STRING_AGG(COALESCE(sharings.user_name, sharings.user_email), ', ' ORDER BY LOWER(sharings.user_name)) AS shared_to FROM (\r\n" +				
+				"				SELECT ids.id, sum(files.file_size_bytes) as file_size FROM (\r\n" + 
 				"					SELECT\r\n" + 
 				"						DISTINCT d.id\r\n" + 
 				"					FROM document d\r\n" + 
