@@ -1081,7 +1081,7 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
 				"			results.parent_id, results.locked, results.locking_date, results.signable, results.deflated, " +
 				"			results.deflate_date, results.deleted, results.invisible_to_owner, results.signed, results.migrated, " +
 				"			results.eform_use_id, results.content, results.files_size_bytes, results.sender_receiver, " +
-				"			rownum rnum FROM (\r\n" +
+				"			row_number() over() AS rnum FROM (\r\n" +
 //				"		SELECT documents.*, id_size_shared.file_size files_size_bytes, CASE WHEN documents.creator_code != :userCode THEN documents.creator_name ELSE id_size_shared.shared_to END sender_receiver FROM (\r\n" +
 				"		SELECT documents.id, documents.guid, documents.title, documents.type, documents.creator_code, documents.creator_name, " +
 				"				documents.creator_user_code, documents.creator_user_name, documents.creation_date, documents.remote_application, " +
@@ -1157,11 +1157,11 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
 				"							)\r\n" + 
 				"						)\r\n" + 
 				"						AND (\r\n" + 
-				"							:periodStart IS NULL\r\n" + 
+				"							CAST(:periodStart AS TIMESTAMP) IS NULL\r\n" + 
 				"							OR CAST(d.last_modified_date AS DATE) >= :periodStart\r\n" + 
 				"						)\r\n" + 
 				"						AND (\r\n" + 
-				"							:periodEnd IS NULL\r\n" + 
+				"							CAST(:periodEnd AS TIMESTAMP) IS NULL\r\n" + 
 				"							OR CAST(d.last_modified_date AS DATE) <= :periodEnd\r\n" + 
 				"						)\r\n" +
 				"						AND (:eformUseId IS NULL OR d.eform_use_id = :eformUseId)\r\n" +
