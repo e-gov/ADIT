@@ -38,18 +38,8 @@ public class TestEecMidSigning {
 	 */
 	private static final Logger LOGGER = Logger.getLogger(TestEecMidSigning.class);
 	
-	// @Autowired
-	// @Qualifier("PrepareSignatureEndpoint")
-	// PrepareSignatureEndpoint ep;
-	
 	@Autowired
-	DocumentService ds;
-	
-//	@Autowired
-//	UserService us;
-
-//	@Autowired
-//	DocumentTypeDAO dtdao;
+	private DocumentService ds;
 	
 	/**
 	 * Digidoc conf. to use.
@@ -58,26 +48,15 @@ public class TestEecMidSigning {
 			"src/main/resources/conf/adit-arendus-tomcat-local/jdigidoc.cfg");
 			
 	/**
-	 * Absolute path to signers signing certificate file. Got this with another 
+	 * Absolute path to signers signing certificate file. Got this with another
 	 * helper.
+	 * 
+	 * For auhentication and signing BDOC files new SIM cards are using ECC
+	 * prime 256v1 key set and for signing DDOC files RSA 2024 key set.
 	 */
-	String certFile = new File(
-			// Successful authentication, signing
-//			"src/test/resources/51001091072_sign_certificate.cer")
-		
-			// For auhentication and signing BDOC files new SIM cards are using
-			// ECC prime 256v1 key set and for signing DDOC files RSA 2024 key
-			// set.
+	private final String certFile = new File( 
 			"src/test/resources/11412090004_sign_certificate.cer")
 					.getAbsolutePath();
-	
-//	private static final String IDCODE = "51001091072";
-	
-//	/**
-//	 * For auhentication and signing BDOC files new SIM cards are using ECC
-//	 * prime 256v1 key set and for signing DDOC files RSA 2024 key set.
-//	 */
-//	private static final String IDCODE = "11412090004";
 	
 	/**
 	 * ADIT gets the document from DB and temp. stores here for signing logic.
@@ -94,16 +73,17 @@ public class TestEecMidSigning {
 		}
 		
 		LOGGER.warn("Temp. dir at - " + TestEecMidSigning.temporaryFilesDir);
+		
 	} // -TestEecMidSigning
 	
 	@Before
 	public void before() throws Exception {
 		
-		// pre-conf Digidoc
+		// Preconfigure Digidoc.
 		ConfigManager.init(jdigidoc_cfg.getAbsolutePath());
 		ConfigManager.addProvider();
 		
-		// check we have DocumentService
+		// Check we have DocumentService.
 		assertNotNull(ds);
 		
 	} // -before
@@ -111,18 +91,20 @@ public class TestEecMidSigning {
 	@Test
 	public void testName() throws Exception {		
 		
-		// just looked these up from DB manually
+		// Just looked these up from DB manually.
 //		Long documentId = ds.getDocumentDAO().getDocument(99999999901L).getId();
 		Long documentId = ds.getDocumentDAO().getDocument(888888888888L).getId();
 		LOGGER.info("Testing with documentId == " + documentId); 
 		
-		// reverse engineer this from CRT
+		// reverse engineer this from CRT - DocumentService checks this
 		AditUser xroadUser = new AditUser();
 		xroadUser.setUserCode(Util.getSubjectSerialNumberFromCert(
 				SignedDoc.readCertificate(certFile)));
 		LOGGER.info("xroad user from CRT is " + xroadUser.getUserCode());
 		
-		// turn off test-cert check
+		// Turn off test-cert check (you need to have test-certs in 
+		// jdigidoc*.jar
+		// NOTE Remember not to deploy this to live!
 		ds.getConfiguration().setDoCheckTestCert(Boolean.FALSE);
 		
 		// EXECUTE
@@ -131,13 +113,15 @@ public class TestEecMidSigning {
 				jdigidoc_cfg.getAbsolutePath(), temporaryFilesDir, xroadUser,
 				Boolean.TRUE);
 				
-		// request.prepareSignature.signer.notCurrentUser = Dokumendi
+		// "request.prepareSignature.signer.notCurrentUser = Dokumendi
 		// allkirjastamine ebaõnnestus, allkirjastaja peab olema sama isik, kes
-		// on infosüsteemi sisenenud.
+		// on infosüsteemi sisenenud."
+		// (This is why we reverse engineered the ID straight from CRT.)
 		assertFalse("request.prepareSignature.signer.notCurrentUser"
 				.equals(res.getErrorCode()));
 		
 		// request.saveDocument.testcertificate = Teenuse viga (Test ID-kaart)
+		// This will happen if you don-t setDoCheckTestCert(false)
 		assertFalse("request.saveDocument.testcertificate"
 				.equals(res.getErrorCode()));
 		
@@ -145,13 +129,5 @@ public class TestEecMidSigning {
 		assertTrue(res.isSuccess());
 		
 	} // -test
-	
-//	/**
-//	 * Helper to add a new user to DB.
-//	 * @param code
-//	 */
-//	private void addUser(String code) {
-//		us.addUser("51001091072", "51001091072", new Usertype("person"));
-//	}
 	
 }
