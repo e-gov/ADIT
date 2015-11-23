@@ -3860,7 +3860,7 @@ public class DocumentService {
                 // Save container to file.
                 String containerFileName = Util.generateRandomFileNameWithoutExtension();
                 containerFileName = temporaryFilesDir + File.separator + containerFileName + "_PSv1.adit";
-                sdoc.writeToFile(new File(containerFileName));
+                sdoc.writeToFile(new File(containerFileName));							// FIXME A - adit side fail entry
                 // Add signature container to document table
                 FileInputStream fileInputStream = null;
                 try {
