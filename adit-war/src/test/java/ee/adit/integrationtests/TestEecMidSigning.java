@@ -68,7 +68,7 @@ public class TestEecMidSigning {
 	private static final String temporaryFilesDir = System
 			.getProperty("java.io.tmpdir") + "adit";
 	
-	private static final Boolean doPreferBdoc = Boolean.FALSE;
+	private static final Boolean doPreferBdoc = Boolean.TRUE;
 	
 	public TestEecMidSigning() {
 		
@@ -156,8 +156,8 @@ public class TestEecMidSigning {
 		String digidocConfigFile = JDIGIDOC_CFG.getAbsolutePath();
 		
 		// CONFIRM
-		ds.confirmSignature(documentId, signatureFileName, requestPersonalCode,
-				currentUser, digidocConfigFile, temporaryFilesDir);
+//		ds.confirmSignature(documentId, signatureFileName, requestPersonalCode,
+//				currentUser, digidocConfigFile, temporaryFilesDir);
 		
 		// digidoc.extract.invalidSignature = DigiDoc faili salvestamine
 		// ebaõnnestus, kuna failist leiti kehtetu allkiri. Kehtetu allkirja
