@@ -20,8 +20,7 @@
         <!-- Edit this to match your destination environment -->
         <!--<resourceDir>ria-dev-weblogic</resourceDir>-->
         <!--<resourceDir>ria-test-weblogic</resourceDir>-->
-        <!--<resourceDir>ria-live-weblogic</resourceDir>-->
-        <!-- <resourceDir>dev-dev-weblogic</resourceDir> -->
+        <!--<resourceDir>ria-live-weblogic</resourceDir>-->        
     </properties>
 
     <dependencies>
@@ -30,6 +29,7 @@
             <artifactId>xtee-server</artifactId>
             <version>1.0</version>
             <scope>system</scope>
+            
             <systemPath>${basedir}/lib/xtee-server-1.0-RC1.jar</systemPath>
         </dependency>
         <dependency>
@@ -548,7 +548,7 @@
                         <include>target/adit/WEB-INF/adit.xsd</include>
                     </includes>
                     <token>@PRODUCER_NAME@</token>
-                    <value>${producerName}</value>
+                    <value>${producerName}</value>                    
                 </configuration>
             </plugin>
             <plugin>

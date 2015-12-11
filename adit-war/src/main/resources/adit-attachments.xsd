@@ -657,6 +657,12 @@
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="files" type="subDocumentFilesType" />
+			<xs:element name="signatures" type="documentSignatureListV1Type">
+				<xs:annotation>
+					<xs:documentation xml:lang="ee">Dokumendi allkirjade andmed</xs:documentation>						
+					<xs:documentation xml:lang="en">Metadata of document signatures</xs:documentation>						
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 

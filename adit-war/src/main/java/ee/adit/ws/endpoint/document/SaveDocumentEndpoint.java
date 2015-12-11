@@ -58,7 +58,6 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
     @Override
     protected Object invokeInternal(Object requestObject, int version) throws Exception {
         logger.debug("saveDocument invoked. Version: " + version);
-
         if (version == 1) {
             return v1(requestObject);
         } else {
@@ -117,6 +116,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 
             // All primary checks passed.
             logger.debug("Processing attachment with id: '" + attachmentID + "'");
+
             // Extract the SOAP message to a temporary file
             String base64EncodedFile = extractAttachmentXML(this.getRequestMessage(), attachmentID);
 
@@ -125,8 +125,10 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
                     .getConfiguration().getDeleteTemporaryFilesAsBoolean());
             logger.debug("Attachment unzipped to temporary file: " + xmlFile);
 
+
             // Extract large files from main document
             FileSplitResult splitResult = Util.splitOutTags(xmlFile, "data", false, false, true, true);
+
 
             // Decode base64-encoded files
             if ((splitResult.getSubFiles() != null) && (splitResult.getSubFiles().size() > 0)) {
@@ -156,8 +158,10 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
                 if (unmarshalledObject instanceof SaveDocumentRequestAttachment) {
                     SaveDocumentRequestAttachment document = (SaveDocumentRequestAttachment) unmarshalledObject;
 
+
                     // Check document metadata
                     this.getDocumentService().checkAttachedDocumentMetadataForNewDocument(document);
+
 
                     // Kas kasutajal on piisavalt vaba kettaruumi
                     long remainingDiskQuota = this.getUserService().getRemainingDiskQuota(user,
@@ -173,8 +177,8 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
                         creatorUserCode = header.getIsikukood();
                     }
 
-                 //   InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream(getDigidocConfigurationFile());
-                 //   String jdigidocCfgTmpFile = Util.createTemporaryFile(input, getConfiguration().getTempDir());
+                    //   InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream(getDigidocConfigurationFile());
+                    //   String jdigidocCfgTmpFile = Util.createTemporaryFile(input, getConfiguration().getTempDir());
 
                     if (document.getId() != null && document.getId() != 0) {
                         updatedExistingDocument = true;
@@ -305,15 +309,15 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
                 logger.debug("Adding exception message to response object.");
                 arrayOfMessage.getMessage().add(new Message("en", e.getMessage()));
                 errorMessage = "ERROR: " + e.getMessage();
-            } 
-	         else if(e instanceof DigiDocException 
+            }
+	         else if(e instanceof DigiDocException
 	        		&& (DocumentService.DIGIDOC_REVOKED_CERT_EXCPETION_CODE==((DigiDocException) e).getCode()
 	        			|| DocumentService.DIGIDOC_UNKNOWN_CERT_EXCPETION_CODE==((DigiDocException) e).getCode())
-	        		) { 
+	        		) {
 	        	if (DocumentService.DIGIDOC_REVOKED_CERT_EXCPETION_CODE==((DigiDocException) e).getCode()) {
 	        		arrayOfMessage.setMessage(this.getMessageService().getMessages("request.saveDocument.revokedcertificate", new Object[]{}));
 	        	} else if (DocumentService.DIGIDOC_UNKNOWN_CERT_EXCPETION_CODE==((DigiDocException) e).getCode()){
-	        		arrayOfMessage.setMessage(this.getMessageService().getMessages("request.saveDocument.unknowncertificate", new Object[]{}));  
+	        		arrayOfMessage.setMessage(this.getMessageService().getMessages("request.saveDocument.unknowncertificate", new Object[]{}));
 	        	}
 	        	errorMessage = "ERROR: " + e.getMessage();
 	        }

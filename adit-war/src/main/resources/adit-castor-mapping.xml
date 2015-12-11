@@ -831,6 +831,9 @@
 		<field name="files" type="ee.adit.pojo.OutputDocumentFile" collection="arraylist">
 			<bind-xml name="file" location="document/files"/>
 		</field>
+		<field name="signatures" type="ee.adit.pojo.Signature" collection="arraylist">
+			<bind-xml name="signature" location="document/signatures"/>
+		</field>		
 	</class>
 
 	<class name="ee.adit.pojo.SaveDocumentResponse">

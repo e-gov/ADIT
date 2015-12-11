@@ -1,5 +1,55 @@
 package ee.adit.service;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.StringBufferInputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.security.cert.X509Certificate;
+import java.sql.Clob;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+
+import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
+import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
+import org.apache.fop.apps.MimeConstants;
+import org.apache.log4j.Logger;
+import org.hibernate.FlushMode;
+import org.hibernate.HibernateException;
+import org.hibernate.LockMode;
+import org.hibernate.LockOptions;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.springframework.context.MessageSource;
+import org.springframework.dao.DataRetrievalFailureException;
+import org.springframework.orm.hibernate3.HibernateCallback;
+import org.springframework.transaction.annotation.Transactional;
+
 import dvk.api.container.ArrayOfSignature;
 import dvk.api.container.LetterMetaData;
 import dvk.api.container.Metaxml;
@@ -19,37 +69,48 @@ import dvk.api.ml.PojoMessage;
 import dvk.api.ml.PojoMessageRecipient;
 import dvk.api.ml.PojoSettings;
 import ee.adit.ContainerVer2_1Sender;
-import ee.adit.dao.*;
+import ee.adit.dao.AditUserDAO;
+import ee.adit.dao.DocumentDAO;
+import ee.adit.dao.DocumentFileDAO;
+import ee.adit.dao.DocumentHistoryDAO;
+import ee.adit.dao.DocumentSharingDAO;
+import ee.adit.dao.DocumentTypeDAO;
+import ee.adit.dao.DocumentWfStatusDAO;
 import ee.adit.dao.dvk.DvkDAO;
-import ee.adit.dao.pojo.*;
+import ee.adit.dao.pojo.AditUser;
+import ee.adit.dao.pojo.Document;
+import ee.adit.dao.pojo.DocumentFile;
+import ee.adit.dao.pojo.DocumentHistory;
+import ee.adit.dao.pojo.DocumentSharing;
+import ee.adit.dao.pojo.DocumentType;
 import ee.adit.dvk.DvkReceiver;
 import ee.adit.dvk.DvkReceiverFactory;
 import ee.adit.dvk.DvkSender;
 import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditInternalException;
-import ee.adit.pojo.*;
-import ee.adit.util.*;
-import ee.sk.digidoc.*;
+import ee.adit.pojo.ArrayOfDataFileHash;
+import ee.adit.pojo.ArrayOfFileType;
+import ee.adit.pojo.DataFileHash;
+import ee.adit.pojo.OutputDocumentFile;
+import ee.adit.pojo.PersonName;
+import ee.adit.pojo.PrepareSignatureInternalResult;
+import ee.adit.pojo.SaveDocumentRequestAttachment;
+import ee.adit.pojo.SaveItemInternalResult;
+import ee.adit.util.Configuration;
+import ee.adit.util.DigiDocExtractionResult;
+import ee.adit.util.SimplifiedDigiDocParser;
+import ee.adit.util.StartEndOffsetPair;
+import ee.adit.util.Util;
+import ee.sk.digidoc.CertValue;
+import ee.sk.digidoc.DataFile;
+import ee.sk.digidoc.DigiDocException;
 import ee.sk.digidoc.Signature;
+import ee.sk.digidoc.SignatureProductionPlace;
+import ee.sk.digidoc.SignatureValue;
+import ee.sk.digidoc.SignedDoc;
 import ee.sk.digidoc.factory.DigiDocGenFactory;
 import ee.sk.digidoc.factory.SAXDigiDocFactory;
 import ee.sk.utils.ConfigManager;
-
-import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
-import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
-import org.apache.fop.apps.MimeConstants;
-import org.apache.log4j.Logger;
-import org.hibernate.*;
-import org.springframework.context.MessageSource;
-import org.springframework.dao.DataRetrievalFailureException;
-import org.springframework.orm.hibernate3.HibernateCallback;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.io.*;
-import java.security.cert.X509Certificate;
-import java.sql.Clob;
-import java.sql.SQLException;
-import java.util.*;
 
 /**
  * Implements business logic for document processing. Provides methods for
@@ -453,8 +514,8 @@ public class DocumentService {
         }
         logger.debug("Signed documents check is finished");
     }
-    
-    
+
+
     /**
      * Checks if document metadata is sufficient and correct for creating a new
      * document.
@@ -530,7 +591,7 @@ public class DocumentService {
         }
     }
 
-    
+
     /**
      * Retrieves a list of valid document types.
      *
@@ -642,6 +703,30 @@ public class DocumentService {
                 }
                 document.setDocument(parent);
 
+
+                // if user to do reply or forward document than copy signature container to new document
+                if (attachmentDocument.getSignatures() != null && !attachmentDocument.getSignatures().isEmpty()) {
+                	for (ee.adit.pojo.Signature signature : attachmentDocument.getSignatures()) {
+                		ee.adit.dao.pojo.Signature sig = new ee.adit.dao.pojo.Signature();
+                		sig.setCity(signature.getCity());
+                		sig.setCountry(signature.getCountry());
+                		sig.setSignerRole(signature.getManifest());
+                		sig.setSignerCode(signature.getSignerCode());
+                		sig.setSignerName(signature.getSignerName());
+                		sig.setCounty(signature.getState());
+                		sig.setPostIndex(signature.getZip());
+                		sig.setSigningDate(signature.getSigningDate());
+                		sig.setUserCode(signature.getUserCode());
+                		sig.setUserName(signature.getUserName());
+                        sig.setDocument(document);
+                        document.getSignatures().add(sig);
+                	}
+                	document.setSigned(true);
+                    document.setLocked(true);
+                    document.setLockingDate(new Date());
+                }
+
+
                 if ((attachmentDocument.getFiles() != null) && (attachmentDocument.getFiles().size() == 1)
                         && ((document.getDocumentFiles() == null) || (document.getDocumentFiles().size() == 0))) {
                     OutputDocumentFile file = attachmentDocument.getFiles().get(0);
@@ -653,6 +738,8 @@ public class DocumentService {
                     // container as a regular file.
                     if (((file.getId() == null) || (file.getId() <= 0)) &&
                     		("ddoc".equalsIgnoreCase(extension) || Util.isBdocExtension(extension))) {
+
+
                         DigiDocExtractionResult extractionResult = extractDigiDocContainer(file.getSysTempFile(), digidocConfigFile);
                         if (extractionResult.isSuccess()) {
                             file.setFileType(FILETYPE_NAME_SIGNATURE_CONTAINER);
@@ -1461,7 +1548,7 @@ public class DocumentService {
                         }
                         is.close();
                         dataWriter.close();
-                        
+
                         dvkMessageToUpdate.setData(dataWriter.toString());
 
                         // Commit to DVK database
@@ -2433,7 +2520,7 @@ public class DocumentService {
                         String sharingUserCode = documentSharing.getUserCode();
                         String sharingUserCodeWithoutCountryPrefix = Util.removeCountryPrefix(sharingUserCode);
                         long sharingDvkStatus = (documentSharing.getDocumentDvkStatus() == null) ? 0 : documentSharing.getDocumentDvkStatus().longValue();
-                                                
+
                         if (sharingUserCodeWithoutCountryPrefix.equalsIgnoreCase(messageRecipient.getRecipientOrgCode())
                                 || sharingUserCode.equalsIgnoreCase(messageRecipient.getRecipientOrgCode())
                                 || sharingUserCodeWithoutCountryPrefix.equalsIgnoreCase(messageRecipient.getRecipientPersonCode())
@@ -2460,12 +2547,12 @@ public class DocumentService {
                                 this.getDocumentSharingDAO().update(documentSharing, true);
                             }
                         }
-                        
+
                         if (!documentSharing.getDocumentDvkStatus().equals(DocumentService.DVK_STATUS_SENT)) {
                             allDocumentSharingsSent = false;
                         }
                     }
-                    
+
                     // If all documentSharings statuses are "sent" then update
                     // the document's dvk status
                     if (allDocumentSharingsSent) {
@@ -3337,7 +3424,7 @@ public class DocumentService {
                 }
                 is.close();
                 dataWriter.close();
-                
+
                 dvkMessageToUpdate.setData(dataWriter.toString());
 
                 // Commit to DVK database
@@ -3691,7 +3778,7 @@ public class DocumentService {
                 // who executed current query
                 String certPersonalIdCode = Util.getSubjectSerialNumberFromCert(cert);
                 String userCodeWithoutCountryPrefix = Util.getPersonalIdCodeWithoutCountryPrefix(xroadUser.getUserCode());
-                
+
                 if (!userCodeWithoutCountryPrefix.equalsIgnoreCase(certPersonalIdCode)) {
                     logger.info("Attempted to sign document " + documentId + " by person \"" + certPersonalIdCode
                             + "\" while logged in as person \"" + userCodeWithoutCountryPrefix + "\"");
@@ -3749,13 +3836,13 @@ public class DocumentService {
                             containerAsStream = new ByteArrayInputStream(signatureContainer.getFileData());
                             isBdoc = Util.isBdocFile(signatureContainer.getFileName());
                         }
-                          
+
                         sdoc = factory.readSignedDocFromStreamOfType(containerAsStream, isBdoc);
 
                     } finally {
                         Util.safeCloseStream(containerAsStream);
                     }
-                    
+
                     // Make sure that document is not already signed
                     // by the same person.
                     int removeSignatureAtIndex = -1;
@@ -4098,8 +4185,8 @@ public class DocumentService {
 
         return result;
     }
-    
-    
+
+
     /**
      * Adds user signature data to pending signature in specified documents
      * signature container. After adding signature to container, gets a
@@ -4136,7 +4223,7 @@ public class DocumentService {
             ConfigManager.init(digidocConfigFile);
             SAXDigiDocFactory factory = new SAXDigiDocFactory();
             Boolean isBdoc = Util.isBdocFile(signatureContainerDraft.getFileName());
-            
+
             SignedDoc sdoc = factory.readSignedDocFromStreamOfType(new ByteArrayInputStream(signatureContainerDraft.getFileData()), isBdoc);
 
             File signatureFile = new File(signatureFileName);
@@ -4160,7 +4247,7 @@ public class DocumentService {
                 Util.safeCloseStream(fs);
                 fs = null;
             }
-            
+
             // Find unfinished Signature from container
             Signature sig = null;
             int activeSignatureIndex = -1;
@@ -4172,7 +4259,7 @@ public class DocumentService {
                     break;
                 }
             }
-            
+
             if (sig == null) {
                 AditCodedException aditCodedException = new AditCodedException("request.confirmSignature.signatureNotPrepared");
                 aditCodedException.setParameters(new Object[]{});
@@ -4750,7 +4837,7 @@ public class DocumentService {
         return result;
     }
 
-    
+
     /**
      * Finds signature container from document files list.
      *
@@ -4917,8 +5004,8 @@ public class DocumentService {
         }
         return result;
     }
-    
-    
+
+
     /**
      * Helper method to determine if document has been sent to given user.
      *
@@ -4944,8 +5031,8 @@ public class DocumentService {
 
         return result;
     }
-    
-    
+
+
     /**
      * Helper method to determine if file with given type ID should be returned
      * when given list of file types was requested.
@@ -4980,8 +5067,8 @@ public class DocumentService {
         }
         return result;
     }
-    
-    
+
+
     public MessageSource getMessageSource() {
         return messageSource;
     }

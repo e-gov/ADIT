@@ -2439,7 +2439,13 @@
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="files" type="subDocumentFilesType" />
+					<xs:element name="files" type="subDocumentFilesType" /> 
+					<xs:element name="signatures" type="documentSignatureListV1Type">
+						<xs:annotation>
+							<xs:documentation xml:lang="ee">Dokumendi allkirjade andmed</xs:documentation>
+							<xs:documentation xml:lang="en">Metadata of document signatures</xs:documentation>
+						</xs:annotation>
+					</xs:element>					
 				</xs:sequence>
 			</xs:complexType>
 
@@ -4942,7 +4948,7 @@
 	<wsdl:service name="aditService">
 		<wsdl:port binding="tns:aditSoap11" name="aditSoap11">
 			<xtee:title>ADIT</xtee:title>
-			<soap:address location="http://TURVASERVER/cgi-bin/consumer_proxy" />
+			<soap:address location="http://TURVASERVER/cgi-bin/consumer_proxy" />			
 			<xtee:address producer="@PRODUCER_NAME@"/>
 		</wsdl:port>
 	</wsdl:service>

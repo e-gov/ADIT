@@ -14,13 +14,15 @@ public class SaveDocumentRequestAttachment {
 
     private Long previousDocumentID;
 
-    private Long eformUseId; 
+    private Long eformUseId;
 
     private String content;
 
     private List<OutputDocumentFile> files;
 
-    public Long getId() {
+    private List<Signature> signatures;
+
+	public Long getId() {
         return id;
     }
 
@@ -50,6 +52,14 @@ public class SaveDocumentRequestAttachment {
 
     public void setFiles(List<OutputDocumentFile> files) {
         this.files = files;
+    }
+
+    public List<Signature> getSignatures() {
+        return signatures;
+    }
+
+    public void setSignatures(List<Signature> signatures) {
+        this.signatures = signatures;
     }
 
     public String getDocumentType() {
