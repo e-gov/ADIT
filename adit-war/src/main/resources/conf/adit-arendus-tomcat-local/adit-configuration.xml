@@ -23,7 +23,7 @@
 	<bean id="configuration" class="ee.adit.util.Configuration">
 		<property name="xteeProducerName" value="@PRODUCER_NAME@" />
 		<property name="getJoinedMaxResults" value="10"/>
-		<property name="tempDir" value="C:\Users\aleksandr.potapov\apache-tomcat-ADIT\temp"/>
+		<property name="tempDir" value="C:\temp\adit"/>
 		<property name="deleteTemporaryFiles" value="true"/>
 		<property name="schedulerEventTypeName" value="Minu dokumentide teavitus"/>
 		<property name="dvkResponseMessageStylesheet" value="DVKresponseMessage.xsl"/>
