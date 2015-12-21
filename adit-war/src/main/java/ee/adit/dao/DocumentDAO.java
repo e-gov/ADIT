@@ -63,8 +63,6 @@ import ee.adit.service.DocumentService;
 import ee.adit.service.MessageService;
 import ee.adit.util.SimplifiedDigiDocParser;
 import ee.adit.util.Util;
-import ee.sk.digidoc.DigiDocException;
-import ee.sk.utils.ConfigManager;
 
 /**
  * Document data access class. Provides methods for retrieving and manipulating
@@ -364,15 +362,12 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
         if (includeFileContents && (doc.getSigned() != null) && doc.getSigned() && (signatureContainerFile != null)) {
         	try {
         		logger.debug("digidocConfigFile: " + digidocConfigFile);
-                ConfigManager.init(digidocConfigFile);
 
         		SimplifiedDigiDocParser.extractFileContentsFromContainer(
     				new ByteArrayInputStream(signatureContainerFile.getFileData()),
 	        		outputFilesList, temporaryFilesDir, Util.isBdocFile(signatureContainerFile.getFileName()));
         	} catch (IOException ex) {
                  throw new HibernateException(ex);
-        	}catch (DigiDocException ex) {
-                throw new HibernateException(ex);
         	}
         }
 

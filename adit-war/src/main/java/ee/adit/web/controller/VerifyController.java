@@ -13,7 +13,6 @@ import org.springframework.web.servlet.mvc.AbstractController;
 import ee.adit.service.DocumentService;
 import ee.adit.util.Configuration;
 import ee.adit.util.Util;
-import ee.sk.utils.ConfigManager;
 
 /**
  * Controller class for monitoring view.

@@ -225,13 +225,13 @@
             <systemPath>${basedir}/lib/bcprov-jdk15on-148.jar</systemPath>
         </dependency>
         <!-- DigiDoc -->
-        <dependency>
+        <!-- <dependency>
             <groupId>ee.sk.digidoc</groupId>
             <artifactId>DigiDocLib</artifactId>
             <version>3.9.0-726</version>
             <scope>system</scope>
             <systemPath>${basedir}/lib/jdigidoc-3.9.0-726.jar</systemPath>
-        </dependency>
+        </dependency> -->
         <dependency>
             <groupId>xerces</groupId>
             <artifactId>impl</artifactId>
@@ -240,6 +240,14 @@
             <systemPath>${basedir}/lib/xercesImpl-2.9.1.jar</systemPath>
         </dependency>
 
+		<!-- DigiDoc4j -->
+		<dependency>
+			<groupId>org.digidoc4j</groupId>
+            <artifactId>DigiDoc4j</artifactId>
+            <version>1.0.0</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/digidoc4j-1.0.0.jar</systemPath>
+		</dependency>
 
         <dependency>
             <groupId>xml</groupId>
