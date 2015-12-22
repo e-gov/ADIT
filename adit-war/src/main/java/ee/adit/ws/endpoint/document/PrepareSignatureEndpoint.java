@@ -26,7 +26,6 @@ import ee.adit.service.UserService;
 import ee.adit.util.CustomXTeeHeader;
 import ee.adit.util.Util;
 import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
-import ee.sk.utils.ConfigManager;
 import ee.webmedia.xtee.annotation.XTeeService;
 
 /**
@@ -90,9 +89,11 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
             InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream(getDigidocConfigurationFile());
             String jdigidocCfgTmpFile = Util.createTemporaryFile(input, getConfiguration().getTempDir());
             logger.debug("JDigidoc.cfg file created as a temporary file: '" + jdigidocCfgTmpFile + "'");
-            //jDigiDoc does not add provider when preparing signature, but uses it causing error. So add provider manualy
-        	ConfigManager.init(jdigidocCfgTmpFile);
-        	ConfigManager.addProvider();
+            
+            // jDigiDoc does not add provider when preparing signature, but uses it causing error. So add provider manually
+        	// ConfigManager.init(jdigidocCfgTmpFile);
+        	// ConfigManager.addProvider();
+        	
             PrepareSignatureRequest request = (PrepareSignatureRequest) requestObject;
             if (request != null) {
                 documentId = request.getDocumentId();
@@ -205,6 +206,7 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
         }
 
         super.logCurrentRequest(documentId, requestDate.getTime(), additionalInformationForLog);
+        
         return response;
     }
 

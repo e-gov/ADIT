@@ -30,15 +30,12 @@ import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.*;
 import ee.adit.util.*;
 import ee.sk.digidoc.*;
-import ee.sk.digidoc.Signature;
-import ee.sk.digidoc.factory.DigiDocGenFactory;
-import ee.sk.digidoc.factory.SAXDigiDocFactory;
-import ee.sk.utils.ConfigManager;
 
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.fop.apps.MimeConstants;
 import org.apache.log4j.Logger;
+import org.digidoc4j.exceptions.DigiDoc4JException;
 import org.hibernate.*;
 import org.springframework.context.MessageSource;
 import org.springframework.dao.DataRetrievalFailureException;
@@ -4485,10 +4482,10 @@ public class DocumentService {
      * @throws SQLException     Will be thrown if reading file contents from database fails
      * @throws IOException      Will be thrown if saving DigiDoc container fails
      */
-    public static OutputDocumentFile createSignatureContainerFromDocumentFiles(
+	public static OutputDocumentFile createSignatureContainerFromDocumentFiles(
             final Document doc,
             final String digidocConfigFile,
-            final String temporaryFilesDir) throws DigiDocException, SQLException, IOException {
+            final String temporaryFilesDir) throws DigiDoc4JException, SQLException, IOException {
 
         ConfigManager.init(digidocConfigFile);
         SignedDoc sdoc = new SignedDoc(SignedDoc.FORMAT_DIGIDOC_XML, SignedDoc.VERSION_1_3);
