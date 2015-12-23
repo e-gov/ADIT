@@ -29,12 +29,16 @@ import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.*;
 import ee.adit.util.*;
-import ee.sk.digidoc.*;
 
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.fop.apps.MimeConstants;
 import org.apache.log4j.Logger;
+import org.digidoc4j.Container;
+import org.digidoc4j.ContainerBuilder;
+import org.digidoc4j.Signature;
+import org.digidoc4j.ValidationResult;
+import org.digidoc4j.X509Cert;
 import org.digidoc4j.exceptions.DigiDoc4JException;
 import org.hibernate.*;
 import org.springframework.context.MessageSource;
@@ -382,55 +386,58 @@ public class DocumentService {
      * @param digidocConfigFile conf file
      * @throws Exception
      */
-    public void verifySignedDocuments(String digidocConfigFile) throws Exception {
+    public void verifySignedDocuments() throws Exception {
         logger.debug("Starting to check signed documents");
-        ConfigManager.init(digidocConfigFile);
-        List<Document> signedDocuments = getDocumentDAO()
-                .getSignedDocuments();
+        
+        List<Document> signedDocuments = getDocumentDAO().getSignedDocuments();
         logger.debug("Found signed documents: " + signedDocuments.size());
-        SAXDigiDocFactory factory = new SAXDigiDocFactory();
-        InputStream stream = null;
+        
         for (Document document : signedDocuments) {
             logger.debug("Checking signed document with id: " + document.getId());
+            
             //DocumentFile signatureContainer = findSignatureContainer(document);
             if ((document != null) && (document.getDocumentFiles() != null)) {
                 for (DocumentFile file : document.getDocumentFiles()) {
                     if (file.getDocumentFileTypeId() == FILETYPE_SIGNATURE_CONTAINER && !file.getDeleted()) {
-                        logger.debug("Signature documentFile id: "
-                                + file.getId());
+                        logger.debug("Signature documentFile id: " + file.getId());
+                        
+                        InputStream stream = null;
                         try {
-                            stream = new ByteArrayInputStream(file.getFileData());
-                            Boolean isBdoc = Util.isBdocFile(file.getFileName());
-                            SignedDoc sdoc = factory.readSignedDocFromStreamOfType(
-                                    stream, isBdoc, null);
-                            ArrayList<Exception> errs = sdoc.verify(true, true);
-                            if (errs == null || errs.size() == 0) {
-                                ArrayList<Signature> signatures = sdoc.getSignatures();
+                        	stream = new ByteArrayInputStream(file.getFileData());
+                            
+                            String containerType = Util.isBdocFile(file.getFileName()) ? ContainerBuilder.BDOC_CONTAINER_TYPE : ContainerBuilder.DDOC_CONTAINER_TYPE;
+                            Container container = ContainerBuilder.aContainer(containerType).fromStream(stream).build();
+                            
+                            ValidationResult validationResult = container.validate();
+                            if (validationResult.isValid()) {
+                                List<Signature> signatures = container.getSignatures();
                                 if (signatures != null && signatures.size() > 0) {
-                                    boolean hadTestSignature = false;
+                                    // boolean hadTestSignature = false;
+                                    
                                     for (Signature signature : signatures) {
-                                        CertValue signerCertificate = signature.getCertValueOfType(CertValue.CERTVAL_TYPE_SIGNER);
-                                        X509Certificate cert = null;
-                                        if ((signerCertificate != null) && (signerCertificate.getCert() != null)) {
-                                            cert = signerCertificate.getCert();
+                                    	X509Certificate cert = null;
+                                        
+                                        X509Cert signingSertificate = signature.getSigningCertificate();
+                                        if ((signingSertificate != null) && (signingSertificate.getX509Certificate() != null)) {
+                                            cert = signingSertificate.getX509Certificate();
                                         }
-                                        if (DigiDocGenFactory.isTestCard(cert)) {
+                                        
+                                        // FIXME How do we check if it's a test card with the new library? And do we really need it?
+                                        /*if (DigiDocGenFactory.isTestCard(cert)) {
                                             hadTestSignature = true;
-                                            logger.error("Signed document has test signature. DocumentId: " + document.getId() + " Signature serialnumber: " + Util.getSubjectSerialNumberFromCert(cert));
-                                        }
+                                            logger.error("Signed document has test signature. DocumentId: " + document.getId() +
+                                            			 " Signature serialnumber: " + Util.getSubjectSerialNumberFromCert(cert));
+                                        }*/
 
                                     }
-                                    if (!hadTestSignature) {
+                                    
+                                   /* if (!hadTestSignature) {
                                         logger.debug("Signed document is OK. DocumentId: " + document.getId());
-                                    }
+                                    }*/
                                 }
                             } else {
-                                for (Exception e : errs) {
-                                    if (e instanceof DigiDocException) {
-                                        DigiDocException de = (DigiDocException) e;
-                                        logger.error("Signed document with DocumentId: " + document.getId() + " has error. DigiDocException errorCode: "
-                                                + de.getCode());
-                                    }
+                                for (DigiDoc4JException e : validationResult.getErrors()) {
+                                    logger.error("Signed document with DocumentId: " + document.getId() + " has error. Error code: " + e.getErrorCode());
                                     logger.error("Signed document has errors. DocumentId: " + document.getId(), e);
                                 }
                             }
@@ -444,6 +451,7 @@ public class DocumentService {
             }
 
         }
+        
         logger.debug("Signed documents check is finished");
     }
 
@@ -4657,7 +4665,7 @@ public class DocumentService {
 
         if (digiDocSignature.getSignedProperties() != null) {
             if (digiDocSignature.getSignedProperties().getSignatureProductionPlace() != null) {
-                ee.sk.digidoc.SignatureProductionPlace location = digiDocSignature.getSignedProperties().getSignatureProductionPlace();
+                SignatureProductionPlace location = digiDocSignature.getSignedProperties().getSignatureProductionPlace();
                 result.setCity(location.getCity());
                 result.setCountry(location.getCountryName());
                 result.setCounty(location.getStateOrProvince());

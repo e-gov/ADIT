@@ -1490,7 +1490,9 @@ public final class Util {
 				throw new IOException("Could not completely read file " + file.getName());
 			}
 		} finally {
-			is.close();
+			if (is != null) {
+				is.close();
+			}
 		}
         
         return bytes;

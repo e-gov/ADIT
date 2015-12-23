@@ -24,8 +24,7 @@
 	</bean>
 	<bean id="verifyController" class="ee.adit.web.controller.VerifyController">
 		<property name="documentService" ref="documentService" />
-		<property name="checkSignatures" ref="checkSignatures" />	
-		<property name="digidocConfigurationFile" value="jdigidoc.cfg" />
+		<property name="checkSignatures" ref="checkSignatures" />
 		<property name="configuration" ref="configuration" />
 	</bean>
 						
