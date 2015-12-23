@@ -168,7 +168,7 @@ public final class SimplifiedDigiDocParser {
 		
 		Hashtable<String, StartEndOffsetPair> result = new Hashtable<String, StartEndOffsetPair>();
 		
-		Container container = ContainerBuilder.aContainer("BDOC").fromExistingFile(pathToDigiDoc).build();
+		Container container = ContainerBuilder.aContainer(ContainerBuilder.BDOC_CONTAINER_TYPE).fromExistingFile(pathToDigiDoc).build();
 		List<DataFile> dataFiles = container.getDataFiles();
 		
 		FileOutputStream dummyFileOutStream = null;
@@ -344,7 +344,7 @@ public final class SimplifiedDigiDocParser {
 
 		long totalBytesExtracted = 0L;
 
-		Container container = ContainerBuilder.aContainer("BDOC").fromStream(ddocContainerAsStream).build();
+		Container container = ContainerBuilder.aContainer(ContainerBuilder.BDOC_CONTAINER_TYPE).fromStream(ddocContainerAsStream).build();
 		for (DataFile df : container.getDataFiles()) {
 			for (OutputDocumentFile file : files) {
 				if (df.getId().equals(file.getDdocDataFileId())) {

@@ -1,7 +1,6 @@
 package ee.adit.util;
 
 import java.io.BufferedInputStream;
-
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -20,6 +19,7 @@ import java.io.Writer;
 import java.lang.reflect.Field;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -66,8 +66,6 @@ import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.Message;
 import ee.adit.pojo.PersonName;
 import ee.adit.service.UserService;
-
-import java.security.cert.X509Certificate;
 
 /**
  * Class providing static utility / helper methods.
@@ -1471,24 +1469,30 @@ public final class Util {
      * @throws IOException
      */
     public static byte[] getBytesFromFile(File file) throws IOException {
-        InputStream is = new FileInputStream(file);
+    	byte[] bytes = null;
+    	
+        InputStream is = null;
+		try {
+			is = new FileInputStream(file);
+			
+			// Get the size of the file
+			long length = file.length();
 
-        // Get the size of the file
-        long length = file.length();
+			bytes = new byte[(int) length];
 
-        byte[] bytes = new byte[(int) length];
+			int offset = 0;
+			int numRead = 0;
+			while (offset < bytes.length && (numRead = is.read(bytes, offset, bytes.length - offset)) >= 0) {
+			    offset += numRead;
+			}
 
-        int offset = 0;
-        int numRead = 0;
-        while (offset < bytes.length && (numRead = is.read(bytes, offset, bytes.length - offset)) >= 0) {
-            offset += numRead;
-        }
-
-        if (offset < bytes.length) {
-            throw new IOException("Could not completely read file " + file.getName());
-        }
-
-        is.close();
+			if (offset < bytes.length) {
+				throw new IOException("Could not completely read file " + file.getName());
+			}
+		} finally {
+			is.close();
+		}
+        
         return bytes;
     }
 
@@ -1534,10 +1538,8 @@ public final class Util {
      * Determines if given String is null or empty (zero length).
      * Whitespace is not treated as empty string.
      *
-     * @param stringToEvaluate
-     * 		String that will be checked for having NULL or empty value
-     * @return
-     * 		true, if input String is NULL or has zero length
+     * @param stringToEvaluate String that will be checked for having NULL or empty value
+     * @return true, if input String is NULL or has zero length
      */
     public static boolean isNullOrEmpty(String stringToEvaluate) {
     	return ((stringToEvaluate == null) || stringToEvaluate.isEmpty());
@@ -1546,15 +1548,13 @@ public final class Util {
     /**
      * Determines if given class contains a field with specified name.
      *
-     * @param targetClass
-     * 		Class to be examined
-     * @param fieldName
-     * 		Name of field that will be seeked from class
-     * @return
-     * 		{@code true} if given class contains a field with given name.
+     * @param targetClass class to be examined
+     * @param fieldName name of field that will be searched in class
+     * @return {@code true} if given class contains a field with given name
      */
-    public static boolean classContainsField(Class targetClass, String fieldName) {
+    public static boolean classContainsField(Class<?> targetClass, String fieldName) {
     	Field[] declaredFields = targetClass.getDeclaredFields();
+    	
     	boolean found = false;
     	for (int i = 0; i < declaredFields.length; i++) {
     		if (declaredFields[i].getName().compareTo(fieldName) == 0) {
@@ -1562,6 +1562,7 @@ public final class Util {
     			break;
     		}
     	}
+    	
     	return found;
     }
 
