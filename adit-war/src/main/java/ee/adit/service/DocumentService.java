@@ -39,6 +39,7 @@ import org.digidoc4j.ContainerBuilder;
 import org.digidoc4j.Signature;
 import org.digidoc4j.ValidationResult;
 import org.digidoc4j.X509Cert;
+import org.digidoc4j.X509Cert.SubjectName;
 import org.digidoc4j.exceptions.DigiDoc4JException;
 import org.hibernate.*;
 import org.springframework.context.MessageSource;
@@ -411,8 +412,9 @@ public class DocumentService {
                             ValidationResult validationResult = container.validate();
                             if (validationResult.isValid()) {
                                 List<Signature> signatures = container.getSignatures();
+                                
                                 if (signatures != null && signatures.size() > 0) {
-                                    // boolean hadTestSignature = false;
+                                    boolean hadTestSignature = false;
                                     
                                     for (Signature signature : signatures) {
                                     	X509Certificate cert = null;
@@ -422,18 +424,16 @@ public class DocumentService {
                                             cert = signingSertificate.getX509Certificate();
                                         }
                                         
-                                        // FIXME How do we check if it's a test card with the new library? And do we really need it?
-                                        /*if (DigiDocGenFactory.isTestCard(cert)) {
+                                        if (Util.isTestCard(cert)) {
                                             hadTestSignature = true;
                                             logger.error("Signed document has test signature. DocumentId: " + document.getId() +
-                                            			 " Signature serialnumber: " + Util.getSubjectSerialNumberFromCert(cert));
-                                        }*/
-
+                                            			 "; Signature serialnumber: " + Util.getSubjectSerialNumberFromCert(cert));
+                                        }
                                     }
                                     
-                                   /* if (!hadTestSignature) {
+                                    if (!hadTestSignature) {
                                         logger.debug("Signed document is OK. DocumentId: " + document.getId());
-                                    }*/
+                                    }
                                 }
                             } else {
                                 for (DigiDoc4JException e : validationResult.getErrors()) {
@@ -449,22 +449,20 @@ public class DocumentService {
                     }
                 }
             }
-
         }
         
         logger.debug("Signed documents check is finished");
     }
 
     /**
-     * Checks if document metadata is sufficient and correct for creating a new
-     * document.
+     * Checks if document metadata is sufficient and correct for creating a new document.
      *
      * @param document document metadata
      * @throws AditCodedException if metadata is insuffidient or incorrect
      */
-    public void checkAttachedDocumentMetadataForNewDocument(SaveDocumentRequestAttachment document)
-            throws AditCodedException {
+    public void checkAttachedDocumentMetadataForNewDocument(SaveDocumentRequestAttachment document) throws AditCodedException {
         logger.debug("Checking attached document metadata for new document...");
+        
         if (document != null) {
 
             logger.debug("Checking GUID: " + document.getGuid());
@@ -4656,49 +4654,49 @@ public class DocumentService {
      * Creates instance of {@link ee.adit.dao.pojo.Signature} and populates it
      * with data from given DigiDoc Signature object.
      *
-     * @param digiDocSignature DigiDoc Signature object
-     * @return Local signature object that can be added to document and saved to
-     *         database
+     * @param digiDocSignature DigiDoc4j Signature object
+     * @return Local signature object that can be added to document and saved to database
      */
     public ee.adit.dao.pojo.Signature convertDigiDocSignatureToLocalSignature(Signature digiDocSignature) throws AditCodedException {
         ee.adit.dao.pojo.Signature result = new ee.adit.dao.pojo.Signature();
 
-        if (digiDocSignature.getSignedProperties() != null) {
-            if (digiDocSignature.getSignedProperties().getSignatureProductionPlace() != null) {
-                SignatureProductionPlace location = digiDocSignature.getSignedProperties().getSignatureProductionPlace();
-                result.setCity(location.getCity());
-                result.setCountry(location.getCountryName());
-                result.setCounty(location.getStateOrProvince());
-                result.setPostIndex(location.getPostalCode());
-            }
-            if ((digiDocSignature.getSignedProperties().countClaimedRoles() > 0) && (digiDocSignature.getSignedProperties().getClaimedRole(0) != null)) {
-                result.setSignerRole(digiDocSignature.getSignedProperties().getClaimedRole(0));
-            }
-            result.setSigningDate(digiDocSignature.getSignedProperties().getSigningTime());
+        result.setCity(digiDocSignature.getCity());
+        result.setCountry(digiDocSignature.getCountryName());
+        result.setCounty(digiDocSignature.getStateOrProvince());
+        result.setPostIndex(digiDocSignature.getPostalCode());
+        
+        if (digiDocSignature.getSignerRoles() != null && digiDocSignature.getSignerRoles().size() > 0) {
+        	result.setSignerRole(digiDocSignature.getSignerRoles().get(0));
         }
+        
+        result.setSigningDate(digiDocSignature.getClaimedSigningTime());
 
-        CertValue signerCertificate = digiDocSignature.getCertValueOfType(CertValue.CERTVAL_TYPE_SIGNER);
-        if ((signerCertificate != null) && (signerCertificate.getCert() != null)) {
-            X509Certificate cert = signerCertificate.getCert();
-            // String signerCode = SignedDoc.getSubjectPersonalCode(cert);
+        X509Cert signingCertificate = digiDocSignature.getSigningCertificate();
+        if ((signingCertificate != null) && (signingCertificate.getX509Certificate() != null)) {
+            X509Certificate cert = signingCertificate.getX509Certificate();
+            
             String signerCode = Util.getSubjectSerialNumberFromCert(cert);
             logger.debug("signerCode" + signerCode);
+            
             String signerCountryCode = getSubjectCountryCode(cert);
             logger.debug("signerCountryCode: " + signerCountryCode);
+            
             String signerCodeWithCountryPrefix = "EE" + signerCode;
             if (!Util.isNullOrEmpty(signerCode) && !Util.isNullOrEmpty(signerCountryCode)) {
                 signerCodeWithCountryPrefix = (signerCode.startsWith(signerCountryCode)) ? signerCode : signerCountryCode + signerCode;
             }
-            if (getConfiguration().getDoCheckTestCert()) {
-                Boolean isTest = DigiDocGenFactory.isTestCard(cert);
-                if (isTest) {
-                    logger.info("Attempted to sign document by person \"" + signerCodeWithCountryPrefix
-                            + " using test certificate");
-                    throw new AditCodedException("request.saveDocument.testcertificate");
-                }
-            }
+            
+			if (getConfiguration().getDoCheckTestCert()) {
+			    Boolean isTest = Util.isTestCard(cert);
+			    if (isTest) {
+			        logger.info("Attempted to sign document by person \"" + signerCodeWithCountryPrefix + " using test certificate");
+			        
+			        throw new AditCodedException("request.saveDocument.testcertificate");
+			    }
+			}
+            
             result.setSignerCode(signerCodeWithCountryPrefix);
-            result.setSignerName(SignedDoc.getSubjectLastName(cert) + ", " + SignedDoc.getSubjectFirstName(cert));
+            result.setSignerName(signingCertificate.getSubjectName(SubjectName.SURNAME) + ", " + signingCertificate.getSubjectName(SubjectName.GIVENNAME));
 
             // Add reference to ADIT user if signer happens to be registered user
             AditUser user = this.getAditUserDAO().getUserByID(signerCodeWithCountryPrefix);
