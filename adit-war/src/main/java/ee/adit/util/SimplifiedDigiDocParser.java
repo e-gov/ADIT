@@ -32,13 +32,14 @@ import ee.adit.pojo.OutputDocumentFile;
  * @author Jaak Lember, Interinx, jaak@interinx.com
  */
 public final class SimplifiedDigiDocParser {
+	
+	private static Logger logger = Logger.getLogger(SimplifiedDigiDocParser.class);
+	
 	/**
 	 * Default constructor.
 	 */
-	private SimplifiedDigiDocParser() {
-	}
+	private SimplifiedDigiDocParser() {}
 
-	private static Logger logger = Logger.getLogger(SimplifiedDigiDocParser.class);
 
 	/**
 	 * Finds offsets of all data files in specified DigiDoc container.
@@ -51,14 +52,15 @@ public final class SimplifiedDigiDocParser {
 	 * @throws NoSuchAlgorithmException
 	 * @throws DigiDocException
 	 */
-	public static Hashtable<String, StartEndOffsetPair> findDigiDocDataFileOffsets(
-			String pathToDigiDoc, Boolean isBdoc, String temporaryFilesDir) throws IOException, NoSuchAlgorithmException {
+	public static Hashtable<String, StartEndOffsetPair> findDigiDocDataFileOffsets(String pathToDigiDoc, Boolean isBdoc, String temporaryFilesDir)
+			throws IOException, NoSuchAlgorithmException {
 		if (isBdoc) {
 			return findFilesInBdoc(pathToDigiDoc, temporaryFilesDir);
 		} else {
 			return findDDocDataFileOffsets(pathToDigiDoc);
 		}
 	}
+	
 	/**
 	 * Finds offsets of all data files in specified DigiDoc(DDOC) container.
 	 *
@@ -327,7 +329,6 @@ public final class SimplifiedDigiDocParser {
         return totalBytesExtracted;
     }
     
-    
     /**
      * Extracts file contents from DigiDoc(BDOC) container.
      *
@@ -369,4 +370,5 @@ public final class SimplifiedDigiDocParser {
 
 		return totalBytesExtracted;
 	}
+	
 }

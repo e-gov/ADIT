@@ -36,6 +36,7 @@ import org.apache.fop.apps.MimeConstants;
 import org.apache.log4j.Logger;
 import org.digidoc4j.Container;
 import org.digidoc4j.ContainerBuilder;
+import org.digidoc4j.DataFile;
 import org.digidoc4j.Signature;
 import org.digidoc4j.ValidationResult;
 import org.digidoc4j.X509Cert;
@@ -916,52 +917,52 @@ public class DocumentService {
      *
      * @param pathToContainer   Absolute path of DigiDoc container
      * @param digidocConfigFile Absolute path of DigiDoc library configuration file
-     * @return File and signature meta-data wrapped into
-     *         {@link DigiDocExtractionResult} object.
+     * @return File and signature meta-data wrapped into {@link DigiDocExtractionResult} object.
      */
     public DigiDocExtractionResult extractDigiDocContainer(final String pathToContainer, final String digidocConfigFile)
             throws AditCodedException {
 
         DigiDocExtractionResult result = new DigiDocExtractionResult();
         final String tempDir = this.getConfiguration().getTempDir();
+        
         if (!Util.isNullOrEmpty(pathToContainer)) {
             File digiDocContainer = new File(pathToContainer);
             if (digiDocContainer.exists()) {
                 try {
-                    logger.debug("digidocConfigFile: " + digidocConfigFile);
-                    ConfigManager.init(digidocConfigFile);
-                    SAXDigiDocFactory factory = new SAXDigiDocFactory();
                     logger.debug("pathToContainer: " + pathToContainer);
-                    SignedDoc ddocContainer = factory.readSignedDoc(pathToContainer);
+                    
+                    Container container = ContainerBuilder.aContainer().fromExistingFile(pathToContainer).build();
                     Boolean isBdoc = false;
-                    if (ddocContainer.getFormat().equals(SignedDoc.FORMAT_BDOC)) {
+                    if (container.getType().equals(ContainerBuilder.BDOC_CONTAINER_TYPE)) {
                     	isBdoc = true;
                     }
-                    int dataFilesCount = ddocContainer.countDataFiles();
+                    
+                    int dataFilesCount = container.getDataFiles() != null ? container.getDataFiles().size() : 0;
                     if (dataFilesCount > 0) {
-
                         Hashtable<String, StartEndOffsetPair> dataFileOffsets = SimplifiedDigiDocParser.findDigiDocDataFileOffsets(pathToContainer, isBdoc, tempDir);
-                        for (int i = 0; i < dataFilesCount; i++) {
-                            DataFile ddocDataFile = ddocContainer.getDataFile(i);
+                        
+                        for (DataFile dataFile : container.getDataFiles()) {
                             DocumentFile localFile = new DocumentFile();
                             localFile.setDeleted(false);
-                            localFile.setContentType(ddocDataFile.getMimeType());
-                            localFile.setFileName(ddocDataFile.getFileName());
-                            localFile.setFileSizeBytes(ddocDataFile.getSize());
+                            localFile.setContentType(dataFile.getMediaType());
+                            localFile.setFileName(dataFile.getName());
+                            localFile.setFileSizeBytes(dataFile.getFileSize());
                             localFile.setLastModifiedDate(new Date());
 
                            // localFile.setFileData(Hibernate.createBlob(ddocDataFile.getBody()));
-                            StartEndOffsetPair currentFileOffsets = dataFileOffsets.get(ddocDataFile.getId());
+                            StartEndOffsetPair currentFileOffsets = dataFileOffsets.get(dataFile.getId());
                             if (currentFileOffsets != null) {
                                 localFile.setFileDataInDdoc(true);
-                                localFile.setDdocDataFileId(ddocDataFile.getId());
+                                localFile.setDdocDataFileId(dataFile.getId());
                                 localFile.setDdocDataFileStartOffset(currentFileOffsets.getStart());
                                 localFile.setDdocDataFileEndOffset(currentFileOffsets.getEnd());
                                 localFile.setFileData(currentFileOffsets.getDataMd5Hash());
                             } else {
-                                logger.error("Failed to find DataFile offsets for data file " + ddocDataFile.getId());
+                                logger.error("Failed to find DataFile offsets for data file " + dataFile.getId());
+                                
                                 AditCodedException aditCodedException = new AditCodedException("digidoc.extract.genericException");
                                 aditCodedException.setParameters(new Object[]{});
+                                
                                 throw aditCodedException;
                             }
 
@@ -969,55 +970,64 @@ public class DocumentService {
                         }
                     }
 
-                    int signaturesCount = ddocContainer.countSignatures();
+                    int signaturesCount = container.getSignatures() != null ? container.getSignatures().size() : 0;
                     logger.info("Extracted file contains " + signaturesCount + " signatures.");
                     if (signaturesCount > 0) {
-                        for (int i = 0; i < signaturesCount; i++) {
-                            Signature ddocSignature = ddocContainer.getSignature(i);
-
+                        for (Signature signature : container.getSignatures()) {
                             // Convert DigiDoc signature to local signature
-
-                            ee.adit.dao.pojo.Signature localSignature = convertDigiDocSignatureToLocalSignature(ddocSignature);
+                            ee.adit.dao.pojo.Signature localSignature = convertDigiDocSignatureToLocalSignature(signature);
                             logger.info("Extracted signature of " + localSignature.getSignerName());
 
-                            // Verify the signature
-                            ArrayList verificationErrors = ddocSignature.verify(ddocContainer, true, true);
-
-                            if ((verificationErrors == null) || (verificationErrors.size() < 1)) {
+                            // Validate the signature
+                            List<DigiDoc4JException> validationErrors = signature.validate();
+                            
+                            if ((validationErrors == null) || (validationErrors.size() < 1)) {
                                 result.getSignatures().add(localSignature);
                             } else {
                                 logger.error("Signature given by " + localSignature.getSignerName() + " was found to be invalid.");
-                                logDigidocVerificationErrors(verificationErrors);
+                                
+                                logDigidocVerificationErrors(validationErrors);
                                 AditCodedException aditCodedException = new AditCodedException("digidoc.extract.invalidSignature");
                                 aditCodedException.setParameters(new Object[]{localSignature.getSignerName()});
+                                
                                 throw aditCodedException;
                             }
                         }
                     }
+                    
                     result.setSuccess(true);
+                    
                 } catch (AditCodedException ex) {
                     throw ex;
-                } catch (DigiDocException ex) {
+                } catch (DigiDoc4JException ex) {
                     logger.error(ex, ex);
+                    
                     AditCodedException aditCodedException = new AditCodedException("digidoc.extract.incorrectContainer", ex);
                     aditCodedException.setParameters(new Object[]{});
+                    
                     throw aditCodedException;
                 } catch (Exception ex) {
                     logger.error(ex);
+                    
                     AditCodedException aditCodedException = new AditCodedException("digidoc.extract.genericException", ex);
                     aditCodedException.setParameters(new Object[]{});
+                    
                     throw aditCodedException;
                 }
             } else {
                 logger.error("DigiDoc container extraction failed because container file \"" + pathToContainer + "\" does not exist!");
+                
                 AditCodedException aditCodedException = new AditCodedException("digidoc.extract.genericException");
                 aditCodedException.setParameters(new Object[]{});
+                
                 throw aditCodedException;
             }
         } else {
             logger.error("DigiDoc container extraction failed because container file was not supplied!");
+            
             AditCodedException aditCodedException = new AditCodedException("digidoc.extract.genericException");
             aditCodedException.setParameters(new Object[]{});
+            
             throw aditCodedException;
         }
 
@@ -1027,14 +1037,14 @@ public class DocumentService {
     /**
      * Logs DigiDoc verification errors to application's error log.
      *
-     * @param verificationErrors ArrayList containing verification errors of a DigiDoc file.
+     * @param verificationErrors a list containing verification errors of a DigiDoc file.
      */
-    private void logDigidocVerificationErrors(ArrayList verificationErrors) {
+    private void logDigidocVerificationErrors(List<DigiDoc4JException> verificationErrors) {
         if (verificationErrors != null) {
             for (int i = 0; i < verificationErrors.size(); i++) {
                 try {
-                    DigiDocException ddocEx = (DigiDocException) verificationErrors.get(i);
-                    logger.error("Signature validation error " + i, ddocEx);
+                    DigiDoc4JException ex = verificationErrors.get(i);
+                    logger.error("Signature validation error " + i, ex);
                 } catch (Exception ex) {
                     // Errors thrown by error logging are intentionally discarded
                 }
