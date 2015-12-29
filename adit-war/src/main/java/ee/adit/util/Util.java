@@ -18,8 +18,10 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.lang.reflect.Field;
+import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -68,6 +70,7 @@ import org.bouncycastle.asn1.x509.X509Extension;
 import org.bouncycastle.asn1.x509.X509Extensions;
 import org.castor.core.util.Base64Decoder;
 import org.castor.core.util.Base64Encoder;
+import org.digidoc4j.exceptions.DigiDoc4JException;
 
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Usertype;
@@ -1956,7 +1959,7 @@ public final class Util {
     }
     
 	public static boolean isTestCard(X509Certificate cert) {
-		// NOTE: this code is copied from ee.sk.digidoc.factory.DigiDocGenFactory
+		// NOTE: this code is taken from ee.sk.digidoc.factory.DigiDocGenFactory class
 		
 		if (cert != null) {
 			String cn = ConvertUtils.getCommonName(cert.getSubjectDN().getName());
@@ -1971,11 +1974,12 @@ public final class Util {
 				}
 			}
 		}
+		
 		return false;
 	}
     
 	private static boolean certHasPolicy(X509Certificate cert, String sOid) {
-		// NOTE: this code is copied from ee.sk.digidoc.factory.DigiDocGenFactory
+		// NOTE: this code is taken from ee.sk.digidoc.factory.DigiDocGenFactory class
 		
 		if (logger.isDebugEnabled()) {
 			logger.debug("Read cert policies: " + cert.getSerialNumber().toString());
@@ -2043,4 +2047,45 @@ public final class Util {
 		return false;
 	}
 	
+	/**
+	 * Reads the certificate from a file, URL or from another location
+	 * somewhere in the CLASSPATH such as in the libraries JAR file.
+	 * 
+	 * @param certLocation certificates file name, or URL.
+	 * 		  You can use URL in form jar://<location> to read a certificate from the JAR file
+	 * 		  or some other location in the CLASSPATH
+	 * @return certificate object
+	 */
+    public static X509Certificate readCertificate(String certLocation) throws DigiDoc4JException {
+    	// NOTE: This code is taken from ee.sk.digidoc.SignedDoc class
+    	
+        X509Certificate cert = null;
+        
+        InputStream isCert = null;
+        try {
+            if(certLocation.startsWith("http")) {
+                URL url = new URL(certLocation);
+                isCert = url.openStream();
+            } else if (certLocation.startsWith("jar://")) {
+              ClassLoader cl = Util.class.getClassLoader();
+              isCert = cl.getResourceAsStream(certLocation.substring(6));
+            } else {
+            	isCert = new FileInputStream(certLocation);
+            }
+            
+            CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
+      		cert = (X509Certificate)certificateFactory.generateCertificate(isCert);
+        } catch(Exception ex) {
+            throw new DigiDoc4JException("Error reading certificate", ex);
+        } finally {
+        	Util.safeCloseStream(isCert);
+        }
+        
+        return cert;
+    }
+	
+    public static int countElements(List<?> list) {
+    	return list != null ? list.size() : 0;
+    }
+    
 }
