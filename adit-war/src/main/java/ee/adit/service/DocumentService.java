@@ -4124,17 +4124,18 @@ public class DocumentService {
                 aditCodedException.setParameters(new Object[]{});
                 throw aditCodedException;
             }
-
-            ConfigManager.init(digidocConfigFile);
-            SAXDigiDocFactory factory = new SAXDigiDocFactory();
-            Boolean isBdoc = Util.isBdocFile(signatureContainerDraft.getFileName());
             
-            SignedDoc sdoc = factory.readSignedDocFromStreamOfType(new ByteArrayInputStream(signatureContainerDraft.getFileData()), isBdoc);
+            Boolean isBdoc = Util.isBdocFile(signatureContainerDraft.getFileName());
+            String containerType = isBdoc ? ContainerBuilder.BDOC_CONTAINER_TYPE : ContainerBuilder.DDOC_CONTAINER_TYPE;
+            
+            Container container = ContainerBuilder.aContainer(containerType).
+            		fromStream(new ByteArrayInputStream(signatureContainerDraft.getFileData())).build();
 
             File signatureFile = new File(signatureFileName);
             if (!signatureFile.exists()) {
                 AditCodedException aditCodedException = new AditCodedException("request.confirmSignature.missingSignature");
                 aditCodedException.setParameters(new Object[]{});
+                
                 throw aditCodedException;
             }
 
@@ -4145,21 +4146,22 @@ public class DocumentService {
                 fs.read(sigValue, 0, sigValue.length);
             } catch (IOException ex) {
                 logger.error(ex);
+                
                 AditCodedException aditCodedException = new AditCodedException("request.confirmSignature.errorReadingSignatureFile");
                 aditCodedException.setParameters(new Object[]{});
+                
                 throw aditCodedException;
             } finally {
                 Util.safeCloseStream(fs);
-                fs = null;
             }
+            
             // Find unfinished Signature from container
             Signature sig = null;
-            int activeSignatureIndex = -1;
-            for (int i = 0; i < sdoc.countSignatures(); i++) {
-                String signerPersonalCode = Util.getSubjectSerialNumberFromCert(sdoc.getSignature(i).getLastCertValue().getCert()); //SignedDoc.getSubjectPersonalCode(sdoc.getSignature(i).getLastCertValue().getCert());
+            for (Signature existingSignature : container.getSignatures()) {
+                String signerPersonalCode = Util.getSubjectSerialNumberFromCert(existingSignature.getSigningCertificate().getX509Certificate());
                 if (signerPersonalCode != null && requestPersonalCode.endsWith(signerPersonalCode)) {
-                    sig = sdoc.getSignature(i);
-                    activeSignatureIndex = i;
+                    sig = existingSignature;
+                    
                     break;
                 }
             }
@@ -4167,8 +4169,10 @@ public class DocumentService {
             if (sig == null) {
                 AditCodedException aditCodedException = new AditCodedException("request.confirmSignature.signatureNotPrepared");
                 aditCodedException.setParameters(new Object[]{});
+                
                 throw aditCodedException;
             }
+            
             // Incoming signature value can be of following 3 types (at least):
             // a) binary signature value
             // b) hex-encoded signature value
@@ -4181,40 +4185,53 @@ public class DocumentService {
                 isSignatureElement = true;
             }
 
+            X509Certificate cert = sig.getSigningCertificate().getX509Certificate();
             String containerFileName = Util.generateRandomFileNameWithoutExtension();
             containerFileName = temporaryFilesDir + File.separator + containerFileName + "_CSv1.adit";
+            
+            // TODO Check if the logic in the following block is correct
             if (isSignatureElement) {
-            	if(sdoc.getFormat().equals(SignedDoc.FORMAT_BDOC)) {
-            		try{
-            		 fs = new FileInputStream(signatureFileName);
-                     factory.readSignature(sdoc, fs);
-                     sdoc.removeSignature(activeSignatureIndex);
-                     sig = sdoc.getSignature(activeSignatureIndex++);
-                     sdoc.writeToFile(new File(containerFileName));
-            		}finally {
+            	if (container.getType().equals(ContainerBuilder.BDOC_CONTAINER_TYPE)) {
+            		try {
+            			container.removeSignature(sig);
+            			
+            			DataToSign dataToSign = SignatureBuilder.aSignature(container).withSigningCertificate(cert).buildDataToSign();
+						sig = dataToSign.finalize(sigValue);
+						
+						container.addSignature(sig);
+						
+						container.saveAsFile(containerFileName);
+            		} finally {
             			Util.safeCloseStream(fs);
             		}
             	} else {
             		 // Write container to temporary file
-                    sdoc.writeToFile(new File(containerFileName));
+                    container.saveAsFile(containerFileName);
+                    
                     // Replace pending signature with confirmed signature
                     replaceSignatureInDigiDocContainer(containerFileName, sig.getId(), signatureValueAsString);
+                    
                     // Reload container
-                    sdoc = factory.readSignedDoc(containerFileName);
-                    sig = sdoc.getSignature(activeSignatureIndex++);
+                    container =  ContainerBuilder.aContainer().fromExistingFile(containerFileName).build();
+                    for (Signature existingSignature : container.getSignatures()) {
+                    	if (existingSignature.getId().equalsIgnoreCase(sig.getId())) {
+                    		sig = existingSignature;
+                    		break;
+                    	}
+                    }
             	}
-
             } else {
                 // Decode signature value if it is HEX encoded
                 sigValue = convertSignatureValueToByteArray(sigValue);
 
-                sig.setOrigContent(null);
-                sig.setSignatureValue(sigValue);
-                sig.getConfirmation();
+                DataToSign dataToSign = SignatureBuilder.aSignature(container).withSigningCertificate(cert).buildDataToSign();
+				sig = dataToSign.finalize(sigValue);
+				container.addSignature(sig);
 
                 // Save container to file.
-                sdoc.writeToFile(new File(containerFileName));
+                container.saveAsFile(containerFileName);
             }
+            
             // Add signature container to document table
             FileInputStream fileInputStream = null;
             try {
@@ -4222,30 +4239,36 @@ public class DocumentService {
             } catch (FileNotFoundException e) {
                 logger.error("Error reading digidoc container file: ", e);
             }
+            
             long length = (new File(containerFileName)).length();
             byte[] containerData = new byte[fileInputStream.available()];
             fileInputStream.read(containerData, 0, fileInputStream.available());
+            
             boolean wasSignedBefore = true;
             if (signatureContainer == null) {
                 wasSignedBefore = false;
+                
                 signatureContainer = new DocumentFile();
                 signatureContainer.setContentType(UNKNOWN_MIME_TYPE);
                 signatureContainer.setDeleted(false);
                 signatureContainer.setDocument(doc);
                 signatureContainer.setDocumentFileTypeId(FILETYPE_SIGNATURE_CONTAINER);
-                String extension;
-                if(sdoc.getFormat().equals(SignedDoc.FORMAT_BDOC)) {
+                
+                String extension = null;
+                if (container.getType().equals(ContainerBuilder.BDOC_CONTAINER_TYPE)) {
                 	extension = Util.BDOC_PRIMARY_EXTENSION;
                 } else {
                 	extension = Util.DDOC_FILE_EXTENSION;
                 }
                 signatureContainer.setFileName(Util.convertToLegalFileName(doc.getTitle(), extension, null));
                 signatureContainer.setGuid(UUID.randomUUID().toString());
+                
                 doc.getDocumentFiles().add(signatureContainer);
             }
             signatureContainer.setFileSizeBytes(length);
             signatureContainer.setFileData(containerData);
             signatureContainer.setLastModifiedDate(new Date());
+            
             doc.setSigned(true);
             // update doc last modified date
             doc.setLastModifiedDate(new Date());
@@ -4259,19 +4282,23 @@ public class DocumentService {
 
             // Add signature metadata to signature table
             ee.adit.dao.pojo.Signature aditSig = convertDigiDocSignatureToLocalSignature(sig);
+            
             // Verify the signature
-            ArrayList verificationErrors = sig.verify(sdoc, true, true);
+            List<DigiDoc4JException> verificationErrors = sig.validate();
             if ((verificationErrors != null) && (verificationErrors.size() > 0)) {
                 logger.error("Signature given by " + aditSig.getSignerName() + " was found to be invalid.");
+                
                 logDigidocVerificationErrors(verificationErrors);
                 AditCodedException aditCodedException = new AditCodedException("digidoc.extract.invalidSignature");
                 aditCodedException.setParameters(new Object[]{aditSig.getSignerName()});
+                
                 throw aditCodedException;
             }
+            
             aditSig.setUserCode(currentUser.getUserCode());
             aditSig.setUserName(currentUser.getFullName());
-
             aditSig.setDocument(doc);
+            
             session.save(aditSig);
 
             // Remove file contents and calculate offsets
@@ -4291,6 +4318,7 @@ public class DocumentService {
             if (tx != null) {
                 tx.rollback();
             }
+            
             throw ex;
         } finally {
             if ((session != null) && session.isOpen()) {
@@ -4319,14 +4347,12 @@ public class DocumentService {
      * Replaces Signature XML block with given XML text in DigiDoc container.
      *
      * @param ddocContainerFullPath Full path to DigiDoc container to be modified.
-     * @param signatureId           Id of signature to be replaced
-     * @param signatureXml          New Signature block
+     * @param signatureId Id of signature to be replaced
+     * @param signatureXml New Signature block
      * @throws IOException Exception is thrown if digidoc container file cannot be found
-     *                     or application does not have sufficient rights to read from or write
-     *                     to the file.
+     *                     or application does not have sufficient rights to read from or write to the file.
      */
-    public void replaceSignatureInDigiDocContainer(String ddocContainerFullPath,
-                                                   String signatureId, String signatureXml) throws IOException {
+    public void replaceSignatureInDigiDocContainer(String ddocContainerFullPath, String signatureId, String signatureXml) throws IOException {
 
         boolean changesMade = false;
         String containerWorkingCopyFullPath = ddocContainerFullPath + ".tmp";
@@ -4383,14 +4409,13 @@ public class DocumentService {
                 }
             }
         } finally {
-            Util.safeCloseWriter(containerWriter);
+        	Util.safeCloseWriter(containerWriter);
             Util.safeCloseReader(originalContainerReader);
-            containerWriter = null;
-            originalContainerReader = null;
         }
 
         if (changesMade) {
             Util.deleteFile(ddocContainerFullPath, true);
+            
             File oldContainer = new File(ddocContainerFullPath);
             File newContainer = new File(containerWorkingCopyFullPath);
             newContainer.renameTo(oldContainer);
