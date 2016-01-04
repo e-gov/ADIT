@@ -6,6 +6,7 @@ import java.io.File;
 
 import org.apache.log4j.Logger;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,13 +17,9 @@ import ee.adit.dao.pojo.AditUser;
 import ee.adit.pojo.PrepareSignatureInternalResult;
 import ee.adit.service.DocumentService;
 import ee.adit.util.Util;
-import ee.sk.digidoc.DigiDocException;
-import ee.sk.digidoc.SignatureProductionPlace;
-import ee.sk.digidoc.SignedDoc;
-import ee.sk.utils.ConfigManager;
 
 /**
- * Tests for For auhentication and signing BDOC files new SIM cards are using
+ * Tests for For authentication and signing BDOC files new SIM cards are using
  * ECC prime 256v1 key set and for signing DDOC files RSA 2024 key set.
  * 
  * @author A
@@ -51,7 +48,7 @@ public class TestEecMidSigning {
 	 * Absolute path to signers signing certificate file. Got this with another
 	 * helper.
 	 * 
-	 * For auhentication and signing BDOC files new SIM cards are using ECC
+	 * For authentication and signing BDOC files new SIM cards are using ECC
 	 * prime 256v1 key set and for signing DDOC files RSA 2024 key set.
 	 */
 	private final String eecCrt = new File( 
@@ -85,15 +82,10 @@ public class TestEecMidSigning {
 	@Before
 	public void before() throws Exception {
 		
-		// Preconfigure Digidoc.
-		ConfigManager.init(JDIGIDOC_CFG.getAbsolutePath());
-		ConfigManager.addProvider();
-		
 		// Check we have DocumentService.
 		assertNotNull(ds);
 		
-		// Turn off test-cert check (you need to have test-certs in 
-		// jdigidoc*.jar
+		// Turn off test-cert check (you need to have test-certs in jdigidoc*.jar
 		// NOTE Remember not to deploy this to live!
 		ds.getConfiguration().setDoCheckTestCert(Boolean.FALSE);
 		
@@ -118,6 +110,7 @@ public class TestEecMidSigning {
 		
 	} // -testNormal
 	
+	@Ignore
 	@Test
 	public void testEec() throws Exception {		
 		
@@ -171,12 +164,11 @@ public class TestEecMidSigning {
 	 * @return
 	 * @throws DigiDocException
 	 */
-	private AditUser getAditUserFromCrt(String crtFile) throws DigiDocException {
+	private AditUser getAditUserFromCrt(String crtFile) {
 		
 		// reverse engineer this from CRT - DocumentService checks this
 		AditUser result = new AditUser();
-		result.setUserCode(Util.getSubjectSerialNumberFromCert(
-				SignedDoc.readCertificate(crtFile)));
+		result.setUserCode(Util.getSubjectSerialNumberFromCert(Util.readCertificate(crtFile)));
 		
 		LOGGER.info("xroad user from CRT is " + result.getUserCode());
 		

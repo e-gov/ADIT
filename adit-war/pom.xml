@@ -141,18 +141,19 @@
             <systemPath>${basedir}/lib/commons-logging-1.1.1.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>slf4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.6.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/slf4j-log4j12-1.5.8.jar</systemPath>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.7.13</version>
         </dependency>
         <dependency>
-            <groupId>java</groupId>
+		    <groupId>org.slf4j</groupId>
+		    <artifactId>jul-to-slf4j</artifactId>
+		    <version>1.7.13</version>
+		</dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.5.10</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/slf4j-api-1.5.8.jar</systemPath>
+            <version>1.7.13</version>
         </dependency>
 
         <!-- Hibernate -->
@@ -164,11 +165,9 @@
             <systemPath>${basedir}/lib/antlr-2.7.6.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>java</groupId>
+            <groupId>commons-collections</groupId>
             <artifactId>commons-collections</artifactId>
-            <version>3.1</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/commons-collections-3.1.jar</systemPath>
+            <version>3.2.1</version>
         </dependency>
         <dependency>
             <groupId>java</groupId>
@@ -270,13 +269,13 @@
             <scope>system</scope>
             <systemPath>${basedir}/lib/xmlParserAPIs.jar</systemPath>
         </dependency>
-        <dependency>
+        <!-- <dependency>
             <groupId>xml</groupId>
             <artifactId>sec</artifactId>
             <version>1.0</version>
             <scope>system</scope>
             <systemPath>${basedir}/lib/xmlsec.jar</systemPath>
-        </dependency>
+        </dependency> -->
         <dependency>
             <groupId>xml</groupId>
             <artifactId>tinyxmlcanonicalizer</artifactId>
@@ -284,7 +283,18 @@
             <scope>system</scope>
             <systemPath>${basedir}/lib/tinyxmlcanonicalizer-0.9.0.jar</systemPath>
         </dependency>
-
+        
+        <dependency>
+		    <groupId>org.apache.santuario</groupId>
+		    <artifactId>xmlsec</artifactId>
+		    <version>2.0.6</version>
+		</dependency>
+		<dependency>
+		    <groupId>xalan</groupId>
+		    <artifactId>xalan</artifactId>
+		    <version>2.6.0</version>
+		</dependency>
+        
         <!-- XmlBeans -->
         <dependency>
             <groupId>org.apache</groupId>
