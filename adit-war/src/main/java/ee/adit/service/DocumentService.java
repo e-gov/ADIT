@@ -1,5 +1,66 @@
 package ee.adit.service;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.StringBufferInputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.security.cert.X509Certificate;
+import java.sql.Clob;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+
+import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
+import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
+import org.apache.fop.apps.MimeConstants;
+import org.apache.log4j.Logger;
+import org.digidoc4j.Container;
+import org.digidoc4j.ContainerBuilder;
+import org.digidoc4j.DataFile;
+import org.digidoc4j.DataToSign;
+import org.digidoc4j.Signature;
+import org.digidoc4j.SignatureBuilder;
+import org.digidoc4j.SignatureProfile;
+import org.digidoc4j.ValidationResult;
+import org.digidoc4j.X509Cert;
+import org.digidoc4j.X509Cert.SubjectName;
+import org.digidoc4j.exceptions.DigiDoc4JException;
+import org.hibernate.FlushMode;
+import org.hibernate.HibernateException;
+import org.hibernate.LockMode;
+import org.hibernate.LockOptions;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.springframework.context.MessageSource;
+import org.springframework.dao.DataRetrievalFailureException;
+import org.springframework.orm.hibernate3.HibernateCallback;
+import org.springframework.transaction.annotation.Transactional;
+
 import dvk.api.container.ArrayOfSignature;
 import dvk.api.container.LetterMetaData;
 import dvk.api.container.Metaxml;
@@ -19,44 +80,39 @@ import dvk.api.ml.PojoMessage;
 import dvk.api.ml.PojoMessageRecipient;
 import dvk.api.ml.PojoSettings;
 import ee.adit.ContainerVer2_1Sender;
-import ee.adit.dao.*;
+import ee.adit.dao.AditUserDAO;
+import ee.adit.dao.DocumentDAO;
+import ee.adit.dao.DocumentFileDAO;
+import ee.adit.dao.DocumentHistoryDAO;
+import ee.adit.dao.DocumentSharingDAO;
+import ee.adit.dao.DocumentTypeDAO;
+import ee.adit.dao.DocumentWfStatusDAO;
 import ee.adit.dao.dvk.DvkDAO;
-import ee.adit.dao.pojo.*;
+import ee.adit.dao.pojo.AditUser;
+import ee.adit.dao.pojo.Document;
+import ee.adit.dao.pojo.DocumentFile;
+import ee.adit.dao.pojo.DocumentHistory;
+import ee.adit.dao.pojo.DocumentSharing;
+import ee.adit.dao.pojo.DocumentType;
 import ee.adit.dvk.DvkReceiver;
 import ee.adit.dvk.DvkReceiverFactory;
 import ee.adit.dvk.DvkSender;
 import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditInternalException;
-import ee.adit.pojo.*;
-import ee.adit.util.*;
-
-import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
-import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
-import org.apache.fop.apps.MimeConstants;
-import org.apache.log4j.Logger;
-import org.digidoc4j.Container;
-import org.digidoc4j.ContainerBuilder;
-import org.digidoc4j.DataFile;
-import org.digidoc4j.DataToSign;
-import org.digidoc4j.Signature;
-import org.digidoc4j.SignatureBuilder;
-import org.digidoc4j.SignatureProductionPlace;
-import org.digidoc4j.SignatureProfile;
-import org.digidoc4j.ValidationResult;
-import org.digidoc4j.X509Cert;
-import org.digidoc4j.X509Cert.SubjectName;
-import org.digidoc4j.exceptions.DigiDoc4JException;
-import org.hibernate.*;
-import org.springframework.context.MessageSource;
-import org.springframework.dao.DataRetrievalFailureException;
-import org.springframework.orm.hibernate3.HibernateCallback;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.io.*;
-import java.security.cert.X509Certificate;
-import java.sql.Clob;
-import java.sql.SQLException;
-import java.util.*;
+import ee.adit.pojo.ArrayOfDataFileHash;
+import ee.adit.pojo.ArrayOfFileType;
+import ee.adit.pojo.DataFileHash;
+import ee.adit.pojo.OutputDocumentFile;
+import ee.adit.pojo.PersonName;
+import ee.adit.pojo.PrepareSignatureInternalResult;
+import ee.adit.pojo.SaveDocumentRequestAttachment;
+import ee.adit.pojo.SaveItemInternalResult;
+import ee.adit.util.Configuration;
+import ee.adit.util.DigiDocExtractionResult;
+import ee.adit.util.SimplifiedDigiDocParser;
+import ee.adit.util.StartEndOffsetPair;
+import ee.adit.util.Util;
+import ee.sk.digidoc.DigiDocException;
 
 
 /**
@@ -4549,8 +4605,7 @@ public class DocumentService {
             final String digidocConfigFile,
             final String temporaryFilesDir) throws DigiDoc4JException, SQLException, IOException {
 
-        ConfigManager.init(digidocConfigFile);
-        SignedDoc sdoc = new SignedDoc(SignedDoc.FORMAT_DIGIDOC_XML, SignedDoc.VERSION_1_3);
+        Container container = ContainerBuilder.aContainer(ContainerBuilder.BDOC_CONTAINER_TYPE).build();
 
         // Create unique subdirectory for files
         File uniqueDir = new File(temporaryFilesDir + File.separator + doc.getId());
@@ -4586,7 +4641,7 @@ public class DocumentService {
                 }
 
                 // Add file to signature container
-                sdoc.addDataFile(new File(outputFileName), docFile.getContentType(), DataFile.CONTENT_EMBEDDED_BASE64);
+               container.addDataFile(new File(outputFileName), docFile.getContentType());
             }
         }
 
@@ -4597,12 +4652,14 @@ public class DocumentService {
         while (new File(containerFileName).exists()) {
             containerFileName = temporaryFilesDir + File.separator + containerFileName + uniqueCounter + ".adit";
         }
-        sdoc.writeToFile(new File(containerFileName));
+        
+        container.saveAsFile(containerFileName);
+        
         long length = (new File(containerFileName)).length();
 
         OutputDocumentFile result = new OutputDocumentFile();
         result.setContentType(UNKNOWN_MIME_TYPE);
-        result.setName(Util.convertToLegalFileName(doc.getTitle(), "ddoc", null));
+        result.setName(Util.convertToLegalFileName(doc.getTitle(), "bdoc", null));
         result.setFileType(FILETYPE_NAME_SIGNATURE_CONTAINER);
         result.setSizeBytes(length);
         result.setSysTempFile(containerFileName);
