@@ -352,11 +352,9 @@
             <systemPath>${basedir}/lib/batik-all-1.7.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>org.apache</groupId>
+            <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>1.3.1</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/commons-io-1.3.1.jar</systemPath>
+            <version>2.4</version>
         </dependency>
 
         <dependency>
