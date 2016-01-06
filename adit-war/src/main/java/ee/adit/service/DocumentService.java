@@ -112,7 +112,6 @@ import ee.adit.util.DigiDocExtractionResult;
 import ee.adit.util.SimplifiedDigiDocParser;
 import ee.adit.util.StartEndOffsetPair;
 import ee.adit.util.Util;
-import ee.sk.digidoc.DigiDocException;
 
 
 /**
@@ -3931,6 +3930,9 @@ public class DocumentService {
                 for (int i = 0; i < dummySignature.length; i++) {
                     dummySignature[i] = 0;
                 }
+                
+                //Signature signature = dataToSign.finalize(dummySignature);
+                //container.addSignature(signature);
                 
                 // FIXME How do we do this?
                 //sig.setSignatureValue(dummySignature);
