@@ -4597,7 +4597,7 @@ public class DocumentService {
      * @param digidocConfigFile Full path to DigiDoc library configuration file
      * @param temporaryFilesDir Path to directory that is used to store temporary files
      * @return DDOC container as {@link OutputDocumentFile} instance
-     * @throws DigiDocException Will be thrown if DigiDoc library initialization or container
+     * @throws DigiDoc4JException Will be thrown if DigiDoc library initialization or container
      *                          manipulation fails
      * @throws SQLException     Will be thrown if reading file contents from database fails
      * @throws IOException      Will be thrown if saving DigiDoc container fails
