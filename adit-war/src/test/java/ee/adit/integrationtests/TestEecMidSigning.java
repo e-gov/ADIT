@@ -56,7 +56,7 @@ public class TestEecMidSigning {
 					.getAbsolutePath();
 	
 	private final String normalCert = new File(
-			"src/test/resources/51001091072_sign_certificate.cer")
+			"src/test/resources/37901130250_sign_certificate.cer")
 			.getAbsolutePath();
 	
 	/**
@@ -96,7 +96,7 @@ public class TestEecMidSigning {
 		
 		final String crt = normalCert;
 		
-		Long documentId = ds.getDocumentDAO().getDocument(13278L).getId();
+		Long documentId = ds.getDocumentDAO().getDocument(15L).getId();
 		AditUser xroadUser = getAditUserFromCrt(crt);	// NORMAL
 		
 		// PREPARE
