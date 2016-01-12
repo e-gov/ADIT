@@ -1,0 +1,42 @@
+Release notes to the initial draft solution for migrating ADIT to the new DigiDoc4j library
+===========================================================================================
+
+The new DigiDoc4j library JAR along with its dependencies were placed to the lib folder (currently there is no Maven repository for DigiDoc4j).
+
+Main changes, related to the DigiDoc4j library usage, were made in the following files:
+
+	ee.adit.service.DocumentService:
+		#verifySignedDocuments()
+		#prepareSignature()
+		#confirmSignature()
+		#createSignatureContainerFromDocumentFiles()
+		#convertDigiDocSignatureToLocalSignature()
+		#extractDigiDocContainer()
+		#isPossibleToRemovePendingSignature()
+		
+	ee.adit.ws.endpoint.document.PrepareSignatureEndpoint
+		#prepareSignature()
+	
+	ee.adit.ws.endpoint.document.ConfirmSignatureEndpoint
+		#v1()
+
+	ee.adit.ws.endpoint.document.SaveDocumentEndpoint
+		#v1()
+	
+	ee.adit.ws.endpoint.document.SaveDocumentFileEndpoint()
+		#v1()
+		
+	ee.adit.util.SimplifiedDigiDocParser
+		#findFilesInBdoc()
+		#extractFileContentsFromBdoc()
+		
+	pom.xml (added/updated dependencies)
+	
+Also currently, when calling prepareSignature() web service method, one can specify to prefer either DDOC or BDOC format.
+DDOC should be removed from production, e.g. we can ignore this parameter (not to break current interface) and 
+always make BDOC containers. This and similar cases should be discussed further. 
+
+
+NB!
+This is a draft solution which requires some testing to discover possible issues.
+	
