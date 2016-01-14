@@ -145,10 +145,9 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
                 throw aditCodedException;
             }
 
-            
             PrepareSignatureInternalResult sigResult = this.documentService.prepareSignature(doc.getId(), request
                     .getManifest(), request.getCountry(), request.getState(), request.getCity(), request.getZip(),
-                    certFile, jdigidocCfgTmpFile, this.getConfiguration().getTempDir(), xroadRequestUser, preferBdoc);
+                    certFile, xroadRequestUser, preferBdoc);
 
             if (sigResult.isSuccess()) {
             	response.setSignatureId(sigResult.getSignatureId());

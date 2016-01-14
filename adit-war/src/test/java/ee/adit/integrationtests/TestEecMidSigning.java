@@ -1,6 +1,8 @@
 package ee.adit.integrationtests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
@@ -17,6 +19,7 @@ import ee.adit.dao.pojo.AditUser;
 import ee.adit.pojo.PrepareSignatureInternalResult;
 import ee.adit.service.DocumentService;
 import ee.adit.util.Util;
+import ee.sk.digidoc.DigiDocException;
 
 /**
  * Tests for For authentication and signing BDOC files new SIM cards are using
@@ -101,9 +104,7 @@ public class TestEecMidSigning {
 		
 		// PREPARE
 		PrepareSignatureInternalResult res = ds.prepareSignature(documentId,
-				"manifest", "country", "state", "city", "zip", crt,
-				JDIGIDOC_CFG.getAbsolutePath(), temporaryFilesDir, xroadUser,
-				doPreferBdoc);
+				"manifest", "country", "state", "city", "zip", crt, xroadUser, doPreferBdoc);
 		
 		// expect a known success result
 		assertTrue(res.isSuccess());
@@ -124,16 +125,13 @@ public class TestEecMidSigning {
 
 		// PREPARE
 		PrepareSignatureInternalResult res = ds.prepareSignature(documentId,
-				"manifest", "country", "state", "city", "zip", crt,
-				JDIGIDOC_CFG.getAbsolutePath(), temporaryFilesDir, xroadUser,
-				doPreferBdoc);
+				"manifest", "country", "state", "city", "zip", crt, xroadUser, doPreferBdoc);
 				
-		// "request.prepareSignature.signer.notCurrentUser = Dokumendi
-		// allkirjastamine ebaõnnestus, allkirjastaja peab olema sama isik, kes
-		// on infosüsteemi sisenenud."
+		// "request.prepareSignature.signer.notCurrentUser =
+		// Dokumendi allkirjastamine ebaõnnestus, allkirjastaja peab olema sama isik,
+		// kes on infosüsteemi sisenenud."
 		// (This is why we reverse engineered the ID straight from CRT.)
-		assertFalse("request.prepareSignature.signer.notCurrentUser"
-				.equals(res.getErrorCode()));
+		assertFalse("request.prepareSignature.signer.notCurrentUser".equals(res.getErrorCode()));
 		
 		// request.saveDocument.testcertificate = Teenuse viga (Test ID-kaart)
 		// This will happen if you don-t setDoCheckTestCert(false)

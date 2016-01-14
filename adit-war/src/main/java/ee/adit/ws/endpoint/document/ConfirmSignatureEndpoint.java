@@ -232,11 +232,7 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
                     throw aditCodedException;
                 }
 
-                InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream(getDigidocConfigurationFile());
-                String jdigidocCfgTmpFile = Util.createTemporaryFile(input, getConfiguration().getTempDir());
-
-                this.documentService.confirmSignature(doc.getId(), signatureFile, header.getIsikukood(),
-                        user, jdigidocCfgTmpFile, this.getConfiguration().getTempDir());
+                this.documentService.confirmSignature(doc.getId(), signatureFile, header.getIsikukood(), user, this.getConfiguration().getTempDir());
 
                 // Send scheduler notification to document owner.
                 // Notification does not need to be sent if user signed his/her own document.
