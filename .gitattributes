@@ -545,6 +545,9 @@ adit-war/src/main/resources/conf/adit-arendus-tomcat-local/jdigidoc.cfg -text
 adit-war/src/main/resources/conf/adit-arendus-tomcat-local/log4j.xml -text
 adit-war/src/main/resources/conf/adit-arendus-tomcat-local/nsca_send_clear.cfg -text
 adit-war/src/main/resources/conf/adit-arendus-tomcat-local/xtee.properties -text
+adit-war/src/main/resources/conf/adit-arendus-tomcat-local/adit-endpoints.xml -text
+adit-war/src/main/resources/conf/adit-arendus-tomcat-local/adit-services.xml -text
+adit-war/src/main/resources/conf/adit-arendus-tomcat-local/adit-dao.xml -text
 adit-war/src/main/resources/conf/adit-arendus-tomcat/adit-configuration.xml -text
 adit-war/src/main/resources/conf/adit-arendus-tomcat/adit-datasource.xml -text
 adit-war/src/main/resources/conf/adit-arendus-tomcat/jdigidoc.cfg -text
