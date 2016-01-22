@@ -1,7 +1,5 @@
 package ee.adit.dvk;
 
-import java.util.List;
-
 import dvk.api.ml.PojoMessage;
 import ee.adit.service.DocumentService;
 
@@ -25,7 +23,7 @@ public class Container1_0Receiver implements DvkReceiver {
     }
 
     @Override
-    public List<DispatchReport> receive(final PojoMessage message) {
+    public boolean receive(final PojoMessage message) {
         return documentService.receiveSingleDocumentFromDVK(message, jdigidocCfgTmpFile);
     }
 }

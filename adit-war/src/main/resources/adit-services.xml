@@ -41,6 +41,8 @@
 		<property name="aditUserDAO" ref="aditUserDAO" />
 		<property name="configuration" ref="configuration" />
 		<property name="dvkDAO" ref="dvkDAO" />
+		
+		<property name="notificationService" ref="notificationService" />
 	</bean>
 
 	<bean id="messageService" class="ee.adit.service.MessageService">

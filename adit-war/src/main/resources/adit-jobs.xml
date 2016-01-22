@@ -41,9 +41,6 @@
                 <entry key="maintenanceJobDAO">
                     <ref bean="maintenanceJobDAO" />
                 </entry>
-				<entry key="notificationService">
-					<ref bean="notificationService" />
-				</entry>
 			</map>
 		</property>
 	</bean>
