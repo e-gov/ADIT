@@ -158,7 +158,7 @@
 
 	<bean id="dvkReceiveTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
 		<property name="jobDetail" ref="receiveJobDetails" />
-		<property name="startDelay" value="1000" />
+		<property name="startDelay" value="120000" />
 		<property name="repeatInterval" value="600000" />
 	</bean>
 
