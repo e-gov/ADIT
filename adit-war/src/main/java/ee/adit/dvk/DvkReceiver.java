@@ -1,5 +1,7 @@
 package ee.adit.dvk;
 
+import java.util.List;
+
 import dvk.api.ml.PojoMessage;
 
 /**
@@ -7,10 +9,12 @@ import dvk.api.ml.PojoMessage;
  * @since 12.06.14
  */
 public interface DvkReceiver {
+	
     /**
      * Receive a message from DVK.
      * @param message {@link PojoMessage}
-     * @return true if successfully received, otherwise false.
+     * @return a list of wrapper objects containing data related to this operation
      */
-    boolean receive(PojoMessage message);
+    List<DispatchReport> receive(PojoMessage message);
+    
 }

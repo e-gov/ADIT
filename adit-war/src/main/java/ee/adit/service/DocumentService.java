@@ -1,5 +1,55 @@
 package ee.adit.service;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.StringBufferInputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.security.cert.X509Certificate;
+import java.sql.Clob;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+
+import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
+import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
+import org.apache.fop.apps.MimeConstants;
+import org.apache.log4j.Logger;
+import org.hibernate.FlushMode;
+import org.hibernate.HibernateException;
+import org.hibernate.LockMode;
+import org.hibernate.LockOptions;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.springframework.context.MessageSource;
+import org.springframework.dao.DataRetrievalFailureException;
+import org.springframework.orm.hibernate3.HibernateCallback;
+import org.springframework.transaction.annotation.Transactional;
+
 import dvk.api.container.ArrayOfSignature;
 import dvk.api.container.LetterMetaData;
 import dvk.api.container.Metaxml;
@@ -19,37 +69,49 @@ import dvk.api.ml.PojoMessage;
 import dvk.api.ml.PojoMessageRecipient;
 import dvk.api.ml.PojoSettings;
 import ee.adit.ContainerVer2_1Sender;
-import ee.adit.dao.*;
+import ee.adit.dao.AditUserDAO;
+import ee.adit.dao.DocumentDAO;
+import ee.adit.dao.DocumentFileDAO;
+import ee.adit.dao.DocumentHistoryDAO;
+import ee.adit.dao.DocumentSharingDAO;
+import ee.adit.dao.DocumentTypeDAO;
+import ee.adit.dao.DocumentWfStatusDAO;
 import ee.adit.dao.dvk.DvkDAO;
-import ee.adit.dao.pojo.*;
+import ee.adit.dao.pojo.AditUser;
+import ee.adit.dao.pojo.Document;
+import ee.adit.dao.pojo.DocumentFile;
+import ee.adit.dao.pojo.DocumentHistory;
+import ee.adit.dao.pojo.DocumentSharing;
+import ee.adit.dao.pojo.DocumentType;
+import ee.adit.dvk.DispatchReport;
 import ee.adit.dvk.DvkReceiver;
 import ee.adit.dvk.DvkReceiverFactory;
 import ee.adit.dvk.DvkSender;
 import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditInternalException;
-import ee.adit.pojo.*;
-import ee.adit.util.*;
-import ee.sk.digidoc.*;
+import ee.adit.pojo.ArrayOfDataFileHash;
+import ee.adit.pojo.ArrayOfFileType;
+import ee.adit.pojo.DataFileHash;
+import ee.adit.pojo.OutputDocumentFile;
+import ee.adit.pojo.PersonName;
+import ee.adit.pojo.PrepareSignatureInternalResult;
+import ee.adit.pojo.SaveDocumentRequestAttachment;
+import ee.adit.pojo.SaveItemInternalResult;
+import ee.adit.util.Configuration;
+import ee.adit.util.DigiDocExtractionResult;
+import ee.adit.util.SimplifiedDigiDocParser;
+import ee.adit.util.StartEndOffsetPair;
+import ee.adit.util.Util;
+import ee.sk.digidoc.CertValue;
+import ee.sk.digidoc.DataFile;
+import ee.sk.digidoc.DigiDocException;
 import ee.sk.digidoc.Signature;
+import ee.sk.digidoc.SignatureProductionPlace;
+import ee.sk.digidoc.SignatureValue;
+import ee.sk.digidoc.SignedDoc;
 import ee.sk.digidoc.factory.DigiDocGenFactory;
 import ee.sk.digidoc.factory.SAXDigiDocFactory;
 import ee.sk.utils.ConfigManager;
-
-import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
-import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
-import org.apache.fop.apps.MimeConstants;
-import org.apache.log4j.Logger;
-import org.hibernate.*;
-import org.springframework.context.MessageSource;
-import org.springframework.dao.DataRetrievalFailureException;
-import org.springframework.orm.hibernate3.HibernateCallback;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.io.*;
-import java.security.cert.X509Certificate;
-import java.sql.Clob;
-import java.sql.SQLException;
-import java.util.*;
 
 /**
  * Implements business logic for document processing. Provides methods for
@@ -1162,6 +1224,19 @@ public class DocumentService {
 
         return result;
     }
+    
+    public DispatchReport sendDocumentAndCreateReport(Document document, AditUser recipient, String dvkFolder, Long dvkId, String messageForRecipient) {
+    	DispatchReport dispatchReport = new DispatchReport();
+    	dispatchReport.setSuccess(false);
+    	
+    	if (this.sendDocument(document, recipient, dvkFolder, dvkId, messageForRecipient)) {
+    		dispatchReport.setSuccess(true);
+    		dispatchReport.setDocument(document);
+    		dispatchReport.setRecipient(recipient);
+    	}
+    	
+    	return dispatchReport;
+    }
 
     /**
      * Sends document to the specified user.
@@ -1777,8 +1852,8 @@ public class DocumentService {
      * @return the number of documents received
      */
     @Transactional
-    public int receiveDocumentsFromDVK(String digidocConfigFile) {
-        int result = 0;
+    public List<DispatchReport> receiveDocumentsFromDVK(String digidocConfigFile) {
+    	List<DispatchReport> allDispatchReports = new ArrayList<DispatchReport>();
 
         try {
             // Fetch all incoming documents from DVK Client database which
@@ -1796,8 +1871,9 @@ public class DocumentService {
                     DvkReceiverFactory receiverFactory = new DvkReceiverFactory(this, digidocConfigFile);
                     DvkReceiver receiver = receiverFactory.getReceiver(dvkDocument);
 
-                    if (receiver.receive(dvkDocument)) {
-                        result++;
+                    List<DispatchReport> dispatchReports = receiver.receive(dvkDocument);
+                    if (dispatchReports != null) {
+                    	allDispatchReports.addAll(dispatchReports);
                     }
                 }
             } else {
@@ -1809,7 +1885,7 @@ public class DocumentService {
             throw new AditInternalException("Error while receiving documents from DVK Client database: ", e);
         }
 
-        return result;
+        return allDispatchReports;
     }
 
     /**
@@ -1819,9 +1895,9 @@ public class DocumentService {
      * @param digidocConfigFile Full path to DigiDoc configuration file
      * @return {@code true} if receiving DVK document succeeded
      */
-    public Boolean receiveSingleDocumentFromDVK(PojoMessage dvkDocument, String digidocConfigFile) {
-        Boolean success = true;
-
+    public List<DispatchReport> receiveSingleDocumentFromDVK(PojoMessage dvkDocument, String digidocConfigFile) {
+    	List<DispatchReport> dispatchReports = new ArrayList<DispatchReport>();
+    	
         try {
             logger.debug("Starting to process incoming DVK message with DVK ID "
                     + dvkDocument.getDhlId() + " and DVK GUID " + dvkDocument.getDhlGuid());
@@ -1831,7 +1907,7 @@ public class DocumentService {
             // Make sure that document sender exists as a user in ADIT
             AditUser senderUser = findAditUserByDvkSenderData(dvkContainer, dvkDocument.getDhlId(), dvkDocument.getDhlGuid());
             if (senderUser == null) {
-                return false;
+            	return null;
             }
 
             // Make sure that exactly the same document has not been received before.
@@ -1843,7 +1919,8 @@ public class DocumentService {
                         + dvkDocument.getDhlId() + ". Message DVK GUID: "
                         + dvkDocument.getDhlGuid();
                 logger.warn(errorMsg);
-                return false;
+                
+                return null;
             }
 
             // Get list of recipients and make sure that at least one recipient exists
@@ -1853,7 +1930,8 @@ public class DocumentService {
                         + " does not contain recipient data. Message DVK ID: " + dvkDocument.getDhlId()
                         + ". Message DVK GUID: " + dvkDocument.getDhlGuid();
                 logger.error(errorMsg);
-                return false;
+                
+                return null;
             }
 
             logger.debug("Recipients for this message: " + recipients.size());
@@ -1896,7 +1974,8 @@ public class DocumentService {
                                         dvkContainer, recipient.getIsikukood().trim(),
                                         dvkDocument.getReceivedDate(), recipient.getNimi());
                                 logger.warn("User uses DVK - not allowed.");
-                                return false;
+                                
+                                return null;
                             } else {
                                 allRecipients.add(user);
                             }
@@ -1906,7 +1985,8 @@ public class DocumentService {
                                     DocumentService.DVK_RECEIVE_FAIL_REASON_USER_DOES_NOT_EXIST, dvkContainer,
                                     recipient.getIsikukood().trim(), dvkDocument.getReceivedDate(),
                                     recipient.getNimi());
-                            return false;
+                            
+                            return null;
                         }
                     }
                 }
@@ -1988,8 +2068,7 @@ public class DocumentService {
                     //aditTransaction = aditSession.beginTransaction();
 
                     // Save document
-                    SaveItemInternalResult saveResult = getDocumentDAO()
-                            .save(aditDocument, tempDocuments, Long.MAX_VALUE);
+                    SaveItemInternalResult saveResult = getDocumentDAO().save(aditDocument, tempDocuments, Long.MAX_VALUE);
 
                     if (saveResult == null) {
                         logger.error("Document saving failed!");
@@ -2006,10 +2085,11 @@ public class DocumentService {
                                     Calendar.getInstance().getTime());
                         }
 
-                        // Add record to sending table to make document
-                        // available to recipient.
+                        // Add record to sending table to make document available to recipient.
                         for (AditUser user : allRecipients) {
-                            this.sendDocument(aditDocument, user, null, dvkDocument.getDhlId(), null);
+                        	DispatchReport dispatchReport = this.sendDocumentAndCreateReport(aditDocument, user, null, dvkDocument.getDhlId(), null);
+                        	
+                        	dispatchReports.add(dispatchReport);
                         }
 
                         // Update user quota limit
@@ -2030,16 +2110,14 @@ public class DocumentService {
                         //aditSession.flush();
                         logger.info("DVK message " + dvkDocument.getDhlMessageId() + " was saved as ADIT document " + saveResult.getItemId());
                     } else {
-                        success = false;
-                        if ((saveResult.getMessages() != null) && (saveResult.getMessages().size() > 0)) {
+                    	if ((saveResult.getMessages() != null) && (saveResult.getMessages().size() > 0)) {
                             logger.error(saveResult.getMessages().get(0).getValue());
                         } else {
                             logger.error("Document saving failed!");
                         }
                     }
                 } catch (Exception e) {
-                    success = false;
-                    logger.warn("Error saving document to ADIT database: ", e);
+                	logger.warn("Error saving document to ADIT database: ", e);
                     //if (aditTransaction != null) {
                     //    aditTransaction.rollback();
                     //}
@@ -2050,11 +2128,10 @@ public class DocumentService {
                 }
             }
         } catch (Exception ex) {
-            success = false;
-            logger.error(ex.getMessage(), ex);
+        	logger.error(ex.getMessage(), ex);
         }
 
-        return success;
+        return dispatchReports;
     }
 
     private AditUser findAditUserByDvkSenderData(ContainerVer1 dvkContainer, Long docDvkId, String docDvkGuid) {

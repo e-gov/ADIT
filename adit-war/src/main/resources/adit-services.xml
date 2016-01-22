@@ -86,5 +86,12 @@
 		<property name="unmarshaller" ref="castorMarshaller" />
 		<property name="configuration" ref="configuration" />
 	</bean>
+	
+	<bean id="notificationService" class="ee.adit.service.NotificationService">
+		<property name="configuration" ref="configuration" />
+		<property name="messageService" ref="messageService" />
+		<property name="userService" ref="userService" />
+		<property name="scheduleClient" ref="scheduleClient" />
+	</bean>
 			
 </beans>

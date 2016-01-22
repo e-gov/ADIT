@@ -1,5 +1,12 @@
 package ee.adit.dvk;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.log4j.Logger;
+
 import dvk.api.container.v2_1.ContainerVer2_1;
 import dvk.api.container.v2_1.DecRecipient;
 import dvk.api.container.v2_1.Recipient;
@@ -12,11 +19,6 @@ import ee.adit.dvk.converter.containerdocument.RecipientsBuilder;
 import ee.adit.pojo.OutputDocumentFile;
 import ee.adit.pojo.SaveItemInternalResult;
 import ee.adit.service.DocumentService;
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.log4j.Logger;
-
-import java.util.Calendar;
-import java.util.List;
 
 /**
  * @author Hendrik Pärna
@@ -40,7 +42,7 @@ public class Container2_1Receiver implements DvkReceiver {
     }
 
     @Override
-    public boolean receive(final PojoMessage message) {
+    public List<DispatchReport> receive(final PojoMessage message) {
         ContainerVer2_1 containerVer2_1 = documentService.getDVKContainer2_1(message);
         ContainerVer2_1ToDocumentConverterImpl converter = createConverter(message, containerVer2_1);
 
@@ -50,7 +52,8 @@ public class Container2_1Receiver implements DvkReceiver {
 
         initDocumentParentId(containerVer2_1, document, message);
         saveDocumentToAdit(message, converter, document);
-        sendToRecipients(message, document, containerVer2_1);
+        
+        List<DispatchReport> dispatchReports = sendToRecipients(message, document, containerVer2_1);
 
         try {
             documentService.getDvkDAO().updateDocumentLocalId(document.getId(), message.getDhlMessageId());
@@ -58,7 +61,7 @@ public class Container2_1Receiver implements DvkReceiver {
             throw new RuntimeException("Unable to update dhl_message_local_id in dvk client", e);
         }
 
-        return true;
+        return dispatchReports;
     }
 
     private ContainerVer2_1ToDocumentConverterImpl createConverter(
@@ -137,17 +140,21 @@ public class Container2_1Receiver implements DvkReceiver {
         }
     }
 
-    private void sendToRecipients(final PojoMessage message, final Document document,
-                                  final ContainerVer2_1 containerVer2_1) {
+    private List<DispatchReport> sendToRecipients(final PojoMessage message, final Document document, final ContainerVer2_1 containerVer2_1) {
+    	List<DispatchReport> dispatchReports = new ArrayList<DispatchReport>();
+    	
         RecipientsBuilder recipientsBuilder = new RecipientsBuilder(containerVer2_1);
         recipientsBuilder.setAditUserDAO(documentService.getAditUserDAO());
         recipientsBuilder.setConfiguration(documentService.getConfiguration());
 
         for (Pair<AditUser, Recipient> aditUserRecipient : recipientsBuilder.build()) {
-            documentService.sendDocument(document,
-                    aditUserRecipient.getLeft(), null,
-                    message.getDhlId(), aditUserRecipient.getRight().getMessageForRecipient());
+        	DispatchReport dispatchReport = documentService.sendDocumentAndCreateReport(
+        			document, aditUserRecipient.getLeft(), null, message.getDhlId(), aditUserRecipient.getRight().getMessageForRecipient());
+        	
+        	dispatchReports.add(dispatchReport);
         }
+        
+        return dispatchReports;
     }
 
     private void initDocumentParentId(final ContainerVer2_1 container, final Document document, final PojoMessage message) {
