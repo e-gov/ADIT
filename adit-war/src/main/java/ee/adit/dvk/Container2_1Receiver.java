@@ -50,7 +50,7 @@ public class Container2_1Receiver implements DvkReceiver {
 
         initDocumentParentId(containerVer2_1, document, message);
         saveDocumentToAdit(message, converter, document);
-        sendToRecipients(message, document, containerVer2_1);
+        sendToRecipients(converter.getSenderUser(), message, document, containerVer2_1);
 
         try {
             documentService.getDvkDAO().updateDocumentLocalId(document.getId(), message.getDhlMessageId());
@@ -137,14 +137,14 @@ public class Container2_1Receiver implements DvkReceiver {
         }
     }
 
-    private void sendToRecipients(final PojoMessage message, final Document document,
+    private void sendToRecipients(final AditUser sender, final PojoMessage message, final Document document,
                                   final ContainerVer2_1 containerVer2_1) {
         RecipientsBuilder recipientsBuilder = new RecipientsBuilder(containerVer2_1);
         recipientsBuilder.setAditUserDAO(documentService.getAditUserDAO());
         recipientsBuilder.setConfiguration(documentService.getConfiguration());
 
         for (Pair<AditUser, Recipient> aditUserRecipient : recipientsBuilder.build()) {
-            documentService.sendDocumentAndNotifyRecipient(document, aditUserRecipient.getLeft(), null,
+            documentService.sendDocumentAndNotifyRecipient(document, sender, aditUserRecipient.getLeft(), null,
                     message.getDhlId(), aditUserRecipient.getRight().getMessageForRecipient());
         }
     }

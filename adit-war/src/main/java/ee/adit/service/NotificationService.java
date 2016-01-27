@@ -24,7 +24,7 @@ public class NotificationService {
 	
 	private ScheduleClient scheduleClient;
 	
-	public void sendNotification(Document document, AditUser recipient, String notificationType) {
+	public void sendNotification(Document document, AditUser sender, AditUser recipient, String notificationType) {
 		if (recipient != null && document != null) {
 			logger.debug("Preparing notifications of type " + notificationType);
 			
@@ -32,7 +32,7 @@ public class NotificationService {
 
 			if ((userService.findNotification(recipient.getUserNotifications(), ScheduleClient.NOTIFICATION_TYPE_SEND) != null)) {
 				List<Message> messageInAllKnownLanguages = this.getMessageService().
-						getMessages("scheduler.message.send", new Object[] {document.getTitle(), recipient.getUserCode()});
+						getMessages("scheduler.message.send", new Object[] {document.getTitle(), sender.getUserCode()});
 				String eventText = Util.joinMessages(messageInAllKnownLanguages, "<br/>");
 				
 				this.scheduleClient.addEvent(recipient, eventText,

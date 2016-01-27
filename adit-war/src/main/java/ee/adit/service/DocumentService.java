@@ -1224,9 +1224,9 @@ public class DocumentService {
         return true;
     }
     
-    public void sendDocumentAndNotifyRecipient(Document document, AditUser recipient, String dvkFolder, Long dvkId, String messageForRecipient) {
+    public void sendDocumentAndNotifyRecipient(Document document, AditUser sender, AditUser recipient, String dvkFolder, Long dvkId, String messageForRecipient) {
     	if (this.sendDocument(document, recipient, dvkFolder, dvkId, messageForRecipient)) {
-    		this.notificationService.sendNotification(document, recipient, ScheduleClient.NOTIFICATION_TYPE_SEND);
+    		this.notificationService.sendNotification(document, sender, recipient, ScheduleClient.NOTIFICATION_TYPE_SEND);
     	}
     }
 
@@ -2073,8 +2073,8 @@ public class DocumentService {
                         }
 
                         // Add record to sending table to make document available to recipient.
-                        for (AditUser user : allRecipients) {
-                            this.sendDocumentAndNotifyRecipient(aditDocument, user, null, dvkDocument.getDhlId(), null);
+                        for (AditUser recipient : allRecipients) {
+                            this.sendDocumentAndNotifyRecipient(aditDocument, senderUser, recipient, null, dvkDocument.getDhlId(), null);
                         }
 
                         // Update user quota limit
