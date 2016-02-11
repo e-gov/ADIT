@@ -22,7 +22,7 @@
         <!--<resourceDir>ria-test-weblogic</resourceDir>-->
         <!--<resourceDir>ria-live-weblogic</resourceDir>-->
         <!-- <resourceDir>dev-dev-weblogic</resourceDir> -->
-        <resourceDir>conf/girf-arendus</resourceDir>
+        <!-- <resourceDir>conf/girf-arendus</resourceDir> -->
     </properties>
 
     <dependencies>
