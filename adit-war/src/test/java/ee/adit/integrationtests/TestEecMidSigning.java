@@ -28,6 +28,7 @@ import ee.sk.digidoc.DigiDocException;
  * @author A
  *		
  */
+@Ignore
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
 		"classpath:**/adit-arendus-tomcat-local/*.xml" })
