@@ -31,8 +31,11 @@ public class NotificationService {
 			Calendar requestDate = Calendar.getInstance();
 
 			if ((userService.findNotification(recipient.getUserNotifications(), ScheduleClient.NOTIFICATION_TYPE_SEND) != null)) {
-				List<Message> messageInAllKnownLanguages = this.getMessageService().
-						getMessages("scheduler.message.send", new Object[] {document.getTitle(), sender.getUserCode()});
+				String senderInfo = sender.getFullName() != null && !sender.getFullName().trim().isEmpty() ?
+									sender.getFullName() : sender.getUserCode();
+				
+				List<Message> messageInAllKnownLanguages = this.getMessageService().getMessages(
+						"scheduler.message.send", new Object[] {document.getTitle(), senderInfo});
 				String eventText = Util.joinMessages(messageInAllKnownLanguages, "<br/>");
 				
 				this.scheduleClient.addEvent(recipient, eventText,

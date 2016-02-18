@@ -226,8 +226,12 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
                         AditUser recipient = this.getUserService().getUserByID(status.getCode());
                         if ((recipient != null)
                         	&& (userService.findNotification(recipient.getUserNotifications(), ScheduleClient.NOTIFICATION_TYPE_SHARE) != null)) {
-
-                        	List<Message> messageInAllKnownLanguages = this.getMessageService().getMessages("scheduler.message.share", new Object[] {doc.getTitle(), user.getUserCode()});
+                        	
+                        	String userInfo = user.getFullName() != null && !user.getFullName().trim().isEmpty() ?
+											user.getFullName() : user.getUserCode();
+                        	
+                        	List<Message> messageInAllKnownLanguages = this.getMessageService().getMessages(
+                        			"scheduler.message.share", new Object[] {doc.getTitle(), userInfo});
                         	String eventText = Util.joinMessages(messageInAllKnownLanguages, "<br/>");
 
                         	getScheduleClient().addEvent(recipient, eventText,

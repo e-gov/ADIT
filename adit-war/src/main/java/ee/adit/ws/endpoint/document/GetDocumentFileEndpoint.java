@@ -226,7 +226,11 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
                             && (userService.findNotification(docCreator.getUserNotifications(),
                                     ScheduleClient.NOTIFICATION_TYPE_VIEW) != null)) {
 
-                        	List<Message> messageInAllKnownLanguages = this.getMessageService().getMessages("scheduler.message.view", new Object[] {doc.getTitle(), user.getUserCode()});
+                        	String userInfo = user.getFullName() != null && !user.getFullName().trim().isEmpty() ?
+											user.getFullName() : user.getUserCode();
+                        	
+                        	List<Message> messageInAllKnownLanguages = this.getMessageService().getMessages(
+                        			"scheduler.message.view", new Object[] {doc.getTitle(), userInfo});
                         	String eventText = Util.joinMessages(messageInAllKnownLanguages, "<br/>");
 
                             getScheduleClient().addEvent(

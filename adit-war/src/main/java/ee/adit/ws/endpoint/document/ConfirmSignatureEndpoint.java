@@ -249,7 +249,8 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
                         && (userService.findNotification(docCreator.getUserNotifications(), ScheduleClient.NOTIFICATION_TYPE_SIGN) != null)) {
 
                     	String signerData = user.getFullName() + " (" + header.getIsikukood() + ")";
-                    	List<Message> messageInAllKnownLanguages = this.getMessageService().getMessages("scheduler.message.sign", new Object[] {doc.getTitle(), signerData});
+                    	List<Message> messageInAllKnownLanguages = this.getMessageService().getMessages(
+                    			"scheduler.message.sign", new Object[] {doc.getTitle(), signerData});
                     	String eventText = Util.joinMessages(messageInAllKnownLanguages, "<br/>");
 
                     	getScheduleClient().addEvent(

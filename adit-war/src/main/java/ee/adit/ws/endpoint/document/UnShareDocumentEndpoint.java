@@ -259,8 +259,12 @@ public class UnShareDocumentEndpoint extends AbstractAditBaseEndpoint {
                         if ((recipient != null)
                             && (userService.findNotification(recipient.getUserNotifications(),
                                     ScheduleClient.NOTIFICATION_TYPE_SHARE) != null)) {
+                        	
+                        	String userInfo = user.getFullName() != null && !user.getFullName().trim().isEmpty() ?
+											user.getFullName() : user.getUserCode();
 
-                        	List<Message> messageInAllKnownLanguages = this.getMessageService().getMessages("scheduler.message.unShare", new Object[] {user.getUserCode(), doc.getTitle()});
+                        	List<Message> messageInAllKnownLanguages = this.getMessageService().getMessages(
+                        			"scheduler.message.unShare", new Object[] {doc.getTitle(), userInfo});
                         	String eventText = Util.joinMessages(messageInAllKnownLanguages, "<br/>");
 
                             getScheduleClient().addEvent(
