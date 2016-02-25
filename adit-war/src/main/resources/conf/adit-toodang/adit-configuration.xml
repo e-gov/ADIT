@@ -12,11 +12,11 @@
 
     <!-- Data sources -->
     <bean id="aditDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
-        <property name="jndiName" value="jdbc/adit-toodang" />
+        <property name="jndiName" value="jdbc/adit-toodang-postgres" />
     </bean>
 
     <bean id="aditDVKDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
-        <property name="jndiName" value="jdbc/adit_dvk-toodang" />
+        <property name="jndiName" value="jdbc/adit_dvk-toodang-postgres" />
     </bean>
 
 	<!-- Configuration -->
