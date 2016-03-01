@@ -41,9 +41,9 @@
 	
 	<bean id="aditDVKDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
         <property name="driverClassName" value="org.postgresql.Driver"/>
-        <property name="url" value="jdbc:postgresql://ats.girf.ee:5432/dvkklient"/>
-        <property name="username" value="postgres"/>
-        <property name="password" value="postgres"/>
+        <property name="url" value="jdbc:postgresql://ats.girf.ee:5432/adit"/>
+        <property name="username" value="adit_dvkuk_user"/>
+        <property name="password" value="yyy"/>
     </bean>
 	
 	<import resource="adit-services.xml"/>
