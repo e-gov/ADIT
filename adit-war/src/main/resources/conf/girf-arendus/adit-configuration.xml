@@ -43,7 +43,7 @@
         <property name="driverClassName" value="org.postgresql.Driver"/>
         <property name="url" value="jdbc:postgresql://ats.girf.ee:5432/adit"/>
         <property name="username" value="adit_dvkuk_user"/>
-        <property name="password" value="xxx"/>
+        <property name="password" value="yyy"/>
     </bean>
 	
 	<import resource="adit-services.xml"/>
