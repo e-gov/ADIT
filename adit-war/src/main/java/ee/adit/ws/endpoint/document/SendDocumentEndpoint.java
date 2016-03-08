@@ -188,7 +188,11 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
                             // Send notification to every user the document was shared to
                             // (assuming they have requested such notifications)
                             if ((userService.findNotification(recipient.getUserNotifications(), ScheduleClient.NOTIFICATION_TYPE_SEND) != null)) {
-                            	List<Message> messageInAllKnownLanguages = this.getMessageService().getMessages("scheduler.message.send", new Object[] {doc.getTitle(), user.getUserCode()});
+                            	String senderInfo = user.getFullName() != null && !user.getFullName().trim().isEmpty() ?
+                            						user.getFullName() : user.getUserCode();
+    									
+                            	List<Message> messageInAllKnownLanguages = this.getMessageService()
+                            			.getMessages("scheduler.message.send", new Object[] {doc.getTitle(), senderInfo});
                             	String eventText = Util.joinMessages(messageInAllKnownLanguages, "<br/>");
 
                             	this.scheduleClient.addEvent(recipient, eventText,

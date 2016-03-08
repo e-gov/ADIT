@@ -221,7 +221,11 @@ public class ModifyStatusEndpoint extends AbstractAditBaseEndpoint {
                             && (userService.findNotification(docCreator.getUserNotifications(),
                                     ScheduleClient.NOTIFICATION_TYPE_MODIFY) != null)) {
 
-                    	List<Message> messageInAllKnownLanguages = this.getMessageService().getMessages("scheduler.message.modify", new Object[] {doc.getTitle(), docCreator.getUserCode()});
+                    	String docCreatorInfo = docCreator.getFullName() != null && !docCreator.getFullName().trim().isEmpty() ?
+                    							docCreator.getFullName() : docCreator.getUserCode();
+                    	
+                    	List<Message> messageInAllKnownLanguages = this.getMessageService().getMessages(
+                    			"scheduler.message.modify", new Object[] {doc.getTitle(), docCreatorInfo});
                     	String eventText = Util.joinMessages(messageInAllKnownLanguages, "<br/>");
 
                         getScheduleClient().addEvent(

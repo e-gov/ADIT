@@ -1,5 +1,55 @@
 package ee.adit.service;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.StringBufferInputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.security.cert.X509Certificate;
+import java.sql.Clob;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+
+import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
+import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
+import org.apache.fop.apps.MimeConstants;
+import org.apache.log4j.Logger;
+import org.hibernate.FlushMode;
+import org.hibernate.HibernateException;
+import org.hibernate.LockMode;
+import org.hibernate.LockOptions;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.springframework.context.MessageSource;
+import org.springframework.dao.DataRetrievalFailureException;
+import org.springframework.orm.hibernate3.HibernateCallback;
+import org.springframework.transaction.annotation.Transactional;
+
 import dvk.api.container.ArrayOfSignature;
 import dvk.api.container.LetterMetaData;
 import dvk.api.container.Metaxml;
@@ -19,37 +69,49 @@ import dvk.api.ml.PojoMessage;
 import dvk.api.ml.PojoMessageRecipient;
 import dvk.api.ml.PojoSettings;
 import ee.adit.ContainerVer2_1Sender;
-import ee.adit.dao.*;
+import ee.adit.dao.AditUserDAO;
+import ee.adit.dao.DocumentDAO;
+import ee.adit.dao.DocumentFileDAO;
+import ee.adit.dao.DocumentHistoryDAO;
+import ee.adit.dao.DocumentSharingDAO;
+import ee.adit.dao.DocumentTypeDAO;
+import ee.adit.dao.DocumentWfStatusDAO;
 import ee.adit.dao.dvk.DvkDAO;
-import ee.adit.dao.pojo.*;
+import ee.adit.dao.pojo.AditUser;
+import ee.adit.dao.pojo.Document;
+import ee.adit.dao.pojo.DocumentFile;
+import ee.adit.dao.pojo.DocumentHistory;
+import ee.adit.dao.pojo.DocumentSharing;
+import ee.adit.dao.pojo.DocumentType;
 import ee.adit.dvk.DvkReceiver;
 import ee.adit.dvk.DvkReceiverFactory;
 import ee.adit.dvk.DvkSender;
 import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditInternalException;
-import ee.adit.pojo.*;
-import ee.adit.util.*;
-import ee.sk.digidoc.*;
+import ee.adit.pojo.ArrayOfDataFileHash;
+import ee.adit.pojo.ArrayOfFileType;
+import ee.adit.pojo.DataFileHash;
+import ee.adit.pojo.OutputDocumentFile;
+import ee.adit.pojo.PersonName;
+import ee.adit.pojo.PrepareSignatureInternalResult;
+import ee.adit.pojo.SaveDocumentRequestAttachment;
+import ee.adit.pojo.SaveItemInternalResult;
+import ee.adit.schedule.ScheduleClient;
+import ee.adit.util.Configuration;
+import ee.adit.util.DigiDocExtractionResult;
+import ee.adit.util.SimplifiedDigiDocParser;
+import ee.adit.util.StartEndOffsetPair;
+import ee.adit.util.Util;
+import ee.sk.digidoc.CertValue;
+import ee.sk.digidoc.DataFile;
+import ee.sk.digidoc.DigiDocException;
 import ee.sk.digidoc.Signature;
+import ee.sk.digidoc.SignatureProductionPlace;
+import ee.sk.digidoc.SignatureValue;
+import ee.sk.digidoc.SignedDoc;
 import ee.sk.digidoc.factory.DigiDocGenFactory;
 import ee.sk.digidoc.factory.SAXDigiDocFactory;
 import ee.sk.utils.ConfigManager;
-
-import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
-import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
-import org.apache.fop.apps.MimeConstants;
-import org.apache.log4j.Logger;
-import org.hibernate.*;
-import org.springframework.context.MessageSource;
-import org.springframework.dao.DataRetrievalFailureException;
-import org.springframework.orm.hibernate3.HibernateCallback;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.io.*;
-import java.security.cert.X509Certificate;
-import java.sql.Clob;
-import java.sql.SQLException;
-import java.util.*;
 
 /**
  * Implements business logic for document processing. Provides methods for
@@ -381,7 +443,8 @@ public class DocumentService {
     private Configuration configuration;
 
     private DvkDAO dvkDAO;
-
+    
+    private NotificationService notificationService;
 
     /**
      * Methods verifies all signed documents using jDigiDoc and logs result.
@@ -1132,8 +1195,6 @@ public class DocumentService {
      */
 
     public boolean sendDocument(Document document, AditUser recipient, String dvkFolder, Long dvkId, String messageForRecipient) {
-        boolean result = false;
-
         DocumentSharing documentSharing = new DocumentSharing();
         documentSharing.setDocumentId(document.getId());
         documentSharing.setCreationDate(new Date());
@@ -1160,7 +1221,13 @@ public class DocumentService {
             throw new AditInternalException("Could not add document sharing information to database.");
         }
 
-        return result;
+        return true;
+    }
+    
+    public void sendDocumentAndNotifyRecipient(Document document, AditUser sender, AditUser recipient, String dvkFolder, Long dvkId, String messageForRecipient) {
+    	if (this.sendDocument(document, recipient, dvkFolder, dvkId, messageForRecipient)) {
+    		this.notificationService.sendNotification(document, sender, recipient, ScheduleClient.NOTIFICATION_TYPE_SEND);
+    	}
     }
 
     /**
@@ -1988,8 +2055,7 @@ public class DocumentService {
                     //aditTransaction = aditSession.beginTransaction();
 
                     // Save document
-                    SaveItemInternalResult saveResult = getDocumentDAO()
-                            .save(aditDocument, tempDocuments, Long.MAX_VALUE);
+                    SaveItemInternalResult saveResult = getDocumentDAO().save(aditDocument, tempDocuments, Long.MAX_VALUE);
 
                     if (saveResult == null) {
                         logger.error("Document saving failed!");
@@ -2006,10 +2072,9 @@ public class DocumentService {
                                     Calendar.getInstance().getTime());
                         }
 
-                        // Add record to sending table to make document
-                        // available to recipient.
-                        for (AditUser user : allRecipients) {
-                            this.sendDocument(aditDocument, user, null, dvkDocument.getDhlId(), null);
+                        // Add record to sending table to make document available to recipient.
+                        for (AditUser recipient : allRecipients) {
+                            this.sendDocumentAndNotifyRecipient(aditDocument, senderUser, recipient, null, dvkDocument.getDhlId(), null);
                         }
 
                         // Update user quota limit
@@ -5061,5 +5126,15 @@ public class DocumentService {
     public void setDvkDAO(DvkDAO dvkDAO) {
         this.dvkDAO = dvkDAO;
     }
+
+
+	public NotificationService getNotificationService() {
+		return notificationService;
+	}
+
+
+	public void setNotificationService(NotificationService notificationService) {
+		this.notificationService = notificationService;
+	}
 
 }

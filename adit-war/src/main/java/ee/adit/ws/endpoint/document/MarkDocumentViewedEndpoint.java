@@ -212,8 +212,12 @@ public class MarkDocumentViewedEndpoint extends AbstractAditBaseEndpoint {
                                     && (docCreator != null)
                                     && (userService.findNotification(docCreator.getUserNotifications(),
                                             ScheduleClient.NOTIFICATION_TYPE_VIEW) != null)) {
+                                	
+                                	String xroadRequestUserInfo = xroadRequestUser.getFullName() != null && !xroadRequestUser.getFullName().trim().isEmpty() ?
+                                					xroadRequestUser.getFullName() : xroadRequestUser.getUserCode();
 
-                                	List<Message> messageInAllKnownLanguages = this.getMessageService().getMessages("scheduler.message.view", new Object[] {doc.getTitle(), xroadRequestUser.getUserCode()});
+                                	List<Message> messageInAllKnownLanguages = this.getMessageService().getMessages(
+                                			"scheduler.message.view", new Object[] {doc.getTitle(), xroadRequestUserInfo});
                                 	String eventText = Util.joinMessages(messageInAllKnownLanguages, "<br/>");
 
                                     getScheduleClient().addEvent(
