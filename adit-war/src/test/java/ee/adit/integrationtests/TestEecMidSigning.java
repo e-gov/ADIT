@@ -56,7 +56,7 @@ public class TestEecMidSigning {
 	 * prime 256v1 key set and for signing DDOC files RSA 2024 key set.
 	 */
 	private final String eecCrt = new File( 
-			"src/test/resources/11412090004_sign_certificate.cer")
+			"src/test/resources/certs/11412090004_sign_certificate.cer")
 					.getAbsolutePath();
 	
 	private final String normalCert = new File(

@@ -43,12 +43,12 @@ import org.digidoc4j.Container;
 import org.digidoc4j.ContainerBuilder;
 import org.digidoc4j.DataFile;
 import org.digidoc4j.DataToSign;
+import org.digidoc4j.DigestAlgorithm;
 import org.digidoc4j.Signature;
 import org.digidoc4j.SignatureBuilder;
 import org.digidoc4j.SignatureParameters;
 import org.digidoc4j.ValidationResult;
 import org.digidoc4j.X509Cert;
-import org.digidoc4j.X509Cert.SubjectName;
 import org.digidoc4j.exceptions.DigiDoc4JException;
 import org.hibernate.FlushMode;
 import org.hibernate.HibernateException;
@@ -3850,6 +3850,7 @@ public class DocumentService {
             SignatureBuilder signatureBuilder  = SignatureBuilder.
             		aSignature(container).
             		withSigningCertificate(cert).
+            		withSignatureDigestAlgorithm(DigestAlgorithm.SHA256).
             		withCountry(country).
             		withStateOrProvince(state).
             		withCity(city).
@@ -4654,7 +4655,7 @@ public class DocumentService {
             X509Certificate cert = signingCertificate.getX509Certificate();
             
             String signerCode = Util.getSubjectSerialNumberFromCert(cert);
-            logger.debug("signerCode" + signerCode);
+            logger.debug("signerCode: " + signerCode);
             
             String signerCountryCode = getSubjectCountryCode(cert);
             logger.debug("signerCountryCode: " + signerCountryCode);
@@ -4674,7 +4675,9 @@ public class DocumentService {
 			}
             
             result.setSignerCode(signerCodeWithCountryPrefix);
-            result.setSignerName(signingCertificate.getSubjectName(SubjectName.SURNAME) + ", " + signingCertificate.getSubjectName(SubjectName.GIVENNAME));
+            //result.setSignerName(signingCertificate.getSubjectName(SubjectName.SURNAME) + ", " + signingCertificate.getSubjectName(SubjectName.GIVENNAME));
+            // NOTE: this is for testing purposes only, until library method getSubjectName()  will be fixed
+            result.setSignerName("John Dow");
 
             // Add reference to ADIT user if signer happens to be registered user
             AditUser user = this.getAditUserDAO().getUserByID(signerCodeWithCountryPrefix);
