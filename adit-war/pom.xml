@@ -445,6 +445,7 @@
                     <include>messages_et.properties</include>
                     <include>messages_ru.properties</include>
                     <include>digidoc4j.yaml</include>
+                    <include>adit.wsdl</include>
                 </includes>
             </resource>
             <resource>
