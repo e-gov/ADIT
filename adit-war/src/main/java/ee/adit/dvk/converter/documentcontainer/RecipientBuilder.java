@@ -48,7 +48,7 @@ public class RecipientBuilder {
 	                recipient.setPerson(contactInfo.getPerson());
 	                recipient.setContactData(contactInfo.getContactData());
 	                recipient.setOrganisation(contactInfo.getOrganisation());
-	                recipient.setMessageForRecipient(documentSharing.getComment());
+	                recipient.setMessageForRecipient(document.getContent());
 	                results.add(recipient);
             	}
             }
