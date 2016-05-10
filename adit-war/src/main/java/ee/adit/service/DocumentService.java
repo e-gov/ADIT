@@ -3779,10 +3779,13 @@ public class DocumentService {
             if (!readExistingContainer) {
                 logger.debug("Creating new signature container.");
                 
+                org.digidoc4j.Configuration configuration = new org.digidoc4j.Configuration(org.digidoc4j.Configuration.Mode.PROD);
+                configuration.setSignOCSPRequests(true);
+                
                 if (isBdoc) {
-                	container = ContainerBuilder.aContainer(ContainerBuilder.BDOC_CONTAINER_TYPE).build();
+                	container = ContainerBuilder.aContainer(ContainerBuilder.BDOC_CONTAINER_TYPE).withConfiguration(configuration).build();
                 } else {
-                	container = ContainerBuilder.aContainer(ContainerBuilder.DDOC_CONTAINER_TYPE).build();
+                	container = ContainerBuilder.aContainer(ContainerBuilder.DDOC_CONTAINER_TYPE).withConfiguration(configuration).build();
                 }
             } else {
                 logger.debug("Loading existing signature container");
