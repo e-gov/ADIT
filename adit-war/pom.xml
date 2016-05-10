@@ -369,7 +369,7 @@
          <dependency>
 			<groupId>org.digidoc4j</groupId>
 			<artifactId>digidoc4j</artifactId>
-			<version>1.0.2</version>
+			<version>1.0.3</version>
 		</dependency>
          
     </dependencies>
