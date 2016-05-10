@@ -49,6 +49,7 @@ import org.digidoc4j.SignatureBuilder;
 import org.digidoc4j.SignatureParameters;
 import org.digidoc4j.ValidationResult;
 import org.digidoc4j.X509Cert;
+import org.digidoc4j.X509Cert.SubjectName;
 import org.digidoc4j.exceptions.DigiDoc4JException;
 import org.hibernate.FlushMode;
 import org.hibernate.HibernateException;
@@ -4675,9 +4676,7 @@ public class DocumentService {
 			}
             
             result.setSignerCode(signerCodeWithCountryPrefix);
-            //result.setSignerName(signingCertificate.getSubjectName(SubjectName.SURNAME) + ", " + signingCertificate.getSubjectName(SubjectName.GIVENNAME));
-            // NOTE: this is for testing purposes only, until library method getSubjectName()  will be fixed
-            result.setSignerName("John Dow");
+            result.setSignerName(signingCertificate.getSubjectName(SubjectName.SURNAME) + ", " + signingCertificate.getSubjectName(SubjectName.GIVENNAME));
 
             // Add reference to ADIT user if signer happens to be registered user
             AditUser user = this.getAditUserDAO().getUserByID(signerCodeWithCountryPrefix);
