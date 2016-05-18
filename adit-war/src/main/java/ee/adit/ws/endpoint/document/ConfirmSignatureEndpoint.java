@@ -1,12 +1,14 @@
 package ee.adit.ws.endpoint.document;
 
-import java.io.InputStream;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
+import org.digidoc4j.exceptions.CertificateNotFoundException;
+import org.digidoc4j.exceptions.CertificateRevokedException;
+import org.digidoc4j.exceptions.DigiDoc4JException;
 import org.springframework.stereotype.Component;
 
 import ee.adit.dao.pojo.AditUser;
@@ -26,7 +28,6 @@ import ee.adit.service.UserService;
 import ee.adit.util.CustomXTeeHeader;
 import ee.adit.util.Util;
 import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
-import ee.sk.digidoc.DigiDocException;
 import ee.webmedia.xtee.annotation.XTeeService;
 
 /**
@@ -95,8 +96,7 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
             // Check request body
             checkRequest(request);
 
-            // Kontrollime, kas päringu käivitanud infosüsteem on ADITis
-            // registreeritud
+            // Kontrollime, kas päringu käivitanud infosüsteem on ADITis registreeritud
             boolean applicationRegistered = this.getUserService().isApplicationRegistered(applicationName);
             if (!applicationRegistered) {
                 AditCodedException aditCodedException = new AditCodedException("application.notRegistered");
@@ -104,8 +104,7 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
                 throw aditCodedException;
             }
 
-            // Kontrollime, kas päringu käivitanud infosüsteem tohib
-            // andmeid muuta
+            // Kontrollime, kas päringu käivitanud infosüsteem tohib andmeid muuta
             int accessLevel = this.getUserService().getAccessLevel(applicationName);
             if (accessLevel != 2) {
                 AditCodedException aditCodedException = new AditCodedException(
@@ -118,16 +117,14 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
             AditUser user = Util.getAditUserFromXroadHeader(this.getHeader(), this.getUserService());
             AditUser xroadRequestUser = Util.getXroadUserFromXroadHeader(user, this.getHeader(), this.getUserService());
 
-            // Kontrollime, et kasutajakonto ligipääs poleks peatatud (kasutaja
-            // lahkunud)
+            // Kontrollime, et kasutajakonto ligipääs poleks peatatud (kasutaja lahkunud)
             if ((user.getActive() == null) || !user.getActive()) {
                 AditCodedException aditCodedException = new AditCodedException("user.inactive");
                 aditCodedException.setParameters(new Object[] {user.getUserCode()});
                 throw aditCodedException;
             }
 
-            // Check whether or not the application has rights to
-            // modify current user's data.
+            // Check whether or not the application has rights to modify current user's data.
             int applicationAccessLevelForUser = userService.getAccessLevelForUser(applicationName, user);
             if (applicationAccessLevelForUser != 2) {
                 AditCodedException aditCodedException = new AditCodedException(
@@ -234,15 +231,10 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
                     throw aditCodedException;
                 }
 
-                InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream(getDigidocConfigurationFile());
-                String jdigidocCfgTmpFile = Util.createTemporaryFile(input, getConfiguration().getTempDir());
-
-                this.documentService.confirmSignature(doc.getId(), signatureFile, header.getIsikukood(),
-                        user, jdigidocCfgTmpFile, this.getConfiguration().getTempDir());
+                this.documentService.confirmSignature(doc.getId(), signatureFile, header.getIsikukood(), user, this.getConfiguration().getTempDir());
 
                 // Send scheduler notification to document owner.
-                // Notification does not need to be sent if user signed
-                // his/her own document.
+                // Notification does not need to be sent if user signed his/her own document.
                 if (!user.getUserCode().equalsIgnoreCase(doc.getCreatorCode())) {
                     AditUser docCreator = this.getUserService().getUserByID(doc.getCreatorCode());
                     if ((docCreator != null)
@@ -285,29 +277,27 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
 
         } catch (Exception e) {
             logger.error("Exception: ", e);
-            String errorMessage = null;
             response.setSuccess(false);
+            
             ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
-
+            String errorMessage = null;
+            
             if (e instanceof AditCodedException) {
                 logger.debug("Adding exception messages to response object.");
                 arrayOfMessage.setMessage(this.getMessageService().getMessages((AditCodedException) e));
-                errorMessage = this.getMessageService().getMessage(e.getMessage(),
-                        ((AditCodedException) e).getParameters(), Locale.ENGLISH);
-                errorMessage = "ERROR: " + errorMessage;
-            } else if(e instanceof DigiDocException 
-            		&& (DocumentService.DIGIDOC_REVOKED_CERT_EXCPETION_CODE==((DigiDocException) e).getCode()
-            			|| DocumentService.DIGIDOC_UNKNOWN_CERT_EXCPETION_CODE==((DigiDocException) e).getCode())
-            		) { 
-            	if (DocumentService.DIGIDOC_REVOKED_CERT_EXCPETION_CODE==((DigiDocException) e).getCode()) {
+                
+                errorMessage = this.getMessageService().getMessage(e.getMessage(), ((AditCodedException) e).getParameters(), Locale.ENGLISH);
+                if (errorMessage == null) {
+                	errorMessage = "ERROR: " + errorMessage;
+                }
+            } else if (e instanceof DigiDoc4JException) { 
+            	if (e instanceof CertificateRevokedException) {
             		arrayOfMessage.setMessage(this.getMessageService().getMessages("request.saveDocument.revokedcertificate", new Object[]{}));
-            	} else if (DocumentService.DIGIDOC_UNKNOWN_CERT_EXCPETION_CODE==((DigiDocException) e).getCode()){
+            	} else if (e instanceof CertificateNotFoundException){
             		arrayOfMessage.setMessage(this.getMessageService().getMessages("request.saveDocument.unknowncertificate", new Object[]{}));  
             	}
             	errorMessage = "ERROR: " + e.getMessage();
-            }
-            
-            else {
+            } else {
             	arrayOfMessage.setMessage(this.getMessageService().getMessages(MessageService.GENERIC_ERROR_CODE, new Object[]{}));
                 errorMessage = "ERROR: " + e.getMessage();
             }
@@ -320,6 +310,7 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
         }
 
         super.logCurrentRequest(documentId, requestDate.getTime(), additionalInformationForLog);
+        
         return response;
     }
 

@@ -63,8 +63,6 @@ import ee.adit.service.DocumentService;
 import ee.adit.service.MessageService;
 import ee.adit.util.SimplifiedDigiDocParser;
 import ee.adit.util.Util;
-import ee.sk.digidoc.DigiDocException;
-import ee.sk.utils.ConfigManager;
 
 /**
  * Document data access class. Provides methods for retrieving and manipulating
@@ -109,6 +107,7 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
 
         return (result.isEmpty() ? null : result.get(0));
     }
+    
     /**
      * Fetches document with Signatures by document ID.
      * Main goal is to initialize signatures collection which is lazy initialized by default.
@@ -364,15 +363,12 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
         if (includeFileContents && (doc.getSigned() != null) && doc.getSigned() && (signatureContainerFile != null)) {
         	try {
         		logger.debug("digidocConfigFile: " + digidocConfigFile);
-                ConfigManager.init(digidocConfigFile);
 
         		SimplifiedDigiDocParser.extractFileContentsFromContainer(
     				new ByteArrayInputStream(signatureContainerFile.getFileData()),
 	        		outputFilesList, temporaryFilesDir, Util.isBdocFile(signatureContainerFile.getFileName()));
         	} catch (IOException ex) {
                  throw new HibernateException(ex);
-        	}catch (DigiDocException ex) {
-                throw new HibernateException(ex);
         	}
         }
 
@@ -432,9 +428,9 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
             DocumentSignatureList docSignatures = new DocumentSignatureList();
             docSignatures.setSignatures(new ArrayList<ee.adit.pojo.Signature>());
             if ((doc.getSignatures() != null) && (!doc.getSignatures().isEmpty())) {
-                Iterator it = doc.getSignatures().iterator();
+                Iterator<ee.adit.dao.pojo.Signature> it = doc.getSignatures().iterator();
                 while (it.hasNext()) {
-                    ee.adit.dao.pojo.Signature sig = (ee.adit.dao.pojo.Signature) it.next();
+                    ee.adit.dao.pojo.Signature sig = it.next();
                     ee.adit.pojo.Signature outSig = new ee.adit.pojo.Signature();
                     outSig.setCity(sig.getCity());
                     outSig.setCountry(sig.getCountry());
@@ -467,9 +463,9 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
             Date sendingDateCheck = null;
 
             if ((doc.getDocumentSharings() != null) && (!doc.getDocumentSharings().isEmpty())) {
-                Iterator it = doc.getDocumentSharings().iterator();
+                Iterator<DocumentSharing> it = doc.getDocumentSharings().iterator();
                 while (it.hasNext()) {
-                    DocumentSharing sharing = (DocumentSharing) it.next();
+                    DocumentSharing sharing = it.next();
 
                     if ((sharing.getDocumentSharingType().equalsIgnoreCase(DocumentService.SHARINGTYPE_SHARE))
                         || (sharing.getDocumentSharingType().equalsIgnoreCase(DocumentService.SHARINGTYPE_SIGN))) {
@@ -623,10 +619,10 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
         	result.setHasBeenViewed(true);
         } else {
             if ((doc.getDocumentSharings() != null) && (!doc.getDocumentSharings().isEmpty())) {
-                Iterator it = doc.getDocumentSharings().iterator();
+                Iterator<DocumentSharing> it = doc.getDocumentSharings().iterator();
                 while (it.hasNext()) {
-                    DocumentSharing sharing = (DocumentSharing) it.next();
-                    if (sharing.getUserCode() != null && currentRequestUserCode.equalsIgnoreCase(sharing.getUserCode())) {
+                    DocumentSharing sharing = it.next();
+                    if (currentRequestUserCode.equalsIgnoreCase(sharing.getUserCode())) {
                     	result.setHasBeenViewed(sharing.getFirstAccessDate() != null);
                     	break;
                     }
@@ -712,9 +708,9 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
                     DocumentFile documentFile = new DocumentFile();
                     if ((attachmentFile.getId() != null) && (attachmentFile.getId() > 0)) {
                         documentFile = null;
-                        Iterator it = document.getDocumentFiles().iterator();
+                        Iterator<DocumentFile> it = document.getDocumentFiles().iterator();
                         while (it.hasNext()) {
-                            DocumentFile f = (DocumentFile) it.next();
+                            DocumentFile f = it.next();
                             if (f.getId() == attachmentFile.getId()) {
                                 documentFile = f;
                                 break;
@@ -766,9 +762,9 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
                     DocumentFile documentFile = new DocumentFile();
                     if ((attachmentFile.getId() != null) && (attachmentFile.getId() > 0)) {
                         documentFile = null;
-                        Iterator it = document.getDocumentFiles().iterator();
+                        Iterator<DocumentFile> it = document.getDocumentFiles().iterator();
                         while (it.hasNext()) {
-                            DocumentFile f = (DocumentFile) it.next();
+                            DocumentFile f = it.next();
                             if (f.getId() == attachmentFile.getId()) {
                                 logger.debug("Found existing file with ID " + attachmentFile.getId()
                                         + ". Updating existing file.");
@@ -1373,10 +1369,10 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
 	
     /**
      * Fetches document from database by dhl id
+     * 
      * @param dhlId
      * @return document
      */
-    @SuppressWarnings("unchecked")
     public Document getDocumentByDhlId(final Long dhlId) {
         if (dhlId==null || dhlId <= 0) {
             throw new IllegalArgumentException("Document ID must be a positive integer. Currently supplied ID was "
@@ -1405,6 +1401,7 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
 
     /**
      * Fetches documents from database by list of dhl ids
+     * 
      * @param dhlIds list of dhl ids
      * @return document
      */
@@ -1464,7 +1461,7 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
 
     /**
      *
-     * @param document - document onbject
+     * @param document document object
      * @return documentSendStatus
      */
     private Collection<DocumentSendStatus> getDocumentSendStatusFromDocumentForSendStatus (Document document, final List<Long> dhlIds) {
@@ -1528,6 +1525,8 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
                 session.close();
             }
         }
+        
         return results;
     }
+    
 }

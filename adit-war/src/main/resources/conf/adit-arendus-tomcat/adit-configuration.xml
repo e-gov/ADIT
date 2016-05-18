@@ -12,10 +12,12 @@
 
     <!-- Data sources -->
     <bean id="aditDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+    	<!-- NB! This part "java:comp/env/" is essential in this case for finding the jndiName -->
         <property name="jndiName" value="java:comp/env/jdbc/adit-arendus-postgres" />
     </bean>
 
     <bean id="aditDVKDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+    	<!-- NB! This part "java:comp/env/" is essential in this case for finding the jndiName -->
         <property name="jndiName" value="java:comp/env/jdbc/adit_dvk-arendus-postgres" />
     </bean>
 

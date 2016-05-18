@@ -7,6 +7,9 @@ import java.util.Iterator;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
+import org.digidoc4j.exceptions.CertificateNotFoundException;
+import org.digidoc4j.exceptions.CertificateRevokedException;
+import org.digidoc4j.exceptions.DigiDoc4JException;
 import org.springframework.stereotype.Component;
 import org.springframework.ws.mime.Attachment;
 
@@ -32,8 +35,6 @@ import ee.adit.util.CustomXTeeHeader;
 import ee.adit.util.FileSplitResult;
 import ee.adit.util.Util;
 import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
-import ee.sk.digidoc.DigiDocException;
-import ee.sk.utils.ConfigManager;
 import ee.webmedia.xtee.annotation.XTeeService;
 
 /**
@@ -69,8 +70,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
     /**
      * Executes "V1" version of "saveDocument" request.
      *
-     * @param requestObject
-     *            Request body object
+     * @param requestObject Request body object
      * @return Response body object
      */
     @SuppressWarnings("unchecked")
@@ -90,10 +90,11 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
             InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream(getDigidocConfigurationFile());
             String jdigidocCfgTmpFile = Util.createTemporaryFile(input, getConfiguration().getTempDir());
             logger.debug("JDigidoc.cfg file created as a temporary file: '" + jdigidocCfgTmpFile + "'");
-            //jDigiDoc does not add provider when preparing signature, but uses it causing error. So add provider manualy
-        	ConfigManager.init(jdigidocCfgTmpFile);
-        	ConfigManager.addProvider();
-
+            
+            // jDigiDoc does not add provider when preparing signature, but uses it causing error. So add provider manually
+        	// ConfigManager.init(jdigidocCfgTmpFile);
+        	// ConfigManager.addProvider();
+            
             // Log request
             Util.printHeader(header, this.getConfiguration());
 
@@ -173,14 +174,13 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
                         creatorUserCode = header.getIsikukood();
                     }
 
-                 //   InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream(getDigidocConfigurationFile());
-                 //   String jdigidocCfgTmpFile = Util.createTemporaryFile(input, getConfiguration().getTempDir());
+					// InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream(getDigidocConfigurationFile());
+					// String jdigidocCfgTmpFile = Util.createTemporaryFile(input, getConfiguration().getTempDir());
 
                     if (document.getId() != null && document.getId() != 0) {
                         updatedExistingDocument = true;
 
-                        // Determine whether or not this document can be
-                        // modified
+                        // Determine whether or not this document can be modified
                         Document doc = this.documentService.getDocumentDAO().getDocument(document.getId());
                         runExistingDocumentChecks(doc, user.getUserCode());
 
@@ -281,10 +281,11 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
             additionalInformationForLog = LogService.REQUEST_LOG_SUCCESS + ": " + additionalMessage;
 
         } catch (Exception e) {
-            String errorMessage = null;
             logger.error("Exception: ", e);
             response.setSuccess(new Success(false));
+            
             ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
+            String errorMessage = null;
 
             if (e instanceof AditCodedException) {
                 logger.debug("Adding exception messages to response object.");
@@ -305,19 +306,14 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
                 logger.debug("Adding exception message to response object.");
                 arrayOfMessage.getMessage().add(new Message("en", e.getMessage()));
                 errorMessage = "ERROR: " + e.getMessage();
-            } 
-	         else if(e instanceof DigiDocException 
-	        		&& (DocumentService.DIGIDOC_REVOKED_CERT_EXCPETION_CODE==((DigiDocException) e).getCode()
-	        			|| DocumentService.DIGIDOC_UNKNOWN_CERT_EXCPETION_CODE==((DigiDocException) e).getCode())
-	        		) { 
-	        	if (DocumentService.DIGIDOC_REVOKED_CERT_EXCPETION_CODE==((DigiDocException) e).getCode()) {
+            } else if(e instanceof DigiDoc4JException) { 
+	        	if (e instanceof CertificateRevokedException) {
 	        		arrayOfMessage.setMessage(this.getMessageService().getMessages("request.saveDocument.revokedcertificate", new Object[]{}));
-	        	} else if (DocumentService.DIGIDOC_UNKNOWN_CERT_EXCPETION_CODE==((DigiDocException) e).getCode()){
+	        	} else if (e instanceof CertificateNotFoundException){
 	        		arrayOfMessage.setMessage(this.getMessageService().getMessages("request.saveDocument.unknowncertificate", new Object[]{}));  
 	        	}
 	        	errorMessage = "ERROR: " + e.getMessage();
-	        }
-            else {
+	        } else {
             	arrayOfMessage.setMessage(this.getMessageService().getMessages(MessageService.GENERIC_ERROR_CODE, new Object[]{}));
                 errorMessage = "ERROR: " + e.getMessage();
             }
@@ -333,15 +329,18 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
         try {
             super.setIgnoreAttachmentHeaders(true);
             boolean cidAdded = false;
-            Iterator<Attachment> i = this.getRequestMessage().getAttachments();
-            while (i.hasNext()) {
-                Attachment attachment = i.next();
+            
+            Iterator<Attachment> it = this.getRequestMessage().getAttachments();
+            while (it.hasNext()) {
+                Attachment attachment = it.next();
+                
                 String contentId = attachment.getContentId();
                 if ((contentId == null) || (contentId.length() < 1)) {
                     contentId = Util.generateRandomID();
                 } else {
                     contentId = Util.stripContentID(contentId);
                 }
+                
                 this.getResponseMessage().addAttachment(contentId, attachment.getDataHandler());
                 if (!cidAdded) {
                     response.setDocument(new SaveDocumentRequestDocument("cid:" + contentId));
@@ -353,6 +352,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
         }
 
         super.logCurrentRequest(documentId, requestDate.getTime(), additionalInformationForLog);
+        
         return response;
     }
 
@@ -386,25 +386,22 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
         } catch (Exception e) {
             logger.error("Failed sending request attachments back within response object!", ex);
         }
+        
         return response;
     }
 
     /**
      * Checks users rights for document.
      *
-     * @param request
-     *     Current request
-     * @param applicationName
-     *     Name of application that was used to execute current request
-     * @param user
-     *     User who executed current request
+     * @param request Current request
+     * @param applicationName Name of application that was used to execute current request
+     * @param user User who executed current request
      */
     private void checkRights(
     	final SaveDocumentRequest request, final String applicationName,
     	final AditUser user) {
 
-        // Check whether or not the application that executed
-        // current query is registered.
+        // Check whether or not the application that executed current query is registered.
         boolean applicationRegistered = this.getUserService().isApplicationRegistered(applicationName);
         if (!applicationRegistered) {
             AditCodedException aditCodedException = new AditCodedException("application.notRegistered");
@@ -412,8 +409,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
             throw aditCodedException;
         }
 
-        // Check whether or not the application is allowed
-        // to view or modify data.
+        // Check whether or not the application is allowed to view or modify data.
         int accessLevel = this.getUserService().getAccessLevel(applicationName);
         if (accessLevel != 2) {
             AditCodedException aditCodedException = new AditCodedException("application.insufficientPrivileges.write");
@@ -428,8 +424,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
             throw aditCodedException;
         }
 
-        // Check whether or not the application has rights to
-        // modify current user's data.
+        // Check whether or not the application has rights to modify current user's data.
         int applicationAccessLevelForUser = userService.getAccessLevelForUser(applicationName, user);
         if (applicationAccessLevelForUser != 2) {
             AditCodedException aditCodedException = new AditCodedException("application.insufficientPrivileges.forUser.write");
@@ -439,13 +434,10 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
     }
 
     /**
-     * Checks the specified document data and throws an error if data is
-     * incorrect.
+     * Checks the specified document data and throws an error if data is incorrect.
      *
-     * @param existingDoc
-     *     Document to be checked
-     * @param userCode
-     *     Code of user who executed saveDocument request
+     * @param existingDoc Document to be checked
+     * @param userCode Code of user who executed saveDocument request
      * @throws AditException
      */
     protected void runExistingDocumentChecks(Document existingDoc, String userCode) throws AditCodedException {
@@ -455,8 +447,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
             throw aditCodedException;
         }
 
-        // Null checks in following statements need to be there
-        // (i.e. don't remove them).
+        // Null checks in following statements need to be there (i.e. don't remove them).
         if ((existingDoc.getLocked() != null) && existingDoc.getLocked()) {
             AditCodedException aditCodedException = new AditCodedException("request.saveDocument.document.locked");
             aditCodedException.setParameters(new Object[] {existingDoc.getLockingDate(), userCode });
@@ -499,4 +490,5 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
     public void setDigidocConfigurationFile(String digidocConfigurationFile) {
         this.digidocConfigurationFile = digidocConfigurationFile;
     }
+    
 }

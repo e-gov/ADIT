@@ -3,22 +3,53 @@
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:tx="http://www.springframework.org/schema/tx"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:util="http://www.springframework.org/schema/util"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
 						http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
 						http://www.springframework.org/schema/context
 						http://www.springframework.org/schema/context/spring-context-2.5.xsd
 						http://www.springframework.org/schema/tx
-						http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+						http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+						http://www.springframework.org/schema/util 
+						http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="properties">
+			<util:properties>
+				<prop key="institution">1234567</prop>
+				<prop key="idcode">1234567</prop>
+				<prop key="security.server">http://xtee.girf.ee/cgi-bin/consumer_proxy</prop>				
+				<prop key="database">teavistuskalender</prop>
+				<prop key="version">1</prop>
+				<prop key="method">jurr</prop>
+			</util:properties>
+		</property>
+	</bean>
 
 	<!-- Data sources -->
-	<bean id="aditDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
-		<property name="jndiName" value="java:comp/env/jdbc/adit-arendus" />
-	</bean>
+	<bean id="aditDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="org.postgresql.Driver"/>
+        <property name="url" value="jdbc:postgresql://ats.girf.ee:5432/adit"/>
+        <property name="username" value="adit_user"/>
+        <property name="password" value="yyy"/>
+    </bean>
 
-	<bean id="aditDVKDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
-		<property name="jndiName" value="java:comp/env/jdbc/adit_dvk-arendus" />
-	</bean>
-
+<!-- 	<bean id="aditDVKDataSource" class="org.springframework.jndi.JndiObjectFactoryBean"> -->
+<!-- 		<property name="jndiName" value="java:comp/env/jdbc/adit_dvk-arendus" /> -->
+<!-- 	</bean> -->
+	
+	<bean id="aditDVKDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="org.postgresql.Driver"/>
+        <property name="url" value="jdbc:postgresql://ats.girf.ee:5432/dvkklient"/>
+        <property name="username" value="postgres"/>
+        <property name="password" value="postgres"/>
+    </bean>
+	
+	<import resource="adit-services.xml"/>
+	<import resource="adit-dao.xml"/>
+	<import resource="adit-endpoints.xml"/>
+	
 	<!-- Configuration -->
 	<bean id="configuration" class="ee.adit.util.Configuration">
 		<property name="xteeProducerName" value="@PRODUCER_NAME@" />
