@@ -3819,7 +3819,7 @@ public class DocumentService {
 
                 // If the same person has already given an unconfirmed
                 // and now attempts to prepare another signature then
-                // lets remove the users earlier signature.
+                // let's remove the user's earlier signature.
                 if (signatureToRemove != null) {
                     container.removeSignature(signatureToRemove);
                 } else if (usingContainerDraft) {
@@ -3845,6 +3845,12 @@ public class DocumentService {
                         }
                     }
                 }
+            }
+            
+            if (container.getType().equals(ContainerBuilder.DDOC_CONTAINER_TYPE) && Util.countElements(container.getSignatures()) > 0) {
+            	AditCodedException aditCodedException = new AditCodedException("request.prepareSignature.notAllowedToAddSignaturesToDdocContainer");
+            	
+            	throw aditCodedException;
             }
      
             if ((Util.countElements(container.getDataFiles()) < 1) && (Util.countElements(container.getSignatures()) < 1)) {
