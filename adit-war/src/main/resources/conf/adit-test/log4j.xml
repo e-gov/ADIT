@@ -50,7 +50,7 @@
     <appender-ref ref="file" />
   </logger>
   <logger name="ee.adit.util">
-    <level value="INFO"></level>
+    <level value="DEBUG"></level>
   </logger>
   <logger name="ee.adit.dao">
     <level value="INFO"></level>
