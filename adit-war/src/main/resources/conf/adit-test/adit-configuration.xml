@@ -46,7 +46,7 @@
 		</property>
 		<property name="dvkOrgCode" value="adit" />
 		<property name="xteeInstitution" value="adit" />
-		<property name="xteeSecurityServer" value="http://10.0.15.15/cgi-bin/consumer_proxy" />
+		<property name="xteeSecurityServer" value="http://10.0.14.15/cgi-bin/consumer_proxy" />
 		<property name="xteeIdCode" value="EE38806190294" />
 		
 		<!-- DVK folder names -->
@@ -70,7 +70,7 @@
 	</bean>
 
 	<bean id="monitorConfiguration" class="ee.adit.util.MonitorConfiguration">
-		<property name="aditServiceUrl" value="http://localhost:7007/adit/service" />
+		<property name="aditServiceUrl" value="http://10.0.7.73:7020/adit/service" />
 		<property name="remoteApplicationShortName" value="MONITOR_TEST_APP" />
 		<property name="userCode" value="EE00000000000" />
 		<property name="institutionCode" value="123456789" />
