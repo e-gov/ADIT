@@ -3701,8 +3701,8 @@ public class DocumentService {
      * @throws Exception
      */
     public PrepareSignatureInternalResult prepareSignature(final long documentId, final String manifest,
-                                                           final String country, final String state, final String city, final String zip, final String certFile,
-                                                           final AditUser xroadUser, final Boolean doPreferBdoc) throws Exception {
+                                                           final String country, final String state, final String city, final String zip,
+                                                           final String certFile, final AditUser xroadUser, final Boolean doPreferBdoc) throws Exception {
 
         PrepareSignatureInternalResult result = new PrepareSignatureInternalResult();
         result.setSuccess(true);
@@ -3756,15 +3756,16 @@ public class DocumentService {
             boolean usingContainerDraft = false;
             boolean readExistingContainer = false;          
             
-            DocumentFile containerDraft = findSignatureContainerDraft(doc);
-            DocumentFile existingContainer = findSignatureContainer(doc);
+            DocumentFile documentFileWithContainerDraft = findSignatureContainerDraft(doc);
+            DocumentFile documentFileWithExistingContainer = findSignatureContainer(doc);
             
             DigitalSigningDTO storedDraftData = null;
-            if ((containerDraft != null) && (containerDraft.getFileData() != null) && !isSignatureContainerDraftExpired(containerDraft)) {
+            if ((documentFileWithContainerDraft != null) && (documentFileWithContainerDraft.getFileData() != null)
+            		&& !isSignatureContainerDraftExpired(documentFileWithContainerDraft)) {
                 try {
-                	storedDraftData = (DigitalSigningDTO) SerializationUtils.deserialize(containerDraft.getFileData());
+                	storedDraftData = (DigitalSigningDTO) SerializationUtils.deserialize(documentFileWithContainerDraft.getFileData());
             	} catch (SerializationException e) {
-            		logger.error("Could not deserialize stored draft data", e);
+            		logger.error("Could not deserialize stored digital signing draft data", e);
             	}
                 
                 if (storedDraftData != null && storedDraftData.isDataStored()) {
@@ -3773,7 +3774,7 @@ public class DocumentService {
                 	usingContainerDraft = true;
                 	readExistingContainer = true;
                 }
-            } else if ((existingContainer != null) && (existingContainer.getFileData() != null)) {
+            } else if ((documentFileWithExistingContainer != null) && (documentFileWithExistingContainer.getFileData() != null)) {
                 readExistingContainer = true;
             }
 
@@ -3799,8 +3800,8 @@ public class DocumentService {
                 } else {
                 	InputStream containerAsStream = null;
                 	try {
-                        containerAsStream = new ByteArrayInputStream(existingContainer.getFileData());
-                        isBdoc = Util.isBdocFile(existingContainer.getFileName());
+                        containerAsStream = new ByteArrayInputStream(documentFileWithExistingContainer.getFileData());
+                        isBdoc = Util.isBdocFile(documentFileWithExistingContainer.getFileName());
                         
                         String containerType = isBdoc ? ContainerBuilder.BDOC_CONTAINER_TYPE : ContainerBuilder.DDOC_CONTAINER_TYPE;
                         container = ContainerBuilder.aContainer(containerType).fromStream(containerAsStream).build();
@@ -3827,7 +3828,7 @@ public class DocumentService {
                 } else if (usingContainerDraft) {
                     // If someone else has a pending signature then lets break signing
                 	// until the other person has completed his/her signing process.
-                    long containerDraftRemainingLifetime = getContainerDraftRemainingLifetimeSeconds(containerDraft);
+                    long containerDraftRemainingLifetime = getContainerDraftRemainingLifetimeSeconds(documentFileWithContainerDraft);
                     if (containerDraftRemainingLifetime <= 0L) {
                         throw new AditCodedException("request.prepareSignature.documentIsBeingSignedByAnotherUser");
                     } else {
@@ -3835,12 +3836,14 @@ public class DocumentService {
                             long minutes = (long) Math.floor((double) containerDraftRemainingLifetime / 60);
                             long seconds = (containerDraftRemainingLifetime - (minutes * 60L));
 
-                            AditCodedException aditCodedException = new AditCodedException("request.prepareSignature.documentIsBeingSignedByAnotherUser.withEstimate");
+                            AditCodedException aditCodedException = new AditCodedException(
+                            		"request.prepareSignature.documentIsBeingSignedByAnotherUser.withEstimate");
                             aditCodedException.setParameters(new Object[]{minutes, seconds});
                             
                             throw aditCodedException;
                         } else {
-                            AditCodedException aditCodedException = new AditCodedException("request.prepareSignature.documentIsBeingSignedByAnotherUser.withEstimateSecondsOnly");
+                            AditCodedException aditCodedException = new AditCodedException(
+                            		"request.prepareSignature.documentIsBeingSignedByAnotherUser.withEstimateSecondsOnly");
                             aditCodedException.setParameters(new Object[]{containerDraftRemainingLifetime});
                             
                             throw aditCodedException;
@@ -3882,22 +3885,22 @@ public class DocumentService {
             digitalSigningDTO.setDataToSign(dataToSign);
             
             byte[] serializedDigitalSigningData = SerializationUtils.serialize(digitalSigningDTO);
-            if (containerDraft == null) {
-            	logger.debug("Creating new container draft");
+            if (documentFileWithContainerDraft == null) {
+            	logger.debug("Creating new document file with container draft");
             	
-            	containerDraft = new DocumentFile();
-            	containerDraft.setContentType(UNKNOWN_MIME_TYPE);
-            	containerDraft.setDeleted(false);
-            	containerDraft.setDocument(doc);
-            	containerDraft.setDocumentFileTypeId(FILETYPE_SIGNATURE_CONTAINER_DRAFT);
+            	documentFileWithContainerDraft = new DocumentFile();
+            	documentFileWithContainerDraft.setContentType(UNKNOWN_MIME_TYPE);
+            	documentFileWithContainerDraft.setDeleted(false);
+            	documentFileWithContainerDraft.setDocument(doc);
+            	documentFileWithContainerDraft.setDocumentFileTypeId(FILETYPE_SIGNATURE_CONTAINER_DRAFT);
             	
-            	doc.getDocumentFiles().add(containerDraft);
+            	doc.getDocumentFiles().add(documentFileWithContainerDraft);
             }
-            containerDraft.setFileData(serializedDigitalSigningData);
-            containerDraft.setFileSizeBytes((long)serializedDigitalSigningData.length);
-            containerDraft.setLastModifiedDate(new Date());
-            containerDraft.setGuid(UUID.randomUUID().toString());
-            containerDraft.setFileName(
+            documentFileWithContainerDraft.setFileData(serializedDigitalSigningData);
+            documentFileWithContainerDraft.setFileSizeBytes((long)serializedDigitalSigningData.length);
+            documentFileWithContainerDraft.setLastModifiedDate(new Date());
+            documentFileWithContainerDraft.setGuid(UUID.randomUUID().toString());
+            documentFileWithContainerDraft.setFileName(
             		Util.convertToLegalFileName(doc.getTitle(),
             		(isBdoc ? Util.BDOC_PRIMARY_EXTENSION : Util.DDOC_FILE_EXTENSION),
             		null));
@@ -4100,12 +4103,12 @@ public class DocumentService {
             Document doc = (Document) session.get(Document.class, documentId);
             
             DigitalSigningDTO storedDraftData = null;
-            DocumentFile containerDraft = findSignatureContainerDraft(doc);
-            if (containerDraft != null && containerDraft.getFileData() != null) {
+            DocumentFile documentFileWithContainerDraft = findSignatureContainerDraft(doc);
+            if (documentFileWithContainerDraft != null && documentFileWithContainerDraft.getFileData() != null) {
             	try {
-            		storedDraftData = (DigitalSigningDTO) SerializationUtils.deserialize(containerDraft.getFileData());
+            		storedDraftData = (DigitalSigningDTO) SerializationUtils.deserialize(documentFileWithContainerDraft.getFileData());
             	} catch (SerializationException e) {
-            		logger.error("Could not deserialize stored draft data", e);
+            		logger.error("Could not deserialize stored digital signing draft data", e);
             	}
             }
             
@@ -4210,8 +4213,8 @@ public class DocumentService {
             doc.setLastModifiedDate(new Date());
 
             // Remove container draft contents
-            containerDraft.setFileData(null);
-            containerDraft.setFileSizeBytes(0L);
+            documentFileWithContainerDraft.setFileData(null);
+            documentFileWithContainerDraft.setFileSizeBytes(0L);
 
             // Update document
             session.update(doc);
