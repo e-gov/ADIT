@@ -3764,10 +3764,12 @@ public class DocumentService {
                 try {
                 	storedDraftData = (DigitalSigningDTO) SerializationUtils.deserialize(containerDraft.getFileData());
             	} catch (SerializationException e) {
-            		logger.error("Prepared container was not stored in the correct format");
+            		logger.error("Could not deserialize stored draft data", e);
             	}
                 
                 if (storedDraftData != null && storedDraftData.isDataStored()) {
+                	logger.debug("Stored draft data was successfully retrieved");
+                	
                 	usingContainerDraft = true;
                 	readExistingContainer = true;
                 }
@@ -3879,8 +3881,10 @@ public class DocumentService {
             digitalSigningDTO.setContainer(container);
             digitalSigningDTO.setDataToSign(dataToSign);
             
-            byte[] serializedDataToSign = SerializationUtils.serialize(digitalSigningDTO);
+            byte[] serializedDigitalSigningData = SerializationUtils.serialize(digitalSigningDTO);
             if (containerDraft == null) {
+            	logger.debug("Creating new container draft");
+            	
             	containerDraft = new DocumentFile();
             	containerDraft.setContentType(UNKNOWN_MIME_TYPE);
             	containerDraft.setDeleted(false);
@@ -3889,8 +3893,8 @@ public class DocumentService {
             	
             	doc.getDocumentFiles().add(containerDraft);
             }
-            containerDraft.setFileData(serializedDataToSign);
-            containerDraft.setFileSizeBytes((long)serializedDataToSign.length);
+            containerDraft.setFileData(serializedDigitalSigningData);
+            containerDraft.setFileSizeBytes((long)serializedDigitalSigningData.length);
             containerDraft.setLastModifiedDate(new Date());
             containerDraft.setGuid(UUID.randomUUID().toString());
             containerDraft.setFileName(
@@ -4101,7 +4105,7 @@ public class DocumentService {
             	try {
             		storedDraftData = (DigitalSigningDTO) SerializationUtils.deserialize(containerDraft.getFileData());
             	} catch (SerializationException e) {
-            		logger.error("Signing data was not stored in the correct format");
+            		logger.error("Could not deserialize stored draft data", e);
             	}
             }
             
