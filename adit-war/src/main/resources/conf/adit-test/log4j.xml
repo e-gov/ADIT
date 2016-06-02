@@ -46,18 +46,18 @@
     <appender-ref ref="performance" />
   </logger>
   <logger name="ee.adit.ws">
-    <level value="DUBUG"></level>
+    <level value="DEBUG"></level>
     <appender-ref ref="file" />
   </logger>
   <logger name="ee.adit.util">
-    <level value="DUBUG"></level>
+    <level value="DEBUG"></level>
   </logger>
   <logger name="ee.adit.dao">
-    <level value="DUBUG"></level>
+    <level value="DEBUG"></level>
     <appender-ref ref="file" />
   </logger>
   <logger name="ee.adit.service">
-    <level value="DUBUG"></level>
+    <level value="DEBUG"></level>
     <appender-ref ref="file" />
   </logger>
   <logger name="dvk">
