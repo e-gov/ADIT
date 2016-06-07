@@ -52,6 +52,7 @@ public class ContainerVer2_1ToDocumentConverterImpl implements Converter<Contain
         document.setLocked(true);
         document.setLockingDate(new Date());
         document.setSignable(true);
+        document.setContent(container.getRecordMetadata().getRecordAbstract());
         document.setTitle(pojoMessage.getTitle());
         document.setDocumentType(DocumentService.DOCTYPE_LETTER);
         document.setSigned(isSigned(container.getFile()));
