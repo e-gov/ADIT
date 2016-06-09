@@ -52,10 +52,10 @@ public class ContainerVer2_1ToDocumentConverterImpl implements Converter<Contain
         document.setLocked(true);
         document.setLockingDate(new Date());
         document.setSignable(true);
-        document.setContent(container.getRecordMetadata().getRecordAbstract());
         document.setTitle(pojoMessage.getTitle());
         document.setDocumentType(DocumentService.DOCTYPE_LETTER);
         document.setSigned(isSigned(container.getFile()));
+        if(container.getRecordMetadata() != null) document.setContent(container.getRecordMetadata().getRecordAbstract()); 
         // Make sure that document sender exists as a user in ADIT
         senderUser = getSender(container.getTransport().getDecSender());
 
