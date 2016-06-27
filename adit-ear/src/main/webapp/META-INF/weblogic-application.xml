@@ -18,10 +18,8 @@
 		<package-name>org.bouncycastle.ocsp.*</package-name>
 		<package-name>org.bouncycastle.util.*</package-name>
 		<package-name>org.bouncycastle.x509.*</package-name>
-		<package-name>org.apache.commons.lang.*</package-name>
-		<package-name>org.apache.commons.io.*</package-name>
-		<package-name>org.digidoc4j.impl.*</package-name>
-
+		<package-name>org.bouncycastle.jcajce.*</package-name>
+		<package-name>org.apache.commons.*</package-name>
 	</prefer-application-packages>
 
 	<xml>

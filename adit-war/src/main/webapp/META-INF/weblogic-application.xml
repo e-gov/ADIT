@@ -1,26 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<weblogic-application
-	xmlns="http://xmlns.oracle.com/weblogic/weblogic-application"
+<weblogic-web-app xmlns="http://xmlns.oracle.com/weblogic/weblogic-web-app"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://xmlns.oracle.com/weblogic/weblogic-application http://xmlns.oracle.com/weblogic/weblogic-application/1.0/weblogic-application.xsd">
+	xsi:schemaLocation="http://xmlns.oracle.com/weblogic/weblogic-web-app http://xmlns.oracle.com/weblogic/weblogic-web-app/1.4/weblogic-web-app.xsd">
 
-	<prefer-application-packages>
-		<package-name>antlr.*</package-name>
-		<package-name>org.dom4j.*</package-name>
-		<package-name>org.hibernate.*</package-name>
-		<package-name>org.bouncycastle.*</package-name>
-		<package-name>org.bouncycastle.asn1.*</package-name>
-		<package-name>org.bouncycastle.crypto.*</package-name>
-		<package-name>org.bouncycastle.i18n.*</package-name>
-		<package-name>org.bouncycastle.jce.*</package-name>
-		<package-name>org.bouncycastle.math.*</package-name>
-		<package-name>org.bouncycastle.ocsp.*</package-name>
-		<package-name>org.bouncycastle.util.*</package-name>
-		<package-name>org.bouncycastle.x509.*</package-name>
-		<package-name>org.apache.commons.lang.*</package-name>
-		<package-name>org.apache.commons.io.*</package-name>
-		<package-name>org.digidoc4j.impl.*</package-name>
+	<container-descriptor>
+		<prefer-web-inf-classes>true</prefer-web-inf-classes>
+	<container-descriptor>
+</weblogic-web-app>
 
-	</prefer-application-packages>
-
-</weblogic-application>

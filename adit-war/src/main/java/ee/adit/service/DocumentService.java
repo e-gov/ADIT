@@ -47,6 +47,7 @@ import org.digidoc4j.DigestAlgorithm;
 import org.digidoc4j.Signature;
 import org.digidoc4j.SignatureBuilder;
 import org.digidoc4j.SignatureParameters;
+import org.digidoc4j.SignatureValidationResult;
 import org.digidoc4j.ValidationResult;
 import org.digidoc4j.X509Cert;
 import org.digidoc4j.X509Cert.SubjectName;
@@ -1056,14 +1057,14 @@ public class DocumentService {
                             logger.info("Extracted signature of " + localSignature.getSignerName());
 
                             // Validate the signature
-                            List<DigiDoc4JException> validationErrors = signature.validate();
+                            SignatureValidationResult signatureValidationResult = signature.validateSignature();
                             
-                            if ((validationErrors == null) || (validationErrors.size() < 1)) {
+                            if (signatureValidationResult.isValid()) {
                                 result.getSignatures().add(localSignature);
                             } else {
                                 logger.error("Signature given by " + localSignature.getSignerName() + " was found to be invalid.");
                                 
-                                logDigidocVerificationErrors(validationErrors);
+                                logDigidocVerificationErrors(signatureValidationResult.getErrors());
                                 AditCodedException aditCodedException = new AditCodedException("digidoc.extract.invalidSignature");
                                 aditCodedException.setParameters(new Object[]{localSignature.getSignerName()});
                                 
@@ -4268,11 +4269,11 @@ public class DocumentService {
             ee.adit.dao.pojo.Signature aditSig = convertDigiDocSignatureToLocalSignature(sig);
             
             // Verify the signature
-            List<DigiDoc4JException> verificationErrors = sig.validate();
-            if ((verificationErrors != null) && (verificationErrors.size() > 0)) {
+            SignatureValidationResult signatureValidationResult = sig.validateSignature();
+            if (!signatureValidationResult.isValid()) {
                 logger.error("Signature given by " + aditSig.getSignerName() + " was found to be invalid.");
                 
-                logDigidocVerificationErrors(verificationErrors);
+                logDigidocVerificationErrors(signatureValidationResult.getErrors());
                 AditCodedException aditCodedException = new AditCodedException("digidoc.extract.invalidSignature");
                 aditCodedException.setParameters(new Object[]{aditSig.getSignerName()});
                 
