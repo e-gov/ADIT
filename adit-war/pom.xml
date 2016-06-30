@@ -18,10 +18,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <digidoc.tmp.dir>C:\\Users\\lisa\\TMP</digidoc.tmp.dir>
         <!-- Edit this to match your destination environment -->
-        <!--<resourceDir>ria-dev-weblogic</resourceDir>-->
-        <!--<resourceDir>ria-test-weblogic</resourceDir>-->
-        <!--<resourceDir>ria-live-weblogic</resourceDir>-->
-        <!-- <resourceDir>dev-dev-weblogic</resourceDir> -->
+        <!--<resourceDir>conf/adit-arendus-tomcat</resourceDir>-->
+        <!--<resourceDir>conf/adit-test-tomcat</resourceDir>-->
+        <!--<resourceDir>conf/adit-toodang</resourceDir>-->
         <!-- <resourceDir>conf/girf-arendus</resourceDir> -->
     </properties>
 
