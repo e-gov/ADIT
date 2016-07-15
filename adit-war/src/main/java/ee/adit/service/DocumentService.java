@@ -47,6 +47,7 @@ import org.digidoc4j.DigestAlgorithm;
 import org.digidoc4j.Signature;
 import org.digidoc4j.SignatureBuilder;
 import org.digidoc4j.SignatureParameters;
+import org.digidoc4j.SignatureProfile;
 import org.digidoc4j.SignatureValidationResult;
 import org.digidoc4j.ValidationResult;
 import org.digidoc4j.X509Cert;
@@ -3865,6 +3866,7 @@ public class DocumentService {
             
             SignatureBuilder signatureBuilder  = SignatureBuilder.
             		aSignature(container).
+            		withSignatureProfile(SignatureProfile.LT).
             		withSigningCertificate(cert).
             		withSignatureDigestAlgorithm(DigestAlgorithm.SHA256).
             		withCountry(country).

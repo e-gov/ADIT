@@ -2063,15 +2063,15 @@ public final class Util {
         
         InputStream isCert = null;
         try {
-            if(certLocation.startsWith("http")) {
-                URL url = new URL(certLocation);
-                isCert = url.openStream();
-            } else if (certLocation.startsWith("jar://")) {
-              ClassLoader cl = Util.class.getClassLoader();
-              isCert = cl.getResourceAsStream(certLocation.substring(6));
-            } else {
-            	isCert = new FileInputStream(certLocation);
-            }
+        	if (certLocation.startsWith("http")) {
+        		URL url = new URL(certLocation);
+        		isCert = url.openStream();
+        	} else if (certLocation.startsWith("jar://")) {
+        		ClassLoader cl = Util.class.getClassLoader();
+        		isCert = cl.getResourceAsStream(certLocation.substring(6));
+        	} else {
+        		isCert = new FileInputStream(certLocation);
+        	}
             
             CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
       		cert = (X509Certificate)certificateFactory.generateCertificate(isCert);
