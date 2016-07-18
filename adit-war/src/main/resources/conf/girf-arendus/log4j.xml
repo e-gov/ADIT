@@ -114,6 +114,11 @@
     	<level value="error"/>
     	<appender-ref ref="file" />
     </logger>
+    
+    <logger name="org.digidoc4j">
+    	<level value="DEBUG"/>
+    	<appender-ref ref="stdout" />
+    </logger>
 
 <!-- 	<logger name="org.hibernate.type"> -->
 <!--     	<level value="TRACE"/> -->
@@ -121,7 +126,7 @@
 <!--     </logger> -->
 
     <root>
-		<level value="error" />
+		<level value="info" />
 		<appender-ref ref="stdout" />
 		<appender-ref ref="file" />
 	</root>
