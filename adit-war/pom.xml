@@ -451,7 +451,6 @@
                     <include>messages_ru.properties</include>
                     <include>digidoc4j.yaml</include>
                     <include>adit.wsdl</include>
-                    <include>905281.p12d</include>
                 </includes>
             </resource>
             <resource>
@@ -533,9 +532,8 @@
 				<artifactId>tomcat7-maven-plugin</artifactId>
 				<version>2.2</version>
 				<configuration>
-				        <path>/adit</path>
-				        <server>tomcat</server>
-				        <warFile>${basedir}/target/adit.war</warFile>
+					<server>tomcat6</server>
+					<warFile>${basedir}/target/adit.war</warFile>
 				</configuration>
 			</plugin>
             <plugin>
