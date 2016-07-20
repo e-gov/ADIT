@@ -13,12 +13,12 @@
     <!-- Data sources -->
     <bean id="aditDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
     	<!-- NB! This part "java:comp/env/" is essential in this case for finding the jndiName -->
-        <property name="jndiName" value="java:comp/env/jdbc/adit-arendus-postgres" />
+        <property name="jndiName" value="java:comp/env/jdbc/adit-test-postgres" />
     </bean>
 
     <bean id="aditDVKDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
     	<!-- NB! This part "java:comp/env/" is essential in this case for finding the jndiName -->
-        <property name="jndiName" value="java:comp/env/jdbc/adit_dvk-arendus-postgres" />
+        <property name="jndiName" value="java:comp/env/jdbc/adit_dvk-test-postgres" />
     </bean>
 
 	<!-- Configuration -->
@@ -72,7 +72,7 @@
 	</bean>
 
 	<bean id="monitorConfiguration" class="ee.adit.util.MonitorConfiguration">
-		<property name="aditServiceUrl" value="http://10.0.13.232:8080/adit/service" />
+		<property name="aditServiceUrl" value="http://10.0.7.234:8080/adit/service" />
 		<property name="remoteApplicationShortName" value="MONITOR_TEST_APP" />
 		<property name="userCode" value="EE00000000000" />
 		<property name="institutionCode" value="123456789" />
