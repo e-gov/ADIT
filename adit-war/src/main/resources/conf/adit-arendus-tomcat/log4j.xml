@@ -2,103 +2,111 @@
 <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
 <log4j:configuration>
 
- 	<appender name="stdout" class="org.apache.log4j.ConsoleAppender">
-	   	<layout class="org.apache.log4j.PatternLayout">
-	    	<param name="ConversionPattern" value="%d{ISO8601}%5p %C:%L - %m%n"/>
-		</layout>
+    <appender name="stdout" class="org.apache.log4j.ConsoleAppender">
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{ISO8601}%5p %C:%L - %m%n"/>
+        </layout>
     </appender>
 
     <appender name="file" class="org.apache.log4j.DailyRollingFileAppender">
-		<param name="file" value="/var/log/tomcat7/adit.log" />
-		<param name="datePattern" value="'.'yyyy-MM" />
-		<param name="append" value="true" />
-		<layout class="org.apache.log4j.PatternLayout">
-	    	<param name="ConversionPattern" value="%d{ISO8601}%5p %C:%L - %m%n"/>
-		</layout>
+        <param name="file" value="/var/log/tomcat7/adit.log" />
+        <param name="datePattern" value="'.'yyyy-MM-dd" />
+        <param name="append" value="true" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{ISO8601}%5p %C:%L - %m%n"/>
+        </layout>
     </appender>
 
     <appender name="dvk" class="org.apache.log4j.DailyRollingFileAppender">
-		<param name="file" value="/var/log/tomcat7/adit_dvk.log" />
-		<param name="datePattern" value="'.'yyyy-MM" />
-		<param name="append" value="true" />
-		<layout class="org.apache.log4j.PatternLayout">
-	    	<param name="ConversionPattern" value="%d{ISO8601}%5p %C:%L - %m%n"/>
-		</layout>
+        <param name="file" value="/var/log/tomcat7/adit_dvk.log" />
+        <param name="datePattern" value="'.'yyyy-MM" />
+        <param name="append" value="true" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{ISO8601}%5p %C:%L - %m%n"/>
+        </layout>
     </appender>
 
     <logger name="ee.adit.ws">
-    	<level value="DEBUG"></level>
+        <level value="INFO"/>
     </logger>
 
     <logger name="ee.adit.util">
-    	<level value="DEBUG"></level>
+      <level value="INFO"/>
     </logger>
 
     <logger name="ee.adit.dao">
-    	<level value="DEBUG"></level>
-    </logger>
-
-    <logger name="ee.adit.service">
-    	<level value="DEBUG"></level>
+      <level value="INFO"/>
     </logger>
 
     <logger name="ee.adit.dvk">
-    	<level value="DEBUG"/>
-    	<appender-ref ref="dvk"/>
+        <level value="INFO"/>
+    </logger> 
+
+    <logger name="ee.adit.service">
+      <level value="INFO"/>
     </logger>
 
     <logger name="org.hibernate">
-    	<level value="INFO"></level>
+      <level value="WARN"/>
     </logger>
 
-    <logger name="org.digidoc4j">
+    <logger name="ee.adit.schedule.ScheduleClient">
+        <level value="INFO" />
+    </logger>
+
+    <logger name="ee.adit.performance">
+        <level value="INFO"/>
+    </logger>
+
+    <logger name="ee.adit.service.MonitorService">
         <level value="DEBUG"/>
     </logger>
-    <logger name="ee.sk.utils.ConfigManager">
-    	<level value="INFO"/>
-    </logger>
-    <logger name="ee.sk.digidoc.DigiDocException">
-    	<level value="INFO"/>
-    </logger>
-    <logger name="ee.sk.digidoc.factory.PKCS11SignatureFactory">
-    	<level value="INFO"/>
-    </logger>
-    <logger name="ee.sk.digidoc.factory.IAIKNotaryFactory">
-    	<level value="INFO"/>
-    </logger>
-    <logger name="ee.sk.xmlenc.factory.EncryptedDataSAXParser">
-    	<level value="INFO"/>
-    </logger>
-    <logger name="ee.sk.xmlenc.EncryptedKey">
-    	<level value="INFO"/>
-    </logger>
-    <logger name="ee.sk.digidoc.Base64Util">
-    	<level value="INFO"/>
-    </logger>
-    <logger name="ee.sk.digidoc.factory.SAXDigiDocFactory">
-    	<level value="DEBUG"/>
-    </logger>
-    <logger name="ee.sk.digidoc.factory.BouncyCastleNotaryFactory">
-    	<level value="DEBUG"/>
-    </logger>
-    <logger name="ee.sk.xmlenc.factory.EncryptedStreamSAXParser">
-    	<level value="DEBUG"/>
-    </logger>
-    <logger name="ee.sk.digidoc.DataFile">
-    	<level value="DEBUG"/>
-    </logger>
-    <logger name="ee.sk.xmlenc.EncryptedData">
-    	<level value="DEBUG"/>
+
+    <logger name="ee.adit.util.NagiosLogger">
+        <level value="INFO" />
     </logger>
 
-    <logger name="org.springframework.orm.hibernate3">
-    	<level value="ERROR"/>
+    <!-- Digidoc signing loggers -->
+    <logger name="org.digidoc4j">
+        <level value="INFO"/>
+    </logger>
+
+    <logger name="ee.sk.digidoc">
+      <level value="INFO"/>
+    </logger>
+
+    <!-- Extra log for receivings from DVK-->
+    <logger name="ee.adit.dvk" additivity="false">
+        <level value="DEBUG"/>
+        <appender-ref ref="dvk"/>
+    </logger>
+
+    <!--Uncomment the below loggers to enable debugging mode-->
+
+    <logger name="org.digidoc4j" additivity="false">
+        <level value="DEBUG"/>
+        <appender-ref ref="file"/>
+    </logger>
+    <logger name="ee.sk" additivity="false">
+      <level value="DEBUG"/>
+      <appender-ref ref="file"/>
+    </logger>
+    <logger name="ee.adit.ws" additivity="false">
+        <level value="DEBUG"/>
+        <appender-ref ref="file"/>
+    </logger>
+    <logger name="ee.adit.util.Util" additivity="false">
+        <level value="DEBUG"/>
+        <appender-ref ref="file"/>
+    </logger>
+    <logger name="ee.adit.schedule" additivity="false">
+        <level value="DEBUG"/>
+        <appender-ref ref="file"/>
     </logger>
 
     <root>
-		<level value="error" />
-		<appender-ref ref="stdout" />
-		<appender-ref ref="file" />
-	</root>
+        <level value="ERROR" />
+        <appender-ref ref="file"/>
+    </root>
 
 </log4j:configuration>
