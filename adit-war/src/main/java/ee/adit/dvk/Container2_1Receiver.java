@@ -1,5 +1,11 @@
 package ee.adit.dvk;
 
+import java.util.Calendar;
+import java.util.List;
+
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.log4j.Logger;
+
 import dvk.api.container.v2_1.ContainerVer2_1;
 import dvk.api.container.v2_1.DecRecipient;
 import dvk.api.container.v2_1.Recipient;
@@ -12,11 +18,6 @@ import ee.adit.dvk.converter.containerdocument.RecipientsBuilder;
 import ee.adit.pojo.OutputDocumentFile;
 import ee.adit.pojo.SaveItemInternalResult;
 import ee.adit.service.DocumentService;
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.log4j.Logger;
-
-import java.util.Calendar;
-import java.util.List;
 
 /**
  * @author Hendrik Pärna

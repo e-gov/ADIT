@@ -1,5 +1,16 @@
 package ee.adit.dvk.converter;
 
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import org.junit.Assert;
+import org.junit.Test;
+
 import dvk.api.container.v2_1.ContainerVer2_1;
 import dvk.api.container.v2_1.DecSender;
 import dvk.api.container.v2_1.File;
@@ -11,16 +22,6 @@ import ee.adit.dao.pojo.Document;
 import ee.adit.service.DocumentService;
 import ee.adit.util.Configuration;
 import ee.adit.util.DigiDocExtractionResult;
-import org.junit.Assert;
-import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * @author Hendrik Pärna

@@ -12,9 +12,6 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-import ee.adit.pojo.ArrayOfFileType;
-import ee.adit.pojo.GetSendStatusRequestDocument;
-
 /**
  * <p>
  * Java class for GetDocumentRequest complex type.

@@ -1,35 +1,24 @@
 package ee.adit.ws.endpoint.document;
 
 import java.io.File;
-
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 
-import ee.adit.pojo.DocumentSendStatus;
-import ee.adit.dao.pojo.AditUser;
-import ee.adit.dao.pojo.Document;
-import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.ArrayOfMessage;
-import ee.adit.pojo.GetDocumentRequest;
+import ee.adit.pojo.DocumentSendStatus;
 import ee.adit.pojo.GetSendStatusRequest;
 import ee.adit.pojo.GetSendStatusRequestAttachment;
 import ee.adit.pojo.GetSendStatusResponse;
 import ee.adit.pojo.GetSendStatusResponseAttachment;
 import ee.adit.pojo.GetSendStatusResponseDocument;
 import ee.adit.pojo.Message;
-import ee.adit.pojo.OutputDocument;
-import ee.adit.pojo.OutputDocumentFile;
-import ee.adit.pojo.SaveDocumentRequestAttachment;
 import ee.adit.schedule.ScheduleClient;
 import ee.adit.service.DocumentService;
 import ee.adit.service.LogService;

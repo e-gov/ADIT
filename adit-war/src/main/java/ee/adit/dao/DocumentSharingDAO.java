@@ -1,23 +1,16 @@
 package ee.adit.dao;
 
-import java.security.acl.Owner;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
-import ee.adit.dao.pojo.Document;
-import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Property;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
-import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.exception.AditInternalException;
 import ee.adit.service.DocumentService;

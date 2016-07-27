@@ -1,5 +1,12 @@
 package ee.adit.dvk.converter;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import org.junit.Assert;
+import org.junit.Ignore;
+import org.junit.Test;
+
 import dvk.api.container.v2_1.ContainerVer2_1;
 import dvk.api.container.v2_1.DecRecipient;
 import dvk.api.container.v2_1.DecSender;
@@ -9,12 +16,6 @@ import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.service.DocumentService;
 import ee.adit.test.service.StubAditUserDAOForOrg;
 import ee.adit.test.service.StubAditUserDAOForPerson;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * @author Hendrik Pärna

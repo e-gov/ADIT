@@ -1,5 +1,9 @@
 package ee.adit.dvk.converter.documentcontainer;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 import dvk.api.container.v2_1.DecRecipient;
 import dvk.api.container.v2_1.DecSender;
 import dvk.api.container.v2_1.Transport;
@@ -7,14 +11,8 @@ import ee.adit.dao.AditUserDAO;
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.DocumentSharing;
-import ee.adit.service.DocumentService;
-import ee.adit.service.UserService;
 import ee.adit.util.Configuration;
 import ee.adit.util.Util;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 
 /**
  * @author Hendrik Pärna

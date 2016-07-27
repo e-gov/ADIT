@@ -1,5 +1,10 @@
 package ee.adit.dvk.converter;
 
+import java.util.Date;
+import java.util.List;
+
+import org.apache.log4j.Logger;
+
 import dvk.api.container.v2_1.ContainerVer2_1;
 import dvk.api.container.v2_1.DecSender;
 import dvk.api.container.v2_1.File;
@@ -13,9 +18,6 @@ import ee.adit.pojo.OutputDocumentFile;
 import ee.adit.service.DocumentService;
 import ee.adit.util.DigiDocExtractionResult;
 import ee.adit.util.Util;
-import java.util.Date;
-import java.util.List;
-import org.apache.log4j.Logger;
 
 /**
  * @author Hendrik Pärna
