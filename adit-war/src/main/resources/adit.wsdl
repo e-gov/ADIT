@@ -1499,6 +1499,9 @@
 
 		<!-- Schema for SOAP Attachment types. Separate schema for attachment types is necessary to keep attachment types out of ADIT namespace. -->
 		<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="">
+		
+			<xs:import namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
+		
 			<xs:complexType name="message">
 				<xs:annotation>
 					<xs:documentation xml:lang="ee">Teade</xs:documentation>
@@ -3558,7 +3561,7 @@
 				<soap:body namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" use="literal" />
 			</wsdl:input>
 			<wsdl:output name="shareDocumentResponse">
-				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="asutus" use="literal">
+				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="asutus" use="literal" />
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="asutus" use="literal" />
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="andmekogu" use="literal" />
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="isikukood" use="literal" />
