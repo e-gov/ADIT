@@ -132,7 +132,7 @@ public class AditEndpointMapping extends AbstractQNameEndpointMapping {
                         String localName = requestQName.getLocalPart();
                         XRoadQueryName queryName = Util.extractQueryName(requestNameHeaderValue);
 
-                        logger.debug("extracted queryname: " + queryName);
+                        logger.debug("extracted queryname: " + queryName.getName());
 
                         if (queryName == null || queryName.getName() == null) {
                             throw new AditInternalException(
