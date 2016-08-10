@@ -1,5 +1,7 @@
 package ee.adit.ws.endpoint.document;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
+
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -22,6 +24,8 @@ import ee.adit.pojo.GetDocumentResponse;
 import ee.adit.pojo.GetDocumentResponseAttachment;
 import ee.adit.pojo.GetDocumentResponseAttachmentV2;
 import ee.adit.pojo.GetDocumentResponseDocument;
+import ee.adit.pojo.GetDocumentV2Request;
+import ee.adit.pojo.GetDocumentV2Response;
 import ee.adit.pojo.Message;
 import ee.adit.pojo.OutputDocument;
 import ee.adit.pojo.OutputDocumentFile;
@@ -333,7 +337,8 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
      * @return Response body object
      */
     protected Object v2(Object requestObject) {
-        GetDocumentResponse response = new GetDocumentResponse();
+        GetDocumentResponse response = (requestObject instanceof GetDocumentV2Request) ? new GetDocumentV2Response() :  new GetDocumentResponse();
+        
         ArrayOfMessage messages = new ArrayOfMessage();
         Calendar requestDate = Calendar.getInstance();
         String additionalInformationForLog = null;
