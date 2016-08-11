@@ -2,7 +2,6 @@ package ee.adit.dvk.converter;
 
 import ee.adit.dao.pojo.Document;
 import ee.adit.util.Configuration;
-import org.junit.Ignore;
 
 /**
  * @author Hendrik Pärna

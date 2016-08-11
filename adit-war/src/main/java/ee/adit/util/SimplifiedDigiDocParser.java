@@ -24,6 +24,7 @@ import org.digidoc4j.ContainerBuilder;
 import org.digidoc4j.DataFile;
 
 import ee.adit.pojo.OutputDocumentFile;
+import ee.sk.digidoc.DigiDocException;
 
 /**
  * Class containing methods for DigiDoc file manipulation (mainly for

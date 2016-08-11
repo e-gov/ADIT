@@ -1,10 +1,11 @@
 package ee.adit.util;
 
-import ee.adit.dao.MaintenanceJobDAO;
 import org.apache.log4j.Logger;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.scheduling.quartz.QuartzJobBean;
+
+import ee.adit.dao.MaintenanceJobDAO;
 
 /**
  * Clears the running statuses on jobs.

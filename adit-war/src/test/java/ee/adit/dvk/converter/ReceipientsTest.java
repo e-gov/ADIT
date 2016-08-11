@@ -1,19 +1,19 @@
 package ee.adit.dvk.converter;
 
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.junit.Assert;
+import org.junit.Test;
+
 import dvk.api.container.v2_1.Recipient;
 import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.service.DocumentService;
 import ee.adit.test.service.StubAditUserDAOForPerson;
 import ee.adit.test.service.StubDocumentTypeDAO;
-
-import org.junit.Assert;
-import org.junit.Test;
-
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 /**
  * @author Hendrik Pärna

@@ -1,10 +1,38 @@
 package ee.adit.integrationtests;
 
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.log4j.Logger;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Property;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestContextManager;
+import org.springframework.util.Assert;
+
 import dvk.api.container.Container;
 import dvk.api.container.v1.ContainerVer1;
 import dvk.api.container.v1.Saaja;
-import dvk.api.container.v2_1.*;
+import dvk.api.container.v2_1.ContainerVer2_1;
+import dvk.api.container.v2_1.DecRecipient;
+import dvk.api.container.v2_1.Recipient;
+import dvk.api.container.v2_1.Transport;
 import dvk.api.ml.PojoMessage;
 import ee.adit.dao.dvk.DvkDAO;
 import ee.adit.dao.pojo.AditUser;
@@ -19,30 +47,6 @@ import ee.adit.integrationtests.Parameters.ReceiveFromDvkTestParameter;
 import ee.adit.service.DocumentService;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
-import org.apache.log4j.Logger;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Property;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration; 
-import org.springframework.test.context.TestContextManager;
-import org.springframework.util.Assert;
-
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * @author Hendrik Pärna

@@ -2,7 +2,6 @@ package ee.adit.pojo;
 
 import java.util.List;
 
-
 public class GetSendStatusResponseAttachment {
     private List<DocumentSendStatus> documents;
 

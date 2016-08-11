@@ -1,15 +1,5 @@
 package ee.adit;
 
-import dvk.api.container.v2_1.ContainerVer2_1;
-import dvk.api.ml.PojoMessage;
-import ee.adit.dao.pojo.AditUser;
-import ee.adit.dao.pojo.Document;
-import ee.adit.dao.pojo.DocumentSharing;
-import ee.adit.dvk.DvkSender;
-import ee.adit.dvk.converter.DocumentToContainerVer2_1ConverterImpl;
-import ee.adit.service.DocumentService;
-import ee.adit.util.Util;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -24,6 +14,16 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.springframework.dao.DataRetrievalFailureException;
+
+import dvk.api.container.v2_1.ContainerVer2_1;
+import dvk.api.ml.PojoMessage;
+import ee.adit.dao.pojo.AditUser;
+import ee.adit.dao.pojo.Document;
+import ee.adit.dao.pojo.DocumentSharing;
+import ee.adit.dvk.DvkSender;
+import ee.adit.dvk.converter.DocumentToContainerVer2_1ConverterImpl;
+import ee.adit.service.DocumentService;
+import ee.adit.util.Util;
 
 /**
  * @author Hendrik Pärna

@@ -1,12 +1,12 @@
 package ee.adit.dvk.converter.documentcontainer;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import dvk.api.container.v2_1.SignatureMetadata;
 import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.Signature;
-
 import ee.adit.util.Util;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Hendrik Pärna

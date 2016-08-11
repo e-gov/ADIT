@@ -1,5 +1,11 @@
 package ee.adit.dvk.converter.containerdocument;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.log4j.Logger;
+
 import dvk.api.container.v2_1.ContainerVer2_1;
 import dvk.api.container.v2_1.DecRecipient;
 import dvk.api.container.v2_1.Recipient;
@@ -7,11 +13,6 @@ import ee.adit.dao.AditUserDAO;
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.util.Configuration;
 import ee.adit.util.Util;
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.log4j.Logger;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Hendrik Pärna

@@ -1,11 +1,12 @@
 package ee.adit.service;
 
+import java.util.List;
+
+import org.apache.log4j.Logger;
+
 import ee.adit.dao.DocumentDAO;
 import ee.adit.dao.pojo.Document;
 import ee.adit.util.Configuration;
-import org.apache.log4j.Logger;
-
-import java.util.List;
 
 /**
  * @author Hendrik Pärna
