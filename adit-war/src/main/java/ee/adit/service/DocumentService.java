@@ -3862,6 +3862,8 @@ public class DocumentService {
                 	for (Signature existingSignature : container.getSignatures()) {
                 		if (isPossibleToRemovePendingSignature(existingSignature, userCodeWithoutCountryPrefix)) {
                 			signatureToRemove = existingSignature;
+                			
+                			break;
                 		}
                 	}
                 }
@@ -3872,29 +3874,35 @@ public class DocumentService {
                 if (signatureToRemove != null) {
                     container.removeSignature(signatureToRemove);
                 } else if (usingContainerDraft) {
-                    // If someone else has a pending signature then lets break signing
-                	// until the other person has completed his/her signing process.
-                    long containerDraftRemainingLifetime = getContainerDraftRemainingLifetimeSeconds(documentFileWithContainerDraft);
-                    if (containerDraftRemainingLifetime <= 0L) {
-                        throw new AditCodedException("request.prepareSignature.documentIsBeingSignedByAnotherUser");
-                    } else {
-                        if (containerDraftRemainingLifetime > 60) {
-                            long minutes = (long) Math.floor((double) containerDraftRemainingLifetime / 60);
-                            long seconds = (containerDraftRemainingLifetime - (minutes * 60L));
-
-                            AditCodedException aditCodedException = new AditCodedException(
-                            		"request.prepareSignature.documentIsBeingSignedByAnotherUser.withEstimate");
-                            aditCodedException.setParameters(new Object[]{minutes, seconds});
-                            
-                            throw aditCodedException;
-                        } else {
-                            AditCodedException aditCodedException = new AditCodedException(
-                            		"request.prepareSignature.documentIsBeingSignedByAnotherUser.withEstimateSecondsOnly");
-                            aditCodedException.setParameters(new Object[]{containerDraftRemainingLifetime});
-                            
-                            throw aditCodedException;
-                        }
-                    }
+                	DataToSign dataToSign = storedDraftData.getDataToSign();
+                	String personIdCode = Util.getSubjectSerialNumberFromCert(dataToSign.getSignatureParameters().getSigningCertificate());
+                	
+                	boolean sameUserPreparesSignature = userCodeWithoutCountryPrefix.equalsIgnoreCase(personIdCode);
+                	if (!sameUserPreparesSignature) {
+                		// If someone else has a pending signature then lets break signing
+                		// until the other person has completed his/her signing process.
+                		long containerDraftRemainingLifetime = getContainerDraftRemainingLifetimeSeconds(documentFileWithContainerDraft);
+                		if (containerDraftRemainingLifetime <= 0L) {
+                			throw new AditCodedException("request.prepareSignature.documentIsBeingSignedByAnotherUser");
+                		} else {
+                			if (containerDraftRemainingLifetime > 60) {
+                				long minutes = (long) Math.floor((double) containerDraftRemainingLifetime / 60);
+                				long seconds = (containerDraftRemainingLifetime - (minutes * 60L));
+                				
+                				AditCodedException aditCodedException = new AditCodedException(
+                						"request.prepareSignature.documentIsBeingSignedByAnotherUser.withEstimate");
+                				aditCodedException.setParameters(new Object[]{minutes, seconds});
+                				
+                				throw aditCodedException;
+                			} else {
+                				AditCodedException aditCodedException = new AditCodedException(
+                						"request.prepareSignature.documentIsBeingSignedByAnotherUser.withEstimateSecondsOnly");
+                				aditCodedException.setParameters(new Object[]{containerDraftRemainingLifetime});
+                				
+                				throw aditCodedException;
+                			}
+                		}
+                	}
                 }
             }
             
@@ -4079,25 +4087,6 @@ public class DocumentService {
         boolean result = false;
 
         if (signature != null) {
-//            int certCount = signature.countCertValues();
-//
-//            for (int i = 0; i < certCount; i++) {
-//                if ((signature.getCertValue(i) != null) && (signature.getCertValue(i).getCert() != null)) {
-//                    boolean pendingSignatureBelongsToCurrentUser =
-//                            userCodeWithoutCountryPrefix.equalsIgnoreCase(
-//                                    Util.getSubjectSerialNumberFromCert(signature.getCertValue(i).getCert())
-//                            );
-//
-//                    if (pendingSignatureBelongsToCurrentUser) {
-//                        if (signature.findResponderCert() != null) {
-//                            throw new AditCodedException("request.prepareSignature.signer.hasAlreadySigned");
-//                        } else {
-//                            result = true;
-//                        }
-//                    }
-//                }
-//            }
-        	
         	if (signature.getSigningCertificate() != null && signature.getSigningCertificate().getX509Certificate() != null) {
         		boolean pendingSignatureBelongsToCurrentUser = userCodeWithoutCountryPrefix.equalsIgnoreCase(
         				Util.getSubjectSerialNumberFromCert(signature.getSigningCertificate().getX509Certificate()));
