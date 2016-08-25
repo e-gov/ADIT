@@ -159,6 +159,8 @@ DIGIDOC_CAS:
         CN: SK Proxy OCSP Responder 2009
         URL: http://ocsp.sk.ee
 
+SIGN_OCSP_REQUESTS: true
+
 # Change these as needed
 DIGIDOC_PKCS12_CONTAINER: 905281.p12d
 DIGIDOC_PKCS12_PASSWD: xzv3rrwy

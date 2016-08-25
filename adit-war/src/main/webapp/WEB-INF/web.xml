@@ -7,6 +7,10 @@
 
 	<distributable />
 
+	<listener>
+		<listener-class>ee.adit.web.listener.AppContextListener</listener-class>
+	</listener>
+
 	<context-param>
 	  	<param-name>contextConfigLocation</param-name>
 	  	<param-value>
