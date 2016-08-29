@@ -3828,8 +3828,8 @@ public class DocumentService {
             if (!readExistingContainer) {
                 logger.debug("Creating new signature container.");
                 
-                org.digidoc4j.Configuration configuration = new org.digidoc4j.Configuration(org.digidoc4j.Configuration.Mode.PROD);
-                configuration.setSignOCSPRequests(true);
+                // Using singleton configuration to speed-up signing process
+                org.digidoc4j.Configuration configuration = org.digidoc4j.Configuration.getInstance();
                 
                 if (isBdoc) {
                 	container = ContainerBuilder.aContainer(ContainerBuilder.BDOC_CONTAINER_TYPE).withConfiguration(configuration).build();
