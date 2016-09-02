@@ -3916,9 +3916,12 @@ public class DocumentService {
             	populateContainerWithDataFiles(container, doc);
             }
             
+            String signatureId = Util.getNewSignatureId(container);
+            
             SignatureBuilder signatureBuilder  = SignatureBuilder.
             		aSignature(container).
             		withSignatureProfile(SignatureProfile.LT).
+            		withSignatureId(signatureId).
             		withSigningCertificate(cert).
             		withSignatureDigestAlgorithm(DigestAlgorithm.SHA256).
             		withCountry(country).
