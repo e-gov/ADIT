@@ -3933,6 +3933,7 @@ public class DocumentService {
             byte[] digest = dataToSign.getDigestToSign();
             
             result.setSignatureHash(Util.convertToHexString(digest));
+            result.setSignatureId(dataToSign.getSignatureParameters().getSignatureId());
             result.setDataFileHashes(getListOfDataFileDigests(container));
             
             DigitalSigningDTO digitalSigningDTO = new DigitalSigningDTO();
