@@ -70,6 +70,7 @@ import org.bouncycastle.asn1.x509.X509Extension;
 import org.bouncycastle.asn1.x509.X509Extensions;
 import org.castor.core.util.Base64Decoder;
 import org.castor.core.util.Base64Encoder;
+import org.digidoc4j.Container;
 import org.digidoc4j.exceptions.DigiDoc4JException;
 
 import ee.adit.dao.pojo.AditUser;
@@ -2086,6 +2087,35 @@ public final class Util {
 	
     public static int countElements(List<?> list) {
     	return list != null ? list.size() : 0;
+    }
+    
+    /**
+     * Returns a new available Signature ID.
+     * 
+     * @return new Signature id
+     */
+    public static String getNewSignatureId(Container container) {
+    	// The following logic was taken with a slight modification and optimization from the JDigiDoc library.
+        int nS = 0;
+        String id = "S" + nS;
+        
+        boolean bExists = false;
+        
+        do {
+            bExists = false;
+            
+            for (org.digidoc4j.Signature sig : container.getSignatures()) {
+                if (sig.getId().equals(id)) {
+                    nS++;
+                    id = "S" + nS;
+                    
+                    bExists = true;
+                    break;
+                }
+            }
+        } while (bExists);
+        
+        return id;
     }
     
 }
