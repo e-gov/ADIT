@@ -3872,6 +3872,15 @@ public class DocumentService {
             	populateContainerWithDataFiles(container, doc);
             }
             
+            if (logger.isDebugEnabled()) {
+            	logger.debug("public key algorithm: " + cert.getPublicKey().getAlgorithm());
+            }
+            
+            EncryptionAlgorithm encryptionAlgorithm = EncryptionAlgorithm.RSA;
+            if (cert.getPublicKey().getAlgorithm().equals("EC") || cert.getPublicKey().getAlgorithm().equals("ECC")) {
+            	encryptionAlgorithm = EncryptionAlgorithm.ECDSA;
+            }
+            
             String signatureId = Util.getNewSignatureId(container);
             
             SignatureBuilder signatureBuilder  = SignatureBuilder.
@@ -3880,7 +3889,7 @@ public class DocumentService {
             		withSignatureId(signatureId).
             		withSigningCertificate(cert).
             		withSignatureDigestAlgorithm(DigestAlgorithm.SHA256).
-            		withEncryptionAlgorithm(EncryptionAlgorithm.ECDSA).
+            		withEncryptionAlgorithm(encryptionAlgorithm).
             		withCountry(country).
             		withStateOrProvince(state).
             		withCity(city).
