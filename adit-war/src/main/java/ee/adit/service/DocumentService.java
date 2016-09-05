@@ -44,9 +44,9 @@ import org.digidoc4j.ContainerBuilder;
 import org.digidoc4j.DataFile;
 import org.digidoc4j.DataToSign;
 import org.digidoc4j.DigestAlgorithm;
+import org.digidoc4j.EncryptionAlgorithm;
 import org.digidoc4j.Signature;
 import org.digidoc4j.SignatureBuilder;
-import org.digidoc4j.SignatureParameters;
 import org.digidoc4j.SignatureProfile;
 import org.digidoc4j.SignatureValidationResult;
 import org.digidoc4j.ValidationResult;
@@ -3880,6 +3880,7 @@ public class DocumentService {
             		withSignatureId(signatureId).
             		withSigningCertificate(cert).
             		withSignatureDigestAlgorithm(DigestAlgorithm.SHA256).
+            		withEncryptionAlgorithm(EncryptionAlgorithm.ECDSA).
             		withCountry(country).
             		withStateOrProvince(state).
             		withCity(city).
@@ -4958,23 +4959,6 @@ public class DocumentService {
     		}
     	}
     }
-    
-	private DataToSign prepareDataToSign(Container container, DataToSign dataToSignDraft) {
-		SignatureParameters sp = dataToSignDraft.getSignatureParameters();
-		
-		X509Certificate cert = sp.getSigningCertificate();
-		String[] claimedRoles = sp.getRoles().toArray(new String[sp.getRoles().size()]);
-		 
-		SignatureBuilder signatureBuilder = SignatureBuilder.aSignature(container).
-				withSigningCertificate(cert).
-				withRoles(claimedRoles).
-				withCity(sp.getCity()).
-				withStateOrProvince(sp.getStateOrProvince()).
-				withPostalCode(sp.getPostalCode()).
-				withCountry(sp.getCountry());
-
-		return signatureBuilder.buildDataToSign();
-	}
 
     public MessageSource getMessageSource() {
         return messageSource;
