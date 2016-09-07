@@ -1,8 +1,9 @@
 package ee.adit.dvk;
 
+import java.util.regex.Pattern;
+
 import dvk.api.ml.PojoMessage;
 import ee.adit.service.DocumentService;
-import java.util.regex.Pattern;
 
 /**
  * @author Hendrik Pärna

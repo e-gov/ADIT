@@ -1,7 +1,6 @@
 package ee.adit.ws.endpoint.document;
 
 import java.io.InputStream;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;

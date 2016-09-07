@@ -1,11 +1,12 @@
 package ee.adit.dvk.converter;
 
+import org.junit.Assert;
+import org.junit.Test;
+
 import dvk.api.container.v2_1.RecordCreator;
 import ee.adit.dao.pojo.Document;
 import ee.adit.test.service.StubAditUserDAOForOrg;
 import ee.adit.test.service.StubAditUserDAOForPerson;
-import org.junit.Assert;
-import org.junit.Test;
 
 /**
  * @author Hendrik Pärna

@@ -1,13 +1,10 @@
 package ee.adit.integrationtests.Parameters;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
-
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.net.URLDecoder;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
 
 /**
  * Created with IntelliJ IDEA.

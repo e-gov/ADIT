@@ -1,7 +1,6 @@
 package ee.adit.ws.endpoint.document;
 
 import java.io.File;
-
 import java.io.InputStream;
 import java.util.Calendar;
 import java.util.List;
@@ -10,10 +9,10 @@ import java.util.Locale;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 
-import ee.adit.pojo.DocumentSendStatus;
 import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.ArrayOfMessage;
+import ee.adit.pojo.DocumentSendStatus;
 import ee.adit.pojo.GetSendStatusRequest;
 import ee.adit.pojo.GetSendStatusRequestAttachment;
 import ee.adit.pojo.GetSendStatusResponse;

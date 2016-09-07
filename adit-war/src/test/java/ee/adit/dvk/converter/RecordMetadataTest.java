@@ -1,16 +1,17 @@
 package ee.adit.dvk.converter;
 
-import dvk.api.container.v2_1.RecordMetadata;
-import ee.adit.dao.pojo.Document;
-import ee.adit.dao.pojo.Signature;
-import ee.adit.test.service.StubDocumentTypeDAO;
-import org.junit.Assert;
-import org.junit.Test;
-
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+import dvk.api.container.v2_1.RecordMetadata;
+import ee.adit.dao.pojo.Document;
+import ee.adit.dao.pojo.Signature;
+import ee.adit.test.service.StubDocumentTypeDAO;
 
 /**
  * @author Hendrik Pärna
