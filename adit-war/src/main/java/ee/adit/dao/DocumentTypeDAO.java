@@ -25,7 +25,7 @@ public class DocumentTypeDAO extends HibernateDaoSupport {
      */
     @SuppressWarnings("unchecked")
     public List<DocumentType> listDocumentTypes() {
-        return this.getHibernateTemplate().find("from DocumentType documentType");
+        return (List<DocumentType>) this.getHibernateTemplate().find("from DocumentType documentType");
     }
 
     /**

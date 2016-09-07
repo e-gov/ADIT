@@ -107,7 +107,7 @@ public class DocumentHistoryDAO extends HibernateDaoSupport {
         	+ historyTypeCode + "'";
 
         List<DocumentHistory> existingHistoryEvents =
-        	this.getHibernateTemplate().find(sql);
+        	(List<DocumentHistory>) this.getHibernateTemplate().find(sql);
 
         if (existingHistoryEvents == null || existingHistoryEvents.size() < 1) {
             result = false;

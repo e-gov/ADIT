@@ -1039,7 +1039,7 @@ public class DocumentService_SendReceiveDvkTest_Integration {
 
         if (dvkMsgs == null || dvkMsgs.size() == 0) {
             dcMessage.add(Property.forName("dhlMessage.dhlId").eq(DEFAULT_DHL_ID));
-            dvkMsgs = dvkDAO.getHibernateTemplate().findByCriteria(dcMessage);
+            dvkMsgs = (List<PojoMessage>) dvkDAO.getHibernateTemplate().findByCriteria(dcMessage);
         }
 
         for (PojoMessage msg : dvkMsgs) {
@@ -1053,7 +1053,7 @@ public class DocumentService_SendReceiveDvkTest_Integration {
 
         if (aditDocs == null || aditDocs.size() == 0) {
             dcDocument.add(Property.forName("document.dvkId").eq(DEFAULT_DHL_ID));
-            aditDocs = documentService.getDocumentDAO().getHibernateTemplate().findByCriteria(dcDocument);
+            aditDocs = (List<Document>) documentService.getDocumentDAO().getHibernateTemplate().findByCriteria(dcDocument);
         }
 
         for (Document doc : aditDocs) {

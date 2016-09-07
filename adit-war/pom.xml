@@ -55,34 +55,27 @@
         </dependency>
 
         <!-- Spring -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>ws</artifactId>
-            <version>1.5.9</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/spring-ws-1.5.9-all.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring</artifactId>
-            <version>3.0.2</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/spring.jar</systemPath>
-        </dependency>
-        <dependency>
+		<dependency>
+			<groupId>org.springframework.ws</groupId>
+			<artifactId>spring-ws-core</artifactId>
+			<version>2.3.0.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<version>4.0.9.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-orm</artifactId>
+			<version>4.0.9.RELEASE</version>
+		</dependency>
+		<dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
-            <version>3.0.2.RELEASE</version>
+            <version>4.0.9.RELEASE</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>servlet</artifactId>
-            <version>2.5.6</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/spring-webmvc.jar</systemPath>
-        </dependency>
-
 
         <!-- Castor -->
         <dependency>
@@ -493,6 +486,14 @@
             </resource>
             <resource>
                 <directory>src/main/resources</directory>
+                <targetPath>../adit/wsdl</targetPath>
+                <includes>
+                    <include>adit_new_v1.wsdl</include>
+                    <include>adit_new_v2.wsdl</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
                 <targetPath>../adit/WEB-INF</targetPath>
                 <includes>
                     <include>adit.xsd</include>
@@ -546,6 +547,8 @@
                         <include>target/adit/WEB-INF/adit-configuration.xml</include>
                         <include>target/adit/WEB-INF/adit-endpoints.xml</include>
                         <include>target/adit/WEB-INF/adit.xsd</include>
+                        <include>target/adit/wsdl/adit_new_v1.wsdl</include>
+                        <include>target/adit/wsdl/adit_new_v2.wsdl</include>
                     </includes>
                     <token>@PRODUCER_NAME@</token>
                     <value>${producerName}</value>

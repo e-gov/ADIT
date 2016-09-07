@@ -42,7 +42,7 @@ public class UsertypeDAO extends HibernateDaoSupport {
         Usertype result = null;
 
         try {
-            List<Usertype> usertypeList = this.getHibernateTemplate().find(
+            List<Usertype> usertypeList = (List<Usertype>) this.getHibernateTemplate().find(
                     "select user.usertype from AditUser user where user.userCode = ?", user.getUserCode());
 
             if (usertypeList != null && usertypeList.size() > 0) {
