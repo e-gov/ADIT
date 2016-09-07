@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!DOCTYPE mapping PUBLIC "-//EXOLAB/Castor Mapping DTD Version 1.0//EN" "http://castor.org/mapping.dtd">
+<!DOCTYPE mapping PUBLIC "-//EXOLAB/Castor Mapping DTD Version 1.0//EN" "mapping.dtd">
 <mapping>
 	<!-- listMethods -->
 	<class name="ee.adit.pojo.ListMethodsRequest">
@@ -10,6 +10,38 @@
 		<map-to xml="keha"/>
 		<field name="item" type="java.lang.String" collection="arraylist">
 			<bind-xml name="item"/>
+		</field>
+	</class>
+	
+	<class name="ee.adit.pojo.ListMethodsResponseVer2">
+		<map-to xml="listMethodsResponse" ns-uri="http://x-road.eu/xsd/xroad.xsd" ns-prefix="xrd" />
+		
+		<field name="services" type="ee.adit.generated.xroad.XRoadServiceIdentifierType" collection="arraylist">
+			<bind-xml name="service" node="element" />
+		</field>
+	</class>
+	
+	<class name="ee.adit.generated.xroad.XRoadServiceIdentifierType" xmlns:id="http://x-road.eu/xsd/identifiers">
+		<field name="objectType" type="ee.adit.generated.xroad.XRoadObjectType" required="true">
+			<bind-xml name="id:objectType" node="attribute" QName-prefix="id" />
+		</field>
+		<field name="xRoadInstance" type="java.lang.String">
+			<bind-xml name="id:xRoadInstance" node="element" QName-prefix="id" />
+		</field>
+		<field name="memberClass" type="java.lang.String">
+			<bind-xml name="id:memberClass" node="element" QName-prefix="id" />
+		</field>
+		<field name="memberCode" type="java.lang.String">
+			<bind-xml name="id:memberCode" node="element" QName-prefix="id" />
+		</field>
+		<field name="subsystemCode" type="java.lang.String">
+			<bind-xml name="id:subsystemCode" node="element" QName-prefix="id" />
+		</field>
+		<field name="serviceCode" type="java.lang.String">
+			<bind-xml name="id:serviceCode" node="element" QName-prefix="id" />
+		</field>
+		<field name="serviceVersion" type="java.lang.String">
+			<bind-xml name="id:serviceVersion" node="element" QName-prefix="id" />
 		</field>
 	</class>
 
@@ -700,6 +732,7 @@
 			<bind-xml name="avamiseAeg"/>
 		</field>
 	</class>
+	
  	<!-- GetDocument -->
  	<class name="ee.adit.pojo.GetDocumentRequest">
 		<map-to xml="getDocument" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
@@ -720,10 +753,10 @@
 		</field>
 	</class>
 
+	<!-- GetDocument response -->
 	<class name="ee.adit.pojo.GetDocumentResponse">
 		<map-to xml="keha" />
-		<field name="success" type="java.lang.Boolean" >
-		</field>
+		<field name="success" type="java.lang.Boolean" ></field>
 		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
 			<bind-xml name="messages" />
 		</field>

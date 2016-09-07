@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import javax.xml.namespace.QName;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
 
 import org.apache.log4j.Logger;
 import org.springframework.ws.context.MessageContext;
@@ -11,11 +12,16 @@ import org.springframework.ws.server.endpoint.mapping.AbstractQNameEndpointMappi
 import org.springframework.ws.server.endpoint.support.PayloadRootUtils;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import ee.adit.exception.AditInternalException;
 import ee.adit.util.Configuration;
 import ee.adit.util.Util;
+import ee.adit.util.xroad.CustomXRoadHeader;
 import ee.adit.util.xroad.XRoadQueryName;
+import ee.adit.util.xroad.protocol.XRoadIdentifierType;
+import ee.adit.util.xroad.protocol.XRoadProtocolHeaderField;
 
 /**
  * Custom web-service endpoint mapping implementation. Maps the incoming SOAP
@@ -97,8 +103,7 @@ public class AditEndpointMapping extends AbstractQNameEndpointMapping {
             	throw new AditInternalException("Payload source of request is NULL!");
             }
 
-        	QName requestQName = PayloadRootUtils.getPayloadRootQName(
-                messageContext.getRequest().getPayloadSource(), transformerFactory);
+        	QName requestQName = PayloadRootUtils.getPayloadRootQName(messageContext.getRequest().getPayloadSource(), transformerFactory);
 
             logger.debug("Resolved request payload qualified name: " + requestQName);
 
@@ -115,48 +120,69 @@ public class AditEndpointMapping extends AbstractQNameEndpointMapping {
                 if (request.getSoapHeader() == null) {
                 	throw new AditInternalException("Request has no SOAP headers!");
                 }
+                
+                Iterator<SoapHeaderElement> soapHeaderIterator = request.getSoapHeader().examineAllHeaderElements();
 
-            	Iterator<SoapHeaderElement> soapHeaderIterator = request.getSoapHeader().examineAllHeaderElements();
-
-                QName xteeRequestNameHeaderQName = new QName(Util.XTEE_NAMESPACE, XTEE_REQUEST_NAME_HEADER);
+                QName xRoadProtocol_V2_0_ServiceName = new QName(Util.XTEE_NAMESPACE, XTEE_REQUEST_NAME_HEADER);
+                QName xRoadProtocol_V4_0_ServiceName = new QName(CustomXRoadHeader.XROAD_NS_URI, XRoadProtocolHeaderField.SERVICE.getValue());
 
                 logger.info("soapHeaderIterator.hasNext(): " + soapHeaderIterator.hasNext());
 
                 while (soapHeaderIterator.hasNext()) {
                     SoapHeaderElement header = soapHeaderIterator.next();
 
-                    if ((header != null) && xteeRequestNameHeaderQName.equals(header.getName())) {
-                        String requestNameHeaderValue = header.getText();
-                        logger.debug("Found X-Road request name header: " + requestNameHeaderValue);
-                        requestNameHeaderFound = true;
-                        String localName = requestQName.getLocalPart();
-                        XRoadQueryName queryName = Util.extractQueryName(requestNameHeaderValue);
-
-                        logger.debug("extracted queryname: " + queryName);
-
-                        if (queryName == null || queryName.getName() == null) {
-                            throw new AditInternalException(
-                                "X-Road query header name does not match the required format '"
-                            	+ configuration.getXteeProducerName() + ".[methodName].v[versionNumber]': "
-                                + requestNameHeaderValue);
-                        }
-
-                        if (!queryName.getName().equalsIgnoreCase(localName)) {
-                            throw new AditInternalException(
-                                    "X-Road query header name does not match SOAP body payload. Query name: '"
-                                            + queryName.getName() + "', payload name: '" + localName + "'.");
-                        }
+                    if (header != null) {
+                    	if (xRoadProtocol_V2_0_ServiceName.equals(header.getName())) {
+                    		requestNameHeaderFound = true;
+                    		
+                    		String requestNameHeaderValue = header.getText();
+                    		logger.debug("Found X-Road messge protocol version 2.0 service name header: " + requestNameHeaderValue);
+                    		
+                    		checkRequestedService(requestNameHeaderValue, requestQName.getLocalPart());
+                    	} else if (xRoadProtocol_V4_0_ServiceName.equals(header.getName())) {
+                    		String subsystemCode = null;
+                    		String serviceCode = null;
+                    		String serviceVersion = "v1";
+                    		
+                    		Node serviceNode = ((DOMSource) header.getSource()).getNode();
+                    		
+                    		NodeList serviceNodeList = serviceNode.getChildNodes();
+                    		for (int i = 0; i < serviceNodeList.getLength(); i++) {
+                    			Node serviceNodeNestedElement = serviceNodeList.item(i);
+                    			if (serviceNodeNestedElement.getNodeType() == Node.ELEMENT_NODE) {
+                    				if (serviceNodeNestedElement.getLocalName().equals(XRoadIdentifierType.SUBSYSTEM_CODE.getName())) {
+                    					subsystemCode = serviceNodeNestedElement.getTextContent();
+                    				} else if (serviceNodeNestedElement.getLocalName().equals(XRoadIdentifierType.SERVICE_CODE.getName())) {
+                    					serviceCode = serviceNodeNestedElement.getTextContent();
+                    				} else if (serviceNodeNestedElement.getLocalName().equals(XRoadIdentifierType.SERVICE_VERSION.getName())) {
+                    					serviceVersion = serviceNodeNestedElement.getTextContent();
+                    				}
+                    			}
+                    		}
+                    		
+                    		if (subsystemCode != null && serviceCode != null) {
+                    			requestNameHeaderFound = true;
+                    			
+                    			String backwardCompatibleServiceName = new StringBuilder().
+                    					append(subsystemCode).append(".").
+                    					append(serviceCode).append(".").
+                    					append(serviceVersion).toString();
+                    			
+                    			logger.debug("Found X-Road messge protocol version 4.0 service name header ([subsystemCode].serviceCode.[serviceVersion]): " +
+                    					backwardCompatibleServiceName);
+                        		
+                        		checkRequestedService(backwardCompatibleServiceName, requestQName.getLocalPart());
+                    		}
+                    	}
                     }
                 }
 
                 if (!requestNameHeaderFound) {
-                    throw new AditInternalException("X-Road header 'nimi' not found.");
+                    throw new AditInternalException("X-Road header for the service name was not found.");
                 }
             }
 
-            result = PayloadRootUtils.getPayloadRootQName(messageContext.getRequest().getPayloadSource(),
-                    transformerFactory);
-
+            result = PayloadRootUtils.getPayloadRootQName(messageContext.getRequest().getPayloadSource(), transformerFactory);
         } catch (Exception e) {
             logger.error("Error while determining endpoint for request: ", e);
 
@@ -169,4 +195,21 @@ public class AditEndpointMapping extends AbstractQNameEndpointMapping {
 
         return result;
     }
+    
+    private void checkRequestedService(String requestServiceNameFromSoapHeader, String requestServiceNameFromSoapBody) {
+    	XRoadQueryName queryName = Util.extractQueryName(requestServiceNameFromSoapHeader);
+		
+		logger.debug("extracted queryname: " + queryName.getName());
+		
+		if (queryName == null || queryName.getName() == null) {
+			throw new AditInternalException("X-Road query header name does not match the required format '" + 
+					configuration.getXteeProducerName() + ".[methodName].v[versionNumber]': " + requestServiceNameFromSoapHeader);
+		}
+		
+		if (!queryName.getName().equalsIgnoreCase(requestServiceNameFromSoapBody)) {
+			throw new AditInternalException("X-Road query header name does not match SOAP body payload. Query name: '" +
+					queryName.getName() + "', payload name: '" + requestServiceNameFromSoapBody + "'.");
+		}
+    }
+    
 }

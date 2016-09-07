@@ -63,6 +63,8 @@ import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Usertype;
 import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditInternalException;
+import ee.adit.generated.xroad.XRoadObjectType;
+import ee.adit.generated.xroad.XRoadServiceIdentifierType;
 import ee.adit.pojo.Message;
 import ee.adit.pojo.PersonName;
 import ee.adit.service.UserService;
@@ -1936,5 +1938,20 @@ public final class Util {
     	return false;
     }
 
+    public static XRoadServiceIdentifierType populateAditXRoadService(String serviceCode, String serviceVersion, Configuration conf) {
+    	XRoadServiceIdentifierType aditXRoadService = new XRoadServiceIdentifierType();
+    	aditXRoadService.setObjectType(XRoadObjectType.SERVICE);
+    	
+    	aditXRoadService.setXRoadInstance(conf.getXroadInstance());
+    	aditXRoadService.setMemberClass(conf.getXroadMemberClass());
+    	aditXRoadService.setMemberCode(conf.getXroadMemberCode());
+    	
+    	aditXRoadService.setSubsystemCode(conf.getXteeProducerName());
+    	aditXRoadService.setServiceCode(serviceCode);
+    	aditXRoadService.setServiceVersion(serviceVersion);
+    	
+    	return aditXRoadService;
+    }
+    
 }
 

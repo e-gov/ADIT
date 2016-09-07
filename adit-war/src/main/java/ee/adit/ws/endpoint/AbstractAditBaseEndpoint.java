@@ -39,6 +39,7 @@ import ee.adit.util.Configuration;
 import ee.adit.util.Util;
 import ee.adit.util.xroad.CustomXRoadHeader;
 import ee.adit.util.xroad.XRoadQueryName;
+import ee.adit.util.xroad.protocol.XRoadProtocolVersion;
 
 /**
  * Base class for web-service endpoints. Wraps XML marshalling / unmarshalling.
@@ -164,14 +165,13 @@ public abstract class AbstractAditBaseEndpoint extends XRoadCustomEndpoint {
 	                logger.warn("System check failed: ", e);
 	            }
 
-	            // Excecute business logic
+	            // Execute business logic
 	            responseObject = invokeInternal(requestObject, version);
 	        } catch (Exception e) {
 	            logger.error("Exception while marshalling request/response object: ", e);
 	            responseObject = getResultForGenericException(e);
 
-	            String additionalInformation = "ERROR: Exception while marshalling request/response object: "
-	                    + e.getMessage();
+	            String additionalInformation = "ERROR: Exception while marshalling request/response object: " + e.getMessage();
 
 	            // Add request log entry
 	            this.getLogService().addRequestLogEntry(configuration.getXteeProducerName() + "." + requestName + ".v" + version, null,
@@ -182,27 +182,28 @@ public abstract class AbstractAditBaseEndpoint extends XRoadCustomEndpoint {
 	        if (responseObject != null) {
 	            // Marshal the response object
 	            DOMResult reponseObjectResult = new DOMResult(responseElement);
+	            
 	            this.getMarshaller().marshal(responseObject, reponseObjectResult);
 
-	            // Add the response DOM tree as a child element to the responseKeha
-	            // element
+	            // Add the response DOM tree as a child element to the responseKeha element
 	            responseElement = (Element) reponseObjectResult.getNode();
 	            
 	            // Add SOAP attributes to ListMethods meta service response body and its elements
 	            if (this.isMetaService()){
-	            	
-	            	((Element)responseElement.getFirstChild()).setAttribute("xsi:type", "SOAP-ENC:Array");
-	            	int size = ((ListMethodsResponse)responseObject).getItem().size();
-	            	((Element)responseElement.getFirstChild()).setAttribute("SOAP-ENC:arrayType", "xsd:string["+size+"]");
-	            	((Element)responseElement.getFirstChild()).setAttribute("SOAP-ENC:offset", "[0]");
-	            		            	
-	            	for(Node childNode = responseElement.getFirstChild().getFirstChild(); childNode!=null;){
-	            		  Node nextChild = childNode.getNextSibling();	 
-	            		  ((Element) childNode).setAttribute("xsi:type", "xsd:string");
-	            		  childNode = nextChild;
-	            		  
-	            	}
+	            	if (xteeHeader.getProtocolVersion().equals(XRoadProtocolVersion.V2_0)) {
+	            		int size = ((ListMethodsResponse)responseObject).getItem().size();
+	            		
+	            		Element element = (Element) responseElement.getFirstChild();
+	            		element.setAttribute("xsi:type", "SOAP-ENC:Array");
+	            		element.setAttribute("SOAP-ENC:arrayType", "xsd:string["+size+"]");
+	            		element.setAttribute("SOAP-ENC:offset", "[0]");
+	            		
+	            		for (Node childNode = responseElement.getFirstChild().getFirstChild(); childNode != null; ) { 
+	            			((Element) childNode).setAttribute("xsi:type", "xsd:string");
 	            			
+	            			childNode = childNode.getNextSibling();
+	            		}
+	            	}
 	            }
 	        } else {
 	            logger.error("Response object not initialized.");

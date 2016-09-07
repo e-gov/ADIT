@@ -76,6 +76,12 @@
 	<bean id="castorMarshaller" class="org.springframework.oxm.castor.CastorMarshaller">
 		<property name="mappingLocation" value="classpath:/adit-castor-mapping.xml" />
 		<property name="ignoreExtraElements" value="true" />
+		<property name="namespaceMappings">
+			<props>
+				<prop key="xrd">http://x-road.eu/xsd/xroad.xsd</prop>
+				<prop key="id">http://x-road.eu/xsd/identifiers</prop>
+			</props>
+		</property>
 	</bean>
 	
 	<!-- Nagios Logger -->
