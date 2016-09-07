@@ -1,4 +1,4 @@
-package ee.adit.util;
+package ee.adit.util.xroad;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
@@ -30,12 +30,12 @@ import ee.webmedia.xtee.client.exception.XTeeException;
  * @author Jaak Lember, Interinx, jaak@interinx.com
  * 
  */
-public class CustomXTeeResponseSanitizerInterceptor implements ClientInterceptor {
+public class CustomXRoadResponseSanitizerInterceptor implements ClientInterceptor {
 
     /**
      * Log4J logger.
      */
-    private static Logger logger = Logger.getLogger(CustomXTeeResponseSanitizerInterceptor.class);
+    private static Logger logger = Logger.getLogger(CustomXRoadResponseSanitizerInterceptor.class);
 
     /**
      * Handle fault.

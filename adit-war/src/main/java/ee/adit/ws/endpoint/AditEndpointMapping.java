@@ -15,7 +15,7 @@ import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import ee.adit.exception.AditInternalException;
 import ee.adit.util.Configuration;
 import ee.adit.util.Util;
-import ee.adit.util.XRoadQueryName;
+import ee.adit.util.xroad.XRoadQueryName;
 
 /**
  * Custom web-service endpoint mapping implementation. Maps the incoming SOAP

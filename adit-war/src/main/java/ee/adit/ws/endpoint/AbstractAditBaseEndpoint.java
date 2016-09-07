@@ -36,9 +36,9 @@ import ee.adit.service.LogService;
 import ee.adit.service.MessageService;
 import ee.adit.service.MonitorService;
 import ee.adit.util.Configuration;
-import ee.adit.util.CustomXTeeHeader;
 import ee.adit.util.Util;
-import ee.adit.util.XRoadQueryName;
+import ee.adit.util.xroad.CustomXRoadHeader;
+import ee.adit.util.xroad.XRoadQueryName;
 
 /**
  * Base class for web-service endpoints. Wraps XML marshalling / unmarshalling.
@@ -47,7 +47,7 @@ import ee.adit.util.XRoadQueryName;
  * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
  * @author Jaak Lember, Interinx, jaak@interinx.com
  */
-public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
+public abstract class AbstractAditBaseEndpoint extends XRoadCustomEndpoint {
 
     /**
      * Log4J logger.
@@ -57,7 +57,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
     /**
      * X-Tee header.
      */
-    private CustomXTeeHeader header;
+    private CustomXRoadHeader header;
 
     /**
      * Marshaller - required to convert Java objects to XML.
@@ -109,7 +109,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
      */
     @Override
     protected void invokeInternal(Document requestKeha, Element responseElement,
-    	CustomXTeeHeader xteeHeader) throws Exception {
+    	CustomXRoadHeader xteeHeader) throws Exception {
 
     	Timer performanceTimer = new Timer();
     	try {
@@ -455,11 +455,11 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
      * or empty.
      *
      * @param headerParam
-     *            SOAP message header part as {@link CustomXTeeHeader}
+     *            SOAP message header part as {@link CustomXRoadHeader}
      * @throws AditCodedException
      *             Exception describing which required field is missing or empty
      */
-    public void checkHeader(CustomXTeeHeader headerParam) throws AditCodedException {
+    public void checkHeader(CustomXRoadHeader headerParam) throws AditCodedException {
         if (header != null) {
         	String infosysteem = header.getInfosysteem(configuration.getXteeProducerName());
             if (Util.isNullOrEmpty(header.getIsikukood())) {
@@ -545,7 +545,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
      *
      * @return X-Tee header of current request
      */
-    public CustomXTeeHeader getHeader() {
+    public CustomXRoadHeader getHeader() {
         return header;
     }
 
@@ -555,7 +555,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
      * @param header
      *            X-Tee header of current request
      */
-    public void setHeader(CustomXTeeHeader header) {
+    public void setHeader(CustomXRoadHeader header) {
         this.header = header;
     }
 

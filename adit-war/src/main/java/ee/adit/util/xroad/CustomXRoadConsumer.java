@@ -1,4 +1,4 @@
-package ee.adit.util;
+package ee.adit.util.xroad;
 
 import java.util.Collection;
 
@@ -15,12 +15,12 @@ import ee.webmedia.xtee.client.service.XTeeServiceConfiguration;
  * @author Jaak Lember, Interinx, jaak@interinx.com
  * 
  */
-public class CustomXTeeConsumer {
+public class CustomXRoadConsumer {
 
     /**
      * Log4J logger.
      */
-    private static Logger logger = Logger.getLogger(CustomXTeeConsumer.class);
+    private static Logger logger = Logger.getLogger(CustomXRoadConsumer.class);
 
     /**
      * Web-service template.
@@ -147,7 +147,7 @@ public class CustomXTeeConsumer {
      */
     private <T> Object sendRealRequest(T t, XTeeServiceConfiguration xteeServiceConfigurator,
             Collection<XTeeAttachment> attachments) {
-        logger.debug("Sending request using CustomXTeeConsumer...");
+        logger.debug("Sending request using CustomXRoadConsumer...");
         return webServiceTemplate.marshalSendAndReceive(serviceConfiguration.getSecurityServer(), t,
                 getCurrentMessageCallbackFactory().create(xteeServiceConfigurator, attachments));
     }

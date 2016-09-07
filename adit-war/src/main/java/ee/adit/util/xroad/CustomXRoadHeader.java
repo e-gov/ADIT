@@ -1,4 +1,4 @@
-package ee.adit.util;
+package ee.adit.util.xroad;
 
 import javax.xml.namespace.QName;
 
@@ -12,9 +12,9 @@ import ee.webmedia.xtee.XTeeHeader;
  * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
  * @author Jaak Lember, Interinx, jaak@interinx.com
  */
-public class CustomXTeeHeader extends XTeeHeader {
+public class CustomXRoadHeader extends XTeeHeader {
     private static final long serialVersionUID = 1L;
-    private static Logger logger = Logger.getLogger(CustomXTeeHeader.class);
+    private static Logger logger = Logger.getLogger(CustomXRoadHeader.class);
 
     /**
      * Retieves the value of the {@code INFOSYSTEEM} SOAP header.

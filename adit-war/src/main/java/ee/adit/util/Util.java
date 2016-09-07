@@ -66,6 +66,8 @@ import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.Message;
 import ee.adit.pojo.PersonName;
 import ee.adit.service.UserService;
+import ee.adit.util.xroad.CustomXRoadHeader;
+import ee.adit.util.xroad.XRoadQueryName;
 
 /**
  * Class providing static utility / helper methods.
@@ -588,7 +590,7 @@ public final class Util {
      * 		{@link Configuration} object containing current
      * 		application configuration settings.
      */
-    public static void printHeader(CustomXTeeHeader header, Configuration conf) {
+    public static void printHeader(CustomXRoadHeader header, Configuration conf) {
 
         logger.debug("-------- XTeeHeader --------");
 
@@ -1764,7 +1766,7 @@ public final class Util {
      *     Current user
      */
     public static AditUser getAditUserFromXroadHeader(
-    	final CustomXTeeHeader header, final UserService userService) {
+    	final CustomXRoadHeader header, final UserService userService) {
 
     	String userCode = isNullOrEmpty(header.getAllasutus()) ? header.getIsikukood() : header.getAllasutus();
         AditUser user = userService.getUserByID(userCode);
@@ -1792,7 +1794,7 @@ public final class Util {
      *     Account of person who executed current request
      */
     public static AditUser getXroadUserFromXroadHeader(
-    	final AditUser currentUser, final CustomXTeeHeader header,
+    	final AditUser currentUser, final CustomXRoadHeader header,
     	final UserService userService) {
 
     	AditUser xroadRequestUser = null;

@@ -37,8 +37,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
-import ee.adit.util.CustomXTeeHeader;
 import ee.adit.util.Util;
+import ee.adit.util.xroad.CustomXRoadHeader;
 import ee.webmedia.soap.SOAPUtil;
 import ee.webmedia.xtee.XTeeUtil;
 
@@ -54,12 +54,12 @@ import ee.webmedia.xtee.XTeeUtil;
  * @author Jaak Lember, Interinx, jaak@interinx.com
  *
  */
-public abstract class XteeCustomEndpoint implements MessageEndpoint {
+public abstract class XRoadCustomEndpoint implements MessageEndpoint {
 
     /**
      * Log4J logger.
      */
-    private static Logger logger = Logger.getLogger(XteeCustomEndpoint.class);
+    private static Logger logger = Logger.getLogger(XRoadCustomEndpoint.class);
 
     /**
      * Response element's suffix.
@@ -91,7 +91,7 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
     /**
      * The entry point for web-service call. Extracts the X-Tee operation node
      * and passes it to the
-     * {@link #getResponse(CustomXTeeHeader, Document, SOAPMessage, SOAPMessage, Document)}
+     * {@link #getResponse(CustomXRoadHeader, Document, SOAPMessage, SOAPMessage, Document)}
      * method for futher processing.
      *
      * @param messageContext
@@ -125,7 +125,7 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
                 respMessage.getSOAPHeader().detachNode();
             }
 
-            CustomXTeeHeader pais = metaService ? null : parseXteeHeader(paringMessage);
+            CustomXRoadHeader pais = metaService ? null : parseXteeHeader(paringMessage);
             Document paring = metaService ? null : parseQuery(paringMessage);
 
             // Extract the operation node (copy namespaces for it to remain
@@ -180,8 +180,8 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
      * @throws SOAPException
      */
     @SuppressWarnings("unchecked")
-    private CustomXTeeHeader parseXteeHeader(SOAPMessage paringMessage) throws SOAPException {
-        CustomXTeeHeader pais = new CustomXTeeHeader();
+    private CustomXRoadHeader parseXteeHeader(SOAPMessage paringMessage) throws SOAPException {
+        CustomXRoadHeader pais = new CustomXRoadHeader();
         SOAPHeader header = paringMessage.getSOAPHeader();
         for (Iterator<Node> headerElemendid = header.getChildElements(); headerElemendid.hasNext();) {
             Node headerElement = headerElemendid.next();
@@ -268,7 +268,7 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
      *            X-Tee specific operation node
      * @throws Exception
      */
-    private void getResponse(CustomXTeeHeader header, Document query, SOAPMessage respMessage,
+    private void getResponse(CustomXRoadHeader header, Document query, SOAPMessage respMessage,
             SOAPMessage reqMessage, Document operationNode) throws Exception {
         SOAPElement teenusElement = createXteeMessageStructure(reqMessage, respMessage);
         //For testing only
@@ -360,7 +360,7 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
     }
 
     /**
-     * Adds headers from the {@code CustomXTeeHeader} to the SOAP message.
+     * Adds headers from the {@code CustomXRoadHeader} to the SOAP message.
      *
      * @param pais
      *            headers
@@ -368,7 +368,7 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
      *            SOAP message
      * @throws SOAPException
      */
-    private void addHeader(CustomXTeeHeader pais, SOAPMessage message) throws SOAPException {
+    private void addHeader(CustomXRoadHeader pais, SOAPMessage message) throws SOAPException {
         XTeeUtil.addXteeNamespace(message);
         for (QName qname : pais.getElemendid().keySet()) {
             if (qname.getNamespaceURI().equals(XTeeUtil.XTEE_NS_URI)) {
@@ -459,7 +459,7 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
     /**
      * Method which must implement the service logic, receives
      * <code>requestKeha</code>, <code>responseElement</code>
-     * and <code>CustomXTeeHeader</code>.
+     * and <code>CustomXRoadHeader</code>.
      *
      * @param requestKeha
      *            query body
@@ -468,7 +468,7 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
      * @param xTeeHeader
      *            query header
      */
-    protected abstract void invokeInternal(Document requestKeha, Element responseElement, CustomXTeeHeader xTeeHeader)
+    protected abstract void invokeInternal(Document requestKeha, Element responseElement, CustomXRoadHeader xTeeHeader)
             throws Exception;
 
 }

@@ -51,13 +51,13 @@ import ee.adit.pojo.SaveDocumentRequestMonitor;
 import ee.adit.pojo.SaveDocumentResponseMonitor;
 import ee.adit.util.Configuration;
 import ee.adit.util.CustomClientInterceptor;
-import ee.adit.util.CustomMessageCallbackFactory;
-import ee.adit.util.CustomXTeeConsumer;
-import ee.adit.util.CustomXTeeServiceConfiguration;
 import ee.adit.util.MonitorConfiguration;
 import ee.adit.util.MonitorResult;
 import ee.adit.util.NagiosLogger;
 import ee.adit.util.Util;
+import ee.adit.util.xroad.CustomMessageCallbackFactory;
+import ee.adit.util.xroad.CustomXRoadConsumer;
+import ee.adit.util.xroad.CustomXRoadServiceConfiguration;
 import ee.webmedia.xtee.client.service.XTeeAttachment;
 
 
@@ -568,7 +568,7 @@ public class MonitorService {
 
             logger.debug("Attachment added with id: 'document'");
 
-            CustomXTeeServiceConfiguration xTeeServiceConfiguration = new CustomXTeeServiceConfiguration();
+            CustomXRoadServiceConfiguration xTeeServiceConfiguration = new CustomXRoadServiceConfiguration();
             xTeeServiceConfiguration.setDatabase(this.getConfiguration().getXteeProducerName());
             xTeeServiceConfiguration.setIdCode(this.getMonitorConfiguration().getUserCode());
             xTeeServiceConfiguration.setInstitution(this.getMonitorConfiguration().getInstitutionCode());
@@ -577,17 +577,17 @@ public class MonitorService {
             xTeeServiceConfiguration.setSecurityServer(serviceURI);
             xTeeServiceConfiguration.setInfosysteem(this.getMonitorConfiguration().getRemoteApplicationShortName());
 
-            CustomXTeeConsumer customXTeeConsumer = new CustomXTeeConsumer();
-            customXTeeConsumer.setWebServiceTemplate(webServiceTemplate);
-            customXTeeConsumer.setServiceConfiguration(xTeeServiceConfiguration);
-            customXTeeConsumer.setMsgCallbackFactory(new CustomMessageCallbackFactory());
+            CustomXRoadConsumer customXRoadConsumer = new CustomXRoadConsumer();
+            customXRoadConsumer.setWebServiceTemplate(webServiceTemplate);
+            customXRoadConsumer.setServiceConfiguration(xTeeServiceConfiguration);
+            customXRoadConsumer.setMsgCallbackFactory(new CustomMessageCallbackFactory());
 
             List<XTeeAttachment> attachments = new ArrayList<XTeeAttachment>();
             XTeeAttachment xTeeAttachment = new XTeeAttachment("document", "text/xml", Util.getBytesFromFile(new File(
                     base64zippedFile)));
             attachments.add(xTeeAttachment);
 
-            SaveDocumentResponseMonitor response = (SaveDocumentResponseMonitor) customXTeeConsumer.sendRequest(
+            SaveDocumentResponseMonitor response = (SaveDocumentResponseMonitor) customXRoadConsumer.sendRequest(
                     request, attachments);
 
             logger.info("response.success: " + response.getKeha().getSuccess());
@@ -648,7 +648,7 @@ public class MonitorService {
             request.setDocumentId(this.getMonitorConfiguration().getTestDocumentId());
             request.setIncludeFileContents(true);
 
-            CustomXTeeServiceConfiguration xTeeServiceConfiguration = new CustomXTeeServiceConfiguration();
+            CustomXRoadServiceConfiguration xTeeServiceConfiguration = new CustomXRoadServiceConfiguration();
             xTeeServiceConfiguration.setDatabase(this.getConfiguration().getXteeProducerName());
             xTeeServiceConfiguration.setIdCode(this.getMonitorConfiguration().getUserCode());
             xTeeServiceConfiguration.setInstitution(this.getMonitorConfiguration().getInstitutionCode());
@@ -657,12 +657,12 @@ public class MonitorService {
             xTeeServiceConfiguration.setSecurityServer(serviceURI);
             xTeeServiceConfiguration.setInfosysteem(this.getMonitorConfiguration().getRemoteApplicationShortName());
             
-            CustomXTeeConsumer customXTeeConsumer = new CustomXTeeConsumer();
-            customXTeeConsumer.setWebServiceTemplate(webServiceTemplate);
-            customXTeeConsumer.setServiceConfiguration(xTeeServiceConfiguration);
-            customXTeeConsumer.setMsgCallbackFactory(new CustomMessageCallbackFactory());
+            CustomXRoadConsumer customXRoadConsumer = new CustomXRoadConsumer();
+            customXRoadConsumer.setWebServiceTemplate(webServiceTemplate);
+            customXRoadConsumer.setServiceConfiguration(xTeeServiceConfiguration);
+            customXRoadConsumer.setMsgCallbackFactory(new CustomMessageCallbackFactory());
                         
-            GetDocumentResponseMonitor response = (GetDocumentResponseMonitor) customXTeeConsumer.sendRequest(request);
+            GetDocumentResponseMonitor response = (GetDocumentResponseMonitor) customXRoadConsumer.sendRequest(request);
 
             if (response != null) {
                 if (!response.isSuccess()) {
@@ -789,7 +789,7 @@ public class MonitorService {
             logger.debug("Request attachment marshalled to temporary file: '" + tmpFile + "'.");
             String base64zippedFile = Util.gzipAndBase64Encode(tmpFile, getConfiguration().getTempDir(), true);
 
-            CustomXTeeServiceConfiguration xTeeServiceConfiguration = new CustomXTeeServiceConfiguration();
+            CustomXRoadServiceConfiguration xTeeServiceConfiguration = new CustomXRoadServiceConfiguration();
             xTeeServiceConfiguration.setDatabase(this.getConfiguration().getXteeProducerName());
             xTeeServiceConfiguration.setIdCode(this.getMonitorConfiguration().getUserCode());
             xTeeServiceConfiguration.setInstitution(this.getMonitorConfiguration().getInstitutionCode());
@@ -798,17 +798,17 @@ public class MonitorService {
             xTeeServiceConfiguration.setSecurityServer(serviceURI);
             xTeeServiceConfiguration.setInfosysteem(this.getMonitorConfiguration().getRemoteApplicationShortName());
 
-            CustomXTeeConsumer customXTeeConsumer = new CustomXTeeConsumer();
-            customXTeeConsumer.setWebServiceTemplate(webServiceTemplate);
-            customXTeeConsumer.setServiceConfiguration(xTeeServiceConfiguration);
-            customXTeeConsumer.setMsgCallbackFactory(new CustomMessageCallbackFactory());
+            CustomXRoadConsumer customXRoadConsumer = new CustomXRoadConsumer();
+            customXRoadConsumer.setWebServiceTemplate(webServiceTemplate);
+            customXRoadConsumer.setServiceConfiguration(xTeeServiceConfiguration);
+            customXRoadConsumer.setMsgCallbackFactory(new CustomMessageCallbackFactory());
 
             List<XTeeAttachment> attachments = new ArrayList<XTeeAttachment>();
             XTeeAttachment xTeeAttachment = new XTeeAttachment("userlist", "text/xml", Util.getBytesFromFile(new File(
                     base64zippedFile)));
             attachments.add(xTeeAttachment);
 
-            GetUserInfoResponseMonitor response = (GetUserInfoResponseMonitor) customXTeeConsumer.sendRequest(request,
+            GetUserInfoResponseMonitor response = (GetUserInfoResponseMonitor) customXRoadConsumer.sendRequest(request,
                     attachments);
 
             if (response != null) {

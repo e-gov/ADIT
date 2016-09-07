@@ -18,8 +18,8 @@ import ee.adit.service.DocumentService;
 import ee.adit.service.LogService;
 import ee.adit.service.MessageService;
 import ee.adit.service.UserService;
-import ee.adit.util.CustomXTeeHeader;
 import ee.adit.util.Util;
+import ee.adit.util.xroad.CustomXRoadHeader;
 import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
 
 /**
@@ -66,7 +66,7 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
         try {
 
             JoinRequest request = (JoinRequest) requestObject;
-            CustomXTeeHeader header = this.getHeader();
+            CustomXRoadHeader header = this.getHeader();
             String applicationName = header.getInfosysteem(this.getConfiguration().getXteeProducerName());
 
             // Log request
