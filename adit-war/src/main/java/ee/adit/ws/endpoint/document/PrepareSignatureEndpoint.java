@@ -63,7 +63,19 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
     
     protected Object v1 (Object requestObject) {
     	logger.debug("prepareSignature.v1 invoked.");
-    	return prepareSignature(requestObject, false);
+    	
+    	/*
+    	 * IMPLEMENTATION NOTE
+    	 * 
+    	 * Version 1 was previously meant for creating DDOC containers.
+    	 * But according to the recent changes digital signature formats in Estonia,
+    	 * we should always prefer the use of the BDOC format.
+    	 * More info can be found here: http://www.id.ee/index.php?id=37370
+    	 * 
+    	 * Both versions are left for backward compatibility, just now they do the same.
+    	 */
+    	
+    	return prepareSignature(requestObject, true);
     }
     
     protected Object v2 (Object requestObject) {
