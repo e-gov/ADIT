@@ -168,7 +168,7 @@ public class AditEndpointMapping extends AbstractQNameEndpointMapping {
                     					append(serviceCode).append(".").
                     					append(serviceVersion).toString();
                     			
-                    			logger.debug("Found X-Road messge protocol version 4.0 service name header ([subsystemCode].serviceCode.[serviceVersion]): " +
+                    			logger.debug("Found X-Road message protocol version 4.0 service name header ([subsystemCode].serviceCode.[serviceVersion]): " +
                     					backwardCompatibleServiceName);
                         		
                         		checkRequestedService(backwardCompatibleServiceName, requestQName.getLocalPart());

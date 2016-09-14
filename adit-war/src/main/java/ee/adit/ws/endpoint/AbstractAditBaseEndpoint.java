@@ -6,6 +6,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -22,6 +24,7 @@ import org.springframework.core.io.InputStreamSource;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
 import org.springframework.oxm.XmlMappingException;
+import org.springframework.oxm.castor.CastorMarshaller;
 import org.springframework.ws.mime.Attachment;
 import org.springframework.ws.soap.SoapMessage;
 import org.w3c.dom.Document;
@@ -54,6 +57,13 @@ public abstract class AbstractAditBaseEndpoint extends XRoadCustomEndpoint {
      * Log4J logger.
      */
     private static Logger logger = Logger.getLogger(AbstractAditBaseEndpoint.class);
+    
+    private static final Map<String, String> nameSpaceMappings;
+    static {
+    	nameSpaceMappings = new HashMap<String, String>();
+    	nameSpaceMappings.put("xrd", "http://x-road.eu/xsd/xroad.xsd");
+    	nameSpaceMappings.put("id", "http://x-road.eu/xsd/identifiers");
+    }
 
     /**
      * X-Tee header.
@@ -109,8 +119,7 @@ public abstract class AbstractAditBaseEndpoint extends XRoadCustomEndpoint {
      * @throws Exception
      */
     @Override
-    protected void invokeInternal(Document requestKeha, Element responseElement,
-    	CustomXRoadHeader xteeHeader) throws Exception {
+    protected void invokeInternal(Document requestKeha, Element responseElement, CustomXRoadHeader xteeHeader) throws Exception {
 
     	Timer performanceTimer = new Timer();
     	try {
@@ -183,7 +192,23 @@ public abstract class AbstractAditBaseEndpoint extends XRoadCustomEndpoint {
 	            // Marshal the response object
 	            DOMResult reponseObjectResult = new DOMResult(responseElement);
 	            
-	            this.getMarshaller().marshal(responseObject, reponseObjectResult);
+	            if (isMetaService() && xteeHeader.getProtocolVersion().equals(XRoadProtocolVersion.V4_0)) {
+	            	if (marshaller instanceof CastorMarshaller) {
+	            		/*
+	            		 * This is done because for some reason Castor ignores name space prefixes defined in the related Castor mappings file
+	            		 * for meta service (ListMethodsResponseVer2) and adds his own ones. As a result the related SOAP answers get duplicate name space definitions.
+	            		 * Although SAOP answers themselves are valid and correct, but still they look not that aesthetic as they could (plus the size is bigger too).
+	            		 * 
+	            		 * This simple code fixes this issue.
+	            		 */
+	            		((CastorMarshaller) marshaller).setNamespaceMappings(nameSpaceMappings);
+	            	}
+	        	}
+	            marshaller.marshal(responseObject, reponseObjectResult);
+            	if (marshaller instanceof CastorMarshaller) {
+            		// We must reset previous name space configurations otherwise they will get into other responses (in the form of element attributes). 
+            		((CastorMarshaller) marshaller).setNamespaceMappings(null);
+            	}
 
 	            // Add the response DOM tree as a child element to the responseKeha element
 	            responseElement = (Element) reponseObjectResult.getNode();
