@@ -45,8 +45,7 @@ public class RecordMetadataBuilder {
         recordMetadata.setRecordOriginalIdentifier(String.valueOf(document.getId()));
         recordMetadata.setRecordDateRegistered(getRecordDateRegistered(document));
         recordMetadata.setRecordTitle(document.getTitle());
-        //TODO: finish me, field still in development
-        //recordMetadata.setRecordAbstract();
+        recordMetadata.setRecordAbstract(document.getContent());
 
         return recordMetadata;
     }
