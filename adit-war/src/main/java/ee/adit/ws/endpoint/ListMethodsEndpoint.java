@@ -10,7 +10,7 @@ import ee.adit.pojo.ListMethodsResponse;
 import ee.adit.pojo.ListMethodsResponseVer2;
 import ee.adit.util.Util;
 import ee.adit.util.xroad.CustomXRoadHeader;
-import ee.adit.util.xroad.protocol.XRoadProtocolVersion;
+import ee.adit.util.xroad.messageprotocol.XRoadProtocolVersion;
 
 /**
  * Web-service endpoint for "listMethods" service. Returns the list of services provided by ADIT.

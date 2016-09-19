@@ -1,4 +1,4 @@
-package ee.adit.util.xroad.protocol;
+package ee.adit.util.xroad.messageprotocol;
 
 /**
  * This class models XRoadIdentifierType as defined in the related

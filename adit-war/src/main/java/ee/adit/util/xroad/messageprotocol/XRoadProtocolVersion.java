@@ -1,5 +1,10 @@
-package ee.adit.util.xroad.protocol;
+package ee.adit.util.xroad.messageprotocol;
 
+/**
+ * This enumeration class contains data related to X-Road message protocol versions.
+ * 
+ * @author Levan Kekelidze
+ */
 public enum XRoadProtocolVersion {
 
 	/**

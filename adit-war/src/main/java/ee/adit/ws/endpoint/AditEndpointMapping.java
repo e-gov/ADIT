@@ -20,8 +20,8 @@ import ee.adit.util.Configuration;
 import ee.adit.util.Util;
 import ee.adit.util.xroad.CustomXRoadHeader;
 import ee.adit.util.xroad.XRoadQueryName;
-import ee.adit.util.xroad.protocol.XRoadIdentifierType;
-import ee.adit.util.xroad.protocol.XRoadProtocolHeaderField;
+import ee.adit.util.xroad.messageprotocol.XRoadIdentifierType;
+import ee.adit.util.xroad.messageprotocol.XRoadProtocolHeaderField;
 
 /**
  * Custom web-service endpoint mapping implementation. Maps the incoming SOAP

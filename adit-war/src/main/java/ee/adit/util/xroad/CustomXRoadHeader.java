@@ -5,9 +5,9 @@ import javax.xml.namespace.QName;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
-import ee.adit.util.xroad.protocol.XRoadClient;
-import ee.adit.util.xroad.protocol.XRoadProtocolVersion;
-import ee.adit.util.xroad.protocol.XRoadService;
+import ee.adit.util.xroad.messageprotocol.XRoadClient;
+import ee.adit.util.xroad.messageprotocol.XRoadProtocolVersion;
+import ee.adit.util.xroad.messageprotocol.XRoadService;
 import ee.webmedia.xtee.XTeeHeader;
 
 /**

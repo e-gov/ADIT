@@ -42,7 +42,7 @@ import ee.adit.util.Configuration;
 import ee.adit.util.Util;
 import ee.adit.util.xroad.CustomXRoadHeader;
 import ee.adit.util.xroad.XRoadQueryName;
-import ee.adit.util.xroad.protocol.XRoadProtocolVersion;
+import ee.adit.util.xroad.messageprotocol.XRoadProtocolVersion;
 
 /**
  * Base class for web-service endpoints. Wraps XML marshalling / unmarshalling.

@@ -41,10 +41,10 @@ import org.w3c.dom.NodeList;
 import ee.adit.util.Util;
 import ee.adit.util.xroad.CustomSOAPUtil;
 import ee.adit.util.xroad.CustomXRoadHeader;
-import ee.adit.util.xroad.protocol.XRoadClient;
-import ee.adit.util.xroad.protocol.XRoadProtocolHeaderField;
-import ee.adit.util.xroad.protocol.XRoadProtocolVersion;
-import ee.adit.util.xroad.protocol.XRoadService;
+import ee.adit.util.xroad.messageprotocol.XRoadClient;
+import ee.adit.util.xroad.messageprotocol.XRoadProtocolHeaderField;
+import ee.adit.util.xroad.messageprotocol.XRoadProtocolVersion;
+import ee.adit.util.xroad.messageprotocol.XRoadService;
 import ee.webmedia.xtee.XTeeUtil;
 
 /**
