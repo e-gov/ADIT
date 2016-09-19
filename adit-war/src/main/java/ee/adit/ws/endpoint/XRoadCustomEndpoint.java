@@ -42,6 +42,7 @@ import ee.adit.util.Util;
 import ee.adit.util.xroad.CustomSOAPUtil;
 import ee.adit.util.xroad.CustomXRoadHeader;
 import ee.adit.util.xroad.messageprotocol.XRoadClient;
+import ee.adit.util.xroad.messageprotocol.XRoadIdentifierType;
 import ee.adit.util.xroad.messageprotocol.XRoadProtocolHeaderField;
 import ee.adit.util.xroad.messageprotocol.XRoadProtocolVersion;
 import ee.adit.util.xroad.messageprotocol.XRoadService;
@@ -203,11 +204,12 @@ public abstract class XRoadCustomEndpoint implements MessageEndpoint {
     		
     		Element client = CustomSOAPUtil.getNsElement(soapHeader, XRoadProtocolHeaderField.CLIENT.getValue(), CustomXRoadHeader.XROAD_NS_URI);
     		if (client != null) {
-    			String clientXRoadInstance = CustomSOAPUtil.getNsElementValue(client, "xRoadInstance", CustomXRoadHeader.IDENTIFIERS_NS_URI);
-    			String clientMemberClass = CustomSOAPUtil.getNsElementValue(client, "memberClass", CustomXRoadHeader.IDENTIFIERS_NS_URI);
-    			String clientMemberCode = CustomSOAPUtil.getNsElementValue(client, "memberCode", CustomXRoadHeader.IDENTIFIERS_NS_URI);
+    			String clientXRoadInstance = CustomSOAPUtil.getNsElementValue(client, XRoadIdentifierType.XROAD_INSTANCE.getName(), CustomXRoadHeader.IDENTIFIERS_NS_URI);
+    			String clientMemberClass = CustomSOAPUtil.getNsElementValue(client,  XRoadIdentifierType.MEMBER_CLASS.getName(), CustomXRoadHeader.IDENTIFIERS_NS_URI);
+    			String clientMemberCode = CustomSOAPUtil.getNsElementValue(client, XRoadIdentifierType.MEMBER_CODE.getName(), CustomXRoadHeader.IDENTIFIERS_NS_URI);
+    			String clientSubsystemCode = CustomSOAPUtil.getNsElementValue(client, XRoadIdentifierType.SUBSYSTEM_CODE.getName(), CustomXRoadHeader.IDENTIFIERS_NS_URI);
     			
-    			XRoadClient xRoadClient = new XRoadClient(clientXRoadInstance, clientMemberClass, clientMemberCode);
+    			XRoadClient xRoadClient = new XRoadClient(clientXRoadInstance, clientMemberClass, clientMemberCode, clientSubsystemCode);
     			
     			xRoadHeader.setXRoadClient(xRoadClient);
     		}

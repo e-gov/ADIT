@@ -9,12 +9,37 @@ package ee.adit.util.xroad.messageprotocol;
  */
 public class XRoadClient extends XRoadIdentifier {
 	
-	public XRoadClient() {}
-	
+	/**
+	 * A constructor for X-Road client with <em>mandatory</em> parameters.
+	 * 
+	 * @param xRoadInstance 
+	 * @param memberClass
+	 * @param memberCode
+	 */
 	public XRoadClient(String xRoadInstance, String memberClass, String memberCode) {
 		this.xRoadInstance = xRoadInstance;
 		this.memberClass = memberClass;
 		this.memberCode = memberCode;
+	}
+	
+	/**
+	 * A constructor for X-Road client.
+	 * 
+	 * <p>
+	 * NOTE:<br>
+	 * According to the XRoadServiceIdentifierType XSD definition {@code subsystemCode} is <em>optional</em>.
+	 * </p>
+	 * 
+	 * @param xRoadInstance
+	 * @param memberClass
+	 * @param memberCode
+	 * @param subsytemCode
+	 */
+	public XRoadClient(String xRoadInstance, String memberClass, String memberCode, String subsytemCode) {
+		this(xRoadInstance, memberClass, memberCode);
+		
+		this.subsystemCode = subsytemCode;
+		
 	}
 	
 	public String getxRoadInstance() {

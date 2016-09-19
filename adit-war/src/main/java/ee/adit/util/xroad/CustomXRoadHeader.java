@@ -139,7 +139,7 @@ public class CustomXRoadHeader extends XTeeHeader {
     
     @Override
     public String getAsutus() {
-    	String consumer = "";
+    	String consumer = null;
     	if (protocolVersion.equals(XRoadProtocolVersion.V2_0)) {
     		consumer = super.getAsutus();
     	} else {
@@ -151,7 +151,7 @@ public class CustomXRoadHeader extends XTeeHeader {
 
     @Override
 	public String getAndmekogu() {
-    	String producer = "";
+    	String producer = null;
     	if (protocolVersion.equals(XRoadProtocolVersion.V2_0)) {
     		producer = super.getAndmekogu();
     	} else {
@@ -168,7 +168,7 @@ public class CustomXRoadHeader extends XTeeHeader {
 
     @Override
 	public String getIsikukood() {
-    	String isikukood = "";
+    	String isikukood = null;
     	if (protocolVersion.equals(XRoadProtocolVersion.V2_0)) {
     		isikukood = super.getIsikukood();
     	} else {
@@ -180,7 +180,7 @@ public class CustomXRoadHeader extends XTeeHeader {
 	
     @Override
 	public String getId() {
-    	String requestId = "";
+    	String requestId = null;
     	if (protocolVersion.equals(XRoadProtocolVersion.V2_0)) {
     		requestId = super.getId();
     	} else {
@@ -192,7 +192,7 @@ public class CustomXRoadHeader extends XTeeHeader {
 	
     @Override
 	public String getNimi() {
-    	String serviceName = "";
+    	String serviceName = null;
     	if (protocolVersion.equals(XRoadProtocolVersion.V2_0)) {
     		serviceName = super.getNimi();
     	} else {
@@ -232,14 +232,14 @@ public class CustomXRoadHeader extends XTeeHeader {
 	
     @Override
 	public String getAllasutus() {
-    	String unit = "";
+    	String clientSubsystemCode = null;
     	if (protocolVersion.equals(XRoadProtocolVersion.V2_0)) {
-    		unit = super.getAllasutus();
+    		clientSubsystemCode = super.getAllasutus();
+    	} else {
+    		clientSubsystemCode = xRoadClient.getSubsystemCode();
     	}
     	
-    	// There is no equivalent of the "unit" ("allasutus") in the X-Road message protocol version 4.0
-    	
-		return unit;
+		return clientSubsystemCode;
 	}
     
 }

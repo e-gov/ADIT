@@ -12,12 +12,7 @@ public class XRoadService extends XRoadIdentifier {
 	public XRoadService() {}
 	
 	/**
-	 * A constructor for XRoad service instance.
-	 * 
-	 * <p>
-	 * NOTE:<br>
-	 * According to the XRoadServiceIdentifierType XSD definition subsystemCode and serviceVersion can be omitted.
-	 * </p>
+	 * A constructor for XRoad service with <em>mandatory</em> parameters.
 	 * 
 	 * @param xRoadInstance
 	 * @param memberClass
@@ -32,7 +27,12 @@ public class XRoadService extends XRoadIdentifier {
 	}
 	
 	/**
-	 * A constructor for XRoad service instance.
+	 * A constructor for XRoad service.
+	 * 
+	 * <p>
+	 * NOTE:<br>
+	 * According to the XRoadServiceIdentifierType XSD definition {@code subsystemCode} and {@code serviceVersion} are <em>optional</em>.
+	 * </p>
 	 * 
 	 * @param xRoadInstance
 	 * @param memberClass
@@ -42,11 +42,9 @@ public class XRoadService extends XRoadIdentifier {
 	 * @param serviceVersion
 	 */
 	public XRoadService(String xRoadInstance, String memberClass, String memberCode, String subsystemCode, String serviceCode, String serviceVersion) {
-		this.xRoadInstance = xRoadInstance;
-		this.memberClass = memberClass;
-		this.memberCode = memberCode;
+		this(xRoadInstance, memberClass, memberCode, serviceCode);
+		
 		this.subsystemCode = subsystemCode;
-		this.serviceCode = serviceCode;
 		this.serviceVersion = serviceVersion;
 	}
 	
