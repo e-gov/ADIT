@@ -115,7 +115,7 @@ public abstract class XRoadCustomEndpoint implements MessageEndpoint {
             this.setResponseMessage(new SaajSoapMessage(respMessage));
             this.setRequestMessage(new SaajSoapMessage(paringMessage));
 
-            CustomXRoadHeader pais = parseXteeHeader(paringMessage);
+            CustomXRoadHeader pais = parseXRoadHeader(paringMessage);
             
             String xRoadNameSpace = pais.getProtocolVersion().equals(XRoadProtocolVersion.V2_0) ? Util.XTEE_NAMESPACE : CustomXRoadHeader.XROAD_NS_URI;
             QName listMethodsQN = new QName(xRoadNameSpace, "listMethods");
@@ -178,15 +178,14 @@ public abstract class XRoadCustomEndpoint implements MessageEndpoint {
     }
 
     /**
-     * Parses the X-Tee headers.
+     * Parses X-Road message protocol specific SOAP headers.
      *
-     * @param paringMessage
-     *            the request message
+     * @param paringMessage the request message
      * @return X-Tee header object
      * @throws SOAPException
      */
     @SuppressWarnings("unchecked")
-    private CustomXRoadHeader parseXteeHeader(SOAPMessage paringMessage) throws SOAPException {
+    private CustomXRoadHeader parseXRoadHeader(SOAPMessage paringMessage) throws SOAPException {
     	SOAPHeader soapHeader = paringMessage.getSOAPHeader();
     	
     	String xRoadProtocolVersion = XRoadProtocolVersion.V2_0.getValue();
@@ -216,13 +215,13 @@ public abstract class XRoadCustomEndpoint implements MessageEndpoint {
     		
     		Element service = CustomSOAPUtil.getNsElement(soapHeader, XRoadProtocolHeaderField.SERVICE.getValue(), CustomXRoadHeader.XROAD_NS_URI);
     		if (service != null) {
-    			String serviceXRoadInstance = CustomSOAPUtil.getNsElementValue(service, "xRoadInstance", CustomXRoadHeader.IDENTIFIERS_NS_URI);
-    			String serviceMemberClass = CustomSOAPUtil.getNsElementValue(service, "memberClass", CustomXRoadHeader.IDENTIFIERS_NS_URI);
-    			String serviceMemberCode = CustomSOAPUtil.getNsElementValue(service, "memberCode", CustomXRoadHeader.IDENTIFIERS_NS_URI);
+    			String serviceXRoadInstance = CustomSOAPUtil.getNsElementValue(service, XRoadIdentifierType.XROAD_INSTANCE.getName(), CustomXRoadHeader.IDENTIFIERS_NS_URI);
+    			String serviceMemberClass = CustomSOAPUtil.getNsElementValue(service, XRoadIdentifierType.MEMBER_CLASS.getName(), CustomXRoadHeader.IDENTIFIERS_NS_URI);
+    			String serviceMemberCode = CustomSOAPUtil.getNsElementValue(service, XRoadIdentifierType.MEMBER_CODE.getName(), CustomXRoadHeader.IDENTIFIERS_NS_URI);
     			
-    			String subsystemCode = CustomSOAPUtil.getNsElementValue(service, "subsystemCode", CustomXRoadHeader.IDENTIFIERS_NS_URI);
-    			String serviceCode = CustomSOAPUtil.getNsElementValue(service, "serviceCode", CustomXRoadHeader.IDENTIFIERS_NS_URI);
-    			String serviceVersion = CustomSOAPUtil.getNsElementValue(service, "serviceVersion", CustomXRoadHeader.IDENTIFIERS_NS_URI);
+    			String subsystemCode = CustomSOAPUtil.getNsElementValue(service, XRoadIdentifierType.SUBSYSTEM_CODE.getName(), CustomXRoadHeader.IDENTIFIERS_NS_URI);
+    			String serviceCode = CustomSOAPUtil.getNsElementValue(service, XRoadIdentifierType.SERVICE_CODE.getName(), CustomXRoadHeader.IDENTIFIERS_NS_URI);
+    			String serviceVersion = CustomSOAPUtil.getNsElementValue(service, XRoadIdentifierType.SERVICE_VERSION.getName(), CustomXRoadHeader.IDENTIFIERS_NS_URI);
     			
     			XRoadService xRoadService = new XRoadService(serviceXRoadInstance, serviceMemberClass, serviceMemberCode, subsystemCode, serviceCode, serviceVersion);
     			
@@ -246,7 +245,7 @@ public abstract class XRoadCustomEndpoint implements MessageEndpoint {
         for (Iterator<Node> headerElemendid = soapHeader.getChildElements(); headerElemendid.hasNext();) {
             Node headerElement = headerElemendid.next();
             if (!CustomSOAPUtil.isTextNode(headerElement)) {
-                logger.debug("Parsing XTee header element: " + headerElement.getLocalName() + " (value=" + headerElement.getTextContent() + ")");
+                logger.debug("Parsing X-Road header element: " + headerElement.getLocalName() + " (value=" + headerElement.getTextContent() + ")");
                 
                 xRoadHeader.addElement(new QName(headerElement.getNamespaceURI(), headerElement.getLocalName()), headerElement.getTextContent());
             }
