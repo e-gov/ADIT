@@ -2045,27 +2045,31 @@ public class DocumentService {
                     // If first added file happens to be a DigiDoc container then
                     // extract files and signatures from container. Otherwise add
                     // container as a regular file.
-                    if (((file.getId() == null) || (file.getId() <= 0)) &&
-                    		("ddoc".equalsIgnoreCase(extension)|| Util.isBdocExtension(extension))) {
-                        DigiDocExtractionResult extractionResult = extractDigiDocContainer(file.getSysTempFile(), digidocConfigFile);
-                        if (extractionResult.isSuccess()) {
-                            file.setFileType(FILETYPE_NAME_SIGNATURE_CONTAINER);
-                            aditDocument.setSigned((extractionResult.getSignatures() != null) && (extractionResult.getSignatures().size() > 0));
-                            involvedSignatureContainerExtraction = true;
+					if (extension != null) {
+						if (((file.getId() == null) || (file.getId() <= 0))
+								&& ("ddoc".equalsIgnoreCase(extension) || Util.isBdocExtension(extension))) {
+							DigiDocExtractionResult extractionResult = extractDigiDocContainer(file.getSysTempFile(),
+									digidocConfigFile);
+							if (extractionResult.isSuccess()) {
+								file.setFileType(FILETYPE_NAME_SIGNATURE_CONTAINER);
+								aditDocument.setSigned((extractionResult.getSignatures() != null)
+										&& (extractionResult.getSignatures().size() > 0));
+								involvedSignatureContainerExtraction = true;
 
-                            for (int i = 0; i < extractionResult.getFiles().size(); i++) {
-                                DocumentFile df = extractionResult.getFiles().get(i);
-                                df.setDocument(aditDocument);
-                                aditDocument.getDocumentFiles().add(df);
-                            }
+								for (int i = 0; i < extractionResult.getFiles().size(); i++) {
+									DocumentFile df = extractionResult.getFiles().get(i);
+									df.setDocument(aditDocument);
+									aditDocument.getDocumentFiles().add(df);
+								}
 
-                            for (int i = 0; i < extractionResult.getSignatures().size(); i++) {
-                                ee.adit.dao.pojo.Signature sig = extractionResult.getSignatures().get(i);
-                                sig.setDocument(aditDocument);
-                                aditDocument.getSignatures().add(sig);
-                            }
-                        }
-                    }
+								for (int i = 0; i < extractionResult.getSignatures().size(); i++) {
+									ee.adit.dao.pojo.Signature sig = extractionResult.getSignatures().get(i);
+									sig.setDocument(aditDocument);
+									aditDocument.getSignatures().add(sig);
+								}
+							}
+						}
+					}
                 }
 
                 Session aditSession = null;
