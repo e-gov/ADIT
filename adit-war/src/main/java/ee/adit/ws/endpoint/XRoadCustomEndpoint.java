@@ -371,9 +371,9 @@ public abstract class XRoadCustomEndpoint implements MessageEndpoint {
     }
 
     /**
-     * Creates X-Tee specific structure for SOAP message: adds MIME headers, base namespaces.
-     * @param header 
-     *
+     * Creates X-Road specific structure for SOAP message: adds MIME headers, base namespaces.
+     * 
+     * @param header X-Road specific header
      * @param reqMessage request SOAP message
      * @param respMessage response SOAP message
      * @return the service element of the SOAP response message
@@ -381,8 +381,13 @@ public abstract class XRoadCustomEndpoint implements MessageEndpoint {
      */
     private SOAPElement createXteeMessageStructure(CustomXRoadHeader xRoadHeader, SOAPMessage reqMessage, SOAPMessage respMessage) throws Exception {
         CustomSOAPUtil.addBaseMimeHeaders(respMessage);
-        CustomSOAPUtil.addBaseNamespaces(respMessage);
-        respMessage.getSOAPPart().getEnvelope().setEncodingStyle("http://schemas.xmlsoap.org/soap/encoding/");
+        
+        if (xRoadHeader.getProtocolVersion().equals(XRoadProtocolVersion.V4_0)) {
+        	CustomSOAPUtil.addBaseSoapNamespace(respMessage);
+        } else {
+        	CustomSOAPUtil.addBaseNamespaces(respMessage);
+        	respMessage.getSOAPPart().getEnvelope().setEncodingStyle("http://schemas.xmlsoap.org/soap/encoding/");
+        }
 
         Node teenusElement = CustomSOAPUtil.getFirstNonTextChild(reqMessage.getSOAPBody());
 

@@ -1,5 +1,8 @@
 package ee.adit.util.xroad;
 
+import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPMessage;
+
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -77,6 +80,10 @@ public class CustomSOAPUtil extends SOAPUtil {
 	 */
 	public static String getNsElementValue(Element root, String name, String ns) {
 		return getTextContent(getNsElement(root, name, ns));
+	}
+	
+	public static void addBaseSoapNamespace(SOAPMessage message) throws SOAPException {
+		SOAPUtil.addNamespace(message, "SOAP-ENV", "http://schemas.xmlsoap.org/soap/envelope/");
 	}
 
 }
