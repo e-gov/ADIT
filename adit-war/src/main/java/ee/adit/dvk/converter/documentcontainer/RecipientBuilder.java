@@ -49,7 +49,7 @@ public class RecipientBuilder {
 	                recipient.setPerson(contactInfo.getPerson());
 	                recipient.setContactData(contactInfo.getContactData());
 	                recipient.setOrganisation(contactInfo.getOrganisation());
-	                recipient.setMessageForRecipient(document.getContent());
+	                recipient.setMessageForRecipient(documentSharing.getComment());
 	                results.add(recipient);
             	}
             }
