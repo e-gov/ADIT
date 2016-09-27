@@ -158,6 +158,6 @@ public class CustomXRoadResponseSanitizerInterceptor implements ClientIntercepto
     }
 
 	@Override
-	public void afterCompletion(MessageContext arg0, Exception arg1) throws WebServiceClientException {}
+	public void afterCompletion(MessageContext messageContext, Exception ex) throws WebServiceClientException {}
 
 }

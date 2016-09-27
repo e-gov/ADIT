@@ -16,6 +16,7 @@ import ee.adit.service.UserService;
 import ee.adit.util.Configuration;
 import ee.adit.util.SchedulerSoapArrayInterceptor;
 import ee.adit.util.Util;
+import ee.adit.util.xroad.CustomWSConsumptionLoggingInterceptor;
 import ee.riik.xtee.teavituskalender.producers.producer.teavituskalender.LisaSyndmusDocument;
 import ee.riik.xtee.teavituskalender.producers.producer.teavituskalender.LisaSyndmusDocument.LisaSyndmus;
 import ee.riik.xtee.teavituskalender.producers.producer.teavituskalender.LisaSyndmusDocument.LisaSyndmus.Keha.Lugejad;
@@ -30,7 +31,6 @@ import ee.riik.xtee.teavituskalender.producers.producer.teavituskalender.OtsiKas
 import ee.riik.xtee.teavituskalender.producers.producer.teavituskalender.OtsiKasutajadResponseDocument;
 import ee.webmedia.xtee.client.service.SimpleXTeeServiceConfiguration;
 import ee.webmedia.xtee.client.service.StandardXTeeConsumer;
-import ee.webmedia.xtee.client.util.WSConsumptionLoggingInterceptor;
 import ee.webmedia.xtee.client.util.XTeeResponseSanitizerInterceptor;
 
 /**
@@ -267,7 +267,7 @@ public class ScheduleClient {
 
                 SchedulerSoapArrayInterceptor ai = new SchedulerSoapArrayInterceptor();
                 XTeeResponseSanitizerInterceptor ci = new XTeeResponseSanitizerInterceptor();
-                WSConsumptionLoggingInterceptor li = new WSConsumptionLoggingInterceptor();
+                CustomWSConsumptionLoggingInterceptor li = new CustomWSConsumptionLoggingInterceptor();
 
                 xteeService.getWebServiceTemplate().setInterceptors(new ClientInterceptor[] {ai, ci, li });
                 LisaSyndmusResponseDocument ret = (LisaSyndmusResponseDocument) xteeService.sendRequest(doc, conf);
