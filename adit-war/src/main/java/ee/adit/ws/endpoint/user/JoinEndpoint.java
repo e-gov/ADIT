@@ -100,9 +100,7 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
                         // Kontrollime, kas kasutaja juba eksisteerib
                         // s.t. kas lisame uue kasutaja või muudame olemasolevat
                         logger.debug("Checking if user already exists...");
-                        String userCode = ((this.getHeader().getAllasutus() != null) && (this.getHeader()
-                                .getAllasutus().length() > 0)) ? this.getHeader().getAllasutus() : this.getHeader()
-                                .getIsikukood();
+                        String userCode = !Util.isNullOrEmpty(header.getIsikukood()) ? header.getIsikukood() : header.getAllasutus();
                         AditUser aditUser = userService.getUserByID(userCode);
 
                         // Lisame kasutaja või muudame olemasolevat
@@ -148,8 +146,7 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
                             }
                         } else {
                             logger.info("Adding new user.");
-                            userService.addUser(request.getUserName(), usertype, header.getAllasutus(), header
-                                    .getIsikukood());
+                            userService.addUser(request.getUserName(), usertype, header.getAllasutus(), header.getIsikukood());
                             //add user full name to all document sharings that were made before user joined ADIT.
                             documentService.addUserNameToDocumentSharings(userService.getUserByID(header.getIsikukood()));
                             

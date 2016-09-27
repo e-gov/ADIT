@@ -103,9 +103,7 @@ public class GetUserContactsEndpoint extends AbstractAditBaseEndpoint {
 
                 if (accessLevel >= 1) {
                 	
-                    String userCode = ((this.getHeader().getAllasutus() != null) && (this.getHeader()
-                            .getAllasutus().length() > 0)) ? this.getHeader().getAllasutus() : this.getHeader()
-                            .getIsikukood();
+                    String userCode = !Util.isNullOrEmpty(header.getIsikukood()) ? header.getIsikukood() : header.getAllasutus();
                     AditUser aditUser = userService.getUserByID(userCode);
 
                 	

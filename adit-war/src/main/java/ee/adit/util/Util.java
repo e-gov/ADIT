@@ -1760,22 +1760,20 @@ public final class Util {
     /**
      * Gets current user based on data from X-Road headers.
      *
-     * @param header
-     *     X-Road header
-     * @param userService
-     *     Instance of user service
-     * @return
-     *     Current user
+     * @param header X-Road header
+     * @param userService Instance of user service
+     * @return Current user
      */
-    public static AditUser getAditUserFromXroadHeader(
-    	final CustomXRoadHeader header, final UserService userService) {
-
-    	String userCode = isNullOrEmpty(header.getAllasutus()) ? header.getIsikukood() : header.getAllasutus();
+    public static AditUser getAditUserFromXroadHeader(final CustomXRoadHeader header, final UserService userService) {
+    	String userCode = !isNullOrEmpty(header.getIsikukood()) ? header.getIsikukood() : header.getAllasutus();
+    	
         AditUser user = userService.getUserByID(userCode);
         if (user == null) {
             logger.error("User is not registered. User code: " + userCode);
+            
             AditCodedException aditCodedException = new AditCodedException("user.nonExistent");
             aditCodedException.setParameters(new Object[] {userCode });
+            
             throw aditCodedException;
         }
 

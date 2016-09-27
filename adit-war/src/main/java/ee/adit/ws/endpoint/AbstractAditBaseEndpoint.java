@@ -383,7 +383,7 @@ public abstract class AbstractAditBaseEndpoint extends XRoadCustomEndpoint {
             if (this.header != null) {
                 this.logService.addRequestLogEntry(this.header.getNimi(),
                 	documentId, requestDate, this.header.getInfosysteem(configuration.getXteeProducerName()),
-                	Util.isNullOrEmpty(this.header.getAllasutus()) ? this.header.getIsikukood() : this.header.getAllasutus(),
+                	!Util.isNullOrEmpty(this.header.getIsikukood()) ? this.header.getIsikukood() : this.header.getAllasutus(),
                 	this.header.getAsutus(), logMessage);
             } else {
                 throw new NullPointerException("Request header not initialized.");
@@ -408,7 +408,7 @@ public abstract class AbstractAditBaseEndpoint extends XRoadCustomEndpoint {
             if (this.header != null) {
                 this.logService.addDownloadRequestLogEntry(documentId, fileId,
                 	requestDate, this.header.getInfosysteem(configuration.getXteeProducerName()),
-                	Util.isNullOrEmpty(this.header.getAllasutus()) ? this.header.getIsikukood() : this.header.getAllasutus(),
+                	!Util.isNullOrEmpty(this.header.getIsikukood()) ? this.header.getIsikukood() : this.header.getAllasutus(),
                 	this.header.getAsutus());
             } else {
                 throw new NullPointerException("Request header not initialized.");
@@ -431,7 +431,7 @@ public abstract class AbstractAditBaseEndpoint extends XRoadCustomEndpoint {
             if (this.header != null) {
                 this.logService.addMetadataRequestLogEntry(documentId,
                     requestDate, this.header.getInfosysteem(configuration.getXteeProducerName()),
-                    Util.isNullOrEmpty(this.header.getAllasutus()) ? this.header.getIsikukood() : this.header.getAllasutus(),
+                    !Util.isNullOrEmpty(this.header.getIsikukood()) ? this.header.getIsikukood() : this.header.getAllasutus(),
                     this.header.getAsutus());
             } else {
                 throw new NullPointerException("Request header not initialized.");
@@ -465,7 +465,7 @@ public abstract class AbstractAditBaseEndpoint extends XRoadCustomEndpoint {
             if (this.header != null) {
                 this.logService.addErrorLogEntry(this.header.getNimi(),
                 	documentId, errorDate, this.header.getInfosysteem(configuration.getXteeProducerName()),
-                	Util.isNullOrEmpty(this.header.getAllasutus()) ? this.header.getIsikukood() : this.header.getAllasutus(),
+                	!Util.isNullOrEmpty(this.header.getIsikukood()) ? this.header.getIsikukood() : this.header.getAllasutus(),
                 	level, logMessage);
             } else {
                 throw new NullPointerException("Request header not initialized.");
