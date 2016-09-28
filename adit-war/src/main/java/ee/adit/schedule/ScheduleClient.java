@@ -17,6 +17,7 @@ import ee.adit.util.Configuration;
 import ee.adit.util.SchedulerSoapArrayInterceptor;
 import ee.adit.util.Util;
 import ee.adit.util.xroad.CustomWSConsumptionLoggingInterceptor;
+import ee.adit.util.xroad.XRoadResponseSanitizerInterceptor;
 import ee.riik.xtee.teavituskalender.producers.producer.teavituskalender.LisaSyndmusDocument;
 import ee.riik.xtee.teavituskalender.producers.producer.teavituskalender.LisaSyndmusDocument.LisaSyndmus;
 import ee.riik.xtee.teavituskalender.producers.producer.teavituskalender.LisaSyndmusDocument.LisaSyndmus.Keha.Lugejad;
@@ -31,7 +32,6 @@ import ee.riik.xtee.teavituskalender.producers.producer.teavituskalender.OtsiKas
 import ee.riik.xtee.teavituskalender.producers.producer.teavituskalender.OtsiKasutajadResponseDocument;
 import ee.webmedia.xtee.client.service.SimpleXTeeServiceConfiguration;
 import ee.webmedia.xtee.client.service.StandardXTeeConsumer;
-import ee.webmedia.xtee.client.util.XTeeResponseSanitizerInterceptor;
 
 /**
  * Web service client class for notification calendar (teavituskalender) X-Road
@@ -266,7 +266,7 @@ public class ScheduleClient {
                 conf.setVersion("v1");
 
                 SchedulerSoapArrayInterceptor ai = new SchedulerSoapArrayInterceptor();
-                XTeeResponseSanitizerInterceptor ci = new XTeeResponseSanitizerInterceptor();
+                XRoadResponseSanitizerInterceptor ci = new XRoadResponseSanitizerInterceptor();
                 CustomWSConsumptionLoggingInterceptor li = new CustomWSConsumptionLoggingInterceptor();
 
                 xteeService.getWebServiceTemplate().setInterceptors(new ClientInterceptor[] {ai, ci, li });
