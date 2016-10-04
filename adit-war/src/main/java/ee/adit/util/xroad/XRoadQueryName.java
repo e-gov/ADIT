@@ -1,4 +1,4 @@
-package ee.adit.util;
+package ee.adit.util.xroad;
 
 /**
  * Class holding X-Tee query name data. A query name consists of the name and

@@ -1,7 +1,6 @@
 package ee.adit.util;
 
 import java.io.BufferedInputStream;
-
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -20,6 +19,7 @@ import java.io.Writer;
 import java.lang.reflect.Field;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -36,7 +36,6 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 import javax.security.auth.x500.X500Principal;
-
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -52,13 +51,11 @@ import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
 import org.apache.fop.apps.MimeConstants;
 import org.apache.log4j.Logger;
-
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.x500.RDN;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.style.BCStyle;
 import org.bouncycastle.asn1.x500.style.IETFUtils;
-
 import org.castor.core.util.Base64Decoder;
 import org.castor.core.util.Base64Encoder;
 
@@ -66,11 +63,13 @@ import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Usertype;
 import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditInternalException;
+import ee.adit.generated.xroad.XRoadObjectType;
+import ee.adit.generated.xroad.XRoadServiceIdentifierType;
 import ee.adit.pojo.Message;
 import ee.adit.pojo.PersonName;
 import ee.adit.service.UserService;
-
-import java.security.cert.X509Certificate;
+import ee.adit.util.xroad.CustomXRoadHeader;
+import ee.adit.util.xroad.XRoadQueryName;
 
 /**
  * Class providing static utility / helper methods.
@@ -593,7 +592,7 @@ public final class Util {
      * 		{@link Configuration} object containing current
      * 		application configuration settings.
      */
-    public static void printHeader(CustomXTeeHeader header, Configuration conf) {
+    public static void printHeader(CustomXRoadHeader header, Configuration conf) {
 
         logger.debug("-------- XTeeHeader --------");
 
@@ -1761,22 +1760,20 @@ public final class Util {
     /**
      * Gets current user based on data from X-Road headers.
      *
-     * @param header
-     *     X-Road header
-     * @param userService
-     *     Instance of user service
-     * @return
-     *     Current user
+     * @param header X-Road header
+     * @param userService Instance of user service
+     * @return Current user
      */
-    public static AditUser getAditUserFromXroadHeader(
-    	final CustomXTeeHeader header, final UserService userService) {
-
-    	String userCode = isNullOrEmpty(header.getAllasutus()) ? header.getIsikukood() : header.getAllasutus();
+    public static AditUser getAditUserFromXroadHeader(final CustomXRoadHeader header, final UserService userService) {
+    	String userCode = !isNullOrEmpty(header.getIsikukood()) ? header.getIsikukood() : header.getAllasutus();
+    	
         AditUser user = userService.getUserByID(userCode);
         if (user == null) {
             logger.error("User is not registered. User code: " + userCode);
+            
             AditCodedException aditCodedException = new AditCodedException("user.nonExistent");
             aditCodedException.setParameters(new Object[] {userCode });
+            
             throw aditCodedException;
         }
 
@@ -1797,7 +1794,7 @@ public final class Util {
      *     Account of person who executed current request
      */
     public static AditUser getXroadUserFromXroadHeader(
-    	final AditUser currentUser, final CustomXTeeHeader header,
+    	final AditUser currentUser, final CustomXRoadHeader header,
     	final UserService userService) {
 
     	AditUser xroadRequestUser = null;
@@ -1939,5 +1936,20 @@ public final class Util {
     	return false;
     }
 
+    public static XRoadServiceIdentifierType populateAditXRoadService(String serviceCode, String serviceVersion, Configuration conf) {
+    	XRoadServiceIdentifierType aditXRoadService = new XRoadServiceIdentifierType();
+    	aditXRoadService.setObjectType(XRoadObjectType.SERVICE);
+    	
+    	aditXRoadService.setXRoadInstance(conf.getXroadInstance());
+    	aditXRoadService.setMemberClass(conf.getXroadMemberClass());
+    	aditXRoadService.setMemberCode(conf.getXroadMemberCode());
+    	
+    	aditXRoadService.setSubsystemCode(conf.getXteeProducerName());
+    	aditXRoadService.setServiceCode(serviceCode);
+    	aditXRoadService.setServiceVersion(serviceVersion);
+    	
+    	return aditXRoadService;
+    }
+    
 }
 

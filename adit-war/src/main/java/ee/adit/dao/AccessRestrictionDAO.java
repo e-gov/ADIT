@@ -31,7 +31,7 @@ public class AccessRestrictionDAO extends HibernateDaoSupport {
         try {
             logger.debug("Finding access restrictions for user: " + aditUser.getUserCode() + ", "
                             + aditUser.getFullName());
-            result = this.getHibernateTemplate().find(
+            result = (List<AccessRestriction>) this.getHibernateTemplate().find(
                     "from AccessRestriction accessRestriction where accessRestriction.aditUser = ?", aditUser);
         } catch (Exception e) {
             logger.error("Exception while finding access restrictions: ", e);

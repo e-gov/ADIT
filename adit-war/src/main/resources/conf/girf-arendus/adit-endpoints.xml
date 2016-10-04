@@ -355,58 +355,33 @@
         <property name="configuration" ref="configuration"/>
 		<property name="mappings">
 			<props>
-				<prop
-					key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}join">JoinEndpoint</prop>
-				<prop
-					key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}unJoin">UnJoinEndpoint</prop>
-				<prop
-					key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}getJoined">GetJoinedEndpoint</prop>
-				<prop
-					key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}getUserInfo">GetUserInfoEndpoint</prop>
-				<prop
-					key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}getUserContacts">GetUserContactsEndpoint</prop>
-				<prop
-					key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}setNotifications">SetNotificationsEndpoint</prop>
-				<prop
-					key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}getNotifications">GetNotificationsEndpoint</prop>
-				<prop
-					key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}confirmSignature">ConfirmSignatureEndpoint</prop>
-				<prop
-					key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}deflateDocument">DeflateDocumentEndpoint</prop>
-				<prop
-					key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}deleteDocument">DeleteDocumentEndpoint</prop>
-				<prop
-					key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}deleteDocuments">DeleteDocumentsEndpoint</prop>
-				<prop
-					key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}deleteDocumentFile">DeleteDocumentFileEndpoint</prop>
-				<prop
-					key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}getDocument">GetDocumentEndpoint</prop>
-				<prop
-					key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}getSendStatus">GetSendStatusEndpoint</prop>
-				<prop
-					key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}getDocumentFile">GetDocumentFileEndpoint</prop>
-				<prop
-					key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}getDocumentHistory">GetDocumentHistoryEndpoint</prop>
-				<prop
-					key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}getDocumentList">GetDocumentListEndpoint</prop>
-				<prop
-					key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}markDocumentViewed">MarkDocumentViewedEndpoint</prop>
-				<prop
-					key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}modifyStatus">ModifyStatusEndpoint</prop>
-				<prop
-					key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}prepareSignature">PrepareSignatureEndpoint</prop>
-				<prop
-					key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}saveDocument">SaveDocumentEndpoint</prop>
-				<prop
-					key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}saveDocumentFile">SaveDocumentFileEndpoint</prop>
-				<prop
-					key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}sendDocument">SendDocumentEndpoint</prop>
-				<prop
-					key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}shareDocument">ShareDocumentEndpoint</prop>
-				<prop
-					key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}unShareDocument">UnShareDocumentEndpoint</prop>
-				<prop
-					key="{http://x-tee.riik.ee/xsd/xtee.xsd}listMethods">ListMethodsEndpoint</prop>
+				<prop key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}join">JoinEndpoint</prop>
+				<prop key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}unJoin">UnJoinEndpoint</prop>
+				<prop key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}getJoined">GetJoinedEndpoint</prop>
+				<prop key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}getUserInfo">GetUserInfoEndpoint</prop>
+				<prop key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}getUserContacts">GetUserContactsEndpoint</prop>
+				<prop key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}setNotifications">SetNotificationsEndpoint</prop>
+				<prop key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}getNotifications">GetNotificationsEndpoint</prop>
+				<prop key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}confirmSignature">ConfirmSignatureEndpoint</prop>
+				<prop key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}deflateDocument">DeflateDocumentEndpoint</prop>
+				<prop key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}deleteDocument">DeleteDocumentEndpoint</prop>
+				<prop key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}deleteDocuments">DeleteDocumentsEndpoint</prop>
+				<prop key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}deleteDocumentFile">DeleteDocumentFileEndpoint</prop>
+				<prop key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}getDocument">GetDocumentEndpoint</prop>
+				<prop key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}getSendStatus">GetSendStatusEndpoint</prop>
+				<prop key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}getDocumentFile">GetDocumentFileEndpoint</prop>
+				<prop key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}getDocumentHistory">GetDocumentHistoryEndpoint</prop>
+				<prop key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}getDocumentList">GetDocumentListEndpoint</prop>
+				<prop key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}markDocumentViewed">MarkDocumentViewedEndpoint</prop>
+				<prop key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}modifyStatus">ModifyStatusEndpoint</prop>
+				<prop key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}prepareSignature">PrepareSignatureEndpoint</prop>
+				<prop key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}saveDocument">SaveDocumentEndpoint</prop>
+				<prop key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}saveDocumentFile">SaveDocumentFileEndpoint</prop>
+				<prop key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}sendDocument">SendDocumentEndpoint</prop>
+				<prop key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}shareDocument">ShareDocumentEndpoint</prop>
+				<prop key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}unShareDocument">UnShareDocumentEndpoint</prop>
+				<prop key="{http://x-tee.riik.ee/xsd/xtee.xsd}listMethods">ListMethodsEndpoint</prop>
+				<prop key="{http://x-road.eu/xsd/xroad.xsd}listMethods">ListMethodsEndpoint</prop>
 			</props>
 		</property>
 	</bean>
@@ -418,7 +393,7 @@
 	</bean>
 
 	<bean id="schema" class="org.springframework.xml.xsd.SimpleXsdSchema">
-		<property name="xsd" value="adit.xsd" />
+		<property name="xsd" value="/WEB-INF/adit.xsd" />
 	</bean>
 
 	<bean id="adit"

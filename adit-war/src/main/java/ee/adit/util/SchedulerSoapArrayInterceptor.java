@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
@@ -330,4 +331,8 @@ public class SchedulerSoapArrayInterceptor implements ClientInterceptor {
             renameNamespaceRecursive(list.item(i), namespace);
         }
     }
+
+	@Override
+	public void afterCompletion(MessageContext messageContext, Exception ex) throws WebServiceClientException {}
+    
 }

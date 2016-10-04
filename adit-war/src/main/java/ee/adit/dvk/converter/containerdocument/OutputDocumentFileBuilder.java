@@ -1,18 +1,19 @@
 package ee.adit.dvk.converter.containerdocument;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.io.StringBufferInputStream;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.log4j.Logger;
+
 import dvk.api.container.v2_1.ContainerVer2_1;
 import dvk.api.container.v2_1.File;
 import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.OutputDocumentFile;
 import ee.adit.util.Configuration;
 import ee.adit.util.Util;
-import org.apache.log4j.Logger;
-
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.io.StringBufferInputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Hendrik Pärna

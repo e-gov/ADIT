@@ -110,4 +110,7 @@ public class CustomClientInterceptor implements ClientInterceptor {
         this.configuration = configuration;
     }
 
+	@Override
+	public void afterCompletion(MessageContext messageContext, Exception ex) throws WebServiceClientException {}
+
 }

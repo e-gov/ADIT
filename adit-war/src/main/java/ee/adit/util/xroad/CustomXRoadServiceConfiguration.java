@@ -1,4 +1,4 @@
-package ee.adit.util;
+package ee.adit.util.xroad;
 
 import ee.webmedia.xtee.client.service.SimpleXTeeServiceConfiguration;
 
@@ -10,7 +10,7 @@ import ee.webmedia.xtee.client.service.SimpleXTeeServiceConfiguration;
  * @author Jaak Lember, Interinx, jaak@interinx.com
  * 
  */
-public class CustomXTeeServiceConfiguration
+public class CustomXRoadServiceConfiguration
     extends SimpleXTeeServiceConfiguration {
 
     private static final long serialVersionUID = 1L;

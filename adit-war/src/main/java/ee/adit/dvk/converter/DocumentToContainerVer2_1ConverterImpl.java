@@ -1,5 +1,8 @@
 package ee.adit.dvk.converter;
 
+import java.util.List;
+import java.util.Set;
+
 import dvk.api.container.v2_1.Access;
 import dvk.api.container.v2_1.File;
 import dvk.api.container.v2_1.Recipient;
@@ -21,8 +24,6 @@ import ee.adit.dvk.converter.documentcontainer.RecordSenderToDecBuilder;
 import ee.adit.dvk.converter.documentcontainer.SignatureMetadataBuilder;
 import ee.adit.dvk.converter.documentcontainer.TransportBuilder;
 import ee.adit.util.Configuration;
-import java.util.List;
-import java.util.Set;
 
 
 /**

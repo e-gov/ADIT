@@ -115,6 +115,21 @@ public class Configuration {
      * */
     private Boolean doCheckTestCert;
     
+    /**
+     * X-Road instance of the ADIT service in accordance with X-Road message protocol version 4.0
+     */
+    private String xroadInstance;
+    
+    /**
+     * X-Road member class of the ADIT service in accordance with X-Road message protocol version 4.0
+     */
+    private String xroadMemberClass;
+    
+    /**
+     * X-Road member code of the ADIT service in accordance with X-Road message protocol version 4.0
+     */
+    private String xroadMemberCode;
+    
     public List<String> getLocales() {
         return locales;
     }
@@ -282,6 +297,29 @@ public class Configuration {
 	public void setDoCheckTestCert(Boolean doCheckTestCert) {
 		this.doCheckTestCert = doCheckTestCert;
 	}
-	
+
+	public String getXroadInstance() {
+		return xroadInstance;
+	}
+
+	public void setXroadInstance(String xroadInstance) {
+		this.xroadInstance = xroadInstance;
+	}
+
+	public String getXroadMemberClass() {
+		return xroadMemberClass;
+	}
+
+	public void setXroadMemberClass(String xroadMemberClass) {
+		this.xroadMemberClass = xroadMemberClass;
+	}
+
+	public String getXroadMemberCode() {
+		return xroadMemberCode;
+	}
+
+	public void setXroadMemberCode(String xroadMemberCode) {
+		this.xroadMemberCode = xroadMemberCode;
+	}
 	
 }

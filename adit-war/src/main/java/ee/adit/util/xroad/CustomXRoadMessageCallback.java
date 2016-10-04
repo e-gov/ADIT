@@ -1,4 +1,4 @@
-package ee.adit.util;
+package ee.adit.util.xroad;
 
 import java.util.Collection;
 import java.util.Random;
@@ -24,12 +24,12 @@ import ee.webmedia.xtee.client.service.XTeeAttachment;
  * @author Jaak Lember, Interinx, jaak@interinx.com
  * 
  */
-public class CustomXTeeMessageCallback implements WebServiceMessageCallback {
+public class CustomXRoadMessageCallback implements WebServiceMessageCallback {
 
     /**
      * Log4J logger.
      */
-    private static Logger logger = Logger.getLogger(CustomXTeeMessageCallback.class);
+    private static Logger logger = Logger.getLogger(CustomXRoadMessageCallback.class);
 
     /**
      * Random generator.
@@ -39,7 +39,7 @@ public class CustomXTeeMessageCallback implements WebServiceMessageCallback {
     /**
      * Service configuration.
      */
-    private CustomXTeeServiceConfiguration serviceConfigurator;
+    private CustomXRoadServiceConfiguration serviceConfigurator;
     
     /**
      * Attachments.
@@ -52,9 +52,9 @@ public class CustomXTeeMessageCallback implements WebServiceMessageCallback {
      * @param serviceConfigurator service configuration
      * @param attachments attachments
      */
-    public CustomXTeeMessageCallback(CustomXTeeServiceConfiguration serviceConfigurator,
+    public CustomXRoadMessageCallback(CustomXRoadServiceConfiguration serviceConfigurator,
             Collection<XTeeAttachment> attachments) {
-        logger.debug("Creating CustomXTeeMessageCallback.");
+        logger.debug("Creating CustomXRoadMessageCallback.");
         this.serviceConfigurator = serviceConfigurator;
         this.attachments = attachments;
     }
@@ -65,7 +65,7 @@ public class CustomXTeeMessageCallback implements WebServiceMessageCallback {
      * @param message message
      */
     public void doWithMessage(WebServiceMessage message) {
-        logger.debug("CustomXTeeMessageCallback doWithMessage...");
+        logger.debug("CustomXRoadMessageCallback doWithMessage...");
         SaajSoapMessage messag = (SaajSoapMessage) message;
         // Add attachments
         if (attachments != null) {
@@ -90,7 +90,7 @@ public class CustomXTeeMessageCallback implements WebServiceMessageCallback {
      * @throws SOAPException
      */
     private void addXTeeHeaderElements(SOAPEnvelope env) throws SOAPException {
-        logger.debug("CustomXTeeMessageCallback adding header elements");
+        logger.debug("CustomXRoadMessageCallback adding header elements");
         SOAPHeader header = env.getHeader();
         SOAPElement pasutus = header.addChildElement("asutus", "ns4");
         SOAPElement pandmekogu = header.addChildElement("andmekogu", "ns4");
@@ -137,7 +137,7 @@ public class CustomXTeeMessageCallback implements WebServiceMessageCallback {
      * @param env SOAP envelope
      */
     private void addNamespaces(SOAPEnvelope env) throws SOAPException {
-        logger.debug("CustomXTeeMessageCallback adding namespaces");
+        logger.debug("CustomXRoadMessageCallback adding namespaces");
         env.addNamespaceDeclaration("xs", "http://www.w3.org/2001/XMLSchema");
         env.addNamespaceDeclaration("xsi", "http://www.w3.org/2001/XMLSchema-instance");
         env.addNamespaceDeclaration("SOAP-ENC", "http://schemas.xmlsoap.org/soap/encoding/");

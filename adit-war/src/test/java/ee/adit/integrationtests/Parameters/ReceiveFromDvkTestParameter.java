@@ -1,9 +1,9 @@
 package ee.adit.integrationtests.Parameters;
 
-import ee.adit.integrationtests.Utils;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import ee.adit.integrationtests.Utils;
 
 /**
  * Created with IntelliJ IDEA.

@@ -3,10 +3,7 @@ package ee.adit.test.util;
 import java.util.Calendar;
 import java.util.Date;
 
-import ee.adit.pojo.ArrayOfMessage;
-import ee.adit.pojo.Message;
 import ee.adit.pojo.PersonName;
-import ee.adit.service.MessageService;
 import ee.adit.util.Util;
 import junit.framework.TestCase;
 

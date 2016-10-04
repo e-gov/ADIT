@@ -119,7 +119,7 @@ public class DocumentFileDAO extends HibernateDaoSupport {
         DetachedCriteria dt = DetachedCriteria.forClass(DocumentFile.class, "document_file");
 //        dt.add(Property.forName("document_file.document.id").eq(documentId));
         dt.add(Restrictions.or(Restrictions.eq("document", doc), Restrictions.eq("guid", documentFileGuid)));
-        result = this.getHibernateTemplate().findByCriteria(dt);
+        result = (List<DocumentFile>) this.getHibernateTemplate().findByCriteria(dt);
         
         return (result.isEmpty() ? null : result.get(0));
     }

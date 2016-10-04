@@ -6,10 +6,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Hashtable;
-
-import javax.activation.FileTypeMap;
 
 import ee.adit.dao.pojo.DocumentFile;
 import ee.adit.pojo.ArrayOfFileType;

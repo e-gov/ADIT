@@ -1,8 +1,8 @@
 package ee.adit.dao;
 
-import ee.adit.dao.pojo.Document;
-
 import java.util.List;
+
+import ee.adit.dao.pojo.Document;
 
 /**
  * @author Hendrik Pärna

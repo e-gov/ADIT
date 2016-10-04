@@ -36,10 +36,16 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
-import ee.adit.util.CustomXTeeHeader;
 import ee.adit.util.Util;
-import ee.webmedia.soap.SOAPUtil;
+import ee.adit.util.xroad.CustomSOAPUtil;
+import ee.adit.util.xroad.CustomXRoadHeader;
+import ee.adit.util.xroad.messageprotocol.XRoadClient;
+import ee.adit.util.xroad.messageprotocol.XRoadIdentifierType;
+import ee.adit.util.xroad.messageprotocol.XRoadProtocolHeaderField;
+import ee.adit.util.xroad.messageprotocol.XRoadProtocolVersion;
+import ee.adit.util.xroad.messageprotocol.XRoadService;
 import ee.webmedia.xtee.XTeeUtil;
 
 /**
@@ -54,12 +60,12 @@ import ee.webmedia.xtee.XTeeUtil;
  * @author Jaak Lember, Interinx, jaak@interinx.com
  *
  */
-public abstract class XteeCustomEndpoint implements MessageEndpoint {
+public abstract class XRoadCustomEndpoint implements MessageEndpoint {
 
     /**
      * Log4J logger.
      */
-    private static Logger logger = Logger.getLogger(XteeCustomEndpoint.class);
+    private static Logger logger = Logger.getLogger(XRoadCustomEndpoint.class);
 
     /**
      * Response element's suffix.
@@ -91,7 +97,7 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
     /**
      * The entry point for web-service call. Extracts the X-Tee operation node
      * and passes it to the
-     * {@link #getResponse(CustomXTeeHeader, Document, SOAPMessage, SOAPMessage, Document)}
+     * {@link #getResponse(CustomXRoadHeader, Document, SOAPMessage, SOAPMessage, Document)}
      * method for futher processing.
      *
      * @param messageContext
@@ -99,20 +105,24 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
      * @throws Exception
      *             if an exception occurs while processing the request.
      */
-    public final void invoke(MessageContext messageContext) throws Exception {
+    @SuppressWarnings("rawtypes")
+	public final void invoke(MessageContext messageContext) throws Exception {
 
         try {
-
             // Extract request / response
-            SOAPMessage paringMessage = SOAPUtil.extractSoapMessage(messageContext.getRequest());
-            SOAPMessage respMessage = SOAPUtil.extractSoapMessage(messageContext.getResponse());
+            SOAPMessage paringMessage = CustomSOAPUtil.extractSoapMessage(messageContext.getRequest());
+            SOAPMessage respMessage = CustomSOAPUtil.extractSoapMessage(messageContext.getResponse());
             this.setResponseMessage(new SaajSoapMessage(respMessage));
             this.setRequestMessage(new SaajSoapMessage(paringMessage));
 
-            // Check if metaservice
+            CustomXRoadHeader pais = parseXRoadHeader(paringMessage);
+            
+            String xRoadNameSpace = pais.getProtocolVersion().equals(XRoadProtocolVersion.V2_0) ? Util.XTEE_NAMESPACE : CustomXRoadHeader.XROAD_NS_URI;
+            QName listMethodsQN = new QName(xRoadNameSpace, "listMethods");
+            
+            // Check if it is a metaservice
             try {
-                Iterator i = paringMessage.getSOAPBody()
-                        .getChildElements(new QName(Util.XTEE_NAMESPACE, "listMethods"));
+                Iterator i = paringMessage.getSOAPBody().getChildElements(listMethodsQN);
                 if (i.hasNext()) {
                     metaService = true;
                 }
@@ -120,16 +130,15 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
                 logger.error("Error while trying to determine if metaservice query: ", e);
             }
 
-            // meta-service does not need 'header' element
-            if (metaService) {
+            Document paring = metaService ? null : parseQuery(paringMessage);
+            
+            // Meta-service for message protocol version 2.0 does not need 'header' element
+            if (metaService && pais.getProtocolVersion().equals(XRoadProtocolVersion.V2_0)) {
                 respMessage.getSOAPHeader().detachNode();
             }
 
-            CustomXTeeHeader pais = metaService ? null : parseXteeHeader(paringMessage);
-            Document paring = metaService ? null : parseQuery(paringMessage);
 
-            // Extract the operation node (copy namespaces for it to remain
-            // valid)
+            // Extract the operation node (copy namespaces for it to remain valid)
             Node operationNode = null;
             Iterator i = paringMessage.getSOAPBody().getChildElements();
             while (i.hasNext()) {
@@ -143,8 +152,7 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
             operationNode = operationDocument.importNode(operationNode, true);
             operationDocument.appendChild(operationNode);
 
-            // Copy namespace declarations from SOAP message to
-            // body XML document.
+            // Copy namespace declarations from SOAP message to body XML document.
             // This is useful for example if request body contains SOAP
             // arrays (in which case the necessary namespace declarations
             // are likely to be found in SOAP envelope header.
@@ -156,11 +164,9 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
                 logger.debug("Attempting to add namespace declaration xmlns:" + prefix + "=\"" + uri + "\"");
                 try {
                     operationDocument.getDocumentElement().setAttribute("xmlns:" + prefix, uri);
-                    logger.debug("Namespace declaration xmlns:" + prefix + "=\"" + uri
-                            + "\" was copied from SOAP envelope to request document.");
+                    logger.debug("Namespace declaration xmlns:" + prefix + "=\"" + uri + "\" was copied from SOAP envelope to request document.");
                 } catch (Exception ex) {
-                    logger.warn("Failed to copy namespace declaration xmlns:" + prefix + "=\"" + uri
-                            + "\" from SOAP envelope to request document.", ex);
+                    logger.warn("Failed to copy namespace declaration xmlns:" + prefix + "=\"" + uri + "\" from SOAP envelope to request document.", ex);
                 }
             }
 
@@ -172,27 +178,80 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
     }
 
     /**
-     * Parses the X-Tee headers.
+     * Parses X-Road message protocol specific SOAP headers.
      *
-     * @param paringMessage
-     *            the request message
+     * @param paringMessage the request message
      * @return X-Tee header object
      * @throws SOAPException
      */
     @SuppressWarnings("unchecked")
-    private CustomXTeeHeader parseXteeHeader(SOAPMessage paringMessage) throws SOAPException {
-        CustomXTeeHeader pais = new CustomXTeeHeader();
-        SOAPHeader header = paringMessage.getSOAPHeader();
-        for (Iterator<Node> headerElemendid = header.getChildElements(); headerElemendid.hasNext();) {
+    private CustomXRoadHeader parseXRoadHeader(SOAPMessage paringMessage) throws SOAPException {
+    	SOAPHeader soapHeader = paringMessage.getSOAPHeader();
+    	
+    	String xRoadProtocolVersion = XRoadProtocolVersion.V2_0.getValue();
+    	
+        NodeList protocolVersionNodeList = soapHeader.getElementsByTagNameNS(CustomXRoadHeader.XROAD_NS_URI, XRoadProtocolHeaderField.PROTOCOL_VERSION.getValue());
+        if (protocolVersionNodeList.getLength() > 0) {
+        	xRoadProtocolVersion = protocolVersionNodeList.item(0).getTextContent();
+        }
+        
+        CustomXRoadHeader xRoadHeader = null;
+        if (protocolVersionNodeList.getLength() > 0 && xRoadProtocolVersion.equals(XRoadProtocolVersion.V4_0.getValue())) {
+        	logger.debug("Incoming request's X-Road message protocol version is 4.0");
+        	
+    		xRoadHeader = new CustomXRoadHeader(XRoadProtocolVersion.V4_0);
+    		
+    		Element client = CustomSOAPUtil.getNsElement(soapHeader, XRoadProtocolHeaderField.CLIENT.getValue(), CustomXRoadHeader.XROAD_NS_URI);
+    		if (client != null) {
+    			String clientXRoadInstance = CustomSOAPUtil.getNsElementValue(client, XRoadIdentifierType.XROAD_INSTANCE.getName(), CustomXRoadHeader.IDENTIFIERS_NS_URI);
+    			String clientMemberClass = CustomSOAPUtil.getNsElementValue(client,  XRoadIdentifierType.MEMBER_CLASS.getName(), CustomXRoadHeader.IDENTIFIERS_NS_URI);
+    			String clientMemberCode = CustomSOAPUtil.getNsElementValue(client, XRoadIdentifierType.MEMBER_CODE.getName(), CustomXRoadHeader.IDENTIFIERS_NS_URI);
+    			String clientSubsystemCode = CustomSOAPUtil.getNsElementValue(client, XRoadIdentifierType.SUBSYSTEM_CODE.getName(), CustomXRoadHeader.IDENTIFIERS_NS_URI);
+    			
+    			XRoadClient xRoadClient = new XRoadClient(clientXRoadInstance, clientMemberClass, clientMemberCode, clientSubsystemCode);
+    			
+    			xRoadHeader.setXRoadClient(xRoadClient);
+    		}
+    		
+    		Element service = CustomSOAPUtil.getNsElement(soapHeader, XRoadProtocolHeaderField.SERVICE.getValue(), CustomXRoadHeader.XROAD_NS_URI);
+    		if (service != null) {
+    			String serviceXRoadInstance = CustomSOAPUtil.getNsElementValue(service, XRoadIdentifierType.XROAD_INSTANCE.getName(), CustomXRoadHeader.IDENTIFIERS_NS_URI);
+    			String serviceMemberClass = CustomSOAPUtil.getNsElementValue(service, XRoadIdentifierType.MEMBER_CLASS.getName(), CustomXRoadHeader.IDENTIFIERS_NS_URI);
+    			String serviceMemberCode = CustomSOAPUtil.getNsElementValue(service, XRoadIdentifierType.MEMBER_CODE.getName(), CustomXRoadHeader.IDENTIFIERS_NS_URI);
+    			
+    			String subsystemCode = CustomSOAPUtil.getNsElementValue(service, XRoadIdentifierType.SUBSYSTEM_CODE.getName(), CustomXRoadHeader.IDENTIFIERS_NS_URI);
+    			String serviceCode = CustomSOAPUtil.getNsElementValue(service, XRoadIdentifierType.SERVICE_CODE.getName(), CustomXRoadHeader.IDENTIFIERS_NS_URI);
+    			String serviceVersion = CustomSOAPUtil.getNsElementValue(service, XRoadIdentifierType.SERVICE_VERSION.getName(), CustomXRoadHeader.IDENTIFIERS_NS_URI);
+    			
+    			XRoadService xRoadService = new XRoadService(serviceXRoadInstance, serviceMemberClass, serviceMemberCode, subsystemCode, serviceCode, serviceVersion);
+    			
+    			xRoadHeader.setXRoadService(xRoadService);
+    		}
+    		
+    		Element userId = CustomSOAPUtil.getNsElement(soapHeader, XRoadProtocolHeaderField.USER_ID.getValue(), CustomXRoadHeader.XROAD_NS_URI);
+    		if (userId != null) {
+    			xRoadHeader.setUserId(userId.getTextContent());
+    		}
+    		
+    		Element id = CustomSOAPUtil.getNsElement(soapHeader, XRoadProtocolHeaderField.ID.getValue(), CustomXRoadHeader.XROAD_NS_URI);
+    		if (id != null) {
+    			xRoadHeader.setId(id.getTextContent());
+    		}
+        } else {
+        	xRoadHeader = new CustomXRoadHeader(XRoadProtocolVersion.V2_0);
+        }
+        
+        // This is left for backward compatibility
+        for (Iterator<Node> headerElemendid = soapHeader.getChildElements(); headerElemendid.hasNext();) {
             Node headerElement = headerElemendid.next();
-            if (!SOAPUtil.isTextNode(headerElement)) {
-                logger.debug("Parsing XTee header element: " + headerElement.getLocalName() + " (value="
-                        + headerElement.getTextContent() + ")");
-                pais.addElement(new QName(headerElement.getNamespaceURI(), headerElement.getLocalName()), headerElement
-                        .getTextContent());
+            if (!CustomSOAPUtil.isTextNode(headerElement)) {
+                logger.debug("Parsing X-Road header element: " + headerElement.getLocalName() + " (value=" + headerElement.getTextContent() + ")");
+                
+                xRoadHeader.addElement(new QName(headerElement.getNamespaceURI(), headerElement.getLocalName()), headerElement.getTextContent());
             }
         }
-        return pais;
+        
+        return xRoadHeader;
     }
 
     /**
@@ -268,9 +327,9 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
      *            X-Tee specific operation node
      * @throws Exception
      */
-    private void getResponse(CustomXTeeHeader header, Document query, SOAPMessage respMessage,
+    private void getResponse(CustomXRoadHeader header, Document query, SOAPMessage respMessage,
             SOAPMessage reqMessage, Document operationNode) throws Exception {
-        SOAPElement teenusElement = createXteeMessageStructure(reqMessage, respMessage);
+        SOAPElement teenusElement = createXteeMessageStructure(header, reqMessage, respMessage);
         //For testing only
 //        DOMSource domSource = new DOMSource(query);
 //        StringWriter writer = new StringWriter();
@@ -281,12 +340,15 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
 //        String requestObjectSourceXml = writer.toString();
 //        logger.info(requestObjectSourceXml);
         //testing end
-        if (!metaService) {
+        
+        if (!metaService && header.getProtocolVersion().equals(XRoadProtocolVersion.V2_0)) {
             copyParing(query, teenusElement);
         }
+        
         invokeInternal(operationNode, teenusElement, header);
-        if (!metaService) {
-            addHeader(header, respMessage);
+        
+        if (!(metaService && header.getProtocolVersion().equals(XRoadProtocolVersion.V2_0))) {
+            addHeader(header, respMessage, reqMessage);
         }
 
         if (respMessage != null) {
@@ -295,7 +357,8 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
         	respMessage.getMimeHeaders().setHeader("Content-Type", "multipart/related;charset=utf-8");
 
 	        if (!this.isIgnoreAttachmentHeaders()) {
-	            Iterator it = respMessage.getAttachments();
+	            @SuppressWarnings("rawtypes")
+				Iterator it = respMessage.getAttachments();
 	            if (it != null) {
 	                while (it.hasNext()) {
 	                    AttachmentPart at = (AttachmentPart) it.next();
@@ -308,30 +371,38 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
     }
 
     /**
-     * Creates X-Tee specific structure for SOAP message: adds MIME headers,
-     * base namespaces.
-     *
-     * @param reqMessage
-     *            request SOAP message
-     * @param respMessage
-     *            response SOAP message
+     * Creates X-Road specific structure for SOAP message: adds MIME headers, base namespaces.
+     * 
+     * @param header X-Road specific header
+     * @param reqMessage request SOAP message
+     * @param respMessage response SOAP message
      * @return the service element of the SOAP response message
      * @throws Exception
      */
-    private SOAPElement createXteeMessageStructure(SOAPMessage reqMessage, SOAPMessage respMessage)
-            throws Exception {
-        SOAPUtil.addBaseMimeHeaders(respMessage);
-        SOAPUtil.addBaseNamespaces(respMessage);
-        respMessage.getSOAPPart().getEnvelope().setEncodingStyle("http://schemas.xmlsoap.org/soap/encoding/");
+    private SOAPElement createXteeMessageStructure(CustomXRoadHeader xRoadHeader, SOAPMessage reqMessage, SOAPMessage respMessage) throws Exception {
+        CustomSOAPUtil.addBaseMimeHeaders(respMessage);
+        
+        if (xRoadHeader.getProtocolVersion().equals(XRoadProtocolVersion.V4_0)) {
+        	CustomSOAPUtil.addBaseSoapNamespace(respMessage);
+        } else {
+        	CustomSOAPUtil.addBaseNamespaces(respMessage);
+        	respMessage.getSOAPPart().getEnvelope().setEncodingStyle("http://schemas.xmlsoap.org/soap/encoding/");
+        }
 
-        Node teenusElement = SOAPUtil.getFirstNonTextChild(reqMessage.getSOAPBody());
+        Node teenusElement = CustomSOAPUtil.getFirstNonTextChild(reqMessage.getSOAPBody());
 
         if (teenusElement.getPrefix() == null || teenusElement.getNamespaceURI() == null) {
             throw new IllegalStateException("Service request is missing namespace.");
         }
-        SOAPUtil.addNamespace(respMessage, teenusElement.getPrefix(), teenusElement.getNamespaceURI());
-        return respMessage.getSOAPBody().addChildElement(teenusElement.getLocalName() + RESPONSE_SUFFIX,
-                teenusElement.getPrefix(), teenusElement.getNamespaceURI());
+        
+        CustomSOAPUtil.addNamespace(respMessage, teenusElement.getPrefix(), teenusElement.getNamespaceURI());
+        
+        SOAPElement soapElement = respMessage.getSOAPBody();
+        if (!(isMetaService() && xRoadHeader.getProtocolVersion().equals(XRoadProtocolVersion.V4_0))) {
+        	soapElement = soapElement.addChildElement(teenusElement.getLocalName() + RESPONSE_SUFFIX, teenusElement.getPrefix(), teenusElement.getNamespaceURI());
+        }
+        
+        return soapElement;
     }
 
     /**
@@ -360,21 +431,40 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
     }
 
     /**
-     * Adds headers from the {@code CustomXTeeHeader} to the SOAP message.
+     * Adds headers from the {@code CustomXRoadHeader} to the SOAP message.
      *
      * @param pais
      *            headers
-     * @param message
+     * @param responseMessage
      *            SOAP message
      * @throws SOAPException
      */
-    private void addHeader(CustomXTeeHeader pais, SOAPMessage message) throws SOAPException {
-        XTeeUtil.addXteeNamespace(message);
-        for (QName qname : pais.getElemendid().keySet()) {
-            if (qname.getNamespaceURI().equals(XTeeUtil.XTEE_NS_URI)) {
-                XTeeUtil.addHeaderElement(message.getSOAPHeader(), qname.getLocalPart(), pais.getElemendid().get(qname));
-            }
-        }
+    private void addHeader(CustomXRoadHeader pais, SOAPMessage responseMessage, SOAPMessage requestMessage) throws SOAPException {
+    	if (pais.getProtocolVersion().equals(XRoadProtocolVersion.V4_0)) {
+    		CustomSOAPUtil.addNamespace(responseMessage, CustomXRoadHeader.XROAD_NS_PREFIX, CustomXRoadHeader.XROAD_NS_URI);
+        	CustomSOAPUtil.addNamespace(responseMessage, CustomXRoadHeader.IDENTIFIERS_NS_PREFIX, CustomXRoadHeader.IDENTIFIERS_NS_URI);
+    		
+    		NodeList reqHeaders = requestMessage.getSOAPHeader().getChildNodes();
+    		
+    		for (int i = 0; i < reqHeaders.getLength(); i++) {
+    			Node reqHeader = reqHeaders.item(i);
+    			
+    			if (reqHeader.getNodeType() != Node.ELEMENT_NODE) {
+    				continue;
+    			} else if (reqHeader.getNamespaceURI().equals(CustomXRoadHeader.XROAD_NS_URI)) {
+    				Node rspHeader = responseMessage.getSOAPPart().importNode(reqHeader, true);
+    				responseMessage.getSOAPHeader().appendChild(rspHeader);
+    			}
+    		}
+    	} else if (pais.getProtocolVersion().equals(XRoadProtocolVersion.V2_0)) {
+    		XTeeUtil.addXteeNamespace(responseMessage);
+    		
+    		for (QName qname : pais.getElemendid().keySet()) {
+    			if (qname.getNamespaceURI().equals(XTeeUtil.XTEE_NS_URI)) {
+    				XTeeUtil.addHeaderElement(responseMessage.getSOAPHeader(), qname.getLocalPart(), pais.getElemendid().get(qname));
+    			}
+    		}
+    	}
     }
 
     /**
@@ -459,7 +549,7 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
     /**
      * Method which must implement the service logic, receives
      * <code>requestKeha</code>, <code>responseElement</code>
-     * and <code>CustomXTeeHeader</code>.
+     * and <code>CustomXRoadHeader</code>.
      *
      * @param requestKeha
      *            query body
@@ -468,7 +558,7 @@ public abstract class XteeCustomEndpoint implements MessageEndpoint {
      * @param xTeeHeader
      *            query header
      */
-    protected abstract void invokeInternal(Document requestKeha, Element responseElement, CustomXTeeHeader xTeeHeader)
+    protected abstract void invokeInternal(Document requestKeha, Element responseElement, CustomXRoadHeader xTeeHeader)
             throws Exception;
 
 }

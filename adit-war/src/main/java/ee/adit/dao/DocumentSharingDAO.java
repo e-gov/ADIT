@@ -3,6 +3,7 @@ package ee.adit.dao;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -92,7 +93,7 @@ public class DocumentSharingDAO extends HibernateDaoSupport {
     public List<DocumentSharing> getDVKSharings(final Long documentID) {
         String sql = "from DocumentSharing where documentId = " + documentID + " and documentSharingType = '"
                 + DocumentService.SHARINGTYPE_SEND_DVK + "'";
-        return this.getHibernateTemplate().find(sql);
+        return (List<DocumentSharing>) this.getHibernateTemplate().find(sql);
     }
 
     /**
@@ -137,7 +138,7 @@ public class DocumentSharingDAO extends HibernateDaoSupport {
         List<DocumentSharing> result;
         DetachedCriteria dt = DetachedCriteria.forClass(DocumentSharing.class, "sharing");
         dt.add(Property.forName("sharing.userCode").eq(userCode));
-        result = this.getHibernateTemplate().findByCriteria(dt);
+        result = (List<DocumentSharing>) this.getHibernateTemplate().findByCriteria(dt);
         return result;
     }
 }
