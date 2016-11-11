@@ -6,6 +6,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -22,6 +24,7 @@ import org.springframework.core.io.InputStreamSource;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
 import org.springframework.oxm.XmlMappingException;
+import org.springframework.oxm.castor.CastorMarshaller;
 import org.springframework.ws.mime.Attachment;
 import org.springframework.ws.soap.SoapMessage;
 import org.w3c.dom.Document;
@@ -36,9 +39,10 @@ import ee.adit.service.LogService;
 import ee.adit.service.MessageService;
 import ee.adit.service.MonitorService;
 import ee.adit.util.Configuration;
-import ee.adit.util.CustomXTeeHeader;
 import ee.adit.util.Util;
-import ee.adit.util.XRoadQueryName;
+import ee.adit.util.xroad.CustomXRoadHeader;
+import ee.adit.util.xroad.XRoadQueryName;
+import ee.adit.util.xroad.messageprotocol.XRoadProtocolVersion;
 
 /**
  * Base class for web-service endpoints. Wraps XML marshalling / unmarshalling.
@@ -47,17 +51,24 @@ import ee.adit.util.XRoadQueryName;
  * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
  * @author Jaak Lember, Interinx, jaak@interinx.com
  */
-public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
+public abstract class AbstractAditBaseEndpoint extends XRoadCustomEndpoint {
 
     /**
      * Log4J logger.
      */
     private static Logger logger = Logger.getLogger(AbstractAditBaseEndpoint.class);
+    
+    private static final Map<String, String> nameSpaceMappings;
+    static {
+    	nameSpaceMappings = new HashMap<String, String>();
+    	nameSpaceMappings.put("xrd", "http://x-road.eu/xsd/xroad.xsd");
+    	nameSpaceMappings.put("id", "http://x-road.eu/xsd/identifiers");
+    }
 
     /**
      * X-Tee header.
      */
-    private CustomXTeeHeader header;
+    private CustomXRoadHeader header;
 
     /**
      * Marshaller - required to convert Java objects to XML.
@@ -108,8 +119,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
      * @throws Exception
      */
     @Override
-    protected void invokeInternal(Document requestKeha, Element responseElement,
-    	CustomXTeeHeader xteeHeader) throws Exception {
+    protected void invokeInternal(Document requestKeha, Element responseElement, CustomXRoadHeader xteeHeader) throws Exception {
 
     	Timer performanceTimer = new Timer();
     	try {
@@ -164,14 +174,13 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 	                logger.warn("System check failed: ", e);
 	            }
 
-	            // Excecute business logic
+	            // Execute business logic
 	            responseObject = invokeInternal(requestObject, version);
 	        } catch (Exception e) {
 	            logger.error("Exception while marshalling request/response object: ", e);
 	            responseObject = getResultForGenericException(e);
 
-	            String additionalInformation = "ERROR: Exception while marshalling request/response object: "
-	                    + e.getMessage();
+	            String additionalInformation = "ERROR: Exception while marshalling request/response object: " + e.getMessage();
 
 	            // Add request log entry
 	            this.getLogService().addRequestLogEntry(configuration.getXteeProducerName() + "." + requestName + ".v" + version, null,
@@ -182,27 +191,44 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
 	        if (responseObject != null) {
 	            // Marshal the response object
 	            DOMResult reponseObjectResult = new DOMResult(responseElement);
-	            this.getMarshaller().marshal(responseObject, reponseObjectResult);
+	            
+	            if (isMetaService() && xteeHeader.getProtocolVersion().equals(XRoadProtocolVersion.V4_0)) {
+	            	if (marshaller instanceof CastorMarshaller) {
+	            		/*
+	            		 * This is done because for some reason Castor ignores name space prefixes defined in the related Castor mappings file
+	            		 * for meta service (ListMethodsResponseVer2) and adds his own ones. As a result the related SOAP answers get duplicate name space definitions.
+	            		 * Although SAOP answers themselves are valid and correct, but still they look not that aesthetic as they could (plus the size is bigger too).
+	            		 * 
+	            		 * This simple code fixes this issue.
+	            		 */
+	            		((CastorMarshaller) marshaller).setNamespaceMappings(nameSpaceMappings);
+	            	}
+	        	}
+	            marshaller.marshal(responseObject, reponseObjectResult);
+            	if (marshaller instanceof CastorMarshaller) {
+            		// We must reset previous name space configurations otherwise they will get into other responses (in the form of element attributes). 
+            		((CastorMarshaller) marshaller).setNamespaceMappings(null);
+            	}
 
-	            // Add the response DOM tree as a child element to the responseKeha
-	            // element
+	            // Add the response DOM tree as a child element to the responseKeha element
 	            responseElement = (Element) reponseObjectResult.getNode();
 	            
 	            // Add SOAP attributes to ListMethods meta service response body and its elements
 	            if (this.isMetaService()){
-	            	
-	            	((Element)responseElement.getFirstChild()).setAttribute("xsi:type", "SOAP-ENC:Array");
-	            	int size = ((ListMethodsResponse)responseObject).getItem().size();
-	            	((Element)responseElement.getFirstChild()).setAttribute("SOAP-ENC:arrayType", "xsd:string["+size+"]");
-	            	((Element)responseElement.getFirstChild()).setAttribute("SOAP-ENC:offset", "[0]");
-	            		            	
-	            	for(Node childNode = responseElement.getFirstChild().getFirstChild(); childNode!=null;){
-	            		  Node nextChild = childNode.getNextSibling();	 
-	            		  ((Element) childNode).setAttribute("xsi:type", "xsd:string");
-	            		  childNode = nextChild;
-	            		  
-	            	}
+	            	if (xteeHeader.getProtocolVersion().equals(XRoadProtocolVersion.V2_0)) {
+	            		int size = ((ListMethodsResponse)responseObject).getItem().size();
+	            		
+	            		Element element = (Element) responseElement.getFirstChild();
+	            		element.setAttribute("xsi:type", "SOAP-ENC:Array");
+	            		element.setAttribute("SOAP-ENC:arrayType", "xsd:string["+size+"]");
+	            		element.setAttribute("SOAP-ENC:offset", "[0]");
+	            		
+	            		for (Node childNode = responseElement.getFirstChild().getFirstChild(); childNode != null; ) { 
+	            			((Element) childNode).setAttribute("xsi:type", "xsd:string");
 	            			
+	            			childNode = childNode.getNextSibling();
+	            		}
+	            	}
 	            }
 	        } else {
 	            logger.error("Response object not initialized.");
@@ -357,7 +383,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
             if (this.header != null) {
                 this.logService.addRequestLogEntry(this.header.getNimi(),
                 	documentId, requestDate, this.header.getInfosysteem(configuration.getXteeProducerName()),
-                	Util.isNullOrEmpty(this.header.getAllasutus()) ? this.header.getIsikukood() : this.header.getAllasutus(),
+                	!Util.isNullOrEmpty(this.header.getIsikukood()) ? this.header.getIsikukood() : this.header.getAllasutus(),
                 	this.header.getAsutus(), logMessage);
             } else {
                 throw new NullPointerException("Request header not initialized.");
@@ -382,7 +408,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
             if (this.header != null) {
                 this.logService.addDownloadRequestLogEntry(documentId, fileId,
                 	requestDate, this.header.getInfosysteem(configuration.getXteeProducerName()),
-                	Util.isNullOrEmpty(this.header.getAllasutus()) ? this.header.getIsikukood() : this.header.getAllasutus(),
+                	!Util.isNullOrEmpty(this.header.getIsikukood()) ? this.header.getIsikukood() : this.header.getAllasutus(),
                 	this.header.getAsutus());
             } else {
                 throw new NullPointerException("Request header not initialized.");
@@ -405,7 +431,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
             if (this.header != null) {
                 this.logService.addMetadataRequestLogEntry(documentId,
                     requestDate, this.header.getInfosysteem(configuration.getXteeProducerName()),
-                    Util.isNullOrEmpty(this.header.getAllasutus()) ? this.header.getIsikukood() : this.header.getAllasutus(),
+                    !Util.isNullOrEmpty(this.header.getIsikukood()) ? this.header.getIsikukood() : this.header.getAllasutus(),
                     this.header.getAsutus());
             } else {
                 throw new NullPointerException("Request header not initialized.");
@@ -439,7 +465,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
             if (this.header != null) {
                 this.logService.addErrorLogEntry(this.header.getNimi(),
                 	documentId, errorDate, this.header.getInfosysteem(configuration.getXteeProducerName()),
-                	Util.isNullOrEmpty(this.header.getAllasutus()) ? this.header.getIsikukood() : this.header.getAllasutus(),
+                	!Util.isNullOrEmpty(this.header.getIsikukood()) ? this.header.getIsikukood() : this.header.getAllasutus(),
                 	level, logMessage);
             } else {
                 throw new NullPointerException("Request header not initialized.");
@@ -455,11 +481,11 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
      * or empty.
      *
      * @param headerParam
-     *            SOAP message header part as {@link CustomXTeeHeader}
+     *            SOAP message header part as {@link CustomXRoadHeader}
      * @throws AditCodedException
      *             Exception describing which required field is missing or empty
      */
-    public void checkHeader(CustomXTeeHeader headerParam) throws AditCodedException {
+    public void checkHeader(CustomXRoadHeader headerParam) throws AditCodedException {
         if (header != null) {
         	String infosysteem = header.getInfosysteem(configuration.getXteeProducerName());
             if (Util.isNullOrEmpty(header.getIsikukood())) {
@@ -545,7 +571,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
      *
      * @return X-Tee header of current request
      */
-    public CustomXTeeHeader getHeader() {
+    public CustomXRoadHeader getHeader() {
         return header;
     }
 
@@ -555,7 +581,7 @@ public abstract class AbstractAditBaseEndpoint extends XteeCustomEndpoint {
      * @param header
      *            X-Tee header of current request
      */
-    public void setHeader(CustomXTeeHeader header) {
+    public void setHeader(CustomXRoadHeader header) {
         this.header = header;
     }
 

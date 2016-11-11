@@ -235,23 +235,16 @@ public class UserService {
     /**
      * Adds a user.
      *
-     * @param username
-     *            user full name
-     * @param usertype
-     *            usertype
-     * @param institutionCode
-     *            institution code - used if usertype is {@code
-     *            USERTYPE_INSTITUTION} or {@code USERTYPE_COMPANY}
-     * @param personalCode
-     *            personal code - used if usertype is {@code USERTYPE_PERSON}
+     * @param username user full name
+     * @param usertype type of a user
+     * @param institutionCode institution code - used if type of a user is {@code USERTYPE_INSTITUTION} or {@code USERTYPE_COMPANY}
+     * @param personalCode personal code - used if type of a user is {@code USERTYPE_PERSON}
      * @throws AditInternalException
      */
-    public void addUser(String username, Usertype usertype, String institutionCode, String personalCode)
-            throws AditInternalException {
+    public void addUser(String username, Usertype usertype, String institutionCode, String personalCode) throws AditInternalException {
         if (USERTYPE_PERSON.equalsIgnoreCase(usertype.getShortName())) {
             addUser(username, personalCode, usertype);
-        } else if (USERTYPE_INSTITUTION.equalsIgnoreCase(usertype.getShortName())
-                || USERTYPE_COMPANY.equalsIgnoreCase(usertype.getShortName())) {
+        } else if (USERTYPE_INSTITUTION.equalsIgnoreCase(usertype.getShortName()) || USERTYPE_COMPANY.equalsIgnoreCase(usertype.getShortName())) {
             addUser(username, institutionCode, usertype);
         } else {
             throw new AditInternalException("Unknown usertype");

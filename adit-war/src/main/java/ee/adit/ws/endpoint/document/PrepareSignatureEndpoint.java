@@ -23,8 +23,8 @@ import ee.adit.service.DocumentService;
 import ee.adit.service.LogService;
 import ee.adit.service.MessageService;
 import ee.adit.service.UserService;
-import ee.adit.util.CustomXTeeHeader;
 import ee.adit.util.Util;
+import ee.adit.util.xroad.CustomXRoadHeader;
 import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
 import ee.webmedia.xtee.annotation.XTeeService;
 
@@ -51,7 +51,7 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
     @Override
     protected Object invokeInternal(Object requestObject, int version) throws Exception {
     	logger.debug("prepareSignature invoked. Version: " + version);
-
+    	
     	if (version == 1) {
             return v1(requestObject);
         } if (version == 2) {
@@ -63,7 +63,19 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
     
     protected Object v1 (Object requestObject) {
     	logger.debug("prepareSignature.v1 invoked.");
-    	return prepareSignature(requestObject, false);
+    	
+    	/*
+    	 * IMPLEMENTATION NOTE
+    	 * 
+    	 * Version 1 was previously meant for creating DDOC containers.
+    	 * But according to the recent changes digital signature formats in Estonia,
+    	 * we should always prefer the use of the BDOC format.
+    	 * More info can be found here: http://www.id.ee/index.php?id=37370
+    	 * 
+    	 * Both versions are left for backward compatibility, just now they do the same.
+    	 */
+    	
+    	return prepareSignature(requestObject, true);
     }
     
     protected Object v2 (Object requestObject) {
@@ -71,10 +83,9 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
     	return prepareSignature(requestObject, true);
     }
     /**
-     * Executes common logic vor V1 and V2 version of "prepareSignature" request.
+     * Executes common logic for V1 and V2 versions of "prepareSignature" request.
      *
-     * @param requestObject
-     *            Request body object
+     * @param requestObject Request body object
      * @return Response body object
      */
     protected Object prepareSignature(Object requestObject, Boolean preferBdoc) {
@@ -98,7 +109,7 @@ public class PrepareSignatureEndpoint extends AbstractAditBaseEndpoint {
             if (request != null) {
                 documentId = request.getDocumentId();
             }
-            CustomXTeeHeader header = this.getHeader();
+            CustomXRoadHeader header = this.getHeader();
             String applicationName = header.getInfosysteem(this.getConfiguration().getXteeProducerName());
 
             // Log request

@@ -368,7 +368,6 @@
 				<prop key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}deleteDocuments">DeleteDocumentsEndpoint</prop>
 				<prop key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}deleteDocumentFile">DeleteDocumentFileEndpoint</prop>
 				<prop key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}getDocument">GetDocumentEndpoint</prop>
-				<prop key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}getDocumentV2">GetDocumentEndpoint</prop>
 				<prop key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}getSendStatus">GetSendStatusEndpoint</prop>
 				<prop key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}getDocumentFile">GetDocumentFileEndpoint</prop>
 				<prop key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}getDocumentHistory">GetDocumentHistoryEndpoint</prop>
@@ -382,6 +381,7 @@
 				<prop key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}shareDocument">ShareDocumentEndpoint</prop>
 				<prop key="{http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@}unShareDocument">UnShareDocumentEndpoint</prop>
 				<prop key="{http://x-tee.riik.ee/xsd/xtee.xsd}listMethods">ListMethodsEndpoint</prop>
+				<prop key="{http://x-road.eu/xsd/xroad.xsd}listMethods">ListMethodsEndpoint</prop>
 			</props>
 		</property>
 	</bean>

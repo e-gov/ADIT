@@ -29,6 +29,11 @@
 		<property name="deleteTemporaryFiles" value="true"/>
 		<property name="schedulerEventTypeName" value="Minu dokumentide teavitus"/>
 		<property name="dvkResponseMessageStylesheet" value="DVKresponseMessage.xsl"/>
+		
+		<!-- X-Road message protocol version 4.0 specific values -->
+		<property name="xroadInstance" value="EE" />
+		<property name="xroadMemberClass" value="GOV" />
+		<property name="xroadMemberCode" value="70006317" />
 
 		<!-- Default disk quota in bytes per user -->
 		<property name="globalDiskQuota" value="10240000"/>

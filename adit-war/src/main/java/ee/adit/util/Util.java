@@ -77,10 +77,15 @@ import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Usertype;
 import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditInternalException;
+import ee.adit.generated.xroad.XRoadObjectType;
+import ee.adit.generated.xroad.XRoadServiceIdentifierType;
 import ee.adit.pojo.Message;
 import ee.adit.pojo.PersonName;
 import ee.adit.service.UserService;
 import ee.sk.utils.ConvertUtils;
+
+import ee.adit.util.xroad.CustomXRoadHeader;
+import ee.adit.util.xroad.XRoadQueryName;
 
 /**
  * Class providing static utility / helper methods.
@@ -612,7 +617,7 @@ public final class Util {
      * 		{@link Configuration} object containing current
      * 		application configuration settings.
      */
-    public static void printHeader(CustomXTeeHeader header, Configuration conf) {
+    public static void printHeader(CustomXRoadHeader header, Configuration conf) {
 
         logger.debug("-------- XTeeHeader --------");
 
@@ -1785,22 +1790,20 @@ public final class Util {
     /**
      * Gets current user based on data from X-Road headers.
      *
-     * @param header
-     *     X-Road header
-     * @param userService
-     *     Instance of user service
-     * @return
-     *     Current user
+     * @param header X-Road header
+     * @param userService Instance of user service
+     * @return Current user
      */
-    public static AditUser getAditUserFromXroadHeader(
-    	final CustomXTeeHeader header, final UserService userService) {
-
-    	String userCode = isNullOrEmpty(header.getAllasutus()) ? header.getIsikukood() : header.getAllasutus();
+    public static AditUser getAditUserFromXroadHeader(final CustomXRoadHeader header, final UserService userService) {
+    	String userCode = !isNullOrEmpty(header.getIsikukood()) ? header.getIsikukood() : header.getAllasutus();
+    	
         AditUser user = userService.getUserByID(userCode);
         if (user == null) {
             logger.error("User is not registered. User code: " + userCode);
+            
             AditCodedException aditCodedException = new AditCodedException("user.nonExistent");
             aditCodedException.setParameters(new Object[] {userCode });
+            
             throw aditCodedException;
         }
 
@@ -1821,7 +1824,7 @@ public final class Util {
      *     Account of person who executed current request
      */
     public static AditUser getXroadUserFromXroadHeader(
-    	final AditUser currentUser, final CustomXTeeHeader header,
+    	final AditUser currentUser, final CustomXRoadHeader header,
     	final UserService userService) {
 
     	AditUser xroadRequestUser = null;
@@ -2120,6 +2123,20 @@ public final class Util {
         } while (bExists);
         
         return id;
+
+    public static XRoadServiceIdentifierType populateAditXRoadService(String serviceCode, String serviceVersion, Configuration conf) {
+    	XRoadServiceIdentifierType aditXRoadService = new XRoadServiceIdentifierType();
+    	aditXRoadService.setObjectType(XRoadObjectType.SERVICE);
+    	
+    	aditXRoadService.setXRoadInstance(conf.getXroadInstance());
+    	aditXRoadService.setMemberClass(conf.getXroadMemberClass());
+    	aditXRoadService.setMemberCode(conf.getXroadMemberCode());
+    	
+    	aditXRoadService.setSubsystemCode(conf.getXteeProducerName());
+    	aditXRoadService.setServiceCode(serviceCode);
+    	aditXRoadService.setServiceVersion(serviceVersion);
+    	
+    	return aditXRoadService;
     }
     
 }

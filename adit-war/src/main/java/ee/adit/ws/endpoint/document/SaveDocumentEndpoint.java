@@ -31,9 +31,9 @@ import ee.adit.service.DocumentService;
 import ee.adit.service.LogService;
 import ee.adit.service.MessageService;
 import ee.adit.service.UserService;
-import ee.adit.util.CustomXTeeHeader;
 import ee.adit.util.FileSplitResult;
 import ee.adit.util.Util;
+import ee.adit.util.xroad.CustomXRoadHeader;
 import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
 import ee.webmedia.xtee.annotation.XTeeService;
 
@@ -84,7 +84,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 
         try {
             logger.debug("SaveDocumentEndpoint.v1 invoked.");
-            CustomXTeeHeader header = this.getHeader();
+            CustomXRoadHeader header = this.getHeader();
             String applicationName = header.getInfosysteem(this.getConfiguration().getXteeProducerName());
             SaveDocumentRequest request = (SaveDocumentRequest) requestObject;
             InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream(getDigidocConfigurationFile());

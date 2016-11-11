@@ -331,4 +331,8 @@ public class SchedulerSoapArrayInterceptor implements ClientInterceptor {
             renameNamespaceRecursive(list.item(i), namespace);
         }
     }
+
+	@Override
+	public void afterCompletion(MessageContext messageContext, Exception ex) throws WebServiceClientException {}
+    
 }

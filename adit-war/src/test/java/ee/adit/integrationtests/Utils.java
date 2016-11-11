@@ -307,7 +307,7 @@ public class Utils {
         List<Document> result;
         DetachedCriteria dt = DetachedCriteria.forClass(Document.class, "document");
         dt.add(Property.forName("document.guid").eq(documentGuid));
-        result = documentService.getDocumentDAO().getHibernateTemplate().findByCriteria(dt);
+        result = (List<Document>) documentService.getDocumentDAO().getHibernateTemplate().findByCriteria(dt);
         logger.info("There are " + result.size() + " Documents with dvk_guid = " + documentGuid + "found in ADIT DB");
         return (result.isEmpty() ? null : result);
     }
@@ -316,7 +316,7 @@ public class Utils {
         List<PojoMessage> result;
         DetachedCriteria dt = DetachedCriteria.forClass(PojoMessage.class, "pojoMessage");
         dt.add(Property.forName("pojoMessage.dhlGuid").eq(documentGuid));
-        result = documentService.getDvkDAO().getHibernateTemplate().findByCriteria(dt);
+        result = (List<PojoMessage>) documentService.getDvkDAO().getHibernateTemplate().findByCriteria(dt);
         logger.info("There are " + result.size() + " Documents with dvk_guid = " + documentGuid + "found in DVK DB");
         return (result.isEmpty() ? null : result);
     }

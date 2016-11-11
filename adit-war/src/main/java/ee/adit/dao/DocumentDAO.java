@@ -103,7 +103,7 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
         List<Document> result;
         DetachedCriteria dt = DetachedCriteria.forClass(Document.class, "document");
         dt.add(Property.forName("document.guid").eq(documentGuid));
-        result = this.getHibernateTemplate().findByCriteria(dt);
+        result = (List<Document>) this.getHibernateTemplate().findByCriteria(dt);
 
         return (result.isEmpty() ? null : result.get(0));
     }
@@ -862,7 +862,7 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
 
         String sql = "from Document where dvkId = " + documentDhlId + " and creatorCode = '"
                 + recipientPersonalIdCode.trim() + "'";
-        List<Document> existingDocuments = this.getHibernateTemplate().find(sql);
+        List<Document> existingDocuments = (List<Document>) this.getHibernateTemplate().find(sql);
 
         if (existingDocuments == null || existingDocuments.size() == 0) {
             result = false;

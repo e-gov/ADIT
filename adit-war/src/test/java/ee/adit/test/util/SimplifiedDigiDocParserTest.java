@@ -1,17 +1,10 @@
 package ee.adit.test.util;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.List;
 
-import ee.adit.pojo.OutputDocumentFile;
-import ee.adit.service.DocumentService;
 import ee.adit.util.SimplifiedDigiDocParser;
 import ee.adit.util.StartEndOffsetPair;
-import ee.adit.util.Util;
 import junit.framework.TestCase;
 
 /**
