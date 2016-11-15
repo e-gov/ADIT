@@ -3929,7 +3929,7 @@ public class DocumentService {
             
             SignatureBuilder signatureBuilder  = SignatureBuilder.
             		aSignature(container).
-            		withSignatureProfile(SignatureProfile.LT).
+            		withSignatureProfile(SignatureProfile.LT_TM).
             		withSignatureId(signatureId).
             		withSigningCertificate(cert).
             		withSignatureDigestAlgorithm(DigestAlgorithm.SHA256).
