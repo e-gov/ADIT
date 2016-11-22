@@ -16,6 +16,13 @@
         <file.encoding>UTF-8</file.encoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        
+        <spring.version>4.0.9.RELEASE</spring.version>
+        <postgresql.version>9.4.1212.jre7</postgresql.version>
+        <hibernate.version>3.6.10.Final</hibernate.version>
+        <atomikos.version>4.0.4</atomikos.version>
+        
+        
         <digidoc.tmp.dir>C:\\Users\\lisa\\TMP</digidoc.tmp.dir>
         <!-- Edit this to match your destination environment -->
         <!--<resourceDir>ria-dev-weblogic</resourceDir>-->
@@ -63,17 +70,17 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context-support</artifactId>
-			<version>4.0.9.RELEASE</version>
+			<version>${spring.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-orm</artifactId>
-			<version>4.0.9.RELEASE</version>
+			<version>${spring.version}</version>
 		</dependency>
 		<dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
-            <version>4.0.9.RELEASE</version>
+            <version>${spring.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -147,57 +154,42 @@
             <systemPath>${basedir}/lib/slf4j-api-1.5.8.jar</systemPath>
         </dependency>
 
+        
         <!-- Hibernate -->
         <dependency>
-            <groupId>java</groupId>
-            <artifactId>antlr</artifactId>
-            <version>2.7.6</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/antlr-2.7.6.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>java</groupId>
-            <artifactId>commons-collections</artifactId>
-            <version>3.1</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/commons-collections-3.1.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>java</groupId>
-            <artifactId>dom4j</artifactId>
-            <version>1.6.1</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/dom4j-1.6.1.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>java</groupId>
-            <artifactId>hibernate3</artifactId>
-            <version>1.6.1</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/hibernate3.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>java</groupId>
-            <artifactId>javassist</artifactId>
-            <version>3.9.0.GA</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/javassist-3.9.0.GA.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>java</groupId>
-            <artifactId>jta</artifactId>
-            <version>1.1</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/jta-1.1.jar</systemPath>
-        </dependency>
+		    <groupId>org.hibernate</groupId>
+		    <artifactId>hibernate-entitymanager</artifactId>
+		    <version>${hibernate.version}</version>
+		</dependency>
 
 		<dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>9.4-1201-jdbc41</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/postgresql-9.4-1201.jdbc41.jar</systemPath>
-        </dependency>
+		    <groupId>org.postgresql</groupId>
+		    <artifactId>postgresql</artifactId>
+		    <version>${postgresql.version}</version>
+		</dependency>
+        
+        <!-- Atomikos -->
+		<dependency>
+			<groupId>com.atomikos</groupId>
+			<artifactId>transactions-jta</artifactId>
+			<version>${atomikos.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.atomikos</groupId>
+			<artifactId>transactions-jdbc</artifactId>
+			<version>${atomikos.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.atomikos</groupId>
+			<artifactId>transactions-hibernate3</artifactId>
+			<version>${atomikos.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>hibernate</artifactId>
+					<groupId>org.hibernate</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 
         <!-- Codec -->
         <dependency>
@@ -454,6 +446,14 @@
                 <filtering>false</filtering>
                 <targetPath>../adit/WEB-INF/classes/hbm</targetPath>
             </resource>
+            <resource>
+                <directory>src/main/resources/${resourceDir}</directory>
+                <filtering>false</filtering>
+                <targetPath>../adit/WEB-INF/classes</targetPath>
+                <includes>
+                	<include>jta.properties</include>
+                </includes>
+            </resource>
             <!-- Include all the environment specific configuration files -->
             <resource>
                 <directory>src/main/resources/${resourceDir}</directory>
@@ -461,6 +461,7 @@
                 <excludes>
                     <exclude>adit-configuration.xml</exclude>
                     <exclude>adit-datasource.xml</exclude>
+                    <exclude>adit-endpoints.xml</exclude>
                 </excludes>
             </resource>
             <resource>
@@ -469,6 +470,7 @@
                 <includes>
                     <include>adit-configuration.xml</include>
                     <include>adit-datasource.xml</include>
+                    <include>adit-endpoints.xml</include>
                 </includes>
             </resource>
             <!-- Include static resources -->
