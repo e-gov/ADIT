@@ -461,7 +461,6 @@
                 <excludes>
                     <exclude>adit-configuration.xml</exclude>
                     <exclude>adit-datasource.xml</exclude>
-                    <exclude>adit-endpoints.xml</exclude>
                 </excludes>
             </resource>
             <resource>
@@ -470,7 +469,6 @@
                 <includes>
                     <include>adit-configuration.xml</include>
                     <include>adit-datasource.xml</include>
-                    <include>adit-endpoints.xml</include>
                 </includes>
             </resource>
             <!-- Include static resources -->

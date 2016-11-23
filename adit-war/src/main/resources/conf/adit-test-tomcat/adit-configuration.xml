@@ -1,38 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:tx="http://www.springframework.org/schema/tx"
-	xmlns:util="http://www.springframework.org/schema/util"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
-						http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
-						http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd">
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+						http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+						http://www.springframework.org/schema/context
+						http://www.springframework.org/schema/context/spring-context-2.5.xsd
+						http://www.springframework.org/schema/tx
+						http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
 
-	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="properties">
-			<util:properties>
-				<prop key="institution">1234567</prop>
-				<prop key="idcode">1234567</prop>
-				<prop key="security.server">http://xtee.girf.ee/cgi-bin/consumer_proxy</prop>				
-				<prop key="database">teavistuskalender</prop>
-				<prop key="version">1</prop>
-				<prop key="method">jurr</prop>
-			</util:properties>
-		</property>
-	</bean>
-	
+    <!-- Data sources -->
+    <bean id="aditDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+    	<!-- NB! This part "java:comp/env/" is essential in this case for finding the jndiName -->
+        <property name="jndiName" value="java:comp/env/jdbc/adit-test-postgres" />
+    </bean>
+
+    <bean id="aditDVKDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+    	<!-- NB! This part "java:comp/env/" is essential in this case for finding the jndiName -->
+        <property name="jndiName" value="java:comp/env/jdbc/adit_dvk-test-postgres" />
+    </bean>
+
 	<!-- Configuration -->
 	<bean id="configuration" class="ee.adit.util.Configuration">
-		<property name="xteeProducerName" value="@PRODUCER_NAME@" />
+        <property name="xteeProducerName" value="ametlikud-dokumendid"/>
 		<property name="getJoinedMaxResults" value="10"/>
-		<property name="tempDir" value="C:\temp\adit"/>
+		<property name="tempDir" value="/tmp/adit"/>
 		<property name="deleteTemporaryFiles" value="true"/>
 		<property name="schedulerEventTypeName" value="Minu dokumentide teavitus"/>
 		<property name="dvkResponseMessageStylesheet" value="DVKresponseMessage.xsl"/>
-		
-		<!-- X-Road message protocol version 4.0 specific values -->
-		<property name="xroadInstance" value="EE" />
-		<property name="xroadMemberClass" value="GOV" />
-		<property name="xroadMemberCode" value="70006317" />
 
 		<!-- Default disk quota in bytes per user -->
 		<property name="globalDiskQuota" value="10240000"/>
@@ -50,10 +46,10 @@
 				<value>ru_ru</value>
 			</list>
 		</property>
-		<property name="dvkOrgCode" value="10939882" />
-		<property name="xteeInstitution" value="10939882" />
-		<property name="xteeSecurityServer" value="http://194.204.55.171/cgi-bin/consumer_proxy" />
-		<property name="xteeIdCode" value="EE47809296513" />
+		<property name="dvkOrgCode" value="adit" />
+		<property name="xteeInstitution" value="adit" />
+		<property name="xteeSecurityServer" value="http://10.0.15.15/cgi-bin/consumer_proxy" />
+		<property name="xteeIdCode" value="EE38806190294" />
 		
 		<!-- DVK folder names -->
 		<property name="dvkSendFolder" value="/" />
@@ -76,13 +72,12 @@
 	</bean>
 
 	<bean id="monitorConfiguration" class="ee.adit.util.MonitorConfiguration">
-		<property name="aditServiceUrl" value="http://localhost:8080/adit/service" />
+		<property name="aditServiceUrl" value="http://10.0.7.234:8080/adit/service" />
 		<property name="remoteApplicationShortName" value="MONITOR_TEST_APP" />
 		<property name="userCode" value="EE00000000000" />
 		<property name="institutionCode" value="123456789" />
 		<property name="testDocumentId" value="999999999999" />
 		<property name="dvkTestDocumentID" value="9999999999" />
-		<property name="dvkFolder" value="TESTFOLDER" />
 		<property name="testDocumentFileId" value="999999999999" />
 		<property name="testUserCode" value="EE00000000000" />
 		<property name="documentSaveInterval" value="60000" />

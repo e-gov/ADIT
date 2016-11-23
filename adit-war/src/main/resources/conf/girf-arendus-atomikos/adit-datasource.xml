@@ -1,10 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:tx="http://www.springframework.org/schema/tx"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
 						http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
 
+	<!-- ADIT main data source configuration  -->
+	<bean id="aditDataSource" class="com.atomikos.jdbc.AtomikosDataSourceBean" init-method="init" destroy-method="close">
+		<property name="uniqueResourceName" value="AditDataSource" />
+		
+		<property name="xaDataSource" ref="aditDataBase" />
+		<property name="maxPoolSize" value="20" />
+		<property name="minPoolSize" value="10"/>
+	</bean>
+	<bean id="aditDataBase" class="org.postgresql.xa.PGXADataSource" lazy-init="true">
+		<property name="user" value="adit_user" />
+		<property name="password" value="yyy" />
+		<property name="serverName" value="ats.girf.ee" />
+		<property name="portNumber" value="5432" />
+		<property name="databaseName" value="adit" />
+		<property name="url" value="jdbc:postgresql://ats.girf.ee:5432/adit" />
+	</bean>
 	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
 		<property name="mappingLocations">
 			<list>
@@ -39,15 +55,14 @@
 		<property name="dataSource" ref="aditDataSource" />
 		<property name="hibernateProperties">
 			<props>
-				<prop key="hibernate.show.sql">true</prop>
-				<prop key="hibernate.cache.provider_class">org.hibernate.cache.NoCacheProvider</prop>
 				<prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</prop>
+				<prop key="hibernate.cache.provider_class">org.hibernate.cache.NoCacheProvider</prop>
 				
-				<prop key="hibernate.connection.driver_class">org.postgresql.Driver</prop>
 				<prop key="hibernate.connection.autocommit">false</prop>
 				<prop key="hibernate.connection.useUnicode">true</prop>
 				<prop key="hibernate.connection.characterEncoding">UTF-8</prop>
                 <prop key="hibernate.connection.charSet">UTF-8</prop>
+				<prop key="hibernate.show.sql">true</prop>
 			
 				<prop key="hibernate.current_session_context_class">jta</prop>
 				<prop key="javax.persistence.transactionType">jta</prop>
@@ -56,22 +71,23 @@
 			</props>
 		</property>
 	</bean>
-	<bean id="aditDataSource" class="com.atomikos.jdbc.AtomikosDataSourceBean" init-method="init" destroy-method="close">
-		<property name="uniqueResourceName" value="AditDataSource" />
+	
+	<!-- DVK data source configuration  -->
+	<bean id="aditDVKDataSource" class="com.atomikos.jdbc.AtomikosDataSourceBean" init-method="init" destroy-method="close">
+		<property name="uniqueResourceName" value="AditDVKDataSource" />
 		
-		<property name="xaDataSource" ref="aditDataBase" />
+		<property name="xaDataSource" ref="aditDVKDataBase" />
 		<property name="maxPoolSize" value="20" />
 		<property name="minPoolSize" value="10"/>
 	</bean>
-	<bean id="aditDataBase" class="org.postgresql.xa.PGXADataSource" lazy-init="true">
-		<property name="user" value="adit_user" />
+	<bean id="aditDVKDataBase" class="org.postgresql.xa.PGXADataSource" lazy-init="true">
+		<property name="user" value="adit_dvkuk_user" />
 		<property name="password" value="yyy" />
 		<property name="serverName" value="ats.girf.ee" />
 		<property name="portNumber" value="5432" />
 		<property name="databaseName" value="adit" />
 		<property name="url" value="jdbc:postgresql://ats.girf.ee:5432/adit" />
 	</bean>
-	
 	<bean id="dvkSessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
 		<property name="mappingLocations">
 			<list>
@@ -89,15 +105,14 @@
 		<property name="dataSource" ref="aditDVKDataSource" />
 		<property name="hibernateProperties">
 			<props>
-				<prop key="hibernate.show.sql">true</prop>
-				<prop key="hibernate.cache.provider_class">org.hibernate.cache.NoCacheProvider</prop>
 				<prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</prop>
+				<prop key="hibernate.cache.provider_class">org.hibernate.cache.NoCacheProvider</prop>
 				
-				<prop key="hibernate.connection.driver_class">org.postgresql.Driver</prop>
 				<prop key="hibernate.connection.autocommit">false</prop>
 				<prop key="hibernate.connection.useUnicode">true</prop>
 				<prop key="hibernate.connection.characterEncoding">UTF-8</prop>
                 <prop key="hibernate.connection.charSet">UTF-8</prop>
+				<prop key="hibernate.show.sql">true</prop>
                 
                 <prop key="hibernate.current_session_context_class">jta</prop>
 				<prop key="javax.persistence.transactionType">jta</prop>
@@ -105,21 +120,6 @@
 				<prop key="hibernate.transaction.factory_class">com.atomikos.icatch.jta.hibernate3.AtomikosJTATransactionFactory</prop>
 			</props>
 		</property>
-	</bean>
-	<bean id="aditDVKDataSource" class="com.atomikos.jdbc.AtomikosDataSourceBean" init-method="init" destroy-method="close">
-		<property name="uniqueResourceName" value="AditDVKDataSource" />
-		
-		<property name="xaDataSource" ref="aditDVKDataBase" />
-		<property name="maxPoolSize" value="20" />
-		<property name="minPoolSize" value="10"/>
-	</bean>
-	<bean id="aditDVKDataBase" class="org.postgresql.xa.PGXADataSource" lazy-init="true">
-		<property name="user" value="adit_dvkuk_user" />
-		<property name="password" value="yyy" />
-		<property name="serverName" value="ats.girf.ee" />
-		<property name="portNumber" value="5432" />
-		<property name="databaseName" value="adit" />
-		<property name="url" value="jdbc:postgresql://ats.girf.ee:5432/adit" />
 	</bean>
 
 
@@ -137,13 +137,7 @@
 	</bean>
 
 
-	<!-- Enable Spring annotation based transactions -->
+	<!-- Enabling Spring annotation based transactions -->
 	<tx:annotation-driven transaction-manager="transactionManager" />
-	
-	<!-- <bean id="hibernateTemplate" class="org.springframework.orm.hibernate3.HibernateTemplate"> 
-		<property name="sessionFactory">
-			<ref bean="sessionFactory"/>
-		</property> 
-	</bean> -->
 	
 </beans>
