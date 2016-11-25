@@ -22,6 +22,16 @@
         <hibernate.version>3.6.10.Final</hibernate.version>
         <atomikos.version>4.0.4</atomikos.version>
         
+        <!--
+        	NB!
+        	For database settings in context.xml placed inside Tomcat's /conf directory use provided scope
+        	and the related transactions-jdbc-<version>.jar file must be present in Tomcat's /lib directory.
+        	This will prevent an issue when EnhancedTomcatAtomikosBeanFactory cannot recognize AtomikosDataSourceBean object.
+        	
+        	When using Spring based data source configurations (see /conf/girf-arendus-atomikos/adit-datasource.xml)
+        	use the default scope, i.e. "compile".
+        -->
+        <atomikos.dependency.scope>provided</atomikos.dependency.scope>
         
         <digidoc.tmp.dir>C:\\Users\\lisa\\TMP</digidoc.tmp.dir>
         <!-- Edit this to match your destination environment -->
@@ -178,6 +188,7 @@
 			<groupId>com.atomikos</groupId>
 			<artifactId>transactions-jdbc</artifactId>
 			<version>${atomikos.version}</version>
+			<scope>${atomikos.dependency.scope}</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.atomikos</groupId>
