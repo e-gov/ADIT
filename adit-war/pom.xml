@@ -33,6 +33,12 @@
         -->
         <atomikos.dependency.scope>provided</atomikos.dependency.scope>
         
+        <!--
+        	When deploying to an external Tomcat instance use the "provided" scope.
+        	The related PostgrSQL JDBC driver of course must be present in the TOMCAT_HOME/lib directory.
+        -->
+        <postgresql.dependency.scope>provided</postgresql.dependency.scope>
+        
         <digidoc.tmp.dir>C:\\Users\\lisa\\TMP</digidoc.tmp.dir>
         <!-- Edit this to match your destination environment -->
         <!--<resourceDir>ria-dev-weblogic</resourceDir>-->
@@ -176,6 +182,7 @@
 		    <groupId>org.postgresql</groupId>
 		    <artifactId>postgresql</artifactId>
 		    <version>${postgresql.version}</version>
+		    <scope>${postgresql.dependency.scope}</scope>
 		</dependency>
         
         <!-- Atomikos -->
