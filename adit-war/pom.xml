@@ -39,6 +39,12 @@
         -->
         <postgresql.dependency.scope>provided</postgresql.dependency.scope>
         
+        <!--
+        	NB! This is meant for RIA administrators.
+        	The following directory will contain the required JAR dependencies that must be put inside TOMCAT_HOME/lib directory.
+         -->
+        <ria.jar.dependencies.directory>${project.build.directory}/tomcat_lib</ria.jar.dependencies.directory>
+        
         <digidoc.tmp.dir>C:\\Users\\lisa\\TMP</digidoc.tmp.dir>
         <!-- Edit this to match your destination environment -->
         <!--<resourceDir>ria-dev-weblogic</resourceDir>-->
@@ -207,6 +213,13 @@
 					<groupId>org.hibernate</groupId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+		<!-- This transactions-jms dependency is required ONLY for RIA's deploy process -->
+		<dependency>
+			<groupId>com.atomikos</groupId>
+			<artifactId>transactions-jms</artifactId>
+			<version>${atomikos.version}</version>
+			<scope>provided</scope>
 		</dependency>
 
         <!-- Codec -->
@@ -536,6 +549,9 @@
                 <includes>
                     <include>*</include>
                 </includes>
+                <excludes>
+                    <exclude>atomikos-integration-extension-3.7.2.jar</exclude>
+                </excludes>
                 <!--
                 <excludes>
                     <exclude>saaj-api.jar</exclude>
@@ -544,6 +560,16 @@
                 -->
                 <targetPath>../adit/WEB-INF/lib</targetPath>
             </resource>
+            
+            <!-- Copying atomikos-integration-extension for RIA administrators -->
+            <resource>
+                <directory>${basedir}/lib</directory>
+                <includes>
+                    <include>atomikos-integration-extension-3.7.2.jar</include>
+                </includes>
+                <targetPath>${ria.jar.dependencies.directory}</targetPath>
+            </resource>
+            
         </resources>
         <plugins>
             <plugin>
@@ -614,8 +640,26 @@
                     </execution>
                 </executions>
             </plugin>
-        </plugins>
-    </build>
+            
+            <!-- Preparing JAR dependencies for RIA administrators -->
+            <plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${ria.jar.dependencies.directory}</outputDirectory>
+							<includeArtifactIds>transactions-jta,transactions-jdbc,transactions-api,atomikos-util,transactions,transactions-jms,jta</includeArtifactIds>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+	    </plugins>
+	    </build>
 
     <reporting>
         <plugins>
