@@ -20,7 +20,7 @@
         <spring.version>4.0.9.RELEASE</spring.version>
         <postgresql.version>9.4.1212.jre7</postgresql.version>
         <hibernate.version>3.6.10.Final</hibernate.version>
-        <atomikos.version>4.0.4</atomikos.version>
+        <atomikos.version>4.0.3</atomikos.version>
         
         <!--
         	NB!
