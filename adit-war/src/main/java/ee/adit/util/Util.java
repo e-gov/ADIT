@@ -2123,6 +2123,7 @@ public final class Util {
         } while (bExists);
         
         return id;
+    }
 
     public static XRoadServiceIdentifierType populateAditXRoadService(String serviceCode, String serviceVersion, Configuration conf) {
     	XRoadServiceIdentifierType aditXRoadService = new XRoadServiceIdentifierType();
