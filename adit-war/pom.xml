@@ -621,7 +621,7 @@
 						</goals>
 						<configuration>
 							<outputDirectory>${ria.jar.dependencies.directory}</outputDirectory>
-							<includeArtifactIds>transactions-jta,transactions-jdbc,transactions-api,atomikos-util,transactions,transactions-jms,jta</includeArtifactIds>
+							<includeArtifactIds>transactions-jta,transactions-jdbc,transactions-api,atomikos-util,transactions,transactions-jms,jta,postgresql</includeArtifactIds>
 						</configuration>
 					</execution>
 				</executions>
