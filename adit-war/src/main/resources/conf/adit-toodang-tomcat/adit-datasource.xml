@@ -7,7 +7,7 @@
 
 	 <!-- ADIT main data source configuration  -->
     <bean id="aditDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
-        <property name="jndiName" value="java:comp/env/jdbc/adit-test-postgres" />
+        <property name="jndiName" value="java:comp/env/jdbc/adit-toodang-postgres" />
     </bean>
 	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
 		<property name="mappingLocations">
@@ -61,7 +61,7 @@
 
 	<!-- DVK data source configuration  -->
 	<bean id="aditDVKDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
-        <property name="jndiName" value="java:comp/env/jdbc/adit_dvk-test-postgres" />
+        <property name="jndiName" value="java:comp/env/jdbc/adit_dvk-toodang-postgres" />
     </bean>
 	<bean id="dvkSessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
 		<property name="mappingLocations">
