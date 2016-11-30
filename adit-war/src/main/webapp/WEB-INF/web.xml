@@ -11,12 +11,13 @@
 		<listener-class>ee.adit.web.listener.AppContextListener</listener-class>
 	</listener>
 
+	<listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
 	<context-param>
 	  	<param-name>contextConfigLocation</param-name>
-	  	<param-value>
-		    /WEB-INF/adit-servlet.xml
-		    /WEB-INF/adit-monitor-servlet.xml
-	  	</param-value>
+	  	<param-value>/WEB-INF/adit-datasource.xml</param-value>
 	</context-param>
 
 	<!-- take especial notice of the name of this servlet -->
@@ -24,12 +25,22 @@
 		<servlet-name>adit-monitor</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
+		
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+		  	<param-value>/WEB-INF/adit-monitor-servlet.xml</param-value>
+		</init-param>
 	</servlet>
 	
 	<servlet>
 		<servlet-name>adit</servlet-name>
 		<servlet-class>org.springframework.ws.transport.http.MessageDispatcherServlet</servlet-class>
 		<load-on-startup>2</load-on-startup>
+		
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+		  	<param-value>/WEB-INF/adit-servlet.xml</param-value>
+		</init-param>
 	</servlet>
 
 	<servlet-mapping>

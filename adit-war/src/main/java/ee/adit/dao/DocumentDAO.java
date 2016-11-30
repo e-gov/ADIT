@@ -883,9 +883,11 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
         logger.debug("Fetching documents for status update. StatusID: " + dvkStatusId);
         String sql = "from Document where dvkId is not null and (documentDvkStatusId is null or documentDvkStatusId != " + dvkStatusId + ")";
         logger.debug("SQL: " + sql);
+        
         Session session = null;
         try {
-            session = this.getSessionFactory().getCurrentSession();
+        	session = this.getSessionFactory().openSession();
+        	
             result = session.createQuery(sql).list();
         } catch (Exception e) {
             throw new AditInternalException("Error while updating Document: ", e);
@@ -928,16 +930,17 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
         Session session = null;
         Transaction transaction = null;
         try {
-
-            session = this.getSessionFactory().getCurrentSession();
+            session = this.getSessionFactory().openSession();
             transaction = session.beginTransaction();
+            
             session.saveOrUpdate(document);
+            
             transaction.commit();
-
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
+            
             throw new AditInternalException("Error while updating Document: ", e);
         }
     }
@@ -954,7 +957,7 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
 
         Session session = null;
         try {
-            session = this.getSessionFactory().getCurrentSession();
+            session = this.getSessionFactory().openSession();
             result = (Document) session.createQuery(sql).uniqueResult();
         } catch (Exception e) {
             throw new AditInternalException("Error while updating Document: ", e);

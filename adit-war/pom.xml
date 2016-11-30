@@ -16,6 +16,35 @@
         <file.encoding>UTF-8</file.encoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        
+        <spring.version>4.0.9.RELEASE</spring.version>
+        <postgresql.version>9.4.1212.jre7</postgresql.version>
+        <hibernate.version>3.6.10.Final</hibernate.version>
+        <atomikos.version>4.0.3</atomikos.version>
+        
+        <!--
+        	NB!
+        	For database settings in context.xml placed inside Tomcat's /conf directory use provided scope
+        	and the related transactions-jdbc-<version>.jar file must be present in Tomcat's /lib directory.
+        	This will prevent an issue when EnhancedTomcatAtomikosBeanFactory cannot recognize AtomikosDataSourceBean object.
+        	
+        	When using Spring based data source configurations (see /conf/girf-arendus-atomikos/adit-datasource.xml)
+        	use the default scope, i.e. "compile".
+        -->
+        <atomikos.dependency.scope>provided</atomikos.dependency.scope>
+        
+        <!--
+        	When deploying to an external Tomcat instance use the "provided" scope.
+        	The related PostgrSQL JDBC driver of course must be present in the TOMCAT_HOME/lib directory.
+        -->
+        <postgresql.dependency.scope>provided</postgresql.dependency.scope>
+        
+        <!--
+        	NB! This is meant for RIA administrators.
+        	The following directory will contain the required JAR dependencies that must be put inside TOMCAT_HOME/lib directory.
+         -->
+        <ria.jar.dependencies.directory>${project.build.directory}/tomcat_lib</ria.jar.dependencies.directory>
+        
         <digidoc.tmp.dir>C:\\Users\\lisa\\TMP</digidoc.tmp.dir>
         <!-- Edit this to match your destination environment -->
         <!--<resourceDir>conf/adit-arendus-tomcat</resourceDir>-->
@@ -63,17 +92,17 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context-support</artifactId>
-			<version>4.0.9.RELEASE</version>
+			<version>${spring.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-orm</artifactId>
-			<version>4.0.9.RELEASE</version>
+			<version>${spring.version}</version>
 		</dependency>
 		<dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
-            <version>4.0.9.RELEASE</version>
+            <version>${spring.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -133,50 +162,51 @@
             <systemPath>${basedir}/lib/commons-logging-1.1.1.jar</systemPath>
         </dependency> -->
 
+        
         <!-- Hibernate -->
         <dependency>
-            <groupId>java</groupId>
-            <artifactId>antlr</artifactId>
-            <version>2.7.6</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/antlr-2.7.6.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>java</groupId>
-            <artifactId>dom4j</artifactId>
-            <version>1.6.1</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/dom4j-1.6.1.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>java</groupId>
-            <artifactId>hibernate3</artifactId>
-            <version>1.6.1</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/hibernate3.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>java</groupId>
-            <artifactId>javassist</artifactId>
-            <version>3.9.0.GA</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/javassist-3.9.0.GA.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>java</groupId>
-            <artifactId>jta</artifactId>
-            <version>1.1</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/jta-1.1.jar</systemPath>
-        </dependency>
+		    <groupId>org.hibernate</groupId>
+		    <artifactId>hibernate-entitymanager</artifactId>
+		    <version>${hibernate.version}</version>
+		</dependency>
 
 		<dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>9.4.1208.jre7</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/postgresql-9.4.1208.jre7.jar</systemPath>
-        </dependency>
+		    <groupId>org.postgresql</groupId>
+		    <artifactId>postgresql</artifactId>
+		    <version>${postgresql.version}</version>
+		    <scope>${postgresql.dependency.scope}</scope>
+		</dependency>
+        
+        <!-- Atomikos -->
+		<dependency>
+			<groupId>com.atomikos</groupId>
+			<artifactId>transactions-jta</artifactId>
+			<version>${atomikos.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.atomikos</groupId>
+			<artifactId>transactions-jdbc</artifactId>
+			<version>${atomikos.version}</version>
+			<scope>${atomikos.dependency.scope}</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.atomikos</groupId>
+			<artifactId>transactions-hibernate3</artifactId>
+			<version>${atomikos.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>hibernate</artifactId>
+					<groupId>org.hibernate</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<!-- This transactions-jms dependency is required ONLY for RIA's deploy process -->
+		<dependency>
+			<groupId>com.atomikos</groupId>
+			<artifactId>transactions-jms</artifactId>
+			<version>${atomikos.version}</version>
+			<scope>provided</scope>
+		</dependency>
 
         <!-- Codec -->
         <!-- <dependency>
@@ -413,6 +443,14 @@
                 <filtering>false</filtering>
                 <targetPath>../adit/WEB-INF/classes/hbm</targetPath>
             </resource>
+            <resource>
+                <directory>src/main/resources/${resourceDir}</directory>
+                <filtering>false</filtering>
+                <targetPath>../adit/WEB-INF/classes</targetPath>
+                <includes>
+                	<include>jta.properties</include>
+                </includes>
+            </resource>
             <!-- Include all the environment specific configuration files -->
             <resource>
                 <directory>src/main/resources/${resourceDir}</directory>
@@ -478,6 +516,9 @@
                 <includes>
                     <include>*</include>
                 </includes>
+                <excludes>
+                    <exclude>atomikos-integration-extension-3.7.2.jar</exclude>
+                </excludes>
                 <!--
                 <excludes>
                     <exclude>saaj-api.jar</exclude>
@@ -486,6 +527,16 @@
                 -->
                 <targetPath>../adit/WEB-INF/lib</targetPath>
             </resource>
+            
+            <!-- Copying atomikos-integration-extension for RIA administrators -->
+            <resource>
+                <directory>${basedir}/lib</directory>
+                <includes>
+                    <include>atomikos-integration-extension-3.7.2.jar</include>
+                </includes>
+                <targetPath>${ria.jar.dependencies.directory}</targetPath>
+            </resource>
+            
         </resources>
         <plugins>
             <plugin>
@@ -557,8 +608,26 @@
                     </execution>
                 </executions>
             </plugin>
-        </plugins>
-    </build>
+            
+            <!-- Preparing JAR dependencies for RIA administrators -->
+            <plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${ria.jar.dependencies.directory}</outputDirectory>
+							<includeArtifactIds>transactions-jta,transactions-jdbc,transactions-api,atomikos-util,transactions,transactions-jms,jta</includeArtifactIds>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+	    </plugins>
+	    </build>
 
     <reporting>
         <plugins>

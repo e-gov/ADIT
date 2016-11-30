@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import dvk.api.ml.PojoMessage;
@@ -39,27 +40,25 @@ public class DvkDAO extends HibernateDaoSupport {
     @SuppressWarnings("unchecked")
     public List<PojoMessage> getIncomingDocuments(List<String> dvkFolderNames) {
         List<PojoMessage> result = new ArrayList<PojoMessage>();
-        //Session session = this.getSessionFactory().getCurrentSession();
-        //session.beginTransaction();
-        
-//        try {
-//        	final String sql = "from PojoMessage where isIncoming = true and (localItemId = null or localItemId = 0) and dhlMessageId != 9999999999";
-//            //result = session.createQuery(sql).list();
-//        	result = this.getHibernateTemplate().find(sql);
-//        } catch (Exception e) {
-//            logger.error("Exception while fetching DVK incoming messages: ", e);
-//        }
-        
-        String sql = "from PojoMessage where isIncoming = true and (localItemId = null or localItemId = 0) and dhlMessageId != 9999999999 and dhlFolderName in (:folders)";
-        Session session = null;
 
+        String sql = "from PojoMessage where isIncoming = true and (localItemId = null or localItemId = 0) and dhlMessageId != 9999999999 and dhlFolderName in (:folders)";
+        
+        Session session = null;
+        Transaction transaction = null;
         try {
             session = this.getSessionFactory().openSession();
-            session.beginTransaction();
+            transaction = session.beginTransaction();
+            
             Query query = session.createQuery(sql);
             query.setParameterList("folders", dvkFolderNames);
             result = query.list();
+            
+            transaction.commit();
         } catch (Exception e) {
+        	if (transaction != null) {
+        		transaction.rollback();
+        	}
+        	
         	logger.error("Exception while fetching DVK incoming messages: ", e);
         } finally {
             if (session != null) {
@@ -81,15 +80,23 @@ public class DvkDAO extends HibernateDaoSupport {
     @SuppressWarnings("unchecked")
     public List<PojoMessage> getIncomingDocumentsWithoutStatus(Long statusID) throws Exception {
         List<PojoMessage> result = new ArrayList<PojoMessage>();
-        Session session = null;
         final String sql = "from PojoMessage where isIncoming = true and (recipientStatusId != " + statusID
                 + " or recipientStatusId is null) and dhlMessageId != 9999999999";
-
+        
+        Session session = null;
+        Transaction transaction = null;
         try {
             session = this.getSessionFactory().openSession();
-            session.beginTransaction();
+            transaction = session.beginTransaction();
+            
             result = session.createQuery(sql).list();
+            
+            transaction.commit();
         } catch (Exception e) {
+        	if (transaction != null) {
+        		transaction.rollback();
+        	}
+        	
             throw e;
         } finally {
             if (session != null) {
@@ -163,15 +170,23 @@ public class DvkDAO extends HibernateDaoSupport {
             incomingInt = 1;
         }
 
-        Session session = null;
         String sql = "select mr from PojoMessageRecipient mr, PojoMessage m where mr.dhlMessageId = m.dhlMessageId and m.dhlMessageId = "
                 + dvkMessageID + " and m.isIncoming = " + incomingInt + "  and m.dhlMessageId != 9999999999";
 
+        Session session = null;
+        Transaction transaction = null;
         try {
             session = this.getSessionFactory().openSession();
-            session.beginTransaction();
+            transaction = session.beginTransaction();
+            
             result = session.createQuery(sql).list();
+            
+            transaction.commit();
         } catch (Exception e) {
+        	if (transaction != null) {
+        		transaction.rollback();
+        	}
+        	
             throw e;
         } finally {
             if (session != null) {
@@ -210,6 +225,7 @@ public class DvkDAO extends HibernateDaoSupport {
     @SuppressWarnings("unchecked")
     public List<PojoMessage> getSentDocuments() throws Exception {
         List<PojoMessage> result = new ArrayList<PojoMessage>();
+        
         String sql = "from PojoMessage m where m.isIncoming = false and m.dhlId is not null and dhlMessageId != 9999999999 and (m.faultCode is null or m.faultCode != '"
                 + DocumentService.DVK_FAULT_CODE_FOR_DELETED
                 + "') and m.dhlMessageId not in (select mr.dhlMessageId from PojoMessageRecipient mr where mr.dhlMessageId = m.dhlMessageId and (mr.sendingStatusId is null or mr.sendingStatusId = "
@@ -223,13 +239,21 @@ public class DvkDAO extends HibernateDaoSupport {
                 + " or mr.sendingStatusId = "
                 + DocumentService.DVK_STATUS_ABORTED
                 + "))";
+        
         Session session = null;
-
+        Transaction transaction = null;
         try {
             session = this.getSessionFactory().openSession();
-            session.beginTransaction();
+            transaction = session.beginTransaction();
+            
             result = session.createQuery(sql).list();
+            
+            transaction.commit();
         } catch (Exception e) {
+        	if (transaction != null) {
+        		transaction.rollback();
+        	}
+        	
             throw e;
         } finally {
             if (session != null) {
@@ -247,6 +271,7 @@ public class DvkDAO extends HibernateDaoSupport {
      */
     public List<PojoMessage> getReceivedDocuments() {
         List<PojoMessage> result = new ArrayList<PojoMessage>();
+        
         String sql = "from PojoMessage where isIncoming = true and dhlId is not null and dhlMessageId != 9999999999 and (faultCode is null or faultCode != '"
                 + DocumentService.DVK_FAULT_CODE_FOR_DELETED
                 + "') and (recipientStatusId = "
@@ -254,12 +279,22 @@ public class DvkDAO extends HibernateDaoSupport {
                 + " or recipientStatusId = "
                 + DocumentService.DVK_STATUS_RECEIVED
                 + ")";
+        
         Session session = null;
-
+        Transaction transaction = null;
         try {
             session = this.getSessionFactory().openSession();
-            session.beginTransaction();
+            transaction = session.beginTransaction();
+            
             session.createQuery(sql).list();
+            
+            session.getTransaction().commit();
+        } catch (Exception e) {
+        	if (transaction != null) {
+        		transaction.rollback();
+        	}
+        	
+            throw e;
         } finally {
             if (session != null) {
                 session.close();
@@ -278,14 +313,24 @@ public class DvkDAO extends HibernateDaoSupport {
     public List<PojoOrganization> getUsers() {
         List<PojoOrganization> result = new ArrayList<PojoOrganization>();
         String sql = "from PojoOrganization where dhlCapable = true";
-        Session session = null;
 
         logger.debug("Fetching organizations...");
 
+        Session session = null;
+        Transaction transaction = null;
         try {
             session = this.getSessionFactory().openSession();
-            session.beginTransaction();
+            transaction = session.beginTransaction();
+            
             result = session.createQuery(sql).list();
+            
+            transaction.commit();
+        } catch (Exception e) {
+        	if (transaction != null) {
+        		transaction.rollback();
+        	}
+        	
+            throw e;
         } finally {
             if (session != null) {
                 session.close();
@@ -304,14 +349,24 @@ public class DvkDAO extends HibernateDaoSupport {
     public PojoMessage testRead(long dhlMessageId) {
         PojoMessage result = null;
         String sql = "from PojoMessage where dhlMessageId = " + dhlMessageId;
-        Session session = null;
 
+        Session session = null;
+        Transaction transaction = null;
         try {
             session = this.getSessionFactory().openSession();
-            session.beginTransaction();
+            transaction = session.beginTransaction();
+            
             Query query = session.createQuery(sql);
             query.setMaxResults(1);
             result = (PojoMessage) query.uniqueResult();
+            
+            transaction.commit();
+        } catch (Exception e) {
+        	if (transaction != null) {
+        		transaction.rollback();
+        	}
+        	
+            throw e;
         } finally {
             if (session != null) {
                 session.close();
@@ -330,12 +385,22 @@ public class DvkDAO extends HibernateDaoSupport {
     public PojoMessage getMessage(long dhlMessageId) {
         PojoMessage result = null;
         String sql = "from PojoMessage where dhlMessageId = " + dhlMessageId;
-        Session session = null;
 
+        Session session = null;
+        Transaction transaction = null;
         try {
             session = this.getSessionFactory().openSession();
-            session.beginTransaction();
+            transaction = session.beginTransaction();
+            
             result = (PojoMessage) session.createQuery(sql).uniqueResult();
+            
+            transaction.commit();
+        } catch (Exception e) {
+        	if (transaction != null) {
+        		transaction.rollback();
+        	}
+        	
+            throw e;
         } finally {
             if (session != null) {
                 session.close();
@@ -376,16 +441,24 @@ public class DvkDAO extends HibernateDaoSupport {
         long result = 0;
 
         String sql = "select count(*) from PojoMessage where isIncoming = false and sendingDate => :beginDate and sendingDate <= :endDate)";
-        Session session = null;
 
+        Session session = null;
+        Transaction transaction = null;
         try {
             session = this.getSessionFactory().openSession();
-            session.beginTransaction();
+            transaction = session.beginTransaction();
+            
             Query query = session.createQuery(sql);
             query.setParameter("beginDate", beginDate);
             query.setParameter("endDate", endDate);
             result = (Long) query.uniqueResult();
+            
+            transaction.commit();
         } catch (Exception e) {
+        	if (transaction != null) {
+        		transaction.rollback();
+        	}
+        	
             throw e;
         } finally {
             if (session != null) {
@@ -409,15 +482,23 @@ public class DvkDAO extends HibernateDaoSupport {
 
         String sql = "from PojoMessage where isIncoming = true and recipientStatusId = "
                 + DocumentService.DVK_STATUS_RECEIVED + " and receivedDate <= :comparisonDate";
+        
         Session session = null;
-
+        Transaction transaction = null;
         try {
             session = this.getSessionFactory().openSession();
-            session.beginTransaction();
+            transaction = session.beginTransaction();
+            
             Query query = session.createQuery(sql);
             query.setParameter("comparisonDate", comparisonDate);
             result = query.list();
+            
+            transaction.commit();
         } catch (Exception e) {
+        	if (transaction != null) {
+        		transaction.rollback();
+        	}
+        	
             throw e;
         } finally {
             if (session != null) {
