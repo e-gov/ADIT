@@ -193,7 +193,7 @@ public class CustomXRoadHeader extends XTeeHeader {
     		serviceName = new StringBuilder().
     				append(xRoadService.getSubsystemCode()).append(".").
     				append(xRoadService.getServiceCode()).append(".").
-    				append(!StringUtils.isBlank(xRoadService.getServiceVersion()) ? xRoadService.getServiceVersion() : "v1").os
+    				append(!StringUtils.isBlank(xRoadService.getServiceVersion()) ? xRoadService.getServiceVersion() : "v1").
     				toString();
     	}
     	
