@@ -21,19 +21,13 @@ public class CustomXRoadHeader extends XTeeHeader {
     private static final long serialVersionUID = 1L;
     
     private static Logger logger = Logger.getLogger(CustomXRoadHeader.class);
-    
-    public static final String XROAD_NS_URI = "http://x-road.eu/xsd/xroad.xsd";
-    public static final String XROAD_NS_PREFIX = "xrd";
-    
-    public static final String IDENTIFIERS_NS_URI = "http://x-road.eu/xsd/identifiers";
-    public static final String IDENTIFIERS_NS_PREFIX = "id";
 
     // X-Road protocol version 4.0 SOAP header elements
-    public static final QName CLIENT = new QName(XROAD_NS_URI, "client");
-    public static final QName SERVICE = new QName(XROAD_NS_URI, "service");
-    public static final QName USER_ID = new QName(XROAD_NS_URI, "userId");
-    public static final QName ID = new QName(XROAD_NS_URI, "id");
-    public static final QName PROTOCOL_VERSION = new QName(XROAD_NS_URI, "protocolVersion");
+    public static final QName CLIENT = new QName(XRoadProtocolVersion.V4_0.getNamespaceURI(), "client");
+    public static final QName SERVICE = new QName(XRoadProtocolVersion.V4_0.getNamespaceURI(), "service");
+    public static final QName USER_ID = new QName(XRoadProtocolVersion.V4_0.getNamespaceURI(), "userId");
+    public static final QName ID = new QName(XRoadProtocolVersion.V4_0.getNamespaceURI(), "id");
+    public static final QName PROTOCOL_VERSION = new QName(XRoadProtocolVersion.V4_0.getNamespaceURI(), "protocolVersion");
     
     private String id;
     private String userId;
@@ -199,7 +193,7 @@ public class CustomXRoadHeader extends XTeeHeader {
     		serviceName = new StringBuilder().
     				append(xRoadService.getSubsystemCode()).append(".").
     				append(xRoadService.getServiceCode()).append(".").
-    				append(!StringUtils.isBlank(xRoadService.getServiceVersion()) ? xRoadService.getServiceVersion() : "1").
+    				append(!StringUtils.isBlank(xRoadService.getServiceVersion()) ? xRoadService.getServiceVersion() : "v1").os
     				toString();
     	}
     	

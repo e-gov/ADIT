@@ -1,27 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:tx="http://www.springframework.org/schema/tx"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
-						http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
 
 	<!-- ADIT main data source configuration  -->
 	<bean id="aditDataSource" class="com.atomikos.jdbc.AtomikosDataSourceBean" init-method="init" destroy-method="close">
 		<property name="uniqueResourceName" value="AditDataSource" />
 		
 		<property name="xaDataSource" ref="aditDataBase" />
-		<property name="maxPoolSize" value="20" />
-		<property name="minPoolSize" value="10"/>
+		<property name="minPoolSize" value="5"/>
+		<property name="maxPoolSize" value="15" />
 		<property name="maxIdleTime" value="10"/>
 		<property name="testQuery" value="SELECT 1"/>
 	</bean>
 	<bean id="aditDataBase" class="org.postgresql.xa.PGXADataSource" lazy-init="true">
 		<property name="user" value="adit_user" />
 		<property name="password" value="yyy" />
-		<property name="serverName" value="localhost" />
+		<property name="serverName" value="ats.girf.ee" />
 		<property name="portNumber" value="5432" />
 		<property name="databaseName" value="adit" />
-		<property name="url" value="jdbc:postgresql://localhost:5432/adit" />
+		<property name="url" value="jdbc:postgresql://ats.girf.ee:5432/adit" />
 	</bean>
 	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
 		<property name="mappingLocations">
@@ -79,18 +77,18 @@
 		<property name="uniqueResourceName" value="AditDVKDataSource" />
 		
 		<property name="xaDataSource" ref="aditDVKDataBase" />
-		<property name="maxPoolSize" value="20" />
-		<property name="minPoolSize" value="10"/>
+		<property name="minPoolSize" value="5"/>
+		<property name="maxPoolSize" value="15" />
 		<property name="maxIdleTime" value="10"/>
 		<property name="testQuery" value="SELECT 1"/>
 	</bean>
 	<bean id="aditDVKDataBase" class="org.postgresql.xa.PGXADataSource" lazy-init="true">
 		<property name="user" value="adit_dvkuk_user" />
 		<property name="password" value="yyy" />
-		<property name="serverName" value="localhost" />
+		<property name="serverName" value="ats.girf.ee" />
 		<property name="portNumber" value="5432" />
 		<property name="databaseName" value="adit" />
-		<property name="url" value="jdbc:postgresql://localhost:5432/adit" />
+		<property name="url" value="jdbc:postgresql://ats.girf.ee:5432/adit" />
 	</bean>
 	<bean id="dvkSessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
 		<property name="mappingLocations">
@@ -131,17 +129,12 @@
 	<bean id="atomikosTransactionManager" class="com.atomikos.icatch.jta.UserTransactionManager" init-method="init" destroy-method="close">
 		<property name="forceShutdown" value="false" />
 	</bean>
-	<bean id="atomikosUserTransaction" class="com.atomikos.icatch.jta.UserTransactionImp">
-		<property name="transactionTimeout" value="15000" />
-	</bean>
+	<bean id="atomikosUserTransaction" class="com.atomikos.icatch.jta.UserTransactionImp" />
+
 	<bean id="transactionManager" class="org.springframework.transaction.jta.JtaTransactionManager" depends-on="atomikosTransactionManager,atomikosUserTransaction">
 		<property name="transactionManager" ref="atomikosTransactionManager" />
 		<property name="userTransaction" ref="atomikosUserTransaction" />
 		<property name="allowCustomIsolationLevels" value="true" />
 	</bean>
-
-
-	<!-- Enabling Spring annotation based transactions -->
-	<tx:annotation-driven transaction-manager="transactionManager" />
 	
 </beans>
