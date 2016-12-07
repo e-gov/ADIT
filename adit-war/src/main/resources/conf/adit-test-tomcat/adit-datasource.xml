@@ -3,12 +3,7 @@
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:tx="http://www.springframework.org/schema/tx"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans
-						http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
-						http://www.springframework.org/schema/context
-						http://www.springframework.org/schema/context/spring-context-2.5.xsd
-						http://www.springframework.org/schema/tx
-						http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
 
 	<bean id="sessionFactory"
 		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
@@ -88,8 +83,5 @@
 	<bean class="org.springframework.orm.hibernate3.HibernateTransactionManager" id="transactionManager">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
-
-	<!-- Enable the configuration of transactional behavior based on annotations -->
-	<tx:annotation-driven transaction-manager="transactionManager" />
 
 </beans>

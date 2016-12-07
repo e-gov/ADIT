@@ -114,9 +114,14 @@
     	<level value="error"/>
     	<appender-ref ref="file" />
     </logger>
+    
+    <logger name="com.atomikos">
+    	<level value="DEBUG"/>
+    	<appender-ref ref="file" />
+    </logger>
 
     <root>
-		<level value="info" />
+		<level value="DEBUG" />
 		<appender-ref ref="stdout" />
 		<appender-ref ref="file" />
 	</root>
