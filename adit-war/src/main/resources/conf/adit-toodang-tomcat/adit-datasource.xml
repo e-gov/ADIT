@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:tx="http://www.springframework.org/schema/tx"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
-						http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
 
 	 <!-- ADIT main data source configuration  -->
     <bean id="aditDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
@@ -102,8 +100,7 @@
 	<bean id="atomikosTransactionManager" class="com.atomikos.icatch.jta.UserTransactionManager" init-method="init" destroy-method="close">
 		<property name="forceShutdown" value="false" />
 	</bean>
-	<bean id="atomikosUserTransaction" class="com.atomikos.icatch.jta.UserTransactionImp">
-		<property name="transactionTimeout" value="15000" />
+	<bean id="atomikosUserTransaction" class="com.atomikos.icatch.jta.UserTransactionImp" />
 	</bean>
 	<bean id="transactionManager" class="org.springframework.transaction.jta.JtaTransactionManager" depends-on="atomikosTransactionManager,atomikosUserTransaction">
 		<property name="transactionManager" ref="atomikosTransactionManager" />
@@ -111,8 +108,4 @@
 		<property name="allowCustomIsolationLevels" value="true" />
 	</bean>
 
-
-	<!-- Enabling Spring annotation based transactions -->
-	<tx:annotation-driven transaction-manager="transactionManager" />
-	
 </beans>
