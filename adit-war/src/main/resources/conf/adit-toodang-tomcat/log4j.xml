@@ -81,6 +81,11 @@
     <logger name="ee.adit.schedule.ScheduleClient">
         <level value="INFO" />
     </logger>
+  
+    <logger name="com.atomikos">
+        <level value="ERROR"/>
+        <appender-ref ref="stdout" />
+    </logger>
 
     <!-- Digidoc signing loggers -->
     <logger name="org.digidoc4j">
