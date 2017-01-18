@@ -115,6 +115,11 @@
     	<appender-ref ref="file" />
     </logger>
     
+    <logger name="org.digidoc4j">
+    	<level value="DEBUG"/>
+    	<appender-ref ref="stdout" />
+    </logger>
+
     <logger name="com.atomikos">
     	<level value="DEBUG"/>
     	<appender-ref ref="file" />
