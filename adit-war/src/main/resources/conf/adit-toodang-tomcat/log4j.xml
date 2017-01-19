@@ -96,51 +96,51 @@
       <level value="INFO"/>
     </logger>
 
-    <logger name="ee.sk.digidoc.DigiDocException" additivity=“false”>
+    <logger name="ee.sk.digidoc.DigiDocException" additivity="false">
         <level value="ERROR" />
         <appender-ref ref="file" />
     </logger>
-    <logger name="ee.sk.digidoc.factory.PKCS11SignatureFactory" additivity=“false”>
+    <logger name="ee.sk.digidoc.factory.PKCS11SignatureFactory" additivity="false"”>
         <level value="ERROR" />
         <appender-ref ref="file" />
     </logger>
-    <logger name="ee.sk.digidoc.factory.IAIKNotaryFactory" additivity=“false”>
+    <logger name="ee.sk.digidoc.factory.IAIKNotaryFactory" additivity="false">
         <level value="ERROR" />
         <appender-ref ref="file" />
     </logger>
-    <logger name="ee.sk.xmlenc.factory.EncryptedDataSAXParser" additivity=“false”>
+    <logger name="ee.sk.xmlenc.factory.EncryptedDataSAXParser" additivity="false">
         <level value="ERROR" />
         <appender-ref ref="file" />
     </logger>
-    <logger name="ee.sk.xmlenc.EncryptedKey" additivity=“false”>
+    <logger name="ee.sk.xmlenc.EncryptedKey" additivity="false">
         <level value="ERROR" />
         <appender-ref ref="file" />
     </logger>
-    <logger name="ee.sk.digidoc.Base64Util" additivity=“false”>
+    <logger name="ee.sk.digidoc.Base64Util" additivity="false">
         <level value="ERROR" />
         <appender-ref ref="file" />
     </logger>
-    <logger name="ee.sk.digidoc.factory.SAXDigiDocFactory" additivity=“false”>
+    <logger name="ee.sk.digidoc.factory.SAXDigiDocFactory" additivity="false">
         <level value="ERROR" />
         <appender-ref ref="file" />
     </logger>
-    <logger name="ee.sk.digidoc.factory.SAXDigiDocException" additivity=“false”>
+    <logger name="ee.sk.digidoc.factory.SAXDigiDocException" additivity="false">
         <level value="ERROR" />
         <appender-ref ref="file" />
     </logger>
-    <logger name="ee.sk.digidoc.factory.BouncyCastleNotaryFactory" additivity=“false”>
+    <logger name="ee.sk.digidoc.factory.BouncyCastleNotaryFactory" additivity="false">
         <level value="ERROR" />
         <appender-ref ref="file" />
     </logger>
-    <logger name="ee.sk.xmlenc.factory.EncryptedStreamSAXParser" additivity=“false”>
+    <logger name="ee.sk.xmlenc.factory.EncryptedStreamSAXParser" additivity="false">
         <level value="ERROR" />
         <appender-ref ref="file" />
     </logger>
-    <logger name="ee.sk.digidoc.DataFile" additivity=“false”>
+    <logger name="ee.sk.digidoc.DataFile" additivity="false">
         <level value="ERROR" />
         <appender-ref ref="file" />
     </logger>
-    <logger name="ee.sk.xmlenc.EncryptedData" additivity=“false”>
+    <logger name="ee.sk.xmlenc.EncryptedData" additivity="false">
         <level value="ERROR" />
         <appender-ref ref="file" />
     </logger>
