@@ -88,20 +88,12 @@
     </logger>
 
     <!-- Digidoc signing loggers -->
-    <logger name="org.digidoc4j">
-        <level value="INFO"/>
+    <logger name="ee.sk.utils.ConfigManager">
+        <level value="WARN" />
     </logger>
 
     <logger name="ee.sk.digidoc">
       <level value="INFO"/>
-    </logger>
-
-    <logger name="org.digidoc4j.impl.bdoc.xades.XadesSigningDssFacade">
-        <level value="DEBUG"/>
-    </logger>
-
-    <logger name="ee.sk.utils.ConvertUtils">
-        <level value="DEBUG"/>
     </logger>
 
     <logger name="ee.adit.ws.endpoint.document.PrepareSignatureEndpoint">
@@ -157,6 +149,13 @@
     <logger name="ee.adit.schedule" additivity="false">
         <level value="DEBUG"/>
         <appender-ref ref="file"/>
+    </logger>
+    <logger name="ee.sk.utils.ConvertUtils" additivity="false">
+        <level value="DEBUG"/>
+        <appender-ref ref="file"/>
+    </logger>
+    <logger name="org.digidoc4j.impl.bdoc.xades.XadesSigningDssFacade">
+        <level value="DEBUG"/>
     </logger>
     -->
 
