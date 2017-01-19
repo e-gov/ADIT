@@ -100,7 +100,7 @@
         <level value="ERROR" />
         <appender-ref ref="file" />
     </logger>
-    <logger name="ee.sk.digidoc.factory.PKCS11SignatureFactory" additivity="false"”>
+    <logger name="ee.sk.digidoc.factory.PKCS11SignatureFactory" additivity="false">
         <level value="ERROR" />
         <appender-ref ref="file" />
     </logger>
