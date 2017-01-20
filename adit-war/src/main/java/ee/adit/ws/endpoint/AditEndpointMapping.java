@@ -18,10 +18,10 @@ import org.w3c.dom.NodeList;
 import ee.adit.exception.AditInternalException;
 import ee.adit.util.Configuration;
 import ee.adit.util.Util;
-import ee.adit.util.xroad.CustomXRoadHeader;
 import ee.adit.util.xroad.XRoadQueryName;
 import ee.adit.util.xroad.messageprotocol.XRoadIdentifierType;
 import ee.adit.util.xroad.messageprotocol.XRoadProtocolHeaderField;
+import ee.adit.util.xroad.messageprotocol.XRoadProtocolVersion;
 
 /**
  * Custom web-service endpoint mapping implementation. Maps the incoming SOAP
@@ -86,7 +86,6 @@ public class AditEndpointMapping extends AbstractQNameEndpointMapping {
      * @return the qualified name of the SOAP body payload element.
      * @throws Exception
      */
-    @SuppressWarnings("unchecked")
     @Override
     protected QName resolveQName(MessageContext messageContext) throws Exception {
         QName result = null;
@@ -124,7 +123,7 @@ public class AditEndpointMapping extends AbstractQNameEndpointMapping {
                 Iterator<SoapHeaderElement> soapHeaderIterator = request.getSoapHeader().examineAllHeaderElements();
 
                 QName xRoadProtocol_V2_0_ServiceName = new QName(Util.XTEE_NAMESPACE, XTEE_REQUEST_NAME_HEADER);
-                QName xRoadProtocol_V4_0_ServiceName = new QName(CustomXRoadHeader.XROAD_NS_URI, XRoadProtocolHeaderField.SERVICE.getValue());
+                QName xRoadProtocol_V4_0_ServiceName = new QName(XRoadProtocolVersion.V4_0.getNamespaceURI(), XRoadProtocolHeaderField.SERVICE.getValue());
 
                 logger.info("soapHeaderIterator.hasNext(): " + soapHeaderIterator.hasNext());
 

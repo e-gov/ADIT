@@ -42,6 +42,7 @@ import ee.adit.util.Util;
 import ee.adit.util.xroad.CustomSOAPUtil;
 import ee.adit.util.xroad.CustomXRoadHeader;
 import ee.adit.util.xroad.messageprotocol.XRoadClient;
+import ee.adit.util.xroad.messageprotocol.XRoadIdentifier;
 import ee.adit.util.xroad.messageprotocol.XRoadIdentifierType;
 import ee.adit.util.xroad.messageprotocol.XRoadProtocolHeaderField;
 import ee.adit.util.xroad.messageprotocol.XRoadProtocolVersion;
@@ -117,7 +118,7 @@ public abstract class XRoadCustomEndpoint implements MessageEndpoint {
 
             CustomXRoadHeader pais = parseXRoadHeader(paringMessage);
             
-            String xRoadNameSpace = pais.getProtocolVersion().equals(XRoadProtocolVersion.V2_0) ? Util.XTEE_NAMESPACE : CustomXRoadHeader.XROAD_NS_URI;
+            String xRoadNameSpace = pais.getProtocolVersion().equals(XRoadProtocolVersion.V2_0) ? Util.XTEE_NAMESPACE : XRoadProtocolVersion.V4_0.getNamespaceURI();
             QName listMethodsQN = new QName(xRoadNameSpace, "listMethods");
             
             // Check if it is a metaservice
@@ -190,7 +191,7 @@ public abstract class XRoadCustomEndpoint implements MessageEndpoint {
     	
     	String xRoadProtocolVersion = XRoadProtocolVersion.V2_0.getValue();
     	
-        NodeList protocolVersionNodeList = soapHeader.getElementsByTagNameNS(CustomXRoadHeader.XROAD_NS_URI, XRoadProtocolHeaderField.PROTOCOL_VERSION.getValue());
+        NodeList protocolVersionNodeList = soapHeader.getElementsByTagNameNS(XRoadProtocolVersion.V4_0.getNamespaceURI(), XRoadProtocolHeaderField.PROTOCOL_VERSION.getValue());
         if (protocolVersionNodeList.getLength() > 0) {
         	xRoadProtocolVersion = protocolVersionNodeList.item(0).getTextContent();
         }
@@ -201,39 +202,39 @@ public abstract class XRoadCustomEndpoint implements MessageEndpoint {
         	
     		xRoadHeader = new CustomXRoadHeader(XRoadProtocolVersion.V4_0);
     		
-    		Element client = CustomSOAPUtil.getNsElement(soapHeader, XRoadProtocolHeaderField.CLIENT.getValue(), CustomXRoadHeader.XROAD_NS_URI);
+    		Element client = CustomSOAPUtil.getNsElement(soapHeader, XRoadProtocolHeaderField.CLIENT.getValue(), XRoadProtocolVersion.V4_0.getNamespaceURI());
     		if (client != null) {
-    			String clientXRoadInstance = CustomSOAPUtil.getNsElementValue(client, XRoadIdentifierType.XROAD_INSTANCE.getName(), CustomXRoadHeader.IDENTIFIERS_NS_URI);
-    			String clientMemberClass = CustomSOAPUtil.getNsElementValue(client,  XRoadIdentifierType.MEMBER_CLASS.getName(), CustomXRoadHeader.IDENTIFIERS_NS_URI);
-    			String clientMemberCode = CustomSOAPUtil.getNsElementValue(client, XRoadIdentifierType.MEMBER_CODE.getName(), CustomXRoadHeader.IDENTIFIERS_NS_URI);
-    			String clientSubsystemCode = CustomSOAPUtil.getNsElementValue(client, XRoadIdentifierType.SUBSYSTEM_CODE.getName(), CustomXRoadHeader.IDENTIFIERS_NS_URI);
+    			String clientXRoadInstance = CustomSOAPUtil.getNsElementValue(client, XRoadIdentifierType.XROAD_INSTANCE.getName(), XRoadIdentifier.NAMESPACE_URI);
+    			String clientMemberClass = CustomSOAPUtil.getNsElementValue(client,  XRoadIdentifierType.MEMBER_CLASS.getName(), XRoadIdentifier.NAMESPACE_URI);
+    			String clientMemberCode = CustomSOAPUtil.getNsElementValue(client, XRoadIdentifierType.MEMBER_CODE.getName(), XRoadIdentifier.NAMESPACE_URI);
+    			String clientSubsystemCode = CustomSOAPUtil.getNsElementValue(client, XRoadIdentifierType.SUBSYSTEM_CODE.getName(), XRoadIdentifier.NAMESPACE_URI);
     			
     			XRoadClient xRoadClient = new XRoadClient(clientXRoadInstance, clientMemberClass, clientMemberCode, clientSubsystemCode);
     			
     			xRoadHeader.setXRoadClient(xRoadClient);
     		}
     		
-    		Element service = CustomSOAPUtil.getNsElement(soapHeader, XRoadProtocolHeaderField.SERVICE.getValue(), CustomXRoadHeader.XROAD_NS_URI);
+    		Element service = CustomSOAPUtil.getNsElement(soapHeader, XRoadProtocolHeaderField.SERVICE.getValue(), XRoadProtocolVersion.V4_0.getNamespaceURI());
     		if (service != null) {
-    			String serviceXRoadInstance = CustomSOAPUtil.getNsElementValue(service, XRoadIdentifierType.XROAD_INSTANCE.getName(), CustomXRoadHeader.IDENTIFIERS_NS_URI);
-    			String serviceMemberClass = CustomSOAPUtil.getNsElementValue(service, XRoadIdentifierType.MEMBER_CLASS.getName(), CustomXRoadHeader.IDENTIFIERS_NS_URI);
-    			String serviceMemberCode = CustomSOAPUtil.getNsElementValue(service, XRoadIdentifierType.MEMBER_CODE.getName(), CustomXRoadHeader.IDENTIFIERS_NS_URI);
+    			String serviceXRoadInstance = CustomSOAPUtil.getNsElementValue(service, XRoadIdentifierType.XROAD_INSTANCE.getName(), XRoadIdentifier.NAMESPACE_URI);
+    			String serviceMemberClass = CustomSOAPUtil.getNsElementValue(service, XRoadIdentifierType.MEMBER_CLASS.getName(), XRoadIdentifier.NAMESPACE_URI);
+    			String serviceMemberCode = CustomSOAPUtil.getNsElementValue(service, XRoadIdentifierType.MEMBER_CODE.getName(), XRoadIdentifier.NAMESPACE_URI);
     			
-    			String subsystemCode = CustomSOAPUtil.getNsElementValue(service, XRoadIdentifierType.SUBSYSTEM_CODE.getName(), CustomXRoadHeader.IDENTIFIERS_NS_URI);
-    			String serviceCode = CustomSOAPUtil.getNsElementValue(service, XRoadIdentifierType.SERVICE_CODE.getName(), CustomXRoadHeader.IDENTIFIERS_NS_URI);
-    			String serviceVersion = CustomSOAPUtil.getNsElementValue(service, XRoadIdentifierType.SERVICE_VERSION.getName(), CustomXRoadHeader.IDENTIFIERS_NS_URI);
+    			String subsystemCode = CustomSOAPUtil.getNsElementValue(service, XRoadIdentifierType.SUBSYSTEM_CODE.getName(), XRoadIdentifier.NAMESPACE_URI);
+    			String serviceCode = CustomSOAPUtil.getNsElementValue(service, XRoadIdentifierType.SERVICE_CODE.getName(), XRoadIdentifier.NAMESPACE_URI);
+    			String serviceVersion = CustomSOAPUtil.getNsElementValue(service, XRoadIdentifierType.SERVICE_VERSION.getName(), XRoadIdentifier.NAMESPACE_URI);
     			
     			XRoadService xRoadService = new XRoadService(serviceXRoadInstance, serviceMemberClass, serviceMemberCode, subsystemCode, serviceCode, serviceVersion);
     			
     			xRoadHeader.setXRoadService(xRoadService);
     		}
     		
-    		Element userId = CustomSOAPUtil.getNsElement(soapHeader, XRoadProtocolHeaderField.USER_ID.getValue(), CustomXRoadHeader.XROAD_NS_URI);
+    		Element userId = CustomSOAPUtil.getNsElement(soapHeader, XRoadProtocolHeaderField.USER_ID.getValue(), XRoadProtocolVersion.V4_0.getNamespaceURI());
     		if (userId != null) {
     			xRoadHeader.setUserId(userId.getTextContent());
     		}
     		
-    		Element id = CustomSOAPUtil.getNsElement(soapHeader, XRoadProtocolHeaderField.ID.getValue(), CustomXRoadHeader.XROAD_NS_URI);
+    		Element id = CustomSOAPUtil.getNsElement(soapHeader, XRoadProtocolHeaderField.ID.getValue(), XRoadProtocolVersion.V4_0.getNamespaceURI());
     		if (id != null) {
     			xRoadHeader.setId(id.getTextContent());
     		}
@@ -441,8 +442,8 @@ public abstract class XRoadCustomEndpoint implements MessageEndpoint {
      */
     private void addHeader(CustomXRoadHeader pais, SOAPMessage responseMessage, SOAPMessage requestMessage) throws SOAPException {
     	if (pais.getProtocolVersion().equals(XRoadProtocolVersion.V4_0)) {
-    		CustomSOAPUtil.addNamespace(responseMessage, CustomXRoadHeader.XROAD_NS_PREFIX, CustomXRoadHeader.XROAD_NS_URI);
-        	CustomSOAPUtil.addNamespace(responseMessage, CustomXRoadHeader.IDENTIFIERS_NS_PREFIX, CustomXRoadHeader.IDENTIFIERS_NS_URI);
+    		CustomSOAPUtil.addNamespace(responseMessage, XRoadProtocolVersion.V4_0.getNamespacePrefix(), XRoadProtocolVersion.V4_0.getNamespaceURI());
+        	CustomSOAPUtil.addNamespace(responseMessage, XRoadIdentifier.NAMESPACE_PREFIX, XRoadIdentifier.NAMESPACE_URI);
     		
     		NodeList reqHeaders = requestMessage.getSOAPHeader().getChildNodes();
     		
@@ -451,7 +452,7 @@ public abstract class XRoadCustomEndpoint implements MessageEndpoint {
     			
     			if (reqHeader.getNodeType() != Node.ELEMENT_NODE) {
     				continue;
-    			} else if (reqHeader.getNamespaceURI().equals(CustomXRoadHeader.XROAD_NS_URI)) {
+    			} else if (reqHeader.getNamespaceURI().equals(XRoadProtocolVersion.V4_0.getNamespaceURI())) {
     				Node rspHeader = responseMessage.getSOAPPart().importNode(reqHeader, true);
     				responseMessage.getSOAPHeader().appendChild(rspHeader);
     			}

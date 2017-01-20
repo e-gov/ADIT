@@ -8,6 +8,12 @@ package ee.adit.util.xroad.messageprotocol;
  *
  */
 public abstract class XRoadIdentifier {
+	
+	public static final String NAMESPACE_URI = "http://x-road.eu/xsd/identifiers";
+	
+    public static final String NAMESPACE_PREFIX = "id";
+    
+    public static final String OBJECT_TYPE_ATTRIBUTE = "objectType";
 
 	protected String xRoadInstance;
 	

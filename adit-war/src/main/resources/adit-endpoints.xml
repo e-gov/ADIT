@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:tx="http://www.springframework.org/schema/tx"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans
-						http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
-						http://www.springframework.org/schema/context
-						http://www.springframework.org/schema/context/spring-context-2.5.xsd
-						http://www.springframework.org/schema/tx
-						http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+						http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
 
 	<!-- X-Road client import (located in jar) -->
 	<import resource="classpath:xtee.xml" />
+	
+	<context:component-scan base-package="ee.adit.ws.endpoint" />
 
 	<!-- User endpoints -->
 	<bean id="JoinEndpoint" class="ee.adit.ws.endpoint.user.JoinEndpoint">
@@ -94,7 +91,6 @@
 
 
 	<!-- Document endpoints -->
-
 	<bean id="ConfirmSignatureEndpoint" class="ee.adit.ws.endpoint.document.ConfirmSignatureEndpoint">
 		<property name="marshaller" ref="castorMarshaller"/>
 		<property name="unmarshaller" ref="castorMarshaller"/>
@@ -386,8 +382,6 @@
 		</property>
 	</bean>
 
-	<context:component-scan base-package="ee.adit.ws.endpoint" />
-
 	<bean id="contextPath" class="java.lang.String">
 		<constructor-arg type="java.lang.String" value="ee.adit.pojo" />
 	</bean>
@@ -396,12 +390,12 @@
 		<property name="xsd" value="/WEB-INF/adit.xsd" />
 	</bean>
 
-	<bean id="adit"
-		class="org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition">
+	<bean id="adit" class="org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition">
 		<constructor-arg value="classpath:adit.wsdl" />
 	</bean>
 
 	<bean id="xteeDatabase" class="java.lang.String">
 		<constructor-arg value="@PRODUCER_NAME@" />
 	</bean>
+	
 </beans>
