@@ -10,6 +10,9 @@
 	<listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
+		<listener-class>ee.adit.web.listener.AppContextListener</listener-class>
+	</listener>
+
 	<context-param>
 	  	<param-name>contextConfigLocation</param-name>
 	  	<param-value>/WEB-INF/adit-datasource.xml</param-value>

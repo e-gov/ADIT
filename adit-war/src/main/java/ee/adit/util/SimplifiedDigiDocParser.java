@@ -19,12 +19,12 @@ import java.util.List;
 
 import org.apache.commons.codec.binary.Base64OutputStream;
 import org.apache.log4j.Logger;
+import org.digidoc4j.Container;
+import org.digidoc4j.ContainerBuilder;
+import org.digidoc4j.DataFile;
 
 import ee.adit.pojo.OutputDocumentFile;
-import ee.sk.digidoc.DataFile;
 import ee.sk.digidoc.DigiDocException;
-import ee.sk.digidoc.SignedDoc;
-import ee.sk.digidoc.factory.SAXDigiDocFactory;
 
 /**
  * Class containing methods for DigiDoc file manipulation (mainly for
@@ -33,44 +33,40 @@ import ee.sk.digidoc.factory.SAXDigiDocFactory;
  * @author Jaak Lember, Interinx, jaak@interinx.com
  */
 public final class SimplifiedDigiDocParser {
+	
+	private static Logger logger = Logger.getLogger(SimplifiedDigiDocParser.class);
+	
 	/**
 	 * Default constructor.
 	 */
-	private SimplifiedDigiDocParser() {
-	}
+	private SimplifiedDigiDocParser() {}
 
-	private static Logger logger = Logger.getLogger(SimplifiedDigiDocParser.class);
 
 	/**
 	 * Finds offsets of all data files in specified DigiDoc container.
 	 *
-	 * @param pathToDigiDoc
-	 *     Full path to DigiDoc container
-	 * @param isBdoc 
-	 * 		if need to find offsets for Bdoc formatted file, then true, otherwise false
-	 * @param temporaryFilesDir   
-	 * 		Absolute path to applications temporary files directory
-	 * @return
-	 *     Hashtable containing data file offsets
+	 * @param pathToDigiDoc Full path to DigiDoc container
+	 * @param isBdoc if need to find offsets for BDOC formatted file, then true, otherwise false
+	 * @param temporaryFilesDir Absolute path to applications temporary files directory
+	 * @return Hashtable containing data file offsets
 	 * @throws IOException
 	 * @throws NoSuchAlgorithmException
 	 * @throws DigiDocException
 	 */
-	public static Hashtable<String, StartEndOffsetPair> findDigiDocDataFileOffsets(
-			String pathToDigiDoc, Boolean isBdoc, String temporaryFilesDir) throws IOException, NoSuchAlgorithmException, DigiDocException {
+	public static Hashtable<String, StartEndOffsetPair> findDigiDocDataFileOffsets(String pathToDigiDoc, Boolean isBdoc, String temporaryFilesDir)
+			throws IOException, NoSuchAlgorithmException {
 		if (isBdoc) {
 			return findFilesInBdoc(pathToDigiDoc, temporaryFilesDir);
 		} else {
 			return findDDocDataFileOffsets(pathToDigiDoc);
 		}
 	}
+	
 	/**
-	 * Finds offsets of all data files in specified DigiDoc(ddoc) container.
+	 * Finds offsets of all data files in specified DigiDoc(DDOC) container.
 	 *
-	 * @param pathToDigiDoc
-	 *     Full path to DigiDoc container
-	 * @return
-	 *     Hashtable containing data file offsets
+	 * @param pathToDigiDoc Full path to DigiDoc container
+	 * @return Hashtable containing data file offsets
 	 * @throws IOException
 	 * @throws NoSuchAlgorithmException
 	 * @throws DigiDocException
@@ -154,72 +150,64 @@ public final class SimplifiedDigiDocParser {
         	Util.safeCloseReader(bufferedReader);
             Util.safeCloseReader(textReader);
             Util.safeCloseStream(inStream);
-            inStream = null;
-            textReader = null;
-            bufferedReader = null;
-            base64OutputStream = null;
         }
 
 		return result;
 	}
 
 	/**
-	 * Finds all data files in specified DigiDoc(bdoc) container. 
-	 * In bdoc there is not need to search for offsets, just check if files exist
+	 * Finds all data files in specified DigiDoc(BDOC) container. 
+	 * In BDOC there is not need to search for offsets, just check if files exist
 	 *
-	 * @param pathToDigiDoc
-	 *     Full path to DigiDoc container
+	 * @param pathToDigiDoc Full path to DigiDoc container
 	 * @param temporaryFilesDir   Absolute path to applications temporary files directory
-	 * @return
-	 *     Hashtable containing information about DataFiles
+	 * @return Hashtable containing information about DataFiles
 	 * @throws IOException
 	 * @throws NoSuchAlgorithmException
 	 * @throws DigiDocException
 	 */
-	public static Hashtable<String, StartEndOffsetPair> findFilesInBdoc(
-			String pathToDigiDoc, String temporaryFilesDir) throws IOException, NoSuchAlgorithmException,
-			DigiDocException {
+	public static Hashtable<String, StartEndOffsetPair> findFilesInBdoc(String pathToDigiDoc, String temporaryFilesDir)
+			throws IOException, NoSuchAlgorithmException {
+		
 		Hashtable<String, StartEndOffsetPair> result = new Hashtable<String, StartEndOffsetPair>();
+		
+		Container container = ContainerBuilder.aContainer(ContainerBuilder.BDOC_CONTAINER_TYPE).fromExistingFile(pathToDigiDoc).build();
+		List<DataFile> dataFiles = container.getDataFiles();
+		
 		FileOutputStream dummyFileOutStream = null;
-		SAXDigiDocFactory factory = new SAXDigiDocFactory();
-		SignedDoc sdoc = factory.readSignedDoc(pathToDigiDoc);
-		StartEndOffsetPair pendingOffsetPair = null;
-		List<DataFile> dfs = sdoc.getDataFiles();
 		InputStream is = null;
 		try {
-			for (DataFile df : dfs) {
-				is = df.getBodyAsStream();
+			for (DataFile df : dataFiles) {
+				is = df.getStream();
+				
 				String fileName = Util.createTemporaryFile(is, temporaryFilesDir);           
                 byte[] md5Hash = Util.calculateMd5Checksum(fileName);
-				if(md5Hash!=null) {
+                
+                StartEndOffsetPair pendingOffsetPair = null;
+				if (md5Hash != null) {
 					pendingOffsetPair = new StartEndOffsetPair();
 					pendingOffsetPair.setDataMd5Hash(md5Hash);
 					pendingOffsetPair.setBdocOrigin(true);
 					pendingOffsetPair.setStart(1);
-				} else {
-					pendingOffsetPair = null;
 				}
-				//in case of bdoc, we dont set offsets, but file should be found in BDOC file
+				
+				// In case of BDOC, we don't set offsets, but file should be found in BDOC file
 				result.put(df.getId(), pendingOffsetPair);
 			}
 		} finally {
             Util.safeCloseStream(dummyFileOutStream);
             Util.safeCloseStream(is);
-            is = null;
-            dummyFileOutStream = null;
 		}
+		
 		return result;
-
 	}
+	
 	/**
 	 * Gets XML attribute value.
 	 *
-	 * @param tag
-	 *     XML tag as String
-	 * @param attributeName
-	 *     Attribute name
-	 * @return
-	 *     Value of specified attribute
+	 * @param tag  XML tag as String
+	 * @param attributeName Attribute name
+	 * @return Value of specified attribute
 	 */
     private static String getAttributeValueFromTag(String tag, String attributeName) {
         String result = "";
@@ -241,23 +229,18 @@ public final class SimplifiedDigiDocParser {
     
     /**
      * 
-     * @param ddocContainerAsStream
-     * 		DigiDoc container as {@link InputStream}
-     * @param files
-     * 		Files to be extracted
-     * @param temporaryFilesDir
-     * 		Path of applications temporary files folder
-     * @param isBdoc  
-     * 		if need to find offsets for Bdoc formatted file, then true, otherwise false
+     * @param ddocContainerAsStream DigiDoc container as {@link InputStream}
+     * @param files Files to be extracted
+     * @param temporaryFilesDir Path of applications temporary files folder
+     * @param isBdoc if need to find offsets for BDOC formatted file, then true, otherwise false
      * 		
      * @return
      * @throws IOException
      * @throws DigiDocException
      */
-    public static long extractFileContentsFromContainer (    	InputStream ddocContainerAsStream,
-    		List<OutputDocumentFile> files,
-    		final String temporaryFilesDir, Boolean isBdoc) throws IOException, DigiDocException{
-    	if(isBdoc) {
+    public static long extractFileContentsFromContainer (InputStream ddocContainerAsStream,
+    		List<OutputDocumentFile> files, final String temporaryFilesDir, Boolean isBdoc) throws IOException {
+    	if (isBdoc) {
     		return extractFileContentsFromBdoc(ddocContainerAsStream, files, temporaryFilesDir);
     	} else {
     		return extractFileContentsFromDdoc(ddocContainerAsStream, files, temporaryFilesDir);
@@ -267,14 +250,10 @@ public final class SimplifiedDigiDocParser {
     /**
      * Extracts file contents from DigiDoc(DDOC) container.
      *
-     * @param ddocContainerAsStream
-     *     DigiDoc container as {@link InputStream}
-     * @param files
-     *     Files to be extracted
-     * @param temporaryFilesDir
-     *     Path of applications temporary files folder
-     * @return
-     *     Total bytes extracted
+     * @param ddocContainerAsStream DigiDoc container as {@link InputStream}
+     * @param files Files to be extracted
+     * @param temporaryFilesDir Path of applications temporary files folder
+     * @return Total bytes extracted
      * @throws IOException
      */
     public static long extractFileContentsFromDdoc(
@@ -346,58 +325,51 @@ public final class SimplifiedDigiDocParser {
             Util.safeCloseWriter(bufferedWriter);
             Util.safeCloseWriter(textWriter);
             Util.safeCloseStream(outStream);
-            textReader = null;
-            bufferedReader = null;
-            outStream = null;
-            textWriter = null;
-            bufferedWriter = null;
         }
 
         return totalBytesExtracted;
     }
     
-    
     /**
      * Extracts file contents from DigiDoc(BDOC) container.
      *
-     * @param ddocContainerAsStream
-     *     DigiDoc container as {@link InputStream}
-     * @param files
-     *     Files to be extracted
-     * @param temporaryFilesDir
-     *     Path of applications temporary files folder
-     * @return
-     *     Total bytes extracted
+     * @param ddocContainerAsStream DigiDoc container as {@link InputStream}
+     * @param files Files to be extracted
+     * @param temporaryFilesDir Path of applications temporary files folder
+     * @return Total bytes extracted
      * @throws IOException
      */
-    public static long extractFileContentsFromBdoc(
-    		InputStream ddocContainerAsStream,
-    		List<OutputDocumentFile> files,
-    		final String temporaryFilesDir) throws IOException, DigiDocException {
-    		FileOutputStream outStream;
-        	long totalBytesExtracted = 0L;
-        	 SAXDigiDocFactory factory = new SAXDigiDocFactory();
-             SignedDoc sdoc = factory.readSignedDocFromStreamOfType(ddocContainerAsStream, true, null);
-             List <DataFile> dataFiles = sdoc.getDataFiles();
-             InputStream is = null;
-            for (DataFile df : dataFiles) {
-            	
-	    	    for (OutputDocumentFile file : files) {
-	    	    		if (df.getId().equals(file.getDdocDataFileId())) {
-	    	    			try{
-	    	    			is = df.getBodyAsStream();
-	    	                String outputFileName = Util.createTemporaryFile(is, temporaryFilesDir);
-	    	                //bdoc provides file in binary, need to convert to base64 
-	    	                String fileNameBase64 = Util.base64EncodeFile(outputFileName, temporaryFilesDir);
-	    	                file.setSysTempFile(fileNameBase64);	
-	    	                // Lets trust database values instead of decoding base64 data
-	    	                totalBytesExtracted += (file.getSizeBytes() == null) ? 0L : file.getSizeBytes();
-	    	    			} finally {
-	    	    				Util.safeCloseStream(is);
-	    	    			}
-	    	    		}
-	    	    	}
-            }
-            return totalBytesExtracted;
-        }
+	public static long extractFileContentsFromBdoc(
+			InputStream ddocContainerAsStream,
+			List<OutputDocumentFile> files,
+			final String temporaryFilesDir) throws IOException {
+
+		long totalBytesExtracted = 0L;
+
+		Container container = ContainerBuilder.aContainer(ContainerBuilder.BDOC_CONTAINER_TYPE).fromStream(ddocContainerAsStream).build();
+		for (DataFile df : container.getDataFiles()) {
+			for (OutputDocumentFile file : files) {
+				if (df.getId().equals(file.getDdocDataFileId())) {
+					InputStream is = null;
+					
+					try {
+						is = df.getStream();
+						String outputFileName = Util.createTemporaryFile(is, temporaryFilesDir);
+
+						// BDOC provides file in binary, need to convert to base64
+						String fileNameBase64 = Util.base64EncodeFile(outputFileName, temporaryFilesDir);
+						file.setSysTempFile(fileNameBase64);
+
+						// Lets trust database values instead of decoding base64 data
+						totalBytesExtracted += (file.getSizeBytes() == null) ? 0L : file.getSizeBytes();
+					} finally {
+						Util.safeCloseStream(is);
+					}
+				}
+			}
+		}
+
+		return totalBytesExtracted;
+	}
+	
 }

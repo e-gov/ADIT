@@ -12,15 +12,15 @@
     <appender-ref ref="stdout" />
   </logger>-->
   <logger name="ee.adit.util">
-    <level value="ERROR"></level>
+    <level value="INFO"></level>
     <appender-ref ref="stdout" />
   </logger>
   <logger name="ee.adit.dao">
-    <level value="ERROR"></level>
+    <level value="INFO"></level>
     <appender-ref ref="stdout" />
   </logger>
   <logger name="ee.adit.service">
-    <level value="ERROR"></level>
+    <level value="INFO"></level>
     <appender-ref ref="stdout" />
   </logger>
   <logger name="dvk">
@@ -110,7 +110,7 @@
     <appender-ref ref="stdout" />
   </logger>-->
   <root>
-    <level value="ERROR" />
+    <level value="INFO" />
     <appender-ref ref="stdout" />
   </root>
 </log4j:configuration>

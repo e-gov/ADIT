@@ -8,6 +8,9 @@ import java.util.Iterator;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
+import org.digidoc4j.exceptions.CertificateNotFoundException;
+import org.digidoc4j.exceptions.CertificateRevokedException;
+import org.digidoc4j.exceptions.DigiDoc4JException;
 import org.springframework.stereotype.Component;
 import org.springframework.ws.mime.Attachment;
 
@@ -35,7 +38,6 @@ import ee.adit.util.FileSplitResult;
 import ee.adit.util.Util;
 import ee.adit.util.xroad.CustomXRoadHeader;
 import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
-import ee.sk.digidoc.DigiDocException;
 import ee.webmedia.xtee.annotation.XTeeService;
 
 /**
@@ -72,8 +74,7 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
     /**
      * Executes "V1" version of "saveDocumentFile" request.
      *
-     * @param requestObject
-     *            Request body object
+     * @param requestObject Request body object
      * @return Response body object
      */
     @SuppressWarnings("unchecked")
@@ -217,17 +218,20 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
             additionalInformationForLog = LogService.REQUEST_LOG_SUCCESS + ": " + additionalMessage;
 
         } catch (Exception e) {
-            String errorMessage = null;
             logger.error("Exception: ", e);
             response.setSuccess(false);
+            
             ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
+            String errorMessage = null;
 
             if (e instanceof AditCodedException) {
                 logger.debug("Adding exception messages to response object.");
                 arrayOfMessage.setMessage(this.getMessageService().getMessages((AditCodedException) e));
-                errorMessage = this.getMessageService().getMessage(e.getMessage(),
-                        ((AditCodedException) e).getParameters(), Locale.ENGLISH);
-                errorMessage = "ERROR: " + errorMessage;
+                
+                errorMessage = this.getMessageService().getMessage(e.getMessage(), ((AditCodedException) e).getParameters(), Locale.ENGLISH);
+                if (errorMessage == null) {
+                	errorMessage = "ERROR: " + errorMessage;
+                }
             } else if (e instanceof AditMultipleException) {
                 AditMultipleException aditMultipleException = (AditMultipleException) e;
                 arrayOfMessage.setMessage(aditMultipleException.getMessages());
@@ -241,19 +245,14 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
                 logger.debug("Adding exception message to response object.");
                 arrayOfMessage.getMessage().add(new Message("en", e.getMessage()));
                 errorMessage = "ERROR: " + e.getMessage();
-            } 
-	         else if(e instanceof DigiDocException 
-	        		&& (DocumentService.DIGIDOC_REVOKED_CERT_EXCPETION_CODE==((DigiDocException) e).getCode()
-	        			|| DocumentService.DIGIDOC_UNKNOWN_CERT_EXCPETION_CODE==((DigiDocException) e).getCode())
-	        		) { 
-	        	if (DocumentService.DIGIDOC_REVOKED_CERT_EXCPETION_CODE==((DigiDocException) e).getCode()) {
+            } else if (e instanceof DigiDoc4JException) { 
+	        	if (e instanceof CertificateRevokedException) {
 	        		arrayOfMessage.setMessage(this.getMessageService().getMessages("request.saveDocument.revokedcertificate", new Object[]{}));
-	        	} else if (DocumentService.DIGIDOC_UNKNOWN_CERT_EXCPETION_CODE==((DigiDocException) e).getCode()){
+	        	} else if (e instanceof CertificateNotFoundException){
 	        		arrayOfMessage.setMessage(this.getMessageService().getMessages("request.saveDocument.unknowncertificate", new Object[]{}));  
 	        	}
 	        	errorMessage = "ERROR: " + e.getMessage();
-	        }
-            else {
+	        } else {
             	arrayOfMessage.setMessage(this.getMessageService().getMessages(MessageService.GENERIC_ERROR_CODE, new Object[]{}));
                 errorMessage = "ERROR: " + e.getMessage();
             }
@@ -268,15 +267,18 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
             try {
                 super.setIgnoreAttachmentHeaders(true);
                 boolean cidAdded = false;
-                Iterator<Attachment> i = this.getRequestMessage().getAttachments();
-                while (i.hasNext()) {
-                    Attachment attachment = i.next();
+                
+                Iterator<Attachment> it = this.getRequestMessage().getAttachments();
+                while (it.hasNext()) {
+                    Attachment attachment = it.next();
+                    
                     String contentId = attachment.getContentId();
                     if ((contentId == null) || (contentId.length() < 1)) {
                         contentId = Util.generateRandomID();
                     } else {
                         contentId = Util.stripContentID(contentId);
                     }
+                    
                     this.getResponseMessage().addAttachment(contentId, attachment.getDataHandler());
                     if (!cidAdded) {
                         response.setFile(new SaveDocumentFileRequestFile("cid:" + contentId));
@@ -289,14 +291,14 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
         }
 
         super.logCurrentRequest(documentId, requestDate.getTime(), additionalInformationForLog);
+        
         return response;
     }
 
     @SuppressWarnings("unchecked")
     @Override
     protected Object getResultForGenericException(Exception ex) {
-        super.logError(null, Calendar.getInstance().getTime(), LogService.ERROR_LOG_LEVEL_FATAL, "ERROR: "
-                + ex.getMessage());
+        super.logError(null, Calendar.getInstance().getTime(), LogService.ERROR_LOG_LEVEL_FATAL, "ERROR: " + ex.getMessage());
         SaveDocumentFileResponse response = new SaveDocumentFileResponse();
         response.setSuccess(false);
         ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
@@ -328,22 +330,16 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
     /**
      * Checks users rights for document.
      *
-     * @param request
-     *     Current request
-     * @param applicationName
-     *     Name of application that was used to execute current request
-     * @param user
-     *     User who executed current request
-     * @return
-     *     Requested document if user has necessary rights for it (or
-     *     {@code null} otherwise).
+     * @param request Current request
+     * @param applicationName Name of application that was used to execute current request
+     * @param user User who executed current request
+     * @return Requested document if user has necessary rights for it (or {@code null} otherwise).
      */
     private Document checkRightsAndGetDocument(
     	final SaveDocumentFileRequest request, final String applicationName,
     	final AditUser user) {
 
-        // Kontrollime, kas päringu käivitanud infosüsteem on ADITis
-        // registreeritud
+        // Kontrollime, kas päringu käivitanud infosüsteem on ADITis registreeritud
         boolean applicationRegistered = this.getUserService().isApplicationRegistered(applicationName);
         if (!applicationRegistered) {
             AditCodedException aditCodedException = new AditCodedException("application.notRegistered");
@@ -351,8 +347,7 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
             throw aditCodedException;
         }
 
-        // Kontrollime, kas päringu käivitanud infosüsteem tohib
-        // andmeid muuta
+        // Kontrollime, kas päringu käivitanud infosüsteem tohib andmeid muuta
         int accessLevel = this.getUserService().getAccessLevel(applicationName);
         if (accessLevel != 2) {
             AditCodedException aditCodedException = new AditCodedException("application.insufficientPrivileges.write");
@@ -360,16 +355,14 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
             throw aditCodedException;
         }
 
-        // Kontrollime, et kasutajakonto ligipääs poleks peatatud (kasutaja
-        // lahkunud)
+        // Kontrollime, et kasutajakonto ligipääs poleks peatatud (kasutaja lahkunud)
         if ((user.getActive() == null) || !user.getActive()) {
             AditCodedException aditCodedException = new AditCodedException("user.inactive");
             aditCodedException.setParameters(new Object[] {user.getUserCode()});
             throw aditCodedException;
         }
 
-        // Check whether or not the application has rights to
-        // modify current user's data.
+        // Check whether or not the application has rights to modify current user's data.
         int applicationAccessLevelForUser = userService.getAccessLevelForUser(applicationName, user);
         if (applicationAccessLevelForUser != 2) {
             AditCodedException aditCodedException = new AditCodedException("application.insufficientPrivileges.forUser.write");
@@ -464,10 +457,8 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
      * Throws {@link AditCodedException} if any errors in request data are
      * found.
      *
-     * @param request
-     *            Request body as {@link SaveDocumentFileRequest} object.
-     * @throws AditCodedException
-     *             Exception describing error found in requet body.
+     * @param request Request body as {@link SaveDocumentFileRequest} object.
+     * @throws AditCodedException Exception describing error found in requet body.
      */
     private void checkRequest(SaveDocumentFileRequest request) throws AditCodedException {
         if (request != null) {
@@ -514,4 +505,5 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
     public void setDigidocConfigurationFile(String digidocConfigurationFile) {
         this.digidocConfigurationFile = digidocConfigurationFile;
     }
+    
 }

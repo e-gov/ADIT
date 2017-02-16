@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -17,14 +18,17 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.lang.reflect.Field;
+import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -51,13 +55,23 @@ import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
 import org.apache.fop.apps.MimeConstants;
 import org.apache.log4j.Logger;
+import org.bouncycastle.asn1.ASN1InputStream;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
+import org.bouncycastle.asn1.ASN1OctetString;
+import org.bouncycastle.asn1.ASN1Sequence;
 import org.bouncycastle.asn1.x500.RDN;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.style.BCStyle;
 import org.bouncycastle.asn1.x500.style.IETFUtils;
+import org.bouncycastle.asn1.x509.PolicyInformation;
+import org.bouncycastle.asn1.x509.TBSCertificateStructure;
+import org.bouncycastle.asn1.x509.X509CertificateStructure;
+import org.bouncycastle.asn1.x509.X509Extension;
+import org.bouncycastle.asn1.x509.X509Extensions;
 import org.castor.core.util.Base64Decoder;
 import org.castor.core.util.Base64Encoder;
+import org.digidoc4j.Container;
+import org.digidoc4j.exceptions.DigiDoc4JException;
 
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Usertype;
@@ -71,13 +85,17 @@ import ee.adit.service.UserService;
 import ee.adit.util.xroad.CustomXRoadHeader;
 import ee.adit.util.xroad.XRoadQueryName;
 
+import ee.sk.utils.ConvertUtils;
+
 /**
  * Class providing static utility / helper methods.
  *
  * @author Marko Kurm, Microlink Eesti AS, marko.kurm@microlink.ee
  * @author Jaak Lember, Interinx, jaak@interinx.com
  */
+@SuppressWarnings("deprecation")
 public final class Util {
+	
 	/**
 	 * Default constructor.
 	 */
@@ -110,8 +128,14 @@ public final class Util {
     public static final String[] BDOC_FILE_EXTENSIONS = {"bdoc", "asice", "sce"};
     public static final String BDOC_PRIMARY_EXTENSION = "bdoc";
     public static final String DDOC_FILE_EXTENSION = "ddoc";
-
-
+    
+    public static final String[] TEST_OIDS_PREFS = {
+		"1.3.6.1.4.1.10015.3.7", "1.3.6.1.4.1.10015.7", // tempel test
+		"1.3.6.1.4.1.10015.3.3", "1.3.6.1.4.1.10015.3.11", // mid test
+		"1.3.6.1.4.1.10015.3.2", // digi-id test
+		"1.3.6.1.4.1.10015.3.1" // est-eid test
+    };
+    
     /**
      * Base64 encodes the specified string.
      *
@@ -1473,24 +1497,32 @@ public final class Util {
      * @throws IOException
      */
     public static byte[] getBytesFromFile(File file) throws IOException {
-        InputStream is = new FileInputStream(file);
+    	byte[] bytes = null;
+    	
+        InputStream is = null;
+		try {
+			is = new FileInputStream(file);
+			
+			// Get the size of the file
+			long length = file.length();
 
-        // Get the size of the file
-        long length = file.length();
+			bytes = new byte[(int) length];
 
-        byte[] bytes = new byte[(int) length];
+			int offset = 0;
+			int numRead = 0;
+			while (offset < bytes.length && (numRead = is.read(bytes, offset, bytes.length - offset)) >= 0) {
+			    offset += numRead;
+			}
 
-        int offset = 0;
-        int numRead = 0;
-        while (offset < bytes.length && (numRead = is.read(bytes, offset, bytes.length - offset)) >= 0) {
-            offset += numRead;
-        }
-
-        if (offset < bytes.length) {
-            throw new IOException("Could not completely read file " + file.getName());
-        }
-
-        is.close();
+			if (offset < bytes.length) {
+				throw new IOException("Could not completely read file " + file.getName());
+			}
+		} finally {
+			if (is != null) {
+				is.close();
+			}
+		}
+        
         return bytes;
     }
 
@@ -1536,10 +1568,8 @@ public final class Util {
      * Determines if given String is null or empty (zero length).
      * Whitespace is not treated as empty string.
      *
-     * @param stringToEvaluate
-     * 		String that will be checked for having NULL or empty value
-     * @return
-     * 		true, if input String is NULL or has zero length
+     * @param stringToEvaluate String that will be checked for having NULL or empty value
+     * @return true, if input String is NULL or has zero length
      */
     public static boolean isNullOrEmpty(String stringToEvaluate) {
     	return ((stringToEvaluate == null) || stringToEvaluate.isEmpty());
@@ -1548,15 +1578,13 @@ public final class Util {
     /**
      * Determines if given class contains a field with specified name.
      *
-     * @param targetClass
-     * 		Class to be examined
-     * @param fieldName
-     * 		Name of field that will be seeked from class
-     * @return
-     * 		{@code true} if given class contains a field with given name.
+     * @param targetClass class to be examined
+     * @param fieldName name of field that will be searched in class
+     * @return {@code true} if given class contains a field with given name
      */
-    public static boolean classContainsField(Class targetClass, String fieldName) {
+    public static boolean classContainsField(Class<?> targetClass, String fieldName) {
     	Field[] declaredFields = targetClass.getDeclaredFields();
+    	
     	boolean found = false;
     	for (int i = 0; i < declaredFields.length; i++) {
     		if (declaredFields[i].getName().compareTo(fieldName) == 0) {
@@ -1564,6 +1592,7 @@ public final class Util {
     			break;
     		}
     	}
+    	
     	return found;
     }
 
@@ -1949,6 +1978,165 @@ public final class Util {
     	aditXRoadService.setServiceVersion(serviceVersion);
     	
     	return aditXRoadService;
+    }
+    
+	public static boolean isTestCard(X509Certificate cert) {
+		// NOTE: this code is taken from ee.sk.digidoc.factory.DigiDocGenFactory class
+		
+		if (cert != null) {
+			String cn = ConvertUtils.getCommonName(cert.getSubjectDN().getName());
+			for (int i = 0; i < TEST_OIDS_PREFS.length; i++) {
+				String sOid = TEST_OIDS_PREFS[i];
+				if (i == 1) {
+					if (certHasPolicy(cert, sOid) && cn != null && cn.indexOf("TEST") != -1)
+						return true;
+				} else {
+					if (certHasPolicy(cert, sOid))
+						return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+    
+	private static boolean certHasPolicy(X509Certificate cert, String sOid) {
+		// NOTE: this code is taken from ee.sk.digidoc.factory.DigiDocGenFactory class
+		
+		if (logger.isDebugEnabled()) {
+			logger.debug("Read cert policies: " + cert.getSerialNumber().toString());
+		}
+		
+		ASN1InputStream aIn = null;
+		ASN1InputStream extIn = null;
+		try {
+			ByteArrayInputStream bIn = new ByteArrayInputStream(cert.getEncoded());
+			aIn = new ASN1InputStream(bIn);
+			
+			ASN1Sequence seq = (ASN1Sequence) aIn.readObject();
+			X509CertificateStructure obj = new X509CertificateStructure(seq);
+			TBSCertificateStructure tbsCert = obj.getTBSCertificate();
+			
+			if (tbsCert.getVersion() == 3) {
+				X509Extensions ext = tbsCert.getExtensions();
+				
+				if (ext != null) {
+					@SuppressWarnings("rawtypes")
+					Enumeration en = ext.oids();
+					
+					while (en.hasMoreElements()) {
+						Object o = en.nextElement();
+						if (o instanceof ASN1ObjectIdentifier) {
+							ASN1ObjectIdentifier oid = (ASN1ObjectIdentifier) o;
+							
+							X509Extension extVal = ext.getExtension(oid);
+							ASN1OctetString oct = extVal.getValue();
+							extIn = new ASN1InputStream(new ByteArrayInputStream(oct.getOctets()));
+							
+							if (oid.equals(X509Extension.certificatePolicies)) {
+								// In case of BountyCastle 146 and JDK 1.6 - X509Extension.certificatePolicies
+								ASN1Sequence cp = (ASN1Sequence) extIn.readObject();
+								
+								for (int i = 0; i != cp.size(); i++) {
+									PolicyInformation pol = PolicyInformation.getInstance(cp.getObjectAt(i));
+									
+									if (pol != null) {
+										String sId = pol.getPolicyIdentifier().getId(); // getPolicyIdentifier();
+										if (sId != null) {
+											if (logger.isDebugEnabled()) {
+												logger.debug("Policy: " + sId);
+											}
+											
+											if (sId.startsWith(sOid)) {
+												return true;
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+
+			}
+		} catch (Exception ex) {
+			logger.error("Error reading cert policies: " + ex);
+		} finally {
+			Util.safeCloseStream(aIn);
+			Util.safeCloseStream(extIn);
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Reads the certificate from a file, URL or from another location
+	 * somewhere in the CLASSPATH such as in the libraries JAR file.
+	 * 
+	 * @param certLocation certificates file name, or URL.
+	 * 		  You can use URL in form jar://<location> to read a certificate from the JAR file
+	 * 		  or some other location in the CLASSPATH
+	 * @return certificate object
+	 */
+    public static X509Certificate readCertificate(String certLocation) throws DigiDoc4JException {
+    	// NOTE: This code is taken from ee.sk.digidoc.SignedDoc class
+    	
+        X509Certificate cert = null;
+        
+        InputStream isCert = null;
+        try {
+        	if (certLocation.startsWith("http")) {
+        		URL url = new URL(certLocation);
+        		isCert = url.openStream();
+        	} else if (certLocation.startsWith("jar://")) {
+        		ClassLoader cl = Util.class.getClassLoader();
+        		isCert = cl.getResourceAsStream(certLocation.substring(6));
+        	} else {
+        		isCert = new FileInputStream(certLocation);
+        	}
+            
+            CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
+      		cert = (X509Certificate)certificateFactory.generateCertificate(isCert);
+        } catch(Exception ex) {
+            throw new DigiDoc4JException("Error reading certificate", ex);
+        } finally {
+        	Util.safeCloseStream(isCert);
+        }
+        
+        return cert;
+    }
+	
+    public static int countElements(List<?> list) {
+    	return list != null ? list.size() : 0;
+    }
+    
+    /**
+     * Returns a new available Signature ID.
+     * 
+     * @return new Signature id
+     */
+    public static String getNewSignatureId(Container container) {
+    	// The following logic was taken with a slight modification and optimization from the JDigiDoc library.
+        int nS = 0;
+        String id = "S" + nS;
+        
+        boolean bExists = false;
+        
+        do {
+            bExists = false;
+            
+            for (org.digidoc4j.Signature sig : container.getSignatures()) {
+                if (sig.getId().equals(id)) {
+                    nS++;
+                    id = "S" + nS;
+                    
+                    bExists = true;
+                    break;
+                }
+            }
+        } while (bExists);
+        
+        return id;
     }
     
 }
