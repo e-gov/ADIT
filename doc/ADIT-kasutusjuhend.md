@@ -268,7 +268,7 @@ Parameetrid
 	xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
 	xmlns:id="http://x-road.eu/xsd/identifiers">
     <soapenv:Header>
-        <xrd:client id:objectType="MEMBER">
+        <xrd:client id:objectType="SUBSYSTEM">
             <id:xRoadInstance>EE</id:xRoadInstance>
             <id:memberClass>BUSINESS</id:memberClass>
             <id:memberCode>12345678</id:memberCode>
@@ -336,7 +336,7 @@ Parameetrid
 	xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
 	xmlns:id="http://x-road.eu/xsd/identifiers">
     <SOAP-ENV:Header>
-        <xrd:client id:objectType="MEMBER">
+        <xrd:client id:objectType="SUBSYSTEM">
             <id:xRoadInstance>EE</id:xRoadInstance>
             <id:memberClass>BUSINESS</id:memberClass>
             <id:memberCode>12345678</id:memberCode>
@@ -408,7 +408,7 @@ Parameetrid
 	xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
 	xmlns:id="http://x-road.eu/xsd/identifiers">
     <soapenv:Header>
-        <xrd:client id:objectType="MEMBER">
+        <xrd:client id:objectType="SUBSYSTEM">
             <id:xRoadInstance>EE</id:xRoadInstance>
             <id:memberClass>BUSINESS</id:memberClass>
             <id:memberCode>12345678</id:memberCode>
@@ -473,7 +473,7 @@ Parameetrid
 	xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
 	xmlns:id="http://x-road.eu/xsd/identifiers">
     <SOAP-ENV:Header>
-        <xrd:client id:objectType="MEMBER">
+        <xrd:client id:objectType="SUBSYSTEM">
             <id:xRoadInstance>EE</id:xRoadInstance>
             <id:memberClass>BUSINESS</id:memberClass>
             <id:memberCode>12345678</id:memberCode>
@@ -550,7 +550,7 @@ Parameetrid
 	xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
 	xmlns:id="http://x-road.eu/xsd/identifiers">
     <soapenv:Header>
-        <xrd:client id:objectType="MEMBER">
+        <xrd:client id:objectType="SUBSYSTEM">
             <id:xRoadInstance>EE</id:xRoadInstance>
             <id:memberClass>BUSINESS</id:memberClass>
             <id:memberCode>12345678</id:memberCode>
@@ -622,7 +622,7 @@ Parameetrid
 	xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
 	xmlns:id="http://x-road.eu/xsd/identifiers">
     <SOAP-ENV:Header>
-        <xrd:client id:objectType="MEMBER">
+        <xrd:client id:objectType="SUBSYSTEM">
             <id:xRoadInstance>EE</id:xRoadInstance>
             <id:memberClass>BUSINESS</id:memberClass>
             <id:memberCode>12345678</id:memberCode>
@@ -719,7 +719,7 @@ Parameetrid
 	xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
 	xmlns:id="http://x-road.eu/xsd/identifiers">
     <soapenv:Header>
-        <xrd:client id:objectType="MEMBER">
+        <xrd:client id:objectType="SUBSYSTEM">
             <id:xRoadInstance>EE</id:xRoadInstance>
             <id:memberClass>BUSINESS</id:memberClass>
             <id:memberCode>12345678</id:memberCode>
@@ -799,7 +799,7 @@ Parameetrid
 	xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
 	xmlns:id="http://x-road.eu/xsd/identifiers">
     <SOAP-ENV:Header>
-        <xrd:client id:objectType="MEMBER">
+        <xrd:client id:objectType="SUBSYSTEM">
             <id:xRoadInstance>EE</id:xRoadInstance>
             <id:memberClass>BUSINESS</id:memberClass>
             <id:memberCode>12345678</id:memberCode>
@@ -923,7 +923,7 @@ Parameetrid
 	xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
 	xmlns:id="http://x-road.eu/xsd/identifiers">
     <soapenv:Header>
-        <xrd:client id:objectType="MEMBER">
+        <xrd:client id:objectType="SUBSYSTEM">
             <id:xRoadInstance>EE</id:xRoadInstance>
             <id:memberClass>BUSINESS</id:memberClass>
             <id:memberCode>12345678</id:memberCode>
@@ -990,7 +990,7 @@ Parameetrid
 	xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
 	xmlns:id="http://x-road.eu/xsd/identifiers">
     <SOAP-ENV:Header>
-        <xrd:client id:objectType="MEMBER">
+        <xrd:client id:objectType="SUBSYSTEM">
             <id:xRoadInstance>EE</id:xRoadInstance>
             <id:memberClass>BUSINESS</id:memberClass>
             <id:memberCode>12345678</id:memberCode>
@@ -1100,7 +1100,7 @@ Parameetrid
 	xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
 	xmlns:id="http://x-road.eu/xsd/identifiers">
     <soapenv:Header>
-        <xrd:client id:objectType="MEMBER">
+        <xrd:client id:objectType="SUBSYSTEM">
             <id:xRoadInstance>EE</id:xRoadInstance>
             <id:memberClass>BUSINESS</id:memberClass>
             <id:memberCode>12345678</id:memberCode>
@@ -1187,7 +1187,7 @@ Parameetrid
 	xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
 	xmlns:id="http://x-road.eu/xsd/identifiers">
     <SOAP-ENV:Header>
-        <xrd:client id:objectType="MEMBER">
+        <xrd:client id:objectType="SUBSYSTEM">
             <id:xRoadInstance>EE</id:xRoadInstance>
             <id:memberClass>BUSINESS</id:memberClass>
             <id:memberCode>12345678</id:memberCode>
@@ -1260,7 +1260,7 @@ Parameetrid
 	xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
 	xmlns:id="http://x-road.eu/xsd/identifiers">
     <soapenv:Header>
-        <xrd:client id:objectType="MEMBER">
+        <xrd:client id:objectType="SUBSYSTEM">
             <id:xRoadInstance>EE</id:xRoadInstance>
             <id:memberClass>BUSINESS</id:memberClass>
             <id:memberCode>12345678</id:memberCode>
@@ -1346,7 +1346,7 @@ Parameetrid
 	xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
 	xmlns:id="http://x-road.eu/xsd/identifiers">
     <SOAP-ENV:Header>
-        <xrd:client id:objectType="MEMBER">
+        <xrd:client id:objectType="SUBSYSTEM">
             <id:xRoadInstance>EE</id:xRoadInstance>
             <id:memberClass>BUSINESS</id:memberClass>
             <id:memberCode>12345678</id:memberCode>
@@ -1448,7 +1448,7 @@ Parameetrid
 	xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
 	xmlns:id="http://x-road.eu/xsd/identifiers">
     <soapenv:Header>
-        <xrd:client id:objectType="MEMBER">
+        <xrd:client id:objectType="SUBSYSTEM">
             <id:xRoadInstance>EE</id:xRoadInstance>
             <id:memberClass>BUSINESS</id:memberClass>
             <id:memberCode>12345678</id:memberCode>
@@ -1599,7 +1599,7 @@ Parameetrid
 	xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
 	xmlns:id="http://x-road.eu/xsd/identifiers">
     <SOAP-ENV:Header>
-        <xrd:client id:objectType="MEMBER">
+        <xrd:client id:objectType="SUBSYSTEM">
             <id:xRoadInstance>EE</id:xRoadInstance>
             <id:memberClass>BUSINESS</id:memberClass>
             <id:memberCode>12345678</id:memberCode>
@@ -1678,7 +1678,7 @@ Parameetrid
 	xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
 	xmlns:id="http://x-road.eu/xsd/identifiers">
     <soapenv:Header>
-        <xrd:client id:objectType="MEMBER">
+        <xrd:client id:objectType="SUBSYSTEM">
             <id:xRoadInstance>EE</id:xRoadInstance>
             <id:memberClass>BUSINESS</id:memberClass>
             <id:memberCode>12345678</id:memberCode>
@@ -1782,7 +1782,7 @@ Parameetrid
 	xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
 	xmlns:id="http://x-road.eu/xsd/identifiers">
     <SOAP-ENV:Header>
-        <xrd:client id:objectType="MEMBER">
+        <xrd:client id:objectType="SUBSYSTEM">
             <id:xRoadInstance>EE</id:xRoadInstance>
             <id:memberClass>BUSINESS</id:memberClass>
             <id:memberCode>12345678</id:memberCode>
@@ -1857,7 +1857,7 @@ Parameetrid
 	xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
 	xmlns:id="http://x-road.eu/xsd/identifiers">
     <soapenv:Header>
-        <xrd:client id:objectType="MEMBER">
+        <xrd:client id:objectType="SUBSYSTEM">
             <id:xRoadInstance>EE</id:xRoadInstance>
             <id:memberClass>BUSINESS</id:memberClass>
             <id:memberCode>12345678</id:memberCode>
@@ -1925,7 +1925,7 @@ Parameetrid
 	xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
 	xmlns:id="http://x-road.eu/xsd/identifiers">
     <SOAP-ENV:Header>
-        <xrd:client id:objectType="MEMBER">
+        <xrd:client id:objectType="SUBSYSTEM">
             <id:xRoadInstance>EE</id:xRoadInstance>
             <id:memberClass>BUSINESS</id:memberClass>
             <id:memberCode>12345678</id:memberCode>
@@ -1998,7 +1998,7 @@ Parameetrid
 	xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
 	xmlns:id="http://x-road.eu/xsd/identifiers">
     <soapenv:Header>
-        <xrd:client id:objectType="MEMBER">
+        <xrd:client id:objectType="SUBSYSTEM">
             <id:xRoadInstance>EE</id:xRoadInstance>
             <id:memberClass>BUSINESS</id:memberClass>
             <id:memberCode>12345678</id:memberCode>
@@ -2066,7 +2066,7 @@ Parameetrid
 	xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
 	xmlns:id="http://x-road.eu/xsd/identifiers">
     <SOAP-ENV:Header>
-        <xrd:client id:objectType="MEMBER">
+        <xrd:client id:objectType="SUBSYSTEM">
             <id:xRoadInstance>EE</id:xRoadInstance>
             <id:memberClass>BUSINESS</id:memberClass>
             <id:memberCode>12345678</id:memberCode>
@@ -2142,7 +2142,7 @@ Parameetrid
 	xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
 	xmlns:id="http://x-road.eu/xsd/identifiers">
     <soapenv:Header>
-        <xrd:client id:objectType="MEMBER">
+        <xrd:client id:objectType="SUBSYSTEM">
             <id:xRoadInstance>EE</id:xRoadInstance>
             <id:memberClass>BUSINESS</id:memberClass>
             <id:memberCode>12345678</id:memberCode>
@@ -2211,7 +2211,7 @@ Parameetrid
 	xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
 	xmlns:id="http://x-road.eu/xsd/identifiers">
     <SOAP-ENV:Header>
-        <xrd:client id:objectType="MEMBER">
+        <xrd:client id:objectType="SUBSYSTEM">
             <id:xRoadInstance>EE</id:xRoadInstance>
             <id:memberClass>BUSINESS</id:memberClass>
             <id:memberCode>12345678</id:memberCode>
@@ -2305,7 +2305,7 @@ Parameetrid
 	xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
 	xmlns:id="http://x-road.eu/xsd/identifiers">
     <soapenv:Header>
-        <xrd:client id:objectType="MEMBER">
+        <xrd:client id:objectType="SUBSYSTEM">
             <id:xRoadInstance>EE</id:xRoadInstance>
             <id:memberClass>BUSINESS</id:memberClass>
             <id:memberCode>12345678</id:memberCode>
@@ -2384,7 +2384,7 @@ Parameetrid
 	xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
 	xmlns:id="http://x-road.eu/xsd/identifiers">
     <SOAP-ENV:Header>
-        <xrd:client id:objectType="MEMBER">
+        <xrd:client id:objectType="SUBSYSTEM">
             <id:xRoadInstance>EE</id:xRoadInstance>
             <id:memberClass>BUSINESS</id:memberClass>
             <id:memberCode>12345678</id:memberCode>
@@ -2562,7 +2562,7 @@ Parameetrid
 	xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
 	xmlns:id="http://x-road.eu/xsd/identifiers">
     <soapenv:Header>
-        <xrd:client id:objectType="MEMBER">
+        <xrd:client id:objectType="SUBSYSTEM">
             <id:xRoadInstance>EE</id:xRoadInstance>
             <id:memberClass>BUSINESS</id:memberClass>
             <id:memberCode>12345678</id:memberCode>
@@ -2634,7 +2634,7 @@ Parameetrid
 	xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
 	xmlns:id="http://x-road.eu/xsd/identifiers">
     <SOAP-ENV:Header>
-        <xrd:client id:objectType="MEMBER">
+        <xrd:client id:objectType="SUBSYSTEM">
             <id:xRoadInstance>EE</id:xRoadInstance>
             <id:memberClass>BUSINESS</id:memberClass>
             <id:memberCode>12345678</id:memberCode>
@@ -2815,7 +2815,7 @@ Parameetrid
 	xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
 	xmlns:id="http://x-road.eu/xsd/identifiers">
     <soapenv:Header>
-        <xrd:client id:objectType="MEMBER">
+        <xrd:client id:objectType="SUBSYSTEM">
             <id:xRoadInstance>EE</id:xRoadInstance>
             <id:memberClass>BUSINESS</id:memberClass>
             <id:memberCode>12345678</id:memberCode>
@@ -2908,7 +2908,7 @@ Parameetrid
         xmlns:id="http://x-road.eu/xsd/identifiers"
         xmlns:xrd="http://x-road.eu/xsd/xroad.xsd">
     <SOAP-ENV:Header>
-        <xrd:client id:objectType="MEMBER">
+        <xrd:client id:objectType="SUBSYSTEM">
             <id:xRoadInstance>EE</id:xRoadInstance>
             <id:memberClass>BUSINESS</id:memberClass>
             <id:memberCode>12486864</id:memberCode>
@@ -3032,7 +3032,7 @@ Parameetrid
 	xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
 	xmlns:id="http://x-road.eu/xsd/identifiers">
     <soapenv:Header>
-        <xrd:client id:objectType="MEMBER">
+        <xrd:client id:objectType="SUBSYSTEM">
             <id:xRoadInstance>EE</id:xRoadInstance>
             <id:memberClass>BUSINESS</id:memberClass>
             <id:memberCode>12345678</id:memberCode>
@@ -3109,7 +3109,7 @@ Parameetrid
 	xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
 	xmlns:id="http://x-road.eu/xsd/identifiers">
     <SOAP-ENV:Header>
-        <xrd:client id:objectType="MEMBER">
+        <xrd:client id:objectType="SUBSYSTEM">
             <id:xRoadInstance>EE</id:xRoadInstance>
             <id:memberClass>BUSINESS</id:memberClass>
             <id:memberCode>12345678</id:memberCode>
@@ -3236,7 +3236,7 @@ Parameetrid
 	xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
 	xmlns:id="http://x-road.eu/xsd/identifiers">
     <soapenv:Header>
-        <xrd:client id:objectType="MEMBER">
+        <xrd:client id:objectType="SUBSYSTEM">
             <id:xRoadInstance>EE</id:xRoadInstance>
             <id:memberClass>BUSINESS</id:memberClass>
             <id:memberCode>12345678</id:memberCode>
@@ -3305,7 +3305,7 @@ Parameetrid
 	xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
 	xmlns:id="http://x-road.eu/xsd/identifiers">
     <SOAP-ENV:Header>
-        <xrd:client id:objectType="MEMBER">
+        <xrd:client id:objectType="SUBSYSTEM">
             <id:xRoadInstance>EE</id:xRoadInstance>
             <id:memberClass>BUSINESS</id:memberClass>
             <id:memberCode>12345678</id:memberCode>
@@ -3501,7 +3501,7 @@ Parameetrid
 	xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
 	xmlns:id="http://x-road.eu/xsd/identifiers">
     <soapenv:Header>
-        <xrd:client id:objectType="MEMBER">
+        <xrd:client id:objectType="SUBSYSTEM">
             <id:xRoadInstance>EE</id:xRoadInstance>
             <id:memberClass>BUSINESS</id:memberClass>
             <id:memberCode>12345678</id:memberCode>
@@ -3606,7 +3606,7 @@ Parameetrid
 	xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
 	xmlns:id="http://x-road.eu/xsd/identifiers">
     <SOAP-ENV:Header>
-        <xrd:client id:objectType="MEMBER">
+        <xrd:client id:objectType="SUBSYSTEM">
             <id:xRoadInstance>EE</id:xRoadInstance>
             <id:memberClass>BUSINESS</id:memberClass>
             <id:memberCode>12345678</id:memberCode>
@@ -3787,7 +3787,7 @@ Parameetrid
 	xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
 	xmlns:id="http://x-road.eu/xsd/identifiers">
     <soapenv:Header>
-        <xrd:client id:objectType="MEMBER">
+        <xrd:client id:objectType="SUBSYSTEM">
             <id:xRoadInstance>EE</id:xRoadInstance>
             <id:memberClass>BUSINESS</id:memberClass>
             <id:memberCode>12345678</id:memberCode>
@@ -3874,7 +3874,7 @@ Parameetrid
 	xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
 	xmlns:id="http://x-road.eu/xsd/identifiers">
     <SOAP-ENV:Header>
-        <xrd:client id:objectType="MEMBER">
+        <xrd:client id:objectType="SUBSYSTEM">
             <id:xRoadInstance>EE</id:xRoadInstance>
             <id:memberClass>BUSINESS</id:memberClass>
             <id:memberCode>12345678</id:memberCode>
@@ -3965,7 +3965,7 @@ Parameetrid
 	xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
 	xmlns:id="http://x-road.eu/xsd/identifiers">
     <soapenv:Header>
-        <xrd:client id:objectType="MEMBER">
+        <xrd:client id:objectType="SUBSYSTEM">
             <id:xRoadInstance>EE</id:xRoadInstance>
             <id:memberClass>BUSINESS</id:memberClass>
             <id:memberCode>12345678</id:memberCode>
@@ -4035,7 +4035,7 @@ Parameetrid
 	xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
 	xmlns:id="http://x-road.eu/xsd/identifiers">
     <SOAP-ENV:Header>
-        <xrd:client id:objectType="MEMBER">
+        <xrd:client id:objectType="SUBSYSTEM">
             <id:xRoadInstance>EE</id:xRoadInstance>
             <id:memberClass>BUSINESS</id:memberClass>
             <id:memberCode>12345678</id:memberCode>
@@ -4128,7 +4128,7 @@ Parameetrid
 	xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
 	xmlns:id="http://x-road.eu/xsd/identifiers">
     <soapenv:Header>
-        <xrd:client id:objectType="MEMBER">
+        <xrd:client id:objectType="SUBSYSTEM">
             <id:xRoadInstance>EE</id:xRoadInstance>
             <id:memberClass>BUSINESS</id:memberClass>
             <id:memberCode>12345678</id:memberCode>
@@ -4216,7 +4216,7 @@ Parameetrid
 	xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
 	xmlns:id="http://x-road.eu/xsd/identifiers">
     <SOAP-ENV:Header>
-        <xrd:client id:objectType="MEMBER">
+        <xrd:client id:objectType="SUBSYSTEM">
             <id:xRoadInstance>EE</id:xRoadInstance>
             <id:memberClass>BUSINESS</id:memberClass>
             <id:memberCode>12345678</id:memberCode>
@@ -4307,7 +4307,7 @@ Parameetrid
 	xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
 	xmlns:id="http://x-road.eu/xsd/identifiers">
     <soapenv:Header>
-        <xrd:client id:objectType="MEMBER">
+        <xrd:client id:objectType="SUBSYSTEM">
             <id:xRoadInstance>EE</id:xRoadInstance>
             <id:memberClass>BUSINESS</id:memberClass>
             <id:memberCode>12345678</id:memberCode>
@@ -4403,7 +4403,7 @@ Parameetrid
 	xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
 	xmlns:id="http://x-road.eu/xsd/identifiers">
     <SOAP-ENV:Header>
-        <xrd:client id:objectType="MEMBER">
+        <xrd:client id:objectType="SUBSYSTEM">
             <id:xRoadInstance>EE</id:xRoadInstance>
             <id:memberClass>BUSINESS</id:memberClass>
             <id:memberCode>12345678</id:memberCode>
@@ -4500,7 +4500,7 @@ Parameetrid
 	xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
 	xmlns:id="http://x-road.eu/xsd/identifiers">
     <soapenv:Header>
-        <xrd:client id:objectType="MEMBER">
+        <xrd:client id:objectType="SUBSYSTEM">
             <id:xRoadInstance>EE</id:xRoadInstance>
             <id:memberClass>BUSINESS</id:memberClass>
             <id:memberCode>12345678</id:memberCode>
@@ -4583,7 +4583,7 @@ Parameetrid
 	xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
 	xmlns:id="http://x-road.eu/xsd/identifiers">
     <SOAP-ENV:Header>
-        <xrd:client id:objectType="MEMBER">
+        <xrd:client id:objectType="SUBSYSTEM">
             <id:xRoadInstance>EE</id:xRoadInstance>
             <id:memberClass>BUSINESS</id:memberClass>
             <id:memberCode>12345678</id:memberCode>
@@ -4666,7 +4666,7 @@ Parameetrid
 	xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
 	xmlns:id="http://x-road.eu/xsd/identifiers">
     <soapenv:Header>
-        <xrd:client id:objectType="MEMBER">
+        <xrd:client id:objectType="SUBSYSTEM">
             <id:xRoadInstance>EE</id:xRoadInstance>
             <id:memberClass>BUSINESS</id:memberClass>
             <id:memberCode>12345678</id:memberCode>
@@ -4734,7 +4734,7 @@ Parameetrid
 	xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
 	xmlns:id="http://x-road.eu/xsd/identifiers">
     <SOAP-ENV:Header>
-        <xrd:client id:objectType="MEMBER">
+        <xrd:client id:objectType="SUBSYSTEM">
             <id:xRoadInstance>EE</id:xRoadInstance>
             <id:memberClass>BUSINESS</id:memberClass>
             <id:memberCode>12345678</id:memberCode>
@@ -4811,7 +4811,7 @@ Parameetrid
 	xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
 	xmlns:id="http://x-road.eu/xsd/identifiers">
     <soapenv:Header>
-        <xrd:client id:objectType="MEMBER">
+        <xrd:client id:objectType="SUBSYSTEM">
             <id:xRoadInstance>EE</id:xRoadInstance>
             <id:memberClass>BUSINESS</id:memberClass>
             <id:memberCode>12345678</id:memberCode>
@@ -4881,7 +4881,7 @@ Parameetrid
 	xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
 	xmlns:id="http://x-road.eu/xsd/identifiers">
     <SOAP-ENV:Header>
-        <xrd:client id:objectType="MEMBER">
+        <xrd:client id:objectType="SUBSYSTEM">
             <id:xRoadInstance>EE</id:xRoadInstance>
             <id:memberClass>BUSINESS</id:memberClass>
             <id:memberCode>12345678</id:memberCode>
