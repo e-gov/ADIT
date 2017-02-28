@@ -2,7 +2,7 @@ package ee.adit.service;
 
 import java.util.Date;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 
 import ee.adit.dao.DownloadRequestLogDAO;
 import ee.adit.dao.ErrorLogDAO;
@@ -23,7 +23,7 @@ public class LogService {
     /**
      * Default logger.
      */
-    private static Logger logger = Logger.getLogger(LogService.class);
+    private static Logger logger = LogManager.getLogger(LogService.class);
 
     /**
      * Error log level WARN.

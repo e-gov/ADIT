@@ -2,6 +2,7 @@ package ee.adit.integrationtests;
 
 
 import java.io.File;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -13,7 +14,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Property;
 import org.junit.After;
@@ -26,14 +28,14 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestContextManager;
 import org.springframework.util.Assert;
 
-import dvk.api.container.Container;
-import dvk.api.container.v1.ContainerVer1;
-import dvk.api.container.v1.Saaja;
-import dvk.api.container.v2_1.ContainerVer2_1;
-import dvk.api.container.v2_1.DecRecipient;
-import dvk.api.container.v2_1.Recipient;
-import dvk.api.container.v2_1.Transport;
-import dvk.api.ml.PojoMessage;
+import ee.adit.dvk.api.container.Container;
+import ee.adit.dvk.api.container.v1.ContainerVer1;
+import ee.adit.dvk.api.container.v1.Saaja;
+import ee.adit.dvk.api.container.v2_1.ContainerVer2_1;
+import ee.adit.dvk.api.container.v2_1.DecRecipient;
+import ee.adit.dvk.api.container.v2_1.Recipient;
+import ee.adit.dvk.api.container.v2_1.Transport;
+import ee.adit.dvk.api.ml.PojoMessage;
 import ee.adit.dao.dvk.DvkDAO;
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
@@ -71,7 +73,7 @@ public class DocumentService_SendReceiveDvkTest_Integration {
     final static String CONTAINER_TYPE_NOT_DDOC = "Not_DDOC_Container";
     final static String CONTAINER_TYPE_DDOC = "DDOC_Container";
 
-    private static Logger logger = Logger.getLogger(DocumentService_SendReceiveDvkTest_Integration.class);
+    private static Logger logger = LogManager.getLogger(DocumentService_SendReceiveDvkTest_Integration.class);
 
     @Autowired
     private Utils utils;
@@ -336,15 +338,15 @@ public class DocumentService_SendReceiveDvkTest_Integration {
         Assert.notNull(containerOutput.getFile());
         Assert.notNull(containerInput.getFile().size() > 0);
         Assert.notNull(containerOutput.getFile().size() > 0);
-        Map<String, dvk.api.container.v2_1.File> filesFromInputContainer = new HashMap<String, dvk.api.container.v2_1.File>();
-        for (dvk.api.container.v2_1.File inputFile : containerInput.getFile()) {
+        Map<String, ee.adit.dvk.api.container.v2_1.File> filesFromInputContainer = new HashMap<String, ee.adit.dvk.api.container.v2_1.File>();
+        for (ee.adit.dvk.api.container.v2_1.File inputFile : containerInput.getFile()) {
             filesFromInputContainer.put(inputFile.getFileGuid(), inputFile);
         }
 
-        for (dvk.api.container.v2_1.File outputFile : containerOutput.getFile()) {
+        for (ee.adit.dvk.api.container.v2_1.File outputFile : containerOutput.getFile()) {
             String outputFileCode = outputFile.getFileGuid();
             Assert.isTrue(filesFromInputContainer.containsKey(outputFileCode));
-            dvk.api.container.v2_1.File inputFile = filesFromInputContainer.get(outputFileCode);
+            ee.adit.dvk.api.container.v2_1.File inputFile = filesFromInputContainer.get(outputFileCode);
             Assert.isTrue(Utils.compareStringsIgnoreCase(inputFile.getFileName(), outputFile.getFileName()));
             Assert.isTrue(inputFile.getFileSize().equals(outputFile.getFileSize()));
             Assert.isTrue(Utils.compareStringsIgnoreCase(inputFile.getMimeType(), outputFile.getMimeType()));
@@ -540,7 +542,7 @@ public class DocumentService_SendReceiveDvkTest_Integration {
         }
         Assert.isTrue(aditDocumentNotInDdocFilesByName.size() == container.getSignedDoc().getDataFiles().size(),
                 "Number of DOCUMENT_FILES records with guid. expected:" + container.getSignedDoc().getDataFiles().size() + " ,actual:" + aditDocumentNotInDdocFilesByName.size());
-        for (dvk.api.container.v1.DataFile dataFile : container.getSignedDoc().getDataFiles()) {
+        for (ee.adit.dvk.api.container.v1.DataFile dataFile : container.getSignedDoc().getDataFiles()) {
             String fileName = dataFile.getFileName();
             Assert.isTrue(aditDocumentNotInDdocFilesByName.containsKey(fileName),
                     "Received ADIT document doesn't have related DOCUMENT_FILE for file" + fileName);
@@ -880,7 +882,7 @@ public class DocumentService_SendReceiveDvkTest_Integration {
         }
         Assert.isTrue(aditDocumentFilesWithGuid.size() == container.getFile().size(),
                 "Number of DOCUMENT_FILES records with guid. expected:" + container.getFile().size() + " ,actual:" + aditDocumentFilesWithGuid.size());
-        for (dvk.api.container.v2_1.File dataFile : container.getFile()) {
+        for (ee.adit.dvk.api.container.v2_1.File dataFile : container.getFile()) {
             String fileGuid = dataFile.getFileGuid();
             Assert.isTrue(aditDocumentFilesWithGuid.containsKey(fileGuid),
                     "Received ADIT document doesn't have related DOCUMENT_FILE for file" + fileGuid);

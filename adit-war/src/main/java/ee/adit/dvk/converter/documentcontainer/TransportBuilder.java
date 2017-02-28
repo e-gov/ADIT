@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import dvk.api.container.v2_1.DecRecipient;
-import dvk.api.container.v2_1.DecSender;
-import dvk.api.container.v2_1.Transport;
+import ee.adit.dvk.api.container.v2_1.DecRecipient;
+import ee.adit.dvk.api.container.v2_1.DecSender;
+import ee.adit.dvk.api.container.v2_1.Transport;
 import ee.adit.dao.AditUserDAO;
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;

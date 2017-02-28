@@ -3,14 +3,14 @@ package ee.adit.dvk.converter;
 import java.util.List;
 import java.util.Set;
 
-import dvk.api.container.v2_1.Access;
-import dvk.api.container.v2_1.File;
-import dvk.api.container.v2_1.Recipient;
-import dvk.api.container.v2_1.RecordCreator;
-import dvk.api.container.v2_1.RecordMetadata;
-import dvk.api.container.v2_1.RecordSenderToDec;
-import dvk.api.container.v2_1.SignatureMetadata;
-import dvk.api.container.v2_1.Transport;
+import ee.adit.dvk.api.container.v2_1.Access;
+import ee.adit.dvk.api.container.v2_1.File;
+import ee.adit.dvk.api.container.v2_1.Recipient;
+import ee.adit.dvk.api.container.v2_1.RecordCreator;
+import ee.adit.dvk.api.container.v2_1.RecordMetadata;
+import ee.adit.dvk.api.container.v2_1.RecordSenderToDec;
+import ee.adit.dvk.api.container.v2_1.SignatureMetadata;
+import ee.adit.dvk.api.container.v2_1.Transport;
 import ee.adit.dao.AditUserDAO;
 import ee.adit.dao.DocumentTypeDAO;
 import ee.adit.dao.pojo.Document;
@@ -30,19 +30,19 @@ import ee.adit.util.Configuration;
  * @author Hendrik Pärna
  * @since 22.04.14
  */
-public class DocumentToContainerVer2_1ConverterImpl implements Converter<Document, dvk.api.container.v2_1.ContainerVer2_1> {
+public class DocumentToContainerVer2_1ConverterImpl implements Converter<Document, ee.adit.dvk.api.container.v2_1.ContainerVer2_1> {
 
     private AditUserDAO aditUserDAO;
     private DocumentTypeDAO documentTypeDAO;
     private Configuration configuration;
 
     @Override
-    public dvk.api.container.v2_1.ContainerVer2_1 convert(final Document document) {
+    public ee.adit.dvk.api.container.v2_1.ContainerVer2_1 convert(final Document document) {
         if (document == null) {
             throw new IllegalArgumentException("Document should not be null!");
         }
 
-        dvk.api.container.v2_1.ContainerVer2_1 container = new dvk.api.container.v2_1.ContainerVer2_1();
+        ee.adit.dvk.api.container.v2_1.ContainerVer2_1 container = new ee.adit.dvk.api.container.v2_1.ContainerVer2_1();
         container.setTransport(createTransport(document));
         container.setRecordMetadata(createRecordMetadata(document));
         container.setRecordCreator(createRecordCreator(document));

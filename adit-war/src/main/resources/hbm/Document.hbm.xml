@@ -88,6 +88,11 @@
         <property name="content" type="string">
             <column name="CONTENT" length="4000" />
         </property>
+        
+        <property name="dhxId" type="string">
+            <column name="dhx_id" length="100" />
+        </property>
+
         <set name="documents" inverse="true" lazy="true" table="DOCUMENT" fetch="select">
             <key>
                 <column name="PARENT_ID" precision="12" scale="0" />

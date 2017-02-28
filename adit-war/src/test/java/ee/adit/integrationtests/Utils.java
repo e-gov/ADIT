@@ -1,6 +1,7 @@
 package ee.adit.integrationtests;
 
 import java.io.BufferedReader;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -20,25 +21,26 @@ import java.util.zip.GZIPInputStream;
 
 import org.apache.commons.codec.binary.Base64InputStream;
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.FlushMode;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Property;
 
-import dvk.api.container.Container;
-import dvk.api.container.v1.ContainerVer1;
-import dvk.api.container.v1.Saaja;
-import dvk.api.container.v1.Saatja;
-import dvk.api.container.v2_1.ContactInfo;
-import dvk.api.container.v2_1.ContainerVer2_1;
-import dvk.api.container.v2_1.DecRecipient;
-import dvk.api.container.v2_1.DecSender;
-import dvk.api.container.v2_1.OrganisationType;
-import dvk.api.container.v2_1.PersonType;
-import dvk.api.container.v2_1.Recipient;
-import dvk.api.ml.PojoMessage;
+import ee.adit.dvk.api.container.Container;
+import ee.adit.dvk.api.container.v1.ContainerVer1;
+import ee.adit.dvk.api.container.v1.Saaja;
+import ee.adit.dvk.api.container.v1.Saatja;
+import ee.adit.dvk.api.container.v2_1.ContactInfo;
+import ee.adit.dvk.api.container.v2_1.ContainerVer2_1;
+import ee.adit.dvk.api.container.v2_1.DecRecipient;
+import ee.adit.dvk.api.container.v2_1.DecSender;
+import ee.adit.dvk.api.container.v2_1.OrganisationType;
+import ee.adit.dvk.api.container.v2_1.PersonType;
+import ee.adit.dvk.api.container.v2_1.Recipient;
+import ee.adit.dvk.api.ml.PojoMessage;
 import ee.adit.dao.dvk.DvkDAO;
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
@@ -50,7 +52,7 @@ import ee.adit.service.DocumentService;
 
 public class Utils {
 
-    private static Logger logger = Logger.getLogger(Utils.class);
+    private static Logger logger = LogManager.getLogger(Utils.class);
 
     private DocumentService documentService;
 
@@ -116,7 +118,7 @@ public class Utils {
             }
 
             // Create a Blob for all files
-            for (dvk.api.container.v2_1.File fileToInsert : container.getFile()) {
+            for (ee.adit.dvk.api.container.v2_1.File fileToInsert : container.getFile()) {
                 // Create a document file, related with this document
                 documentFile = new DocumentFile();
                 documentFile.setDocument(document);

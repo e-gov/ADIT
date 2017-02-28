@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	">
 
 	<!--
 	<bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory">
@@ -25,11 +27,14 @@
 	    </property>
 	</bean>
 
+
 	<import resource="adit-configuration.xml"/>
 	<import resource="adit-dao.xml"/>
 	<import resource="adit-services.xml"/>
+	<import resource="adit-dhx.xml"/>
 	<import resource="adit-endpoints.xml"/>
 	<import resource="adit-jobs.xml"/>
 	<import resource="adit-application.xml"/>
+	
 	
 </beans>

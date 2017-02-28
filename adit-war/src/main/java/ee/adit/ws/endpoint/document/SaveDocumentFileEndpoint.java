@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Locale;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.ws.mime.Attachment;
 
@@ -50,7 +50,7 @@ import ee.webmedia.xtee.annotation.XTeeService;
 @Component
 public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 
-    private static Logger logger = Logger.getLogger(SaveDocumentFileEndpoint.class);
+    private static Logger logger = LogManager.getLogger(SaveDocumentFileEndpoint.class);
 
     private UserService userService;
 

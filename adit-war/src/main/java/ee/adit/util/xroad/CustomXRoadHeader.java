@@ -3,7 +3,7 @@ package ee.adit.util.xroad;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 
 import ee.adit.util.xroad.messageprotocol.XRoadClient;
 import ee.adit.util.xroad.messageprotocol.XRoadProtocolVersion;
@@ -20,7 +20,7 @@ public class CustomXRoadHeader extends XTeeHeader {
 	
     private static final long serialVersionUID = 1L;
     
-    private static Logger logger = Logger.getLogger(CustomXRoadHeader.class);
+    private static Logger logger = LogManager.getLogger(CustomXRoadHeader.class);
 
     // X-Road protocol version 4.0 SOAP header elements
     public static final QName CLIENT = new QName(XRoadProtocolVersion.V4_0.getNamespaceURI(), "client");

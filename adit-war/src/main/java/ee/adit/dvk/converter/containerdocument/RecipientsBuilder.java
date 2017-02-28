@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 
-import dvk.api.container.v2_1.ContainerVer2_1;
-import dvk.api.container.v2_1.DecRecipient;
-import dvk.api.container.v2_1.Recipient;
+import ee.adit.dvk.api.container.v2_1.ContainerVer2_1;
+import ee.adit.dvk.api.container.v2_1.DecRecipient;
+import ee.adit.dvk.api.container.v2_1.Recipient;
 import ee.adit.dao.AditUserDAO;
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.util.Configuration;
@@ -19,7 +19,7 @@ import ee.adit.util.Util;
  * @since 10.06.14
  */
 public class RecipientsBuilder {
-    private static Logger logger = Logger.getLogger(RecipientsBuilder.class);
+    private static Logger logger = LogManager.getLogger(RecipientsBuilder.class);
     private ContainerVer2_1 container;
     private Configuration configuration;
     private AditUserDAO aditUserDAO;

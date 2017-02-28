@@ -1,7 +1,7 @@
 package ee.adit.dvk.converter.documentcontainer;
 
-import dvk.api.container.v2_1.ContactInfo;
-import dvk.api.container.v2_1.RecordCreator;
+import ee.adit.dvk.api.container.v2_1.ContactInfo;
+import ee.adit.dvk.api.container.v2_1.RecordCreator;
 import ee.adit.dao.AditUserDAO;
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;

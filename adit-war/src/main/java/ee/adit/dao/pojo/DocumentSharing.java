@@ -27,6 +27,8 @@ public class DocumentSharing implements java.io.Serializable {
     private Long dvkId;
     private String comment;
     private String userEmail;
+    
+    private String dhxId;
 
     public DocumentSharing() {
     }
@@ -186,4 +188,12 @@ public class DocumentSharing implements java.io.Serializable {
         }
         return result;
     }
+
+	public String getDhxId() {
+		return dhxId;
+	}
+
+	public void setDhxId(String dhxId) {
+		this.dhxId = dhxId;
+	}
 }

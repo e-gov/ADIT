@@ -1,6 +1,6 @@
 package ee.adit.dvk;
 
-import dvk.api.ml.PojoMessage;
+import ee.adit.dvk.api.ml.PojoMessage;
 
 /**
  * @author Hendrik Pärna

@@ -10,7 +10,7 @@ import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 
@@ -29,7 +29,7 @@ public class MonitorController extends AbstractController {
     /**
      * Log4J logger.
      */
-    private static Logger logger = Logger.getLogger(MonitorController.class);
+    private static Logger logger = LogManager.getLogger(MonitorController.class);
 
     /**
      * Monitor service.

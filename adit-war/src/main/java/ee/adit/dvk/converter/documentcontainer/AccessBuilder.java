@@ -1,6 +1,6 @@
 package ee.adit.dvk.converter.documentcontainer;
 
-import dvk.api.container.v2_1.Access;
+import ee.adit.dvk.api.container.v2_1.Access;
 
 /**
  * @author Hendrik Pärna

@@ -183,7 +183,8 @@ CREATE TABLE adit.document_sharing (
     dvk_folder varchar(1000),
     dvk_id bigint,
     user_email varchar(255),
-    comment_text text
+    comment_text text,
+    dhx_id character varying(100)
 )
 WITH (oids = false);
 --
@@ -225,7 +226,8 @@ CREATE TABLE adit.document (
     eform_use_id bigint,
     files_size_bytes bigint DEFAULT 0,
     sender_receiver varchar(50),
-    content varchar(4000)
+    content varchar(4000),
+    dhx_id character varying(100)
 )
 WITH (oids = false);
 --

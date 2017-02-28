@@ -5,9 +5,9 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 
-import dvk.api.container.v2_1.File;
+import ee.adit.dvk.api.container.v2_1.File;
 import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.DocumentFile;
 import ee.adit.service.DocumentService;
@@ -20,7 +20,7 @@ import ee.adit.util.Util;
  */
 public class FileBuilder {
 
-    private static Logger logger = Logger.getLogger(FileBuilder.class);
+    private static Logger logger = LogManager.getLogger(FileBuilder.class);
 
     private Document document;
     private Configuration configuration;

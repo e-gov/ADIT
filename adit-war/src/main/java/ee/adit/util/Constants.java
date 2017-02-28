@@ -59,4 +59,10 @@ public final class Constants {
 	 * Must have a corresponding record in database table "MAINTENANCE_JOB".
 	 */
 	public static final long JOB_ID_TEMPORARY_FOLDER_CLEAN = 8L;
+	
+	/**
+	 * Unique ID of maintenance job: DHX addressees renew.
+	 * Must have a corresponding record in database table "MAINTENANCE_JOB".
+	 */
+	public static final long JOB_ID_DHX_ADDRESSEES_RENEW = 9L;
 }

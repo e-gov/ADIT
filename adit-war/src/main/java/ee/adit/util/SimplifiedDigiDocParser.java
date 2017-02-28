@@ -18,7 +18,7 @@ import java.util.Hashtable;
 import java.util.List;
 
 import org.apache.commons.codec.binary.Base64OutputStream;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 
 import ee.adit.pojo.OutputDocumentFile;
 import ee.sk.digidoc.DataFile;
@@ -39,7 +39,7 @@ public final class SimplifiedDigiDocParser {
 	private SimplifiedDigiDocParser() {
 	}
 
-	private static Logger logger = Logger.getLogger(SimplifiedDigiDocParser.class);
+	private static Logger logger = LogManager.getLogger(SimplifiedDigiDocParser.class);
 
 	/**
 	 * Finds offsets of all data files in specified DigiDoc container.

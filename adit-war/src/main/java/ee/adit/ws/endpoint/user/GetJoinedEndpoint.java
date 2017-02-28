@@ -12,7 +12,7 @@ import java.util.Locale;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.springframework.oxm.XmlMappingException;
 import org.springframework.stereotype.Component;
 
@@ -46,7 +46,7 @@ import ee.webmedia.xtee.annotation.XTeeService;
 @Component
 public class GetJoinedEndpoint extends AbstractAditBaseEndpoint {
 
-    private static Logger logger = Logger.getLogger(GetJoinedEndpoint.class);
+    private static Logger logger = LogManager.getLogger(GetJoinedEndpoint.class);
 
     private UserService userService;
 

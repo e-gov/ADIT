@@ -1,9 +1,9 @@
 package ee.adit.dvk.converter.documentcontainer;
 
-import dvk.api.container.v2_1.ContactDataType;
-import dvk.api.container.v2_1.ContactInfo;
-import dvk.api.container.v2_1.OrganisationType;
-import dvk.api.container.v2_1.PersonType;
+import ee.adit.dvk.api.container.v2_1.ContactDataType;
+import ee.adit.dvk.api.container.v2_1.ContactInfo;
+import ee.adit.dvk.api.container.v2_1.OrganisationType;
+import ee.adit.dvk.api.container.v2_1.PersonType;
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
 import ee.adit.pojo.PersonName;

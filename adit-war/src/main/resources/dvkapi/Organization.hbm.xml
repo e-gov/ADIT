@@ -3,25 +3,57 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated 7.02.2010 22:22:31 by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
-    <class name="dvk.api.ml.PojoOrganization" table="DHL_ORGANIZATION">
-        <id name="orgCode" type="string">
-            <column name="ORG_CODE" length="20" />
-            <generator class="assigned" />
-        </id>
-        <property name="orgName" type="string">
-            <column name="ORG_NAME" length="100" not-null="true" />
+	<class name="ee.adit.dvk.api.ml.PojoOrganization" table="DHL_ORGANIZATION">
+		<id name="dhlOrganisationId" type="long">
+			<column name="dhl_organisation_id" precision="10" scale="0" />
+			<generator class="sequence">
+				<param name="sequence">sq_dhl_organisation_id</param>
+			</generator>
+		</id>
+		<property name="orgCode" type="string">
+			<column name="ORG_CODE" length="20" />
+		</property>
+		<property name="orgName" type="string">
+			<column name="ORG_NAME" length="100" not-null="true" />
+		</property>
+		<property name="dhlCapable" type="org.hibernate.type.NumericBooleanType">
+			<column name="DHL_CAPABLE" precision="1" scale="0" not-null="true" />
+		</property>
+		<property name="dhlDirectCapable" type="org.hibernate.type.NumericBooleanType">
+			<column name="DHL_DIRECT_CAPABLE" precision="1" scale="0"
+				not-null="true" />
+		</property>
+		<property name="dhlDirectProducerName" type="string">
+			<column name="DHL_DIRECT_PRODUCER_NAME" length="50" />
+		</property>
+		<property name="dhlDirectServiceUrl" type="string">
+			<column name="DHL_DIRECT_SERVICE_URL" length="100" />
+		</property>
+		<many-to-one name="representor" class="ee.adit.dvk.api.ml.PojoOrganization" fetch="select">
+            <column name="REPRESENTOR_ID" precision="12" scale="0" />
+        </many-to-one>
+        
+        <property name="subSystem" type="string">
+			<column name="subsystem" length="100" />
+		</property>
+		<property name="memberClass" type="string">
+			<column name="member_class" length="100" />
+		</property>
+		<property name="xroadInstance" type="string">
+			<column name="xroad_instance" length="100" />
+		</property>
+		
+         <property name="representeeStart" type="timestamp">
+            <column name="representee_start" length="7" />
         </property>
-        <property name="dhlCapable" type="org.hibernate.type.NumericBooleanType">
-            <column name="DHL_CAPABLE" precision="1" scale="0" not-null="true" />
+        <property name="representeeEnd" type="timestamp">
+            <column name="representee_end" length="7" />
         </property>
-        <property name="dhlDirectCapable" type="org.hibernate.type.NumericBooleanType">
-            <column name="DHL_DIRECT_CAPABLE" precision="1" scale="0" not-null="true" />
-        </property>
-        <property name="dhlDirectProducerName" type="string">
-            <column name="DHL_DIRECT_PRODUCER_NAME" length="50" />
-        </property>
-        <property name="dhlDirectServiceUrl" type="string">
-            <column name="DHL_DIRECT_SERVICE_URL" length="100" />
-        </property>
-    </class>
+        		<property name="dhxOrganisation" type="org.hibernate.type.NumericBooleanType">
+			<column name="dhx_organisation" precision="1" scale="0" not-null="true" />
+		</property>  
+		<property name="organisationIdentificator" type="string">
+			<column name="organisation_identificator" length="100" />
+		</property>      
+	</class>
 </hibernate-mapping>

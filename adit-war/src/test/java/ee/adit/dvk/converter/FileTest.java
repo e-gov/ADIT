@@ -9,7 +9,7 @@ import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
-import dvk.api.container.v2_1.File;
+import ee.adit.dvk.api.container.v2_1.File;
 import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.DocumentFile;
 import ee.adit.test.service.StubAditUserDAOForOrg;

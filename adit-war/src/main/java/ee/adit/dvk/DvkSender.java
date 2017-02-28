@@ -11,7 +11,7 @@ public interface DvkSender {
     /**
      * Send document to dvk client.
      * @param document {@link Document}
-     * @return id of the {@link dvk.api.ml.PojoMessage}
+     * @return id of the {@link ee.adit.dvk.api.ml.PojoMessage}
      */
     Long send(Document document);
 }

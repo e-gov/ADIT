@@ -6,7 +6,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
 
 import ee.adit.dao.pojo.AditUser;
@@ -41,7 +41,7 @@ import ee.webmedia.xtee.annotation.XTeeService;
 @Component
 public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
 
-    private static Logger logger = Logger.getLogger(GetDocumentListEndpoint.class);
+    private static Logger logger = LogManager.getLogger(GetDocumentListEndpoint.class);
 
     private UserService userService;
     private DocumentService documentService;
@@ -54,7 +54,9 @@ public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
 
         if (version == 1) {
             return v1(requestObject);
-        } else {
+        } else if (version == 2) {
+        	return v2(requestObject);
+        }else {
             throw new AditInternalException("This method does not support version specified: " + version);
         }
     }
@@ -76,6 +78,8 @@ public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
         try {
             logger.debug("getDocumentList.v1 invoked.");
             GetDocumentListRequest request = (GetDocumentListRequest) requestObject;
+            request.setDecFolder(null);
+            request.setDocumentDhxStatuses(null);
             CustomXRoadHeader header = this.getHeader();
             String applicationName = header.getInfosysteem(this.getConfiguration().getXteeProducerName());
 
@@ -135,7 +139,169 @@ public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
             GetDocumentListResponseAttachment att = this.documentService.getDocumentDAO().getDocumentSearchResult(
                     request, user.getUserCode(), this.getConfiguration().getTempDir(),
                     this.getMessageSource().getMessage("files.nonExistentOrDeleted", new Object[] {}, Locale.ENGLISH),
-                    user.getUserCode(), getConfiguration().getDocumentRetentionDeadlineDays(), jdigidocCfgTmpFile);
+                    user.getUserCode(), getConfiguration().getDocumentRetentionDeadlineDays(), jdigidocCfgTmpFile, true, false);
+
+            if (att != null) {
+                // Remember document ID-s for logging
+                if (att.getDocumentList() != null) {
+	            	for (OutputDocument outputDoc : att.getDocumentList()) {
+	                    documentIdList.add(outputDoc.getId());
+	                }
+                }
+
+                // 1. Convert java list to XML string and output to file
+                String xmlFile = marshal(att);
+
+                // 2. GZip the temporary file
+                // Base64 encoding will be done at SOAP envelope level
+                String gzipFileName = Util.gzipFile(xmlFile, this.getConfiguration().getTempDir());
+
+                // 3. Add as an attachment
+                String contentID = addAttachment(gzipFileName);
+                GetDocumentListResponseList responseList = new GetDocumentListResponseList();
+                responseList.setHref("cid:" + contentID);
+                response.setDocumentList(responseList);
+            }
+
+            // Set response messages
+            response.setSuccess(true);
+            if ((att != null) && (att.getTotal() > 0)) {
+	            messages.setMessage(this.getMessageService().getMessages("request.getDocumentList.success", new Object[] {}));
+	            response.setMessages(messages);
+            } else {
+	            messages.setMessage(this.getMessageService().getMessages("request.getDocumentList.noDocumentsFound", new Object[] {user.getUserCode()}));
+	            response.setMessages(messages);
+            }
+
+            if ((att != null) && (att.getTotal() > 0)) {
+	            String additionalMessage = this.getMessageService().getMessage("request.getDocumentList.success", new Object[] {}, Locale.ENGLISH);
+	            additionalInformationForLog = LogService.REQUEST_LOG_SUCCESS + ": " + additionalMessage;
+            } else {
+	            String additionalMessage = this.getMessageService().getMessage("request.getDocumentList.noDocumentsFound", new Object[] {user.getUserCode()}, Locale.ENGLISH);
+	            additionalInformationForLog = LogService.REQUEST_LOG_SUCCESS + ": " + additionalMessage;
+            }
+
+        } catch (Exception e) {
+            String errorMessage = null;
+            logger.error("Exception: ", e);
+            response.setSuccess(false);
+            ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
+
+            if (e instanceof AditCodedException) {
+                logger.debug("Adding exception messages to response object.");
+                arrayOfMessage.setMessage(this.getMessageService().getMessages((AditCodedException) e));
+                errorMessage = this.getMessageService().getMessage(e.getMessage(),
+                        ((AditCodedException) e).getParameters(), Locale.ENGLISH);
+                errorMessage = "ERROR: " + errorMessage;
+            } else if (e instanceof AditException) {
+                logger.debug("Adding exception message to response object.");
+                arrayOfMessage.getMessage().add(new Message("en", e.getMessage()));
+                errorMessage = "ERROR: " + e.getMessage();
+            } else {
+            	arrayOfMessage.setMessage(this.getMessageService().getMessages(MessageService.GENERIC_ERROR_CODE, new Object[]{}));
+                errorMessage = "ERROR: " + e.getMessage();
+            }
+
+            additionalInformationForLog = errorMessage;
+            super.logError(null, requestDate.getTime(), LogService.ERROR_LOG_LEVEL_ERROR, errorMessage);
+
+            logger.debug("Adding exception messages to response object.");
+            response.setMessages(arrayOfMessage);
+        }
+
+        super.logCurrentRequest((Long)null, requestDate.getTime(), additionalInformationForLog);
+
+        // Log metadata download
+        if ((documentIdList == null) || (documentIdList.size() < 1)) {
+            for (Long documentId : documentIdList) {
+                super.logMetadataRequest(documentId, requestDate.getTime());
+            }
+        }
+
+        return response;
+    }
+    
+    
+    /**
+     * Executes "V2" version of "getDocumentList" request.
+     *
+     * @param requestObject
+     *            Request body object
+     * @return Response body object
+     */
+    protected Object v2(Object requestObject) {
+        GetDocumentListResponse response = new GetDocumentListResponse();
+        ArrayOfMessage messages = new ArrayOfMessage();
+        Calendar requestDate = Calendar.getInstance();
+        String additionalInformationForLog = null;
+        List<Long> documentIdList = new ArrayList<Long>();
+
+        try {
+            logger.debug("getDocumentList.v1 invoked.");
+            GetDocumentListRequest request = (GetDocumentListRequest) requestObject;
+            //set dhx parameters as DVK parameters.
+            request.setDvkFolder(request.getDecFolder());
+            request.setDocumentDvkStatuses(request.getDocumentDhxStatuses());
+            CustomXRoadHeader header = this.getHeader();
+            String applicationName = header.getInfosysteem(this.getConfiguration().getXteeProducerName());
+
+            // Log request
+            Util.printHeader(header, this.getConfiguration());
+            printRequest(request);
+
+            // Check header for required fields
+            checkHeader(header);
+
+            // Check request body
+            checkRequest(request);
+
+            // Kontrollime, kas päringu käivitanud infosüsteem on ADITis
+            // registreeritud
+            boolean applicationRegistered = this.getUserService().isApplicationRegistered(applicationName);
+            if (!applicationRegistered) {
+                AditCodedException aditCodedException = new AditCodedException("application.notRegistered");
+                aditCodedException.setParameters(new Object[] {applicationName });
+                throw aditCodedException;
+            }
+
+            // Kontrollime, kas päringu käivitanud infosüsteem tohib
+            // andmeid näha
+            int accessLevel = this.getUserService().getAccessLevel(applicationName);
+            if (accessLevel < 1) {
+                AditCodedException aditCodedException = new AditCodedException(
+                        "application.insufficientPrivileges.read");
+                aditCodedException.setParameters(new Object[] {applicationName });
+                throw aditCodedException;
+            }
+
+            // Kontrollime, kas päringus märgitud isik on teenuse kasutaja
+            AditUser user = Util.getAditUserFromXroadHeader(this.getHeader(), this.getUserService());
+
+            // Kontrollime, et kasutajakonto ligipääs poleks peatatud (kasutaja
+            // lahkunud)
+            if ((user.getActive() == null) || !user.getActive()) {
+                AditCodedException aditCodedException = new AditCodedException("user.inactive");
+                aditCodedException.setParameters(new Object[] {user.getUserCode() });
+                throw aditCodedException;
+            }
+
+            // Check whether or not the application has rights to
+            // read current user's data.
+            int applicationAccessLevelForUser = userService.getAccessLevelForUser(applicationName, user);
+            if (applicationAccessLevelForUser < 1) {
+                AditCodedException aditCodedException = new AditCodedException(
+                        "application.insufficientPrivileges.forUser.read");
+                aditCodedException.setParameters(new Object[] {applicationName, user.getUserCode()});
+                throw aditCodedException;
+            }
+
+            InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream(getDigidocConfigurationFile());
+            String jdigidocCfgTmpFile = Util.createTemporaryFile(input, getConfiguration().getTempDir());
+
+            GetDocumentListResponseAttachment att = this.documentService.getDocumentDAO().getDocumentSearchResult(
+                    request, user.getUserCode(), this.getConfiguration().getTempDir(),
+                    this.getMessageSource().getMessage("files.nonExistentOrDeleted", new Object[] {}, Locale.ENGLISH),
+                    user.getUserCode(), getConfiguration().getDocumentRetentionDeadlineDays(), jdigidocCfgTmpFile, false, true);
 
             if (att != null) {
                 // Remember document ID-s for logging

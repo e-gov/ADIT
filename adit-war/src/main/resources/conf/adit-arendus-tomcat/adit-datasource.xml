@@ -60,7 +60,7 @@
 
 	<!-- DVK data source configuration  -->
 	<bean id="aditDVKDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
-        <property name="jndiName" value="java:comp/env/jdbc/adit_dvk-arendus-postgres" />
+        <property name="jndiName" value="java:comp/env/jdbc/adit_dvk-arendus" />
     </bean>
 	<bean id="dvkSessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
 		<property name="mappingLocations">
@@ -108,5 +108,4 @@
 		<property name="userTransaction" ref="atomikosUserTransaction" />
 		<property name="allowCustomIsolationLevels" value="true" />
 	</bean>
-	
 </beans>

@@ -2,7 +2,7 @@ package ee.adit.schedule;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.scheduling.quartz.QuartzJobBean;
@@ -29,7 +29,7 @@ public class SendNotificationsJob extends QuartzJobBean {
 	 * Must have a corresponding record in database table "MAINTENANCE_JOB".
 	 */
 	private static long jobId = Constants.JOB_ID_NOTIFICATION_SEND;
-    private static Logger logger = Logger.getLogger(SendNotificationsJob.class);
+    private static Logger logger = LogManager.getLogger(SendNotificationsJob.class);
 
     private UserService userService;
     private Configuration configuration;

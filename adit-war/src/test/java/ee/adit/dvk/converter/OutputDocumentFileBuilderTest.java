@@ -6,8 +6,8 @@ import java.util.UUID;
 
 import org.junit.Test;
 
-import dvk.api.container.v2_1.ContainerVer2_1;
-import dvk.api.container.v2_1.File;
+import ee.adit.dvk.api.container.v2_1.ContainerVer2_1;
+import ee.adit.dvk.api.container.v2_1.File;
 import ee.adit.dvk.converter.containerdocument.OutputDocumentFileBuilder;
 import ee.adit.pojo.OutputDocumentFile;
 import ee.adit.util.Configuration;

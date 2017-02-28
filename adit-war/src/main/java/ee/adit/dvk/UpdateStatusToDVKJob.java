@@ -1,6 +1,6 @@
 package ee.adit.dvk;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.scheduling.quartz.QuartzJobBean;
@@ -21,7 +21,7 @@ public class UpdateStatusToDVKJob extends QuartzJobBean {
 	 * Must have a corresponding record in database table "MAINTENANCE_JOB".
 	 */
 	private static long jobId = Constants.JOB_ID_DVK_UPDATE_STATUS_TO_DVK;
-    private static Logger logger = Logger.getLogger(UpdateStatusToDVKJob.class);
+    private static Logger logger = LogManager.getLogger(UpdateStatusToDVKJob.class);
 
     private DocumentService documentService;
     private MaintenanceJobDAO maintenanceJobDAO;

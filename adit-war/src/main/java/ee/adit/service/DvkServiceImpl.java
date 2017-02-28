@@ -2,7 +2,7 @@ package ee.adit.service;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 
 import ee.adit.dao.DocumentDAO;
 import ee.adit.dao.pojo.Document;
@@ -13,7 +13,7 @@ import ee.adit.util.Configuration;
  * @since 21.04.14
  */
 public class DvkServiceImpl implements DvkService {
-    private static Logger logger = Logger.getLogger(DvkServiceImpl.class);
+    private static Logger logger = LogManager.getLogger(DvkServiceImpl.class);
     private DocumentDAO documentDAO;
     private Configuration configuration;
 

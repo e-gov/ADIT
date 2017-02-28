@@ -59,13 +59,31 @@ public class GetDocumentListRequest {
     private String folder;
     @XmlElement(name = "dvk_folder", required = true)
     private String dvkFolder;
+    @XmlElement(name = "dec_folder", required = true)
+    private String decFolder;
     @XmlElement(name = "document_types", required = true)
     private ArrayOfDocumentType documentTypes;
     @XmlElement(name = "file_types")
     private ArrayOfFileType fileTypes;
     @XmlElement(name = "document_dvk_statuses", required = true)
     private ArrayOfDocumentDvkStatus documentDvkStatuses;
-    @XmlElement(name = "document_workflow_statuses", required = true)
+    @XmlElement(name = "document_dhx_statuses", required = true)
+    private ArrayOfDocumentDvkStatus documentDhxStatuses;
+    /**
+	 * @return the documentDhxStatuses
+	 */
+	public ArrayOfDocumentDvkStatus getDocumentDhxStatuses() {
+		return documentDhxStatuses;
+	}
+
+	/**
+	 * @param documentDhxStatuses the documentDhxStatuses to set
+	 */
+	public void setDocumentDhxStatuses(ArrayOfDocumentDvkStatus documentDhxStatuses) {
+		this.documentDhxStatuses = documentDhxStatuses;
+	}
+
+	@XmlElement(name = "document_workflow_statuses", required = true)
     private ArrayOfDocumentWorkflowStatus documentWorkflowStatuses;
     @XmlElement(name = "has_been_viewed")
     private Boolean hasBeenViewed;
@@ -436,6 +454,20 @@ public class GetDocumentListRequest {
 
 	public void setSigned(Boolean signed) {
 		this.signed = signed;
+	}
+
+	/**
+	 * @return the decFolder
+	 */
+	public String getDecFolder() {
+		return decFolder;
+	}
+
+	/**
+	 * @param decFolder the decFolder to set
+	 */
+	public void setDecFolder(String decFolder) {
+		this.decFolder = decFolder;
 	}
 	
 	

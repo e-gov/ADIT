@@ -44,6 +44,8 @@ public class Document implements java.io.Serializable {
     private Set<Signature> signatures = new HashSet<Signature>(0);
     private Set<DocumentHistory> documentHistories = new HashSet<DocumentHistory>(0);
     private Set<DocumentSharing> documentSharings = new HashSet<DocumentSharing>(0);
+    
+    private String dhxId;
 
     public Document() {
     }
@@ -346,5 +348,13 @@ public class Document implements java.io.Serializable {
 
 	public void setSenderReceiver(String senderReceiver) {
 		this.senderReceiver = senderReceiver;
+	}
+
+	public String getDhxId() {
+		return dhxId;
+	}
+
+	public void setDhxId(String dhxId) {
+		this.dhxId = dhxId;
 	}
 }

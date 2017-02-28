@@ -7,10 +7,10 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import dvk.api.container.v2_1.ContainerVer2_1;
-import dvk.api.container.v2_1.DecRecipient;
-import dvk.api.container.v2_1.DecSender;
-import dvk.api.container.v2_1.Transport;
+import ee.adit.dvk.api.container.v2_1.ContainerVer2_1;
+import ee.adit.dvk.api.container.v2_1.DecRecipient;
+import ee.adit.dvk.api.container.v2_1.DecSender;
+import ee.adit.dvk.api.container.v2_1.Transport;
 import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.service.DocumentService;

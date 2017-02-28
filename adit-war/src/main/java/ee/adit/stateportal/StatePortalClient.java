@@ -4,7 +4,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import ee.adit.pojo.EmailAddress;
@@ -26,7 +26,7 @@ import ee.webmedia.xtee.client.service.StandardXTeeConsumer;
  */
 public final class StatePortalClient {
 
-    private static Logger logger = Logger.getLogger(StatePortalClient.class);
+    private static Logger logger = LogManager.getLogger(StatePortalClient.class);
 
     /**
      * Result code OK.

@@ -238,6 +238,9 @@
 		<field name="usesDVK" type="boolean">
 			<bind-xml name="uses_dvk" />
 		</field>
+		<field name="usesDHX" type="boolean">
+			<bind-xml name="uses_dhx" />
+		</field>
 		<field name="messages" type="ee.adit.pojo.ArrayOfMessage">
 			<bind-xml name="messages" />
 		</field>
@@ -512,6 +515,9 @@
 		<field name="dvkId" type="java.lang.Long">
 			<bind-xml name="dvk_id"/>
 		</field>
+		<field name="dhxReceiptId" type="java.lang.String">
+			<bind-xml name="dhx_receipt_id"/>
+		</field>
 		<field name="workflowStatusId" type="java.lang.Long">
 			<bind-xml name="workflow_status_id"/>
 		</field>
@@ -586,6 +592,9 @@
 		<field name="dvkFolder" type="java.lang.String">
 			<bind-xml name="dvk_folder" location="keha" />
 		</field>
+		<field name="decFolder" type="java.lang.String">
+			<bind-xml name="dec_folder" location="keha" />
+		</field>
 		<field name="documentTypes" type="ee.adit.pojo.ArrayOfDocumentType">
 			<bind-xml name="document_types" location="keha" />
 		</field>
@@ -594,6 +603,9 @@
 		</field>
 		<field name="documentDvkStatuses" type="ee.adit.pojo.ArrayOfDocumentDvkStatus">
 			<bind-xml name="document_dvk_statuses" location="keha" />
+		</field>
+		<field name="documentDhxStatuses" type="ee.adit.pojo.ArrayOfDocumentDvkStatus">
+			<bind-xml name="document_dhx_statuses" location="keha" />
 		</field>
 		<field name="documentWorkflowStatuses" type="ee.adit.pojo.ArrayOfDocumentWorkflowStatus">
 			<bind-xml name="document_workflow_statuses" location="keha" />
@@ -684,6 +696,13 @@
 			<bind-xml name="dhl_id" />
 		</field>
 	</class>
+	
+	<class name="ee.adit.pojo.GetSendStatusRequestAttachmentV2">
+		<map-to xml="dhx_receipt_ids" />
+		<field name="dhxReceiptIds" type="java.lang.String" collection="arraylist">
+			<bind-xml name="dhx_receipt_id" />
+		</field>
+	</class>
 
 	<class name="ee.adit.pojo.GetSendStatusResponse">
 		<map-to xml="keha" />
@@ -713,6 +732,9 @@
 	<class name="ee.adit.pojo.DocumentSendStatus">
 		<field name="dhlId" type="java.lang.Long">
 			<bind-xml name="dhl_id"/>
+		</field>
+		<field name="dhxReceiptId" type="java.lang.String">
+			<bind-xml name="dhx_receipt_id"/>
 		</field>
 		<field name="recipients" type="ee.adit.pojo.DocumentSharingRecipientStatus" collection="arraylist">
 			<bind-xml name="saaja" />
@@ -751,6 +773,9 @@
 		<field name="dvkId" type="long">
 			<bind-xml name="dvk_id" location="keha" />
 		</field>
+		<field name="dhxReceiptId" type="java.lang.String">
+			<bind-xml name="dhx_receipt_id" location="keha" />
+		</field>
 	</class>
 
 	<!-- GetDocument response -->
@@ -781,6 +806,13 @@
 	
 	<class name="ee.adit.pojo.GetDocumentResponseAttachmentV2">
 		<map-to xml="getDocumentResponseAttachmentV2" />
+		<field name="document" type="ee.adit.pojo.OutputDocument">
+			<bind-xml name="document" />
+		</field>
+	</class>
+	
+	<class name="ee.adit.pojo.GetDocumentResponseAttachmentV3">
+		<map-to xml="getDocumentResponseAttachmentV3" />
 		<field name="document" type="ee.adit.pojo.OutputDocument">
 			<bind-xml name="document" />
 		</field>
@@ -1252,6 +1284,9 @@
 		</field>		
 		<field name="dvkFolder" type="java.lang.String">
 			<bind-xml name="dvk_folder" location="keha"/>
+		</field>
+		<field name="decFolder" type="java.lang.String">
+			<bind-xml name="dec_folder" location="keha"/>
 		</field>
 	</class>
 

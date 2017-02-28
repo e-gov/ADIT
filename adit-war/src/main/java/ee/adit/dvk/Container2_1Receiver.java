@@ -4,12 +4,12 @@ import java.util.Calendar;
 import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 
-import dvk.api.container.v2_1.ContainerVer2_1;
-import dvk.api.container.v2_1.DecRecipient;
-import dvk.api.container.v2_1.Recipient;
-import dvk.api.ml.PojoMessage;
+import ee.adit.dvk.api.container.v2_1.ContainerVer2_1;
+import ee.adit.dvk.api.container.v2_1.DecRecipient;
+import ee.adit.dvk.api.container.v2_1.Recipient;
+import ee.adit.dvk.api.ml.PojoMessage;
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
 import ee.adit.dvk.converter.ContainerVer2_1ToDocumentConverterImpl;
@@ -24,7 +24,7 @@ import ee.adit.service.DocumentService;
  * @since 12.06.14
  */
 public class Container2_1Receiver implements DvkReceiver {
-    private static Logger logger = Logger.getLogger(Container2_1Receiver.class);
+    private static Logger logger = LogManager.getLogger(Container2_1Receiver.class);
 
     private DocumentService documentService;
     private String jdigidocCfgTmpFile;
@@ -146,7 +146,7 @@ public class Container2_1Receiver implements DvkReceiver {
 
         for (Pair<AditUser, Recipient> aditUserRecipient : recipientsBuilder.build()) {
             documentService.sendDocumentAndNotifyRecipient(document, sender, aditUserRecipient.getLeft(), null,
-                    message.getDhlId(), aditUserRecipient.getRight().getMessageForRecipient());
+                    message.getDhlId(), aditUserRecipient.getRight().getMessageForRecipient(), message.getDhxReceiptId());
         }
     }
 

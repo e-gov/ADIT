@@ -2,7 +2,7 @@ package ee.adit.dvk;
 
 import java.util.regex.Pattern;
 
-import dvk.api.ml.PojoMessage;
+import ee.adit.dvk.api.ml.PojoMessage;
 import ee.adit.service.DocumentService;
 
 /**
@@ -35,7 +35,7 @@ public class DvkReceiverFactory {
 
         DvkReceiver dvkReceiver;
 
-        Pattern decContainerPattern = Pattern.compile(Pattern.quote("<DecContainer"), Pattern.CASE_INSENSITIVE);
+        Pattern decContainerPattern = Pattern.compile(/*Pattern.quote(*/"<([a-zA-Z0-9]+:)?DecContainer"/*)*/, Pattern.CASE_INSENSITIVE);
         Pattern dhlPattern = Pattern.compile(Pattern.quote("<dhl:dokument"), Pattern.CASE_INSENSITIVE);
 
         if (decContainerPattern.matcher(xml).find()) {

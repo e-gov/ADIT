@@ -5,7 +5,7 @@
 		SaatjaDefineeritud
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	-->
-	<class name="dvk.api.container.SaatjaDefineeritud">
+	<class name="ee.adit.dvk.api.container.SaatjaDefineeritud">
 		<map-to xml="saatja_defineeritud" xmlns="http://www.riik.ee/schemas/dhl-meta-manual" />
 
 		<field name="saatjaDefineeritud" type="string">

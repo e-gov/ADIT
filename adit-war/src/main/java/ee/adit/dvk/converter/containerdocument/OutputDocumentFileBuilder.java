@@ -6,10 +6,10 @@ import java.io.StringBufferInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 
-import dvk.api.container.v2_1.ContainerVer2_1;
-import dvk.api.container.v2_1.File;
+import ee.adit.dvk.api.container.v2_1.ContainerVer2_1;
+import ee.adit.dvk.api.container.v2_1.File;
 import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.OutputDocumentFile;
 import ee.adit.util.Configuration;
@@ -20,7 +20,7 @@ import ee.adit.util.Util;
  * @since 10.06.14
  */
 public class OutputDocumentFileBuilder {
-    private static Logger logger = Logger.getLogger(OutputDocumentFileBuilder.class);
+    private static Logger logger = LogManager.getLogger(OutputDocumentFileBuilder.class);
     private Configuration configuration;
     private ContainerVer2_1 container;
 

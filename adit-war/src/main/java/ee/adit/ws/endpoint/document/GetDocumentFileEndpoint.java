@@ -11,7 +11,7 @@ import java.util.Locale;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.springframework.oxm.XmlMappingException;
 import org.springframework.stereotype.Component;
 
@@ -51,7 +51,7 @@ import ee.webmedia.xtee.annotation.XTeeService;
 @Component
 public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
 
-    private static Logger logger = Logger.getLogger(GetDocumentFileEndpoint.class);
+    private static Logger logger = LogManager.getLogger(GetDocumentFileEndpoint.class);
 
     private UserService userService;
 
@@ -166,7 +166,7 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
                         this.getConfiguration().getTempDir(),
                         this.getMessageSource().getMessage("files.nonExistentOrDeleted", new Object[] {},
                         Locale.ENGLISH), user.getUserCode(), getConfiguration().getDocumentRetentionDeadlineDays(),
-                        null);
+                        null, true, false);
 
                 List<OutputDocumentFile> docFiles = outputDoc.getFiles().getFiles();
 

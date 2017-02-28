@@ -12,7 +12,7 @@ import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.springframework.ws.client.WebServiceClientException;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 import org.springframework.ws.context.MessageContext;
@@ -34,7 +34,7 @@ public class SchedulerSoapArrayInterceptor implements ClientInterceptor {
     /**
      * Log4J logger.
      */
-    private static Logger logger = Logger.getLogger(SchedulerSoapArrayInterceptor.class);
+    private static Logger logger = LogManager.getLogger(SchedulerSoapArrayInterceptor.class);
     
     /**
      * Notification calendar namespace.

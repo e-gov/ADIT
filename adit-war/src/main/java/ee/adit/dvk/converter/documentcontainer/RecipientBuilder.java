@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import dvk.api.container.v2_1.ContactInfo;
-import dvk.api.container.v2_1.Recipient;
+import ee.adit.dvk.api.container.v2_1.ContactInfo;
+import ee.adit.dvk.api.container.v2_1.Recipient;
 import ee.adit.dao.AditUserDAO;
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;

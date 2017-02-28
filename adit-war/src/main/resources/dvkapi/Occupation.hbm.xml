@@ -3,7 +3,7 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated 7.02.2010 22:22:31 by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
-    <class name="dvk.api.ml.PojoOccupation" table="DHL_OCCUPATION">
+    <class name="ee.adit.dvk.api.ml.PojoOccupation" table="DHL_OCCUPATION">
         <id name="occupationCode" type="big_decimal">
             <column name="OCCUPATION_CODE" precision="38" scale="0" />
             <generator class="assigned" />

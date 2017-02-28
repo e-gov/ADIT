@@ -3,12 +3,12 @@ package ee.adit.dvk.converter;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 
-import dvk.api.container.v2_1.ContainerVer2_1;
-import dvk.api.container.v2_1.DecSender;
-import dvk.api.container.v2_1.File;
-import dvk.api.ml.PojoMessage;
+import ee.adit.dvk.api.container.v2_1.ContainerVer2_1;
+import ee.adit.dvk.api.container.v2_1.DecSender;
+import ee.adit.dvk.api.container.v2_1.File;
+import ee.adit.dvk.api.ml.PojoMessage;
 import ee.adit.dao.AditUserDAO;
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
@@ -25,7 +25,7 @@ import ee.adit.util.Util;
  */
 public class ContainerVer2_1ToDocumentConverterImpl implements Converter<ContainerVer2_1, Document> {
 
-    private static Logger logger = Logger.getLogger(ContainerVer2_1ToDocumentConverterImpl.class);
+    private static Logger logger = LogManager.getLogger(ContainerVer2_1ToDocumentConverterImpl.class);
     private PojoMessage pojoMessage;
     private AditUserDAO aditUserDAO;
     private String jdigidocCfgTmpFile;
@@ -50,6 +50,7 @@ public class ContainerVer2_1ToDocumentConverterImpl implements Converter<Contain
         document.setLastModifiedDate(new Date());
         document.setDocumentDvkStatusId(DocumentService.DVK_STATUS_SENT);
         document.setDvkId(pojoMessage.getDhlId());
+        document.setDhxId(String.valueOf(pojoMessage.getDhlMessageId()));
         document.setGuid(pojoMessage.getDhlGuid());
         document.setLocked(true);
         document.setLockingDate(new Date());

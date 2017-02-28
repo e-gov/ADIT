@@ -14,7 +14,7 @@ import javax.xml.transform.Source;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.oxm.Marshaller;
@@ -24,7 +24,7 @@ import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 import org.xml.sax.InputSource;
 
-import dvk.api.ml.PojoMessage;
+import ee.adit.dvk.api.ml.PojoMessage;
 import ee.adit.dao.DocumentDAO;
 import ee.adit.dao.DocumentSharingDAO;
 import ee.adit.dao.ErrorLogDAO;
@@ -128,7 +128,7 @@ public class MonitorService {
      */
     private static final String ADIT_APP = "ADIT_APP";
 
-    private static Logger logger = Logger.getLogger(MonitorService.class);
+    private static Logger logger = LogManager.getLogger(MonitorService.class);
 
     private DocumentDAO documentDAO;
 

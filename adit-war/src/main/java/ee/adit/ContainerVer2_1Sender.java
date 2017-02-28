@@ -5,9 +5,11 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.hibernate.FlushMode;
 import org.hibernate.LockOptions;
 import org.hibernate.Session;
@@ -15,23 +17,31 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.springframework.dao.DataRetrievalFailureException;
 
-import dvk.api.container.v2_1.ContainerVer2_1;
-import dvk.api.ml.PojoMessage;
+import ee.adit.dvk.api.container.v2_1.ContainerVer2_1;
+import ee.adit.dvk.api.container.v2_1.DecMetadata;
+import ee.adit.dvk.api.ml.PojoMessage;
+import ee.adit.dvk.api.ml.PojoMessageRecipient;
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.DocumentSharing;
+import ee.adit.dhx.AditDhxConfig;
+import ee.adit.dhx.DhxService;
 import ee.adit.dvk.DvkSender;
 import ee.adit.dvk.converter.DocumentToContainerVer2_1ConverterImpl;
 import ee.adit.service.DocumentService;
 import ee.adit.util.Util;
+import ee.ria.dhx.exception.DhxException;
+import ee.ria.dhx.ws.context.AppContext;
+import ee.ria.dhx.ws.service.DhxMarshallerService;
 
 /**
  * @author Hendrik Pärna
  * @since 13.06.14
  */
 public class ContainerVer2_1Sender implements DvkSender {
-    private static Logger logger = Logger.getLogger(ContainerVer2_1Sender.class);
+    private static Logger logger = LogManager.getLogger(ContainerVer2_1Sender.class);
     private DocumentService documentService;
+    private DhxService dhxService;
 
 
     /**
@@ -50,12 +60,19 @@ public class ContainerVer2_1Sender implements DvkSender {
         converter.setConfiguration(documentService.getConfiguration());
         converter.setDocumentTypeDAO(documentService.getDocumentTypeDAO());
         ContainerVer2_1 container = converter.convert(document);
-
-        Long messageId = savePojoMessage(document);
-        saveContainerToTempFile(container);
+        //String containerFile =  saveContainerToTempFile(container);
+        Long messageId = savePojoMessageAndRecipients(document, container);
         updatePojoMessageWithData(messageId, container);
 
         return messageId;
+    }
+    
+    private void addDecMetaData (ContainerVer2_1 container, PojoMessage pojoMessage) {
+    	DecMetadata metaData = new DecMetadata();
+    	metaData.setDecFolder(pojoMessage.getDhlFolderName());
+    	metaData.setDecReceiptDate(new Date());
+    	metaData.setDecId(String.valueOf(pojoMessage.getDhlMessageId()));
+    	container.setDecMetadata(metaData);
     }
 
     private void updatePojoMessageWithData(final Long dvkMessageID, final ContainerVer2_1 containerVer2_1) {
@@ -65,8 +82,9 @@ public class ContainerVer2_1Sender implements DvkSender {
         Transaction dvkTransaction = dvkSession.beginTransaction();
 
         try {
+            getDhxService().formatCapsuleRecipientAndSenderAditContainerV21(containerVer2_1);
             PojoMessage dvkMessageToUpdate = (PojoMessage) dvkSession.load(PojoMessage.class, dvkMessageID, LockOptions.UPGRADE);
-
+            addDecMetaData(containerVer2_1, dvkMessageToUpdate);
             String temporaryFile = saveContainerToTempFile(containerVer2_1);
 
             // Write the temporary file to the database
@@ -80,7 +98,6 @@ public class ContainerVer2_1Sender implements DvkSender {
             is.close();
             dataWriter.close();
             dvkMessageToUpdate.setData(dataWriter.toString());
-
             // Commit to DVK database
             dvkTransaction.commit();
         } catch (Exception e) {
@@ -145,7 +162,7 @@ public class ContainerVer2_1Sender implements DvkSender {
         dvkMessage.setSenderName(document.getCreatorUserName());
 
         AditUser firstRecipient = getFirstRecipient(document);
-
+        
         // Add first recipient data
         if (firstRecipient != null) {
             if (firstRecipient.isPerson()) {
@@ -162,7 +179,8 @@ public class ContainerVer2_1Sender implements DvkSender {
         return dvkMessage;
     }
 
-    private Long savePojoMessage(final Document document) {
+
+    private Long savePojoMessageAndRecipients(final Document document, ContainerVer2_1 container) {
         SessionFactory sessionFactory = documentService.getDvkDAO().getSessionFactory();
         Session dvkSession = sessionFactory.openSession();
         dvkSession.setFlushMode(FlushMode.COMMIT);
@@ -172,8 +190,14 @@ public class ContainerVer2_1Sender implements DvkSender {
 
         Long dvkMessageID = null;
         try {
-            dvkMessageID = (Long) dvkSession.save(dvkMessage);
-
+            dvkMessageID = (Long) dvkSession.save(dvkMessage);			
+        	List<PojoMessageRecipient> recipients =  getDhxService().getPojoMessageRecipientsFromOutgoingAditContainerV21(container, dvkMessageID);
+        	for(PojoMessageRecipient recipient : recipients) {
+        		recipient.setSendingStatusId(DocumentService.DVK_STATUS_WAITING);
+        		recipient.setSendingDate(new Date());
+        		recipient.setDhxConsignmentId("");
+				dvkSession.save(recipient);
+			}
             if (dvkMessageID == null || dvkMessageID == 0) {
                 logger.error("Error while saving outgoing message to DVK database - no ID returned by save method.");
                 throw new DataRetrievalFailureException(
@@ -215,4 +239,16 @@ public class ContainerVer2_1Sender implements DvkSender {
 
         return folderName;
     }
+
+	public DhxService getDhxService() {
+		if (dhxService == null) {
+			DhxService serv = AppContext.getApplicationContext().getBean(DhxService.class);
+			dhxService = serv;
+		}
+		return dhxService;
+	}
+
+	public void setDhxService(DhxService dhxService) {
+		this.dhxService = dhxService;
+	}
 }

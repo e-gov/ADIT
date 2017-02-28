@@ -1,3 +1,4 @@
+@1_0_9\update_1_0_9.sql
 @1_0_8\update_1_0_8.sql
 @1_0_17\update_1_0_17.sql
 @1_0_23\update_1_0_23.sql

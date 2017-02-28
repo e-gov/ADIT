@@ -3,7 +3,7 @@ package ee.adit.dvk.converter.documentcontainer;
 import java.util.Date;
 import java.util.Set;
 
-import dvk.api.container.v2_1.RecordMetadata;
+import ee.adit.dvk.api.container.v2_1.RecordMetadata;
 import ee.adit.dao.DocumentTypeDAO;
 import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.DocumentType;

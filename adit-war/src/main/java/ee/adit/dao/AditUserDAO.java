@@ -2,7 +2,7 @@ package ee.adit.dao;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.DetachedCriteria;
@@ -21,7 +21,7 @@ import ee.adit.exception.AditInternalException;
  */
 public class AditUserDAO extends HibernateDaoSupport {
 
-    private static Logger logger = Logger.getLogger(AditUserDAO.class);
+    private static Logger logger = LogManager.getLogger(AditUserDAO.class);
 
     /**
      * Retrieves user by ID.

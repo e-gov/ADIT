@@ -8,7 +8,7 @@ import java.util.Set;
 import org.junit.Assert;
 import org.junit.Test;
 
-import dvk.api.container.v2_1.SignatureMetadata;
+import ee.adit.dvk.api.container.v2_1.SignatureMetadata;
 import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.Signature;
 

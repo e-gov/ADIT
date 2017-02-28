@@ -50,7 +50,7 @@ import org.apache.commons.codec.binary.Base64OutputStream;
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
 import org.apache.fop.apps.MimeConstants;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.x500.RDN;
 import org.bouncycastle.asn1.x500.X500Name;
@@ -92,7 +92,7 @@ public final class Util {
     /**
      * Log4J logger.
      */
-    private static Logger logger = Logger.getLogger(Util.class);
+    private static Logger logger = LogManager.getLogger(Util.class);
 
     /**
      * Default file extension for temporary files.

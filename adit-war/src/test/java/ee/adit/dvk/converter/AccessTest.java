@@ -2,7 +2,7 @@ package ee.adit.dvk.converter;
 
 import org.junit.Test;
 
-import dvk.api.container.v2_1.Access;
+import ee.adit.dvk.api.container.v2_1.Access;
 import ee.adit.dvk.converter.documentcontainer.AccessConditionsCode;
 import ee.adit.test.service.StubDocumentTypeDAO;
 import junit.framework.Assert;

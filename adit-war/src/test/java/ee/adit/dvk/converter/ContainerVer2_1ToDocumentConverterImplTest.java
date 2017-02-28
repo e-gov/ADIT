@@ -11,11 +11,11 @@ import java.util.UUID;
 import org.junit.Assert;
 import org.junit.Test;
 
-import dvk.api.container.v2_1.ContainerVer2_1;
-import dvk.api.container.v2_1.DecSender;
-import dvk.api.container.v2_1.File;
-import dvk.api.container.v2_1.Transport;
-import dvk.api.ml.PojoMessage;
+import ee.adit.dvk.api.container.v2_1.ContainerVer2_1;
+import ee.adit.dvk.api.container.v2_1.DecSender;
+import ee.adit.dvk.api.container.v2_1.File;
+import ee.adit.dvk.api.container.v2_1.Transport;
+import ee.adit.dvk.api.ml.PojoMessage;
 import ee.adit.dao.AditUserDAO;
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;

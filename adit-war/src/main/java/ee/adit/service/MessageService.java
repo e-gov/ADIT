@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.springframework.context.MessageSource;
 
 import ee.adit.exception.AditCodedException;
@@ -21,7 +21,7 @@ import ee.adit.util.Configuration;
  */
 public class MessageService {
 
-    private static Logger logger = Logger.getLogger(MessageService.class);
+    private static Logger logger = LogManager.getLogger(MessageService.class);
 
     /**
      * Error code for generic errors.

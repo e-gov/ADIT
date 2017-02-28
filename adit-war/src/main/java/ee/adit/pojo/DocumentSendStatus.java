@@ -4,6 +4,8 @@ import java.util.List;
 
 public class DocumentSendStatus {
 	private Long dhlId;
+	private String dhxReceiptId;
+
 	private List<DocumentSharingRecipientStatus> recipients;
 	
 	public Long getDhlId() {
@@ -17,6 +19,19 @@ public class DocumentSendStatus {
 	}
 	public void setRecipients(List<DocumentSharingRecipientStatus> recipients) {
 		this.recipients = recipients;
+	}
+	
+	/**
+	 * @return the dhxReceiptId
+	 */
+	public String getDhxReceiptId() {
+		return dhxReceiptId;
+	}
+	/**
+	 * @param dhxReceiptId the dhxReceiptId to set
+	 */
+	public void setDhxReceiptId(String dhxReceiptId) {
+		this.dhxReceiptId = dhxReceiptId;
 	}
 
 }

@@ -3,7 +3,7 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated 7.02.2010 22:22:31 by Hibernate Tools 3.2.4.GA -->
 <hibernate-mapping>
-    <class name="dvk.api.ml.PojoSettings" table="DHL_SETTINGS">
+    <class name="ee.adit.dvk.api.ml.PojoSettings" table="DHL_SETTINGS">
         <id name="id" type="long">
             <column name="ID" precision="10" scale="0" />
             <generator class="assigned" />

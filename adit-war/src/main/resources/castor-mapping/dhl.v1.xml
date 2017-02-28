@@ -9,26 +9,26 @@
 		Container1
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	-->
-	<class name="dvk.api.container.v1.ContainerVer1">
+	<class name="ee.adit.dvk.api.container.v1.ContainerVer1">
 		<map-to xml="dokument" ns-uri="http://www.riik.ee/schemas/dhl" />
 
-		<field name="metainfo" type="dvk.api.container.v1.Metainfo">
+		<field name="metainfo" type="ee.adit.dvk.api.container.v1.Metainfo">
 			<bind-xml name="metainfo" />
 		</field>
 
-		<field name="transport" type="dvk.api.container.v1.Transport">
+		<field name="transport" type="ee.adit.dvk.api.container.v1.Transport">
 			<bind-xml name="transport" />
 		</field>
 
-		<field name="ajalugu" type="dvk.api.container.v1.Ajalugu">
+		<field name="ajalugu" type="ee.adit.dvk.api.container.v1.Ajalugu">
 			<bind-xml name="ajalugu" />
 		</field>
 
-		<field name="metaxml" type="dvk.api.container.Metaxml">
+		<field name="metaxml" type="ee.adit.dvk.api.container.Metaxml">
 			<bind-xml name="metaxml" />
 		</field>
 
-		<field name="signedDoc" type="dvk.api.container.v1.SignedDoc">
+		<field name="signedDoc" type="ee.adit.dvk.api.container.v1.SignedDoc">
 			<bind-xml name="SignedDoc" xmlns="http://www.sk.ee/DigiDoc/v1.3.0#" ns-prefix="" />
 		</field>
 	</class>
@@ -37,7 +37,7 @@
 		Metainfo
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	-->
-	<class name="dvk.api.container.v1.Metainfo">
+	<class name="ee.adit.dvk.api.container.v1.Metainfo">
 		<map-to xml="metainfo" />
 
 		<field name="dhlId" type="int">
@@ -92,7 +92,7 @@
 			<bind-xml name="dhl_saaja_epost" node="element" xmlns="http://www.riik.ee/schemas/dhl-meta-automatic" />
 		</field>
 
-		<field name="dhlEmailHeader" type="dvk.api.container.DhlEmailHeader">
+		<field name="dhlEmailHeader" type="ee.adit.dvk.api.container.DhlEmailHeader">
 			<bind-xml name="dhl_email_header" node="element" xmlns="http://www.riik.ee/schemas/dhl-meta-automatic" />
 		</field>
 
@@ -206,7 +206,7 @@
 			<bind-xml name="sisu_id" node="element" xmlns="http://www.riik.ee/schemas/dhl-meta-manual" />
 		</field>
 
-		<field name="saatjaDefineeritud" type="dvk.api.container.SaatjaDefineeritud" collection="arraylist">
+		<field name="saatjaDefineeritud" type="ee.adit.dvk.api.container.SaatjaDefineeritud" collection="arraylist">
 			<bind-xml name="saatja_defineeritud" node="element" xmlns="http://www.riik.ee/schemas/dhl-meta-manual" />
 		</field>
 	</class>
@@ -215,7 +215,7 @@
 		DhlEmailHeader
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	-->
-	<class name="dvk.api.container.DhlEmailHeader">
+	<class name="ee.adit.dvk.api.container.DhlEmailHeader">
 		<map-to xml="dhl_email_header" />
 
 		<field name="text" type="string">
@@ -231,7 +231,7 @@
 		Document
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	-->
-	<class name="dvk.api.container.v1.SignedDoc">
+	<class name="ee.adit.dvk.api.container.v1.SignedDoc">
 		<map-to xml="SignedDoc" xmlns="http://www.sk.ee/DigiDoc/v1.3.0#" />
 
 		<field name="ddocNamespace" type="string"><!-- adds attribute with DigiDoc namespace -->
@@ -246,12 +246,12 @@
 			<bind-xml name="version" node="attribute" />
 		</field>
 
-		<field name="dataFiles" type="dvk.api.container.v1.DataFile" collection="arraylist">
+		<field name="dataFiles" type="ee.adit.dvk.api.container.v1.DataFile" collection="arraylist">
 			<bind-xml name="DataFile" node="element" xmlns="http://www.sk.ee/DigiDoc/v1.3.0#" />
 		</field>
 	</class>
 
-	<class name="dvk.api.container.v1.DataFile">
+	<class name="ee.adit.dvk.api.container.v1.DataFile">
 		<map-to xml="DataFile" xmlns="http://www.sk.ee/DigiDoc/v1.3.0#" />
 
 		<field name="fileBase64Content" type="string" >
@@ -287,7 +287,7 @@
 		AddressType
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	-->
-	<class name="dvk.api.container.v1.AddressType">
+	<class name="ee.adit.dvk.api.container.v1.AddressType">
 		<field name="regNr" type="string">
 			<bind-xml name="regnr" node="element" />
 		</field>
