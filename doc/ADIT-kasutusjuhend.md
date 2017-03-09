@@ -892,7 +892,7 @@ Parameetrid
 
 Päring võimaldab näha kasutajate detailset informatsiooni. Parameetriga „userList“ on määratud SOAP manuse ID, milles sisaldub kasutajakoodide loend, kelle kohta soovitakse informatsiooni. SOAP manus peab olema GZip-itud XML fail, mis on seejärel Base64 kodeeritud ning lisatud manusena. Päringu vastus tagastatakse samuti SOAP manuses ning samamoodi GZip-ituna ja seejärel Base64 kodeeritult.
 
-Päring erineb versioonist 1 selle poolest, et teenuse vastuses on eemaldatud parameeter uses_dvk ja lisatud uus parameeter uses_dhx.
+Päring erineb versioonist 1 selle poolest, et teenuse vastusest on eemaldatud parameeter uses_dvk ja lisatud uus parameeter uses_dhx.
 
 Parameetrid
 
@@ -1046,7 +1046,7 @@ Parameetrid
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<getUserInfoResponseAttachmentV1>
+<getUserInfoResponseAttachmentV2>
     <user_list>
         <user>
             <code>EE38407054916</code>
@@ -1093,7 +1093,7 @@ Parameetrid
             </messages>
         </user>
     </user_list>
-</getUserInfoResponseAttachmentV1>
+</getUserInfoResponseAttachmentV2>
 ```
 
 ## GetUserContacts.v1 
@@ -3188,64 +3188,66 @@ Parameetrid
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<document>
-    <id>46</id>
-    <guid>19d71714-0d93-292a-b254-3a06a4f24002</guid>
-    <title>Avaldus Jõgeva Linnavalitsusele</title>
-    <folder>local</folder>
-    <has_been_viewed>true</has_been_viewed>
-    <document_type>application</document_type>
-    <creator_code>EE38407089745</creator_code>
-    <creator_name>Eesnimi Perenimi</creator_name>
-    <creator_user_code>EE38407089745</creator_user_code>
-    <creator_user_name>Eesnimi Perenimi</creator_user_name>
-    <created>2010-08-09T12:17:26.000+03:00</created>
-    <creator_application>KOV</creator_application>
-    <last_modified>2010-08-09T12:17:26.000+03:00</last_modified>
-    <dvk_id>9573</dvk_id>
-    <signable>true</signable>
-    <remove_date>2012-01-01</remove_date>
-    <signed>true</signed>
-     <signatures>
-          <signature>
-              <signer_code>EE38407089745</signer_code>
-              <signer_name>JUUST, JUTA</signer_name>
-              <signing_date>2014-01-10T15:59:31.000+02:00</signing_date>
-          </signature>
-     </signatures>
-    <document_files>
-        <total_files>2</total_files>
-        <total_bytes>446</total_bytes>
-        <document_files>
-            <file>
-                <id>17</id>
-                <name>avaldus2.txt</name>
-                <content_type>text/plain</content_type>
-                <description>Avaldus tekstifailina</description>
-                <size_bytes>223</size_bytes>
-                <file_type>document_file</file_type>
-                <data>SvVnZXZhIExpbm5hdmFsaXRzdXMJMjAuMDQuMjAxMA0KDQpBdmFsZHVzDQoNClBhbHVuIHZpaXZp
-dGFtYXR1bHQgdGFnYXN0YWRhIG1pbnUgcG9vbHQgbfb2ZHVudWQgdGVpc2lw5GV2YWwgbGlubmF2
-YWxpdHN1c2Uga2FudHNlbGVpc3NlIHVudXN0YXR1ZCBrb2h2ZXIsIHN1dXNhZCBqYSByYW5uYXBh
-bGwuDQoNCg0KRWlubyBNdWlkdWdpDQpBUyBBc3V0dXMNCkp1aGF0dXNlIGVzaW1lZXMNCg==
-</data>
-            </file>
-            <file>
-                <id>16</id>
-                <name>avaldus1.txt</name>
-                <content_type>text/plain</content_type>
-                <description>Avaldus tekstifailina</description>
-                <size_bytes>223</size_bytes>
-                <file_type>document_file</file_type>
-                <data>SvVnZXZhIExpbm5hdmFsaXRzdXMJMjAuMDQuMjAxMA0KDQpBdmFsZHVzDQoNClBhbHVuIHZpaXZp
-dGFtYXR1bHQgdGFnYXN0YWRhIG1pbnUgcG9vbHQgbfb2ZHVudWQgdGVpc2lw5GV2YWwgbGlubmF2
-YWxpdHN1c2Uga2FudHNlbGVpc3NlIHVudXN0YXR1ZCBrb2h2ZXIsIHN1dXNhZCBqYSByYW5uYXBh
-bGwuDQoNCg0KRWlubyBNdWlkdWdpDQpBUyBBc3V0dXMNCkp1aGF0dXNlIGVzaW1lZXMNCg==
-</data>
-            </file>
-        </document_files>
-    </document_files>
-</document>
+<getDocumentResponseAttachmentV3>
+	<document>
+	    <id>46</id>
+	    <guid>19d71714-0d93-292a-b254-3a06a4f24002</guid>
+	    <title>Avaldus Jõgeva Linnavalitsusele</title>
+	    <folder>local</folder>
+	    <has_been_viewed>true</has_been_viewed>
+	    <document_type>application</document_type>
+	    <creator_code>EE38407089745</creator_code>
+	    <creator_name>Eesnimi Perenimi</creator_name>
+	    <creator_user_code>EE38407089745</creator_user_code>
+	    <creator_user_name>Eesnimi Perenimi</creator_user_name>
+	    <created>2010-08-09T12:17:26.000+03:00</created>
+	    <creator_application>KOV</creator_application>
+	    <last_modified>2010-08-09T12:17:26.000+03:00</last_modified>
+	    <dvk_id>9573</dvk_id>
+	    <signable>true</signable>
+	    <remove_date>2012-01-01</remove_date>
+	    <signed>true</signed>
+	     <signatures>
+	          <signature>
+	              <signer_code>EE38407089745</signer_code>
+	              <signer_name>JUUST, JUTA</signer_name>
+	              <signing_date>2014-01-10T15:59:31.000+02:00</signing_date>
+	          </signature>
+	     </signatures>
+	    <document_files>
+	        <total_files>2</total_files>
+	        <total_bytes>446</total_bytes>
+	        <document_files>
+	            <file>
+	                <id>17</id>
+	                <name>avaldus2.txt</name>
+	                <content_type>text/plain</content_type>
+	                <description>Avaldus tekstifailina</description>
+	                <size_bytes>223</size_bytes>
+	                <file_type>document_file</file_type>
+	                <data>SvVnZXZhIExpbm5hdmFsaXRzdXMJMjAuMDQuMjAxMA0KDQpBdmFsZHVzDQoNClBhbHVuIHZpaXZp
+	dGFtYXR1bHQgdGFnYXN0YWRhIG1pbnUgcG9vbHQgbfb2ZHVudWQgdGVpc2lw5GV2YWwgbGlubmF2
+	YWxpdHN1c2Uga2FudHNlbGVpc3NlIHVudXN0YXR1ZCBrb2h2ZXIsIHN1dXNhZCBqYSByYW5uYXBh
+	bGwuDQoNCg0KRWlubyBNdWlkdWdpDQpBUyBBc3V0dXMNCkp1aGF0dXNlIGVzaW1lZXMNCg==
+	</data>
+	            </file>
+	            <file>
+	                <id>16</id>
+	                <name>avaldus1.txt</name>
+	                <content_type>text/plain</content_type>
+	                <description>Avaldus tekstifailina</description>
+	                <size_bytes>223</size_bytes>
+	                <file_type>document_file</file_type>
+	                <data>SvVnZXZhIExpbm5hdmFsaXRzdXMJMjAuMDQuMjAxMA0KDQpBdmFsZHVzDQoNClBhbHVuIHZpaXZp
+	dGFtYXR1bHQgdGFnYXN0YWRhIG1pbnUgcG9vbHQgbfb2ZHVudWQgdGVpc2lw5GV2YWwgbGlubmF2
+	YWxpdHN1c2Uga2FudHNlbGVpc3NlIHVudXN0YXR1ZCBrb2h2ZXIsIHN1dXNhZCBqYSByYW5uYXBh
+	bGwuDQoNCg0KRWlubyBNdWlkdWdpDQpBUyBBc3V0dXMNCkp1aGF0dXNlIGVzaW1lZXMNCg==
+	</data>
+	            </file>
+	        </document_files>
+	    </document_files>
+	</document>
+</getDocumentResponseAttachmentV3>
 ```
 
 ## GetSendStatus.v1   
@@ -4420,7 +4422,7 @@ Allkirjastamine koosneb kahest sammust:
 
 Päring tagastab nimekirja etteatud parameetritele vastavatest dokumentidest, mida päringu käivitanud kasutaja tohib näha. Päringu parameetrid ei ole kohustuslikud.
 
-Päring erineb versioonist 1 selle poolest, et teenuse päringus on eemaldatud parameeter document_dvk_statuses ja lisatud uus parameeter document_dhx_statuses, teenuse vastuses on eemaldatud parameeter dvk_id ja lisatud parmaeeter dhx_receipt_id
+Päring erineb versioonist 1 selle poolest, et teenuse päringust on eemaldatud parameeter document_dvk_statuses ja lisatud uus parameeter document_dhx_statuses.
 
 Parameetrid
 
@@ -4668,50 +4670,52 @@ Parameetrid
 **Näide**
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<document_list>
-    <total>1</total>
-    <document>
-        <id>46</id>
-        <guid>19d71714-0d93-292a-b254-3a06a4f24002</guid>
-        <title>Avaldus Jõgeva Linnavalitsusele</title>
-        <folder>local</folder>
-        <has_been_viewed>true</has_been_viewed>
-        <document_type>application</document_type>
-        <creator_code>EE38407089745</creator_code>
-        <creator_name>Eesnimi Perenimi</creator_name>
-        <creator_user_code>EE38407089745</creator_user_code>
-        <creator_user_name>Eesnimi Perenimi</creator_user_name>
-        <created>2010-08-09T12:17:26.000+03:00</created>
-        <creator_application>KOV</creator_application>
-        <last_modified>2010-08-09T12:17:26.000+03:00</last_modified>
-        <signable>true</signable>
-        <remove_date>2012-01-01</remove_date>
-        <sent_to/>
-        <shared_to/>
-        <document_files>
-            <total_files>2</total_files>
-            <total_bytes>0</total_bytes>
-            <document_files>
-                <file>
-                    <id>17</id>
-                    <name>avaldus2.txt</name>
-                    <content_type>text/plain</content_type>
-                    <description>Avaldus tekstifailina</description>
-                    <size_bytes>223</size_bytes>
-                    <file_type>document_file</file_type>
-                </file>
-                <file>
-                    <id>16</id>
-                    <name>avaldus1.txt</name>
-                    <content_type>text/plain</content_type>
-                    <description>Avaldus tekstifailina</description>
-                    <size_bytes>223</size_bytes>
-                    <file_type>document_file</file_type>
-                </file>
-            </document_files>
-        </document_files>
-    </document>
-</document_list>
+<getDocumentListResponseAttachmentV2>
+	<document_list>
+	    <total>1</total>
+	    <document>
+	        <id>46</id>
+	        <guid>19d71714-0d93-292a-b254-3a06a4f24002</guid>
+	        <title>Avaldus Jõgeva Linnavalitsusele</title>
+	        <folder>local</folder>
+	        <has_been_viewed>true</has_been_viewed>
+	        <document_type>application</document_type>
+	        <creator_code>EE38407089745</creator_code>
+	        <creator_name>Eesnimi Perenimi</creator_name>
+	        <creator_user_code>EE38407089745</creator_user_code>
+	        <creator_user_name>Eesnimi Perenimi</creator_user_name>
+	        <created>2010-08-09T12:17:26.000+03:00</created>
+	        <creator_application>KOV</creator_application>
+	        <last_modified>2010-08-09T12:17:26.000+03:00</last_modified>
+	        <signable>true</signable>
+	        <remove_date>2012-01-01</remove_date>
+	        <sent_to/>
+	        <shared_to/>
+	        <document_files>
+	            <total_files>2</total_files>
+	            <total_bytes>0</total_bytes>
+	            <document_files>
+	                <file>
+	                    <id>17</id>
+	                    <name>avaldus2.txt</name>
+	                    <content_type>text/plain</content_type>
+	                    <description>Avaldus tekstifailina</description>
+	                    <size_bytes>223</size_bytes>
+	                    <file_type>document_file</file_type>
+	                </file>
+	                <file>
+	                    <id>16</id>
+	                    <name>avaldus1.txt</name>
+	                    <content_type>text/plain</content_type>
+	                    <description>Avaldus tekstifailina</description>
+	                    <size_bytes>223</size_bytes>
+	                    <file_type>document_file</file_type>
+	                </file>
+	            </document_files>
+	        </document_files>
+	    </document>
+	</document_list>
+<getDocumentListResponseAttachmentV2>
 ```
 
 <a name="document-sign"></a>
@@ -5250,12 +5254,12 @@ Parameetrid
 </SOAP-ENV:Envelope>
 ```
 
-## SendDocument.v1   
+## SendDocument.v2   
 
 Päring võimaldab saata dokumendi teisele kasutajale (see võib olla ka DHX kasutaja – sellisel juhul saadetakse dokument üle DHX). Saadetava kapsli kausta saab määrata dec_folder parameetriga.
 Samuti võimaldab päring märkida dokumendi meilile saadetuks. Reaalselt ADIT ei saada dokumenti meiliga, kuid loob document_sharing objekti ja kõik mis sellega kaasneb. Dokument lukustatakse. Päringu vastuses tagastatakse päringu töötlemise üleüldine õnnestumine parameetriga „success“ – kui selle elemendi väärtuseks on „true“, siis õnnestus dokumendi saatmine kõikidele adressaatidele, vastasel juhul ebaõnnestus dokumendi saatmine kas vähemalt ühele või kõigile adressaatidele. Iga adressaadi juures, välja arvatud meili adressaat, on eraldi välja toodud, kas saatmine õnnestus või mitte
 
-Päring erineb versioonist 1 selle poolest, et teenuse päringus on eemaldatud parameeter dvk_folder ja lisatud uus parameeter dec_folder.
+Päring erineb versioonist 1 selle poolest, et teenuse päringust on eemaldatud parameeter dvk_folder ja lisatud uus parameeter dec_folder.
 
 Parameetrid
 
