@@ -1,6 +1,7 @@
 package ee.adit.service;
 
 import java.math.BigInteger;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.stereotype.Service;
 
-import ee.adit.dvk.api.ml.PojoOrganization;
 import ee.adit.dao.AccessRestrictionDAO;
 import ee.adit.dao.AditUserDAO;
 import ee.adit.dao.DocumentDAO;
@@ -24,7 +24,7 @@ import ee.adit.dao.NotificationTypeDAO;
 import ee.adit.dao.RemoteApplicationDAO;
 import ee.adit.dao.UserContactDAO;
 import ee.adit.dao.UsertypeDAO;
-import ee.adit.dao.dvk.DvkDAO;
+import ee.adit.dao.DhxUserDAO;
 import ee.adit.dao.pojo.AccessRestriction;
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.NotificationType;
@@ -33,15 +33,15 @@ import ee.adit.dao.pojo.UserContact;
 import ee.adit.dao.pojo.UserNotification;
 import ee.adit.dao.pojo.UserNotificationId;
 import ee.adit.dao.pojo.Usertype;
-import ee.adit.dhx.DhxService;
 import ee.adit.dhx.DhxUtil;
+import ee.adit.dao.pojo.DhxUser;
 import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.ArrayOfNotification;
 import ee.adit.pojo.GetUserInfoRequestAttachmentUserList;
 import ee.adit.pojo.GetUserInfoResponseAttachmentUser;
 import ee.adit.pojo.Notification;
-import ee.adit.util.DVKUserSyncResult;
+import ee.adit.util.DHXUserSyncResult;
 import ee.adit.util.Util;
 import ee.ria.dhx.ws.context.AppContext;
 import lombok.Getter;
@@ -72,7 +72,7 @@ public class UserService {
 
     private NotificationDAO notificationDAO;
 
-    private DvkDAO dvkDAO;
+    private DhxUserDAO dhxDAO;
     
     private UserContactDAO userContactDAO;
 
@@ -782,19 +782,19 @@ public class UserService {
      *
      * @return result
      */
-    public DVKUserSyncResult synchroinzeDVKUsers() {
+    public DHXUserSyncResult synchroinzeDVKUsers() {
 
-        DVKUserSyncResult result = new DVKUserSyncResult();
+        DHXUserSyncResult result = new DHXUserSyncResult();
 
         int deactivated = 0;
         int added = 0;
         int modified = 0;
 
         try {
-            List<PojoOrganization> dvkUsers = this.getDvkDAO().getUsers();
+            List<DhxUser> dvkUsers = this.getDhxDAO().getUsers();
             logger.info("Number of DVK users found: " + dvkUsers.size());
 
-            Iterator<PojoOrganization> dvkUserIterator = dvkUsers.iterator();
+            Iterator<DhxUser> dvkUserIterator = dvkUsers.iterator();
 
             List<AditUser> aditUsers = this.getAditUserDAO().listDVKUsers();
             logger.info("Number of ADIT users found: " + aditUsers.size());
@@ -810,7 +810,7 @@ public class UserService {
 
             while (dvkUserIterator.hasNext()) {
 
-                PojoOrganization dvkUser = dvkUserIterator.next();
+                DhxUser dvkUser = dvkUserIterator.next();
                 boolean found = false;
                 Iterator<AditUser> aditUserIterator = aditUsers.iterator();
              //   String dhxAdaptedUser = DhxUtil.toDvkCapsuleAddressee(dvkUser.getCode(), dvkUser.getSubSystem());
@@ -993,12 +993,12 @@ public class UserService {
         this.notificationDAO = notificationDAO;
     }
 
-    public DvkDAO getDvkDAO() {
-        return dvkDAO;
+    public DhxUserDAO getDhxDAO() {
+        return dhxDAO;
     }
 
-    public void setDvkDAO(DvkDAO dvkDAO) {
-        this.dvkDAO = dvkDAO;
+    public void setDhxDAO(DhxUserDAO dhxDAO) {
+        this.dhxDAO = dhxDAO;
     }
 
     public UserContactDAO getUserContactDAO() {

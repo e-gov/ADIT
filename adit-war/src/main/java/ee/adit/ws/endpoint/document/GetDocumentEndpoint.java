@@ -22,6 +22,7 @@ import ee.adit.pojo.GetDocumentRequest;
 import ee.adit.pojo.GetDocumentResponse;
 import ee.adit.pojo.GetDocumentResponseAttachment;
 import ee.adit.pojo.GetDocumentResponseAttachmentV2;
+import ee.adit.pojo.GetDocumentResponseAttachmentV3;
 import ee.adit.pojo.GetDocumentResponseDocument;
 import ee.adit.pojo.Message;
 import ee.adit.pojo.OutputDocument;
@@ -725,7 +726,7 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
 
                     // 1. Convert java list to XML string and output
                     // to file
-                    GetDocumentResponseAttachmentV2 attachment = new GetDocumentResponseAttachmentV2();
+                    GetDocumentResponseAttachmentV3 attachment = new GetDocumentResponseAttachmentV3();
                     attachment.setDocument(resultDoc);
                     String xmlFile = marshal(attachment);
                     Util.joinSplitXML(xmlFile, "data");

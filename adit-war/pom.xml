@@ -453,9 +453,9 @@
 				<targetPath>../adit/WEB-INF/classes/castor-mapping</targetPath>
 			</resource>
 			<resource>
-				<directory>src/main/resources/dvkapi</directory>
+				<directory>src/main/resources/dhx</directory>
 				<filtering>false</filtering>
-				<targetPath>../adit/WEB-INF/classes/dvkapi</targetPath>
+				<targetPath>../adit/WEB-INF/classes/dhx</targetPath>
 			</resource>
 			<resource>
 				<directory>src/main/resources/hbm</directory>

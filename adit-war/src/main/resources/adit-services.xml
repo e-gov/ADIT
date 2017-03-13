@@ -19,7 +19,7 @@
 		<property name="documentDAO" ref="documentDAO" />
 		<property name="accessRestrictionDAO" ref="accessRestrictionDAO" />
 		<property name="notificationDAO" ref="notificationDAO" />
-		<property name="dvkDAO" ref="dvkDAO" />
+		<property name="dhxDAO" ref="dhxDAO" />
 		<property name="userContactDAO" ref="userContactDAO" />
 	</bean>
 
@@ -33,7 +33,7 @@
 		<property name="documentHistoryDAO" ref="documentHistoryDAO" />
 		<property name="aditUserDAO" ref="aditUserDAO" />
 		<property name="configuration" ref="configuration" />
-		<property name="dvkDAO" ref="dvkDAO" />
+		<property name="dhxDAO" ref="dhxDAO" />
 		
 		<property name="notificationService" ref="notificationService" />
 	</bean>
@@ -47,7 +47,7 @@
 		<property name="marshaller" ref="castorMarshaller" />
 		<property name="unmarshaller" ref="castorMarshaller" />
 		<property name="documentDAO" ref="documentDAO" />
-		<property name="dvkDAO" ref="dvkDAO" />
+		<property name="dhxDAO" ref="dhxDAO" />
 		<property name="configuration" ref="configuration" />
 		<property name="nagiosLogger" ref="nagiosLogger" />
 		<property name="documentService" ref="documentService" />

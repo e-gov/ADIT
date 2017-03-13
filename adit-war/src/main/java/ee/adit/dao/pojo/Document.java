@@ -45,7 +45,8 @@ public class Document implements java.io.Serializable {
     private Set<DocumentHistory> documentHistories = new HashSet<DocumentHistory>(0);
     private Set<DocumentSharing> documentSharings = new HashSet<DocumentSharing>(0);
     
-    private String dhxId;
+    private String dhxReceiptId;
+    private String dhxConsignmentId;
 
     public Document() {
     }
@@ -350,11 +351,32 @@ public class Document implements java.io.Serializable {
 		this.senderReceiver = senderReceiver;
 	}
 
-	public String getDhxId() {
-		return dhxId;
+	/**
+	 * @return the dhxReceiptId
+	 */
+	public String getDhxReceiptId() {
+		return dhxReceiptId;
 	}
 
-	public void setDhxId(String dhxId) {
-		this.dhxId = dhxId;
+	/**
+	 * @param dhxReceiptId the dhxReceiptId to set
+	 */
+	public void setDhxReceiptId(String dhxReceiptId) {
+		this.dhxReceiptId = dhxReceiptId;
 	}
+
+	/**
+	 * @return the dhxConsignmentId
+	 */
+	public String getDhxConsignmentId() {
+		return dhxConsignmentId;
+	}
+
+	/**
+	 * @param dhxConsignmentId the dhxConsignmentId to set
+	 */
+	public void setDhxConsignmentId(String dhxConsignmentId) {
+		this.dhxConsignmentId = dhxConsignmentId;
+	}
+	
 }

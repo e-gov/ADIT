@@ -89,8 +89,12 @@
             <column name="CONTENT" length="4000" />
         </property>
         
-        <property name="dhxId" type="string">
-            <column name="dhx_id" length="100" />
+        <property name="dhxReceiptId" type="string">
+            <column name="dhx_receipt_id" length="100" />
+        </property>
+        
+         <property name="dhxConsignmentId" type="string">
+            <column name="dhx_consignment_id" length="100" />
         </property>
 
         <set name="documents" inverse="true" lazy="true" table="DOCUMENT" fetch="select">

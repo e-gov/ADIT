@@ -62,6 +62,7 @@
 | 2016-02-15 | 1.2.11 | Parandatud dokumentatsiooni puuduliku info (prepareSignature.v2) põhjal | Kertu Hiire |
 | 2016-09-22 | 1.3 | Lisatud info ja näited X-tee sõnumiprotokolli v4.0 kasutamise kohta | Levan Kekelidze |
 | 2016-11-17 | 1.3.1 | Viidud dokumentatsioon üle MarkDown formaati. Pisiparandused koodinäidetes. Täpsustused teenuste muudatustes seoses X-tee sõnumiprotokoll v4.0 kasutuse võtmisega | Kertu Hiire |
+| 2017-03-10 | 1.3.2 | Muudatused seoses DHX protokolli kasutuselevõtuga. Lisatud uued teenused GetUserInfo.v2, GetDocument.v3, GetDocumentList.v2, GetSendStatus.v2, SendDocument.v2 | Aleksei Kokarev |
 
 ## Sissejuhatus
 

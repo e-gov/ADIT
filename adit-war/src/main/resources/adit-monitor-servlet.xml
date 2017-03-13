@@ -11,7 +11,7 @@
 	<import resource="adit-configuration.xml"/>
 	<import resource="adit-services.xml"/>
 	<import resource="adit-dao.xml"/>
-	<import resource="adit-jobs.xml"/>
+	<!-- <import resource="adit-jobs.xml"/> -->
 	<import resource="adit-application.xml"/>
 
 </beans>

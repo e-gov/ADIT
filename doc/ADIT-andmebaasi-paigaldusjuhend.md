@@ -15,6 +15,7 @@
 |---|---|---|---|
 | 12.05.2015 | 1.0 | Andmebaasi dokument | Kristo Kütt |
 | 25.11.2016 | 1.1 | Dokument üle viidud MarkDown formaati | Kertu Hiire |
+| 10.03.2017 | 1.2 | Muudatused seoses DHX protokolli kasutuselevõtuga | Aleksei Kokarev |
 
 ## Sissejuhatus
 
@@ -27,7 +28,6 @@ ADIT andmebaasi paigaldamine koosneb järgmistest sammudest:
 ### Nõuded keskkonnale
 
 1.	Andmebaas Postgres 9.4 (UTF-8)
-2.	Eraldiseisev DVK universaalklient ADIT-ile kasutamiseks. DVK universaalkliendi paigaldamiseks vaata [paigaldusjuhendit DVK kliendi repositooriumis](https://github.com/e-gov/DVK/tree/master/doc/client). Lisanõudena on vajalik lülitada välja DVK universaalkliendi andmebaasipäästik _“tr_dhl_message_id”_.
 
 
 ## ADIT andmebaas
@@ -76,7 +76,7 @@ CONNECTION LIMIT = -1;
 
 - Skeema „adit“
 
-   * Tabeleid: 25
+   * Tabeleid: 26
    * Triggereid: 19
    * Funktsioone: 3
    * Sequence: 13

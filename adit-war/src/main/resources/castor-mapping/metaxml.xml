@@ -5,26 +5,26 @@
 		Metaxml
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	-->
-	<class name="ee.adit.dvk.api.container.Metaxml">
+	<class name="ee.adit.dhx.api.container.Metaxml">
 		<map-to xml="metaxml" ns-uri="http://www.riik.ee/schemas/dhl" />
 
-		<field name="authorInfo" type="ee.adit.dvk.api.container.AuthorInfo">
+		<field name="authorInfo" type="ee.adit.dhx.api.container.AuthorInfo">
 			<bind-xml name="rkel:Author" node="element" xmlns:rkel="http://www.riik.ee/schemas/dhl/rkel_letter" />
 		</field>
 
-		<field name="addressees" type="ee.adit.dvk.api.container.AddresseeInfo" collection="arraylist">
+		<field name="addressees" type="ee.adit.dhx.api.container.AddresseeInfo" collection="arraylist">
 			<bind-xml name="rkel:Addressee" node="element" location="Addressees" xmlns:rkel="http://www.riik.ee/schemas/dhl/rkel_letter" />
 		</field>
 
-		<field name="compilators" type="ee.adit.dvk.api.container.Compilator" collection="arraylist">
+		<field name="compilators" type="ee.adit.dhx.api.container.Compilator" collection="arraylist">
 			<bind-xml name="rkel:Compilator" node="element" location="Compilators" xmlns:rkel="http://www.riik.ee/schemas/dhl/rkel_letter" />
 		</field>
 
-		<field name="letterMetaData" type="ee.adit.dvk.api.container.LetterMetaData">
+		<field name="letterMetaData" type="ee.adit.dhx.api.container.LetterMetaData">
 			<bind-xml name="rkel:LetterMetaData" node="element" xmlns:rkel="http://www.riik.ee/schemas/dhl/rkel_letter" />
 		</field>
 
-		<field name="signatures" type="ee.adit.dvk.api.container.ArrayOfSignature">
+		<field name="signatures" type="ee.adit.dhx.api.container.ArrayOfSignature">
 			<bind-xml name="rkel:Signatures" node="element" xmlns:rkel="http://www.riik.ee/schemas/dhl/rkel_letter" />
 		</field>
 
@@ -37,13 +37,13 @@
 		AuthorInfo
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	-->
-	<class name="ee.adit.dvk.api.container.AuthorInfo">
+	<class name="ee.adit.dhx.api.container.AuthorInfo">
 		<map-to xml="Author" ns-uri="http://www.riik.ee/schemas/dhl/rkel_letter" ns-prefix="rkel" />
 
-		<field name="organisation" type="ee.adit.dvk.api.container.Organisation">
+		<field name="organisation" type="ee.adit.dhx.api.container.Organisation">
 		</field>
 
-		<field name="person" type="ee.adit.dvk.api.container.Person">
+		<field name="person" type="ee.adit.dhx.api.container.Person">
 		</field>
 	</class>
 	<!--
@@ -51,13 +51,13 @@
 		AddresseeInfo
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	-->
-	<class name="ee.adit.dvk.api.container.AddresseeInfo">
+	<class name="ee.adit.dhx.api.container.AddresseeInfo">
 		<map-to xml="Addressee" ns-uri="http://www.riik.ee/schemas/dhl/rkel_letter" ns-prefix="rkel" />
 
-		<field name="organisation" type="ee.adit.dvk.api.container.Organisation">
+		<field name="organisation" type="ee.adit.dhx.api.container.Organisation">
 		</field>
 
-		<field name="person" type="ee.adit.dvk.api.container.v1.Addressee">
+		<field name="person" type="ee.adit.dhx.api.container.v1.Addressee">
 		</field>
 	</class>
 	<!--
@@ -65,13 +65,13 @@
 		CompilatorInfo
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	-->
-	<class name="ee.adit.dvk.api.container.CompilatorInfo">
+	<class name="ee.adit.dhx.api.container.CompilatorInfo">
 		<map-to xml="Compilator" ns-uri="http://www.riik.ee/schemas/dhl/rkel_letter" ns-prefix="rkel" />
 
-		<field name="organisation" type="ee.adit.dvk.api.container.Organisation">
+		<field name="organisation" type="ee.adit.dhx.api.container.Organisation">
 		</field>
 
-		<field name="person" type="ee.adit.dvk.api.container.Compilator">
+		<field name="person" type="ee.adit.dhx.api.container.Compilator">
 		</field>
 	</class>
 	<!--
@@ -79,7 +79,7 @@
 		Organisation
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	-->
-	<class name="ee.adit.dvk.api.container.Organisation">
+	<class name="ee.adit.dhx.api.container.Organisation">
 		<map-to xml="Organisation" ns-uri="http://www.riik.ee/schemas/dhl/rkel_letter" ns-prefix="rkel" />
 
 		<field name="organisationName" type="string">
@@ -95,7 +95,7 @@
 		Person
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	-->
-	<class name="ee.adit.dvk.api.container.Person">
+	<class name="ee.adit.dhx.api.container.Person">
 		<map-to xml="Person" ns-uri="http://www.riik.ee/schemas/dhl/rkel_letter" ns-prefix="rkel" />
 
 		<field name="firstname" type="string">
@@ -123,10 +123,10 @@
 		IntellectualPropertyRights
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	-->
-	<class name="ee.adit.dvk.api.container.IntellectualPropertyRights">
+	<class name="ee.adit.dhx.api.container.IntellectualPropertyRights">
 		<map-to xml="IntellectualPropertyRights" ns-uri="http://www.riik.ee/schemas/dhl/rkel_letter" ns-prefix="rkel" />
 
-		<field name="copyrightEndDate" type="string" handler="ee.adit.dvk.api.container.IntellectualPropertyRightsCopyrightEndDateHander">
+		<field name="copyrightEndDate" type="string" handler="ee.adit.dhx.api.container.IntellectualPropertyRightsCopyrightEndDateHander">
 			<bind-xml name="CopyrightEndDate" node="element" />
 		</field>
 
@@ -139,14 +139,14 @@
 		SignatureInfo
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	-->
-	<class name="ee.adit.dvk.api.container.SignatureInfo">
+	<class name="ee.adit.dhx.api.container.SignatureInfo">
 		<map-to xml="SignatureData" ns-uri="http://www.riik.ee/schemas/dhl/rkel_letter" ns-prefix="rkel" />
 
-		<field name="signatureDate" type="string" handler="ee.adit.dvk.api.container.SignatureDateHandler">
+		<field name="signatureDate" type="string" handler="ee.adit.dhx.api.container.SignatureDateHandler">
 			<bind-xml name="SignatureDate" node="element" />
 		</field>
 
-		<field name="signatureTime" type="string" handler="ee.adit.dvk.api.container.SignatureTimeHandler">
+		<field name="signatureTime" type="string" handler="ee.adit.dhx.api.container.SignatureTimeHandler">
 			<bind-xml name="SignatureTime" node="element" />
 		</field>
 	</class>
@@ -155,14 +155,14 @@
 		Signature
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	-->
-	<class name="ee.adit.dvk.api.container.Signature">
+	<class name="ee.adit.dhx.api.container.Signature">
 		<map-to xml="Signature" ns-uri="http://www.riik.ee/schemas/dhl/rkel_letter" ns-prefix="rkel" />
 
-		<field name="person" type="ee.adit.dvk.api.container.Person">
+		<field name="person" type="ee.adit.dhx.api.container.Person">
 			<bind-xml name="Person" node="element" />
 		</field>
 
-		<field name="signatureInfo" type="ee.adit.dvk.api.container.SignatureInfo">
+		<field name="signatureInfo" type="ee.adit.dhx.api.container.SignatureInfo">
 			<bind-xml name="SignatureData" node="element" />
 		</field>
 	</class>
@@ -171,10 +171,10 @@
 		ArrayOfSignature
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	-->
-	<class name="ee.adit.dvk.api.container.ArrayOfSignature">
+	<class name="ee.adit.dhx.api.container.ArrayOfSignature">
 		<map-to xml="Signatures" ns-uri="http://www.riik.ee/schemas/dhl/rkel_letter" ns-prefix="rkel" />
 
-		<field name="signature" type="ee.adit.dvk.api.container.Signature" collection="arraylist">
+		<field name="signature" type="ee.adit.dhx.api.container.Signature" collection="arraylist">
 			<bind-xml name="Signature" node="element" />
 		</field>
 	</class>
@@ -183,18 +183,18 @@
 		AccessRights
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	-->
-	<class name="ee.adit.dvk.api.container.AccessRights">
+	<class name="ee.adit.dhx.api.container.AccessRights">
 		<map-to xml="AccessRights" ns-uri="http://www.riik.ee/schemas/dhl/rkel_letter" ns-prefix="rkel" />
 
 		<field name="restriction" type="string">
 			<bind-xml name="Restriction" node="element" />
 		</field>
 
-		<field name="beginDate" type="string" handler="ee.adit.dvk.api.container.AccessRightsBeginDateHandler">
+		<field name="beginDate" type="string" handler="ee.adit.dhx.api.container.AccessRightsBeginDateHandler">
 			<bind-xml name="BeginDate" node="element" />
 		</field>
 
-		<field name="endDate" type="string" handler="ee.adit.dvk.api.container.AccessRightsEndDateHandler">
+		<field name="endDate" type="string" handler="ee.adit.dhx.api.container.AccessRightsEndDateHandler">
 			<bind-xml name="EndDate" node="element" />
 		</field>
 
@@ -207,7 +207,7 @@
 		Enclosure
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	-->
-	<class name="ee.adit.dvk.api.container.Enclosure">
+	<class name="ee.adit.dhx.api.container.Enclosure">
 		<map-to xml="Enclosures" ns-uri="http://www.riik.ee/schemas/dhl/rkel_letter" ns-prefix="rkel" />
 
 		<field name="titles" type="string" collection="arraylist">
@@ -219,10 +219,10 @@
 		Letter
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	-->
-	<class name="ee.adit.dvk.api.container.LetterMetaData">
+	<class name="ee.adit.dhx.api.container.LetterMetaData">
 		<map-to xml="LetterMetaData" ns-uri="http://www.riik.ee/schemas/dhl/rkel_letter" ns-prefix="rkel" />
 
-		<field name="signDate" type="string" handler="ee.adit.dvk.api.container.LetterMetadataSignDateHandler">
+		<field name="signDate" type="string" handler="ee.adit.dhx.api.container.LetterMetadataSignDateHandler">
 			<bind-xml name="SignDate" node="element" />
 		</field>
 
@@ -250,19 +250,19 @@
 			<bind-xml name="Title" node="element" />
 		</field>
 
-		<field name="deadline" type="string" handler="ee.adit.dvk.api.container.LetterMetadataDeadlineHandler">
+		<field name="deadline" type="string" handler="ee.adit.dhx.api.container.LetterMetadataDeadlineHandler">
 			<bind-xml name="Deadline" node="element" />
 		</field>
 
-		<field name="enclosure" type="ee.adit.dvk.api.container.Enclosure">
+		<field name="enclosure" type="ee.adit.dhx.api.container.Enclosure">
 			<bind-xml name="Enclosures" node="element" />
 		</field>
 
-		<field name="accessRights" type="ee.adit.dvk.api.container.AccessRights">
+		<field name="accessRights" type="ee.adit.dhx.api.container.AccessRights">
 			<bind-xml name="AccessRights" node="element" />
 		</field>
 
-		<field name="intellectualPropertyRights" type="ee.adit.dvk.api.container.IntellectualPropertyRights">
+		<field name="intellectualPropertyRights" type="ee.adit.dhx.api.container.IntellectualPropertyRights">
 			<bind-xml name="IntellectualPropertyRights" node="element" />
 		</field>
 
@@ -287,7 +287,7 @@
 		Compilator
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	-->
-	<class name="ee.adit.dvk.api.container.Compilator">
+	<class name="ee.adit.dhx.api.container.Compilator">
 		<map-to xml="Compilator" ns-uri="http://www.riik.ee/schemas/dhl/rkel_letter" ns-prefix="rkel" />
 
 		<field name="firstname" type="string">

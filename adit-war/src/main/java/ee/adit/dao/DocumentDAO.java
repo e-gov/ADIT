@@ -590,7 +590,7 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
 			result.setDvkStatusId(doc.getDocumentDvkStatusId());
 		}
 		if(includeDhxData) {
-			result.setDhxReceiptId(doc.getDhxId());
+			result.setDhxReceiptId(doc.getDhxReceiptId());
 		}
 		result.setGuid(doc.getGuid());
 		result.setId(doc.getId());
@@ -1160,7 +1160,7 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
 						+ "			results.last_modified_date, results.document_dvk_status_id, results.dvk_id, results.document_wf_status_id, "
 						+ "			results.parent_id, results.locked, results.locking_date, results.signable, results.deflated, "
 						+ "			results.deflate_date, results.deleted, results.invisible_to_owner, results.signed, results.migrated, "
-						+ "			results.eform_use_id, results.content, results.dhx_id, results.files_size_bytes, results.sender_receiver, "
+						+ "			results.eform_use_id, results.content, results.dhx_receipt_id, results.dhx_consignment_id, results.files_size_bytes, results.sender_receiver, "
 						+ "			row_number() over() AS rnum FROM (\r\n" +
 						// " SELECT documents.*, id_size_shared.file_size
 						// files_size_bytes, CASE WHEN documents.creator_code !=
@@ -1172,7 +1172,7 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
 						+ "				documents.last_modified_date, documents.document_dvk_status_id, documents.dvk_id, documents.document_wf_status_id, "
 						+ "				documents.parent_id, documents.locked, documents.locking_date, documents.signable, documents.deflated, "
 						+ "				documents.deflate_date, documents.deleted, documents.invisible_to_owner, documents.signed, documents.migrated, "
-						+ "				documents.eform_use_id, documents.content, documents.dhx_id, "
+						+ "				documents.eform_use_id, documents.content, documents.dhx_receipt_id, documents.dhx_consignment_id, "
 						+ "				id_size_shared.file_size files_size_bytes, "
 						+ "				CASE WHEN documents.creator_code != :userCode THEN documents.creator_name ELSE id_size_shared.shared_to END sender_receiver, "
 						+ "				documents.creator_name sender, "
@@ -1487,7 +1487,7 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
 		Session session = null;
 		try {
 			logger.debug("Finding document for dhlids " + dhxReceiptId);
-			String sql = "select document from Document document join document.documentSharings documentSharings where documentSharings.dhxId = :dhxReceiptId";
+			String sql = "select document from Document document join document.documentSharings documentSharings where documentSharings.dhxReceiptId = :dhxReceiptId";
 			session = this.getSessionFactory().openSession();
 			Query query = session.createQuery(sql);
 			query.setParameter("dhxReceiptId", dhxReceiptId);
@@ -1570,7 +1570,7 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
 		Session session = null;
 		try {
 			logger.debug("Finding documents for dhxReceiptIds: " + dhxReceiptIds);
-			String sql = "select document from Document document join document.documentSharings documentSharings where documentSharings.dhxId in (:dhxReceiptIds)";
+			String sql = "select document from Document document join document.documentSharings documentSharings where documentSharings.dhxReceiptId in (:dhxReceiptIds)";
 			session = this.getSessionFactory().openSession();
 			Query query = session.createQuery(sql);
 			query.setParameterList("dhxReceiptIds", dhxReceiptIds);
@@ -1692,7 +1692,7 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
 			for (DocumentSharing documentSharing : document.getDocumentSharings()) {
 				DocumentSendStatus result = null;
 				List<DocumentSharingRecipientStatus> recipients = null;
-				String dhxreceiptId = documentSharing.getDhxId();
+				String dhxreceiptId = documentSharing.getDhxReceiptId();
 				if (!StringUtil.isNullOrEmpty(dhxreceiptId) && dhxReceiptIds.contains(dhxreceiptId)) {
 					result = docs.get(dhxreceiptId);
 					if (result == null) {
@@ -1729,7 +1729,7 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
 		try {
 			session = this.getSessionFactory().openSession();
 			DetachedCriteria documentCriteria = DetachedCriteria.forClass(DocumentSharing.class)
-					.add(Property.forName("documentSharingType").eq(DocumentService.SHARINGTYPE_SEND_DVK))
+					.add(Property.forName("documentSharingType").eq(DocumentService.SHARINGTYPE_SEND_DHX))
 					.add(Restrictions.or(Property.forName("documentDvkStatus").isNull(),
 							Property.forName("documentDvkStatus").eq("")))
 					.setProjection(Property.forName("id"));
@@ -1745,5 +1745,40 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
 			}
 		}
 		return results;
+	}
+	
+	/**
+	 * Count documents with given consignmentId and sender org code
+	 *
+	 * @param messageSender organisation code of the message sender
+	 * @param consignmentId consignment id to search
+	 * @return result document count
+	 */
+	public Long countIncomingMessagesBySenderAndConsignmentId(String messageSender, String consignmentId) {
+		Long result = null;
+		String sql = "select count(*) from Document where creatorCode = '" + messageSender + "' and dhxConsignmentId='" + consignmentId + "'";
+
+		Session session = null;
+		Transaction transaction = null;
+		try {
+			session = this.getSessionFactory().openSession();
+			transaction = session.beginTransaction();
+
+			result = (Long) session.createQuery(sql).uniqueResult();
+
+			transaction.commit();
+		} catch (Exception e) {
+			if (transaction != null) {
+				transaction.rollback();
+			}
+
+			throw e;
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		}
+
+		return result;
 	}
 }

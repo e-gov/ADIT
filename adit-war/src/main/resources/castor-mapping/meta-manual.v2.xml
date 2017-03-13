@@ -5,7 +5,7 @@
 		MetaManual
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	-->
-	<class name="ee.adit.dvk.api.container.v2.MetaManual">
+	<class name="ee.adit.dhx.api.container.v2.MetaManual">
 		<map-to xml="metainfo" ns-uri="http://www.riik.ee/schemas/dhl-meta-manual/2010/2" ns-prefix="mm" />
 
 		<field name="koostajaAsutuseNr" type="string">
@@ -149,23 +149,23 @@
 			<bind-xml name="tahtaeg" node="element" />
 		</field>
 
-		<field name="saatjaKontekst" type="ee.adit.dvk.api.container.v2.SaatjaKontekst">
+		<field name="saatjaKontekst" type="ee.adit.dhx.api.container.v2.SaatjaKontekst">
 			<bind-xml name="saatja_kontekst" node="element" />
 		</field>
 
-		<field name="juurdepaasPiirang" type="ee.adit.dvk.api.container.v2.JuurdepaasPiirang">
+		<field name="juurdepaasPiirang" type="ee.adit.dhx.api.container.v2.JuurdepaasPiirang">
 			<bind-xml name="juurdepaas_piirang" node="element" />
 		</field>
 
-		<field name="ipr" type="ee.adit.dvk.api.container.v2.IPR">
+		<field name="ipr" type="ee.adit.dhx.api.container.v2.IPR">
 			<bind-xml name="ipr" node="element" />
 		</field>
 
-		<field name="koostajad" type="ee.adit.dvk.api.container.v2.Koostaja" collection="arraylist">
+		<field name="koostajad" type="ee.adit.dhx.api.container.v2.Koostaja" collection="arraylist">
 			<bind-xml name="koostaja" node="element" location="koostajad" />
 		</field>
 
-		<field name="saatjaDefineeritud" type="ee.adit.dvk.api.container.SaatjaDefineeritud">
+		<field name="saatjaDefineeritud" type="ee.adit.dhx.api.container.SaatjaDefineeritud">
 			<bind-xml name="saatja_defineeritud" node="element" />
 		</field>
 
@@ -177,7 +177,7 @@
 		If this is a response document, information about the original document is held here
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	-->
-	<class name="ee.adit.dvk.api.container.v2.SaatjaKontekst">
+	<class name="ee.adit.dhx.api.container.v2.SaatjaKontekst">
 		<map-to xml="saatja_kontekst" />
 
 		<field name="seosviit" type="string">
@@ -199,7 +199,7 @@
 		Document compiler
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	-->
-	<class name="ee.adit.dvk.api.container.v2.Koostaja">
+	<class name="ee.adit.dhx.api.container.v2.Koostaja">
 		<map-to xml="koostaja" />
 
 		<field name="eesnimi" type="string">
@@ -229,18 +229,18 @@
 		Document's access restrictions
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	-->
-	<class name="ee.adit.dvk.api.container.v2.JuurdepaasPiirang">
+	<class name="ee.adit.dhx.api.container.v2.JuurdepaasPiirang">
 		<map-to xml="juurdepaas_piirang" />
 
 		<field name="piirang" type="string">
 			<bind-xml name="piirang" node="element" />
 		</field>
 
-		<field name="piirangAlgus" type="string" handler="ee.adit.dvk.api.container.v2.JuurdepaasPiirangPiirangAlgusHandler">
+		<field name="piirangAlgus" type="string" handler="ee.adit.dhx.api.container.v2.JuurdepaasPiirangPiirangAlgusHandler">
 			<bind-xml name="piirang_algus" node="element" />
 		</field>
 
-		<field name="piirangLopp" type="string" handler="ee.adit.dvk.api.container.v2.JuurdepaasPiirangPiirangLoppHandler">
+		<field name="piirangLopp" type="string" handler="ee.adit.dhx.api.container.v2.JuurdepaasPiirangPiirangLoppHandler">
 			<bind-xml name="piirang_lopp" node="element" />
 		</field>
 
@@ -255,7 +255,7 @@
 		Intellectual property information
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	-->
-	<class name="ee.adit.dvk.api.container.v2.IPR">
+	<class name="ee.adit.dhx.api.container.v2.IPR">
 		<map-to xml="ipr" />
 
 		<field name="iprTahtaeg" type="date">

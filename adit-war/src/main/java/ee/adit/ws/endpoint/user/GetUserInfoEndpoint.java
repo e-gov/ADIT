@@ -16,6 +16,7 @@ import ee.adit.pojo.GetUserInfoRequestAttachmentUserList;
 import ee.adit.pojo.GetUserInfoResponse;
 import ee.adit.pojo.GetUserInfoResponseAttachment;
 import ee.adit.pojo.GetUserInfoResponseAttachmentUser;
+import ee.adit.pojo.GetUserInfoResponseAttachmentV2;
 import ee.adit.pojo.Message;
 import ee.adit.pojo.Success;
 import ee.adit.pojo.UserList;
@@ -316,7 +317,7 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 								}
 							}
 
-							GetUserInfoResponseAttachment responseAttachment = new GetUserInfoResponseAttachment();
+							GetUserInfoResponseAttachmentV2 responseAttachment = new GetUserInfoResponseAttachmentV2();
 							responseAttachment.setUserList(userInfoList);
 
 							String responseAttachmentXMLFile = this.marshal(responseAttachment);

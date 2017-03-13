@@ -17,6 +17,7 @@ import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.GetDocumentListRequest;
 import ee.adit.pojo.GetDocumentListResponse;
 import ee.adit.pojo.GetDocumentListResponseAttachment;
+import ee.adit.pojo.GetDocumentListResponseAttachmentV2;
 import ee.adit.pojo.GetDocumentListResponseList;
 import ee.adit.pojo.Message;
 import ee.adit.pojo.OutputDocument;
@@ -237,7 +238,7 @@ public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
         List<Long> documentIdList = new ArrayList<Long>();
 
         try {
-            logger.debug("getDocumentList.v1 invoked.");
+            logger.debug("getDocumentList.v2 invoked.");
             GetDocumentListRequest request = (GetDocumentListRequest) requestObject;
             //set dhx parameters as DVK parameters.
             request.setDvkFolder(request.getDecFolder());
@@ -298,11 +299,13 @@ public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
             InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream(getDigidocConfigurationFile());
             String jdigidocCfgTmpFile = Util.createTemporaryFile(input, getConfiguration().getTempDir());
 
-            GetDocumentListResponseAttachment att = this.documentService.getDocumentDAO().getDocumentSearchResult(
+            GetDocumentListResponseAttachment attv1 = this.documentService.getDocumentDAO().getDocumentSearchResult(
                     request, user.getUserCode(), this.getConfiguration().getTempDir(),
                     this.getMessageSource().getMessage("files.nonExistentOrDeleted", new Object[] {}, Locale.ENGLISH),
                     user.getUserCode(), getConfiguration().getDocumentRetentionDeadlineDays(), jdigidocCfgTmpFile, false, true);
-
+            GetDocumentListResponseAttachmentV2 att = new GetDocumentListResponseAttachmentV2();
+            att.setDocumentList(attv1.getDocumentList());
+            att.setTotal(attv1.getTotal());
             if (att != null) {
                 // Remember document ID-s for logging
                 if (att.getDocumentList() != null) {

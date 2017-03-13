@@ -184,9 +184,38 @@ CREATE TABLE adit.document_sharing (
     dvk_id bigint,
     user_email varchar(255),
     comment_text text,
-    dhx_id character varying(100)
+    dhx_receipt_id character varying(100),
+	dhx_consignment_id character varying(100),
+	dhx_fault character varying(2500),
+	dhx_received_date timestamp without time zone,
+	dhx_sent_date timestamp without time zone
 )
 WITH (oids = false);
+
+
+CREATE TABLE &&ADIT_SCHEMA..dhx_user
+(
+    org_code character varying(30)NOT NULL,
+    org_name character varying(100) NOT NULL,
+    active smallint NOT NULL DEFAULT 0,
+    dhx_user_id integer NOT NULL,
+    representor_id integer,
+    subsystem character varying(100),
+    member_class character varying(100),
+    xroad_instance character varying(100),
+    memberclass character varying(100),
+    dhx_organisation smallint NOT NULL DEFAULT 0,
+    representee_start timestamp without time zone,
+    representee_end timestamp without time zone,
+    organisation_identificator character varying(100),
+    CONSTRAINT dhx_user_pkey PRIMARY KEY (dhx_user_id),
+    CONSTRAINT dhx_user_dhx_userfk FOREIGN KEY (representor_id)
+        REFERENCES &&ADIT_SCHEMA..dhx_user (dhx_user_id) MATCH FULL
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+WITH (oids = false);
+
 --
 -- Structure for table document_type (OID = 16419) : 
 --
@@ -227,7 +256,8 @@ CREATE TABLE adit.document (
     files_size_bytes bigint DEFAULT 0,
     sender_receiver varchar(50),
     content varchar(4000),
-    dhx_id character varying(100)
+    dhx_receipt_id character varying(100),
+	dhx_consignment_id character varying(100)
 )
 WITH (oids = false);
 --
@@ -571,6 +601,13 @@ CREATE SEQUENCE adit.signature_id_seq
 -- Definition for sequence user_contact_id_seq (OID = 24615) : 
 --
 CREATE SEQUENCE adit.user_contact_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+CREATE SEQUENCE &&ADIT_SCHEMA..sq_dhx_user_id
     START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
@@ -2430,6 +2467,62 @@ BEGIN
         primary_key_v
       );
     END IF;
+    
+    -- dhx_receipt_id changed
+    IF(coalesce(document_new.dhx_receipt_id, '') != coalesce(document_old.dhx_receipt_id, '')) THEN
+    
+      INSERT INTO adit.adit_log(
+        table_name,
+        column_name,
+        old_value,
+        new_value,
+        log_date,
+        remote_application_short_name,
+        xtee_user_code,
+        xtee_institution_code,
+        db_user,
+        primary_key_value
+      ) VALUES (
+        tablename,
+        'dhx_receipt_id',
+        document_old.dhx_receipt_id,
+        document_new.dhx_receipt_id,
+        LOCALTIMESTAMP,
+        aditlog.get_current_setting('aditlog.remote_application_short_name'),
+        aditlog.get_current_setting('aditlog.xtee_isikukood'),
+        aditlog.get_current_setting('aditlog.xtee_asutus'),
+        usr,
+        primary_key_v
+      );
+    END IF;
+    
+        -- dhx_consignment_id changed
+    IF(coalesce(document_new.dhx_consignment_id, '') != coalesce(document_old.dhx_consignment_id, '')) THEN
+    
+      INSERT INTO adit.adit_log(
+        table_name,
+        column_name,
+        old_value,
+        new_value,
+        log_date,
+        remote_application_short_name,
+        xtee_user_code,
+        xtee_institution_code,
+        db_user,
+        primary_key_value
+      ) VALUES (
+        tablename,
+        'dhx_consignment_id',
+        document_old.dhx_consignment_id,
+        document_new.dhx_consignment_id,
+        LOCALTIMESTAMP,
+        aditlog.get_current_setting('aditlog.remote_application_short_name'),
+        aditlog.get_current_setting('aditlog.xtee_isikukood'),
+        aditlog.get_current_setting('aditlog.xtee_asutus'),
+        usr,
+        primary_key_v
+      );
+    END IF;
   
 END;
 $body$
@@ -3302,6 +3395,142 @@ BEGIN
         'dvk_id',
         document_sharing_old.dvk_id,
         document_sharing_new.dvk_id,
+        LOCALTIMESTAMP,
+        aditlog.get_current_setting('aditlog.remote_application_short_name'),
+        aditlog.get_current_setting('aditlog.xtee_isikukood'),
+        aditlog.get_current_setting('aditlog.xtee_asutus'),
+        usr,
+        primary_key_v
+      );
+    END IF;
+    -- dhx_receipt_id changed
+    IF(coalesce(document_sharing_new.dhx_receipt_id, '') != coalesce(document_sharing_old.dhx_receipt_id, '')) THEN 
+      INSERT INTO adit.adit_log(
+        table_name,
+        column_name,
+        old_value,
+        new_value,
+        log_date,
+        remote_application_short_name,
+        xtee_user_code,
+        xtee_institution_code,
+        db_user,
+        primary_key_value
+      ) VALUES (
+        tablename,
+        'dhx_receipt_id',
+        document_sharing_old.dhx_receipt_id,
+        document_sharing_new.dhx_receipt_id,
+        LOCALTIMESTAMP,
+        aditlog.get_current_setting('aditlog.remote_application_short_name'),
+        aditlog.get_current_setting('aditlog.xtee_isikukood'),
+        aditlog.get_current_setting('aditlog.xtee_asutus'),
+        usr,
+        primary_key_v
+      );
+    END IF;
+    
+     -- dhx_consignment_id changed
+    IF(coalesce(document_sharing_new.dhx_consignment_id, '') != coalesce(document_sharing_old.dhx_consignment_id, '')) THEN 
+      INSERT INTO adit.adit_log(
+        table_name,
+        column_name,
+        old_value,
+        new_value,
+        log_date,
+        remote_application_short_name,
+        xtee_user_code,
+        xtee_institution_code,
+        db_user,
+        primary_key_value
+      ) VALUES (
+        tablename,
+        'dhx_consignment_id',
+        document_sharing_old.dhx_consignment_id,
+        document_sharing_new.dhx_consignment_id,
+        LOCALTIMESTAMP,
+        aditlog.get_current_setting('aditlog.remote_application_short_name'),
+        aditlog.get_current_setting('aditlog.xtee_isikukood'),
+        aditlog.get_current_setting('aditlog.xtee_asutus'),
+        usr,
+        primary_key_v
+      );
+    END IF;
+    
+     -- dhx_fault changed
+    IF(coalesce(document_sharing_new.dhx_fault, '') != coalesce(document_sharing_old.dhx_fault, '')) THEN 
+      INSERT INTO adit.adit_log(
+        table_name,
+        column_name,
+        old_value,
+        new_value,
+        log_date,
+        remote_application_short_name,
+        xtee_user_code,
+        xtee_institution_code,
+        db_user,
+        primary_key_value
+      ) VALUES (
+        tablename,
+        'dhx_fault',
+        document_sharing_old.dhx_fault,
+        document_sharing_new.dhx_fault,
+        LOCALTIMESTAMP,
+        aditlog.get_current_setting('aditlog.remote_application_short_name'),
+        aditlog.get_current_setting('aditlog.xtee_isikukood'),
+        aditlog.get_current_setting('aditlog.xtee_asutus'),
+        usr,
+        primary_key_v
+      );
+    END IF;
+    
+      -- dhx_received_date changed
+    IF(coalesce(document_sharing_new.dhx_received_date, test_date) != coalesce(document_sharing_old.dhx_received_date, test_date)) THEN
+    
+      INSERT INTO adit.adit_log(
+        table_name,
+        column_name,
+        old_value,
+        new_value,
+        log_date,
+        remote_application_short_name,
+        xtee_user_code,
+        xtee_institution_code,
+        db_user,
+        primary_key_value
+      ) VALUES (
+        tablename,
+        'dhx_received_date',
+        document_sharing_old.dhx_received_date::character varying,
+        document_sharing_new.dhx_received_date::character varying,
+        LOCALTIMESTAMP,
+        aditlog.get_current_setting('aditlog.remote_application_short_name'),
+        aditlog.get_current_setting('aditlog.xtee_isikukood'),
+        aditlog.get_current_setting('aditlog.xtee_asutus'),
+        usr,
+        primary_key_v
+      );
+    END IF;
+    
+      -- dhx_sent_date changed
+    IF(coalesce(document_sharing_new.dhx_sent_date, test_date) != coalesce(document_sharing_old.dhx_sent_date, test_date)) THEN
+    
+      INSERT INTO adit.adit_log(
+        table_name,
+        column_name,
+        old_value,
+        new_value,
+        log_date,
+        remote_application_short_name,
+        xtee_user_code,
+        xtee_institution_code,
+        db_user,
+        primary_key_value
+      ) VALUES (
+        tablename,
+        'dhx_sent_date',
+        document_sharing_old.dhx_sent_date::character varying,
+        document_sharing_new.dhx_sent_date::character varying,
         LOCALTIMESTAMP,
         aditlog.get_current_setting('aditlog.remote_application_short_name'),
         aditlog.get_current_setting('aditlog.xtee_isikukood'),
@@ -5272,6 +5501,8 @@ BEGIN
 	  DOCUMENT_new.DEFLATED := NEW.DEFLATED;
 	  DOCUMENT_new.DEFLATE_DATE := NEW.DEFLATE_DATE;
 	  DOCUMENT_new.DELETED := NEW.DELETED;
+	  DOCUMENT_new.dhx_receipt_id := NEW.dhx_receipt_id;
+	  DOCUMENT_new.dhx_consignment_id := NEW.dhx_consignment_id;
   end if;
   
   if TG_OP != 'INSERT' then
@@ -5296,6 +5527,8 @@ BEGIN
 	  DOCUMENT_old.DEFLATED := OLD.DEFLATED;
 	  DOCUMENT_old.DEFLATE_DATE := OLD.DEFLATE_DATE;
 	  DOCUMENT_old.DELETED := OLD.DELETED;
+	  DOCUMENT_old.dhx_receipt_id := OLD.dhx_receipt_id;
+	  DOCUMENT_old.dhx_consignment_id := OLD.dhx_consignment_id;
   end if;
 
   PERFORM ADITLOG.LOG_DOCUMENT(
@@ -5345,6 +5578,11 @@ BEGIN
 	  DOCUMENT_SHARING_new.WF_STATUS_ID := NEW.WF_STATUS_ID;
 	  DOCUMENT_SHARING_new.FIRST_ACCESS_DATE := NEW.FIRST_ACCESS_DATE;
 	  DOCUMENT_SHARING_new.DVK_ID := NEW.DVK_ID;
+	  DOCUMENT_SHARING_new.dhx_receipt_id := NEW.dhx_receipt_id;
+	  DOCUMENT_SHARING_new.dhx_consignment_id := NEW.dhx_consignment_id;
+	  DOCUMENT_SHARING_new.dhx_fault := NEW.dhx_fault;
+	  DOCUMENT_SHARING_new.dhx_received_date := NEW.dhx_received_date;
+	  DOCUMENT_SHARING_new.dhx_sent_date := NEW.dhx_sent_date;
   end if;	  
   
   if TG_OP != 'INSERT' then
@@ -5359,6 +5597,11 @@ BEGIN
 	  DOCUMENT_SHARING_old.WF_STATUS_ID := OLD.WF_STATUS_ID;
 	  DOCUMENT_SHARING_old.FIRST_ACCESS_DATE := OLD.FIRST_ACCESS_DATE;
 	  DOCUMENT_SHARING_old.DVK_ID := OLD.DVK_ID;
+	  DOCUMENT_SHARING_old.dhx_receipt_id := OLD.dhx_receipt_id;
+	  DOCUMENT_SHARING_old.dhx_consignment_id := OLD.dhx_consignment_id;
+	  DOCUMENT_SHARING_old.dhx_fault := OLD.dhx_fault;
+	  DOCUMENT_SHARING_old.dhx_received_date := OLD.dhx_received_date;
+	  DOCUMENT_SHARING_old.dhx_sent_date := OLD.dhx_sent_date;
   end if;	  
 
   PERFORM ADITLOG.LOG_DOCUMENT_SHARING(
@@ -6099,6 +6342,7 @@ GRANT SELECT, UPDATE, INSERT ON adit.signature TO adit_user;
 GRANT SELECT, UPDATE, INSERT ON adit.user_contact TO adit_user;
 GRANT SELECT, UPDATE, INSERT, DELETE ON adit.user_notification TO adit_user;
 GRANT SELECT, UPDATE, INSERT ON adit.usertype TO adit_user;
+GRANT SELECT, UPDATE, INSERT ON adit.dhx_user TO adit_user;
 
 GRANT USAGE ON SEQUENCE adit.adit_log_id_seq TO adit_user;
 GRANT USAGE ON SEQUENCE adit.document_file_id_seq TO adit_user;
@@ -6112,6 +6356,7 @@ GRANT USAGE ON SEQUENCE adit.notification_id_seq TO adit_user;
 GRANT USAGE ON SEQUENCE adit.request_log_id_seq TO adit_user;
 GRANT USAGE ON SEQUENCE adit.signature_id_seq TO adit_user;
 GRANT USAGE ON SEQUENCE adit.user_contact_id_seq TO adit_user;
+GRANT USAGE ON SEQUENCE adit.sq_dhx_user_id TO adit_user;
 
 GRANT EXECUTE ON FUNCTION adit.set_job_running_status(bigint, bigint) TO adit_user;
 GRANT EXECUTE ON FUNCTION adit.remove_signed_file_contents(bigint, bigint, bigint, bigint) TO adit_user;

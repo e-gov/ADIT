@@ -1,51 +1,41 @@
-ALTER TABLE &&ADIT_DVK_SCHEMA..dhl_message ALTER COLUMN recipient_org_code TYPE varchar(50);
-ALTER TABLE &&ADIT_DVK_SCHEMA..dhl_message ALTER COLUMN sender_org_code TYPE varchar(50);
-ALTER TABLE &&ADIT_DVK_SCHEMA..dhl_message_recipient ALTER COLUMN recipient_org_code TYPE varchar(50);
+ALTER TABLE &&ADIT_SCHEMA..document_sharing
+  add dhx_receipt_id character varying(100),
+  add dhx_consignment_id character varying(100),
+  add dhx_fault character varying(2500),
+  add dhx_received_date timestamp without time zone,
+  add dhx_sent_date timestamp without time zone;
 
-CREATE SEQUENCE &&ADIT_DVK_SCHEMA..sq_dhl_organisation_id
-    INCREMENT 1
-    START 1577
-    MINVALUE 1
-    MAXVALUE 9223372036854775807
+ALTER TABLE &&ADIT_SCHEMA..document
+  add dhx_receipt_id character varying(100),
+  add dhx_consignment_id character varying(100);
+
+CREATE TABLE &&ADIT_SCHEMA..dhx_user
+(
+    org_code character varying(30)NOT NULL,
+    org_name character varying(100) NOT NULL,
+    active smallint NOT NULL DEFAULT 0,
+    dhx_user_id integer NOT NULL,
+    representor_id integer,
+    subsystem character varying(100),
+    member_class character varying(100),
+    xroad_instance character varying(100),
+    memberclass character varying(100),
+    dhx_organisation smallint NOT NULL DEFAULT 0,
+    representee_start timestamp without time zone,
+    representee_end timestamp without time zone,
+    organisation_identificator character varying(100),
+    CONSTRAINT dhx_user_pkey PRIMARY KEY (dhx_user_id),
+    CONSTRAINT dhx_user_dhx_userfk FOREIGN KEY (representor_id)
+        REFERENCES &&ADIT_SCHEMA..dhx_user (dhx_user_id) MATCH FULL
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+);
+CREATE SEQUENCE &&ADIT_SCHEMA..sq_dhx_user_id
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
-    
-alter table &&ADIT_DVK_SCHEMA..dhl_organization add dhl_organisation_id integer;
 
-update &&ADIT_DVK_SCHEMA..dhl_organization set dhl_organisation_id=nextval('adit_dvkuk.sq_dhl_organisation_id');
-
-ALTER TABLE &&ADIT_DVK_SCHEMA..dhl_organization DROP CONSTRAINT dhl_organization_pkey;
-
-ALTER TABLE &&ADIT_DVK_SCHEMA..dhl_organization ADD PRIMARY KEY (dhl_organisation_id);
-
-alter table &&ADIT_DVK_SCHEMA..dhl_organization add representor_id integer;
-
-alter table &&ADIT_DVK_SCHEMA..dhl_organization ADD CONSTRAINT dhl_organization_dhl_organizationfk FOREIGN KEY (representor_id) REFERENCES adit_dvkuk.dhl_organization (dhl_organisation_id) MATCH FULL;
-
-
-alter table &&ADIT_DVK_SCHEMA..dhl_organization 
-add subsystem character varying(100),
-add member_class character varying(100),
-add xroad_instance character varying(100),
-add memberClass character varying(100),
-add dhx_organisation smallint NOT NULL DEFAULT 0,
-add representee_start timestamp without time zone,
-add representee_end timestamp without time zone,
-add organisation_identificator character varying(100);
-
-GRANT select, update ON &&ADIT_DVK_SCHEMA..sq_dhl_organisation_id TO adit_dvk;
-
-alter table &&ADIT_DVK_SCHEMA..dhl_message 
-add dhx_consignment_id character varying(100),
-add dhx_receipt_id  character varying(100);
-		
-		
-alter table &&ADIT_DVK_SCHEMA..dhl_message_recipient 
-add dhx_consignment_id character varying(100),
-add dhx_receipt_id  character varying(100);
-
-
-alter table &&ADIT_SCHEMA..document 
-add dhx_id character varying(100);
-
-alter table &&ADIT_SCHEMA..document_sharing
-add dhx_id character varying(100);
+GRANT SELECT, UPDATE, INSERT ON &&ADIT_SCHEMA..dhx_user TO &&ADIT_APP.;
+GRANT USAGE ON SEQUENCE &&ADIT_SCHEMA..sq_dhx_user_id TO &&ADIT_APP.;

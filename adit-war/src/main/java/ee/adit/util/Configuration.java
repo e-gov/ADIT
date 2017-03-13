@@ -39,11 +39,6 @@ public class Configuration {
      */
     private String schedulerEventTypeName;
 
-    /**
-     * The location of the stylesheet that is used to generate a response
-     * message to DVK.
-     */
-    private String dvkResponseMessageStylesheet;
 
     /**
      * Global disk quota per user specified in bytes. This is used in case no
@@ -91,26 +86,6 @@ public class Configuration {
     private Long unfinishedSignatureLifetimeSeconds;
     
     /**
-     * Default DVK folder name which is used by sendDocument request
-     */
-    private String dvkSendFolder;
-    
-    /**
-     * DVK folder names list from which ADIT recieves documents.
-     */
-    private List<String> dvkRecieveFolders;
-    
-    /**
-     * DVK folder name for Letter type documents used by sendDocument request.
-     */
-    private String dvkFolderForLetterType;
-    
-    /**
-     * DVK folder name for Application type documents used by sendDocument request.
-     */
-    private String dvkFolderForApplicationType;
-
-    /**
      * Checking of certificates for test certificate is performed or not
      * */
     private Boolean doCheckTestCert;
@@ -129,6 +104,11 @@ public class Configuration {
      * X-Road member code of the ADIT service in accordance with X-Road message protocol version 4.0
      */
     private String xroadMemberCode;
+    
+    /**
+     * jDigiDoc configuration file.
+     */
+    private String jDigiDocConfigFile;
     
     public List<String> getLocales() {
         return locales;
@@ -193,14 +173,6 @@ public class Configuration {
         this.schedulerEventTypeName = schedulerEventTypeName;
     }
 
-    public String getDvkResponseMessageStylesheet() {
-        return dvkResponseMessageStylesheet;
-    }
-
-    public void setDvkResponseMessageStylesheet(String dvkResponseMessageStylesheet) {
-        this.dvkResponseMessageStylesheet = dvkResponseMessageStylesheet;
-    }
-
     public Long getGlobalDiskQuota() {
         return globalDiskQuota;
     }
@@ -258,38 +230,6 @@ public class Configuration {
 		this.unfinishedSignatureLifetimeSeconds = unfinishedSignatureLifetimeSeconds;
 	}
 
-	public String getDvkSendFolder() {
-		return dvkSendFolder;
-	}
-
-	public void setDvkSendFolder(String dvkSendFolder) {
-		this.dvkSendFolder = dvkSendFolder;
-	}
-
-	public List<String> getDvkRecieveFolders() {
-		return dvkRecieveFolders;
-	}
-
-	public void setDvkRecieveFolders(List<String> dvkRecieveFolders) {
-		this.dvkRecieveFolders = dvkRecieveFolders;
-	}
-
-	public String getDvkFolderForLetterType() {
-		return dvkFolderForLetterType;
-	}
-
-	public void setDvkFolderForLetterType(String dvkFolderForLetterType) {
-		this.dvkFolderForLetterType = dvkFolderForLetterType;
-	}
-
-	public String getDvkFolderForApplicationType() {
-		return dvkFolderForApplicationType;
-	}
-
-	public void setDvkFolderForApplicationType(String dvkFolderForApplicationType) {
-		this.dvkFolderForApplicationType = dvkFolderForApplicationType;
-	}
-
 	public Boolean getDoCheckTestCert() {
 		return doCheckTestCert;
 	}
@@ -320,6 +260,20 @@ public class Configuration {
 
 	public void setXroadMemberCode(String xroadMemberCode) {
 		this.xroadMemberCode = xroadMemberCode;
+	}
+
+	/**
+	 * @return the jDigiDocConfigFile
+	 */
+	public String getjDigiDocConfigFile() {
+		return jDigiDocConfigFile;
+	}
+
+	/**
+	 * @param jDigiDocConfigFile the jDigiDocConfigFile to set
+	 */
+	public void setjDigiDocConfigFile(String jDigiDocConfigFile) {
+		this.jDigiDocConfigFile = jDigiDocConfigFile;
 	}
 	
 }

@@ -208,6 +208,13 @@
 			<bind-xml name="user" location="user_list" />
 		</field>
  	</class>
+ 	
+ 	<class name="ee.adit.pojo.GetUserInfoResponseAttachmentV2">
+ 		<map-to xml="getUserInfoResponseAttachmentV2" />
+ 		<field name="userList" type="ee.adit.pojo.GetUserInfoResponseAttachmentUser" collection="arraylist">
+			<bind-xml name="user" location="user_list" />
+		</field>
+ 	</class>
 
  	<class name="ee.adit.pojo.GetUserInfoResponseAttachmentUser">
  		<map-to xml="user" />
@@ -669,6 +676,16 @@
 
 	<class name="ee.adit.pojo.GetDocumentListResponseAttachment">
 		<map-to xml="getDocumentListResponseAttachmentV1" />
+		<field name="total" type="java.lang.Integer">
+			<bind-xml name="total" location="document_list" />
+		</field>
+		<field name="documentList" type="ee.adit.pojo.OutputDocument" collection="arraylist">
+			<bind-xml name="document" location="document_list" />
+		</field>
+	</class>
+	
+	<class name="ee.adit.pojo.GetDocumentListResponseAttachmentV2">
+		<map-to xml="getDocumentListResponseAttachmentV2" />
 		<field name="total" type="java.lang.Integer">
 			<bind-xml name="total" location="document_list" />
 		</field>

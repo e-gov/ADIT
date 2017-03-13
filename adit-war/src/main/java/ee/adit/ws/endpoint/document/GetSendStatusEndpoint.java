@@ -226,7 +226,7 @@ public class GetSendStatusEndpoint extends AbstractAditBaseEndpoint {
         String additionalInformationForLog = null;
         
         try {
-            logger.debug("getSendStatus.v1 invoked.");
+            logger.debug("getSendStatus.v2 invoked.");
             GetSendStatusRequest request = (GetSendStatusRequest) requestObject;
             String attachmentID = null;
             // Check if the attachment ID is specified

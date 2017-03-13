@@ -10,26 +10,26 @@
 		Container2
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	-->
-	<class name="ee.adit.dvk.api.container.v2.ContainerVer2">
+	<class name="ee.adit.dhx.api.container.v2.ContainerVer2">
 		<map-to xml="dokument" ns-uri="http://www.riik.ee/schemas/dhl/2010/2" ns-prefix="dhl" />
 
 		<field name="version" type="integer">
 			<bind-xml name="konteineri_versioon" node="attribute" />
 		</field>
 
-		<field name="metainfo" type="ee.adit.dvk.api.container.v2.Metainfo">
+		<field name="metainfo" type="ee.adit.dhx.api.container.v2.Metainfo">
 			<bind-xml name="metainfo" />
 		</field>
 
-		<field name="transport" type="ee.adit.dvk.api.container.v2.Transport">
+		<field name="transport" type="ee.adit.dhx.api.container.v2.Transport">
 			<bind-xml name="transport" />
 		</field>
 
-		<field name="ajalugu" type="ee.adit.dvk.api.container.v2.Ajalugu">
+		<field name="ajalugu" type="ee.adit.dhx.api.container.v2.Ajalugu">
 			<bind-xml name="ajalugu" />
 		</field>
 		
-		<field name="failideKonteiner" type="ee.adit.dvk.api.container.v2.FailideKonteiner">
+		<field name="failideKonteiner" type="ee.adit.dhx.api.container.v2.FailideKonteiner">
 			<bind-xml name="failid" />
 		</field>
 	</class>
@@ -38,14 +38,14 @@
 		Metainfo
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	-->
-	<class name="ee.adit.dvk.api.container.v2.Metainfo">
+	<class name="ee.adit.dhx.api.container.v2.Metainfo">
 		<map-to xml="metainfo" />
 
-		<field name="metaManual" type="ee.adit.dvk.api.container.v2.MetaManual">
+		<field name="metaManual" type="ee.adit.dhx.api.container.v2.MetaManual">
 			<bind-xml name="mm:metainfo" xmlns:mm="http://www.riik.ee/schemas/dhl-meta-manual/2010/2" />
 		</field>
 
-		<field name="metaAutomatic" type="ee.adit.dvk.api.container.v2.MetaAutomatic">
+		<field name="metaAutomatic" type="ee.adit.dhx.api.container.v2.MetaAutomatic">
 			<bind-xml name="ma:metainfo" xmlns:ma="http://www.riik.ee/schemas/dhl-meta-automatic" />
 		</field>
 	</class>
@@ -54,7 +54,7 @@
 		FailideKonteiner
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	-->
-	<class name="ee.adit.dvk.api.container.v2.FailideKonteiner">
+	<class name="ee.adit.dhx.api.container.v2.FailideKonteiner">
 		<map-to xml="dokument" ns-uri="http://www.riik.ee/schemas/dhl/2010/2" ns-prefix="dhl" />
 
 		<field name="kokku" type="short">
@@ -62,7 +62,7 @@
 			<bind-xml name="kokku" />
 		</field>
 
-		<field name="failid" type="ee.adit.dvk.api.container.v2.Fail" collection="arraylist">
+		<field name="failid" type="ee.adit.dhx.api.container.v2.Fail" collection="arraylist">
 			<bind-xml name="fail" />
 		</field>
 	</class>
@@ -72,7 +72,7 @@
 		Fail
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	-->
-	<class name="ee.adit.dvk.api.container.v2.Fail">
+	<class name="ee.adit.dhx.api.container.v2.Fail">
 		<map-to xml="Fail" ns-uri="http://www.riik.ee/schemas/dhl/2010/2" ns-prefix="dhl" />
 
 		<field name="jrkNr" type="short">
@@ -122,18 +122,18 @@
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	-->
 
-	<class name="ee.adit.dvk.api.container.v2.Ajalugu">
+	<class name="ee.adit.dhx.api.container.v2.Ajalugu">
 		<map-to xml="ajalugu" ns-uri="http://www.riik.ee/schemas/dhl/2010/2" ns-prefix="dhl" />
 
-		<field name="metainfo" type="ee.adit.dvk.api.container.v2.Metainfo">
+		<field name="metainfo" type="ee.adit.dhx.api.container.v2.Metainfo">
 			<bind-xml name="metainfo" />
 		</field>
 
-		<field name="transport" type="ee.adit.dvk.api.container.v2.Transport">
+		<field name="transport" type="ee.adit.dhx.api.container.v2.Transport">
 			<bind-xml name="transport" />
 		</field>
 
-		<field name="metaxml" type="ee.adit.dvk.api.container.Metaxml">
+		<field name="metaxml" type="ee.adit.dhx.api.container.Metaxml">
 			<bind-xml name="metaxml" />
 		</field>
 	</class>
@@ -142,7 +142,7 @@
 		metainfo.koostajaKuupaev.dateHandler
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	-->
-	<field-handler name="metainfo.koostajaKuupaev.dateHandler" class="ee.adit.dvk.api.container.CustomDateHandler">
+	<field-handler name="metainfo.koostajaKuupaev.dateHandler" class="ee.adit.dhx.api.container.CustomDateHandler">
 		<param name="fieldName" value="koostajaKuupaev" />
 		<param name="info" value="DateHandler for Metainfo.KoostajaKuupaev" />
 	</field-handler>
@@ -151,7 +151,7 @@
 		metaxml.letterMetaData.signDate.dateHandler
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	-->
-	<field-handler name="metaxml.letterMetaData.signDate.dateHandler" class="ee.adit.dvk.api.container.CustomDateHandler">
+	<field-handler name="metaxml.letterMetaData.signDate.dateHandler" class="ee.adit.dhx.api.container.CustomDateHandler">
 		<param name="fieldName" value="signDate" />
 		<param name="info" value="DateHandler for LetterMetaData.SignDate" />
 	</field-handler>

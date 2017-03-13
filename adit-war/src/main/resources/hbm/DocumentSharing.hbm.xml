@@ -52,8 +52,24 @@
 		<property name="userEmail" type="string">
 			<column name="USER_EMAIL" length="255" />
 		</property>
-		<property name="dhxId" type="string">
-			<column name="dhx_id" length="100" />
+
+		<property name="dhxReceiptId" type="string">
+			<column name="dhx_receipt_id" length="100" />
+		</property>
+
+		<property name="dhxConsignmentId" type="string">
+			<column name="dhx_consignment_id" length="100" />
+		</property>
+
+		<property name="dhxFault" type="string">
+			<column name="dhx_fault" length="2500" />
+		</property>
+
+		<property name="dhxReceivedDate" type="timestamp">
+			<column name="dhx_received_date" length="7" />
+		</property>
+		<property name="dhxSentDate" type="timestamp">
+			<column name="dhx_sent_date" length="7" />
 		</property>
 	</class>
 </hibernate-mapping>

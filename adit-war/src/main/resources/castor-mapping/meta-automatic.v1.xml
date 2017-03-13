@@ -5,7 +5,7 @@
 		MetaAutomatic
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	-->
-	<class name="ee.adit.dvk.api.container.MetaAutomatic">
+	<class name="ee.adit.dhx.api.container.MetaAutomatic">
 		<map-to xml="metainfo" ns-uri="http://www.riik.ee/schemas/dhl-meta-automatic" ns-prefix="ma" />
 
 		<field name="dhlSaabumisviis" type="string">
@@ -56,7 +56,7 @@
 			<bind-xml name="dhl_saaja_epost" node="element" />
 		</field>
 
-		<field name="dhlEmailHeader" type="ee.adit.dvk.api.container.DhlEmailHeader">
+		<field name="dhlEmailHeader" type="ee.adit.dhx.api.container.DhlEmailHeader">
 			<bind-xml name="dhl_email_header" node="element" />
 		</field>
 
@@ -69,7 +69,7 @@
 		DhlEmailHeader
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	-->
-	<class name="ee.adit.dvk.api.container.DhlEmailHeader">
+	<class name="ee.adit.dhx.api.container.DhlEmailHeader">
 		<map-to xml="dhl_email_header" />
 
 		<field name="text" type="string">
