@@ -629,10 +629,9 @@
 				<artifactId>tomcat7-maven-plugin</artifactId>
 				<version>2.2</version>
 				<configuration>
-					<server>devbpw</server>
-					<url>http://localhost:8085/manager/text</url>
-					<username>admin	</username>
-					<password>admin</password>
+					<url>${tomcat.manager}</url>
+					<username>${tomcat.manager.username}</username>
+					<password>${tomcat.manager.password}</password>
 					<path>/adit</path>
 				</configuration>
 			</plugin>
@@ -655,6 +654,36 @@
 			</plugin>
 		</plugins>
 	</build>
+	<profiles>
+		<profile>
+			<id>adit-arendus-tomcat</id>
+			<activation>
+				<property>
+					<name>env</name>
+					<value>adit-arendus-tomcat</value>
+				</property>
+			</activation>
+			<properties>
+				<tomcat.manager>http://10.0.13.232:8080/manager/text</tomcat.manager>
+				<tomcat.manager.username>admin</tomcat.manager.username>
+				<tomcat.manager.password>admin</tomcat.manager.password>
+			</properties>
+		</profile>
+		<profile>
+			<id>adit-arendus-bpw</id>
+			<activation>
+				<property>
+					<name>env</name>
+					<value>adit-arendus-bpw</value>
+				</property>
+			</activation>
+			<properties>
+				<tomcat.manager>http://localhost:8085/manager/text</tomcat.manager>
+				<tomcat.manager.username>admin</tomcat.manager.username>
+				<tomcat.manager.password>admin</tomcat.manager.password>
+			</properties>
+		</profile>
+	</profiles>
 
 	<reporting>
 		<plugins>
