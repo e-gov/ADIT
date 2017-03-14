@@ -1,15 +1,15 @@
-ALTER TABLE &&ADIT_SCHEMA..document_sharing
+ALTER TABLE adit.document_sharing
   add dhx_receipt_id character varying(100),
   add dhx_consignment_id character varying(100),
   add dhx_fault character varying(2500),
   add dhx_received_date timestamp without time zone,
   add dhx_sent_date timestamp without time zone;
 
-ALTER TABLE &&ADIT_SCHEMA..document
+ALTER TABLE adit.document
   add dhx_receipt_id character varying(100),
   add dhx_consignment_id character varying(100);
 
-CREATE TABLE &&ADIT_SCHEMA..dhx_user
+CREATE TABLE adit.dhx_user
 (
     org_code character varying(30)NOT NULL,
     org_name character varying(100) NOT NULL,
@@ -26,16 +26,18 @@ CREATE TABLE &&ADIT_SCHEMA..dhx_user
     organisation_identificator character varying(100),
     CONSTRAINT dhx_user_pkey PRIMARY KEY (dhx_user_id),
     CONSTRAINT dhx_user_dhx_userfk FOREIGN KEY (representor_id)
-        REFERENCES &&ADIT_SCHEMA..dhx_user (dhx_user_id) MATCH FULL
+        REFERENCES adit.dhx_user (dhx_user_id) MATCH FULL
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 );
-CREATE SEQUENCE &&ADIT_SCHEMA..sq_dhx_user_id
+CREATE SEQUENCE adit.sq_dhx_user_id
     START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
     NO MINVALUE
     CACHE 1;
 
-GRANT SELECT, UPDATE, INSERT ON &&ADIT_SCHEMA..dhx_user TO &&ADIT_APP.;
-GRANT USAGE ON SEQUENCE &&ADIT_SCHEMA..sq_dhx_user_id TO &&ADIT_APP.;
+ALTER TABLE adit.dhx_user OWNER TO adit_admin;
+    
+GRANT SELECT, UPDATE, INSERT ON adit.dhx_user TO adit_user;
+GRANT USAGE ON SEQUENCE adit.sq_dhx_user_id TO adit_user;

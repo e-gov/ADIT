@@ -1,15 +1,15 @@
 --
 -- Definition for function trigger_fct_tr_document_log (OID = 24715) : 
 --
-CREATE OR REPLACE FUNCTION &&ADIT_SCHEMA..trigger_fct_tr_document_log (
+CREATE OR REPLACE FUNCTION adit.trigger_fct_tr_document_log (
 )
 RETURNS trigger
 AS 
 $body$
 DECLARE
   operation varchar(100);
-  DOCUMENT_new &&ADIT_SCHEMA..DOCUMENT%ROWTYPE;
-  DOCUMENT_old &&ADIT_SCHEMA..DOCUMENT%ROWTYPE;
+  DOCUMENT_new adit.DOCUMENT%ROWTYPE;
+  DOCUMENT_old adit.DOCUMENT%ROWTYPE;
 BEGIN
 
   if TG_OP = 'INSERT' then
@@ -74,7 +74,7 @@ BEGIN
 	  DOCUMENT_old.dhx_consignment_id := OLD.dhx_consignment_id;
   end if;
 
-  PERFORM  &&ADIT_SCHEMA..ADITLOG.LOG_DOCUMENT(
+  PERFORM  adit.ADITLOG.LOG_DOCUMENT(
     DOCUMENT_new,
     DOCUMENT_old,
     operation
@@ -85,19 +85,18 @@ END
 $body$
 LANGUAGE plpgsql
 SECURITY DEFINER;
-/
 --
 -- Definition for function trigger_fct_tr_document_sharing_log (OID = 24717) : 
 --
-CREATE OR REPLACE FUNCTION &&ADIT_SCHEMA..trigger_fct_tr_document_sharing_log (
+CREATE OR REPLACE FUNCTION adit.trigger_fct_tr_document_sharing_log (
 )
 RETURNS trigger
 AS 
 $body$
 DECLARE
   operation varchar(100);
-  DOCUMENT_SHARING_new &&ADIT_SCHEMA..DOCUMENT_SHARING%ROWTYPE;
-  DOCUMENT_SHARING_old &&ADIT_SCHEMA..DOCUMENT_SHARING%ROWTYPE;
+  DOCUMENT_SHARING_new adit.DOCUMENT_SHARING%ROWTYPE;
+  DOCUMENT_SHARING_old adit.DOCUMENT_SHARING%ROWTYPE;
 BEGIN
  
   if TG_OP = 'INSERT' then
@@ -148,7 +147,7 @@ BEGIN
 	  DOCUMENT_SHARING_old.dhx_sent_date := OLD.dhx_sent_date;
   end if;	  
 
-  PERFORM  &&ADIT_SCHEMA..ADITLOG.LOG_DOCUMENT_SHARING(
+  PERFORM  adit.ADITLOG.LOG_DOCUMENT_SHARING(
     DOCUMENT_SHARING_new,
     DOCUMENT_SHARING_old,
     operation
@@ -159,4 +158,3 @@ END
 $body$
 LANGUAGE plpgsql
 SECURITY DEFINER;
-/
