@@ -3543,16 +3543,16 @@ Parameetrid
 
 | Nimi | Kirjeldus | Tüüp | Väärtuse näide |
 | --- | --- | --- | --- |
-| Item | Dokumentide dhl id-de konteiner |  |  |
+| dhx_receipt_ids | Dokumentide dhx receipt id-de konteiner |  |  |
 | dhx_receipt_id | Dokumendi DHX receipt ID | String | 45 |
 
 **Näide*
 
 ```xml
-<item>
+<dhx_receipt_ids>
 	<dhx_receipt_id>2</dhx_receipt_id>
 	<dhx_receipt_id>4</dhx_receipt_id>
-</item>
+</dhx_receipt_ids>
 ```
 
 ### Päringu vastuse näide
