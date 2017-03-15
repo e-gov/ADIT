@@ -1599,7 +1599,7 @@
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="getDocumentList">
-			<xrd:version>v1</xrd:version>
+			<xrd:version>v2</xrd:version>
 			<soap:operation style="document" />
 			<wsdl:input name="getDocumentListV2Request">
 				<soap:header message="tns:requestHeader" part="client" use="literal" />
@@ -1625,7 +1625,7 @@
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="sendDocument">
-			<xrd:version>v1</xrd:version>
+			<xrd:version>v2</xrd:version>
 			<soap:operation style="document" />
 			<wsdl:input name="sendDocumentV2Request">
 				<soap:header message="tns:requestHeader" part="client" use="literal" />
@@ -1651,7 +1651,7 @@
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="getSendStatus">
-			<xrd:version>v1</xrd:version>
+			<xrd:version>v2</xrd:version>
 			<soap:operation style="document" />
 			<wsdl:input name="getSendStatusV2Request">
 				<soap:header message="tns:requestHeader" part="client" use="literal" />
