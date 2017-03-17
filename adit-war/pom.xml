@@ -11,7 +11,13 @@
 		<artifactId>adit</artifactId>
 		<version>1.2.0</version>
 	</parent>
-
+	<repositories>
+		<repository>
+			<id>ria</id>
+			<name>DVK releases</name>
+			<url>https://artifactory.tt.kit/artifactory/DVK-libs-release-local</url>
+		</repository>
+	</repositories>
 	<properties>
 		<file.encoding>UTF-8</file.encoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
