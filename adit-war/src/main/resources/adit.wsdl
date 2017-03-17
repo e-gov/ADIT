@@ -670,7 +670,6 @@
 						</xs:annotation>
 						<simpleType>
 							<restriction base="string">
-<<<<<<< HEAD
 								<enumeration value="created"/>
 								<enumeration value="document_type"/>
 								<enumeration value="dvk_id"/>
@@ -682,17 +681,6 @@
 								<enumeration value="sender_receiver"/>
 								<enumeration value="sender"/>
 								<enumeration value="receiver"/>
-=======
-								<enumeration value="created" />
-								<enumeration value="document_type" />
-								<enumeration value="dvk_id" />
-								<enumeration value="guid" />
-								<enumeration value="id" />
-								<enumeration value="last_modified" />
-								<enumeration value="title" />
-								<enumeration value="file_size" />
-								<enumeration value="sender_receiver" />
->>>>>>> feature/using-digidoc4j
 							</restriction>
 						</simpleType>
 					</element>
@@ -777,11 +765,6 @@
 					</element>
 				</sequence>
 			</complexType>
-<<<<<<< HEAD
-			
-=======
-
->>>>>>> feature/using-digidoc4j
 			<!-- getDocumentV2 päringu tüübid -->
 			<complexType name="getDocumentV2Request">
 				<xs:annotation>
