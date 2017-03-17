@@ -61,11 +61,6 @@ public class MonitorConfiguration {
     private Long documentSendToDhxInterval;
 
     /**
-     * Document send to ADIT check interval.
-     */
-    private Long documentSendToAditInterval;
-
-    /**
      * Notification send interval.
      */
     private Long notificationSendInterval;
@@ -208,21 +203,6 @@ public class MonitorConfiguration {
         this.documentSendToDhxInterval = documentSendToDhxInterval;
     }
     
-    /**
-     * Get document send to ADIT interval.
-     * @return document send to ADIT interval
-     */
-    public Long getDocumentSendToAditInterval() {
-        return documentSendToAditInterval;
-    }
-
-    /**
-     * Set document send to ADIT interval.
-     * @param documentSendToAditInterval document send to ADIT interval
-     */
-    public void setDocumentSendToAditInterval(Long documentSendToAditInterval) {
-        this.documentSendToAditInterval = documentSendToAditInterval;
-    }
 
     /**
      * Get notification send interval.

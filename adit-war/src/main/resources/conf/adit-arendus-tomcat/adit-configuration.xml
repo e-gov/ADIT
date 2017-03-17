@@ -61,7 +61,6 @@
 		<property name="testUserCode" value="EE00000000000" />
 		<property name="documentSaveInterval" value="60000" />
 		<property name="documentSendToDhxInterval" value="60000" />
-		<property name="documentSendToAditInterval" value="60000" />
 		<property name="notificationSendInterval" value="900000" />
 		<property name="errorInterval" value="60000" />
 		<property name="errorLevel" value="FATAL" />
