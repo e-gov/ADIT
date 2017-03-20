@@ -100,6 +100,7 @@ import ee.adit.util.Util;
 import ee.ria.dhx.exception.DhxException;
 import ee.ria.dhx.types.OutgoingDhxPackage;
 import ee.ria.dhx.util.FileUtil;
+import ee.ria.dhx.util.StringUtil;
 import ee.ria.dhx.ws.context.AppContext;
 import ee.ria.dhx.ws.service.AsyncDhxPackageService;
 import ee.ria.dhx.ws.service.DhxPackageProviderService;
@@ -1355,7 +1356,10 @@ public class DocumentService {
 		Set<DocumentSharing> documentSharings = document.getDocumentSharings();
 
 		if (documentSharings != null && documentSharings.size() > 0) {
-			folderName = documentSharings.iterator().next().getDvkFolder();
+			DocumentSharing sharing = documentSharings.iterator().next();
+			if(!StringUtil.isNullOrEmpty(sharing.getDvkFolder())) {
+				folderName = sharing.getDvkFolder();
+			}
 		}
 
 		return folderName;
@@ -1450,9 +1454,9 @@ public class DocumentService {
 									// create different session for each
 									// sending, because sending is asynchronous
 									// and we dont know when sending is finished
-									if (session == null || !session.isOpen()) {
+									/*if (session == null || !session.isOpen()) {
 										session = this.getDocumentDAO().getSessionFactory().openSession();
-									}
+									}*/
 									dhxTransaction = session.beginTransaction();
 									AditUser recipientUser = aditUserDAO.getUserByID(documentSharing.getUserCode());
 									DhxUser org = dhxDAO.getOrganisationByIdentificator(recipientUser.getDvkOrgCode());
@@ -1461,7 +1465,7 @@ public class DocumentService {
 									documentSharing.setDhxConsignmentId(documentSharing.getId().toString());
 									session.saveOrUpdate(documentSharing);
 									dhxTransaction.commit();
-									session.close();
+									dhxTransaction = null;
 									OutgoingDhxPackage pckg = getDhxPackageProviderService().getOutgoingPackage(
 											new File(temporaryFile), documentSharing.getId().toString(),
 											org.getOrgCode(), org.getSubSystem());
@@ -1473,9 +1477,7 @@ public class DocumentService {
 								if (dhxTransaction != null && !dhxTransaction.wasCommitted()) {
 									dhxTransaction.rollback();
 								}
-								if (session == null || !session.isOpen()) {
-									session = this.getDocumentDAO().getSessionFactory().openSession();
-								}
+								dhxTransaction = session.beginTransaction();
 								documentSharing.setDocumentDvkStatus(DHX_STATUS_ABORTED);
 								String faultString = "Error occured while sending document to DHX." + ex.getMessage();
 								faultString = " Stacktrace: " + ExceptionUtils.getStackTrace(ex);
@@ -1484,6 +1486,7 @@ public class DocumentService {
 								}
 								documentSharing.setDhxFault(faultString);
 								session.saveOrUpdate(documentSharing);
+								dhxTransaction.commit();
 							} finally {
 							}
 						}

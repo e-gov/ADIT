@@ -73,14 +73,19 @@
 	</Appenders>
 	<Loggers>
 		<Logger name="ee.adit.ws" level="info" additivity="false">
+			<AppenderRef ref="file" />
 		</Logger>
 		<Logger name="ee.adit.util" level="info" additivity="false">
+			<AppenderRef ref="file" />
 		</Logger>
 		<Logger name="ee.adit.dao" level="info" additivity="false">
+			<AppenderRef ref="file" />
 		</Logger>
 		<Logger name="ee.adit.dvk" level="info" additivity="false">
+			<AppenderRef ref="file" />
 		</Logger>
 		<Logger name="ee.adit.service" level="info" additivity="false">
+			<AppenderRef ref="file" />
 		</Logger>
 
 		<Logger name="org.hibernate" level="WARN" additivity="false">
