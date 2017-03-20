@@ -327,9 +327,7 @@ public class AditDhxSpecificService implements DhxImplementationSpecificService 
 			} catch (DhxException ex) {
 				log.error("Error occured while cleaningup container.", ex);
 			}
-		/*	if (finalResult.getSentPackage().getDocumentFile() instanceof FileDataHandler) {
-				((FileDataHandler) finalResult.getSentPackage().getDocumentFile()).deleteFile();
-			}*/
+
 		}
 
 	}

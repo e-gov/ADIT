@@ -55,11 +55,11 @@ public class Container2_1Receiver implements DhxReceiver {
         saveDocumentToAdit(converter, document);
         sendToRecipients(converter.getSenderUser(), document, containerVer2_1);
 
-        /*try {
-            documentService.getDhxDAO().updateDocumentLocalId(document.getId(), message.getDhlMessageId());
+        try {
+            documentService.getDocumentDAO().updateDocumentReceiptId(document.getId(), document.getId());
         } catch (Exception e) {
-            throw new RuntimeException("Unable to update dhl_message_local_id in dvk client", e);
-        }*/
+            throw new RuntimeException("Unable to update dhx_receipt_id of the document", e);
+        }
 
         return document.getId();
     }

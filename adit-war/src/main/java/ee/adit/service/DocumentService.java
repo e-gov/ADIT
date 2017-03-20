@@ -1421,10 +1421,6 @@ public class DocumentService {
 			for (Document document : documents) {
 				logger.info("Sending document with ID " + document.getId() + " to DVK");
 				try {
-					// DhxSender dvkSender = new ContainerVer2_1Sender(this);
-
-					// Long dvkMessageID = dvkSender.send(document);
-
 					DocumentToContainerVer2_1ConverterImpl converter = new DocumentToContainerVer2_1ConverterImpl();
 					converter.setAditUserDAO(getAditUserDAO());
 					converter.setConfiguration(getConfiguration());
@@ -1439,7 +1435,8 @@ public class DocumentService {
 					container.setDecMetadata(metaData);
 					String temporaryFile = saveContainerToTempFile(container);
 					if (document.getDocumentSharings() != null) {
-						for (DocumentSharing documentSharing : document.getDocumentSharings()) {
+						Set<DocumentSharing> sharings =  document.getDocumentSharings();
+						for (DocumentSharing documentSharing : sharings) {
 							Transaction dhxTransaction = null;
 							try {
 								// send only those that are ment to be sent to

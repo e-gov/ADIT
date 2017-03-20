@@ -1781,4 +1781,19 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
 
 		return result;
 	}
+	
+	
+	   /**
+     * Updates only dhx receipt id column of the document.
+     *
+     * @param dhxReceiptId
+     * 		dhxReceiptId
+     * @param documentId
+     * 		documentId
+     * @throws Exception
+     */
+    public void updateDocumentReceiptId(Long dhxReceiptId, Long documentId) throws Exception {
+        logger.info("Updating dhx receipt id of the Document. Document ID: " + documentId + ", dhx receipt id: " + dhxReceiptId);
+        this.getHibernateTemplate().bulkUpdate("update Document set dhxReceiptId = "+ dhxReceiptId +" where id = " + documentId);
+    }
 }
