@@ -19,10 +19,6 @@
 - [Teavituskalendri ja riigiportaali X-Tee liidese seadistamine](#notification)
 - [Monitooringu rakendus ja rakenduse kontroll](#monitoring)
    * [Seadistamine](#monitoring-conf)
-   * [Nagiose seaded](#nagios)
-      * [Rakenduse log4j-nagiosappender seadistus](#nagios-log4j)
-      * [Nagiose seadistus – passiivne monitoring](#nagios-passive)
-      * [Nagiose seadistus – aktiivne monitooring](#nagios-active)
 
 
 
@@ -345,40 +341,6 @@ Logimine on ADIT rakenduses lahendatud Log4J raamistikku kasutades, seega toimub
 
 _NB! Rakenduse testimise ajaks on mõistlik sisse lülitada logimine tasemel „DEBUG“. Tootmisesse minekul tuleks logida tasemel „INFO“ või „WARN“._
 
-ADIT rakenduse saab seadistada logima ka Nagios monitooringusüsteemi. Selleks tuleb lisada _log4j2.xml_ faili eraldi Nagiose appender:
-
-```xml
-<appender name="nagios" class="org.apache.log4j.nagios.NagiosAppender">
-   <param name="Host" value="localhost"/>
-   <param name="Port" value="5667"/>
-
-   <param name="ConfigFile" value="nsca_send_clear.cfg"/>
-
-   <param name="ServiceNameDefault" value="ADIT"/>
-
-   <param name="useMDCServiceName" value="false"/>
-   <param name="MDCServiceNameKey" value="nagios_service_name"/>
-
-   <param name="useMDCHostName" value="true"/>
-   <param name="MDCHostNameKey" value="virtual_host"/>
-   <param name="InitializeMDCHostNameValue" value="production"/>
- 
-   <param name="useShortHostName" value="false"/>
-   <param name="MDCCanonicalHostNameKey" value="nagios_canonical_hostname"/>
-
-   <param name="Log4j_Level_WARN"     value="NAGIOS_WARN"/>
-   <param name="Log4j_Level_ERROR"    value="NAGIOS_CRITICAL"/>
-   <param name="Log4j_Level_FATAL"    value="NAGIOS_CRITICAL"/>
-
-   <param name="SendStartupMessageOK" value="Application Errors Cleared"/>
-
-   <layout class="org.apache.log4j.PatternLayout">
-      <param name="ConversionPattern" value="%X{nagios_canonical_hostname}: %m%n"/>
-   </layout>
-</appender>
-```
-
-Parameetris _„ConfigFile“_ viidatud konfiguratsioonifail _„ncsa_send_clear.cfg“_ sisaldab Nagios andmevahetuse krüpteeringu seadeid.
 
 <a name="conf5"></a>
 #### Fail xtee.properties
@@ -509,6 +471,7 @@ ADIT lähtekoodi ehitamisel tõmmatakse Maveni tsentraalsest repositooriumist va
 4) Paki paigalduspakett lahti kataloogi _„[TOMCAT_HOME]/webapps/adit“_
 
 5) Tee rakendusserverile taaskäivitus
+*kui tegemist on paigaldusega kus andmebaasis on puudu DHX adresaatide nimekiri(ntks esmane paigaldus), siis pärast paigaldust tuleb avada ADITi lehe http://ADIT_URL/dhx. Sellele lehele minnes initsialiseeritakse DHX adressaatide nimekirja.*
 
 
 
@@ -643,73 +606,3 @@ Monitooringurakenduse seadistamiseks on failis **_adit-configuration.xml_** jär
 - **notificationSendInterval** – intervall, mille jooksul saadetakse teavitusi teavitusteenusele (millisekundites).
 - **errorInterval** – intervall, mille jooksul kontrollitakse veateadete logitabelit.
 - **errorLevel** – määrab vaadeldavate vigade taseme vigade tabelis. Võimalikud väärtused – WARN, ERROR, FATAL.
-
-<a name="nagios"></a>
-### Nagiose seaded
-
-<a name="nagios-log4j"></a>
-#### Rakenduse log4j-nagiosappender seadistus
-
-Nagiose NSCA teenus, kuulab mon1a.sise.kit (IP 10.0.5.10 – soovituslik on usaldada DNSi) ning TCP pordil 5667. Suhtluse krüpteerimiseks kasutatakse NSCA konfiguratsioonis 16 = RIJNDAEL-256 algoritmi. Ühtlasi tuleb defineerida ka parool, mida siinkohal ülesse ei märgi.
-
-<a name="nagios-passive"></a>
-#### Nagiose seadistus – passiivne monitoring
-
-Nagioses on defineeritud teenuse template, adit-service3, milles määratakse _active_check_enabled_ 0 parameetriga passiivne kontroll.
-
-```
-define service{
-    name                            adit-service3
-    use                             generic-service-template1
-    check_period                    24x7
-    contact_groups                  adit-admins1
-    notifications_enabled         	1
-    notification_interval           2880
-    notification_period             16x7
-    active_checks_enabled       	0
-    max_check_attempts         	 	1
-    check_freshness                 1
-    freshness_threshold            	86400
-    check_command                 	return-critical
-    register                       	0
-}
-```
-
-ADIT rakendusserverile seadistatakse teenus, mille nimelist peab edastama _nagios appender_.
-
-```
-define service{
-    use                             adit-service3
-    host_name                       adit.avalik.kit
-    service_description             ADIT
-    check_command                   return-critical
-}
-```
-
-<a name="nagios-active"></a>
-#### Nagiose seadistus – aktiivne monitooring
-
-Nagioses on defineeritud teenuse template, adit-service2.
-
-```
-define service{
-    name                             adit-service2
-    use                              generic-service-template1
-    check_period                     24x7
-    contact_groups                   adit-admins1
-    notifications_enabled         	 1
-    notification_interval            2880
-    notification_period              16x7
-    register                       	 0
-}
-```
-ADIT rakendusserverile on defineeritud teenused, mida soovitakse kontrollida.
-
-```
-define service{
-    use                             adit-service2
-    host_name                       adit.avalik.kit
-    service_description             ADIT_active_check
-    check_command                   check_http
-}
-```
