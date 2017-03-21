@@ -7,7 +7,7 @@
 - [Lahenduse arhitektuur ja ülesehitus](#lahenduse-arhitektuur-ja-ülesehitus)
    * [Seosed teiste infosüsteemidega](#seosed-teiste-infosüsteemidega)
       * [Teavituskalender ja riigiportaal](#teavituskalender-ja-riigiportaal)
-      * [DVK liides](#dvk-liides)
+      * [DHX liides](#dhx-liides)
    * [Tagasiside ja veateated](#tagasiside-ja-veateated)
    * [Logimine](#logimine)
       * [Rakenduse logi](#rakenduse-logi)
