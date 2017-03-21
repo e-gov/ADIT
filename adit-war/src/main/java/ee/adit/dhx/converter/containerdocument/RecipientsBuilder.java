@@ -65,12 +65,12 @@ public class RecipientsBuilder {
                     final AditUser user = this.getAditUserDAO().getUserByID(personalIdCodeWithCountryPrefix);
 
                     if (user != null && user.getActive()) {
-                        // Check if user uses DVK
+                        // Check if user uses DHX
                         if (!Util.isNullOrEmpty(user.getDvkOrgCode())) {
-                            // The user uses DVK - this is not allowed.
+                            // The user uses DHX - this is not allowed.
                             // Users that use DVK have to exchange documents with
                             // other users that use DVK, over DVK.
-                            throw new IllegalStateException("User uses DVK - not allowed.");
+                            throw new IllegalStateException("User uses DHX - not allowed.");
                         } else {
                             final Recipient recipientFromContainer = findAppropriateRecipientFromContainer(recipient, container);
 

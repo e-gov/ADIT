@@ -111,21 +111,6 @@ public class MonitorService {
     private static final String ADIT_DB_CONNECTION_WRITE = "ADIT_DB_CONNECTION_WRITE";
 
     /**
-     * Component ADIT_UK_CONNECTION.
-     */
-    private static final String ADIT_UK_CONNECTION = "ADIT_UK_CONNECTION";
-
-    /**
-     * Component ADIT_UK_CONNECTION_READ.
-     */
-    private static final String ADIT_UK_CONNECTION_READ = "ADIT_UK_CONNECTION_READ";
-
-    /**
-     * Component ADIT_UK_CONNECTION_WRITE.
-     */
-    private static final String ADIT_UK_CONNECTION_WRITE = "ADIT_UK_CONNECTION_WRITE";
-
-    /**
      * Component ADIT_APP.
      */
     private static final String ADIT_APP = "ADIT_APP";
