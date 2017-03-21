@@ -4137,6 +4137,7 @@ public class DocumentService {
                                  final String requestPersonalCode, final AditUser currentUser,
                                  final String temporaryFilesDir) throws Exception {
 
+    	logger.debug("start confirmSignature docId: " + documentId);
         Session session = null;
         Transaction tx = null;
         try {
@@ -4171,7 +4172,9 @@ public class DocumentService {
             }
             
             Container container = storedDraftData.getContainer();
-            
+            logger.debug("container signatures " + container.getSignatures());
+            logger.debug("container type " + container.getType());
+
             boolean isBdoc = container.getType().equals(ContainerBuilder.BDOC_CONTAINER_TYPE) ? true : false;
 
             byte[] sigValue = new byte[(int) signatureFile.length()];
@@ -4195,6 +4198,7 @@ public class DocumentService {
             // b) hex-encoded signature value
             // c) base64 encoded <Signature> element 
             String signatureValueAsString = new String(sigValue, "UTF-8");
+            logger.debug("signatureValueAsString " + signatureValueAsString);
             if (!Util.isNullOrEmpty(signatureValueAsString)
                     && !signatureValueAsString.startsWith("<Signature") /*ddoc signature*/
                     && !signatureValueAsString.startsWith("<?xml") /*bdoc signature*/) {
@@ -4202,8 +4206,18 @@ public class DocumentService {
             	// Decode signature value if it is HEX encoded
             	sigValue = convertSignatureValueToByteArray(sigValue);
             }
+            logger.debug("sigValue before finalize " + new String(sigValue, "UTF-8"));
+            logger.debug("sigValue before finalize w/o UTF-8 " + new String(sigValue));
             
             DataToSign dataToSign = storedDraftData.getDataToSign();
+            logger.debug("dataToSign algorithm " + dataToSign.getDigestAlgorithm());
+            logger.debug("dataToSign signature parameters " + dataToSign.getSignatureParameters());
+            if (dataToSign.getSignatureParameters() != null) {
+	            logger.debug("dataToSign signing cert " + dataToSign.getSignatureParameters().getSigningCertificate());
+	            logger.debug("dataToSign encrypt algo " + dataToSign.getSignatureParameters().getEncryptionAlgorithm());
+            }
+            logger.debug("dataToSign digest to sign " + new String(dataToSign.getDigestToSign(), "UTF-8"));
+
             Signature sig = null;
             try {
             	sig = dataToSign.finalize(sigValue);
