@@ -440,6 +440,7 @@ public final class Util {
         byte[] b = new byte[66000];
         while ((len = base64InputStream.read(b)) > 0) {
             base64DecodedOut.write(b, 0, len);
+            logger.debug("Base64Encoded: " + new String(b, "UTF-8"));
         }
         base64DecodedOut.close();
         base64InputStream.close();
