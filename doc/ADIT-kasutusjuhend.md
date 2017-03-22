@@ -41,7 +41,7 @@
   * [UnShareDocument.v1](#unsharedocumentv1)   
   * [MarkDocumentViewed.v1](#markdocumentviewedv1)   
   * [ModifyStatus.v1](#modifystatusv1) 
-  * [SendDocument.v1 DHX teenus](#senddocumentv1DHXteenus) 
+  * [SendDocument.v1 DHX teenus](#senddocumentv1dhx) 
   
 ## Muutelugu
 
@@ -6099,6 +6099,7 @@ Parameetrid
     </SOAP-ENV:Body>
 </SOAP-ENV:Envelope>
 ```
+<a name="senddocumentv1dhx"></a>
 ## SendDocument.v1 DHX teenus 
 
 Päring võimaldab saata dokumendi teisele kasutajale vastavalt DHX protkollile.
