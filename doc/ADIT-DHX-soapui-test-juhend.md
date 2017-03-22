@@ -1,5 +1,3 @@
-![](EL_Regionaalarengu_Fond_horisontaalne.jpg)
-
 # SoapUI testide käivitamise juhend
 
 ## Sissejuhatus
