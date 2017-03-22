@@ -40,7 +40,8 @@
   * [ShareDocument.v1](#sharedocumentv1)   
   * [UnShareDocument.v1](#unsharedocumentv1)   
   * [MarkDocumentViewed.v1](#markdocumentviewedv1)   
-  * [ModifyStatus.v1](#modifystatusv1)  
+  * [ModifyStatus.v1](#modifystatusv1) 
+  * [SendDocument.v1 DHX teenus](#senddocumentv1DHXteenus) 
   
 ## Muutelugu
 
@@ -6098,4 +6099,10 @@ Parameetrid
     </SOAP-ENV:Body>
 </SOAP-ENV:Envelope>
 ```
+## SendDocument.v1 DHX teenus 
+
+Päring võimaldab saata dokumendi teisele kasutajale vastavalt DHX protkollile.
+Teenus realiseeritud vastavalt DHX spetsifikatsioonile mis asub [siin](https://github.com/e-gov/DHX/blob/master/files/sendDocument.md).
+
+
 
