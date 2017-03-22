@@ -11,7 +11,7 @@ SoapUi testid on koostatud ja nimetatud vastavalt [testilugudele](ADIT-DHX-testi
 ## SoapUI testide konfigureerimine.
 
 * Importida SoapUI project (SoapUI projekti importimise kohta võib rohkem infot  leida [siin](https://www.soapui.org/articles/import-project.html))
-* SoapUi projekt asub [siin](../test), fail adit-soapui.xml
+* SoapUi projekt asub [siin](../adit-war/src/test/soapui), fail adit-soapui.xml
 
 * Muuta ADIT_DHX SoapUi projekti parameetrid (SoapUI parameetrite kohta võib rohkem infot leida  [siin](https://www.soapui.org/functional-testing/properties/working-with-properties.html)):
 
@@ -41,7 +41,7 @@ SoapUi testid on koostatud ja nimetatud vastavalt [testilugudele](ADIT-DHX-testi
 | notCapsule | C:\Users\alex\Desktop\xmls/kapsel_21_not_kapsel.xml | viide failile, mis ei ole XML-vormingus või on XML vales vormingus.  |
 | document | C:\Users\alex\Desktop\xmls/document.xml | viide dokumendile, mida saadetakse kasutajale |
 
-**Failid asuvad [xmls](../test/xmls) kaustas. Faili viidetega parameetrid (goodCapsule, badCapsule, notCapsule, document) tuleb muuta igas keskkonnas kus teste käivitatakse. Faili viide peab olema absolute path failini.**
+**Failid asuvad [xmls](../adit-war/src/test/soapui/xmls) kaustas. Faili viidetega parameetrid (goodCapsule, badCapsule, notCapsule, document) tuleb muuta igas keskkonnas kus teste käivitatakse. Faili viide peab olema absolute path failini.**
 
 ## SoapUI testide käivitamine
 Testide struktuuri ja käivitamise kirjeldus on esitatud [siin](https://www.soapui.org/functional-testing/structuring-and-running-tests.html).
