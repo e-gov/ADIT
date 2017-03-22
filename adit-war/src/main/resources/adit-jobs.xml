@@ -104,7 +104,7 @@
 
 	<bean id="UserSyncJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
 		<property name="jobDetail" ref="UserSyncJobDetails" />
-		<property name="cronExpression" value="0 */2 * * * ?" />
+		<property name="cronExpression" value="0 0 7 * * ?" />
 	</bean>
 
 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
