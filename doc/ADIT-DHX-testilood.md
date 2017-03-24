@@ -47,7 +47,7 @@ DHX protokolli ja ADIT koostöö testimiseks valiti need ADITi teenused, mis on 
   - getSendStatus
   - markDocumentViewed
 
-  ![](Testkontseptsioon.jpg)
+  ![](../img/Testkontseptsioon.jpg)
   
 Testimine on planeeritud läbi viia kahes etapis. Esimeses etapis testitakse ADIT dokumentide haldamisega seotud teenused vastu vana DVK-d. Seejärel realiseeritakse DHX protokolli võimekus ning testitakse samad teenused üle DHX-I vastu DHX makettrakendust, veendumaks, et kõik teenused töötavad samamoodi, nagu enne DHXi kasutuselevõttu.
 
