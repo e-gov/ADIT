@@ -38,7 +38,7 @@ Andmebaasi skriptid ja rakenduse algkood on saadaval koos [lähtekoodiga](https:
 
 ### Andmebaasi loomine
 
-Andmebaasiskeemi loomise SQL skriptid asuvad paigalduspaketis kataloogis [/sql](../adit-war/sql). Enne aga, kui skripte käivitada, tuleb luua andmebaasiskeem / kasutaja (_schema_) ning tabeliruumid (_tablespace_) ADIT andmetabelite ja indeksite (_index_) jaoks. Paigaldamise sammud on järgmised:
+Andmebaasiskeemi loomise SQL skriptid asuvad paigalduspaketis kataloogis [/sql](../adit-war/sql). Enne skriptide käivitamist tuleb luua andmebaasiskeem / kasutaja (_schema_) ning tabeliruumid (_tablespace_) ADIT andmetabelite ja indeksite (_index_) jaoks. Paigaldamise sammud on järgmised:
 
 1.	Tekitada eesti kodeeringus andmebaasi klaster: 
 
@@ -48,7 +48,7 @@ pg_createcluster --locale et_EE.UTF-8 9.4 main
 
 2.	Tekitada kasutajana postgres kaks kasutajat, _adit_admin_ ja _adit_user_ 
 
-   - **adit_admin** – kasutaja, kelle skeemi luuakse kõik tabelid / protseduurid / triggerid ja muud andmebaasiobjektid.
+   - **adit_admin** – kasutaja, kelle skeemi luuakse kõik tabelid / protseduurid / trigerid ja muud andmebaasiobjektid.
    - **adit_user** – kasutaja, kelle abil rakendus andmebaasiga suhtleb. 
 
 ```
@@ -70,14 +70,14 @@ LC_CTYPE = 'et_EE.UTF-8'
 CONNECTION LIMIT = -1;
 ```
 
-4.	Käivita SQL skript [latest_postgresql_database.sql](../adit-war/sql/latest_postgresql_database.sql) (ADIT andmebaasi loomine). Skript tuleb käivitada _adit_admin_ kasutaja poolt, kellel on tabelite, päästikute ja protseduuride loomise õigused.
+4.	Käivita SQL skript [latest_postgresql_database.sql](../adit-war/sql/latest_postgresql_database.sql) (ADIT andmebaasi loomine). Skript tuleb käivitada _adit_admin_ kasutaja poolt, kellel on tabelite, trigerite ja protseduuride loomise õigused.
 
-5.	Kontrolli, kas tabelid, funktsioonid ja triggerid on loodud 
+5.	Kontrolli, kas tabelid, funktsioonid ja trigerid on loodud 
 
 - Skeema „adit“
 
    * Tabeleid: 26
-   * Triggereid: 19
+   * Trigereid: 19
    * Funktsioone: 3
    * Sequence: 13
 
@@ -85,7 +85,7 @@ CONNECTION LIMIT = -1;
 
    * Funktsioone: 20
 
-Andmebaasikasutajal (_adit_admin_), kelle skeemi tabelid loodi, peavad olema järgmised õigused (juba antud kasutaja loomise käigus):
+Andmebaasikasutajal (_adit_admin_), kelle skeemi tabelid loodi, peavad olema järgmised õigused (antud juba kasutaja loomise käigus):
 
 1.	Kõikidesse oma schema tabelitesse kirjutamise õigus
 2.	Kõikide oma schema tabelite lugemisõigus

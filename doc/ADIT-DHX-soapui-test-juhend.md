@@ -2,7 +2,7 @@
 
 ## Sissejuhatus
 
-SoapUI on tarkvara, mis võimaldab lihtsal viisil teha SOAP päringuid. SoapUI saab alla laadida ja rohkem infot leida on võimalik leheküljel: [https://www.soapui.org/](https://www.soapui.org/).
+SoapUI on tarkvara, mis võimaldab lihtsal viisil teha SOAP päringuid. SoapUI alla laadida ja rohkem infot leida on võimalik leheküljel: [https://www.soapui.org/](https://www.soapui.org/).
 
 Käesolev juhend kirjeldab ADIT veebiteenuste testimiseks väljatöötatud SoapUI testide konfigureerimist ja käivitamist.
 
@@ -18,8 +18,8 @@ SoapUi testid on koostatud ja nimetatud vastavalt [testilugudele](ADIT-DHX-testi
 
 | Parameetri nimi | Näidisväärtus | Kommentaar |
 |-------|----------|----------------|
-| aditDhxEndpoint | http://10.0.13.198/cgi-bin/consumer_proxy  | endpoint kuhu tuleb saata DHX päringud. Tavaliselt turvaserveri aadress. |
-| aditEndpoint | http://10.0.13.198/cgi-bin/consumer_proxy  | endpoint kuhu tuleb saata ADIT päringud. Tavaliselt turvaserveri aadress. |
+| aditDhxEndpoint | http://10.0.13.198/cgi-bin/consumer_proxy  | endpoint, kuhu tuleb saata DHX päringud. Tavaliselt turvaserveri aadress. |
+| aditEndpoint | http://10.0.13.198/cgi-bin/consumer_proxy  | endpoint, kuhu tuleb saata ADIT päringud. Tavaliselt turvaserveri aadress. |
 | xroadInstance | ee-dev | SOAP headeri Xtee parameetri xroadInstance väärtus |
 | dhs1MemberClass | COM | testilugudes kirjeldatud DHS1 Xtee liikme memberClass |
 | dhs1MemberCode | EE30000001 | testilugudes kirjeldatud DHS1 Xtee liikme memberCode |
@@ -41,9 +41,9 @@ SoapUi testid on koostatud ja nimetatud vastavalt [testilugudele](ADIT-DHX-testi
 | notCapsule | C:\Users\alex\Desktop\xmls/kapsel_21_not_kapsel.xml | viide failile, mis ei ole XML-vormingus või on XML vales vormingus.  |
 | document | C:\Users\alex\Desktop\xmls/document.xml | viide dokumendile, mida saadetakse kasutajale |
 
-**Failid asuvad [xmls](../adit-war/src/test/soapui/xmls) kaustas. Faili viidetega parameetrid (goodCapsule, badCapsule, notCapsule, document) tuleb muuta igas keskkonnas kus teste käivitatakse. Faili viide peab olema absolute path failini.**
+**Failid asuvad [xmls](../adit-war/src/test/soapui/xmls) kaustas. Faili viidetega parameetrid (goodCapsule, badCapsule, notCapsule, document) tuleb muuta igas keskkonnas, kus teste käivitatakse. Faili viide peab olema absolute path failini.**
 
 ## SoapUI testide käivitamine
-Testide struktuuri ja käivitamise kirjeldus on esitatud [siin](https://www.soapui.org/functional-testing/structuring-and-running-tests.html).
+Testide ülesehituse ja käivitamise kirjeldus on esitatud [siin](https://www.soapui.org/functional-testing/structuring-and-running-tests.html).
 
 Pärast testide läbimist tuleb veenduda, et kõik testid on õnnestunud.

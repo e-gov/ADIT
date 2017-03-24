@@ -1,5 +1,6 @@
 # Sisukord
 
+- [Testimise strateegia](#test-strateegia)
 - [Testilood](#tests)
 
   - [1. DHX protokolli teenuste testimine](#dhx-tests)
@@ -34,6 +35,22 @@
     - [3.2. Duplikaadi kontroll](#3.2)
     - [3.3. ADIT süsteemist tulnud dokumendi vastuvõtmine](#3.3)
 
+<a name="test-strateegia"></a>
+# Testimise strateegia
+DHX protokolli ja ADIT koostöö testimiseks valiti need ADITi teenused, mis on seotud dokumentide edastamisega:
+  - saveDocument
+  - sendDocument
+  - getDocument
+  - getJoined
+  - getDocumentList
+  - getUserInfo
+  - getSendStatus
+  - markDocumentViewed
+
+  ![](Testkontseptsioon.jpg)
+  
+Testimine on planeeritud läbi viia kahes etapis. Esimeses etapis testitakse ADIT dokumentide haldamisega seotud teenused vastu vana DVK-d. Seejärel realiseeritakse DHX protokolli võimekus ning testitakse samad teenused üle DHX-I vastu DHX makettrakendust, veendumaks, et kõik teenused töötavad samamoodi, nagu enne DHXi kasutuselevõttu.
+
 <a name="tests"></a>
 # Testilood
 
@@ -43,9 +60,9 @@
 
 ADIT testimiseks on vajalikud järgmised X-tee liikmed:
 
-- DHS 1 - X-tee liige, kellel on olemas DHX alamsüsteem, kes on registreeritud DHX vahendajana ja pakub X-tee teenuseid representationList ja sendDocument vastavalt DHX protokollile. RepresentationList teenus peab tagastama vähemalt ühe vahendatava andmeid. Asutusel on registreeritud vähemalt üks DHX. prefiksiga (ntks DHX.subsystem) alamsüsteem, kuhu võib DHX protkolli järgi dokumente saata.
+- DHS 1 - X-tee liige, kellel on olemas DHX alamsüsteem, kes on registreeritud DHX vahendajana ja pakub X-tee teenuseid representationList ja sendDocument vastavalt DHX protokollile. RepresentationList teenus peab tagastama vähemalt ühe vahendatava andmeid. Asutusel on registreeritud vähemalt üks DHX. prefiksiga (ntks DHX.subsystem) alamsüsteem, kuhu võib DHX protokolli järgi dokumente saata.
 
-- ADIT - X-tee liige, teenuste omanik (pakkuja), ehk see liige kellele dokumente saadetakse DHX-st ja kes pakub ADIT teenuseid DHS-le.
+- ADIT - X-tee liige, teenuste omanik (pakkuja), ehk see liige, kellele dokumente saadetakse DHX-st ja kes pakub ADIT teenuseid DHS-le.
 
 - CONSUMER - X-tee liige, kes suhtleb ADIT-iga (DHX ja ADIT teenustega)
 
@@ -76,7 +93,7 @@ Saadetis : korrektselt kapseldatud fail
 
 #### **Oodatav tulemus** :
 
-- sendDocument päringu saatmisel vigu ei tekkinud ja päringu vastuses on olemas receiptId
+- sendDocument päringu saatmisel vigu ei tekkinud ja päringu vastuses on olemas receiptId.
 
 #### **Päringu näide:**
 
@@ -240,7 +257,7 @@ Saadetis : kapsli fail, mis ei vasta Elektroonilise andmevahetuse metaandmete lo
 
 #### **Oodatav tulemus** :
 
-- sendDocument päringu vastuses on DHX.Validation koodiga fault
+- sendDocument päringu vastuses on DHX.Validation koodiga fault.
 
 #### **Päringu näide:**
 
@@ -391,7 +408,7 @@ Saadetis : fail, mis ei ole XML-vormingus või on XML vale vorminguga.
 
 #### **Oodatav tulemus** :
 
-- sendDocument päringu vastuses on DHX.Validation koodiga fault
+- sendDocument päringu vastuses on DHX.Validation koodiga fault.
 
 #### **Päringu näide:**
 
@@ -453,7 +470,7 @@ Saadetis : korrektselt kapseldatud fail
 
 #### **Oodatav tulemus** :
 
-- sendDocument päringu vastuses on DHX.Duplicate koodiga fault
+- sendDocument päringu vastuses on DHX.Duplicate koodiga fault.
 
 #### **Päringu näide:**
 
@@ -613,7 +630,7 @@ Saadetis : korrektselt kapseldatud fail
 
 #### **Oodatav tulemus** :
 
-- sendDocument päringu vastuses on DHX.InvalidAddressee koodiga fault
+- sendDocument päringu vastuses on DHX.InvalidAddressee koodiga fault.
 
 #### **Päringu näide:**
 
@@ -774,7 +791,7 @@ Saadetis : korrektselt kapseldatud fail
 
 #### **Oodatav tulemus** :
 
-- sendDocument päringu saatmisel vigu ei tekkinud ja päringu vastuses on olemas receiptId
+- sendDocument päringu saatmisel vigu ei tekkinud ja päringu vastuses on olemas receiptId.
 
 #### **Päringu näide:**
 
@@ -937,7 +954,7 @@ Saadetis : korrektselt kapseldatud fail
 
 #### **Oodatav tulemus** :
 
-- sendDocument päringu saatmisel vigu sh duplikaadi vigu ei tekkinud ja päringu vastuses on olemas receiptId
+- sendDocument päringu saatmisel vigu (sh duplikaadi vigu) ei tekkinud ja päringu vastuses on olemas receiptId.
 
 #### **Päringu näide:**
 
@@ -1098,7 +1115,7 @@ Saadetis : korrektselt kapseldatud fail
 
 #### **Oodatav tulemus** :
 
-- sendDocument päringu vastuses on faultcode ja faultstring
+- sendDocument päringu vastuses on faultcode ja faultstring.
 
 #### **Päringu näide:**
 
@@ -1261,7 +1278,7 @@ Saadetis : korrektselt kapseldatud fail
 
 #### **Oodatav tulemus** :
 
-- sendDocument päringu vastuses on faultcode ja faultstring 'User uses DVK - not allowed'
+- sendDocument päringu vastuses on faultcode ja faultstring 'User uses DVK - not allowed'.
 
 #### **Päringu näide:**
 
@@ -1427,7 +1444,7 @@ Saadetis : Dokument
 
 #### **Oodatav tulemus** :
 
-- saveDocument päringu saatmisel vigu ei tekkinud ja päringu vastuses on olemas document_id
+- saveDocument päringu saatmisel vigu ei tekkinud ja päringu vastuses on olemas document_id.
 
 #### **Päringu näide:**
 
@@ -1542,7 +1559,7 @@ Dokumendi adressaat SOAP kehas (recipient_list): DHS1
 
 #### **Oodatav tulemus** :
 
-- sendDocument päringu saatmisel vigu ei tekkinud
+- sendDocument päringu saatmisel vigu ei tekkinud.
 
 #### **Päringu näide:**
 
@@ -1600,7 +1617,7 @@ Dokumendi adressaat SOAP kehas (recipient_list): DHS1
 
 #### **Oodatav tulemus** :
 
-- sendDocument päringu saatmisel vigu ei tekkinud
+- sendDocument päringu saatmisel vigu ei tekkinud.
 
 #### **Päringu näide:**
 
@@ -1658,7 +1675,7 @@ Dokumendi adressaat SOAP kehas (recipient_list): DHS1 vahendatav
 
 #### **Oodatav tulemus** :
 
-- sendDocument päringu saatmisel vigu ei tekkinud
+- sendDocument päringu saatmisel vigu ei tekkinud.
 
 #### **Päringu näide:**
 
@@ -1716,7 +1733,7 @@ Dokumendi adressaat SOAP kehas (recipient_list): DHS1 alamsüsteem
 
 #### **Oodatav tulemus** :
 
-- sendDocument päringu saatmisel vigu ei tekkinud
+- sendDocument päringu saatmisel vigu ei tekkinud.
 
 #### **Päringu näide:**
 
@@ -1774,7 +1791,7 @@ Dokumendi adressaat SOAP kehas (recipient_list): DHS1, DHS1 alamsüsteem, DHS1 v
 
 #### **Oodatav tulemus** :
 
-- sendDocument päringu saatmisel vigu ei tekkinud
+- sendDocument päringu saatmisel vigu ei tekkinud.
 
 #### **Päringu näide:**
 
@@ -1995,7 +2012,7 @@ Saadetis : XML fail, mis sisaldab kasutajate DHS1, DHS1 vahendatav, DHS1 alamsü
 
 #### **Oodatav tulemus** :
 
-- getUserInfo päringu saatmisel vigu ei tekkinud ja päritud kasutajate andmed on õiged
+- getUserInfo päringu saatmisel vigu ei tekkinud ja päritud kasutajate andmed on õiged.
 
 #### **Päringu näide:**
 
@@ -2331,7 +2348,7 @@ Saadetis : korrektselt kapseldatud fail
 
 #### **Oodatav tulemus:**
 
-- Saatmise sündmus on kajastatud saatva süsteemi sündmuste logis
+- Saatmise sündmus on kajastatud saatva süsteemi sündmuste logis.
 
 <a name="3.2"></a>
 ### 3.2. Duplikaadi kontroll
@@ -2352,9 +2369,9 @@ Saadetis : korrektselt kapseldatud fail
 
 #### **Oodatav tulemus:**
 
-- dokument on tagasi lükatud
-- vastuses on DHX.Duplicate koodiga fault
-- sündmus on kajastatud sündmuste logis
+- dokument on tagasi lükatud;
+- vastuses on DHX.Duplicate koodiga fault;
+- sündmus on kajastatud sündmuste logis;
 
 <a name="3.3"></a>
 ### 3.3. ADIT süsteemist tulnud dokumendi vastuvõtmine
@@ -2371,5 +2388,5 @@ Saadetis : korrektselt kapseldatud fail
 
 #### **Oodatav tulemus:**
 
-- ADIT-st tulnud dokumendi info olemas makettrakenduse sündmuste logis
+- ADIT-st tulnud dokumendi info olemas makettrakenduse sündmuste logis.
 

@@ -39,7 +39,7 @@ ADIT rakendus on oma olemuselt veebirakendus, mis töötab Java rakendusserveris
 
 ### Seosed teiste infosüsteemidega
 
-ADIT on liidestatud teavituskalendri ning kasutab DHX protokolli dokumentide saatmiseks.
+ADIT on liidestatud teavituskalendriga ning kasutab DHX protokolli dokumentide saatmiseks.
 
 ![Arhitektuuri joonis](../doc/img/ADITiArhitektuurijoonis.png)
 
@@ -76,18 +76,18 @@ ADIT peab olema suuteline ka DHX-st tulevaid dokumente vastu võtma ning oma and
 
 #### Dokumendi saatmine DHX-i
 
-Kui ADIT rakendusest saadetakse dokument (kutsutakse välja veebiteenus „sendDocument()“) adressaadile, siis saatmisele eelnevalt kontrollitakse, kas adressaat on DHX-i adressaat. Kui vastus on positiivne, saadetaksegi dokument sellele konkreetsele adressaadile DHX kaudu. 
-See tähendab seda, et saadetava dokumendi andmete põhjal koostatakse versioon 2.1 konteiner. Seejärel saadetakse konteiner koos saatmist puudutavate andmetega DHX adressaadile, kasutades DHX adapteri poolt pakutud funktsioone. DHX adapter saadab dokumendi asünkroonselt ja pärast saatmist kutsub välja ADITi funktsiooni saatmise tulemuste salvestamiseks(tulemuste salvestamisel uuendatakse staatust ja salvestatakse DHX receipt id juhul kui saatmine õnnestus, vastasel juhul ainult uuendatakse staatust).
+Kui ADIT rakendusest saadetakse dokument (kutsutakse välja veebiteenus „sendDocument()“) adressaadile, siis enne saatmist kontrollitakse, kas adressaat on DHX-i adressaat. Kui vastus on positiivne, saadetaksegi dokument sellele konkreetsele adressaadile DHX kaudu. 
+See tähendab seda, et saadetava dokumendi andmete põhjal koostatakse kapsli versioon 2.1 vastav konteiner. Seejärel saadetakse konteiner koos saatmist puudutavate andmetega DHX adressaadile, kasutades DHX adapteri poolt pakutud funktsioone. DHX adapter saadab dokumendi asünkroonselt ja pärast saatmist kutsub välja ADITi funktsiooni saatmise tulemuste salvestamiseks(tulemuste salvestamisel uuendatakse staatust ja salvestatakse DHX receipt id juhul kui saatmine õnnestus, vastasel juhul ainult uuendatakse staatust).
 
 
 #### Dokumendi vastuvõtmine DHX-st
 
-ADIT pakub DHX teenust sendDocument(DHX adapter abil) kuhu teised DHX kasutajad võivad dokumente saata. 
+ADIT pakub DHX teenust sendDocument(DHX adapter abil), kuhu teised DHX kasutajad võivad dokumente saata. 
 
-Dokumendi vastuvõtmisel saabunud konteinerist võetakse välja andmed ning salvestatakse ADIT andmebaasis. ADIT andmebaasis seotakse dokument dokumendi adressaadiks olnud kasutajaga. 
-Kui dokumendi sidumisel kasutajaga ilmnes, et kasutajat pole ADIT aktiivsete kasutajate hulgas, siis tagastatakse vea. Kui dokumendi adressaadiks on DHX kasutaja, siis talitatakse sarnaselt eeltoodule, kuna DHX kasutajad peavad suhtlema otse omavahel, mitte ADIT kaudu.
+Dokumendi vastuvõtmisel  võetakse saabunud konteinerist välja andmed ning salvestatakse ADIT andmebaasis. ADIT andmebaasis seotakse dokument dokumendi adressaadiks olnud kasutajaga. 
+Kui dokumendi sidumisel kasutajaga ilmnes, et kasutajat pole ADIT aktiivsete kasutajate hulgas, siis tagastatakse viga. Kui dokumendi adressaadiks on DHX kasutaja, siis talitatakse sarnaselt eeltoodule, kuna DHX kasutajad peavad suhtlema otse omavahel, mitte ADIT kaudu.
 
-DHX kaudu vastuvõetava dokumendi puhul on vaja välja selgitada, millisele ADIT kasutajale see dokument mõeldud on. Selle jaoks tuleb panna ADIT kasutaja kood konteineris transport ning saaja blokki – täpsemalt `<Transport><DecRecipient><PersonalIdCode>` ning `<Recipient><Person><PersonalIdCode>` sisse:
+DHX kaudu vastuvõetava dokumendi puhul on vaja välja selgitada, millisele ADIT kasutajale see dokument mõeldud on. Selle jaoks tuleb panna ADIT kasutaja kood konteineris blokkidesse "transport" ning "saaja" blokki – täpsemalt `<Transport><DecRecipient><PersonalIdCode>` ning `<Recipient><Person><PersonalIdCode>` sisse:
 
 ```xml
 <DecContainer xmlns="http://www.riik.ee/schemas/deccontainer/vers_2_1/">
@@ -116,8 +116,8 @@ DHX kaudu vastuvõetava dokumendi puhul on vaja välja selgitada, millisele ADIT
 
 #### DHX kasutajate eristamine
 
-DHX kasutajad eristatakse ADIT kasutajatest selle poolest, et DHX kasutajate kontol on määratud DHX organisatsiooni registrikood (tabel ADIT_USER.dvk_org_code). Kui see andmetabeli väli ei ole määratud on tegemist nö. ADIT tavakasutajaga.
-DHX kasutaja andmete muudatused (lisamised, nimemuutused, kustutamised) tulevad ainult ühepoolselt – DHX-st ADITisse. DHX kasutajate andmeid ei saa muuta join või unJoin päringutega.
+DHX kasutajad erinevad  ADIT tavakasutajatest selle poolest, et DHX kasutajate kontol on määratud DHX organisatsiooni registrikood (tabel ADIT_USER.dvk_org_code). Kui see andmeväli ei ole määratud on tegemist nö. ADIT tavakasutajaga.
+DHX kasutaja andmete muudatused (lisamised, nimemuutused, kustutamised) liiguvad ainult ühepoolselt – DHX-st ADITisse. DHX kasutajate andmeid ei saa muuta join või unJoin päringutega.
 DHX kasutaja (pöördudes ADIT teenuse poole otseste x-tee päringutega)  saab kutsuda välja ainult päringuid:
 
 - getDocumentList
@@ -182,7 +182,7 @@ Rakenduse logi tekitamiseks kasutatakse Log4j teeki, mis võimaldab logimise sea
 
 #### Andmebaasi logi
 
-Järgenvalt on toodud erinevad ADIT andmebaasis olevad logitabelid ning nende eesmärk:
+Järgnevalt on toodud erinevad ADIT andmebaasis olevad logitabelid ning nende eesmärk:
 
 - **ADIT_LOG** – hoiab andmeid kõikide andmebaasis toimunud muudatuste kohta.
 - **REQUEST_LOG** - tehtud päringute logimiseks. Logitakse järgmised päringud:
