@@ -910,7 +910,7 @@ Parameetrid
 ```xml
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xtee="http://x-tee.riik.ee/xsd/xtee.xsd" xmlns:adit="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid">
    <soapenv:Header>
-      <xtee:nimi>ametlikud-dokumendid.getUserInfo.v1</xtee:nimi>
+      <xtee:nimi>ametlikud-dokumendid.getUserInfo.v2</xtee:nimi>
       <xtee:id>00000000000000</xtee:id>
       <xtee:isikukood>EE38407089745</xtee:isikukood>
       <xtee:andmekogu>ametlikud-dokumendid</xtee:andmekogu>
@@ -947,7 +947,7 @@ Parameetrid
             <id:memberCode>70006317</id:memberCode>			
             <id:subsystemCode>adit</id:subsystemCode>
             <id:serviceCode>getUserInfo</id:serviceCode>
-            <id:serviceVersion>v1</id:serviceVersion>
+            <id:serviceVersion>v2</id:serviceVersion>
         </xrd:service>
         <xrd:userId>EE37901130250</xrd:userId>
         <xrd:id>3cf04253-db0c-4d1d-8105-791472d88437</xrd:id>
@@ -990,7 +990,7 @@ Parameetrid
       <xtee:asutus xsi:type="xsd:string">12345678</xtee:asutus>
       <xtee:isikukood xsi:type="xsd:string">EE38407089745</xtee:isikukood>
       <xtee:id xsi:type="xsd:string">00000000000000</xtee:id>
-      <xtee:nimi xsi:type="xsd:string">ametlikud-dokumendid.getUserInfo.v1</xtee:nimi>
+      <xtee:nimi xsi:type="xsd:string">ametlikud-dokumendid.getUserInfo.v2</xtee:nimi>
       <xtee:andmekogu xsi:type="xsd:string">ametlikud-dokumendid</xtee:andmekogu>
    </SOAP-ENV:Header>
    <SOAP-ENV:Body>
@@ -1027,7 +1027,7 @@ Parameetrid
             <id:memberCode>70006317</id:memberCode>	
             <id:subsystemCode>adit</id:subsystemCode>
             <id:serviceCode>getUserInfo</id:serviceCode>
-            <id:serviceVersion>v1</id:serviceVersion>
+            <id:serviceVersion>v2</id:serviceVersion>
         </xrd:service>
         <xrd:userId>EE37901130250</xrd:userId>
         <xrd:id>3cf04253-db0c-4d1d-8105-791472d88437</xrd:id>
@@ -3018,7 +3018,7 @@ Parameetrid
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:amet="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" xmlns:xtee="http://x-tee.riik.ee/xsd/xtee.xsd">
    <soapenv:Header>
       <amet:infosysteem>KOV</amet:infosysteem>
-      <xtee:nimi>ametlikud-dokumendid.getDocument.v2</xtee:nimi>
+      <xtee:nimi>ametlikud-dokumendid.getDocument.v3</xtee:nimi>
       <xtee:id>00000000000000</xtee:id>
       <xtee:isikukood>EE38605150320</xtee:isikukood>
       <xtee:andmekogu>ametlikud-dokumendid</xtee:andmekogu>
@@ -3055,7 +3055,7 @@ Parameetrid
             <id:memberCode>70006317</id:memberCode>			
             <id:subsystemCode>adit</id:subsystemCode>
             <id:serviceCode>getDocument</id:serviceCode>
-            <id:serviceVersion>v2</id:serviceVersion>
+            <id:serviceVersion>v3</id:serviceVersion>
         </xrd:service>
         <xrd:userId>EE37901130250</xrd:userId>
         <xrd:id>3cf04253-db0c-4d1d-8105-791472d88437</xrd:id>
@@ -3085,7 +3085,7 @@ Parameetrid
       <xtee:asutus xsi:type="xsd:string">10560025</xtee:asutus>
       <xtee:isikukood xsi:type="xsd:string">EE38605150320</xtee:isikukood>
       <xtee:id xsi:type="xsd:string">00000000000000</xtee:id>
-      <xtee:nimi xsi:type="xsd:string">ametlikud-dokumendid.getDocument.v2</xtee:nimi>
+      <xtee:nimi xsi:type="xsd:string">ametlikud-dokumendid.getDocument.v3</xtee:nimi>
       <xtee:andmekogu xsi:type="xsd:string">ametlikud-dokumendid</xtee:andmekogu>
    </SOAP-ENV:Header>
    <SOAP-ENV:Body>
@@ -3127,7 +3127,7 @@ Parameetrid
             <id:memberCode>70006317</id:memberCode>
             <id:subsystemCode>adit</id:subsystemCode>
             <id:serviceCode>getDocument</id:serviceCode>
-            <id:serviceVersion>v2</id:serviceVersion>
+            <id:serviceVersion>v3</id:serviceVersion>
         </xrd:service>
         <xrd:userId>EE37901130250</xrd:userId>
         <xrd:id>3cf04253-db0c-4d1d-8105-791472d88437</xrd:id>
@@ -3486,7 +3486,7 @@ Parameetrid
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:amet="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" xmlns:xtee="http://x-tee.riik.ee/xsd/xtee.xsd">
    <soapenv:Header>
       <amet:infosysteem>KOV</amet:infosysteem>
-      <xtee:nimi>ametlikud-dokumendid.getSendStatus.v1</xtee:nimi>
+      <xtee:nimi>ametlikud-dokumendid.getSendStatus.v2</xtee:nimi>
       <xtee:id>00000000000000</xtee:id>
       <xtee:isikukood>EE37507164211</xtee:isikukood>
       <xtee:andmekogu>ametlikud-dokumendid</xtee:andmekogu>
@@ -3522,7 +3522,7 @@ Parameetrid
             <id:memberCode>70006317</id:memberCode>			
             <id:subsystemCode>adit</id:subsystemCode>
             <id:serviceCode>getSendStatus</id:serviceCode>
-            <id:serviceVersion>v1</id:serviceVersion>
+            <id:serviceVersion>v2</id:serviceVersion>
         </xrd:service>
         <xrd:userId>EE37901130250</xrd:userId>
         <xrd:id>3cf04253-db0c-4d1d-8105-791472d88437</xrd:id>
@@ -3570,7 +3570,7 @@ Parameetrid
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns:xtee="http://x-tee.riik.ee/xsd/xtee.xsd">
     <SOAP-ENV:Header>
-        <xtee:nimi>ametlikud-dokumendid.getSendStatus.v1</xtee:nimi>
+        <xtee:nimi>ametlikud-dokumendid.getSendStatus.v2</xtee:nimi>
         <xtee:id>00000000000000</xtee:id>
         <xtee:isikukood>EE37507164211</xtee:isikukood>
         <xtee:andmekogu>ametlikud-dokumendid</xtee:andmekogu>
@@ -3615,7 +3615,7 @@ Parameetrid
             <id:memberCode>70006317</id:memberCode>
             <id:subsystemCode>adit</id:subsystemCode>
             <id:serviceCode>getSendStatus</id:serviceCode>
-            <id:serviceVersion>v1</id:serviceVersion>
+            <id:serviceVersion>v2</id:serviceVersion>
         </xrd:service>
         <xrd:userId>EE37901130250</xrd:userId>
         <xrd:id>3cf04253-db0c-4d1d-8105-791472d88437</xrd:id>
@@ -4413,13 +4413,6 @@ Parameetrid
 </document_list>
 ```
 
-<a name="document-sign"></a>
-## Dokumentide allkirjastamine
-
-Allkirjastamine koosneb kahest sammust:
-1. prepareSignature valmistab ette uue kinnitamata allkirja ja tagastab räsikoodi, mille saab kasutajaliideses ID-kaardiga allkirjastada. Juhul kui dokumendile lisatakse esimest allkirja (konteiner on veel puudu), siis  luuakse BDOC formaadis konteiner, juhul kui dokument oli enne  allkirjastatud (konteiner juba olemas), siis allkiri lisatakse olemasolevale konteinerile. **DDOC formaadis konteineritele allkirja lisada pole võimalik**, sest tegemist on vananenud formaadiga.
-2. confirmSignature lisab dokumendile allkirja (mis tekkis eelmisel sammul koostatud räsikoodi allkirjastamisel) ning küsib allkirjale kehtivuskinnituse.
-
 ## GetDocumentList.v2   
 
 Päring tagastab nimekirja etteatud parameetritele vastavatest dokumentidest, mida päringu käivitanud kasutaja tohib näha. Päringu parameetrid ei ole kohustuslikud.
@@ -4458,7 +4451,7 @@ Parameetrid
 ```xml
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xtee="http://x-tee.riik.ee/xsd/xtee.xsd" xmlns:adit="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid">
    <soapenv:Header>
-      <xtee:nimi>ametlikud-dokumendid.getDocumentList.v1</xtee:nimi>
+      <xtee:nimi>ametlikud-dokumendid.getDocumentList.v2</xtee:nimi>
       <xtee:id>00000000000000</xtee:id>
       <xtee:isikukood>EE38407089745</xtee:isikukood>
       <xtee:andmekogu>ametlikud-dokumendid</xtee:andmekogu>
@@ -4513,7 +4506,7 @@ Parameetrid
             <id:memberCode>70006317</id:memberCode>			
             <id:subsystemCode>adit</id:subsystemCode>
             <id:serviceCode>getDocumentList</id:serviceCode>
-            <id:serviceVersion>v1</id:serviceVersion>
+            <id:serviceVersion>v2</id:serviceVersion>
         </xrd:service>
         <xrd:userId>EE37901130250</xrd:userId>
         <xrd:id>3cf04253-db0c-4d1d-8105-791472d88437</xrd:id>
@@ -4560,7 +4553,7 @@ Parameetrid
       <xtee:asutus xsi:type="xsd:string">12345678</xtee:asutus>
       <xtee:isikukood xsi:type="xsd:string">EE38407089745</xtee:isikukood>
       <xtee:id xsi:type="xsd:string">00000000000000</xtee:id>
-      <xtee:nimi xsi:type="xsd:string">ametlikud-dokumendid.getDocumentList.v1</xtee:nimi>
+      <xtee:nimi xsi:type="xsd:string">ametlikud-dokumendid.getDocumentList.v2</xtee:nimi>
       <xtee:andmekogu xsi:type="xsd:string">ametlikud-dokumendid</xtee:andmekogu>
    </SOAP-ENV:Header>
    <SOAP-ENV:Body>
@@ -4618,7 +4611,7 @@ Parameetrid
             <id:memberCode>70006317</id:memberCode>	
             <id:subsystemCode>adit</id:subsystemCode>
             <id:serviceCode>getDocumentList</id:serviceCode>
-            <id:serviceVersion>v1</id:serviceVersion>
+            <id:serviceVersion>v2</id:serviceVersion>
         </xrd:service>
         <xrd:userId>EE37901130250</xrd:userId>
         <xrd:id>3cf04253-db0c-4d1d-8105-791472d88437</xrd:id>
@@ -5282,7 +5275,7 @@ Parameetrid
 ```xml
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xtee="http://x-tee.riik.ee/xsd/xtee.xsd" xmlns:adit="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid">
    <soapenv:Header>
-      <xtee:nimi>ametlikud-dokumendid.sendDocument.v1</xtee:nimi>
+      <xtee:nimi>ametlikud-dokumendid.sendDocument.v2</xtee:nimi>
       <xtee:id>00000000000000</xtee:id>
       <xtee:isikukood>EE38407089745</xtee:isikukood>
       <xtee:andmekogu>ametlikud-dokumendid</xtee:andmekogu>
@@ -5328,7 +5321,7 @@ Parameetrid
             <id:memberCode>70006317</id:memberCode>			
             <id:subsystemCode>adit</id:subsystemCode>
             <id:serviceCode>sendDocument</id:serviceCode>
-            <id:serviceVersion>v1</id:serviceVersion>
+            <id:serviceVersion>v2</id:serviceVersion>
         </xrd:service>
         <xrd:userId>EE37901130250</xrd:userId>
         <xrd:id>3cf04253-db0c-4d1d-8105-791472d88437</xrd:id>
@@ -5366,7 +5359,7 @@ Parameetrid
       <xtee:asutus xsi:type="xsd:string">12345678</xtee:asutus>
       <xtee:isikukood xsi:type="xsd:string">EE38407089745</xtee:isikukood>
       <xtee:id xsi:type="xsd:string">00000000000000</xtee:id>
-      <xtee:nimi xsi:type="xsd:string">ametlikud-dokumendid.sendDocument.v1</xtee:nimi>
+      <xtee:nimi xsi:type="xsd:string">ametlikud-dokumendid.sendDocument.v2</xtee:nimi>
       <xtee:andmekogu xsi:type="xsd:string">ametlikud-dokumendid</xtee:andmekogu>
    </SOAP-ENV:Header>
    <SOAP-ENV:Body>
@@ -5416,7 +5409,7 @@ Parameetrid
             <id:memberCode>70006317</id:memberCode>	
             <id:subsystemCode>adit</id:subsystemCode>
             <id:serviceCode>sendDocument</id:serviceCode>
-            <id:serviceVersion>v1</id:serviceVersion>
+            <id:serviceVersion>v2</id:serviceVersion>
         </xrd:service>
         <xrd:userId>EE37901130250</xrd:userId>
         <xrd:id>3cf04253-db0c-4d1d-8105-791472d88437</xrd:id>
