@@ -8603,6 +8603,9 @@ log.info xml
 
 def sentToCode = testRunner.testCase.testSuite.project.getPropertyValue("userCode")
 def creator = 'EE' + testRunner.testCase.testSuite.project.getPropertyValue("consumerMemberCode")
+if  (testRunner.testCase.testSuite.project.getPropertyValue("consumerSubsystem") !="DHX") {
+   creator = 'EE' + testRunner.testCase.testSuite.project.getPropertyValue("consumerSubsystem")  + "." + testRunner.testCase.testSuite.project.getPropertyValue("consumerMemberCode")
+}
 def rootNode = new XmlSlurper().parseText(xml)
 assert rootNode.document.sent_to.user.code == sentToCode
 assert rootNode.document.creator_code == creator
