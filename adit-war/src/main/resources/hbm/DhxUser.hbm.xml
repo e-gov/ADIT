@@ -44,6 +44,12 @@
 		</property>  
 		<property name="organisationIdentificator" type="string">
 			<column name="organisation_identificator" length="100" />
-		</property>      
+		</property>  
+		<set name="representees" inverse="true" lazy="false" table="DHX_USER" fetch="select">
+            <key>
+                <column name="REPRESENTOR_ID" precision="12" scale="0" />
+            </key>
+            <one-to-many class="ee.adit.dao.pojo.DhxUser" />
+        </set>    
 	</class>
 </hibernate-mapping>

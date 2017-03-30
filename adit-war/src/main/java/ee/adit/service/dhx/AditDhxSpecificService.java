@@ -147,6 +147,7 @@ public class AditDhxSpecificService implements DhxImplementationSpecificService 
 	@Loggable
 	private InternalXroadMember getInternalXroadMemberFromOrganisation(DhxUser org) {
 		DhxUser mainOrg = org;
+
 		DhxRepresentee representee = null;
 		if (org.getRepresentor() != null) {
 			mainOrg = org.getRepresentor();
@@ -155,6 +156,9 @@ public class AditDhxSpecificService implements DhxImplementationSpecificService 
 		}
 		InternalXroadMember member = new InternalXroadMember(mainOrg.getXroadInstance(), mainOrg.getMemberClass(),
 				mainOrg.getCode(), mainOrg.getSubSystem(), mainOrg.getName(), representee);
+		if (org.getRepresentees() != null && org.getRepresentees().size() > 0) {
+			member.setRepresentor(true);
+		}
 		log.trace("created member: {}", member);
 		return member;
 	}
