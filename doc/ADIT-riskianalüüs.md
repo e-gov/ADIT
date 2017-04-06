@@ -60,7 +60,7 @@ Risk kaotada andmeid realiseerub juhul kui toimub andmebaasifailide hävimine/vi
 
 Kuna ADIT tarkvara kasutab üle interneti suhtlemiseks X-tee infrastruktuuri, siis võrgupõhised turvariskid (andmete muutmine, andmete lekkimine kõrvalistele isikutele jne.) on minimaalsed. X-tee infrastruktuur minimeerib sellised riskid.
 
-Teine risk, mis tuleneb võrgupõhise tarkvara olemusest on võrguühenduse katkestused. Sellisel juhul võib ADIT tarkvara olla seda kasutavatele infosüsteemidele kättesaamatu. Kuna ADIT tarkvara kasutab oma töös ka kahte liidest (DVK, teavituskalender), siis võrguühenduse katkedes võib katkeda ka ühendus liidestatud infosüsteemidega. Riski minimeerimiseks on liidesed üles ehitatud selliselt, et kui liidese abil ühenduse loomine ebaõnnestub, siis ei teki andmekadu ega andmete loogilise terviklikkuse rikkumist. Kui teavituste saatmine teavituskalendrisse ei õnnestu, siis proovitakse seda perioodiliselt teha seni, kuni see õnnestub. Sama kehtib DVK liidese puhul.
+Teine risk, mis tuleneb võrgupõhise tarkvara olemusest on võrguühenduse katkestused. Sellisel juhul võib ADIT tarkvara olla seda kasutavatele infosüsteemidele kättesaamatu. Kuna ADIT tarkvara kasutab oma töös ka kahte liidest (DHX, teavituskalender), siis võrguühenduse katkedes võib katkeda ka ühendus liidestatud infosüsteemidega. Riski minimeerimiseks on liidesed üles ehitatud selliselt, et kui liidese abil ühenduse loomine ebaõnnestub, siis ei teki andmekadu ega andmete loogilise terviklikkuse rikkumist. Kui teavituste saatmine teavituskalendrisse ei õnnestu, siis proovitakse seda perioodiliselt teha seni, kuni see õnnestub. Kui DHX dokumentide saatmine ei õnnestu, siis proovitakse seda uuesti saata seadistatud perioodi jooksul.
 
 
 ### Tarkvara ülekoormus

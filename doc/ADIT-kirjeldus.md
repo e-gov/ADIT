@@ -139,7 +139,7 @@ ADIT identifitseerib kasutajaid ühe parameetri järgi, mis on reeglina asutuse 
 
 Selle vastuolu lahendamiseks salvestatakse DHX kasutajaid ADIT-sse järgmiselt:
 
-* Tavalised DHX adressaadid (EE/GOV/<registrikood>/DHX/sendDocument), lisatakse ADIT_USER tabelisse kujul dvk_org_code=<registrikood>.
+* Tavalised DHX adressaadid (EE/GOV/<registrikood>/DHX/sendDocument), lisatakse ADIT_USER tabelisse kujul dvk_org_code=registrikood.
 
 * DHX-i alamsüsteemidega (kelle subSystemCode ei ole DHX vaid DHX.alamsüsteem) adressaadid registreeritakse ADIT_USER tabelis kujul dvk_org_code=alamsüsteem.registrikood
 
