@@ -91,3 +91,12 @@ Andmebaasikasutajal (_adit_admin_), kelle skeemi tabelid loodi, peavad olema jä
 2.	Kõikide oma schema tabelite lugemisõigus
 3.	Kõikide oma schema tabelite andmete muutmise õigus
 4.	Kõikide oma schema _SEQUENCE_-te ja _TRIGGER_-ite käivitamise õigus
+
+
+### Andmebaasi uuendamine
+
+See samm on vajalik siis kui ADIT andmebaas on juba paigaldatud ja on vaja andmebaasi uuendada(paigaldada muudatusi mis olid tehtud andmebaasis uues ADITi versioonis)
+
+1. Kävitada SQL skriptid mis asuvad kaustas adit-war/sql/updates. Skriptide käivitamisel on vaja teada mis versioon on hetkel paigaldatud ja käivitada kõik skriptid mis on suurema versiooninumbriga.
+
+
