@@ -11,6 +11,7 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Property;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.exception.AditInternalException;
 import ee.adit.service.DocumentService;
@@ -92,7 +93,7 @@ public class DocumentSharingDAO extends HibernateDaoSupport {
     @SuppressWarnings("unchecked")
     public List<DocumentSharing> getDVKSharings(final Long documentID) {
         String sql = "from DocumentSharing where documentId = " + documentID + " and documentSharingType = '"
-                + DocumentService.SHARINGTYPE_SEND_DVK + "'";
+                + DocumentService.SHARINGTYPE_SEND_DHX + "'";
         return (List<DocumentSharing>) this.getHibernateTemplate().find(sql);
     }
 
@@ -105,8 +106,8 @@ public class DocumentSharingDAO extends HibernateDaoSupport {
     @SuppressWarnings("unchecked")
     public List<DocumentSharing> getDVKSharings(final Date creationDateComparison) {
         List<DocumentSharing> result = new ArrayList<DocumentSharing>();
-        String sql = "from DocumentSharing where documentSharingType = '" + DocumentService.SHARINGTYPE_SEND_DVK
-                + "' and documentDvkStatus = " + DocumentService.DVK_STATUS_MISSING
+        String sql = "from DocumentSharing where documentSharingType = '" + DocumentService.SHARINGTYPE_SEND_DHX
+                + "' and documentDvkStatus = " + DocumentService.DHX_STATUS_MISSING
                 + " and creationDate < :comparisonDate";
 
         Session session = null;
@@ -141,4 +142,18 @@ public class DocumentSharingDAO extends HibernateDaoSupport {
         result = (List<DocumentSharing>) this.getHibernateTemplate().findByCriteria(dt);
         return result;
     }
+    
+    
+	/**
+	 * Fetches document sharing by ID.
+	 *
+	 * @param id
+	 *            document sharing ID
+	 * @return document
+	 */
+	public DocumentSharing getDocumentSharing(long id) {
+		logger.debug("Attempting to load document sharing from database. Document id: " + String.valueOf(id));
+		return (DocumentSharing) this.getHibernateTemplate().get(DocumentSharing.class, id);
+	}
+
 }

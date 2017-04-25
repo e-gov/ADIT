@@ -2,7 +2,7 @@ package ee.adit.dao;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import ee.adit.dao.pojo.AccessRestriction;
@@ -16,7 +16,7 @@ import ee.adit.dao.pojo.AditUser;
  */
 public class AccessRestrictionDAO extends HibernateDaoSupport {
 
-    private static Logger logger = Logger.getLogger(AccessRestrictionDAO.class);
+    private static Logger logger = LogManager.getLogger(AccessRestrictionDAO.class);
 
     /**
      * Retrieves access restrictions for the specified user.

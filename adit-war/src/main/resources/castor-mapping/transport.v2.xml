@@ -5,14 +5,14 @@
 		Transport
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	-->
-	<class name="dvk.api.container.v2.Transport">
+	<class name="ee.adit.dhx.api.container.v2.Transport">
 		<map-to xml="transport" ns-uri="http://www.riik.ee/schemas/dhl/2010/2" ns-prefix="dhl" />
 
-		<field name="saajad" type="dvk.api.container.v2.Saaja" collection="arraylist">
+		<field name="saajad" type="ee.adit.dhx.api.container.v2.Saaja" collection="arraylist">
 			<bind-xml name="saaja" node="element" />
 		</field>
 
-		<field name="saatjad" type="dvk.api.container.v2.Saatja" collection="arraylist">
+		<field name="saatjad" type="ee.adit.dhx.api.container.v2.Saatja" collection="arraylist">
 			<bind-xml name="saatja" node="element" />
 		</field>
 	</class>
@@ -22,7 +22,7 @@
 		Saaja
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	-->
-	<class name="dvk.api.container.v2.Saaja">
+	<class name="ee.adit.dhx.api.container.v2.Saaja">
 		<map-to xml="saaja" ns-uri="http://www.riik.ee/schemas/dhl/2010/2" ns-prefix="dhl" />
 
 		<field name="regNr" type="string">
@@ -74,7 +74,7 @@
 		Saatja
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	-->
-	<class name="dvk.api.container.v2.Saatja">
+	<class name="ee.adit.dhx.api.container.v2.Saatja">
 		<map-to xml="saatja" ns-uri="http://www.riik.ee/schemas/dhl/2010/2" ns-prefix="dhl" />
 
 		<field name="regNr" type="string">

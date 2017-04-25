@@ -1,6 +1,7 @@
 package ee.adit.service;
 
 import java.math.BigInteger;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -8,12 +9,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.HibernateCallback;
+import org.springframework.stereotype.Service;
 
-import dvk.api.ml.PojoOrganization;
 import ee.adit.dao.AccessRestrictionDAO;
 import ee.adit.dao.AditUserDAO;
 import ee.adit.dao.DocumentDAO;
@@ -22,7 +24,7 @@ import ee.adit.dao.NotificationTypeDAO;
 import ee.adit.dao.RemoteApplicationDAO;
 import ee.adit.dao.UserContactDAO;
 import ee.adit.dao.UsertypeDAO;
-import ee.adit.dao.dvk.DvkDAO;
+import ee.adit.dao.DhxUserDAO;
 import ee.adit.dao.pojo.AccessRestriction;
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.NotificationType;
@@ -31,14 +33,19 @@ import ee.adit.dao.pojo.UserContact;
 import ee.adit.dao.pojo.UserNotification;
 import ee.adit.dao.pojo.UserNotificationId;
 import ee.adit.dao.pojo.Usertype;
+import ee.adit.dhx.DhxUtil;
+import ee.adit.dao.pojo.DhxUser;
 import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.ArrayOfNotification;
 import ee.adit.pojo.GetUserInfoRequestAttachmentUserList;
 import ee.adit.pojo.GetUserInfoResponseAttachmentUser;
 import ee.adit.pojo.Notification;
-import ee.adit.util.DVKUserSyncResult;
+import ee.adit.util.DHXUserSyncResult;
 import ee.adit.util.Util;
+import ee.ria.dhx.ws.context.AppContext;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Provides services for manipulating and retrieving user data.
@@ -49,7 +56,7 @@ import ee.adit.util.Util;
  */
 public class UserService {
 
-    private static Logger logger = Logger.getLogger(UserService.class);
+    private static Logger logger = LogManager.getLogger(UserService.class);
 
     private RemoteApplicationDAO remoteApplicationDAO;
 
@@ -65,7 +72,7 @@ public class UserService {
 
     private NotificationDAO notificationDAO;
 
-    private DvkDAO dvkDAO;
+    private DhxUserDAO dhxDAO;
     
     private UserContactDAO userContactDAO;
 
@@ -345,13 +352,13 @@ public class UserService {
      */
     public List<GetUserInfoResponseAttachmentUser> getUserInfo(
     		GetUserInfoRequestAttachmentUserList userList,
-    		Long globalDiskQuota) {
+    		Long globalDiskQuota, Boolean includeDvkData, Boolean includeDhxData) {
         List<GetUserInfoResponseAttachmentUser> result = new ArrayList<GetUserInfoResponseAttachmentUser>();
 
         List<String> userCodes = userList.getCodes();
 
         for (String userCode : userCodes) {
-            GetUserInfoResponseAttachmentUser userInfo = getUserInfo(userCode, globalDiskQuota);
+            GetUserInfoResponseAttachmentUser userInfo = getUserInfo(userCode, globalDiskQuota, includeDvkData, includeDhxData);
             result.add(userInfo);
         }
 
@@ -367,7 +374,7 @@ public class UserService {
      *     Global disk quota from application configuration
      * @return user information
      */
-    public GetUserInfoResponseAttachmentUser getUserInfo(String userCode, Long globalDiskQuota) {
+    public GetUserInfoResponseAttachmentUser getUserInfo(String userCode, Long globalDiskQuota, Boolean includeDvkData, Boolean includeDhxData) {
         GetUserInfoResponseAttachmentUser result = new GetUserInfoResponseAttachmentUser();
 
         if (userCode == null) {
@@ -420,7 +427,12 @@ public class UserService {
             result.setTotalSpace(userTotalDiskQuota);
             result.setCanRead(canRead);
             result.setCanWrite(canWrite);
-            result.setUsesDVK(usesDVK);
+            if(includeDvkData) {
+            	result.setUsesDVK(usesDVK);
+            }
+            if(includeDhxData) {
+            	result.setUsesDHX(usesDVK);
+            }
         } else {
             result.setUserCode(userCode);
             // User has not joined the service
@@ -770,19 +782,19 @@ public class UserService {
      *
      * @return result
      */
-    public DVKUserSyncResult synchroinzeDVKUsers() {
+    public DHXUserSyncResult synchroinzeDVKUsers() {
 
-        DVKUserSyncResult result = new DVKUserSyncResult();
+        DHXUserSyncResult result = new DHXUserSyncResult();
 
         int deactivated = 0;
         int added = 0;
         int modified = 0;
 
         try {
-            List<PojoOrganization> dvkUsers = this.getDvkDAO().getUsers();
+            List<DhxUser> dvkUsers = this.getDhxDAO().getUsers();
             logger.info("Number of DVK users found: " + dvkUsers.size());
 
-            Iterator<PojoOrganization> dvkUserIterator = dvkUsers.iterator();
+            Iterator<DhxUser> dvkUserIterator = dvkUsers.iterator();
 
             List<AditUser> aditUsers = this.getAditUserDAO().listDVKUsers();
             logger.info("Number of ADIT users found: " + aditUsers.size());
@@ -798,10 +810,10 @@ public class UserService {
 
             while (dvkUserIterator.hasNext()) {
 
-                PojoOrganization dvkUser = dvkUserIterator.next();
+                DhxUser dvkUser = dvkUserIterator.next();
                 boolean found = false;
                 Iterator<AditUser> aditUserIterator = aditUsers.iterator();
-
+             //   String dhxAdaptedUser = DhxUtil.toDvkCapsuleAddressee(dvkUser.getCode(), dvkUser.getSubSystem());
                 logger.debug("Finding match for dvkUser: " + dvkUser.getOrgCode());
                 while (!found && aditUserIterator.hasNext()) {
                     AditUser aditUser = aditUserIterator.next();
@@ -810,14 +822,16 @@ public class UserService {
 
                     logger.debug("Matching: " + aditUser.getDvkOrgCode());
                     if (aditUser.getDvkOrgCode() != null
-                            && aditUser.getDvkOrgCode().trim().equalsIgnoreCase(dvkUser.getOrgCode())) {
+                            && aditUser.getDvkOrgCode().trim().equalsIgnoreCase(dvkUser.getOrganisationIdentificator())) {
                         found = true;
                         logger.debug("Matched!");
 
                         aditUsersCopy.remove(aditUser);
 
                         // Check if user's name has changed in DVK
-                        if (dvkUser.getName() != null && !dvkUser.getName().equalsIgnoreCase(aditUser.getFullName())) {
+                        if (dvkUser.getName() != null && !dvkUser.getName().equalsIgnoreCase(aditUser.getFullName())
+                        		|| !aditUser.getActive()) {
+                        	aditUser.setActive(true);
                             aditUser.setFullName(dvkUser.getName());
                             this.getAditUserDAO().saveOrUpdate(aditUser);
                             logger.info("User '" + aditUser.getUserCode() + "' has modified name. Updated in ADIT.");
@@ -832,10 +846,10 @@ public class UserService {
                 if (!found) {
                     logger.info("Adding new user to ADIT (DVK user): " + dvkUser.getOrgCode() + ", " + dvkUser.getName());
                     AditUser newAditUser = new AditUser();
-                    newAditUser.setDvkOrgCode(dvkUser.getOrgCode());
+                    newAditUser.setDvkOrgCode(dvkUser.getOrganisationIdentificator());
                     newAditUser.setActive(Boolean.valueOf(true));
                     newAditUser.setFullName(dvkUser.getName());
-                    newAditUser.setUserCode("EE" + dvkUser.getOrgCode());
+                    newAditUser.setUserCode("EE" + dvkUser.getOrganisationIdentificator());
                     newAditUser.setUsertype(institutionUsertype);
                     this.getAditUserDAO().saveOrUpdate(newAditUser);
                     added++;
@@ -979,12 +993,12 @@ public class UserService {
         this.notificationDAO = notificationDAO;
     }
 
-    public DvkDAO getDvkDAO() {
-        return dvkDAO;
+    public DhxUserDAO getDhxDAO() {
+        return dhxDAO;
     }
 
-    public void setDvkDAO(DvkDAO dvkDAO) {
-        this.dvkDAO = dvkDAO;
+    public void setDhxDAO(DhxUserDAO dhxDAO) {
+        this.dhxDAO = dhxDAO;
     }
 
     public UserContactDAO getUserContactDAO() {
@@ -994,4 +1008,6 @@ public class UserService {
 	public void setUserContactDAO(UserContactDAO userContactDAO) {
 		this.userContactDAO = userContactDAO;
 	}
+
+
 }

@@ -27,6 +27,13 @@ public class DocumentSharing implements java.io.Serializable {
     private Long dvkId;
     private String comment;
     private String userEmail;
+    
+    
+    private String dhxReceiptId;
+    private String dhxConsignmentId;
+    private String dhxFault;
+    private Date dhxReceivedDate;
+    private Date dhxSentDate;
 
     public DocumentSharing() {
     }
@@ -178,12 +185,83 @@ public class DocumentSharing implements java.io.Serializable {
 
     public boolean isDocumentReadySendToDvk() {
         boolean result = false;
-        if (DocumentService.SHARINGTYPE_SEND_DVK.equalsIgnoreCase(this.getDocumentSharingType())
-                && (DocumentService.DVK_STATUS_WAITING.equals(this.getDocumentDvkStatus())
-                || DocumentService.DVK_STATUS_MISSING.equals(this.getDocumentDvkStatus())
+        if (DocumentService.SHARINGTYPE_SEND_DHX.equalsIgnoreCase(this.getDocumentSharingType())
+                && (DocumentService.DHX_STATUS_WAITING.equals(this.getDocumentDvkStatus())
+                || DocumentService.DHX_STATUS_MISSING.equals(this.getDocumentDvkStatus())
                 || this.getDocumentDvkStatus() == null)) {
             result = true;
         }
         return result;
     }
+
+	/**
+	 * @return the dhxReceiptId
+	 */
+	public String getDhxReceiptId() {
+		return dhxReceiptId;
+	}
+
+	/**
+	 * @param dhxReceiptId the dhxReceiptId to set
+	 */
+	public void setDhxReceiptId(String dhxReceiptId) {
+		this.dhxReceiptId = dhxReceiptId;
+	}
+
+	/**
+	 * @return the dhxConsignmentId
+	 */
+	public String getDhxConsignmentId() {
+		return dhxConsignmentId;
+	}
+
+	/**
+	 * @param dhxConsignmentId the dhxConsignmentId to set
+	 */
+	public void setDhxConsignmentId(String dhxConsignmentId) {
+		this.dhxConsignmentId = dhxConsignmentId;
+	}
+
+	/**
+	 * @return the dhxFault
+	 */
+	public String getDhxFault() {
+		return dhxFault;
+	}
+
+	/**
+	 * @param dhxFault the dhxFault to set
+	 */
+	public void setDhxFault(String dhxFault) {
+		this.dhxFault = dhxFault;
+	}
+
+	/**
+	 * @return the dhxReceivedDate
+	 */
+	public Date getDhxReceivedDate() {
+		return dhxReceivedDate;
+	}
+
+	/**
+	 * @param dhxReceivedDate the dhxReceivedDate to set
+	 */
+	public void setDhxReceivedDate(Date dhxReceivedDate) {
+		this.dhxReceivedDate = dhxReceivedDate;
+	}
+
+	/**
+	 * @return the dhxSentDate
+	 */
+	public Date getDhxSentDate() {
+		return dhxSentDate;
+	}
+
+	/**
+	 * @param dhxSentDate the dhxSentDate to set
+	 */
+	public void setDhxSentDate(Date dhxSentDate) {
+		this.dhxSentDate = dhxSentDate;
+	}
+
 }

@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
 
 import ee.adit.dao.pojo.AditUser;
@@ -42,7 +42,7 @@ import ee.webmedia.xtee.annotation.XTeeService;
 @XTeeService(name = "sendDocument", version = "v1")
 @Component
 public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
-    private static Logger logger = Logger.getLogger(SendDocumentEndpoint.class);
+    private static Logger logger = LogManager.getLogger(SendDocumentEndpoint.class);
     private UserService userService;
     private DocumentService documentService;
     private ScheduleClient scheduleClient;
@@ -53,7 +53,9 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 
         if (version == 1) {
             return v1(requestObject);
-        } else {
+        } else if (version == 2) {
+        	return v2(requestObject);
+        }else {
             throw new AditInternalException("This method does not support version specified: " + version);
         }
     }
@@ -178,7 +180,283 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
                             String dvkFolder = request.getDvkFolder();
 
                             // Add sharing information to database
-                            this.getDocumentService().sendDocument(doc, recipient, dvkFolder, null, null);
+                            this.getDocumentService().sendDocument(doc, recipient, dvkFolder, null, null, null, null);
+
+
+                            //TODO: it is better to add dvkFolder to the Document object here
+                            //instead of adding it in sendDocument Method to DocumentSharing objects
+
+
+                            // Send notification to every user the document was shared to
+                            // (assuming they have requested such notifications)
+                            if ((userService.findNotification(recipient.getUserNotifications(), ScheduleClient.NOTIFICATION_TYPE_SEND) != null)) {
+                            	String senderInfo = user.getFullName() != null && !user.getFullName().trim().isEmpty() ?
+                            						user.getFullName() : user.getUserCode();
+    									
+                            	List<Message> messageInAllKnownLanguages = this.getMessageService()
+                            			.getMessages("scheduler.message.send", new Object[] {doc.getTitle(), senderInfo});
+                            	String eventText = Util.joinMessages(messageInAllKnownLanguages, "<br/>");
+
+                            	this.scheduleClient.addEvent(recipient, eventText,
+                                    this.getConfiguration().getSchedulerEventTypeName(), requestDate,
+                                    ScheduleClient.NOTIFICATION_TYPE_SEND, doc.getId(), this.userService);
+                            }
+
+                            // Add success message to response
+                            recipientStatus.setSuccess(true);
+
+                            if (successCount > 0) {
+                                description = description + ", ";
+                            }
+                            description = description + recipient.getUserCode();
+                            successCount++;
+
+                            if (additionalInformationForLog != null && additionalInformationForLog.trim() != "") {
+                                additionalInformationForLog = additionalInformationForLog + ",";
+                            }
+                            additionalInformationForLog = additionalInformationForLog + " Document sent to: " + recipientCode;
+
+                            // Add recipient to user contacts
+                            userService.addUserContact(user, recipient);
+
+                        } catch (Exception e) {
+                            logger.error("Exception while sharing document: ", e);
+                            recipientStatus.setSuccess(false);
+                            List<Message> errorMessages = this.getMessageService().getMessages("service.error",
+                                    new Object[] {});
+                            ArrayOfMessage recipientMessages = new ArrayOfMessage();
+                            recipientMessages.setMessage(errorMessages);
+                            recipientStatus.setMessages(recipientMessages);
+                            success = false;
+                            additionalInformationForLog = "Exception while sharing document: " + e.getMessage() + " ";
+                        }
+                    }
+                    reponseStatuses.addRecipient(recipientStatus);
+                }
+
+            } else {
+            	recipientListIsEmpty = true;
+            }
+            
+            if (recipientEmailList != null && recipientEmailList.getEmail() != null && recipientEmailList.getEmail().size() > 0) {
+            //TODO: add email sending logic here
+                Iterator<String> i = recipientEmailList.getEmail().iterator();
+                while (i.hasNext()) {
+                	String recipientEmail = i.next();
+                	try {
+                    // Lock the document
+                    this.getDocumentService().lockDocument(doc);
+
+                    // Add locking history event
+                    this.getDocumentService().addHistoryEvent(applicationName, doc.getId(), user.getUserCode(),
+                        DocumentService.HISTORY_TYPE_LOCK, xroadRequestUser.getUserCode(),
+                        xroadRequestUser.getFullName(), DocumentService.DOCUMENT_HISTORY_DESCRIPTION_LOCK,
+                        user.getFullName(), requestDate.getTime());
+                	
+                    // Add sharing information to database
+                    this.getDocumentService().sendDocumentByEmail(doc, recipientEmail);
+                	} catch (Exception e) {
+                        logger.error("Exception while sharing document: ", e);
+                        success = false;
+                        additionalInformationForLog = "Exception while sending document by email: " + e.getMessage() + " ";
+                    }
+                }
+                
+            	
+            } else {
+            	recipientEmailListIsEmpty = true;
+            }
+            
+            if (recipientListIsEmpty && recipientEmailListIsEmpty) {
+                throw new NullPointerException("Recipient list is empty or null.");
+            }
+
+            response.setSuccess(success);
+            response.setRecipientList(reponseStatuses);
+
+            if (success) {
+                String additionalMessage = this.getMessageService().getMessage("request.sendDocument.success",
+                        new Object[] {}, Locale.ENGLISH);
+                additionalMessage = additionalInformationForLog;
+                additionalInformationForLog = LogService.REQUEST_LOG_SUCCESS + ": " + additionalMessage;
+                messages.setMessage(this.getMessageService().getMessages("request.sendDocument.success",
+                        new Object[] {}));
+    			// update doc last modified date
+    			doc.setLastModifiedDate(new Date());
+    			this.documentService.save(doc, Long.MAX_VALUE);
+            } else {
+                String additionalMessage = this.getMessageService().getMessage("request.sendDocument.fail",
+                        new Object[] {}, Locale.ENGLISH);
+                additionalMessage = additionalInformationForLog;
+                additionalInformationForLog = LogService.REQUEST_LOG_FAIL + additionalMessage;
+                messages.setMessage(this.getMessageService().getMessages("request.sendDocument.fail", new Object[] {}));
+            }
+
+            response.setMessages(messages);
+
+            if (successCount > 0) {
+                this.getDocumentService().addHistoryEvent(applicationName, doc.getId(), user.getUserCode(),
+                        DocumentService.HISTORY_TYPE_SEND, xroadRequestUser.getUserCode(),
+                        xroadRequestUser.getFullName(), description, user.getFullName(), requestDate.getTime());
+            }
+
+        } catch (Exception e) {
+            String errorMessage = null;
+            success = false;
+            logger.error("Exception: ", e);
+            response.setSuccess(success);
+            ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
+
+            if (e instanceof AditCodedException) {
+                logger.debug("Adding exception messages to response object.");
+                arrayOfMessage.setMessage(this.getMessageService().getMessages((AditCodedException) e));
+                errorMessage = this.getMessageService().getMessage(e.getMessage(),
+                        ((AditCodedException) e).getParameters(), Locale.ENGLISH);
+                errorMessage = "ERROR: " + errorMessage;
+            } else if (e instanceof AditException) {
+                logger.debug("Adding exception message to response object.");
+                arrayOfMessage.getMessage().add(new Message("en", e.getMessage()));
+                errorMessage = "ERROR: " + e.getMessage();
+            } else {
+            	arrayOfMessage.setMessage(this.getMessageService().getMessages(MessageService.GENERIC_ERROR_CODE, new Object[]{}));
+                errorMessage = "ERROR: " + e.getMessage();
+            }
+
+            additionalInformationForLog = errorMessage;
+            super.logError(request.getDocumentId(), requestDate.getTime(), LogService.ERROR_LOG_LEVEL_ERROR, errorMessage);
+
+            logger.debug("Adding exception messages to response object.");
+            response.setMessages(arrayOfMessage);
+        }
+
+        super.logCurrentRequest(request.getDocumentId(), requestDate.getTime(), additionalInformationForLog);
+
+        return response;
+    }
+    
+    
+    /**
+     * Executes "V2" version of "sendDocument" request.
+     *
+     * @param requestObject
+     *            Request body object
+     * @return Response body object
+     */
+    protected Object v2(Object requestObject) {
+        SendDocumentResponse response = new SendDocumentResponse();
+        Calendar requestDate = Calendar.getInstance();
+        String additionalInformationForLog = "";
+        boolean success = true;
+        ArrayOfRecipientStatus reponseStatuses = new ArrayOfRecipientStatus();
+        String description = "Recipients: ";
+        int successCount = 0;
+        ArrayOfMessage messages = new ArrayOfMessage();
+        SendDocumentRequest request = null;
+
+        try {
+
+            logger.debug("SendDocumentEndpoint.v1 invoked.");
+            request = (SendDocumentRequest) requestObject;
+            request.setDvkFolder(request.getDecFolder());
+            CustomXRoadHeader header = this.getHeader();
+            String applicationName = header.getInfosysteem(this.getConfiguration().getXteeProducerName());
+
+            // Log request
+            Util.printHeader(header, this.getConfiguration());
+
+            // Check header for required fields
+            checkHeader(header);
+
+            // Check request body
+            checkRequest(request);
+
+            // Check if the user is registered
+            AditUser user = Util.getAditUserFromXroadHeader(this.getHeader(), this.getUserService());
+            AditUser xroadRequestUser = Util.getXroadUserFromXroadHeader(user, this.getHeader(), this.getUserService());
+
+            Document doc = checkRightsAndGetDocument(request, applicationName, user);
+
+            ArrayOfUserCode recipientList = request.getRecipientList();
+
+            ArrayOfUserEmail recipientEmailList = request.getRecipientEmailList();
+            
+            boolean recipientListIsEmpty = false;
+            boolean recipientEmailListIsEmpty = false;
+            if (recipientList != null && recipientList.getCode() != null && recipientList.getCode().size() > 0) {
+                Iterator<String> i = recipientList.getCode().iterator();
+                while (i.hasNext()) {
+                    String recipientCode = i.next();
+
+                    RecipientStatus recipientStatus = new RecipientStatus();
+                    recipientStatus.setSuccess(true);
+                    recipientStatus.setCode(recipientCode);
+
+                    // Check if the user is registered
+                    AditUser recipient = this.getUserService().getUserByID(recipientCode);
+                    if ((recipient == null) && !Util.codeStartsWithCountryPrefix(recipientCode)) {
+                    	String recipientCodeWithDefaultCountryPrefix = "EE" + recipientCode;
+                    	recipient = this.getUserService().getUserByID(recipientCodeWithDefaultCountryPrefix);
+                    }
+
+                    if (recipient == null || !recipient.getActive()) {
+                        logger.error("User is not registered or inactive.");
+                        String messageCode = "user.nonExistent";
+                        boolean inactive = false;
+
+                        if (recipient != null) {
+                            messageCode = "user.inactive";
+                            inactive = true;
+                        }
+
+                        recipientStatus.setSuccess(false);
+                        List<Message> errorMessages = this.getMessageService().getMessages(messageCode, new Object[] {recipientCode });
+                        ArrayOfMessage recipientMessages = new ArrayOfMessage();
+                        recipientMessages.setMessage(errorMessages);
+                        recipientStatus.setMessages(recipientMessages);
+                        success = false;
+
+                        String localErrorMessage = "";
+                        if (inactive) {
+                            localErrorMessage = "User account deleted (inactive) for user ";
+                        } else {
+                            localErrorMessage = "User does not exist: ";
+                        }
+                        super.logError(request.getDocumentId(), requestDate.getTime(), LogService.ERROR_LOG_LEVEL_ERROR,
+                                LogService.REQUEST_LOG_FAIL + localErrorMessage + recipientCode);
+                        if (additionalInformationForLog != null && !additionalInformationForLog.trim().equals("")) {
+                            additionalInformationForLog = additionalInformationForLog + ", ";
+                        }
+                        additionalInformationForLog = additionalInformationForLog + localErrorMessage + recipientCode + " ";
+                    } else if (DocumentService.documentSendingExists(doc.getDocumentSharings(), recipientCode)) {
+                        recipientStatus.setSuccess(false);
+                        List<Message> errorMessages = this.getMessageService().getMessages("request.sendDocument.recipientStatus.alreadySentToUser", new Object[] {recipientCode });
+                        ArrayOfMessage recipientMessages = new ArrayOfMessage();
+                        recipientMessages.setMessage(errorMessages);
+                        recipientStatus.setMessages(recipientMessages);
+                        success = false;
+
+                        String localErrorMessage = "Document has already been sent to user: ";
+                        super.logError(request.getDocumentId(), requestDate.getTime(), LogService.ERROR_LOG_LEVEL_ERROR,
+                                LogService.REQUEST_LOG_FAIL + localErrorMessage + recipientCode);
+                        if (additionalInformationForLog != null && !additionalInformationForLog.trim().equals("")) {
+                            additionalInformationForLog += ", ";
+                        }
+                        additionalInformationForLog += localErrorMessage + recipientCode + " ";
+                    } else {
+                        try {
+                            // Lock the document
+                            this.getDocumentService().lockDocument(doc);
+
+                            // Add locking history event
+                            this.getDocumentService().addHistoryEvent(applicationName, doc.getId(), user.getUserCode(),
+                                DocumentService.HISTORY_TYPE_LOCK, xroadRequestUser.getUserCode(),
+                                xroadRequestUser.getFullName(), DocumentService.DOCUMENT_HISTORY_DESCRIPTION_LOCK,
+                                user.getFullName(), requestDate.getTime());
+
+                            String dvkFolder = request.getDvkFolder();
+
+                            // Add sharing information to database
+                            this.getDocumentService().sendDocument(doc, recipient, dvkFolder, null, null, null, null);
 
 
                             //TODO: it is better to add dvkFolder to the Document object here

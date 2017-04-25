@@ -1,6 +1,6 @@
 package ee.adit.dao;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import ee.adit.dao.pojo.DocumentWfStatus;
@@ -14,7 +14,7 @@ import ee.adit.dao.pojo.DocumentWfStatus;
  */
 public class DocumentWfStatusDAO extends HibernateDaoSupport {
     
-    private static Logger logger = Logger.getLogger(DocumentWfStatusDAO.class);
+    private static Logger logger = LogManager.getLogger(DocumentWfStatusDAO.class);
 
     /**
      * Fetch document workflow status by ID.

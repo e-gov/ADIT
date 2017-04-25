@@ -10,12 +10,16 @@
 			<value>
 				monitor=monitorController
 				verify=verifyController
+				dhx=dhxController
             </value>
 		</property>
 	</bean>
 	<bean id="monitorController" class="ee.adit.web.controller.MonitorController">
 		<property name="monitorService" ref="monitorService" />
 		<property name="configuration" ref="configuration" />
+	</bean>
+	<bean id="dhxController" class="ee.adit.web.controller.DhxController">
+		<property name="addressService" ref="addressService" />
 	</bean>
 	<bean id="verifyController" class="ee.adit.web.controller.VerifyController">
 		<property name="documentService" ref="documentService" />

@@ -1,0 +1,1 @@
+drop schema adit_dvkuk cascade;

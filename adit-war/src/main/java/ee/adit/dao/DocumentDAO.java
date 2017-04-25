@@ -22,7 +22,8 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.UUID;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
@@ -64,6 +65,10 @@ import ee.adit.service.MessageService;
 import ee.adit.util.SimplifiedDigiDocParser;
 import ee.adit.util.Util;
 
+import ee.ria.dhx.util.StringUtil;
+import ee.sk.digidoc.DigiDocException;
+import ee.sk.utils.ConfigManager;
+
 /**
  * Document data access class. Provides methods for retrieving and manipulating
  * document data.
@@ -73,7 +78,7 @@ import ee.adit.util.Util;
  */
 public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
 
-    private static Logger logger = Logger.getLogger(DocumentDAO.class);
+	private static Logger logger = LogManager.getLogger(DocumentDAO.class);
 
     private MessageSource messageSource;
 
@@ -82,7 +87,8 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
     /**
      * Fetches document by ID.
      *
-     * @param id document ID
+	 * @param id
+	 *            document ID
      * @return document
      */
     public Document getDocument(long id) {
@@ -93,7 +99,8 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
     /**
      * Fetches document by GUID.
      *
-     * @param documentGuid document GUID
+	 * @param documentGuid
+	 *            document GUID
      * @return document
      */
     @SuppressWarnings("unchecked")
@@ -109,17 +116,17 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
     }
     
     /**
-     * Fetches document with Signatures by document ID.
-     * Main goal is to initialize signatures collection which is lazy initialized by default.
+	 * Fetches document with Signatures by document ID. Main goal is to
+	 * initialize signatures collection which is lazy initialized by default.
+	 * 
      * @param documentId
      * @return
      * @throws Exception
      */
-    public Document getDocumentWithSignaturesAndFiles(final long documentId)
-            throws Exception {
+	public Document getDocumentWithSignaturesAndFiles(final long documentId) throws Exception {
         if (documentId <= 0) {
-            throw new IllegalArgumentException("Document ID must be a positive integer. Currently supplied ID was "
-                    + documentId + ".");
+			throw new IllegalArgumentException(
+					"Document ID must be a positive integer. Currently supplied ID was " + documentId + ".");
         }
 
         Document result = null;
@@ -134,10 +141,12 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
 
                     if (doc.getSigned()) {
                     	Set<ee.adit.dao.pojo.Signature> signatures =  doc.getSignatures();
-                    	logger.debug("While fetching document for unsharing, initialized set of signatures. Set size - " + signatures.size());
+						logger.debug("While fetching document for unsharing, initialized set of signatures. Set size - "
+								+ signatures.size());
                     }
                     Set<DocumentFile> docFiles = doc.getDocumentFiles();
-                    logger.debug("While fetching document for unsharing, initialized set of document files. Set size - " + docFiles.size());
+					logger.debug("While fetching document for unsharing, initialized set of document files. Set size - "
+							+ docFiles.size());
                     return doc;
                 }
             });
@@ -155,32 +164,42 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
     /**
      * Fetch document with files.
      *
-     * @param documentId document ID
-     * @param fileIdList document file ID list
-     * @param includeSignatures do signatures have to be included in the result
-     * @param includeSharings do sharings have to be included in the result
-     * @param includeFileContents do file contents have to be included in the result
-     * @param fileTypes List of file types requested
-     * @param temporaryFilesDir temporary directory
-     * @param filesNotFoundMessageBase exception message base
-     * @param currentRequestUserCode user code (the user that activated the request)
+	 * @param documentId
+	 *            document ID
+	 * @param fileIdList
+	 *            document file ID list
+	 * @param includeSignatures
+	 *            do signatures have to be included in the result
+	 * @param includeSharings
+	 *            do sharings have to be included in the result
+	 * @param includeFileContents
+	 *            do file contents have to be included in the result
+	 * @param fileTypes
+	 *            List of file types requested
+	 * @param temporaryFilesDir
+	 *            temporary directory
+	 * @param filesNotFoundMessageBase
+	 *            exception message base
+	 * @param currentRequestUserCode
+	 *            user code (the user that activated the request)
      * @param documentRetentionDeadlineDays
-     * 		Document retention deadline from application configuration. Will be
-     * 		used to calculate estimated remove date of document.
+	 *            Document retention deadline from application configuration.
+	 *            Will be used to calculate estimated remove date of document.
      * @param digidocConfigFile
      *     Full path to DigiDoc library configuration file.
      *
      * @return document
-     * @throws Exception if any sort of exception occurred
+	 * @throws Exception
+	 *             if any sort of exception occurred
      */
     public OutputDocument getDocumentWithFiles(final long documentId, final List<Long> fileIdList,
             final boolean includeSignatures, final boolean includeSharings, final boolean includeFileContents,
             final ArrayOfFileType fileTypes, final String temporaryFilesDir, final String filesNotFoundMessageBase,
-            final String currentRequestUserCode, final Long documentRetentionDeadlineDays, final String digidocConfigFile)
-            throws Exception {
+			final String currentRequestUserCode, final Long documentRetentionDeadlineDays,
+			final String digidocConfigFile, final Boolean includeDvkData, final Boolean includeDhxData) throws Exception {
         if (documentId <= 0) {
-            throw new IllegalArgumentException("Document ID must be a positive integer. Currently supplied ID was "
-                    + documentId + ".");
+			throw new IllegalArgumentException(
+					"Document ID must be a positive integer. Currently supplied ID was " + documentId + ".");
         }
 
         OutputDocument result = null;
@@ -194,7 +213,7 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
                     Document doc = (Document) session.get(Document.class, documentId);
                     return dbDocumentToOutputDocument(doc, fileIdList, includeSignatures, includeSharings,
                             includeFileContents, fileTypes, temporaryFilesDir, filesNotFoundMessageBase,
-                            currentRequestUserCode, documentRetentionDeadlineDays, digidocConfigFile);
+							currentRequestUserCode, documentRetentionDeadlineDays, digidocConfigFile, includeDvkData, includeDhxData);
                 }
             });
         } catch (DataAccessException ex) {
@@ -211,18 +230,27 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
     /**
      * Converts database document to output document.
      *
-     * @param doc document to be converted
-     * @param fileIdList document files
-     * @param includeSignatures do signatures have to be included in the result
-     * @param includeSharings do sharings have to be included in the result
-     * @param includeFileContents do file contents have to be included in the result
-     * @param fileTypes List of file types requested
-     * @param temporaryFilesDir temporary directory
-     * @param filesNotFoundMessageBase exception message base
-     * @param currentRequestUserCode user code (the user that activated the request)
+	 * @param doc
+	 *            document to be converted
+	 * @param fileIdList
+	 *            document files
+	 * @param includeSignatures
+	 *            do signatures have to be included in the result
+	 * @param includeSharings
+	 *            do sharings have to be included in the result
+	 * @param includeFileContents
+	 *            do file contents have to be included in the result
+	 * @param fileTypes
+	 *            List of file types requested
+	 * @param temporaryFilesDir
+	 *            temporary directory
+	 * @param filesNotFoundMessageBase
+	 *            exception message base
+	 * @param currentRequestUserCode
+	 *            user code (the user that activated the request)
      * @param documentRetentionDeadlineDays
-     * 		Document retention deadline from application configuration. Will be
-     * 		used to calculate estimated remove date of document.
+	 *            Document retention deadline from application configuration.
+	 *            Will be used to calculate estimated remove date of document.
      * @param digidocConfigFile
      *     Full path to DigiDoc library configuration file.
      *
@@ -232,7 +260,8 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
     private OutputDocument dbDocumentToOutputDocument(Document doc, final List<Long> fileIdList,
             final boolean includeSignatures, final boolean includeSharings, final boolean includeFileContents,
             final ArrayOfFileType fileTypes, final String temporaryFilesDir, final String filesNotFoundMessageBase,
-            final String currentRequestUserCode, final Long documentRetentionDeadlineDays, final String digidocConfigFile)
+			final String currentRequestUserCode, final Long documentRetentionDeadlineDays,
+			final String digidocConfigFile, final Boolean includeDvkData, final Boolean includeDhxData)
             throws SQLException {
 
         long totalBytes = 0;
@@ -266,9 +295,8 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
             }
         }
 
-
-        boolean buildZipArchive = (includeFileContents && (fileTypes != null)
-            && (fileTypes.getFileType() != null) && (fileTypes.getFileType().size() > 0)
+		boolean buildZipArchive = (includeFileContents && (fileTypes != null) && (fileTypes.getFileType() != null)
+				&& (fileTypes.getFileType().size() > 0)
             && (fileTypes.getFileType().contains(DocumentService.FILETYPE_NAME_ZIP_ARCHIVE)));
 
         int itemIndex = 0;
@@ -282,9 +310,12 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
                 	signatureContainerFile = docFile;
                 }
             	
-            	boolean fileMatchesRequestedId = (fileIdList == null) || fileIdList.isEmpty() || fileIdList.contains(docFile.getId());
-            	boolean fileTypeWasRequested = DocumentService.fileIsOfRequestedType(docFile.getDocumentFileTypeId(), fileTypes);
-            	boolean fileIsNeededForZipArchive = buildZipArchive && (docFile.getDocumentFileTypeId() == DocumentService.FILETYPE_DOCUMENT_FILE);
+				boolean fileMatchesRequestedId = (fileIdList == null) || fileIdList.isEmpty()
+						|| fileIdList.contains(docFile.getId());
+				boolean fileTypeWasRequested = DocumentService.fileIsOfRequestedType(docFile.getDocumentFileTypeId(),
+						fileTypes);
+				boolean fileIsNeededForZipArchive = buildZipArchive
+						&& (docFile.getDocumentFileTypeId() == DocumentService.FILETYPE_DOCUMENT_FILE);
 
             	if ((fileMatchesRequestedId && fileTypeWasRequested) || fileIsNeededForZipArchive) {
             		OutputDocumentFile f = new OutputDocumentFile();
@@ -306,12 +337,14 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
                     // This is necessary to avoid storing potentially large
                     // amounts of binary data in server memory.
                     if (includeFileContents) {
-                    	logger.debug("Attempting to retreive file contents because contents of file " + docFile.getId() + " were requested.");
+						logger.debug("Attempting to retreive file contents because contents of file " + docFile.getId()
+								+ " were requested.");
 
                     	if ((docFile.getFileDataInDdoc() == null) || !docFile.getFileDataInDdoc()) {
 	                        itemIndex++;
 	                        String outputFileName = Util.generateRandomFileNameWithoutExtension();
-	                        outputFileName = temporaryFilesDir + File.separator + outputFileName + "_" + itemIndex + "_GDFv1.adit";
+							outputFileName = temporaryFilesDir + File.separator + outputFileName + "_" + itemIndex
+									+ "_GDFv1.adit";
 
 	                        InputStream blobDataStream = null;
 	                        FileOutputStream fileOutputStream = null;
@@ -327,9 +360,12 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
 	                                fileOutputStream.write(buffer, 0, len);
 	                                currentFileBytes += len;
 	                            }
-	                            logger.debug("Successfully retreived " + currentFileBytes + " bytes. Was expecting " + docFile.getFileSizeBytes() + " bytes.");
+								logger.debug("Successfully retreived " + currentFileBytes + " bytes. Was expecting "
+										+ docFile.getFileSizeBytes() + " bytes.");
 	                        } catch (IOException ex) {
-	                        	logger.debug("Exception occured while reading file " + docFile.getId() + " from database.", ex);
+								logger.debug(
+										"Exception occured while reading file " + docFile.getId() + " from database.",
+										ex);
 	                            throw new HibernateException(ex);
 	                        } finally {
 	                        	Util.safeCloseStream(blobDataStream);
@@ -340,15 +376,19 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
 
 	                        // Base64 encode file
 	                        try {
-	                        	logger.debug("Base64 encoding contents of file " + docFile.getId() + " ad writing encoded data to disk.");
+								logger.debug("Base64 encoding contents of file " + docFile.getId()
+										+ " ad writing encoded data to disk.");
 	                            f.setSysTempFile(Util.base64EncodeFile(outputFileName, temporaryFilesDir));
 	                            logger.debug("Base64 encoded data was successfully written to " + f.getSysTempFile());
 	                        } catch (IOException ex) {
-	                        	logger.debug("Exception occured while Base64 encoding file contents and/or writing encoded data to disk.", ex);
+								logger.debug(
+										"Exception occured while Base64 encoding file contents and/or writing encoded data to disk.",
+										ex);
 	                            throw new HibernateException(ex);
 	                        }
 	                    } else {
-	                    	logger.debug("Could not retreive contents of file " + docFile.getId() + " directly from database because contents of this file are stored in signature container (separate file).");
+							logger.debug("Could not retreive contents of file " + docFile.getId()
+									+ " directly from database because contents of this file are stored in signature container (separate file).");
 	                    }
                     }
 
@@ -365,8 +405,8 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
         		logger.debug("digidocConfigFile: " + digidocConfigFile);
 
         		SimplifiedDigiDocParser.extractFileContentsFromContainer(
-    				new ByteArrayInputStream(signatureContainerFile.getFileData()),
-	        		outputFilesList, temporaryFilesDir, Util.isBdocFile(signatureContainerFile.getFileName()));
+						new ByteArrayInputStream(signatureContainerFile.getFileData()), outputFilesList,
+						temporaryFilesDir, Util.isBdocFile(signatureContainerFile.getFileName()));
         	} catch (IOException ex) {
                  throw new HibernateException(ex);
         	}
@@ -374,18 +414,15 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
 
         // Add unsigned DDOC container containing all document files
         // (if DDOC container was requested and document is not signed)
-        if (includeFileContents
-        	&& !resultContainsSignatureContainer
-        	&& (fileTypes != null)
-        	&& (fileTypes.getFileType() != null)
-        	&& (fileTypes.getFileType().size() > 0)
+		if (includeFileContents && !resultContainsSignatureContainer && (fileTypes != null)
+				&& (fileTypes.getFileType() != null) && (fileTypes.getFileType().size() > 0)
         	&& (fileTypes.getFileType().contains(DocumentService.FILETYPE_NAME_SIGNATURE_CONTAINER))) {
 
         	try {
-	        	OutputDocumentFile dummyContainer =
-	        		DocumentService.createSignatureContainerFromDocumentFiles(
-	        			doc, digidocConfigFile, temporaryFilesDir);
-	        	dummyContainer.setSysTempFile(Util.base64EncodeFile(dummyContainer.getSysTempFile(), temporaryFilesDir));
+				OutputDocumentFile dummyContainer = DocumentService.createSignatureContainerFromDocumentFiles(doc,
+						digidocConfigFile, temporaryFilesDir);
+				dummyContainer
+						.setSysTempFile(Util.base64EncodeFile(dummyContainer.getSysTempFile(), temporaryFilesDir));
 	        	totalBytes += (dummyContainer.getSizeBytes() == null) ? 0L : dummyContainer.getSizeBytes();
 	        	outputFilesList.add(dummyContainer);
         	} catch (Exception ex) {
@@ -393,17 +430,20 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
         	}
         }
 
-        // Add ZIP archive containing all document files (if ZIP archive was requested)
+		// Add ZIP archive containing all document files (if ZIP archive was
+		// requested)
         if (buildZipArchive) {
         	try {
-	        	OutputDocumentFile zipArchive = DocumentService.createZipArchiveFromDocumentFiles(doc, outputFilesList, temporaryFilesDir);
+				OutputDocumentFile zipArchive = DocumentService.createZipArchiveFromDocumentFiles(doc, outputFilesList,
+						temporaryFilesDir);
 	        	zipArchive.setSysTempFile(Util.base64EncodeFile(zipArchive.getSysTempFile(), temporaryFilesDir));
 
 	        	// Remove from output files that were not requested but were
 	        	// required for building ZIP archive
 	        	totalBytes = 0L;
 	        	for (int i = outputFilesList.size() - 1; i >= 0; i--) {
-	        		if (!DocumentService.fileIsOfRequestedType(DocumentService.resolveFileTypeId(outputFilesList.get(i).getFileType()), fileTypes)) {
+					if (!DocumentService.fileIsOfRequestedType(
+							DocumentService.resolveFileTypeId(outputFilesList.get(i).getFileType()), fileTypes)) {
 	        			outputFilesList.remove(i);
 	        		} else {
 	        			totalBytes += outputFilesList.get(i).getSizeBytes();
@@ -496,16 +536,20 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
 
                         sendingData.getUserList().add(rec);
 
-                        // There should be possible to have only one sending per document.
-                        // So it should be safe to take sending date from any sending record
+						// There should be possible to have only one sending per
+						// document.
+						// So it should be safe to take sending date from any
+						// sending record
                         // associated to current document.
                         sendingData.setSentTime(sharing.getCreationDate());
 
-                        // Check if assumptions mentioned above are also valid in real world
+						// Check if assumptions mentioned above are also valid
+						// in real world
                         if ((sendingDateCheck != null) && (sharing.getCreationDate() != null)) {
                         	long diffInMs = sharing.getCreationDate().getTime() - sendingDateCheck.getTime();
                         	if (Math.abs(diffInMs) > (60L * 1000L)) {
-                        		logger.warn("Document " + doc.getId() + " has multiple sendings with sending times varying more than 1 minute.");
+								logger.warn("Document " + doc.getId()
+										+ " has multiple sendings with sending times varying more than 1 minute.");
                         	}
                         }
                         if (sharing.getCreationDate() != null) {
@@ -539,8 +583,13 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
         result.setDeflated(doc.getDeflated());
         result.setDeflatingDate(doc.getDeflateDate());
         result.setDocumentType(doc.getDocumentType());
+		if(includeDvkData) {
         result.setDvkId(doc.getDvkId());
         result.setDvkStatusId(doc.getDocumentDvkStatusId());
+		}
+		if(includeDhxData) {
+			result.setDhxReceiptId(doc.getDhxReceiptId());
+		}
         result.setGuid(doc.getGuid());
         result.setId(doc.getId());
         result.setLastModified(doc.getLastModifiedDate());
@@ -595,7 +644,8 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
             	for (Document childDocument : doc.getDocuments()) {
     				if (childDocument.getDocumentSharings() != null && !childDocument.getDocumentSharings().isEmpty()) {
     					for (DocumentSharing sharing : childDocument.getDocumentSharings()) {
-							if (!Boolean.TRUE.equals(sharing.getDeleted()) && sharing.getUserCode() != null && doc.getCreatorCode().equals(sharing.getUserCode())) {
+							if (!Boolean.TRUE.equals(sharing.getDeleted()) && sharing.getUserCode() != null
+									&& doc.getCreatorCode().equals(sharing.getUserCode())) {
 								hasSentReply = true;
 								break;
 							}
@@ -622,7 +672,8 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
                 Iterator<DocumentSharing> it = doc.getDocumentSharings().iterator();
                 while (it.hasNext()) {
                     DocumentSharing sharing = (DocumentSharing) it.next();
-                    if (sharing.getUserCode() != null && currentRequestUserCode.equalsIgnoreCase(sharing.getUserCode())) {
+					if (sharing.getUserCode() != null
+							&& currentRequestUserCode.equalsIgnoreCase(sharing.getUserCode())) {
                     	result.setHasBeenViewed(sharing.getFirstAccessDate() != null);
                     	break;
                     }
@@ -636,10 +687,14 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
     /**
      * Save document with files.
      *
-     * @param document document
-     * @param files document files
-     * @param remainingDiskQuota remaining disk quota for user
-     * @param existingSession the existing database session
+	 * @param document
+	 *            document
+	 * @param files
+	 *            document files
+	 * @param remainingDiskQuota
+	 *            remaining disk quota for user
+	 * @param existingSession
+	 *            the existing database session
      *
      * @return save result
      * @throws Exception
@@ -656,9 +711,12 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
     /**
      * Save document in new session.
      *
-     * @param document document
-     * @param files document files
-     * @param remainingDiskQuota remaining disk quota for user
+	 * @param document
+	 *            document
+	 * @param files
+	 *            document files
+	 * @param remainingDiskQuota
+	 *            remaining disk quota for user
      *
      * @return save result
      * @throws Exception
@@ -680,10 +738,14 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
     /**
      * Save document.
      *
-     * @param document document
-     * @param files document files
-     * @param remainingDiskQuota remaining disk quota for user
-     * @param session session to be used for saving
+	 * @param document
+	 *            document
+	 * @param files
+	 *            document files
+	 * @param remainingDiskQuota
+	 *            remaining disk quota for user
+	 * @param session
+	 *            session to be used for saving
      *
      * @return save result
      * @throws IOException
@@ -720,18 +782,16 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
 
                     if (documentFile == null) {
                         result.setSuccess(false);
-                        result.getMessages().addAll(
-                                this.getMessageService().getMessages(
-                                        "request.saveDocument.document.noFileToUpdate",
-                                        new Object[] {attachmentFile.getId().toString(),
-                                                new Long(document.getId()).toString() }));
+						result.getMessages().addAll(this.getMessageService()
+								.getMessages("request.saveDocument.document.noFileToUpdate", new Object[] {
+										attachmentFile.getId().toString(), new Long(document.getId()).toString() }));
                         return result;
                     }
 
                     long length = (new File(attachmentFile.getSysTempFile())).length();
                     if ((documentFile != null) && (documentFile.getId() > 0)) {
-                        Long currentVersionLength = (documentFile.getFileSizeBytes() == null) ? 0 : documentFile
-                                .getFileSizeBytes();
+						Long currentVersionLength = (documentFile.getFileSizeBytes() == null) ? 0
+								: documentFile.getFileSizeBytes();
                         requiredDiskSpace += (length - currentVersionLength);
                     } else {
                         requiredDiskSpace += length;
@@ -747,8 +807,9 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
                     // new Object[] { remainingDiskQuota, requiredDiskSpace },
                     // Locale.ENGLISH));
                     // result.getMessages().add(msg);
-                    result.getMessages().addAll(
-                            (this.getMessageService().getMessages("request.saveDocument.document.files.quotaExceeded",
+					result.getMessages()
+							.addAll((this.getMessageService().getMessages(
+									"request.saveDocument.document.files.quotaExceeded",
                                     new Object[] {new Long(remainingDiskQuota).toString(),
                                             new Long(requiredDiskSpace).toString() })));
                     return result;
@@ -805,10 +866,12 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
                         filesTotalSize = filesTotalSize + length;
                     }
 
-                    documentFile.setFileDataInDdoc((attachmentFile.getDdocDataFileStartOffset() != null) && (attachmentFile.getDdocDataFileStartOffset() > 0));
+					documentFile.setFileDataInDdoc((attachmentFile.getDdocDataFileStartOffset() != null)
+							&& (attachmentFile.getDdocDataFileStartOffset() > 0));
                     documentFile.setDocumentFileTypeId(DocumentService.resolveFileTypeId(attachmentFile.getFileType()));
 
-                    String guid = attachmentFile.getGuid() != null ? attachmentFile.getGuid() : UUID.randomUUID().toString();
+					String guid = attachmentFile.getGuid() != null ? attachmentFile.getGuid()
+							: UUID.randomUUID().toString();
                     documentFile.setGuid(guid);
                     documentFile.setContentType(attachmentFile.getContentType());
                     documentFile.setDeleted(false);
@@ -856,8 +919,7 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
      * @return true if document exists
      */
     @SuppressWarnings("unchecked")
-    public boolean checkIfDocumentExists(final Long documentDhlId,
-    	final String recipientPersonalIdCode) {
+	public boolean checkIfDocumentExists(final Long documentDhlId, final String recipientPersonalIdCode) {
         boolean result = true;
 
         String sql = "from Document where dvkId = " + documentDhlId + " and creatorCode = '"
@@ -874,7 +936,8 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
     /**
      * Fetch documents without the specified DVK status.
      *
-     * @param dvkStatusId DVK status ID
+	 * @param dvkStatusId
+	 *            DVK status ID
      * @return document list
      */
     @SuppressWarnings("unchecked")
@@ -883,7 +946,8 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
     	
         List<Document> result = null;
         
-        String sql = "from Document where dvkId is not null and (documentDvkStatusId is null or documentDvkStatusId != " + dvkStatusId + ")";
+		String sql = "from Document where dvkId is not null and (documentDvkStatusId is null or documentDvkStatusId != "
+				+ dvkStatusId + ")";
         logger.debug("SQL: " + sql);
         
         Session session = null;
@@ -898,7 +962,6 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
         return result;
     }
 
-    
     /**
      * Fetch documents which have signatures.
      *
@@ -922,11 +985,11 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
         return result;
     }
 
-    
     /**
      * Update existing document.
      *
-     * @param document document
+	 * @param document
+	 *            document
      */
     public void update(Document document) {
         Session session = null;
@@ -951,7 +1014,8 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
     /**
      * Fetch document by DVK ID.
      *
-     * @param dvkMessageID document DVK ID
+	 * @param dvkMessageID
+	 *            document DVK ID
      * @return document
      */
     public Document getDocumentByDVKID(Long dvkMessageID) {
@@ -991,8 +1055,7 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
 	 *
 	 * @param xmlName
 	 *	 Field name in XML (WSDL)
-	 * @return
-	 *	 Field name in database
+	 * @return Field name in database
 	 */
 	private String documentFieldXmlNameToDbName(String xmlName) {
 		if ("id".equalsIgnoreCase(xmlName)) {
@@ -1025,14 +1088,19 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
 	/**
 	 * Document search.
 	 *
-	 * @param param search parameters
-	 * @param userCode user code (document owner)
-	 * @param temporaryFilesDir temporary directory
-	 * @param filesNotFoundMessageBase exception message base
-	 * @param currentRequestUserCode user code (the user that activated the request)
+	 * @param param
+	 *            search parameters
+	 * @param userCode
+	 *            user code (document owner)
+	 * @param temporaryFilesDir
+	 *            temporary directory
+	 * @param filesNotFoundMessageBase
+	 *            exception message base
+	 * @param currentRequestUserCode
+	 *            user code (the user that activated the request)
 	 * @param documentRetentionDeadlineDays
-	 * 		Document retention deadline from application configuration. Will be
-	 * 		used to calculate estimated remove date of document.
+	 *            Document retention deadline from application configuration.
+	 *            Will be used to calculate estimated remove date of document.
 	 * @param digidocConfigFile
 	 *	 Full path to DigiDoc library configuration file.
 	 *
@@ -1043,7 +1111,8 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
 	public GetDocumentListResponseAttachment getDocumentSearchResult(final GetDocumentListRequest param,
 			final String userCode, final String temporaryFilesDir, final String filesNotFoundMessageBase,
 			final String currentRequestUserCode, final Long documentRetentionDeadlineDays,
-			final String digidocConfigFile) throws SQLException {
+			final String digidocConfigFile, final Boolean includeDvkData, final Boolean includeDhxData)
+			throws SQLException {
 
 		Map<String, Object> parameterMap = new HashMap<String, Object>();
 		if (param.isHasBeenViewed() == null) {
@@ -1054,7 +1123,9 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
 			parameterMap.put("hasBeenViewed", Arrays.asList(1, Hibernate.INTEGER).toArray());
 		}
 		parameterMap.put("userCode", Arrays.asList(userCode, Hibernate.STRING).toArray());
-		parameterMap.put("searchPhrase", Arrays.asList(param.getSearchPhrase() == null || param.getSearchPhrase().length() == 0 ? null : "%" + param.getSearchPhrase().toLowerCase() + "%", Hibernate.STRING).toArray());
+		parameterMap.put("searchPhrase",
+				Arrays.asList(param.getSearchPhrase() == null || param.getSearchPhrase().length() == 0 ? null
+						: "%" + param.getSearchPhrase().toLowerCase() + "%", Hibernate.STRING).toArray());
 		if (param.isIsDeflated() == null) {
 			parameterMap.put("deflated", Arrays.asList(null, Hibernate.INTEGER).toArray());
 		} else if(param.isIsDeflated() == false) {
@@ -1062,9 +1133,14 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
 		} else if(param.isIsDeflated() == true) {
 			parameterMap.put("deflated", Arrays.asList(1, Hibernate.INTEGER).toArray());
 		}
-		parameterMap.put("periodStart", Arrays.asList(param.getPeriodStart() == null ? null : param.getPeriodStart().toDate(), Hibernate.DATE).toArray());
-		parameterMap.put("periodEnd", Arrays.asList(param.getPeriodEnd() == null ? null : param.getPeriodEnd().toDate(), Hibernate.DATE).toArray());
-		parameterMap.put("folder", Arrays.asList(param.getFolder() == null || param.getFolder().length() == 0 ? null : param.getFolder().toLowerCase(), Hibernate.STRING).toArray());
+		parameterMap.put("periodStart",
+				Arrays.asList(param.getPeriodStart() == null ? null : param.getPeriodStart().toDate(), Hibernate.DATE)
+						.toArray());
+		parameterMap.put("periodEnd", Arrays
+				.asList(param.getPeriodEnd() == null ? null : param.getPeriodEnd().toDate(), Hibernate.DATE).toArray());
+		parameterMap.put("folder", Arrays.asList(
+				param.getFolder() == null || param.getFolder().length() == 0 ? null : param.getFolder().toLowerCase(),
+				Hibernate.STRING).toArray());
 		parameterMap.put("eformUseId", Arrays.asList(param.getEformUseId(), Hibernate.LONG).toArray());
 		if (param.getSigned() == null) {
 			parameterMap.put("signed", Arrays.asList(null, Hibernate.INTEGER).toArray());
@@ -1077,97 +1153,90 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
 		StringBuilder selectSql = new StringBuilder("SELECT * FROM (\r\n");
 		StringBuilder countSql = new StringBuilder("SELECT count(*) total FROM (\r\n");
 		StringBuilder sql = new StringBuilder( 
-				"	SELECT results.id, results.guid, results.title, results.type, results.creator_code, results.creator_name, " +
-				"			results.creator_user_code, results.creator_user_name, results.creation_date, results.remote_application, " +
-				"			results.last_modified_date, results.document_dvk_status_id, results.dvk_id, results.document_wf_status_id, " +
-				"			results.parent_id, results.locked, results.locking_date, results.signable, results.deflated, " +
-				"			results.deflate_date, results.deleted, results.invisible_to_owner, results.signed, results.migrated, " +
-				"			results.eform_use_id, results.content, results.files_size_bytes, results.sender_receiver, " +
-				"			row_number() over() AS rnum FROM (\r\n" +
-//				"		SELECT documents.*, id_size_shared.file_size files_size_bytes, CASE WHEN documents.creator_code != :userCode THEN documents.creator_name ELSE id_size_shared.shared_to END sender_receiver FROM (\r\n" +
-				"		SELECT documents.id, documents.guid, documents.title, documents.type, documents.creator_code, documents.creator_name, " +
-				"				documents.creator_user_code, documents.creator_user_name, documents.creation_date, documents.remote_application, " +
-				"				documents.last_modified_date, documents.document_dvk_status_id, documents.dvk_id, documents.document_wf_status_id, " +
-				"				documents.parent_id, documents.locked, documents.locking_date, documents.signable, documents.deflated, " +
-				"				documents.deflate_date, documents.deleted, documents.invisible_to_owner, documents.signed, documents.migrated, " +				
-				"				documents.eform_use_id, documents.content, " +
-				"				id_size_shared.file_size files_size_bytes, " +
-				"				CASE WHEN documents.creator_code != :userCode THEN documents.creator_name ELSE id_size_shared.shared_to END sender_receiver, " +
-				"				documents.creator_name sender, " +
-				"				id_size_shared.shared_to receiver" +
-				"		FROM (\r\n" +
-//				"			SELECT id_size.id, id_size.file_size, LISTAGG(COALESCE(sharings.user_name, sharings.user_email), ', ') WITHIN GROUP (ORDER BY LOWER(sharings.user_name)) shared_to FROM (\r\n" +
-				"			SELECT id_size.id, id_size.file_size, STRING_AGG(COALESCE(sharings.user_name, sharings.user_email), ', ' ORDER BY LOWER(sharings.user_name)) AS shared_to FROM (\r\n" +				
-				"				SELECT ids.id, sum(files.file_size_bytes) as file_size FROM (\r\n" + 
-				"					SELECT\r\n" + 
-				"						DISTINCT d.id\r\n" + 
-				"					FROM document d\r\n" + 
-				"					LEFT JOIN document_sharing ds ON ds.document_id = d.id\r\n" + 
-				"					LEFT JOIN document_file df ON df.document_id = d.id\r\n" + 
-				"					LEFT JOIN document_history dh ON dh.document_id = d.id AND :hasBeenViewed IS NOT NULL AND dh.document_history_type = 'mark_viewed' AND dh.user_code = :userCode\r\n" + 
-				"					LEFT JOIN signature s ON s.document_id = d.id AND :searchPhrase IS NOT NULL\r\n" + 
-				"					WHERE\r\n" + 
-				"						COALESCE(d.deleted, 0) = 0\r\n" + 
-				"						AND (d.creator_code != :userCode OR COALESCE(d.invisible_to_owner, 0) = 0)\r\n" + 
-				"						AND (\r\n" + 
-				"							(d.creator_code = :userCode)\r\n" + 
-				"							OR (\r\n" + 
-				"								COALESCE(ds.deleted, 0) = 0\r\n" + 
-				"								AND ds.user_code = :userCode\r\n" + 
-				"							)\r\n" + 
-				"						)\r\n" + 
-				"						AND (\r\n" + 
-				"							('local' != COALESCE(:folder, 'X'))\r\n" + 
-				"							OR ('local' = :folder AND d.creator_code = :userCode AND ds.id IS NULL)\r\n" + 
-				"						)\r\n" + 
-				"						AND (\r\n" + 
-				"							('incoming' != COALESCE(:folder, 'X'))\r\n" + 
-				"							OR ('incoming' = :folder AND d.creator_code != :userCode AND ds.id IS NOT NULL)\r\n" + 
-				"						)\r\n" + 
-				"						AND (\r\n" + 
-				"							('outgoing' != COALESCE(:folder, 'X'))\r\n" + 
-				"							OR ('outgoing' = :folder AND d.creator_code = :userCode AND ds.id IS NOT NULL)\r\n" + 
-				"						)\r\n" + 
-				"						AND (\r\n" + 
-				"							(:hasBeenViewed IS NULL)\r\n" + 
-				"							OR (\r\n" + 
-				"								1 = :hasBeenViewed\r\n" + 
-				"								AND (\r\n" + 
-				"									d.creator_code = :userCode\r\n" + 
-				"									OR dh.id IS NOT NULL\r\n" + 
-				"								)\r\n" + 
-				"							)\r\n" + 
-				"							OR (\r\n" + 
-				"								0 = :hasBeenViewed\r\n" + 
-				"								AND d.creator_code != :userCode\r\n" + 
-				"								AND dh.id IS NULL\r\n" + 
-				"							)\r\n" + 
-				"						)\r\n" + 
-				"						AND (:deflated IS NULL OR COALESCE(d.deflated, 0) = :deflated)\r\n" + 
-				"						AND (\r\n" + 
-				"							:searchPhrase IS NULL\r\n" + 
-				"							OR (\r\n" + 
-				"								LOWER(d.title) LIKE :searchPhrase\r\n" + 
-				"								OR LOWER(d.creator_code) LIKE :searchPhrase\r\n" + 
-				"								OR LOWER(d.creator_name) LIKE :searchPhrase\r\n" + 
-				"								OR LOWER(s.signer_code) LIKE :searchPhrase\r\n" + 
-				"								OR LOWER(s.signer_name) LIKE :searchPhrase\r\n" + 
-				"								OR LOWER(ds.user_code) LIKE :searchPhrase\r\n" + 
-				"								OR LOWER(ds.user_name) LIKE :searchPhrase\r\n" + 
-				"								OR LOWER(df.file_name) LIKE :searchPhrase\r\n" + 
-				"								OR LOWER(df.description) LIKE :searchPhrase\r\n" + 
-				"							)\r\n" + 
-				"						)\r\n" + 
-				"						AND (\r\n" + 
-				"							CAST(:periodStart AS TIMESTAMP) IS NULL\r\n" + 
-				"							OR CAST(d.last_modified_date AS DATE) >= :periodStart\r\n" + 
-				"						)\r\n" + 
-				"						AND (\r\n" + 
-				"							CAST(:periodEnd AS TIMESTAMP) IS NULL\r\n" + 
-				"							OR CAST(d.last_modified_date AS DATE) <= :periodEnd\r\n" + 
-				"						)\r\n" +
-				"						AND (:eformUseId IS NULL OR d.eform_use_id = :eformUseId)\r\n" +
-				"						AND (:signed IS NULL OR COALESCE(d.signed, 0) = :signed)");
+				"	SELECT results.id, results.guid, results.title, results.type, results.creator_code, results.creator_name, "
+						+ "			results.creator_user_code, results.creator_user_name, results.creation_date, results.remote_application, "
+						+ "			results.last_modified_date, results.document_dvk_status_id, results.dvk_id, results.document_wf_status_id, "
+						+ "			results.parent_id, results.locked, results.locking_date, results.signable, results.deflated, "
+						+ "			results.deflate_date, results.deleted, results.invisible_to_owner, results.signed, results.migrated, "
+						+ "			results.eform_use_id, results.content, results.dhx_receipt_id, results.dhx_consignment_id, results.files_size_bytes, results.sender_receiver, "
+						+ "			row_number() over() AS rnum FROM (\r\n" +
+						// " SELECT documents.*, id_size_shared.file_size
+						// files_size_bytes, CASE WHEN documents.creator_code !=
+						// :userCode THEN documents.creator_name ELSE
+						// id_size_shared.shared_to END sender_receiver FROM
+						// (\r\n" +
+						"		SELECT documents.id, documents.guid, documents.title, documents.type, documents.creator_code, documents.creator_name, "
+						+ "				documents.creator_user_code, documents.creator_user_name, documents.creation_date, documents.remote_application, "
+						+ "				documents.last_modified_date, documents.document_dvk_status_id, documents.dvk_id, documents.document_wf_status_id, "
+						+ "				documents.parent_id, documents.locked, documents.locking_date, documents.signable, documents.deflated, "
+						+ "				documents.deflate_date, documents.deleted, documents.invisible_to_owner, documents.signed, documents.migrated, "
+						+ "				documents.eform_use_id, documents.content, documents.dhx_receipt_id, documents.dhx_consignment_id, "
+						+ "				id_size_shared.file_size files_size_bytes, "
+						+ "				CASE WHEN documents.creator_code != :userCode THEN documents.creator_name ELSE id_size_shared.shared_to END sender_receiver, "
+						+ "				documents.creator_name sender, "
+						+ "				id_size_shared.shared_to receiver" + "		FROM (\r\n" +
+						// " SELECT id_size.id, id_size.file_size,
+						// LISTAGG(COALESCE(sharings.user_name,
+						// sharings.user_email), ', ') WITHIN GROUP (ORDER BY
+						// LOWER(sharings.user_name)) shared_to FROM (\r\n" +
+						"			SELECT id_size.id, id_size.file_size, STRING_AGG(COALESCE(sharings.user_name, sharings.user_email), ', ' ORDER BY LOWER(sharings.user_name)) AS shared_to FROM (\r\n"
+						+ "				SELECT ids.id, sum(files.file_size_bytes) as file_size FROM (\r\n"
+						+ "					SELECT\r\n" + "						DISTINCT d.id\r\n"
+						+ "					FROM document d\r\n"
+						+ "					LEFT JOIN document_sharing ds ON ds.document_id = d.id\r\n"
+						+ "					LEFT JOIN document_file df ON df.document_id = d.id\r\n"
+						+ "					LEFT JOIN document_history dh ON dh.document_id = d.id AND :hasBeenViewed IS NOT NULL AND dh.document_history_type = 'mark_viewed' AND dh.user_code = :userCode\r\n"
+						+ "					LEFT JOIN signature s ON s.document_id = d.id AND :searchPhrase IS NOT NULL\r\n"
+						+ "					WHERE\r\n" + "						COALESCE(d.deleted, 0) = 0\r\n"
+						+ "						AND (d.creator_code != :userCode OR COALESCE(d.invisible_to_owner, 0) = 0)\r\n"
+						+ "						AND (\r\n"
+						+ "							(d.creator_code = :userCode)\r\n"
+						+ "							OR (\r\n"
+						+ "								COALESCE(ds.deleted, 0) = 0\r\n"
+						+ "								AND ds.user_code = :userCode\r\n"
+						+ "							)\r\n" + "						)\r\n"
+						+ "						AND (\r\n"
+						+ "							('local' != COALESCE(:folder, 'X'))\r\n"
+						+ "							OR ('local' = :folder AND d.creator_code = :userCode AND ds.id IS NULL)\r\n"
+						+ "						)\r\n" + "						AND (\r\n"
+						+ "							('incoming' != COALESCE(:folder, 'X'))\r\n"
+						+ "							OR ('incoming' = :folder AND d.creator_code != :userCode AND ds.id IS NOT NULL)\r\n"
+						+ "						)\r\n" + "						AND (\r\n"
+						+ "							('outgoing' != COALESCE(:folder, 'X'))\r\n"
+						+ "							OR ('outgoing' = :folder AND d.creator_code = :userCode AND ds.id IS NOT NULL)\r\n"
+						+ "						)\r\n" + "						AND (\r\n"
+						+ "							(:hasBeenViewed IS NULL)\r\n"
+						+ "							OR (\r\n" + "								1 = :hasBeenViewed\r\n"
+						+ "								AND (\r\n"
+						+ "									d.creator_code = :userCode\r\n"
+						+ "									OR dh.id IS NOT NULL\r\n"
+						+ "								)\r\n" + "							)\r\n"
+						+ "							OR (\r\n" + "								0 = :hasBeenViewed\r\n"
+						+ "								AND d.creator_code != :userCode\r\n"
+						+ "								AND dh.id IS NULL\r\n" + "							)\r\n"
+						+ "						)\r\n"
+						+ "						AND (:deflated IS NULL OR COALESCE(d.deflated, 0) = :deflated)\r\n"
+						+ "						AND (\r\n" + "							:searchPhrase IS NULL\r\n"
+						+ "							OR (\r\n"
+						+ "								LOWER(d.title) LIKE :searchPhrase\r\n"
+						+ "								OR LOWER(d.creator_code) LIKE :searchPhrase\r\n"
+						+ "								OR LOWER(d.creator_name) LIKE :searchPhrase\r\n"
+						+ "								OR LOWER(s.signer_code) LIKE :searchPhrase\r\n"
+						+ "								OR LOWER(s.signer_name) LIKE :searchPhrase\r\n"
+						+ "								OR LOWER(ds.user_code) LIKE :searchPhrase\r\n"
+						+ "								OR LOWER(ds.user_name) LIKE :searchPhrase\r\n"
+						+ "								OR LOWER(df.file_name) LIKE :searchPhrase\r\n"
+						+ "								OR LOWER(df.description) LIKE :searchPhrase\r\n"
+						+ "							)\r\n" + "						)\r\n"
+						+ "						AND (\r\n"
+						+ "							CAST(:periodStart AS TIMESTAMP) IS NULL\r\n"
+						+ "							OR CAST(d.last_modified_date AS DATE) >= :periodStart\r\n"
+						+ "						)\r\n" + "						AND (\r\n"
+						+ "							CAST(:periodEnd AS TIMESTAMP) IS NULL\r\n"
+						+ "							OR CAST(d.last_modified_date AS DATE) <= :periodEnd\r\n"
+						+ "						)\r\n"
+						+ "						AND (:eformUseId IS NULL OR d.eform_use_id = :eformUseId)\r\n"
+						+ "						AND (:signed IS NULL OR COALESCE(d.signed, 0) = :signed)");
 
 		// no NULL support in IN
 		
@@ -1199,8 +1268,7 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
 
 		// Document workflow status
 		List<Long> documentWfStatuses = new ArrayList<Long>();
-		if ((param.getDocumentWorkflowStatuses() != null)
-				&& (param.getDocumentWorkflowStatuses().getStatusId() != null)
+		if ((param.getDocumentWorkflowStatuses() != null) && (param.getDocumentWorkflowStatuses().getStatusId() != null)
 				&& !param.getDocumentWorkflowStatuses().getStatusId().isEmpty()) {
 
 			for (Long statusId : param.getDocumentWorkflowStatuses().getStatusId()) {
@@ -1213,8 +1281,7 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
 
 		// Creator application
 		List<String> creatorApplications = new ArrayList<String>();
-		if ((param.getCreatorApplications() != null)
-				&& (param.getCreatorApplications().getCreatorApplication() != null)
+		if ((param.getCreatorApplications() != null) && (param.getCreatorApplications().getCreatorApplication() != null)
 				&& !param.getCreatorApplications().getCreatorApplication().isEmpty()) {
 
 			for (String appName : param.getCreatorApplications().getCreatorApplication()) {
@@ -1225,17 +1292,13 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
 			}
 		}
 
-		sql.append("\r\n" +
-				"				) AS ids\r\n" +
-				"				JOIN document documents ON documents.id = ids.id\r\n" +
-				"				LEFT JOIN document_file files ON files.document_id = documents.id AND COALESCE(files.deleted, 0) = 0 AND COALESCE(documents.deflated, 0) = 0 AND COALESCE(documents.invisible_to_owner, 0) = 0 AND files.document_file_type_id NOT IN (:ddocContainers )\r\n" +
-				"				GROUP BY ids.id\r\n" +
-				"			) AS id_size\r\n" +
-				"			LEFT JOIN document_sharing sharings ON sharings.document_id = id_size.id AND COALESCE(sharings.deleted, 0) = 0\r\n" +
-				"			GROUP BY id_size.id, id_size.file_size\r\n" +
-				"		) AS id_size_shared\r\n" +
-				"		JOIN document documents ON documents.id = id_size_shared.id\r\n" +
-				"		ORDER BY ");
+		sql.append("\r\n" + "				) AS ids\r\n"
+				+ "				JOIN document documents ON documents.id = ids.id\r\n"
+				+ "				LEFT JOIN document_file files ON files.document_id = documents.id AND COALESCE(files.deleted, 0) = 0 AND COALESCE(documents.deflated, 0) = 0 AND COALESCE(documents.invisible_to_owner, 0) = 0 AND files.document_file_type_id NOT IN (:ddocContainers )\r\n"
+				+ "				GROUP BY ids.id\r\n" + "			) AS id_size\r\n"
+				+ "			LEFT JOIN document_sharing sharings ON sharings.document_id = id_size.id AND COALESCE(sharings.deleted, 0) = 0\r\n"
+				+ "			GROUP BY id_size.id, id_size.file_size\r\n" + "		) AS id_size_shared\r\n"
+				+ "		JOIN document documents ON documents.id = id_size_shared.id\r\n" + "		ORDER BY ");
 
 		// Search result ordering
 		String sortBy = documentFieldXmlNameToDbName("last_modified");
@@ -1266,9 +1329,7 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
 		}
 		sql.append(sortBy).append(" ").append(sortOrder);
 
-		sql.append(",\r\n" +
-				"		documents.last_modified_date DESC, documents.id ASC\r\n" +
-				"	) AS results");
+		sql.append(",\r\n" + "		documents.last_modified_date DESC, documents.id ASC\r\n" + "	) AS results");
 
 		selectSql.append(sql);
 		countSql.append(sql);
@@ -1280,7 +1341,8 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
 		}
 		int maxResults = (param.getMaxResults() != null) ? param.getMaxResults().intValue() : 20;
 		if (maxResults < 0) {
-			// It is OK to ask 0 results because it is the only way to get total number
+			// It is OK to ask 0 results because it is the only way to get total
+			// number
 			// of documents without retrieving any of them.
 			maxResults = 20;
 		} else if (maxResults > 100) {
@@ -1288,21 +1350,16 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
 		}
 
 		// limit for select
-		selectSql.append("\r\n" +
-				"	LIMIT :end");
+		selectSql.append("\r\n" + "	LIMIT :end");
 
-		selectSql.append("\r\n" +
-				") ");
-		countSql.append("\r\n" +
-				") ");
+		selectSql.append("\r\n" + ") ");
+		countSql.append("\r\n" + ") ");
 
 		// offset for select
 		selectSql.append("AS total where rnum >= :start");
 
-		selectSql.append("\r\n" +
-				"order by rnum asc");
-		countSql.append("\r\n" +
-				"AS total");
+		selectSql.append("\r\n" + "order by rnum asc");
+		countSql.append("\r\n" + "AS total");
 
 		List<Document> documents = null;
 		Integer count = 0;
@@ -1338,7 +1395,15 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
 				countQuery.setParameterList("creatorApplications", creatorApplications);
 			}
 			selectQuery.setParameter("start", startIndex);
-			selectQuery.setParameter("end", startIndex + maxResults - 1);	//-1 is because Oracle 'LIMIT' was rownum < :end
+			selectQuery.setParameter("end", startIndex + maxResults - 1); // -1
+																			// is
+																			// because
+																			// Oracle
+																			// 'LIMIT'
+																			// was
+																			// rownum
+																			// <
+																			// :end
 
 			countQuery.addScalar("total", Hibernate.INTEGER);
 			count = (Integer) countQuery.list().get(0);
@@ -1350,8 +1415,8 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
 
 			for (Document doc : documents) {
 				OutputDocument resultDoc = dbDocumentToOutputDocument(doc, null, true, true, false,
-						param.getFileTypes(), temporaryFilesDir, filesNotFoundMessageBase,
-						currentRequestUserCode, documentRetentionDeadlineDays, digidocConfigFile);
+						param.getFileTypes(), temporaryFilesDir, filesNotFoundMessageBase, currentRequestUserCode,
+						documentRetentionDeadlineDays, digidocConfigFile, includeDvkData, includeDhxData);
 				innerResult.getDocumentList().add(resultDoc);
 			}
 
@@ -1372,7 +1437,6 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
 		}
 	}
 
-	
     /**
      * Fetches document from database by dhl id
      * 
@@ -1381,8 +1445,8 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
      */
     public Document getDocumentByDhlId(final Long dhlId) {
         if (dhlId==null || dhlId <= 0) {
-            throw new IllegalArgumentException("Document ID must be a positive integer. Currently supplied ID was "
-                    + dhlId + ".");
+			throw new IllegalArgumentException(
+					"Document ID must be a positive integer. Currently supplied ID was " + dhlId + ".");
         }
         Document result = null;
         Session session = null;
@@ -1404,11 +1468,47 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
         return result;
     }
 
+	/**
+	 * Fetches document from database by dhx receipt id
+	 * 
+	 * @param dhlId
+	 * @return document
+	 */
+	@SuppressWarnings("unchecked")
+	public Document getDocumentByDhxReceiptId(final String dhxReceiptId) {
+		if (dhxReceiptId == null) {
+			throw new IllegalArgumentException(
+					"Document DHX receipt ID must be filled. Currently supplied ID was " + dhxReceiptId + ".");
+		}
+		Document result = null;
+		Session session = null;
+		try {
+			logger.debug("Finding document for dhlids " + dhxReceiptId);
+			String sql = "select document from Document document join document.documentSharings documentSharings where documentSharings.dhxReceiptId = :dhxReceiptId";
+			session = this.getSessionFactory().openSession();
+			Query query = session.createQuery(sql);
+			query.setParameter("dhxReceiptId", dhxReceiptId);
+			query.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+			result = (Document) query.uniqueResult();
+		} catch (Exception e) {
+			throw new AditInternalException("Error while fetching document: ", e);
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		}
+		return result;
+	}
 
     /**
      * Fetches documents from database by list of dhl ids
      * 
+<<<<<<< HEAD
      * @param dhlIds list of dhl ids
+=======
+	 * @param dhlIds
+	 *            list of dhl ids
+>>>>>>> aditdhx
      * @return document
      */
     @SuppressWarnings("unchecked")
@@ -1418,8 +1518,8 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
 	   	}
 	   	for(Long dhlId : dhlIds) {
 		        if (dhlId <= 0) {
-		            throw new IllegalArgumentException("Document ID must be a positive integer. Currently supplied ID was "
-		                    + dhlId + ".");
+				throw new IllegalArgumentException(
+						"Document ID must be a positive integer. Currently supplied ID was " + dhlId + ".");
 		        }
 	   	}
         List<Document> result = null;
@@ -1433,7 +1533,54 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
             query.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
             result =  query.list();
 //            result = this.getHibernateTemplate().find(
-//                    "select userContact from UserContact userContact join userContact.user user where userContact.user = ? and user.active = ? order by userContact.lastUsedDate desc", aditUser, true);
+			// "select userContact from UserContact userContact join
+			// userContact.user user where userContact.user = ? and user.active
+			// = ? order by userContact.lastUsedDate desc", aditUser, true);
+		} catch (Exception e) {
+			throw new AditInternalException("Error while fetching document: ", e);
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		}
+		logger.debug("Found" + result.size() + " documents");
+
+		return result;
+	}
+	
+	
+	/**
+	 * Fetches documents from database by list of dhl ids
+	 * 
+	 * @param dhlIds
+	 *            list of dhl ids
+	 * @return document
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Document> getDocumentsByDhxReceiptIds(final List<String> dhxReceiptIds) {
+		if (dhxReceiptIds == null || dhxReceiptIds.size() == 0) {
+			throw new IllegalArgumentException("Dhl ids list is empty");
+		}
+		for (String dhxReceiptId : dhxReceiptIds) {
+			if (StringUtil.isNullOrEmpty(dhxReceiptId)) {
+				throw new IllegalArgumentException(
+						"Document ID must not be empty. Currently supplied ID was " + dhxReceiptId + ".");
+			}
+		}
+		List<Document> result = null;
+		Session session = null;
+		try {
+			logger.debug("Finding documents for dhxReceiptIds: " + dhxReceiptIds);
+			String sql = "select document from Document document join document.documentSharings documentSharings where documentSharings.dhxReceiptId in (:dhxReceiptIds)";
+			session = this.getSessionFactory().openSession();
+			Query query = session.createQuery(sql);
+			query.setParameterList("dhxReceiptIds", dhxReceiptIds);
+			query.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+			result = query.list();
+			// result = this.getHibernateTemplate().find(
+			// "select userContact from UserContact userContact join
+			// userContact.user user where userContact.user = ? and user.active
+			// = ? order by userContact.lastUsedDate desc", aditUser, true);
         } catch (Exception e) {
         	throw new AditInternalException("Error while fetching document: ", e);
         } finally {
@@ -1449,28 +1596,57 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
     /**
      * Get list of DocumentSendStatus objects by list of dhl ids.
      *
-     * @param dhlIds document dhl IDs
+	 * @param dhlIds
+	 *            document dhl IDs
      * @return documentSendStatusList
-     * @throws Exception if any sort of exception occurred
+	 * @throws Exception
+	 *             if any sort of exception occurred
      */
-    public List<DocumentSendStatus> getDocumentsForSendStatus(final List<Long> dhlIds)
-            throws Exception {
+	public List<DocumentSendStatus> getDocumentsForSendStatus(final List<Long> dhlIds) throws Exception {
     	List<DocumentSendStatus> result = new ArrayList<DocumentSendStatus>();
 		List<Document> documents = getDocumentsByDhlIds(dhlIds);
 		for(Document document : documents) {
         	logger.debug("Attempting to convert document to outptudocument" + document.getId());
-        	Collection<DocumentSendStatus> documentSendStatus = getDocumentSendStatusFromDocumentForSendStatus(document, dhlIds);
+			Collection<DocumentSendStatus> documentSendStatus = getDocumentSendStatusFromDocumentForSendStatus(document,
+					dhlIds);
         	result.addAll(documentSendStatus);
         }
         return result;
     }
 
     /**
+	 * Get list of DocumentSendStatus objects by list of dhx receipt ids.
      *
+<<<<<<< HEAD
      * @param document document object
+=======
+	 * @param dhxReceiptIds
+	 *            document dhx receipt ids
+	 * @return documentSendStatusList
+	 * @throws Exception
+	 *             if any sort of exception occurred
+	 */
+	public List<DocumentSendStatus> getDocumentsForSendStatusByDhxReceiptIds(final List<String> dhxReceiptIds) throws Exception {
+		List<DocumentSendStatus> result = new ArrayList<DocumentSendStatus>();
+		List<Document> documents = getDocumentsByDhxReceiptIds(dhxReceiptIds);
+		for (Document document : documents) {
+			logger.debug("Attempting to convert document to outptudocument" + document.getId());
+			Collection<DocumentSendStatus> documentSendStatus = getDocumentSendStatusFromDocumentByDhxReceiptIds(document,
+					dhxReceiptIds);
+			result.addAll(documentSendStatus);
+		}
+		return result;
+	}
+
+	/**
+	 *
+	 * @param document
+	 *            - document onbject
+>>>>>>> aditdhx
      * @return documentSendStatus
      */
-    private Collection<DocumentSendStatus> getDocumentSendStatusFromDocumentForSendStatus (Document document, final List<Long> dhlIds) {
+	private Collection<DocumentSendStatus> getDocumentSendStatusFromDocumentForSendStatus(Document document,
+			final List<Long> dhlIds) {
         Map<Long,DocumentSendStatus> docs = new TreeMap<Long,DocumentSendStatus>();
 
         if (document.getDocumentSharings()!=null && document.getDocumentSharings().size()>0) {
@@ -1506,6 +1682,49 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
         return docs.values();
     }
 
+	/**
+	 *
+	 * @param document
+	 *            - document onbject
+	 * @return documentSendStatus
+	 */
+	private Collection<DocumentSendStatus> getDocumentSendStatusFromDocumentByDhxReceiptIds(Document document,
+			final List<String> dhxReceiptIds) {
+		Map<String, DocumentSendStatus> docs = new TreeMap<String, DocumentSendStatus>();
+
+		if (document.getDocumentSharings() != null && document.getDocumentSharings().size() > 0) {
+
+			for (DocumentSharing documentSharing : document.getDocumentSharings()) {
+				DocumentSendStatus result = null;
+				List<DocumentSharingRecipientStatus> recipients = null;
+				String dhxreceiptId = documentSharing.getDhxReceiptId();
+				if (!StringUtil.isNullOrEmpty(dhxreceiptId) && dhxReceiptIds.contains(dhxreceiptId)) {
+					result = docs.get(dhxreceiptId);
+					if (result == null) {
+						result = new DocumentSendStatus();
+						recipients = new ArrayList<DocumentSharingRecipientStatus>();
+						result.setRecipients(recipients);
+						result.setDhxReceiptId(dhxreceiptId);
+						docs.put(dhxreceiptId, result);
+					} else {
+						recipients = result.getRecipients();
+					}
+					DocumentSharingRecipientStatus recipient = new DocumentSharingRecipientStatus();
+					recipient.setCode(documentSharing.getUserCode());
+					recipient.setName(documentSharing.getUserName());
+					boolean opened = false;
+					if (documentSharing.getFirstAccessDate() != null) {
+						opened = true;
+					}
+					recipient.setHasBeenViewed(opened);
+					recipient.setOpenedTime(documentSharing.getFirstAccessDate());
+					recipients.add(recipient);
+				}
+			}
+		}
+		return docs.values();
+	}
+
     @Override
     @SuppressWarnings("unchecked")
     public List<Document> findAllWaitingToBeSentToDVK() {
@@ -1515,9 +1734,8 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
         try {
             session = this.getSessionFactory().openSession();
             DetachedCriteria documentCriteria = DetachedCriteria.forClass(DocumentSharing.class)
-                    .add(Property.forName("documentSharingType").eq(DocumentService.SHARINGTYPE_SEND_DVK))
-                    .add(Restrictions.or(
-                            Property.forName("documentDvkStatus").isNull(),
+					.add(Property.forName("documentSharingType").eq(DocumentService.SHARINGTYPE_SEND_DHX))
+					.add(Restrictions.or(Property.forName("documentDvkStatus").isNull(),
                             Property.forName("documentDvkStatus").eq("")))
                     .setProjection(Property.forName("id"));
 
@@ -1535,4 +1753,54 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
         return results;
     }
     
+
+	/**
+	 * Count documents with given consignmentId and sender org code
+	 *
+	 * @param messageSender organisation code of the message sender
+	 * @param consignmentId consignment id to search
+	 * @return result document count
+	 */
+	public Long countIncomingMessagesBySenderAndConsignmentId(String messageSender, String consignmentId) {
+		Long result = null;
+		String sql = "select count(*) from Document where creatorCode = '" + messageSender + "' and dhxConsignmentId='" + consignmentId + "'";
+
+		Session session = null;
+		Transaction transaction = null;
+		try {
+			session = this.getSessionFactory().openSession();
+			transaction = session.beginTransaction();
+
+			result = (Long) session.createQuery(sql).uniqueResult();
+
+			transaction.commit();
+		} catch (Exception e) {
+			if (transaction != null) {
+				transaction.rollback();
+			}
+
+			throw e;
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		}
+
+		return result;
+	}
+	
+	
+	   /**
+     * Updates only dhx receipt id column of the document.
+     *
+     * @param dhxReceiptId
+     * 		dhxReceiptId
+     * @param documentId
+     * 		documentId
+     * @throws Exception
+     */
+    public void updateDocumentReceiptId(Long dhxReceiptId, Long documentId) throws Exception {
+        logger.info("Updating dhx receipt id of the Document. Document ID: " + documentId + ", dhx receipt id: " + dhxReceiptId);
+        this.getHibernateTemplate().bulkUpdate("update Document set dhxReceiptId = "+ dhxReceiptId +" where id = " + documentId);
+    }
 }

@@ -3,7 +3,7 @@ package ee.adit.ws.endpoint.user;
 import java.util.Calendar;
 import java.util.Locale;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Usertype;
@@ -32,7 +32,7 @@ import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
  */
 public class JoinEndpoint extends AbstractAditBaseEndpoint {
 
-    private static Logger logger = Logger.getLogger(JoinEndpoint.class);
+    private static Logger logger = LogManager.getLogger(JoinEndpoint.class);
 
     private UserService userService;
     

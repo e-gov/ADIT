@@ -7,7 +7,7 @@
 - [Lahenduse arhitektuur ja ülesehitus](#lahenduse-arhitektuur-ja-ülesehitus)
    * [Seosed teiste infosüsteemidega](#seosed-teiste-infosüsteemidega)
       * [Teavituskalender ja riigiportaal](#teavituskalender-ja-riigiportaal)
-      * [DVK liides](#dvk-liides)
+      * [DHX liides](#dhx-liides)
    * [Tagasiside ja veateated](#tagasiside-ja-veateated)
    * [Logimine](#logimine)
       * [Rakenduse logi](#rakenduse-logi)
@@ -27,7 +27,7 @@ ADIT rakendus on oma olemuselt veebirakendus, mis töötab Java rakendusserveris
 
 - **Spring Web Services** – lahenduse kokkupanemiseks ja veebiteenuste loomiseks (http://projects.spring.io/spring-ws/)
 - **X-tee teek** – Spring Web Services teegiga ühilduv X-tee spetsiifiline abiteek, mis võimaldab tarbida ja publitseerida X-tee nõuetele vastavaid veebiteenuseid (https://github.com/nortal/j-road)
-- **DVK-API** – DVK universaalkliendiga suhtlemise lihtsustamiseks mõeldud Java teek (https://github.com/e-gov/DVK/tree/master/api)
+- **DHX adapter** – DHX protokolli järgi suhtlemise lihtsustamiseks mõeldud Java teek (https://github.com/e-gov/DHX-adapter)
 - **Castor** – XML marshaller, mis võimaldab lihtsalt teisendada XML-i Java objektideks ja vastupidi (https://castor-data-binding.github.io/castor/)
 - **Hibernate ORM** – andmebaasiliidese loomiseks ja andmebaasiobjektide teisendamiseks Java objektideks (http://hibernate.org/orm/)
 - **JDigiDoc** – digitaalallkirjastamise abiteek. Teek pakub funktsionaalsust digitaalselt allkirjastatud failide loomiseks, lugemiseks, allkirjastamiseks
@@ -39,7 +39,7 @@ ADIT rakendus on oma olemuselt veebirakendus, mis töötab Java rakendusserveris
 
 ### Seosed teiste infosüsteemidega
 
-ADIT on liidestatud teavituskalendri ning DVK-ga.
+ADIT on liidestatud teavituskalendriga ning kasutab DHX protokolli dokumentide saatmiseks.
 
 ![Arhitektuuri joonis](../doc/img/ADITiArhitektuurijoonis.png)
 
@@ -63,39 +63,31 @@ ADIT lisab üldjuhul teavituskalendrisse teavituse niipea, kui vastav sündmus A
 ADIT andmekogu päring getNotifications tagastab oma vastuses andmeid kahest andmekogust – ADIT-ist ja riigiportaalist. S.t. getNotifications pöördub taustal riigiportaali andmekogu poole ja pärib sealt „tellimusteStaatus.v1“ päringuga, millised teavitused on antud kasutajal tellitud ja millistele e-posti aadressidele need suunatakse.
 
 
-### DVK liides
+### DHX liides
 
-ADIT rakendus kasutab dokumentide edastamisel ühe kanalina DVK tarkvara. Dokumendid liiguvad ADIT ja DVK vahel mõlemas suunas, mis tähendab, et ka dokumentide staatuste muudatusi on vaja mõlemapidiselt edastada.
+ADIT rakendus kasutab dokumentide edastamisel ühe kanalina DHX protkolli. Dokumendid liiguvad ADIT ja DHX adressaatide vahel mõlemas suunas.
 
-ADIT kasutab DVK universaalkliendi andmebaasiga suhtlemiseks DVK API-t, mis on spetsiaalselt selleks otstarbeks loodud Java teek. DVK API kasutamiseks tuleb API juures seadistada DVK universaalkliendi andmebaasi ühenduse parameetrid. 
+ADIT kasutab DHX protokolli järgi suhtlemiseks DHX adapter, mis on spetsiaalselt selleks otstarbeks loodud Java teek. DHX adapteri kasutamiseks tuleb seda eelnevalt seadistada. (lähemalt vaata paigaldusjuhendist)
 
-ADIT-i vajadus on saata juhtudel, kui saaja üks asutustest on DVK kasutaja, dokumente talle läbi DVK teenuse. Sellisel juhul on vaja teada ka kõiki dokumendi staatuse muudatusi, mis toimuvad DVK-s.
+ADIT-i vajadus on saata juhtudel, kui saaja üks asutustest on DHX kasutaja, dokumente talle läbi DHX teenuse. 
 
-ADIT peab olema suuteline ka DVK-st tulevaid dokumente vastu võtma ning oma andmetabelitesse paigutama. Sellisel juhul on oluline, et kui dokumendi staatus muutub ADIT-is, kanduks see staatuse muudatus ka DVK-sse.
+ADIT peab olema suuteline ka DHX-st tulevaid dokumente vastu võtma ning oma andmetabelitesse paigutama. 
 
 
-#### Dokumendi saatmine DVK-le
+#### Dokumendi saatmine DHX-i
 
-Kui ADIT rakendusest saadetakse dokument (kutsutakse välja veebiteenus „sendDocument()“) adressaadile, siis saatmisele eelnevalt kontrollitakse, kas adressaat on liitunud DVK-ga. Kui vastus on positiivne, saadetaksegi dokument sellele konkreetsele adressaadile DVK kaudu. 
-See tähendab seda, et saadetava dokumendi andmete põhjal koostatakse DVK versioon 2.1 konteiner (vastavad meetodid on olemas DVK API-s). Seejärel lisatakse DVK konteiner koos saatmist puudutavate andmetega DVK universaalkliendi andmebaasi (jällegi on vastavad Java klassid ja abimeetodid olemas DVK API-s). Sellega loetakse dokument DVK-le edastatuks ning vastav märge tehakse ka ADIT andmebaasi. 
+Kui ADIT rakendusest saadetakse dokument (kutsutakse välja veebiteenus „sendDocument()“) adressaadile, siis enne saatmist kontrollitakse, kas adressaat on DHX-i adressaat. Kui vastus on positiivne, saadetaksegi dokument sellele konkreetsele adressaadile DHX kaudu. 
+See tähendab seda, et saadetava dokumendi andmete põhjal koostatakse kapsli versioon 2.1 vastav konteiner. Seejärel saadetakse konteiner koos saatmist puudutavate andmetega DHX adressaadile, kasutades DHX adapteri poolt pakutud funktsioone. DHX adapter saadab dokumendi asünkroonselt ja pärast saatmist kutsub välja ADITi funktsiooni saatmise tulemuste salvestamiseks(tulemuste salvestamisel uuendatakse staatust ja salvestatakse DHX receipt id juhul kui saatmine õnnestus, vastasel juhul ainult uuendatakse staatust).
 
-Universaalklient saadab vastavalt seadistatud ajale dokumendid DVKsse. Peale seda, kui dokument on DVK universaalkliendist saadetud DVK serverisse, kustutatakse dokumendi sisu DVK universaalkliendi andmebaasist (kasutades DVK API-t). See on vajalik selleks, et hoida kokku DVK universaalkliendi andmebaasi mahtu. Samamoodi toimitakse juhul kui dokument liigub vastupidises suunas – DVK -> ADIT (peale dokumendi edukat salvestamist ADIT andmebaasi, kustutatakse andmed DVK universaalkliendi andmebaasist).
 
-#### Dokumendi staatuse uuendamine DVK-st
+#### Dokumendi vastuvõtmine DHX-st
 
-Kui dokument on DVK-sse saadetud on vajalik saada tagasisidet selle kohta, kas dokument on adressaadini jõudnud või kui dokument on adressaadini jõudnud, siis kas dokument on töötlemisel jne. Ehk meid huvitab, milline staatus on dokumendil DVK-s. 
-Selleks peame perioodiliselt kontrollima, mis staatuses dokument DVK universaalkliendi andmebaasis on. Sellise kontrolli jaoks luuakse eraldi ajatatud protsess, mis seadistuses määratud perioodi tagant kontrollib DVK-sse saadetud dokumentide staatuseid. Staatuste kontrollimiseks kasutatakse DVK API-s olevat vastavat funktsionaalsust. Kontrollimiseks luuakse kaks eraldiseisvat protsessi. 
+ADIT pakub DHX teenust sendDocument(DHX adapter abil), kuhu teised DHX kasutajad võivad dokumente saata. 
 
-Esimene neist kontrollib ainult nende dokumentide staatuseid, mis ei ole veel kättesaaduks märgitud. Teine protsess kontrollib kõikide ülejäänud dokumentide staatuseid. Mõlemate protsesside käivitamise periood on eraldi seadistatav. Kui kontrollimise käigus leitakse dokumente, mille staatus on muutunud võrreldes nende staatusega ADIT andmebaasis, siis uuendatakse vastavad kirjed ADIT andmebaasis. Sellega loetakse dokumendi staatus uuendatuks.
+Dokumendi vastuvõtmisel  võetakse saabunud konteinerist välja andmed ning salvestatakse ADIT andmebaasis. ADIT andmebaasis seotakse dokument dokumendi adressaadiks olnud kasutajaga. 
+Kui dokumendi sidumisel kasutajaga ilmnes, et kasutajat pole ADIT aktiivsete kasutajate hulgas, siis tagastatakse viga. Kui dokumendi adressaadiks on DHX kasutaja, siis talitatakse sarnaselt eeltoodule, kuna DHX kasutajad peavad suhtlema otse omavahel, mitte ADIT kaudu.
 
-#### Dokumendi vastuvõtmine DVK-st
-
-Juhul kui dokument saadetakse läbi DVK ADIT-sse, tuleb DVK universaalkliendi andmebaasis oleva DVK konteineri andmed ADIT jaoks arusaadavaks teha. Selleks on mõistlik kasutada DVK API-t, milles on vastavad Java klassid. 
-
-Niisiis saabunud DVK konteinerist võetakse välja andmed ning salvestatakse ADIT andmebaasis. ADIT andmebaasis seotakse dokument dokumendi adressaadiks olnud kasutajaga. Peale edukat sidumist kustutatakse universaalkliendi andmebaasist vastava dokumendi sisu. Saabunud dokumente kontrollitakse eraldi käivitatava protsessi abil, mille periood ning käivitamise aeg on seadistatav.
-Kui dokumendi sidumisel kasutajaga ilmnes, et kasutajat pole ADIT aktiivsete kasutajate hulgas, siis märgitakse dokument DVKs katkestatuks (staatus 103) ning algsele saatjale koostatakse automaatselt vastuskiri, milles on toodud kaaskirja dokument (muudetav ADIT haldaja poolt) ning algne dokument. Kui dokumendi adressaadiks on DVK kasutaja, siis talitatakse sarnaselt eeltoodule, kuna DVK kasutajad peavad suhtlema otse omavahel, mitte ADIT kaudu.
-
-DVK kaudu vastuvõetava dokumendi puhul on vaja välja selgitada, millisele ADIT kasutajale see dokument mõeldud on. Selle jaoks tuleb panna ADIT kasutaja kood DVK konteineris transport ning saaja blokki – täpsemalt `<Transport><DecRecipient><PersonalIdCode>` ning `<Recipient><Person><PersonalIdCode>` sisse:
+DHX kaudu vastuvõetava dokumendi puhul on vaja välja selgitada, millisele ADIT kasutajale see dokument mõeldud on. Selle jaoks tuleb panna ADIT kasutaja kood konteineris blokkidesse "transport" ning "saaja" blokki – täpsemalt `<Transport><DecRecipient><PersonalIdCode>` ning `<Recipient><Person><PersonalIdCode>` sisse:
 
 ```xml
 <DecContainer xmlns="http://www.riik.ee/schemas/deccontainer/vers_2_1/">
@@ -121,28 +113,37 @@ DVK kaudu vastuvõetava dokumendi puhul on vaja välja selgitada, millisele ADIT
     </Recipient>
 ```
 
-#### Dokumendi staatuse uuendamine DVK-s
 
-Kui dokument on läbi DVK ADIT-sse saadetud, osutub vajalikuks anda tagasisidet saatjale. Selleks peab ADIT uuendama dokumendi staatust DVK universaalkliendi andmebaasis juhul kui see on muutunud ADIT andmebaasis. Seega, kui ADIT andmebaasis toimub dokumendi staatuse uuendamine (ADIT päring „modifyStatus“), muudetakse staatus koheselt ka DVK universaalkliendi andmebaasis. Selleks kasutatakse jällegi DVK API-t, milles sisalduvate klasside abil võetakse DVK universaalkliendi andmebaasist välja dokumendi kirje ning muudetakse selle staatust.
+#### DHX kasutajate eristamine
 
-#### DVK kasutajate eristamine
-
-DVK kasutajad eristatakse ADIT kasutajatest selle poolest, et DVK kasutajate kontol on määratud DVK organisatsiooni registrikood (tabel ADIT_USER.dvk_org_code). Kui see andmetabeli väli ei ole määratud on tegemist nö. ADIT tavakasutajaga.
-DVK kasutaja andmete muudatused (lisamised, nimemuutused, kustutamised) tulevad ainult ühepoolselt – DVK serverist ADITisse. DVK kasutajate andmeid ei saa muuta join või unJoin päringutega.
-DVK kasutaja (pöördudes ADIT teenuse poole otseste x-tee päringutega)  saab kutsuda välja ainult päringuid:
+DHX kasutajad erinevad  ADIT tavakasutajatest selle poolest, et DHX kasutajate kontol on määratud DHX organisatsiooni registrikood (tabel ADIT_USER.dvk_org_code). Kui see andmeväli ei ole määratud on tegemist nö. ADIT tavakasutajaga.
+DHX kasutaja andmete muudatused (lisamised, nimemuutused, kustutamised) liiguvad ainult ühepoolselt – DHX-st ADITisse. DHX kasutajate andmeid ei saa muuta join või unJoin päringutega.
+DHX kasutaja (pöördudes ADIT teenuse poole otseste x-tee päringutega)  saab kutsuda välja ainult päringuid:
 
 - getDocumentList
-- getDocument (ainukese erinevusega ei märgita selle puhul dokumenti „vaadatuks“, vaid seda teeb DVK liides, kes tagastab õige DVK staatuse)
+- getDocument
 - getDocumentFile
 - getDocumentHistory
 
-#### DVK kasutajate sünkroniseerimine
+#### DHX kasutajate sünkroniseerimine
 
-Kõik DVK kasutajad on automaatselt ka ADIT kasutajad. See tähendab seda, et ADIT rakenduse paigaldamisel on vaja tekitada ADIT-isse kõikidele DVK kasutajatele vastavad kasutajakontod. Samuti on vaja seadistuses määratud perioodi tagant kontrollida üle, kas DVK kasutajate ja ADIT kasutajate vahel on erinevusi. Selleks on ette nähtud ajatatud ajatatud toiming, mida saab seadistada perioodiliselt käivituma ja mis teeb järgmist:
+Kõik DHX kasutajad on automaatselt ka ADIT kasutajad. See tähendab seda, et ADIT rakenduse paigaldamisel on vaja tekitada ADIT-isse kõikidele DHX kasutajatele vastavad kasutajakontod. Samuti on vaja seadistuses määratud perioodi tagant kontrollida üle, kas DHX kasutajate ja ADIT kasutajate vahel on erinevusi. Selleks on ette nähtud ajatatud toiming, mida saab seadistada perioodiliselt käivituma ja mis teeb järgmist:
 
-- Eemaldab DVK-st kustutatud kasutajate andmed ADIT andmebaasist (märgib kasutajate kontod mitteaktiivseks)
+- Eemaldab DHX-st kustutatud kasutajate andmed ADIT andmebaasist (märgib kasutajate kontod mitteaktiivseks)
 - Uuendab muutunud kasutajate andmed (kasutaja registrikoodi põhiselt)
-- Loob lisandunud DVK kasutajate jaoks ADIT kasutajakontod
+- Loob lisandunud DHX kasutajate jaoks ADIT kasutajakontod
+
+#### DHX kasutajate ADITis identifitseerimine
+
+ADIT identifitseerib kasutajaid ühe parameetri järgi, mis on reeglina asutuse registrikood(või isikukood kui tegemist on isikuga). DHX kasutajaid aga identifitseeritakse asutuse registrikoodi ja alamsüsteemi järgi. 
+
+Selle vastuolu lahendamiseks salvestatakse DHX kasutajaid ADIT-sse järgmiselt:
+
+* Tavalised DHX adressaadid (EE/GOV/<registrikood>/DHX/sendDocument), lisatakse ADIT_USER tabelisse kujul dvk_org_code=registrikood.
+
+* DHX-i alamsüsteemidega (kelle subSystemCode ei ole DHX vaid DHX.alamsüsteem) adressaadid registreeritakse ADIT_USER tabelis kujul dvk_org_code=alamsüsteem.registrikood
+
+* Selleks et ADIT adressaatide nimekiri ei muutuks pärast DHX-le üleminekut, tehakse erandid DVKs registreeritud alamsüsteemide jaoks (adit,kovtp,rt,eelnoud). Neid ei registreeri ADITis kujul dvk_org_code=alamsüsteem.registrikood, vaid kujul dvk_org_code=alamsüsteem, kuna nii on nad ADITis registreeritud enne DHX-le üleminekut.
 
 ### Tagasiside ja veateated
 
@@ -177,11 +178,11 @@ ADIT rakenduse puhul rakendatakse kahte tüüpi logimist – rakenduse logi ning
 
 #### Rakenduse logi
 
-Rakenduse logi tekitamiseks kasutatakse Log4j teeki, mis võimaldab logimise seadistust muuta konfiguratsioonifaili abil. Vaikimisi logitakse eraldi failidesse DVK liidese logi ning ADIT rakenduse logi.
+Rakenduse logi tekitamiseks kasutatakse Log4j teeki, mis võimaldab logimise seadistust muuta konfiguratsioonifaili abil.
 
 #### Andmebaasi logi
 
-Järgenvalt on toodud erinevad ADIT andmebaasis olevad logitabelid ning nende eesmärk:
+Järgnevalt on toodud erinevad ADIT andmebaasis olevad logitabelid ning nende eesmärk:
 
 - **ADIT_LOG** – hoiab andmeid kõikide andmebaasis toimunud muudatuste kohta.
 - **REQUEST_LOG** - tehtud päringute logimiseks. Logitakse järgmised päringud:
@@ -260,8 +261,7 @@ Aktiivse monitooringu eesmärgiks on kontrollida rakenduse olulisemate komponent
 | --- | --- |
 | SAVE_DOCUMENT | Päringu saveDocument kontroll – muudetakse andmebaasis olevat testdokumenti (dokumendi pealkiri ja dokumendi faili sisu muudetakse – päringu tegemise hetke kuupäev / kellaaeg) |
 | GET_DOCUMENT | Päringu getDocument kontroll – päritakse testdokumendi andmed ning kontrollitakse, kas dokumendi sisu on viimase saveDocument päringuga muudetud. |
-| DVK_SEND | DVK-sse saatmise kontroll – kontrollitakse, kas andmebaasis on dokumente, mis on määratud DVK-sse saatmisele, kuid mille saatmine sinna ei ole õnnestunud määratud perioodi vältel. |
-| DVK_RECEIVE | DVK-st dokumentide vastuvõtmise kontroll – kontrollitakse, kas dokumendid, mis on saabunud DVK Universaalklienti, on kantud ka ADIT andmebaasi. |
+| DHX_SEND | DHX-i saatmise kontroll – kontrollitakse, kas andmebaasis on dokumente, mis on määratud DHX-i saatmisele, kuid mille saatmine sinna ei ole õnnestunud määratud perioodi vältel. |
 | GET_USER_INFO | Päringu getUserInfo kontroll – kontrollitakse, kas testkasutaja on teenusega liitunud ning kas päring tagastab kasutaja andmed. |
 | NOTIFICATIONS | Teavitusteenuse liidese kontroll – kontrollitakse, kas andmebaasis on teavitusi, mis ei ole määratud perioodi jooksul saadetud teavitusteenusele. |
 | ERROR_LOG | Vigade logitabeli kontroll – kontrollitakse, kas andmebaasis olevasse vigade tabelisse on tekkinud vigu.  Vaadeldavate vigade taseme (WARN/ERROR/FATAL) saab määrata seadistuses. |
@@ -275,7 +275,7 @@ Passiivne monitooring saadab teateid Log4J appender-i abil. Teated on järgmises
 
 [KOMPONENT] [STATUS] [TIME/ERROR_MESSAGE]
 
-Nt. õnnestumisel „ADIT_UK_CONNECTION_READ OK 0.008 seconds“ või ebaõnnestumisel „ADIT_UK_CONNECTION FAIL ORA-12345: Could not connect to host uk.ria.ee”
+Nt. õnnestumisel „ADIT_DB_CONNECTION_READ OK 0.008 seconds“ või ebaõnnestumisel „ADIT_DB_CONNECTION FAIL ORA-12345: Could not connect to host uk.ria.ee”
 
 Komponendid, mille kohta teateid saadetakse on järgmised:
 
@@ -285,7 +285,4 @@ Komponendid, mille kohta teateid saadetakse on järgmised:
 | ADIT_DB_CONNECTION | Kontrollib andmebaasiühendust |
 | ADIT_DB_CONNECTION_READ | Kontrollib andmete lugemist andmebaasist |
 | ADIT_DB_CONNECTION_WRITE | Kontrollib andmete kirjutamist andmebaasi |
-| ADIT_UK_CONNECTION | Kontrollib ADIT DVK universaalkliendi andmebaasiühendust |
-| ADIT_UK_CONNECTION_READ | Kontrollib ADIT DVK universaalkliendi andmebaasist andmete lugemist |
-| ADIT_UK_CONNECTION_WRITE | Kontrollib ADIT DVK universaalkliendi andmebaasi andmete kirjutamist |
 

@@ -3,7 +3,7 @@ package ee.adit.ws.endpoint.user;
 import java.util.Calendar;
 import java.util.Locale;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
 
 import ee.adit.dao.pojo.AditUser;
@@ -32,7 +32,7 @@ import ee.webmedia.xtee.annotation.XTeeService;
 @Component
 public class UnJoinEndpoint extends AbstractAditBaseEndpoint {
 
-    private static Logger logger = Logger.getLogger(UnJoinEndpoint.class);
+    private static Logger logger = LogManager.getLogger(UnJoinEndpoint.class);
 
     private UserService userService;
 

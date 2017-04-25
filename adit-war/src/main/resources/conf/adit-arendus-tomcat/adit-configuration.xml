@@ -14,8 +14,7 @@
 		<property name="tempDir" value="/tmp/adit"/>
 		<property name="deleteTemporaryFiles" value="true"/>
 		<property name="schedulerEventTypeName" value="Minu dokumentide teavitus"/>
-		<property name="dvkResponseMessageStylesheet" value="DVKresponseMessage.xsl"/>
-		
+	
 		<!-- X-Road message protocol version 4.0 specific values -->
 		<property name="xroadInstance" value="ee-dev" />
 		<property name="xroadMemberClass" value="GOV" />
@@ -41,17 +40,6 @@
 		<property name="xteeInstitution" value="adit" />
 		<property name="xteeSecurityServer" value="http://10.0.14.15/cgi-bin/consumer_proxy" />
 		<property name="xteeIdCode" value="EE38806190294" />
-		
-		<!-- DVK folder names -->
-		<property name="dvkSendFolder" value="/" />
-		<property name="dvkRecieveFolders">
-			<list>
-				<value>/</value>
-				<value>EVORMID</value>
-			</list>
-		</property>
-		<property name="dvkFolderForLetterType" value="/" />
-		<property name="dvkFolderForApplicationType" value="/" />
 
         <!--
         Specifies how many seconds the system waits for unfinished digital
@@ -59,7 +47,8 @@
         signatures to the same document is blocked.
         -->
         <property name="unfinishedSignatureLifetimeSeconds" value="300"/>
-        <property name="doCheckTestCert" value="true"/>    
+        <property name="doCheckTestCert" value="true"/>   
+        <property name="jDigiDocConfigFile" value="jdigidoc.cfg"/> 
 	</bean>
 
 	<bean id="monitorConfiguration" class="ee.adit.util.MonitorConfiguration">
@@ -68,12 +57,10 @@
 		<property name="userCode" value="EE00000000000" />
 		<property name="institutionCode" value="123456789" />
 		<property name="testDocumentId" value="999999999999" />
-		<property name="dvkTestDocumentID" value="9999999999" />
 		<property name="testDocumentFileId" value="999999999999" />
 		<property name="testUserCode" value="EE00000000000" />
 		<property name="documentSaveInterval" value="60000" />
-		<property name="documentSendToDvkInterval" value="60000" />
-		<property name="documentSendToAditInterval" value="60000" />
+		<property name="documentSendToDhxInterval" value="60000" />
 		<property name="notificationSendInterval" value="900000" />
 		<property name="errorInterval" value="60000" />
 		<property name="errorLevel" value="FATAL" />

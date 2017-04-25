@@ -1,6 +1,8 @@
 package ee.adit.service;
 
 import java.io.ByteArrayInputStream;
+
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -14,7 +16,7 @@ import javax.xml.transform.Source;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.oxm.Marshaller;
@@ -24,14 +26,14 @@ import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 import org.xml.sax.InputSource;
 
-import dvk.api.ml.PojoMessage;
 import ee.adit.dao.DocumentDAO;
 import ee.adit.dao.DocumentSharingDAO;
 import ee.adit.dao.ErrorLogDAO;
 import ee.adit.dao.NotificationDAO;
-import ee.adit.dao.dvk.DvkDAO;
+import ee.adit.dao.DhxUserDAO;
 import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.DocumentSharing;
+//import ee.adit.dhx.api.ml.PojoMessage;
 import ee.adit.exception.AditInternalException;
 import ee.adit.pojo.ArrayOfMessageMonitor;
 import ee.adit.pojo.GetDocumentRequestMonitor;
@@ -109,32 +111,17 @@ public class MonitorService {
     private static final String ADIT_DB_CONNECTION_WRITE = "ADIT_DB_CONNECTION_WRITE";
 
     /**
-     * Component ADIT_UK_CONNECTION.
-     */
-    private static final String ADIT_UK_CONNECTION = "ADIT_UK_CONNECTION";
-
-    /**
-     * Component ADIT_UK_CONNECTION_READ.
-     */
-    private static final String ADIT_UK_CONNECTION_READ = "ADIT_UK_CONNECTION_READ";
-
-    /**
-     * Component ADIT_UK_CONNECTION_WRITE.
-     */
-    private static final String ADIT_UK_CONNECTION_WRITE = "ADIT_UK_CONNECTION_WRITE";
-
-    /**
      * Component ADIT_APP.
      */
     private static final String ADIT_APP = "ADIT_APP";
 
-    private static Logger logger = Logger.getLogger(MonitorService.class);
+    private static Logger logger = LogManager.getLogger(MonitorService.class);
 
     private DocumentDAO documentDAO;
 
     private DocumentSharingDAO documentSharingDAO;
 
-    private DvkDAO dvkDAO;
+    private DhxUserDAO dhxDAO;
 
     private NotificationDAO notificationDAO;
 
@@ -154,7 +141,7 @@ public class MonitorService {
 	
 
     /**
-     * Check ADIT and DVK database read functions.
+     * Check ADIT database read functions.
      *
      */
     public void check() {
@@ -164,12 +151,6 @@ public class MonitorService {
 
         checkDBConnection();
         checkDBRead(this.getMonitorConfiguration().getTestDocumentId());
-        // checkDBWrite(this.getMonitorConfiguration().getTestDocumentId());
-
-        checkDVKconnection();
-        checkDVKRead(this.getMonitorConfiguration().getDvkTestDocumentID());
-        // checkDVKWrite(this.getMonitorConfiguration().getDvkTestDocumentID());
-
     }
 
     /**
@@ -214,6 +195,61 @@ public class MonitorService {
             logger.error("Error while checking database connectivity: ", e);
         }
 
+    }
+    
+    /**
+     * Tests if documents are sent to DVK client.
+     *
+     * @return test result
+     */
+    public MonitorResult checkDhxSend() {
+        MonitorResult result = new MonitorResult();
+        result.setComponent("DHX_SEND");
+
+        logger.info("Testing DHX_SEND...");
+
+        double duration = 0;
+        Date start = new Date();
+        long startTime = start.getTime();
+
+        /*
+         * 1. Query ADIT database for all documents that are meant for sending
+         * to DHX. If there are messages that are not sent to DHX in the
+         * specified period, then the connection is broken.
+         */
+
+        // 1. Query ADIT database
+        try {
+            long comparisonDateMs = (new Date()).getTime();
+            comparisonDateMs = comparisonDateMs - getMonitorConfiguration().getDocumentSendToDhxInterval();
+            Date comparisonDate = new Date(comparisonDateMs);
+
+            List<DocumentSharing> documentSharings = getDocumentSharingDAO().getDVKSharings(comparisonDate);
+
+            if (documentSharings != null && documentSharings.size() > 0) {
+                // DVK connection down - documents were found, that have not
+                // been sent to DVK in time
+                throw new AditInternalException("Number of documents not sent to DVK client in time: "
+                        + documentSharings.size());
+            } else {
+                logger.debug("No document sharings found for DVK (with status 'missing' - 100)");
+                result.setSuccess(true);
+            }
+
+            Date end = new Date();
+            long endTime = end.getTime();
+            duration = (endTime - startTime) / 1000.0;
+            result.setDuration(duration);
+
+        } catch (Exception e) {
+            logger.error("Error while testing DVK_SEND: ", e);
+            result.setSuccess(false);
+            List<String> exceptions = new ArrayList<String>();
+            exceptions.add(e.getMessage());
+            result.setExceptions(exceptions);
+        }
+
+        return result;
     }
 
     /**
@@ -323,26 +359,6 @@ public class MonitorService {
                     + e.getMessage());
         }
 
-        // 2. Check DVK response message stylesheet
-        try {
-            InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream(this.getConfiguration().getDvkResponseMessageStylesheet());
-            String styleSheet = Util.createTemporaryFile(input, this.getConfiguration().getTempDir());
-
-            File styleSheetFile = new File(styleSheet);
-            if (!styleSheetFile.exists()) {
-                throw new Exception("File does not exist: " + styleSheet);
-            }
-
-        } catch (Exception e) {
-            logger
-                    .error(
-                            "Error checking application - DVK response message stylesheet not defined or file does not exist: ",
-                            e);
-            errorMessages
-                    .add("Error checking application - DVK response message stylesheet not defined or file does not exist: "
-                            + e.getMessage());
-        }
-
         // 3. Check test document ID
         try {
 
@@ -374,128 +390,6 @@ public class MonitorService {
                     new Exception("Errors found: " + combinedErrorMessage));
         } else {
             this.getNagiosLogger().log(ADIT_APP + " " + OK + " " + df.format(duration) + " " + SECONDS);
-        }
-
-    }
-
-    /**
-     * Check DVK database connectivity.
-     */
-    public void checkDVKconnection() {
-        Session session = null;
-        double duration = 0;
-
-        try {
-
-            SessionFactory sessionFactory = this.getDvkDAO().getSessionFactory();
-
-            try {
-
-                Date start = new Date();
-                long startTime = start.getTime();
-
-                session = sessionFactory.openSession();
-                session.close();
-
-                Date end = new Date();
-                long endTime = end.getTime();
-                duration = (endTime - startTime) / 1000.0;
-
-                DecimalFormat df = new DecimalFormat("0.000");
-                this.getNagiosLogger().log(ADIT_UK_CONNECTION + " " + OK + " " + df.format(duration) + " " + SECONDS);
-
-            } catch (Exception e) {
-                logger.info("Error occurred while accessing DVK database: ", e);
-                String message = ADIT_UK_CONNECTION + " " + FAIL;
-                this.getNagiosLogger().log(message, e);
-                return;
-            } finally {
-                if (session != null && session.isOpen()) {
-                    session.close();
-                }
-            }
-
-        } catch (Exception e) {
-            logger.error("Error while checking DVK database connectivity: ", e);
-        }
-    }
-
-    /**
-     * Check DVK database read.
-     *
-     * @param messageDhlId DVK test message ID
-     */
-    public void checkDVKRead(long messageDhlId) {
-        logger.info("ADIT monitor - Checking DVK database READ.");
-
-        try {
-
-            double duration = 0;
-
-            try {
-                Date start = new Date();
-                long startTime = start.getTime();
-
-                this.getDvkDAO().testRead(messageDhlId);
-
-                Date end = new Date();
-                long endTime = end.getTime();
-                duration = (endTime - startTime) / 1000.0;
-
-            } catch (Exception e) {
-                logger.info("Error occurred while accessing DVK database READ function: ", e);
-                String message = ADIT_UK_CONNECTION_READ + " " + FAIL + " ";
-                this.getNagiosLogger().log(message, e);
-                return;
-            }
-
-            DecimalFormat df = new DecimalFormat("0.000");
-            this.getNagiosLogger().log(ADIT_UK_CONNECTION_READ + " " + OK + " " + df.format(duration) + " " + SECONDS);
-
-        } catch (Exception e) {
-            logger.error("Error while checking DVK database READ: ", e);
-        }
-    }
-
-    /**
-     * Check DVK database read.
-     *
-     * @param messageDhlId DVK test document ID
-     */
-    public void checkDVKWrite(long messageDhlId) {
-        logger.info("ADIT monitor - Checking DVK WRITE.");
-
-        try {
-
-            double duration = 0;
-
-            try {
-                Date start = new Date();
-                long startTime = start.getTime();
-
-                PojoMessage document = this.getDvkDAO().getMessage(messageDhlId);
-
-                if (document != null) {
-                    document.setTitle(Util.generateRandomID());
-                    this.getDvkDAO().updateDocument(document);
-                }
-
-                Date end = new Date();
-                long endTime = end.getTime();
-                duration = (endTime - startTime) / 1000.0;
-
-            } catch (Exception e) {
-                logger.info("Error occurred while accessing DVK database WRITE function: ", e);
-                String message = ADIT_UK_CONNECTION_WRITE + " " + FAIL + " ";
-                this.getNagiosLogger().log(message, e);
-                return;
-            }
-
-            DecimalFormat df = new DecimalFormat("0.000");
-            this.getNagiosLogger().log(ADIT_UK_CONNECTION_WRITE + " " + OK + " " + df.format(duration) + " " + SECONDS);
-
-        } catch (Exception e) {
-            logger.error("Error while checking DVK database READ: ", e);
         }
 
     }
@@ -884,125 +778,6 @@ public class MonitorService {
 
     }
 
-    /**
-     * Tests if documents are sent to DVK client.
-     *
-     * @return test result
-     */
-    public MonitorResult checkDvkSend() {
-        MonitorResult result = new MonitorResult();
-        result.setComponent("DVK_SEND");
-
-        logger.info("Testing DVK_SEND...");
-
-        double duration = 0;
-        Date start = new Date();
-        long startTime = start.getTime();
-
-        /*
-         * 1. Query ADIT database for all documents that are meant for sending
-         * to DVK client. If there are messages that are not sent to DVK in the
-         * specified period, then the connection is broken.
-         */
-
-        // 1. Query ADIT database
-        try {
-            long comparisonDateMs = (new Date()).getTime();
-            comparisonDateMs = comparisonDateMs - getMonitorConfiguration().getDocumentSendToDvkInterval();
-            Date comparisonDate = new Date(comparisonDateMs);
-
-            List<DocumentSharing> documentSharings = getDocumentSharingDAO().getDVKSharings(comparisonDate);
-
-            if (documentSharings != null && documentSharings.size() > 0) {
-                // DVK connection down - documents were found, that have not
-                // been sent to DVK in time
-                throw new AditInternalException("Number of documents not sent to DVK client in time: "
-                        + documentSharings.size());
-            } else {
-                logger.debug("No document sharings found for DVK (with status 'missing' - 100)");
-                result.setSuccess(true);
-            }
-
-            Date end = new Date();
-            long endTime = end.getTime();
-            duration = (endTime - startTime) / 1000.0;
-            result.setDuration(duration);
-
-        } catch (Exception e) {
-            logger.error("Error while testing DVK_SEND: ", e);
-            result.setSuccess(false);
-            List<String> exceptions = new ArrayList<String>();
-            exceptions.add(e.getMessage());
-            result.setExceptions(exceptions);
-        }
-
-        return result;
-    }
-
-    /**
-     * Checks if documents are being received from DVK.
-     *
-     * @return test result
-     */
-    @Transactional
-    public MonitorResult checkDvkReceive() {
-        MonitorResult result = new MonitorResult();
-        result.setComponent("DVK_RECEIVE");
-
-        logger.info("Testing DVK_RECEIVE...");
-
-        double duration = 0;
-        int failCount = 0;
-        Date start = new Date();
-        long startTime = start.getTime();
-
-        try {
-
-            // Check if there are documents in the DVK client database that are
-            // not read into ADIT database.
-            long currentDateMs = (new Date()).getTime();
-            Date comparisonDate = new Date(currentDateMs - getMonitorConfiguration().getDocumentSendToAditInterval());
-            // from PojoMessage where incoming = true and recipientStatusId =
-            // 105 and receivedDate <= :comparisonDate
-            List<PojoMessage> receivedMessages = getDvkDAO().getReceivedDocuments(comparisonDate);
-
-            for (int i = 0; i < receivedMessages.size(); i++) {
-                try {
-                    PojoMessage message = receivedMessages.get(i);
-
-                    Document document = getDocumentDAO().getDocumentByDVKID(message.getDhlId());
-
-                    if (document == null) {
-                        // Document has not reached ADIT
-                        failCount++;
-                    }
-                } catch (Exception e) {
-                    logger.error("Could not check document received from DVK: ", e);
-                }
-            }
-
-            if (failCount > 0) {
-                throw new AditInternalException(
-                        "Some document have not been transfered to ADIT. Number of failed documents: " + failCount);
-            } else {
-                result.setSuccess(true);
-            }
-
-            Date end = new Date();
-            long endTime = end.getTime();
-            duration = (endTime - startTime) / 1000.0;
-            result.setDuration(duration);
-
-        } catch (Exception e) {
-            logger.error("Error while testing DVK_RECEIVE: ", e);
-            result.setSuccess(false);
-            List<String> exceptions = new ArrayList<String>();
-            exceptions.add(e.getMessage());
-            result.setExceptions(exceptions);
-        }
-
-        return result;
-    }
 
     /**
      * Check if notifications have been sent.
@@ -1147,12 +922,12 @@ public class MonitorService {
         this.documentDAO = documentDAO;
     }
 
-    public DvkDAO getDvkDAO() {
-        return dvkDAO;
+    public DhxUserDAO getDhxDAO() {
+        return dhxDAO;
     }
 
-    public void setDvkDAO(DvkDAO dvkDAO) {
-        this.dvkDAO = dvkDAO;
+    public void setDhxDAO(DhxUserDAO dhxDAO) {
+        this.dhxDAO = dhxDAO;
     }
 
     public Configuration getConfiguration() {

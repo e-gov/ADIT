@@ -9,7 +9,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPMessage;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.client.WebServiceClientException;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
@@ -35,7 +35,7 @@ public class CustomXRoadResponseSanitizerInterceptor implements ClientIntercepto
     /**
      * Log4J logger.
      */
-    private static Logger logger = Logger.getLogger(CustomXRoadResponseSanitizerInterceptor.class);
+    private static Logger logger = LogManager.getLogger(CustomXRoadResponseSanitizerInterceptor.class);
 
     /**
      * Handle fault.

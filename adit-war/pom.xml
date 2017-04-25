@@ -3,15 +3,21 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>adit-war</artifactId>
     <packaging>war</packaging>
-    <version>1.1.25</version>
+	<version>1.2.0</version>
     <name>ADIT Web Application</name>
 
     <parent>
         <groupId>ee</groupId>
         <artifactId>adit</artifactId>
-        <version>1.1.25</version>
+		<version>1.2.0</version>
     </parent>
-
+	<repositories>
+		<repository>
+			<id>ria</id>
+			<name>DVK releases</name>
+			<url>http://artifactory.tt.kit:8081/artifactory/DVK-libs-release-local</url>
+		</repository>
+	</repositories>
     <properties>
         <file.encoding>UTF-8</file.encoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -22,27 +28,22 @@
         <hibernate.version>3.6.10.Final</hibernate.version>
         <atomikos.version>4.0.3</atomikos.version>
         
-        <!--
-        	NB!
-        	For database settings in context.xml placed inside Tomcat's /conf directory use provided scope
-        	and the related transactions-jdbc-<version>.jar file must be present in Tomcat's /lib directory.
-        	This will prevent an issue when EnhancedTomcatAtomikosBeanFactory cannot recognize AtomikosDataSourceBean object.
-        	
-        	When using Spring based data source configurations (see /conf/girf-arendus-atomikos/adit-datasource.xml)
-        	use the default scope, i.e. "compile".
-        -->
+		<!-- NB! For database settings in context.xml placed inside Tomcat's /conf 
+			directory use provided scope and the related transactions-jdbc-<version>.jar 
+			file must be present in Tomcat's /lib directory. This will prevent an issue 
+			when EnhancedTomcatAtomikosBeanFactory cannot recognize AtomikosDataSourceBean 
+			object. When using Spring based data source configurations (see /conf/girf-arendus-atomikos/adit-datasource.xml) 
+			use the default scope, i.e. "compile". -->
         <atomikos.dependency.scope>provided</atomikos.dependency.scope>
         
-        <!--
-        	When deploying to an external Tomcat instance use the "provided" scope.
-        	The related PostgrSQL JDBC driver of course must be present in the TOMCAT_HOME/lib directory.
-        -->
+		<!-- When deploying to an external Tomcat instance use the "provided" scope. 
+			The related PostgrSQL JDBC driver of course must be present in the TOMCAT_HOME/lib 
+			directory. -->
         <postgresql.dependency.scope>provided</postgresql.dependency.scope>
         
-        <!--
-        	NB! This is meant for RIA administrators.
-        	The following directory will contain the required JAR dependencies that must be put inside TOMCAT_HOME/lib directory.
-         -->
+		<!-- NB! This is meant for RIA administrators. The following directory 
+			will contain the required JAR dependencies that must be put inside TOMCAT_HOME/lib 
+			directory. -->
         <ria.jar.dependencies.directory>${project.build.directory}/tomcat_lib</ria.jar.dependencies.directory>
         
         <digidoc.tmp.dir>C:\\Users\\lisa\\TMP</digidoc.tmp.dir>
@@ -140,14 +141,7 @@
             <systemPath>${basedir}/lib/wsdl4j-qname-1.6.1.jar</systemPath>
         </dependency>
 
-        <!-- Logging -->
-        <dependency>
-            <groupId>org.apache</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.16</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/log4j-1.2.16.jar</systemPath>
-        </dependency>
+
         <dependency>
             <groupId>org.apache</groupId>
             <artifactId>log4j.nagios</artifactId>
@@ -155,13 +149,20 @@
             <scope>system</scope>
             <systemPath>${basedir}/lib/NagiosAppender-1.5.1.jar</systemPath>
         </dependency>
-        <!-- <dependency>
+        <dependency>
             <groupId>org.apache</groupId>
             <artifactId>commons-logging</artifactId>
             <version>1.1.1</version>
             <scope>system</scope>
             <systemPath>${basedir}/lib/commons-logging-1.1.1.jar</systemPath>
-        </dependency> -->
+
+        </dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.22</version>
+		</dependency>
 
         
         <!-- Hibernate -->
@@ -201,7 +202,8 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		<!-- This transactions-jms dependency is required ONLY for RIA's deploy process -->
+		<!-- This transactions-jms dependency is required ONLY for RIA's deploy 
+			process -->
 		<dependency>
 			<groupId>com.atomikos</groupId>
 			<artifactId>transactions-jms</artifactId>
@@ -247,13 +249,13 @@
             <scope>system</scope>
             <systemPath>${basedir}/lib/xmlParserAPIs.jar</systemPath>
         </dependency>
-        <!-- <dependency>
+        <dependency>
             <groupId>xml</groupId>
             <artifactId>sec</artifactId>
             <version>1.0</version>
             <scope>system</scope>
             <systemPath>${basedir}/lib/xmlsec.jar</systemPath>
-        </dependency> -->
+        </dependency>
         <dependency>
             <groupId>xml</groupId>
             <artifactId>tinyxmlcanonicalizer</artifactId>
@@ -280,15 +282,21 @@
             <systemPath>${basedir}/lib/quartz-1.8.3.jar</systemPath>
         </dependency>
 
-        <!-- DVK-API -->
-        <dependency>
-            <groupId>dvk</groupId>
-            <artifactId>api</artifactId>
-            <version>1.0.14</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/dvk-api-1.0.14.jar</systemPath>
-        </dependency>
+		<!-- DVK-API <dependency> <groupId>dvk</groupId> <artifactId>api</artifactId> 
+			<version>1.0.14</version> <scope>system</scope> <systemPath>${basedir}/lib/dvk-api-1.0.14.jar</systemPath> 
+			</dependency> -->
 
+        <dependency>
+			<groupId>ee.ria.dhx</groupId>
+			<artifactId>dhx-adapter-ws</artifactId>
+			<version>1.0.0</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>org.slf4j</artifactId>
+					<groupId>slf4j-api</groupId>
+				</exclusion>
+			</exclusions>
+        </dependency>
         <!-- FOP -->
         <dependency>
             <groupId>org.apache</groupId>
@@ -380,15 +388,12 @@
             <scope>test</scope>
         </dependency>
 
-        <!--       
         <dependency>
-           <groupId>ee.sk.digidoc</groupId>
-           <artifactId>JDCerts</artifactId>
-           <version>1.0</version>
-           <scope>system</scope>
-           <systemPath>${basedir}/lib/jdcerts.jar</systemPath>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>5.3.4.Final</version>
 		</dependency>
-		-->
+
 
          <!-- DigiDoc4j dependencies -->
         <dependency>
@@ -415,6 +420,10 @@
 			<version>1.7.7</version>
 		</dependency>
          
+		<!-- <dependency> <groupId>ee.sk.digidoc</groupId> <artifactId>JDCerts</artifactId> 
+			<version>1.0</version> <scope>system</scope> <systemPath>${basedir}/lib/jdcerts.jar</systemPath> 
+			</dependency> -->
+
     </dependencies>
 
     <build>
@@ -451,9 +460,9 @@
                 <targetPath>../adit/WEB-INF/classes/castor-mapping</targetPath>
             </resource>
             <resource>
-                <directory>src/main/resources/dvkapi</directory>
+				<directory>src/main/resources/dhx</directory>
                 <filtering>false</filtering>
-                <targetPath>../adit/WEB-INF/classes/dvkapi</targetPath>
+				<targetPath>../adit/WEB-INF/classes/dhx</targetPath>
             </resource>
             <resource>
                 <directory>src/main/resources/hbm</directory>
@@ -483,6 +492,7 @@
                 <includes>
                     <include>adit-configuration.xml</include>
                     <include>adit-datasource.xml</include>
+					<include>dhx-application.properties</include>
                 </includes>
             </resource>
             <!-- Include static resources -->
@@ -505,6 +515,7 @@
                 <includes>
                     <include>adit_new_v1.wsdl</include>
                     <include>adit_new_v2.wsdl</include>
+					<include>adit_new_v3.wsdl</include>
                 </includes>
             </resource>
             <resource>
@@ -520,6 +531,8 @@
                     <include>adit-jobs.xml</include>
                     <include>adit-services.xml</include>
                     <include>adit-endpoints.xml</include>
+					<include>adit-dhx.xml</include>
+					<include>adit-dhx-servlet.xml</include>
                 </includes>
             </resource>
 
@@ -536,12 +549,8 @@
                 <excludes>
                     <exclude>atomikos-integration-extension-3.7.2.jar</exclude>
                 </excludes>
-                <!--
-                <excludes>
-                    <exclude>saaj-api.jar</exclude>
-                    <exclude>saaj-impl.jar</exclude>
-                </excludes>
-                -->
+				<!-- <excludes> <exclude>saaj-api.jar</exclude> <exclude>saaj-impl.jar</exclude> 
+					</excludes> -->
                 <targetPath>../adit/WEB-INF/lib</targetPath>
             </resource>
             
@@ -577,15 +586,21 @@
                         <include>target/adit/WEB-INF/adit.xsd</include>
                         <include>target/adit/wsdl/adit_new_v1.wsdl</include>
                         <include>target/adit/wsdl/adit_new_v2.wsdl</include>
+						<include>target/adit/wsdl/adit_new_v3.wsdl</include>
                     </includes>
                     <token>@PRODUCER_NAME@</token>
                     <value>${producerName}</value>
                 </configuration>
             </plugin>
+
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>2.6</version>
             </plugin>
+
+			<!-- <plugin> <artifactId>maven-war-plugin</artifactId> <version>2.1-beta-1</version> 
+				</plugin> -->
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -625,7 +640,17 @@
                     </execution>
                 </executions>
             </plugin>
-            
+			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<version>2.2</version>
+				<configuration>
+					<url>${tomcat.manager}</url>
+					<username>${tomcat.manager.username}</username>
+					<password>${tomcat.manager.password}</password>
+					<path>/adit</path>
+				</configuration>
+			</plugin>
             <!-- Preparing JAR dependencies for RIA administrators -->
             <plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -645,6 +670,36 @@
 			</plugin>
 	    </plugins>
 	    </build>
+	<profiles>
+		<profile>
+			<id>adit-arendus-tomcat</id>
+			<activation>
+				<property>
+					<name>env</name>
+					<value>adit-arendus-tomcat</value>
+				</property>
+			</activation>
+			<properties>
+				<tomcat.manager>http://10.0.13.232:8080/manager/text</tomcat.manager>
+				<tomcat.manager.username>admin</tomcat.manager.username>
+				<tomcat.manager.password>admin</tomcat.manager.password>
+			</properties>
+		</profile>
+		<profile>
+			<id>adit-arendus-bpw</id>
+			<activation>
+				<property>
+					<name>env</name>
+					<value>adit-arendus-bpw</value>
+				</property>
+			</activation>
+			<properties>
+				<tomcat.manager>http://localhost:8085/manager/text</tomcat.manager>
+				<tomcat.manager.username>admin</tomcat.manager.username>
+				<tomcat.manager.password>admin</tomcat.manager.password>
+			</properties>
+		</profile>
+	</profiles>
 
     <reporting>
         <plugins>

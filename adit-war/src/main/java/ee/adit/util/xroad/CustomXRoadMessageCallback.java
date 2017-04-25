@@ -9,7 +9,7 @@ import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPMessage;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.client.core.WebServiceMessageCallback;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
@@ -29,7 +29,7 @@ public class CustomXRoadMessageCallback implements WebServiceMessageCallback {
     /**
      * Log4J logger.
      */
-    private static Logger logger = Logger.getLogger(CustomXRoadMessageCallback.class);
+    private static Logger logger = LogManager.getLogger(CustomXRoadMessageCallback.class);
 
     /**
      * Random generator.

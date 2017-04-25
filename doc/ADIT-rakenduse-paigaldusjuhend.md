@@ -13,16 +13,12 @@
       * [Fail log4j.xml](#conf4)
       * [Fail xtee.properties](#conf5)
       * [Fail jta.properties](#conf6)
+      * [Fail dhx-application.properties](#conf7)
    * [Rakenduse paigaldamine Tomcat 7.x  rakendusserverisse](#tomcat)
    * [Rakenduse paigaldamine Weblogic 10.x rakendusserverisse](#weblogic)
-- [DVK liidese seadistamine](#DVK)
 - [Teavituskalendri ja riigiportaali X-Tee liidese seadistamine](#notification)
 - [Monitooringu rakendus ja rakenduse kontroll](#monitoring)
    * [Seadistamine](#monitoring-conf)
-   * [Nagiose seaded](#nagios)
-      * [Rakenduse log4j-nagiosappender seadistus](#nagios-log4j)
-      * [Nagiose seadistus – passiivne monitoring](#nagios-passive)
-      * [Nagiose seadistus – aktiivne monitooring](#nagios-active)
 
 
 
@@ -45,6 +41,7 @@
 | 12.05.2015 | 1.5.1 | Rakenduse ja andmebaasi paigaldusjuhendi eraldamine | Kristo Kütt |
 | 25.02.2016 | 1.5.2 | SVN asendatud Gitiga | Kertu Hiire |
 | 24.11.2016 | 1.5.3 | Dokumentatsioon üle viidud MarkDown formaati ning teostatud pisiparandusi | Kertu Hiire |
+| 17.03.2017 | 1.5.4 | Muudatused seoses DHX protokolli kasutusele võtuga | Aleksei Kokarev |
 
 
 ## Sissejuhatus
@@ -60,7 +57,7 @@ Rakenduse komponendid:
 
 1.	Andmebaas
 2.	Veebiteenused
-3.	DVK liides
+3.	DHX liides
 4.	X-tee teavituskalendri liides
 5.	Monitooringu komponent
 
@@ -70,7 +67,7 @@ Rakenduse komponendid:
 2.	Rakendusserver Tomcat 7.x / WebLogic 12.x
 3.	Andmebaas Postgres 9.4 (UTF-8)
 4.	Ligipääs X-tee turvaserverile (X-tee teenuste publitseerimiseks ja tarbimiseks)
-5.	Eraldiseisev DVK universaalklient ADIT-ile kasutamiseks. DVK universaalkliendi paigaldamiseks vaata [paigaldusjuhendit DVK kliendi repositooriumis](https://github.com/e-gov/DVK/tree/master/doc/client)
+
 
 ## ADIT rakendus
 
@@ -107,12 +104,12 @@ ADIT rakenduse seadistamine koosneb mitmest failist, mis on järgnevalt toodud v
 |---|---|
 | adit-configuration.xml | rakenduse peamine seadistusfail |
 | adit-datasource.xml | rakenduse andmebaasi ühenduste seadistusfail |
-| log4j.xml | logimise seadistus |
+| log4j2.xml | logimise seadistus |
 | messages_et.properties | Eestikeelsete (vea)teadete seadistusfail |
 | messages_en.properties | inglisekeelsete (vea)teadete seadistusfail |
 | messages_ru.properties | venekeelsete (vea)teadete seadistusfail |
-| DVKresponseMessage.xsl | DVK vastuskirja XSL stiilileht |
 | xtee.properties | X-Tee seadistus (vajalik X-Tee teavituskalendri funktsionaalsuse jaoks) |
+| dhx-application.properties | DHX seadistus |
 
 <a name="conf1"></a>
 #### Fail adit-configuration.xml
@@ -124,7 +121,6 @@ ADIT rakenduse seadistamine koosneb mitmest failist, mis on järgnevalt toodud v
   <property name="tempDir" value="tmp" />
   <property name="deleteTemporaryFiles" value="true" />
   <property name="schedulerEventTypeName" value="Minu dokumentide teavitus" />
-  <property name="dvkResponseMessageStylesheet" value="DVKresponseMessage.xsl" />
 
   <!-- Üldine kettamahu piirang ühe kasutaja kohta baitides -->
   <property name="globalDiskQuota" value="10240000" />
@@ -151,14 +147,10 @@ ADIT rakenduse seadistamine koosneb mitmest failist, mis on järgnevalt toodud v
   <property name="userCode" value="EE00000000000" />
   <property name="institutionCode" value="123456789" />
   <property name="testDocumentId" value="999999999999" />
-  <property name="dvkTestDocumentID" value="9999999999" />
   <property name="testDocumentFileId" value="999999999999" />
   <property name="testUserCode" value="EE00000000000" />
   <property name="documentSaveInterval" value="60000" />
-  <property name="documentSendToDvkInterval" value="60000" />
-  <property name="documentSendToDvkServerInterval" value="60000" />
-  <property name="documentSendToDvkFromDvkServerInterval" value="60000" />
-  <property name="documentSendToAditInterval" value="60000" />
+  <property name="documentSendToDhxInterval" value="60000" />
   <property name="notificationSendInterval" value="60000" />
   <property name="errorInterval" value="60000" />
   <property name="errorLevel" value="FATAL" />
@@ -169,7 +161,6 @@ ADIT rakenduse seadistamine koosneb mitmest failist, mis on järgnevalt toodud v
 - **tempDir** – kataloog, kuhu ADIT rakendus paigutab töötamise ajal loodud ajutised failid. Sellele kataloogile peab olema kasutajal, kellena käivitatakse rakendusserver, lugemis- ja kirjutamisõigus.
 - **deleteTemporaryFiles** – tõeväärtus tüüpi muutuja, mis näitab, kas ajutised failid kustutatakse peale nendega töötamist või mitte. PS! Testimise ajaks ja vigade otsimisel on soovitatav ajutised failid alles jätta.
 - **schedulerEventTypeName** – X-Tee teavituskalendris kasutatav sündmuse nimi ADIT sündmuste jaoks.
-- **dvkResponseMessageStylesheet** – määrab ära, millist stiililehte kasutatakse DVK vastuskirja koostamiseks.
 - **globalDiskQuota** – üldine kettamahu piirang ühe kasutaja kohta baitides.
 - **documentRetentionDeadlineDays** – dokumentide säilitustähtaeg päevades. Arvestatakse dokumendi viimase muutmise kuupäevast. Reaalselt kasutatakse seda ainult getDocument ja getDocumentList päringute vastustes dokumendi eeldatava kustutamisaja arvutamiseks.
 - **locales** – nimekiri keeltest, milles tagastatakse päringute (vea)teated. Keele määramisel kasutatakse formaati `[keelekood]_[riigikood]`. Nt. „en_us“. Keele- ja riigikoodidena kasutatakse kahetähelisi ISO 639-1 formaadis koode.
@@ -182,12 +173,10 @@ ADIT rakenduse seadistamine koosneb mitmest failist, mis on järgnevalt toodud v
 - **userCode** – monitooringu päringute kasutaja kood.
 - **institutionCode** – monitooringu päringute asutuse kood.
 - **testDocumentId** – monitooringu päringute testdokumendi ID.
-- **dvkTestDocumentID** – monitooringu päringute DVK testdokumendi ID.
 - **testDocumentFileId** – monitooringu päringute testdokumendi faili ID.
 - **testUserCode** – monitooringu kasutajate nimekirja päringu testkasutaja kood.
 - **documentSaveInterval** – päringu „saveDocument“ testimise periood millisekundites.
-- **documentSendToDvkInterval** – dokumentide DVK-sse saatmise periood.
-- **documentSendToAditInterval** – dokumentide ADIT-isse importimise periood.
+- **documentSendToDhxInterval** – dokumentide DHX-i saatmise periood.
 - **notificationSendInterval** – teavituste saatmise intervall.
 - **errorInterval** – rakenduse vigade tabeli kontrollimise periood.
 - **errorLevel** – määrab vaadeldavate vigade taseme vigade tabelis. Võimalikud väärtused – WARN, ERROR, FATAL.
@@ -238,6 +227,7 @@ ADIT rakenduse seadistamine koosneb mitmest failist, mis on järgnevalt toodud v
 				<value>classpath:hbm/MaintenanceJob.hbm.xml</value>
 			<value>classpath:hbm/SetJobRunningStatusResult.hbm.xml</value>
 				<value>classpath:hbm/UserContact.hbm.xml</value>
+				<value>classpath:hbm/DhxUser.hbm.xml</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">
@@ -248,36 +238,6 @@ ADIT rakenduse seadistamine koosneb mitmest failist, mis on järgnevalt toodud v
 				<prop key="hibernate.current_session_context_class">org.hibernate.context.JTASessionContext</prop>
 				<prop key="hibernate.transaction.manager_lookup_class">org.hibernate.transaction.WeblogicTransactionManagerLookup</prop>
 				<prop key="hibernate.show.sql">true</prop>
-				<prop key="hibernate.connection.useUnicode">true</prop>
-				<prop key="hibernate.connection.characterEncoding">UTF-8</prop>
-				<prop key="hibernate.connection.charSet">UTF-8</prop>
-			</props>
-		</property>
-	</bean>
-
-	<bean id="dvkSessionFactory"
-		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
-		<property name="dataSource" ref="aditDVKDataSource" />
-		<property name="mappingLocations">
-			<list>
-				<value>classpath:dvkapi/Counter.hbm.xml</value>
-				<value>classpath:dvkapi/Subdivision.hbm.xml</value>
-				<value>classpath:dvkapi/Occupation.hbm.xml</value>
-				<value>classpath:dvkapi/Organization.hbm.xml</value>
-				<value>classpath:dvkapi/SettingsFolders.hbm.xml</value>
-				<value>classpath:dvkapi/Settings.hbm.xml</value>
-				<value>classpath:dvkapi/Message.hbm.xml</value>
-				<value>classpath:dvkapi/MessageRecipient.hbm.xml</value>
-			</list>
-		</property>
-		<property name="hibernateProperties">
-			<props>
-				<prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</prop>
-				<prop key="hibernate.connection.driver_class">org.postgresql.Driver</prop>
-				<prop key="hibernate.cache.provider_class">org.hibernate.cache.NoCacheProvider</prop>
-				<prop key="hibernate.current_session_context_class">org.hibernate.context.JTASessionContext</prop>
-				<prop key="hibernate.transaction.manager_lookup_class">org.hibernate.transaction.WeblogicTransactionManagerLookup</prop>
-				<prop key="hibernate.connection.autocommit">false</prop>
 				<prop key="hibernate.connection.useUnicode">true</prop>
 				<prop key="hibernate.connection.characterEncoding">UTF-8</prop>
 				<prop key="hibernate.connection.charSet">UTF-8</prop>
@@ -298,7 +258,6 @@ ADIT rakenduse seadistamine koosneb mitmest failist, mis on järgnevalt toodud v
 ```
 
 - **sessionFactory** – ADIT andmebaasi ühenduse konfiguratsioon
-- **dvkSessionFactory** – DVK andmebaasi ühenduse konfiguratsioon
 - **dataSource** – ADIT andmebaasi ühendus
 - **mappingLocations** – Andmebaasi objektid, mis kasutavad seda ühendust
 - **hibernateProperties** – Hibernate ühenduse kirjeldused
@@ -312,10 +271,10 @@ ADIT rakenduse seadistamine koosneb mitmest failist, mis on järgnevalt toodud v
 <a name="conf3"></a>
 #### Fail adit-jobs.xml
 
-Ajatatud toimingud (DVK-ga suhtlemine ja teavituste saatmine X-Tee teavituskalendrisse) on seadistatud _adit-jobs.xml_ failis:
+Ajatatud toimingud (DHX-ga suhtlemine ja teavituste saatmine X-Tee teavituskalendrisse) on seadistatud _adit-jobs.xml_ failis:
 
 ```xml
-<bean id="dvkSendTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+<bean id="dhxSendTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
   <property name="jobDetail" ref="sendJobDetails"/>
   <!-- 10 seconds -->
   <property name="startDelay" value="60000"/>
@@ -323,37 +282,6 @@ Ajatatud toimingud (DVK-ga suhtlemine ja teavituste saatmine X-Tee teavituskalen
   <property name="repeatInterval" value="60000"/>
 </bean>
 	
-<bean id="dvkReceiveTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
-  <property name="jobDetail" ref="receiveJobDetails"/>
-  <!-- 10 seconds -->
-  <property name="startDelay" value="120000"/>
-  <!-- repeat every 20 seconds -->
-  <property name="repeatInterval" value="60000"/>
-</bean>
-	
-<bean id="dvkUpdateStatusTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
-  <property name="jobDetail" ref="updateStatusJobDetails"/>
-  <!-- 10 seconds -->
-  <property name="startDelay" value="180000"/>
-  <!-- repeat every 20 seconds -->
-  <property name="repeatInterval" value="60000"/>
-</bean>
-	
-<bean id="dvkUpdateStatusToDVKTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
-  <property name="jobDetail" ref="UpdateStatusToDVKJobDetails"/>
-  <!-- 10 seconds -->
-  <property name="startDelay" value="240000"/>
-  <!-- repeat every 20 seconds -->
-  <property name="repeatInterval" value="60000"/>
-</bean>
-	
-<bean id="DeleteDocumentsFromDVKJobTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
-  <property name="jobDetail" ref="DeleteDocumentsFromDVKJobDetails"/>
-  <!-- 10 seconds -->
-  <property name="startDelay" value="0"/>
-  <!-- repeat every 20 seconds -->
-  <property name="repeatInterval" value="3600000"/>
-</bean>
 	
 <bean id="UserSyncJobTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
   <property name="jobDetail" ref="UserSyncJobDetails"/>
@@ -378,87 +306,41 @@ Ajatatud toimingud (DVK-ga suhtlemine ja teavituste saatmine X-Tee teavituskalen
 </bean>
 ```
 
-- **dvkSendTrigger** – määrab, kui tihti käivitatakse dokumentide DVK-sse saatmise protsess.
-- **dvkReceiveTrigger** – määrab, kui tihti käivitatakse DVK-st dokumentide vastuvõtmise protsess
-- **dvkUpdateStatusTrigger** – määrab, kui tihti uuendatakse dokumentide staatuseid DVK-st ADIT-isse (DVK-sse saadetud dokumentide puhul)
-- **dvkUpdateStatusToDVKTrigger** – määrab, kui tihti uuendatakse dokumentide staatuseid ADIT-ist DVK-sse (ADIT-isse saadetud dokumentide puhul)
-- **DeleteDocumentsFromDVKJobTrigger** – määrab, kui tihti käiakse DVK-st kustutamas dokumente, millel on vastavad „lõpetatud“ staatused. Kustutatakse ainult dokumendi DVK XML konteiner.
-- **UserSyncJobTrigger** – määrab, kui tihti sünkroniseeritakse DVK kasutajad ADIT kasutajatega (sünkroniseerimine toimub suunal DVK -> ADIT).
+- **dhxSendTrigger** – määrab, kui tihti käivitatakse dokumentide DHX-i saatmise protsess.
+- **UserSyncJobTrigger** – määrab, kui tihti sünkroniseeritakse DHX kasutajate listi ADIT-sse.
 - **notificationTrigger** – määrab, kui tihti saadetakse teavitused X-Tee teavituskalendrisse
 - **temporaryFolderCleanerTrigger** – määrab, kui tihti kustutatakse töökataloogist ajutised failid
 
-Kõikides eeltoodud seadistustes saab määrata järgmised parameetrid:
+Kõikides eeltoodud seadistustes(v.a. UserSyncJobTrigger) saab määrata järgmised parameetrid:
 
 - **startDelay** – kui kaua pärast rakenduse käivitamist toimub esimene käivitamine
 - **repeatInterval** – kui tihti protsessi käivitatakse
 
+UserSyncJobTrigger-s saab määrata järgmised parameetrid:
+
+- **cronExpression** – CRON väljend mis määrab kui tihti protsessi käivitatakse
+
+
 <a name="conf4"></a>
-#### Fail log4j.xml
+#### Fail log4j2.xml
 
-Logimine on ADIT rakenduses lahendatud Log4J raamistikku kasutades, seega toimub ka _log4j.xml_ faili seadistamine vastavalt. Vaikimisi on seadistatud logimine kahte eraldi faili:
-
-1. DVK liides logi
+Logimine on ADIT rakenduses lahendatud Log4J raamistikku kasutades, seega toimub ka _log4j2.xml_ faili seadistamine vastavalt. Vaikimisi on seadistatud logimine faili:
 
 ```xml
-<appender name="file" class="org.apache.log4j.DailyRollingFileAppender">
-  <param name="file" value="log/adit/adit_dvk.log" />
-  <param name="datePattern" value="'.'yyyy-MM" />
-  <param name="append" value="true" />
-  <layout class="org.apache.log4j.PatternLayout">
-    <param name="ConversionPattern" value="%d{ABSOLUTE}%5p %C:%L - %m%n"/>
-  </layout>
-</appender>
-```
-
-2. ADIT rakenduse logi
-
-```xml
-<appender name="dvk" class="org.apache.log4j.DailyRollingFileAppender">
-  <param name="file" value="log/adit/adit.log" />
-  <param name="datePattern" value="'.'yyyy-MM" />
-  <param name="append" value="true" />
-  <layout class="org.apache.log4j.PatternLayout">
-    <param name="ConversionPattern" value="%d{ABSOLUTE}%5p %C:%L - %m%n"/>
-  </layout>
-</appender>
+		<RollingFile name="file" fileName="/var/log/tomcat7/adit.log"
+			filePattern="/var/log/tomcat7/adit.log.%d{yyyy-MM-dd}">
+			<PatternLayout>
+				<Pattern>%d{ISO8601}%5p %C:%L - %m%n</Pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="24"
+					modulate="false" />
+			</Policies>
+		</RollingFile>
 ```
 
 _NB! Rakenduse testimise ajaks on mõistlik sisse lülitada logimine tasemel „DEBUG“. Tootmisesse minekul tuleks logida tasemel „INFO“ või „WARN“._
 
-ADIT rakenduse saab seadistada nii rakenduse enda kui ka DVK liidese veateateid logima ka Nagios monitooringusüsteemi. Selleks tuleb lisada _log4j.xml_ faili eraldi Nagiose appender:
-
-```xml
-<appender name="nagios" class="org.apache.log4j.nagios.NagiosAppender">
-   <param name="Host" value="localhost"/>
-   <param name="Port" value="5667"/>
-
-   <param name="ConfigFile" value="nsca_send_clear.cfg"/>
-
-   <param name="ServiceNameDefault" value="ADIT"/>
-
-   <param name="useMDCServiceName" value="false"/>
-   <param name="MDCServiceNameKey" value="nagios_service_name"/>
-
-   <param name="useMDCHostName" value="true"/>
-   <param name="MDCHostNameKey" value="virtual_host"/>
-   <param name="InitializeMDCHostNameValue" value="production"/>
- 
-   <param name="useShortHostName" value="false"/>
-   <param name="MDCCanonicalHostNameKey" value="nagios_canonical_hostname"/>
-
-   <param name="Log4j_Level_WARN"     value="NAGIOS_WARN"/>
-   <param name="Log4j_Level_ERROR"    value="NAGIOS_CRITICAL"/>
-   <param name="Log4j_Level_FATAL"    value="NAGIOS_CRITICAL"/>
-
-   <param name="SendStartupMessageOK" value="Application Errors Cleared"/>
-
-   <layout class="org.apache.log4j.PatternLayout">
-      <param name="ConversionPattern" value="%X{nagios_canonical_hostname}: %m%n"/>
-   </layout>
-</appender>
-```
-
-Parameetris _„ConfigFile“_ viidatud konfiguratsioonifail _„ncsa_send_clear.cfg“_ sisaldab Nagios andmevahetuse krüpteeringu seadeid.
 
 <a name="conf5"></a>
 #### Fail xtee.properties
@@ -498,6 +380,40 @@ com.atomikos.icatch.console_log_level = DEBUG
 
 _NB! Rakenduse testimise ajaks on mõistlik sisse lülitada logimine tasemel „DEBUG“. Tootmisesse minekul tuleks logida tasemel „INFO“ või „WARN“._
 
+<a name="conf7"></a>
+#### Fail dhx-application.properties
+
+Kuna ADIT kasutab oma töös DHX adapter java teeke, siis on vajalik ka sellekohane seadistus (_dhx-application.properties_):
+
+```xml
+soap.security-server=http://10.0.1.23
+soap.xroad-instance=EE
+soap.member-class=GOV
+soap.protocol-version=4.0
+soap.member-code=70006317
+soap.default-subsystem=DHX.adit
+soap.accepted-subsystems=DHX.adit
+dhx.document-resend-template=120,900,3600
+address-renew-timeout=0 0 7 * * ?
+dhx.server.special-orgnisations=adit,kovtp,rt,eelnoud
+dhx.resend.timeout=120
+```
+
+Parameetrid:
+
+- **soap.security-server** – X-tee turvaserveri aadress.
+- **soap.xroad-instance** – ee-dev arenduses, EE toodangus. Määratakse saatmisel X-tee päise Header/client/xRoadInstance väärtuseks.
+- **soap.member-class** – Asutuse enda X-tee kuuluvuse klass (COM või GOV). Määratakse saatmisel X-tee päise Header/client/memberClass väärtuseks.
+- **soap.protocol-version** – X-tee protokolli versioon. Määratakse saatmisel X-tee päise Header/protocolVersion väärtuseks.
+- **soap.member-code** – Asutuse enda registrikood. Määratakse saatmisel X-tee päise Header/client/memberCode väärtuseks.
+- **soap.default-subsystem** – Asutuse enda X-tee DHX alamsüssteem. Määratakse saatmisel X-tee päise Header/client/subsystemCode väärtuseks. Näiteks ADIT kasutab alamsüsteemi, ning kui ta saadab dokumente välja, siis ta peaks selleks väärtustama DHX.adit.
+- **soap.accepted-subsystems** – Määrab milliste alamsüsteemidega võtab asutus dokumente vastu. Komaga eraldatud list. .
+- **dhx.document-resend-template** – Määrab uuesti saatmise ürituste arvu ja oote ajad. Kasutatakse ainult asünkroonsel saatmisel. Antud näide määrab, et kokku tehakse 4 saatmisüritust. Uuesti saatmist üritatakse kõigepealt 30 sekundi järel, seejärel 120 sekundi (2 minuti) järel ning seejärel 1200 sekundi (20 minuti) järel. Kui ka viimane saatmine ebaõnnestus, siis lõpetatakse üritamine..
+- **address-renew-timeout** – Määrab adressaatide nimekirja uuendamise sageduse. Crontab formaat kujul: <second> <minute> <hour> <day> <month> <weekday>. Väärtus */20 tähendab igal 20-nendal ühikul. Seega 0 */20 * * * ? tähendab iga 20 minuti järel. Võib soovi korral muuta, näiteks iga päeva kell 7:00 on 0 0 7 * * *
+- **dhx.server.special-orgnisations** – alamsüsteemide erandid, millele korral salvestatakse neid ADIT-sse ilma registrikoodita vaid ainult süsteemi nimega(ntks: rt).
+- **dhx.resend.timeout** – Ajaperiood (minutites, 1500 min=25 tundi), pärast mida proovitakse uuesti "saatmisel" staatusesse jäänud dokumente saata. Peaks olema suurem kui document-resend-template parameetris määratud aegade summa. Kasutatakse reaalselt saatmisel ainult erijuhul kui server kukkus maha või serveri töö peatati sunnitult.
+
+
 
 <a name="tomcat"></a>
 ### Rakenduse paigaldamine Tomcat 7.x  rakendusserverisse
@@ -518,7 +434,7 @@ ADIT lähtekoodi ehitamisel tõmmatakse Maveni tsentraalsest repositooriumist va
 <Listener className="com.atomikos.tomcat.AtomikosLifecycleListener" />
 ```
 
-3) Loo _TOMCAT_HOME/conf/context.xml_ faili JNDI ressurss, mis viitaks ADIT andmebaasile ja DVK UK andmebaasile (lisada `<WatchedResource>` elemendi järele):
+3) Loo _TOMCAT_HOME/conf/context.xml_ faili JNDI ressurss, mis viitaks ADIT andmebaasile (lisada `<WatchedResource>` elemendi järele):
 
 ```xml
 <!-- ADIT main data source -->
@@ -541,25 +457,6 @@ ADIT lähtekoodi ehitamisel tõmmatakse Maveni tsentraalsest repositooriumist va
           xaProperties.password="yyy"
 />
 
-<!-- DVK data source -->
-<Resource name="jdbc/adit_dvk-arendus-postgres"
-          uniqueResourceName="AditDVKDataSource"
-          auth="Container"
-          
-          type="com.atomikos.jdbc.AtomikosDataSourceBean"
-          factory="com.atomikos.tomcat.EnhancedTomcatAtomikosBeanFactory"
-          minPoolSize="5"
-          maxPoolSize="15"
-          maxIdleTime="60"
-          testQuery="select 1"
-          
-          xaDataSourceClassName="org.postgresql.xa.PGXADataSource"
-          xaProperties.serverName="10.0.13.170" 
-          xaProperties.portNumber="5432"
-          xaProperties.databaseName="adit"
-          xaProperties.user="adit_dvkuk_user"
-          xaProperties.password="yyy"
-/>
 ```
 
    Keskkonnale vastavaks muuda järgmised parameetrid:
@@ -574,6 +471,7 @@ ADIT lähtekoodi ehitamisel tõmmatakse Maveni tsentraalsest repositooriumist va
 4) Paki paigalduspakett lahti kataloogi _„[TOMCAT_HOME]/webapps/adit“_
 
 5) Tee rakendusserverile taaskäivitus
+*kui tegemist on paigaldusega kus andmebaasis on puudu DHX adresaatide nimekiri(ntks esmane paigaldus), siis pärast paigaldust tuleb avada ADITi lehe http://ADIT_URL/dhx. Sellele lehele minnes initsialiseeritakse DHX adressaatide nimekirja.*
 
 
 
@@ -587,7 +485,6 @@ Ettevalmistus:
 1.	Tekita 2 Weblogicu serverit ühte klastrisse
 2.	Tekita järgmised JNDI andmebaasiühendused (_DataSource_):
    a.	_ADIT_DS_ (jndi name: **jdbc/adit**) – viide ADIT andmebaasiskeemile (kasutaja _ADIT_APP_)
-   b.	_ADIT_DVK_CLIENT_DS_ (jndi name: **jdbc/adit_dvk**) – viide ADIT DVK Universaalkliendi andmebaasiskeemile
 
 Sammud paigaldamiseks:
 
@@ -606,10 +503,6 @@ Sammud paigaldamiseks:
 10.	Vajuta nupule _„Release configuration / Activate changes“_.
 11.	Tee WebLogicule restart.
 
-<a name="DVK"></a>
-## DVK liidese seadistamine
-
-Kindlasti tuleb kontrollida, et DVK universaalkliendi andmetabelis _DHL_CLASSIFIER_ olevad DVK staatuste klassifikaatorid vastaksid ADIT-is kasutatavatele, mis asuvad tabelis _DOCUMENT_DVK_STATUS_. Lisaks on vajalik lülitada välja DVK universaalkliendi andmebaasis olev andmebaasipäästik _“TR_DHL_MESSAGE_ID”_.
 
 <a name="notification"></a>
 ## Teavituskalendri ja riigiportaali X-Tee liidese seadistamine
@@ -635,7 +528,6 @@ Teavituskalendri teavituse nimetuse määramine:
   <property name="tempDir" value="/tmp"/>
   <property name="deleteTemporaryFiles" value="true"/>
   <property name="schedulerEventTypeName" value="Minu dokumentide teavitus"/>
-  <property name="dvkResponseMessageStylesheet"     value="DVKresponseMessage.xsl"/>
   <!-- Üldine kettamahu piirang ühe kasutaja kohta baitides -->
   <property name="globalDiskQuota" value="10240000"/>
 </bean>
@@ -692,12 +584,10 @@ Monitooringurakenduse seadistamiseks on failis **_adit-configuration.xml_** jär
   <property name="userCode" value="EE00000000000" />
   <property name="institutionCode" value="123456789" />
   <property name="testDocumentId" value="999999999999" />
-  <property name="dvkTestDocumentID" value="9999999999" />
   <property name="testDocumentFileId" value="999999999999" />
   <property name="testUserCode" value="EE00000000000" />
   <property name="documentSaveInterval" value="60000" />
-  <property name="documentSendToDvkInterval" value="60000" />
-  <property name="documentSendToAditInterval" value="60000" />
+  <property name="documentSendToDhxInterval" value="60000" />
   <property name="notificationSendInterval" value="60000" />
   <property name="errorInterval" value="60000" />
   <property name="errorLevel" value="FATAL" />
@@ -709,82 +599,10 @@ Monitooringurakenduse seadistamiseks on failis **_adit-configuration.xml_** jär
 - **userCode** – monitooringupäringutes kasutatav kasutajakood, kelle nimel tehakse X-tee päringuid. ADIT rakenduses peab olema registreeritud vastav kasutaja (ADIT_USER).
 - **institutionCode** – monitooringupäringutes kasutatav asutuse kood.
 - **testDocumentId** – testdokumendi ID. Määratud ID-ga dokumenti kasutatakse monitooringupäringutes _„saveDocument“_ ja _„getDocument“_.
-- **dvkTestDocumentID** – DVK Universaalkliendis oleva testdokumendi ID. Kasutatakse selleks, et kontrollida DVK liidest.
 - **testDocumentFileId** – monitooringupäringutes kasutatav testdokumendi faili ID.
 - **testUserCode** – monitooringupäringus „getUserInfo“ kasutatav kasutajakood – kasutaja, kelle andmeid ADIT päringuga päritakse.
 - **documentSaveInterval** – intervall, mille jooksul testitakse dokumendi muutmise päringut (millisekundites)
-- **documentSendToDvkInterval** – intervall, mille jooksul testitakse dokumentide saatmist DVK-sse (millisekundites).
-- **documentSendToAditInterval** – intervall, mille jooksul testitakse dokumentide vastuvõtmist DVK-st (millisekundites).
+- **documentSendToDhxInterval** – intervall, mille jooksul testitakse dokumentide saatmist DHX-i (millisekundites).
 - **notificationSendInterval** – intervall, mille jooksul saadetakse teavitusi teavitusteenusele (millisekundites).
 - **errorInterval** – intervall, mille jooksul kontrollitakse veateadete logitabelit.
 - **errorLevel** – määrab vaadeldavate vigade taseme vigade tabelis. Võimalikud väärtused – WARN, ERROR, FATAL.
-
-<a name="nagios"></a>
-### Nagiose seaded
-
-<a name="nagios-log4j"></a>
-#### Rakenduse log4j-nagiosappender seadistus
-
-Nagiose NSCA teenus, kuulab mon1a.sise.kit (IP 10.0.5.10 – soovituslik on usaldada DNSi) ning TCP pordil 5667. Suhtluse krüpteerimiseks kasutatakse NSCA konfiguratsioonis 16 = RIJNDAEL-256 algoritmi. Ühtlasi tuleb defineerida ka parool, mida siinkohal ülesse ei märgi.
-
-<a name="nagios-passive"></a>
-#### Nagiose seadistus – passiivne monitoring
-
-Nagioses on defineeritud teenuse template, adit-service3, milles määratakse _active_check_enabled_ 0 parameetriga passiivne kontroll.
-
-```
-define service{
-    name                            adit-service3
-    use                             generic-service-template1
-    check_period                    24x7
-    contact_groups                  adit-admins1
-    notifications_enabled         	1
-    notification_interval           2880
-    notification_period             16x7
-    active_checks_enabled       	0
-    max_check_attempts         	 	1
-    check_freshness                 1
-    freshness_threshold            	86400
-    check_command                 	return-critical
-    register                       	0
-}
-```
-
-ADIT rakendusserverile seadistatakse teenus, mille nimelist peab edastama _nagios appender_.
-
-```
-define service{
-    use                             adit-service3
-    host_name                       adit.avalik.kit
-    service_description             ADIT
-    check_command                   return-critical
-}
-```
-
-<a name="nagios-active"></a>
-#### Nagiose seadistus – aktiivne monitooring
-
-Nagioses on defineeritud teenuse template, adit-service2.
-
-```
-define service{
-    name                             adit-service2
-    use                              generic-service-template1
-    check_period                     24x7
-    contact_groups                   adit-admins1
-    notifications_enabled         	 1
-    notification_interval            2880
-    notification_period              16x7
-    register                       	 0
-}
-```
-ADIT rakendusserverile on defineeritud teenused, mida soovitakse kontrollida.
-
-```
-define service{
-    use                             adit-service2
-    host_name                       adit.avalik.kit
-    service_description             ADIT_active_check
-    check_command                   check_http
-}
-```

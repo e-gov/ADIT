@@ -18,6 +18,7 @@ public class OutputDocument {
     private Date lastModified;
     private Long dvkStatusId;
     private Long dvkId;
+    private String dhxReceiptId;
     private Long workflowStatusId;
     private Long eformUseId;
     private String content;
@@ -335,5 +336,19 @@ public class OutputDocument {
 
 	public void setHasSentReply(boolean hasSentReply) {
 		this.hasSentReply = hasSentReply;
+	}
+
+	/**
+	 * @return the dhxReceiptId
+	 */
+	public String getDhxReceiptId() {
+		return dhxReceiptId;
+	}
+
+	/**
+	 * @param dhxReceiptId the dhxReceiptId to set
+	 */
+	public void setDhxReceiptId(String dhxReceiptId) {
+		this.dhxReceiptId = dhxReceiptId;
 	}
 }

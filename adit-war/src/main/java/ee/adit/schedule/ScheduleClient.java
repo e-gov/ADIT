@@ -3,7 +3,7 @@ package ee.adit.schedule;
 import java.math.BigInteger;
 import java.util.Calendar;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.apache.xmlbeans.GDateBuilder;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.oxm.Marshaller;
@@ -41,7 +41,7 @@ import ee.webmedia.xtee.client.service.StandardXTeeConsumer;
  */
 public class ScheduleClient {
     
-    private static Logger logger = Logger.getLogger(ScheduleClient.class);
+    private static Logger logger = LogManager.getLogger(ScheduleClient.class);
     
     private static final int RESULT_OK = 0;
 

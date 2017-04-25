@@ -6,7 +6,7 @@ import javax.xml.namespace.QName;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.mapping.AbstractQNameEndpointMapping;
 import org.springframework.ws.server.endpoint.support.PayloadRootUtils;
@@ -35,7 +35,7 @@ public class AditEndpointMapping extends AbstractQNameEndpointMapping {
     /**
      * Log4J logger.
      */
-    private static Logger logger = Logger.getLogger(AditEndpointMapping.class);
+    private static Logger logger = LogManager.getLogger(AditEndpointMapping.class);
 
     /**
      * The name of the SOAP header that specifies the X-Tee request name.

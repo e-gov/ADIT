@@ -3,7 +3,7 @@ package ee.adit.service;
 import java.util.Calendar;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
@@ -14,7 +14,7 @@ import ee.adit.util.Util;
 
 public class NotificationService {
 
-	private static Logger logger = Logger.getLogger(NotificationService.class);
+	private static Logger logger = LogManager.getLogger(NotificationService.class);
 	
 	private Configuration configuration;
 	

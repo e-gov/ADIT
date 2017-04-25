@@ -3,7 +3,7 @@ package ee.adit.dao;
 import java.sql.SQLException;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -22,7 +22,7 @@ import ee.adit.exception.AditInternalException;
  * @author Jaak Lember, Interinx, jaak@interinx.com
  */
 public class MaintenanceJobDAO extends HibernateDaoSupport {
-	private static Logger logger = Logger.getLogger(MaintenanceJobDAO.class);
+	private static Logger logger = LogManager.getLogger(MaintenanceJobDAO.class);
 
     /**
      * Attempts to set "running" flag for given maintenance job (either
