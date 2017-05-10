@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Context>
+<Resource name="jdbc/adit-arendus-postgres" auth="Container" type="javax.sql.DataSource" 
+    driverClassName="org.postgresql.Driver"
+    url="jdbc:postgresql://localhost" username="" password="" maxActive="100" maxIdle="20" minIdle="5"
+    maxWait="10000" />
+</Context>
