@@ -15,6 +15,7 @@
 |---|---|---|---|
 | 12.05.2015 | 1.0 | Andmebaasi dokument | Kristo Kütt |
 | 25.11.2016 | 1.1 | Dokument üle viidud MarkDown formaati | Kertu Hiire |
+| 10.03.2017 | 1.2 | Muudatused seoses DHX protokolli kasutuselevõtuga | Aleksei Kokarev |
 
 ## Sissejuhatus
 
@@ -27,7 +28,6 @@ ADIT andmebaasi paigaldamine koosneb järgmistest sammudest:
 ### Nõuded keskkonnale
 
 1.	Andmebaas Postgres 9.4 (UTF-8)
-2.	Eraldiseisev DVK universaalklient ADIT-ile kasutamiseks. DVK universaalkliendi paigaldamiseks vaata [paigaldusjuhendit DVK kliendi repositooriumis](https://github.com/e-gov/DVK/tree/master/doc/client). Lisanõudena on vajalik lülitada välja DVK universaalkliendi andmebaasipäästik _“tr_dhl_message_id”_.
 
 
 ## ADIT andmebaas
@@ -38,7 +38,7 @@ Andmebaasi skriptid ja rakenduse algkood on saadaval koos [lähtekoodiga](https:
 
 ### Andmebaasi loomine
 
-Andmebaasiskeemi loomise SQL skriptid asuvad paigalduspaketis kataloogis [/sql](../adit-war/sql). Enne aga, kui skripte käivitada, tuleb luua andmebaasiskeem / kasutaja (_schema_) ning tabeliruumid (_tablespace_) ADIT andmetabelite ja indeksite (_index_) jaoks. Paigaldamise sammud on järgmised:
+Andmebaasiskeemi loomise SQL skriptid asuvad paigalduspaketis kataloogis [/sql](../adit-war/sql). Enne skriptide käivitamist tuleb luua andmebaasiskeem / kasutaja (_schema_) ning tabeliruumid (_tablespace_) ADIT andmetabelite ja indeksite (_index_) jaoks. Paigaldamise sammud on järgmised:
 
 1.	Tekitada eesti kodeeringus andmebaasi klaster: 
 
@@ -48,7 +48,7 @@ pg_createcluster --locale et_EE.UTF-8 9.4 main
 
 2.	Tekitada kasutajana postgres kaks kasutajat, _adit_admin_ ja _adit_user_ 
 
-   - **adit_admin** – kasutaja, kelle skeemi luuakse kõik tabelid / protseduurid / triggerid ja muud andmebaasiobjektid.
+   - **adit_admin** – kasutaja, kelle skeemi luuakse kõik tabelid / protseduurid / trigerid ja muud andmebaasiobjektid.
    - **adit_user** – kasutaja, kelle abil rakendus andmebaasiga suhtleb. 
 
 ```
@@ -70,14 +70,14 @@ LC_CTYPE = 'et_EE.UTF-8'
 CONNECTION LIMIT = -1;
 ```
 
-4.	Käivita SQL skript [latest_postgresql_database.sql](../adit-war/sql/latest_postgresql_database.sql) (ADIT andmebaasi loomine). Skript tuleb käivitada _adit_admin_ kasutaja poolt, kellel on tabelite, päästikute ja protseduuride loomise õigused.
+4.	Käivita SQL skript [latest_postgresql_database.sql](../adit-war/sql/latest_postgresql_database.sql) (ADIT andmebaasi loomine). Skript tuleb käivitada _adit_admin_ kasutaja poolt, kellel on tabelite, trigerite ja protseduuride loomise õigused.
 
-5.	Kontrolli, kas tabelid, funktsioonid ja triggerid on loodud 
+5.	Kontrolli, kas tabelid, funktsioonid ja trigerid on loodud 
 
 - Skeema „adit“
 
-   * Tabeleid: 25
-   * Triggereid: 19
+   * Tabeleid: 26
+   * Trigereid: 19
    * Funktsioone: 3
    * Sequence: 13
 
@@ -85,9 +85,18 @@ CONNECTION LIMIT = -1;
 
    * Funktsioone: 20
 
-Andmebaasikasutajal (_adit_admin_), kelle skeemi tabelid loodi, peavad olema järgmised õigused (juba antud kasutaja loomise käigus):
+Andmebaasikasutajal (_adit_admin_), kelle skeemi tabelid loodi, peavad olema järgmised õigused (antud juba kasutaja loomise käigus):
 
 1.	Kõikidesse oma schema tabelitesse kirjutamise õigus
 2.	Kõikide oma schema tabelite lugemisõigus
 3.	Kõikide oma schema tabelite andmete muutmise õigus
 4.	Kõikide oma schema _SEQUENCE_-te ja _TRIGGER_-ite käivitamise õigus
+
+
+### Andmebaasi uuendamine
+
+See samm on vajalik siis kui ADIT andmebaas on juba paigaldatud ja on vaja andmebaasi uuendada(paigaldada muudatusi mis olid tehtud andmebaasis uues ADITi versioonis)
+
+1. Kävitada SQL skriptid mis asuvad kaustas adit-war/sql/updates. Skriptide käivitamisel on vaja teada mis versioon on hetkel paigaldatud ja käivitada kõik skriptid mis on suurema versiooninumbriga.
+
+

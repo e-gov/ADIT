@@ -2,7 +2,7 @@ package ee.adit.util.xroad;
 
 import java.util.Collection;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.springframework.ws.client.core.WebServiceTemplate;
 
 import ee.webmedia.xtee.client.service.XTeeAttachment;
@@ -20,7 +20,7 @@ public class CustomXRoadConsumer {
     /**
      * Log4J logger.
      */
-    private static Logger logger = Logger.getLogger(CustomXRoadConsumer.class);
+    private static Logger logger = LogManager.getLogger(CustomXRoadConsumer.class);
 
     /**
      * Web-service template.

@@ -26,7 +26,7 @@ import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPMessage;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.exolab.castor.xml.NodeType;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.MessageEndpoint;
@@ -66,7 +66,7 @@ public abstract class XRoadCustomEndpoint implements MessageEndpoint {
     /**
      * Log4J logger.
      */
-    private static Logger logger = Logger.getLogger(XRoadCustomEndpoint.class);
+    private static Logger logger = LogManager.getLogger(XRoadCustomEndpoint.class);
 
     /**
      * Response element's suffix.

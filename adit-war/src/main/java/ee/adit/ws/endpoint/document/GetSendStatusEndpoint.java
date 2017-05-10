@@ -6,7 +6,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
 
 import ee.adit.exception.AditCodedException;
@@ -15,6 +15,7 @@ import ee.adit.pojo.ArrayOfMessage;
 import ee.adit.pojo.DocumentSendStatus;
 import ee.adit.pojo.GetSendStatusRequest;
 import ee.adit.pojo.GetSendStatusRequestAttachment;
+import ee.adit.pojo.GetSendStatusRequestAttachmentV2;
 import ee.adit.pojo.GetSendStatusResponse;
 import ee.adit.pojo.GetSendStatusResponseAttachment;
 import ee.adit.pojo.GetSendStatusResponseDocument;
@@ -40,7 +41,7 @@ import ee.webmedia.xtee.annotation.XTeeService;
 @Component
 public class GetSendStatusEndpoint extends AbstractAditBaseEndpoint {
 
-    private static Logger logger = Logger.getLogger(GetSendStatusEndpoint.class);
+    private static Logger logger = LogManager.getLogger(GetSendStatusEndpoint.class);
 
     private UserService userService;
     private DocumentService documentService;
@@ -54,7 +55,9 @@ public class GetSendStatusEndpoint extends AbstractAditBaseEndpoint {
 
         if (version == 1) {
             return v1(requestObject);
-        } else {
+        } else if (version == 2) {
+        	 return v2(requestObject);
+        }else {
             throw new AditInternalException("This method does not support version specified: " + version);
         }
     }
@@ -144,6 +147,156 @@ public class GetSendStatusEndpoint extends AbstractAditBaseEndpoint {
                      this.getUserService().checkApplicationReadPrivilege(applicationName);
                      
                 	 List<DocumentSendStatus> documentSendStatuses = this.documentService.getDocumentDAO().getDocumentsForSendStatus(requestAttachment.getDhlIds());
+                     if (documentSendStatuses != null) {
+                             // 1. Convert java list to XML string and output
+                             // to file
+                             GetSendStatusResponseAttachment attachment = new GetSendStatusResponseAttachment();
+                            /* List<OutputDocument> outputDocuments = new ArrayList<OutputDocument>();
+                             outputDocuments.add(resultDoc);*/
+                             attachment.setDocuments(documentSendStatuses);
+                             String xmlFile = marshal(attachment);
+                             logger.debug("xmlFile: " + xmlFile);
+                             Util.joinSplitXML(xmlFile, "data");
+
+                             // 2. GZip the temporary file Base64 encoding
+                             // will be done at SOAP envelope level
+                             String gzipFileName = Util.gzipFile(xmlFile, this.getConfiguration().getTempDir());
+
+                             // 3. Add as an attachment
+                             String contentID = addAttachment(gzipFileName);
+                             GetSendStatusResponseDocument responseDoc = new GetSendStatusResponseDocument();
+                             responseDoc.setHref("cid:" + contentID);
+                             response.setDocument(responseDoc);
+                     } else {
+                         logger.debug("Document has no files!");
+                     }
+                	 // Set response messages
+                     response.setSuccess(true);
+                     messages.setMessage(this.getMessageService().getMessages("request.getSendStatus.success", new Object[] {}));
+                     response.setMessages(messages);
+
+                     String additionalMessage = this.getMessageService().getMessage("request.getDocument.success",
+                             new Object[] {}, Locale.ENGLISH);
+                     additionalInformationForLog = LogService.REQUEST_LOG_SUCCESS + ": " + additionalMessage;
+
+                   /*  if (request != null && request.isIncludeFileContents()) {
+                         additionalInformationForLog = additionalInformationForLog + ("(Including files)");
+                     }*/
+                }
+            }
+        } catch (Exception e) {
+            logger.error("Exception: ", e);
+            String errorMessage = null;
+            response.setSuccess(false);
+            ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
+
+            if (e instanceof AditCodedException) {
+                logger.debug("Adding exception messages to response object.");
+                arrayOfMessage.setMessage(this.getMessageService().getMessages((AditCodedException) e));
+                errorMessage = this.getMessageService().getMessage(e.getMessage(),
+                        ((AditCodedException) e).getParameters(), Locale.ENGLISH);
+                errorMessage = "ERROR: " + errorMessage;
+            } else {
+            	arrayOfMessage.setMessage(this.getMessageService().getMessages(MessageService.GENERIC_ERROR_CODE, new Object[]{}));
+                errorMessage = "ERROR: " + e.getMessage();
+            }
+
+            additionalInformationForLog = errorMessage;
+            super.logError(null, requestDate.getTime(), LogService.ERROR_LOG_LEVEL_ERROR, errorMessage);
+
+            logger.debug("Adding exception messages to response object.");
+            response.setMessages(arrayOfMessage);
+        }
+
+        super.logCurrentRequest(null, requestDate.getTime(), additionalInformationForLog);
+        return response;
+    }
+    
+    /**
+     * Executes "V1" version of "getSendStatus" request.
+     *
+     * @param requestObject
+     *            Request body object
+     * @return Response body object
+     */
+    protected Object v2(Object requestObject) {
+        GetSendStatusResponse response = new GetSendStatusResponse();
+        ArrayOfMessage messages = new ArrayOfMessage();
+        Calendar requestDate = Calendar.getInstance();
+        String additionalInformationForLog = null;
+        
+        try {
+            logger.debug("getSendStatus.v2 invoked.");
+            GetSendStatusRequest request = (GetSendStatusRequest) requestObject;
+            String attachmentID = null;
+            // Check if the attachment ID is specified
+            if (request.getDocument() != null && request.getDocument().getHref() != null
+                    && !request.getDocument().getHref().trim().equals("")) {
+                attachmentID = Util.extractContentID(request.getDocument().getHref());
+            } else {
+                throw new AditCodedException("request.getSendStatus.attachment.id.notSpecified");
+            }
+
+            // All primary checks passed.
+            logger.info("Processing attachment with id: '" + attachmentID + "'");
+            // Extract the SOAP message to a temporary file
+            String base64EncodedFile = extractAttachmentXML(this.getRequestMessage(), attachmentID);
+
+            // Base64 decode and unzip the temporary file
+            String xmlFileInput = Util.base64DecodeAndUnzip(base64EncodedFile, this.getConfiguration().getTempDir(), this
+                    .getConfiguration().getDeleteTemporaryFilesAsBoolean());
+            logger.info("Attachment unzipped to temporary file: " + xmlFileInput);
+
+            // Extract large files from main document
+            FileSplitResult splitResult = Util.splitOutTags(xmlFileInput, "data", false, false, true, true);
+
+            // Decode base64-encoded files
+            if ((splitResult.getSubFiles() != null) && (splitResult.getSubFiles().size() > 0)) {
+                for (String fileName : splitResult.getSubFiles()) {
+                    String resultFile = Util.base64DecodeFile(fileName, this.getConfiguration().getTempDir());
+                    // Replace encoded file with decoded file
+                    (new File(fileName)).delete();
+                    (new File(resultFile)).renameTo(new File(fileName));
+                }
+            }
+
+            // Unmarshal the XML from the temporary file
+            Object unmarshalledObject = null;
+            try {
+                unmarshalledObject = unMarshal(xmlFileInput);
+            } catch (Exception e) {
+                logger.error("Error while unmarshalling SOAP attachment: ", e);
+                AditCodedException aditCodedException = new AditCodedException("request.attachments.invalidFormat");
+                throw aditCodedException;
+            }
+
+            boolean involvedSignatureContainerExtraction = false;
+            boolean saveDocument = false;
+            // Check if the marshalling result is what we expected
+            if (unmarshalledObject != null) {
+                logger.info("XML unmarshalled to type: " + unmarshalledObject.getClass());
+                if (unmarshalledObject instanceof GetSendStatusRequestAttachmentV2) {
+                	GetSendStatusRequestAttachmentV2 requestAttachment = (GetSendStatusRequestAttachmentV2) unmarshalledObject;
+                	 InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream(getDigidocConfigurationFile());
+                     String jdigidocCfgTmpFile = Util.createTemporaryFile(input, getConfiguration().getTempDir());
+                	 CustomXRoadHeader header = this.getHeader();
+                     String applicationName = header.getInfosysteem(this.getConfiguration().getXteeProducerName());
+
+                     // Log request
+                     Util.printHeader(header, this.getConfiguration());
+
+                     // Check header for required fields
+                     checkHeader(header);
+
+                     // Kontrollime, kas päringu käivitanud infosüsteem on ADITis
+                     // registreeritud
+                     this.getUserService().checkApplicationRegistered(applicationName);
+
+                     // Kontrollime, kas päringu käivitanud infosüsteem tohib
+                     // andmeid näha
+                     this.getUserService().checkApplicationReadPrivilege(applicationName);
+                     
+                	 List<DocumentSendStatus> documentSendStatuses = this.documentService.getDocumentDAO().getDocumentsForSendStatusByDhxReceiptIds(requestAttachment.getDhxReceiptIds());
                      if (documentSendStatuses != null) {
                              // 1. Convert java list to XML string and output
                              // to file

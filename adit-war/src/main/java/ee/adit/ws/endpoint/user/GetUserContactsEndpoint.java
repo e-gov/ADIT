@@ -11,7 +11,7 @@ import java.util.Locale;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.springframework.oxm.XmlMappingException;
 import org.springframework.stereotype.Component;
 
@@ -48,7 +48,7 @@ import ee.webmedia.xtee.annotation.XTeeService;
 @Component
 public class GetUserContactsEndpoint extends AbstractAditBaseEndpoint {
 
-    private static Logger logger = Logger.getLogger(GetUserContactsEndpoint.class);
+    private static Logger logger = LogManager.getLogger(GetUserContactsEndpoint.class);
 
     private UserService userService;
 

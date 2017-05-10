@@ -2,7 +2,7 @@ package ee.adit.dao;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -20,7 +20,7 @@ import ee.adit.exception.AditInternalException;
  */
 public class UserContactDAO extends HibernateDaoSupport {
 
-    private static Logger logger = Logger.getLogger(UserContactDAO.class);
+    private static Logger logger = LogManager.getLogger(UserContactDAO.class);
 
     /**
      * Save user contact.

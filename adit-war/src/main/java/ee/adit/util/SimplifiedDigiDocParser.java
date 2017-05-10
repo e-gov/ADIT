@@ -18,10 +18,13 @@ import java.util.Hashtable;
 import java.util.List;
 
 import org.apache.commons.codec.binary.Base64OutputStream;
-import org.apache.log4j.Logger;
+
 import org.digidoc4j.Container;
 import org.digidoc4j.ContainerBuilder;
 import org.digidoc4j.DataFile;
+
+import org.apache.logging.log4j.LogManager; 
+import org.apache.logging.log4j.Logger;
 
 import ee.adit.pojo.OutputDocumentFile;
 import ee.sk.digidoc.DigiDocException;
@@ -33,14 +36,13 @@ import ee.sk.digidoc.DigiDocException;
  * @author Jaak Lember, Interinx, jaak@interinx.com
  */
 public final class SimplifiedDigiDocParser {
-	
-	private static Logger logger = Logger.getLogger(SimplifiedDigiDocParser.class);
-	
+
 	/**
 	 * Default constructor.
 	 */
 	private SimplifiedDigiDocParser() {}
 
+	private static Logger logger = LogManager.getLogger(SimplifiedDigiDocParser.class);
 
 	/**
 	 * Finds offsets of all data files in specified DigiDoc container.

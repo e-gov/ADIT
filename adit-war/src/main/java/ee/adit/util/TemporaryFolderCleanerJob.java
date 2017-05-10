@@ -3,7 +3,7 @@ package ee.adit.util;
 import java.io.File;
 import java.io.FilenameFilter;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.scheduling.quartz.QuartzJobBean;
@@ -29,7 +29,7 @@ public class TemporaryFolderCleanerJob extends QuartzJobBean {
 	/**
      * Log4j logger.
      */
-    private static Logger logger = Logger.getLogger(TemporaryFolderCleanerJob.class);
+    private static Logger logger = LogManager.getLogger(TemporaryFolderCleanerJob.class);
 
     /**
      * Application configuration as {@link Configuration} object. Wraps

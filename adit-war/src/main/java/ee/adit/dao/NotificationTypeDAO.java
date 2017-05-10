@@ -2,7 +2,7 @@ package ee.adit.dao;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import ee.adit.dao.pojo.NotificationType;
@@ -16,7 +16,7 @@ import ee.adit.dao.pojo.NotificationType;
  */
 public class NotificationTypeDAO extends HibernateDaoSupport {
 
-    private static Logger logger = Logger.getLogger(NotificationTypeDAO.class);
+    private static Logger logger = LogManager.getLogger(NotificationTypeDAO.class);
 
     /**
      * Fetch notification type list.

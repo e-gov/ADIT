@@ -73,8 +73,8 @@
         <property name="sessionFactory" ref="sessionFactory" />
     </bean>
 
-	<bean id="dvkDAO" class="ee.adit.dao.dvk.DvkDAO">
-		<property name="sessionFactory" ref="dvkSessionFactory" />
+	<bean id="dhxDAO" class="ee.adit.dao.DhxUserDAO">
+		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 	
 	<bean id="userContactDAO" class="ee.adit.dao.UserContactDAO">

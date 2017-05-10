@@ -2,7 +2,7 @@ package ee.adit.util.xroad;
 
 import java.util.Collection;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.springframework.ws.client.core.WebServiceMessageCallback;
 
 import ee.webmedia.xtee.client.factory.XTeeMessageCallbackFactory;
@@ -21,7 +21,7 @@ public class CustomMessageCallbackFactory implements XTeeMessageCallbackFactory 
     /**
      * Log4J logger.
      */
-    private static Logger logger = Logger.getLogger(CustomMessageCallbackFactory.class);
+    private static Logger logger = LogManager.getLogger(CustomMessageCallbackFactory.class);
 
     /**
      * Creates a new WebServiceMessageCallback.

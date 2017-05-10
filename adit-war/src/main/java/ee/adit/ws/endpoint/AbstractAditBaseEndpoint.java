@@ -17,7 +17,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.springframework.context.MessageSource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.InputStreamSource;
@@ -56,7 +56,7 @@ public abstract class AbstractAditBaseEndpoint extends XRoadCustomEndpoint {
     /**
      * Log4J logger.
      */
-    private static Logger logger = Logger.getLogger(AbstractAditBaseEndpoint.class);
+    private static Logger logger = LogManager.getLogger(AbstractAditBaseEndpoint.class);
     
     private static final Map<String, String> nameSpaceMappings;
     static {

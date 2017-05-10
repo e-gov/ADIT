@@ -144,16 +144,6 @@
         <property name="dvkOrgCode" value="adit"/>
         <property name="xteeInstitution" value="adit"/>
 
-        <!-- DVK folder names -->
-        <property name="dvkSendFolder" value="/"/>
-        <property name="dvkRecieveFolders">
-            <list>
-                <value>/</value>
-                <value>EVORMID</value>
-            </list>
-        </property>
-        <property name="dvkFolderForLetterType" value="/"/>
-        <property name="dvkFolderForApplicationType" value="/"/>
         <property name="doCheckTestCert" value="true"/>
     </bean>
 

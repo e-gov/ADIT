@@ -3,7 +3,7 @@ package ee.adit.web.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 
@@ -19,10 +19,10 @@ import ee.adit.util.Configuration;
  */
 public class VerifyController extends AbstractController {
 
-	/**
-	 * Log4J logger.
-	 */
-	private static Logger logger = Logger.getLogger(VerifyController.class);
+    /**
+     * Log4J logger.
+     */
+    private static Logger logger = LogManager.getLogger(VerifyController.class);
 
 	/**
 	 * Document service.
@@ -94,3 +94,4 @@ public class VerifyController extends AbstractController {
 	}
 
 }
+

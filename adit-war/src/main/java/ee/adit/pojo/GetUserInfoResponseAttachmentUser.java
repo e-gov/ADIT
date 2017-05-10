@@ -10,7 +10,8 @@ public class GetUserInfoResponseAttachmentUser {
     private Long totalSpace;
     private boolean canRead;
     private boolean canWrite;
-    private boolean usesDVK;
+    private Boolean usesDVK;
+    private Boolean usesDHX;
     private ArrayOfMessage messages;
 
     public String getUserCode() {
@@ -87,11 +88,11 @@ public class GetUserInfoResponseAttachmentUser {
         this.canWrite = canWrite;
     }
 
-    public boolean isUsesDVK() {
+    public Boolean isUsesDVK() {
         return usesDVK;
     }
 
-    public void setUsesDVK(boolean usesDVK) {
+    public void setUsesDVK(Boolean usesDVK) {
         this.usesDVK = usesDVK;
     }
 
@@ -101,5 +102,19 @@ public class GetUserInfoResponseAttachmentUser {
 
 	public void setMessages(ArrayOfMessage messages) {
 		this.messages = messages;
+	}
+
+	/**
+	 * @return the usesDHX
+	 */
+	public Boolean isUsesDHX() {
+		return usesDHX;
+	}
+
+	/**
+	 * @param usesDHX the usesDHX to set
+	 */
+	public void setUsesDHX(Boolean usesDHX) {
+		this.usesDHX = usesDHX;
 	}
 }

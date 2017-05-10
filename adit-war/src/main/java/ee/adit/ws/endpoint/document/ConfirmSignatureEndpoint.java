@@ -5,10 +5,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
-import org.apache.log4j.Logger;
 import org.digidoc4j.exceptions.CertificateNotFoundException;
 import org.digidoc4j.exceptions.CertificateRevokedException;
 import org.digidoc4j.exceptions.DigiDoc4JException;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import org.springframework.stereotype.Component;
 
 import ee.adit.dao.pojo.AditUser;
@@ -42,7 +45,7 @@ import ee.webmedia.xtee.annotation.XTeeService;
 @Component
 public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
 
-    private static Logger logger = Logger.getLogger(ConfirmSignatureEndpoint.class);
+    private static Logger logger = LogManager.getLogger(ConfirmSignatureEndpoint.class);
 
     private UserService userService;
 

@@ -1,90 +1,92 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <artifactId>adit-war</artifactId>
-    <packaging>war</packaging>
-    <version>1.1.25</version>
-    <name>ADIT Web Application</name>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>adit-war</artifactId>
+	<packaging>war</packaging>
+	<version>1.2.0</version>
+	<name>ADIT Web Application</name>
 
-    <parent>
-        <groupId>ee</groupId>
-        <artifactId>adit</artifactId>
-        <version>1.1.25</version>
-    </parent>
+	<parent>
+		<groupId>ee</groupId>
+		<artifactId>adit</artifactId>
+		<version>1.2.0</version>
+	</parent>
+	<repositories>
+		<repository>
+			<id>ria</id>
+			<name>DVK releases</name>
+			<url>http://artifactory.tt.kit:8081/artifactory/DVK-libs-release-local</url>
+		</repository>
+	</repositories>
 
-    <properties>
-        <file.encoding>UTF-8</file.encoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        
-        <spring.version>4.0.9.RELEASE</spring.version>
-        <postgresql.version>9.4.1212.jre7</postgresql.version>
-        <hibernate.version>3.6.10.Final</hibernate.version>
-        <atomikos.version>4.0.3</atomikos.version>
-        
-        <!--
-        	NB!
-        	For database settings in context.xml placed inside Tomcat's /conf directory use provided scope
-        	and the related transactions-jdbc-<version>.jar file must be present in Tomcat's /lib directory.
-        	This will prevent an issue when EnhancedTomcatAtomikosBeanFactory cannot recognize AtomikosDataSourceBean object.
-        	
-        	When using Spring based data source configurations (see /conf/girf-arendus-atomikos/adit-datasource.xml)
-        	use the default scope, i.e. "compile".
-        -->
-        <atomikos.dependency.scope>provided</atomikos.dependency.scope>
-        
-        <!--
-        	When deploying to an external Tomcat instance use the "provided" scope.
-        	The related PostgrSQL JDBC driver of course must be present in the TOMCAT_HOME/lib directory.
-        -->
-        <postgresql.dependency.scope>provided</postgresql.dependency.scope>
-        
-        <!--
-        	NB! This is meant for RIA administrators.
-        	The following directory will contain the required JAR dependencies that must be put inside TOMCAT_HOME/lib directory.
-         -->
-        <ria.jar.dependencies.directory>${project.build.directory}/tomcat_lib</ria.jar.dependencies.directory>
-        
-        <digidoc.tmp.dir>C:\\Users\\lisa\\TMP</digidoc.tmp.dir>
-        <!-- Edit this to match your destination environment -->
-        <!--<resourceDir>ria-dev-weblogic</resourceDir>-->
-        <!--<resourceDir>ria-test-weblogic</resourceDir>-->
-        <!--<resourceDir>ria-live-weblogic</resourceDir>-->
-        <!-- <resourceDir>dev-dev-weblogic</resourceDir> -->
-        <!-- <resourceDir>conf/girf-arendus</resourceDir> -->
-    </properties>
+	<properties>
+		<file.encoding>UTF-8</file.encoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-    <dependencies>
-        <dependency>
-            <groupId>ee.webmedia</groupId>
-            <artifactId>xtee-server</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/xtee-server-1.0-RC1.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>ee.webmedia</groupId>
-            <artifactId>xtee-client</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/xtee-client-1.0-RC1.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>ee.ria</groupId>
-            <artifactId>teavituskalender-types</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/teavituskalender-types.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>ee.ria</groupId>
-            <artifactId>riigiportaal-types</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/riigiportaal-types.jar</systemPath>
-        </dependency>
+		<spring.version>4.0.9.RELEASE</spring.version>
+		<postgresql.version>9.4.1212.jre7</postgresql.version>
+		<hibernate.version>3.6.10.Final</hibernate.version>
+		<atomikos.version>4.0.3</atomikos.version>
 
-        <!-- Spring -->
+		<!-- NB! For database settings in context.xml placed inside Tomcat's /conf 
+			directory use provided scope and the related transactions-jdbc-<version>.jar 
+			file must be present in Tomcat's /lib directory. This will prevent an issue 
+			when EnhancedTomcatAtomikosBeanFactory cannot recognize AtomikosDataSourceBean 
+			object. When using Spring based data source configurations (see /conf/girf-arendus-atomikos/adit-datasource.xml) 
+			use the default scope, i.e. "compile". -->
+		<atomikos.dependency.scope>provided</atomikos.dependency.scope>
+
+		<!-- When deploying to an external Tomcat instance use the "provided" scope. 
+			The related PostgrSQL JDBC driver of course must be present in the TOMCAT_HOME/lib 
+			directory. -->
+		<postgresql.dependency.scope>provided</postgresql.dependency.scope>
+
+		<!-- NB! This is meant for RIA administrators. The following directory 
+			will contain the required JAR dependencies that must be put inside TOMCAT_HOME/lib 
+			directory. -->
+		<ria.jar.dependencies.directory>${project.build.directory}/tomcat_lib</ria.jar.dependencies.directory>
+
+		<digidoc.tmp.dir>C:\\Users\\lisa\\TMP</digidoc.tmp.dir>
+		<!-- Edit this to match your destination environment -->
+		<!--<resourceDir>ria-dev-weblogic</resourceDir> -->
+		<!--<resourceDir>ria-test-weblogic</resourceDir> -->
+		<!--<resourceDir>ria-live-weblogic</resourceDir> -->
+		<!-- <resourceDir>dev-dev-weblogic</resourceDir> -->
+		<!-- <resourceDir>conf/girf-arendus</resourceDir> -->
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>ee.webmedia</groupId>
+			<artifactId>xtee-server</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/xtee-server-1.0-RC1.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>ee.webmedia</groupId>
+			<artifactId>xtee-client</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/xtee-client-1.0-RC1.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>ee.ria</groupId>
+			<artifactId>teavituskalender-types</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/teavituskalender-types.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>ee.ria</groupId>
+			<artifactId>riigiportaal-types</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/riigiportaal-types.jar</systemPath>
+		</dependency>
+
+		<!-- Spring -->
 		<dependency>
 			<groupId>org.springframework.ws</groupId>
 			<artifactId>spring-ws-core</artifactId>
@@ -101,84 +103,99 @@
 			<version>${spring.version}</version>
 		</dependency>
 		<dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-            <version>${spring.version}</version>
-            <scope>test</scope>
-        </dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${spring.version}</version>
+			<scope>test</scope>
+		</dependency>
 
-        <!-- Castor -->
-        <dependency>
-            <groupId>org.castor</groupId>
-            <artifactId>castor</artifactId>
-            <version>1.3.1</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/castor-1.3.1.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>org.castor</groupId>
-            <artifactId>core</artifactId>
-            <version>1.3.1</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/castor-1.3.1-core.jar</systemPath>
-        </dependency>
+		<!-- Castor -->
+		<dependency>
+			<groupId>org.castor</groupId>
+			<artifactId>castor</artifactId>
+			<version>1.3.1</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/castor-1.3.1.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>org.castor</groupId>
+			<artifactId>core</artifactId>
+			<version>1.3.1</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/castor-1.3.1-core.jar</systemPath>
+		</dependency>
 
 
-        <!-- WSDL -->
-        <dependency>
-            <groupId>java</groupId>
-            <artifactId>wsdl4j</artifactId>
-            <version>1.6.1</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/wsdl4j-1.6.1.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>java</groupId>
-            <artifactId>wsdl4j-qname</artifactId>
-            <version>1.6.1</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/wsdl4j-qname-1.6.1.jar</systemPath>
-        </dependency>
+		<!-- WSDL -->
+		<dependency>
+			<groupId>java</groupId>
+			<artifactId>wsdl4j</artifactId>
+			<version>1.6.1</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/wsdl4j-1.6.1.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>java</groupId>
+			<artifactId>wsdl4j-qname</artifactId>
+			<version>1.6.1</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/wsdl4j-qname-1.6.1.jar</systemPath>
+		</dependency>
 
-        <!-- Logging -->
-        <dependency>
-            <groupId>org.apache</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.16</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/log4j-1.2.16.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>org.apache</groupId>
-            <artifactId>log4j.nagios</artifactId>
-            <version>1.5.1</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/NagiosAppender-1.5.1.jar</systemPath>
-        </dependency>
-        <!-- <dependency>
-            <groupId>org.apache</groupId>
-            <artifactId>commons-logging</artifactId>
-            <version>1.1.1</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/commons-logging-1.1.1.jar</systemPath>
-        </dependency> -->
+		<!-- Logging -->
+		<dependency>
+			<groupId>org.apache</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.16</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/log4j-1.2.16.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>org.apache</groupId>
+			<artifactId>log4j.nagios</artifactId>
+			<version>1.5.1</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/NagiosAppender-1.5.1.jar</systemPath>
+		</dependency>
+		<!-- <dependency> <groupId>org.apache</groupId> <artifactId>commons-logging</artifactId> 
+			<version>1.1.1</version> <scope>system</scope> <systemPath>${basedir}/lib/commons-logging-1.1.1.jar</systemPath> 
+			</dependency> -->
 
-        
-        <!-- Hibernate -->
-        <dependency>
-		    <groupId>org.hibernate</groupId>
-		    <artifactId>hibernate-entitymanager</artifactId>
-		    <version>${hibernate.version}</version>
+		<dependency>
+			<groupId>org.apache</groupId>
+			<artifactId>log4j.nagios</artifactId>
+			<version>1.5.1</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/NagiosAppender-1.5.1.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>org.apache</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.1.1</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/commons-logging-1.1.1.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.22</version>
+		</dependency>
+
+		<!-- Hibernate -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-entitymanager</artifactId>
+			<version>${hibernate.version}</version>
 		</dependency>
 
 		<dependency>
-		    <groupId>org.postgresql</groupId>
-		    <artifactId>postgresql</artifactId>
-		    <version>${postgresql.version}</version>
-		    <scope>${postgresql.dependency.scope}</scope>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>${postgresql.version}</version>
+			<scope>${postgresql.dependency.scope}</scope>
 		</dependency>
-        
-        <!-- Atomikos -->
+
+		<!-- Atomikos -->
 		<dependency>
 			<groupId>com.atomikos</groupId>
 			<artifactId>transactions-jta</artifactId>
@@ -201,7 +218,8 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		<!-- This transactions-jms dependency is required ONLY for RIA's deploy process -->
+		<!-- This transactions-jms dependency is required ONLY for RIA's deploy 
+			process -->
 		<dependency>
 			<groupId>com.atomikos</groupId>
 			<artifactId>transactions-jms</artifactId>
@@ -209,425 +227,514 @@
 			<scope>provided</scope>
 		</dependency>
 
-        <!-- Codec -->
-        <!-- <dependency>
-            <groupId>commons</groupId>
-            <artifactId>codec</artifactId>
-            <version>1.6</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/commons-codec-1.6.jar</systemPath>
-        </dependency> -->
+		<!-- Codec -->
+		<!-- <dependency> <groupId>commons</groupId> <artifactId>codec</artifactId> 
+			<version>1.6</version> <scope>system</scope> <systemPath>${basedir}/lib/commons-codec-1.6.jar</systemPath> 
+			</dependency> -->
 
-        <dependency>
-            <groupId>xerces</groupId>
-            <artifactId>impl</artifactId>
-            <version>2.9.1</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/xercesImpl-2.9.1.jar</systemPath>
-        </dependency>
-
-        <dependency>
-            <groupId>xml</groupId>
-            <artifactId>apis</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/xml-apis.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>xmlbeans</groupId>
-            <artifactId>qname</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/xmlbeans-qname.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>xmlParser</groupId>
-            <artifactId>apis</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/xmlParserAPIs.jar</systemPath>
-        </dependency>
-        <!-- <dependency>
-            <groupId>xml</groupId>
-            <artifactId>sec</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/xmlsec.jar</systemPath>
-        </dependency> -->
-        <dependency>
-            <groupId>xml</groupId>
-            <artifactId>tinyxmlcanonicalizer</artifactId>
-            <version>0.9.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/tinyxmlcanonicalizer-0.9.0.jar</systemPath>
-        </dependency>
-        
-        <!-- XmlBeans -->
-        <dependency>
-            <groupId>org.apache</groupId>
-            <artifactId>XMLBeans</artifactId>
-            <version>2.4.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/xbean.jar</systemPath>
-        </dependency>
-
-        <!-- Quartz -->
-        <dependency>
-            <groupId>org.quartz</groupId>
-            <artifactId>scheduler</artifactId>
-            <version>1.8.3</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/quartz-1.8.3.jar</systemPath>
-        </dependency>
-
-        <!-- DVK-API -->
-        <dependency>
-            <groupId>dvk</groupId>
-            <artifactId>api</artifactId>
-            <version>1.0.14</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/dvk-api-1.0.14.jar</systemPath>
-        </dependency>
-
-        <!-- FOP -->
-        <dependency>
-            <groupId>org.apache</groupId>
-            <artifactId>fop</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/fop.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>xmlgraphics</groupId>
-            <artifactId>commons</artifactId>
-            <version>1.4</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/xmlgraphics-commons-1.4.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>org.apache</groupId>
-            <artifactId>avalon-framework</artifactId>
-            <version>4.2.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/avalon-framework-4.2.0.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>org.apache</groupId>
-            <artifactId>batik</artifactId>
-            <version>1.7</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/batik-all-1.7.jar</systemPath>
-        </dependency>
-
-        <dependency>
-            <groupId>java</groupId>
-            <artifactId>ee</artifactId>
-            <version>1.3.1</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/j2ee.jar</systemPath>
-        </dependency>
-
-        <!-- SAAJ 1.3.2 -->
-        <dependency>
-            <groupId>com.sun</groupId>
-            <artifactId>saaj-api</artifactId>
-            <version>1.3.2</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/saaj-api.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>com.sun</groupId>
-            <artifactId>saaj-impl</artifactId>
-            <version>1.3.2</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/saaj-impl.jar</systemPath>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.3.2</version>
-        </dependency>
-
-        <!-- Testing -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.6</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>commons-dbcp</groupId>
-            <artifactId>commons-dbcp</artifactId>
-            <version>1.2.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>1.9.5</version>
-        </dependency>
-        <dependency>
-            <groupId>pl.pragmatists</groupId>
-            <artifactId>JUnitParams</artifactId>
-            <version>1.0.2</version>
-            <scope>test</scope>
-        </dependency>
-        <!-- AOP dependency -->
-        <dependency>
-            <groupId>cglib</groupId>
-            <artifactId>cglib</artifactId>
-            <version>2.2</version>
-            <scope>test</scope>
-        </dependency>
-
-        <!--       
-        <dependency>
-           <groupId>ee.sk.digidoc</groupId>
-           <artifactId>JDCerts</artifactId>
-           <version>1.0</version>
-           <scope>system</scope>
-           <systemPath>${basedir}/lib/jdcerts.jar</systemPath>
+		<dependency>
+			<groupId>commons</groupId>
+			<artifactId>codec</artifactId>
+			<version>1.6</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/commons-codec-1.6.jar</systemPath>
 		</dependency>
-		-->
 
-         <!-- DigiDoc4j dependencies -->
-        <dependency>
-            <groupId>org.digidoc4j</groupId>
-            <artifactId>digidoc4j</artifactId>
-            <version>1.0.5</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.digidoc4j.dss</groupId>
-                    <artifactId>dss-xades</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.digidoc4j.dss</groupId>
-            <artifactId>dss-xades</artifactId>
-            <version>dss-xades-4.7.RC2.d4j.1</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/dss-xades-4.7.RC2.d4j.1.jar</systemPath>
-        </dependency>
-        <dependency>
+		<!-- DigiDoc -->
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>BouncyCastle</artifactId>
+			<version>1.5</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/bcprov-jdk15on-148.jar</systemPath>
+		</dependency>
+		<!-- DigiDoc -->
+		<dependency>
+			<groupId>ee.sk.digidoc</groupId>
+			<artifactId>DigiDocLib</artifactId>
+			<version>3.9.0-726</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/jdigidoc-3.9.0-726.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<groupId>xerces</groupId>
+			<artifactId>impl</artifactId>
+			<version>2.9.1</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/xercesImpl-2.9.1.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<groupId>xml</groupId>
+			<artifactId>apis</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/xml-apis.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>xmlbeans</groupId>
+			<artifactId>qname</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/xmlbeans-qname.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>xmlParser</groupId>
+			<artifactId>apis</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/xmlParserAPIs.jar</systemPath>
+		</dependency>
+
+		<!-- <dependency> <groupId>xml</groupId> <artifactId>sec</artifactId> <version>1.0</version> 
+			<scope>system</scope> <systemPath>${basedir}/lib/xmlsec.jar</systemPath> 
+			</dependency> -->
+
+		<dependency>
+			<groupId>xml</groupId>
+			<artifactId>sec</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/xmlsec.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<groupId>xml</groupId>
+			<artifactId>tinyxmlcanonicalizer</artifactId>
+			<version>0.9.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/tinyxmlcanonicalizer-0.9.0.jar</systemPath>
+		</dependency>
+
+		<!-- XmlBeans -->
+		<dependency>
+			<groupId>org.apache</groupId>
+			<artifactId>XMLBeans</artifactId>
+			<version>2.4.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/xbean.jar</systemPath>
+		</dependency>
+
+		<!-- Quartz -->
+		<dependency>
+			<groupId>org.quartz</groupId>
+			<artifactId>scheduler</artifactId>
+			<version>1.8.3</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/quartz-1.8.3.jar</systemPath>
+		</dependency>
+
+		<!-- DVK-API -->
+		<dependency>
+			<groupId>dvk</groupId>
+			<artifactId>api</artifactId>
+			<version>1.0.14</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/dvk-api-1.0.14.jar</systemPath>
+		</dependency>
+
+		<!-- DVK-API <dependency> <groupId>dvk</groupId> <artifactId>api</artifactId> 
+			<version>1.0.14</version> <scope>system</scope> <systemPath>${basedir}/lib/dvk-api-1.0.14.jar</systemPath> 
+			</dependency> -->
+
+		<dependency>
+			<groupId>ee.ria.dhx</groupId>
+			<artifactId>dhx-adapter-ws</artifactId>
+			<version>1.0.0</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>org.slf4j</artifactId>
+					<groupId>slf4j-api</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<!-- FOP -->
+		<dependency>
+			<groupId>org.apache</groupId>
+			<artifactId>fop</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/fop.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>xmlgraphics</groupId>
+			<artifactId>commons</artifactId>
+			<version>1.4</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/xmlgraphics-commons-1.4.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>org.apache</groupId>
+			<artifactId>avalon-framework</artifactId>
+			<version>4.2.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/avalon-framework-4.2.0.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>org.apache</groupId>
+			<artifactId>batik</artifactId>
+			<version>1.7</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/batik-all-1.7.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>1.3.1</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/commons-io-1.3.1.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<groupId>java</groupId>
+			<artifactId>ee</artifactId>
+			<version>1.3.1</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/j2ee.jar</systemPath>
+		</dependency>
+
+		<!-- SAAJ 1.3.2 -->
+		<dependency>
+			<groupId>com.sun</groupId>
+			<artifactId>saaj-api</artifactId>
+			<version>1.3.2</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/saaj-api.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>com.sun</groupId>
+			<artifactId>saaj-impl</artifactId>
+			<version>1.3.2</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/saaj-impl.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+
+			<artifactId>commons-compress</artifactId>
+			<version>1.3</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/commons-compress-1.3.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.3.2</version>
+		</dependency>
+
+		<!-- Testing -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.6</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-dbcp</groupId>
+			<artifactId>commons-dbcp</artifactId>
+			<version>1.2.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>1.9.5</version>
+		</dependency>
+		<dependency>
+			<groupId>pl.pragmatists</groupId>
+			<artifactId>JUnitParams</artifactId>
+			<version>1.0.2</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- AOP dependency -->
+		<dependency>
+			<groupId>cglib</groupId>
+			<artifactId>cglib</artifactId>
+			<version>2.2</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- <dependency> <groupId>ee.sk.digidoc</groupId> <artifactId>JDCerts</artifactId> 
+			<version>1.0</version> <scope>system</scope> <systemPath>${basedir}/lib/jdcerts.jar</systemPath> 
+			</dependency> -->
+
+		<!-- DigiDoc4j dependencies -->
+		<dependency>
+			<groupId>org.digidoc4j</groupId>
+			<artifactId>digidoc4j</artifactId>
+			<version>1.0.5</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.digidoc4j.dss</groupId>
+					<artifactId>dss-xades</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.digidoc4j.dss</groupId>
+			<artifactId>dss-xades</artifactId>
+			<version>dss-xades-4.7.RC2.d4j.1</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/dss-xades-4.7.RC2.d4j.1.jar</systemPath>
+		</dependency>
+		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>1.7.7</version>
 		</dependency>
-         
-    </dependencies>
 
-    <build>
-        <finalName>adit</finalName>
-        <sourceDirectory>src/main/java</sourceDirectory>
-        <testSourceDirectory>src/test/java</testSourceDirectory>
-        <testOutputDirectory>target/test-classes</testOutputDirectory>
-        <testResources>
-            <testResource>
-                <directory>src/main/resources</directory>
-                <filtering>false</filtering>
-            </testResource>
-            <testResource>
-                <directory>src/test/resources</directory>
-                <includes>
-                    <include>integration-tests.xml</include>
-                    <include>jdigidoc.cfg</include>
-                </includes>
-                <filtering>true</filtering>
-            </testResource>
-            <testResource>
-                <directory>src/test/resources</directory>
-                <excludes>
-                    <exclude>integration-tests.xml</exclude>
-                    <exclude>jdigidoc.cfg</exclude>
-                </excludes>
-                <filtering>false</filtering>
-            </testResource>
-        </testResources>
-        <resources>
-            <resource>
-                <directory>src/main/resources/castor-mapping</directory>
-                <filtering>false</filtering>
-                <targetPath>../adit/WEB-INF/classes/castor-mapping</targetPath>
-            </resource>
-            <resource>
-                <directory>src/main/resources/dvkapi</directory>
-                <filtering>false</filtering>
-                <targetPath>../adit/WEB-INF/classes/dvkapi</targetPath>
-            </resource>
-            <resource>
-                <directory>src/main/resources/hbm</directory>
-                <filtering>false</filtering>
-                <targetPath>../adit/WEB-INF/classes/hbm</targetPath>
-            </resource>
-            <resource>
-                <directory>src/main/resources/${resourceDir}</directory>
-                <filtering>false</filtering>
-                <targetPath>../adit/WEB-INF/classes</targetPath>
-                <includes>
-                	<include>jta.properties</include>
-                </includes>
-            </resource>
-            <!-- Include all the environment specific configuration files -->
-            <resource>
-                <directory>src/main/resources/${resourceDir}</directory>
-                <targetPath>../adit/WEB-INF/classes</targetPath>
-                <excludes>
-                    <exclude>adit-configuration.xml</exclude>
-                    <exclude>adit-datasource.xml</exclude>
-                </excludes>
-            </resource>
-            <resource>
-                <directory>src/main/resources/${resourceDir}</directory>
-                <targetPath>../adit/WEB-INF</targetPath>
-                <includes>
-                    <include>adit-configuration.xml</include>
-                    <include>adit-datasource.xml</include>
-                </includes>
-            </resource>
-            <!-- Include static resources -->
-            <resource>
-                <directory>src/main/resources</directory>
-                <targetPath>../adit/WEB-INF/classes</targetPath>
-                <includes>
-                    <include>adit-castor-mapping.xml</include>
-                    <include>DVKresponseMessage.xsl</include>
-                    <include>messages_en.properties</include>
-                    <include>messages_et.properties</include>
-                    <include>messages_ru.properties</include>
-                    <include>digidoc4j.yaml</include>
-                    <include>adit.wsdl</include>
-                </includes>
-            </resource>
-            <resource>
-                <directory>src/main/resources</directory>
-                <targetPath>../adit/wsdl</targetPath>
-                <includes>
-                    <include>adit_new_v1.wsdl</include>
-                    <include>adit_new_v2.wsdl</include>
-                </includes>
-            </resource>
-            <resource>
-                <directory>src/main/resources</directory>
-                <targetPath>../adit/WEB-INF</targetPath>
-                <includes>
-                    <include>adit.xsd</include>
-                    <include>adit-servlet.xml</include>
-                    <include>adit-monitor-servlet.xml</include>
-                    <include>adit-application.xml</include>
-                    <include>adit-dao.xml</include>
-                    <!--<include>adit-datasource.xml</include>-->
-                    <include>adit-jobs.xml</include>
-                    <include>adit-services.xml</include>
-                    <include>adit-endpoints.xml</include>
-                </includes>
-            </resource>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>5.3.4.Final</version>
+		</dependency>
+		<!-- <dependency> <groupId>ee.sk.digidoc</groupId> <artifactId>JDCerts</artifactId> 
+			<version>1.0</version> <scope>system</scope> <systemPath>${basedir}/lib/jdcerts.jar</systemPath> 
+			</dependency> -->
+	</dependencies>
 
-            <resource>
-                <directory>${basedir}/sql</directory>
-                <filtering>false</filtering>
-                <targetPath>../adit/sql</targetPath>
-            </resource>
-            <resource>
-                <directory>${basedir}/lib</directory>
-                <includes>
-                    <include>*</include>
-                </includes>
-                <excludes>
-                    <exclude>atomikos-integration-extension-3.7.2.jar</exclude>
-                </excludes>
-                <!--
-                <excludes>
-                    <exclude>saaj-api.jar</exclude>
-                    <exclude>saaj-impl.jar</exclude>
-                </excludes>
-                -->
-                <targetPath>../adit/WEB-INF/lib</targetPath>
-            </resource>
-            
-            <!-- Copying atomikos-integration-extension for RIA administrators -->
-            <resource>
-                <directory>${basedir}/lib</directory>
-                <includes>
-                    <include>atomikos-integration-extension-3.7.2.jar</include>
-                </includes>
-                <targetPath>${ria.jar.dependencies.directory}</targetPath>
-            </resource>
-            
-        </resources>
-        <plugins>
-            <plugin>
-                <groupId>com.google.code.maven-replacer-plugin</groupId>
-                <artifactId>maven-replacer-plugin</artifactId>
-                <version>1.3.9</version>
-                <executions>
-                    <execution>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>replace</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <includes>
-                        <include>target/adit/WEB-INF/classes/adit-castor-mapping.xml</include>
-                        <include>target/adit/WEB-INF/classes/adit.wsdl</include>
-                        <include>target/adit/WEB-INF/adit-configuration.xml</include>
-                        <include>target/adit/WEB-INF/adit-endpoints.xml</include>
-                        <include>target/adit/WEB-INF/adit.xsd</include>
-                        <include>target/adit/wsdl/adit_new_v1.wsdl</include>
-                        <include>target/adit/wsdl/adit_new_v2.wsdl</include>
-                    </includes>
-                    <token>@PRODUCER_NAME@</token>
-                    <value>${producerName}</value>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>2.6</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
-                <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
-                    <encoding>UTF-8</encoding>
-                </configuration>
-            </plugin>
+	<build>
+		<finalName>adit</finalName>
+		<sourceDirectory>src/main/java</sourceDirectory>
+		<testSourceDirectory>src/test/java</testSourceDirectory>
+		<testOutputDirectory>target/test-classes</testOutputDirectory>
+		<testResources>
+			<testResource>
+				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
+			</testResource>
+			<testResource>
+				<directory>src/test/resources</directory>
+				<includes>
+					<include>integration-tests.xml</include>
+					<include>jdigidoc.cfg</include>
+				</includes>
+				<filtering>true</filtering>
+			</testResource>
+			<testResource>
+				<directory>src/test/resources</directory>
+				<excludes>
+					<exclude>integration-tests.xml</exclude>
+					<exclude>jdigidoc.cfg</exclude>
+				</excludes>
+				<filtering>false</filtering>
+			</testResource>
+		</testResources>
+		<resources>
+			<resource>
+				<directory>src/main/resources/castor-mapping</directory>
+				<filtering>false</filtering>
+				<targetPath>../adit/WEB-INF/classes/castor-mapping</targetPath>
+			</resource>
+			<resource>
+				<directory>src/main/resources/dhx</directory>
+				<filtering>false</filtering>
+				<targetPath>../adit/WEB-INF/classes/dhx</targetPath>
+			</resource>
+			<resource>
+				<directory>src/main/resources/dvkapi</directory>
+				<filtering>false</filtering>
+				<targetPath>../adit/WEB-INF/classes/dvkapi</targetPath>
+			</resource>
+			<resource>
+				<directory>src/main/resources/hbm</directory>
+				<filtering>false</filtering>
+				<targetPath>../adit/WEB-INF/classes/hbm</targetPath>
+			</resource>
+			<resource>
+				<directory>src/main/resources/${resourceDir}</directory>
+				<filtering>false</filtering>
+				<targetPath>../adit/WEB-INF/classes</targetPath>
+				<includes>
+					<include>jta.properties</include>
+				</includes>
+			</resource>
+			<!-- Include all the environment specific configuration files -->
+			<resource>
+				<directory>src/main/resources/${resourceDir}</directory>
+				<targetPath>../adit/WEB-INF/classes</targetPath>
+				<excludes>
+					<exclude>adit-configuration.xml</exclude>
+					<exclude>adit-datasource.xml</exclude>
+				</excludes>
+			</resource>
+			<resource>
+				<directory>src/main/resources/${resourceDir}</directory>
+				<targetPath>../adit/WEB-INF</targetPath>
+				<includes>
+					<include>adit-configuration.xml</include>
+					<include>adit-datasource.xml</include>
+					<include>dhx-application.properties</include>
+				</includes>
+			</resource>
+			<!-- Include static resources -->
+			<resource>
+				<directory>src/main/resources</directory>
+				<targetPath>../adit/WEB-INF/classes</targetPath>
+				<includes>
+					<include>adit-castor-mapping.xml</include>
+					<include>DVKresponseMessage.xsl</include>
+					<include>messages_en.properties</include>
+					<include>messages_et.properties</include>
+					<include>messages_ru.properties</include>
+					<include>digidoc4j.yaml</include>
+					<include>adit.wsdl</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<targetPath>../adit/wsdl</targetPath>
+				<includes>
+					<include>adit_new_v1.wsdl</include>
+					<include>adit_new_v2.wsdl</include>
+					<include>adit_new_v3.wsdl</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<targetPath>../adit/WEB-INF</targetPath>
+				<includes>
+					<include>adit.xsd</include>
+					<include>adit-servlet.xml</include>
+					<include>adit-monitor-servlet.xml</include>
+					<include>adit-application.xml</include>
+					<include>adit-dao.xml</include>
+					<!--<include>adit-datasource.xml</include> -->
+					<include>adit-jobs.xml</include>
+					<include>adit-services.xml</include>
+					<include>adit-endpoints.xml</include>
+					<include>adit-dhx.xml</include>
+					<include>adit-dhx-servlet.xml</include>
+				</includes>
+			</resource>
+
+			<resource>
+				<directory>${basedir}/sql</directory>
+				<filtering>false</filtering>
+				<targetPath>../adit/sql</targetPath>
+			</resource>
+			<resource>
+				<directory>${basedir}/lib</directory>
+				<includes>
+					<include>*</include>
+				</includes>
+				<excludes>
+					<exclude>atomikos-integration-extension-3.7.2.jar</exclude>
+				</excludes>
+				<!-- <excludes> <exclude>saaj-api.jar</exclude> <exclude>saaj-impl.jar</exclude> 
+					</excludes> -->
+				<targetPath>../adit/WEB-INF/lib</targetPath>
+			</resource>
+
+			<!-- Copying atomikos-integration-extension for RIA administrators -->
+			<resource>
+				<directory>${basedir}/lib</directory>
+				<includes>
+					<include>atomikos-integration-extension-3.7.2.jar</include>
+				</includes>
+				<targetPath>${ria.jar.dependencies.directory}</targetPath>
+			</resource>
+
+		</resources>
+		<plugins>
+			<plugin>
+				<groupId>com.google.code.maven-replacer-plugin</groupId>
+				<artifactId>maven-replacer-plugin</artifactId>
+				<version>1.3.9</version>
+				<executions>
+					<execution>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>replace</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<includes>
+						<include>target/adit/WEB-INF/classes/adit-castor-mapping.xml</include>
+						<include>target/adit/WEB-INF/classes/adit.wsdl</include>
+						<include>target/adit/WEB-INF/adit-configuration.xml</include>
+						<include>target/adit/WEB-INF/adit-endpoints.xml</include>
+						<include>target/adit/WEB-INF/adit.xsd</include>
+						<include>target/adit/wsdl/adit_new_v1.wsdl</include>
+						<include>target/adit/wsdl/adit_new_v2.wsdl</include>
+						<include>target/adit/wsdl/adit_new_v3.wsdl</include>
+					</includes>
+					<token>@PRODUCER_NAME@</token>
+					<value>${producerName}</value>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.6</version>
+			</plugin>
+			<!-- <plugin> <artifactId>maven-war-plugin</artifactId> <version>2.1-beta-1</version> 
+				</plugin> -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.tomcat.maven</groupId>
 				<artifactId>tomcat7-maven-plugin</artifactId>
 				<version>2.2</version>
+<!-- 				<groupId>org.codehaus.mojo</groupId> -->
+<!-- 				<artifactId>tomcat-maven-plugin</artifactId> -->
+
 				<configuration>
 					<server>tomcat6</server>
 					<warFile>${basedir}/target/adit.war</warFile>
+					<systemProperties>
+						<org.apache.catalina.startup.ContextConfig.jarsToSkip>
+							bcprov*.jar
+						</org.apache.catalina.startup.ContextConfig.jarsToSkip>
+					</systemProperties>
 				</configuration>
 			</plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.17</version>
-                <configuration>
-                    <encoding>UTF-8</encoding>
-                    <includes>
-                        <include>**/integrationtests/*_Integration.java</include>
-                    </includes>
-                    <!--<debugForkedProcess>true</debugForkedProcess>-->
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>integration-test</goal>
-                            <goal>verify</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            
-            <!-- Preparing JAR dependencies for RIA administrators -->
-            <plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>2.17</version>
+				<configuration>
+					<encoding>UTF-8</encoding>
+					<includes>
+						<include>**/integrationtests/*_Integration.java</include>
+					</includes>
+					<!--<debugForkedProcess>true</debugForkedProcess> -->
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+<!-- 			<plugin> -->
+<!-- 				<groupId>org.apache.tomcat.maven</groupId> -->
+<!-- 				<artifactId>tomcat7-maven-plugin</artifactId> -->
+<!-- 				<version>2.2</version> -->
+<!-- 				<configuration> -->
+<!-- 					<url>${tomcat.manager}</url> -->
+<!-- 					<username>${tomcat.manager.username}</username> -->
+<!-- 					<password>${tomcat.manager.password}</password> -->
+<!-- 					<path>/adit</path> -->
+<!-- 				</configuration> -->
+<!-- 			</plugin> -->
+
+			<!-- Preparing JAR dependencies for RIA administrators -->
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
 				<executions>
@@ -643,25 +750,56 @@
 					</execution>
 				</executions>
 			</plugin>
-	    </plugins>
-	    </build>
+		</plugins>
+	</build>
 
-    <reporting>
-        <plugins>
+	<profiles>
+		<profile>
+			<id>adit-arendus-tomcat</id>
+			<activation>
+				<property>
+					<name>env</name>
+					<value>adit-arendus-tomcat</value>
+				</property>
+			</activation>
+			<properties>
+				<tomcat.manager>http://10.0.13.232:8080/manager/text</tomcat.manager>
+				<tomcat.manager.username>admin</tomcat.manager.username>
+				<tomcat.manager.password>admin</tomcat.manager.password>
+			</properties>
+		</profile>
+		<profile>
+			<id>adit-arendus-bpw</id>
+			<activation>
+				<property>
+					<name>env</name>
+					<value>adit-arendus-bpw</value>
+				</property>
+			</activation>
+			<properties>
+				<tomcat.manager>http://localhost:8085/manager/text</tomcat.manager>
+				<tomcat.manager.username>admin</tomcat.manager.username>
+				<tomcat.manager.password>admin</tomcat.manager.password>
+			</properties>
+		</profile>
+	</profiles>
 
-            <!-- CheckStyle -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>2.6</version>
-                <configuration>
-                    <configLocation>doc/adit_cs_checks.xml</configLocation>
-                    <encoding>UTF-8</encoding>
-                    <excludes>ee/adit/pojo/*,ee/adit/dao/pojo/*,ee/adit/pojo/notification/*</excludes>
-                </configuration>
-            </plugin>
+	<reporting>
+		<plugins>
 
-        </plugins>
-    </reporting>
+			<!-- CheckStyle -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<configLocation>doc/adit_cs_checks.xml</configLocation>
+					<encoding>UTF-8</encoding>
+					<excludes>ee/adit/pojo/*,ee/adit/dao/pojo/*,ee/adit/pojo/notification/*</excludes>
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</reporting>
 
 </project>

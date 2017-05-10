@@ -2,7 +2,7 @@ package ee.adit.util;
 
 import java.util.Iterator;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.client.WebServiceClientException;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
@@ -21,7 +21,7 @@ public class CustomClientInterceptor implements ClientInterceptor {
     /**
      * Log4J logger.
      */
-    private static Logger logger = Logger.getLogger(CustomClientInterceptor.class);
+    private static Logger logger = LogManager.getLogger(CustomClientInterceptor.class);
 
     /**
      * Temporary file address.

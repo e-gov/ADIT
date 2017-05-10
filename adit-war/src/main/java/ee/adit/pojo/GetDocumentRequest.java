@@ -50,6 +50,10 @@ public class GetDocumentRequest {
     private ArrayOfFileType fileTypes;
     @XmlElement(name = "dvk_id")
     private Long dvkId;
+    
+    @XmlElement(name = "dhx_receipt_id")
+    private String dhxReceiptId;
+
 
     /**
      * Gets the value of the documentId property.
@@ -137,5 +141,19 @@ public class GetDocumentRequest {
     public void setDvkId(Long value) {
         this.dvkId = value;
     }
+
+	/**
+	 * @return the dhxReceiptId
+	 */
+	public String getDhxReceiptId() {
+		return dhxReceiptId;
+	}
+
+	/**
+	 * @param dhxReceiptId the dhxReceiptId to set
+	 */
+	public void setDhxReceiptId(String dhxReceiptId) {
+		this.dhxReceiptId = dhxReceiptId;
+	}
 
 }

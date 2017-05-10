@@ -1,41 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mapping>
-    <class name="dvk.api.container.v2_1.ContainerVer2_1">
+    <class name="ee.adit.dhx.api.container.v2_1.ContainerVer2_1">
         <map-to xml="DecContainer" ns-uri="http://www.riik.ee/schemas/deccontainer/vers_2_1/" />
 
-        <field name="Transport" type="dvk.api.container.v2_1.Transport">
+        <field name="Transport" type="ee.adit.dhx.api.container.v2_1.Transport">
             <bind-xml name="Transport" />
         </field>
 
-        <field name="Initiator" type="dvk.api.container.v2_1.Initiator">
+        <field name="Initiator" type="ee.adit.dhx.api.container.v2_1.Initiator">
             <bind-xml name="Initiator" />
         </field>
 
-        <field name="RecordCreator" type="dvk.api.container.v2_1.RecordCreator">
+        <field name="RecordCreator" type="ee.adit.dhx.api.container.v2_1.RecordCreator">
             <bind-xml name="RecordCreator" />
         </field>
 
-        <field name="RecordSenderToDec" type="dvk.api.container.v2_1.RecordSenderToDec">
+        <field name="RecordSenderToDec" type="ee.adit.dhx.api.container.v2_1.RecordSenderToDec">
             <bind-xml name="RecordSenderToDec" />
         </field>
 
-        <field name="Recipient" type="dvk.api.container.v2_1.Recipient" collection="arraylist">
+        <field name="Recipient" type="ee.adit.dhx.api.container.v2_1.Recipient" collection="arraylist">
             <bind-xml name="Recipient" node="element" />
         </field>
 
-        <field name="RecordMetadata" type="dvk.api.container.v2_1.RecordMetadata">
+        <field name="RecordMetadata" type="ee.adit.dhx.api.container.v2_1.RecordMetadata">
             <bind-xml name="RecordMetadata" />
         </field>
 
-        <field name="Access" type="dvk.api.container.v2_1.Access">
+        <field name="Access" type="ee.adit.dhx.api.container.v2_1.Access">
             <bind-xml name="Access" />
         </field>
 
-        <field name="SignatureMetadata" type="dvk.api.container.v2_1.SignatureMetadata" collection="arraylist">
+        <field name="SignatureMetadata" type="ee.adit.dhx.api.container.v2_1.SignatureMetadata" collection="arraylist">
             <bind-xml name="SignatureMetadata" node="element" />
         </field>
 
-        <field name="File" type="dvk.api.container.v2_1.File" collection="arraylist">
+        <field name="File" type="ee.adit.dhx.api.container.v2_1.File" collection="arraylist">
             <bind-xml name="File" node="element" />
         </field>
 
@@ -43,24 +43,24 @@
             <bind-xml name="RecordTypeSpecificMetadata" node="element"/>
         </field>
 
-        <field name="DecMetadata" type="dvk.api.container.v2_1.DecMetadata">
+        <field name="DecMetadata" type="ee.adit.dhx.api.container.v2_1.DecMetadata">
             <bind-xml name="DecMetadata" />
         </field>
     </class>
 
-    <class name="dvk.api.container.v2_1.Transport">
+    <class name="ee.adit.dhx.api.container.v2_1.Transport">
         <map-to xml="Transport" ns-uri="http://www.riik.ee/schemas/deccontainer/vers_2_1/"/>
 
-        <field name="DecSender" type="dvk.api.container.v2_1.DecSender">
+        <field name="DecSender" type="ee.adit.dhx.api.container.v2_1.DecSender">
             <bind-xml name="DecSender" />
         </field>
 
-        <field name="DecRecipient" type="dvk.api.container.v2_1.DecRecipient" collection="arraylist">
+        <field name="DecRecipient" type="ee.adit.dhx.api.container.v2_1.DecRecipient" collection="arraylist">
             <bind-xml name="DecRecipient" node="element" />
         </field>
     </class>
 
-    <class name="dvk.api.container.v2_1.DecSender">
+    <class name="ee.adit.dhx.api.container.v2_1.DecSender">
         <map-to xml="DecSender" ns-uri="http://www.riik.ee/schemas/deccontainer/vers_2_1/"/>
 
         <field name="OrganisationCode" type="string">
@@ -76,7 +76,7 @@
         </field>
     </class>
 
-    <class name="dvk.api.container.v2_1.DecRecipient">
+    <class name="ee.adit.dhx.api.container.v2_1.DecRecipient">
         <map-to xml="DecRecipient" ns-uri="http://www.riik.ee/schemas/deccontainer/vers_2_1/"/>
 
         <field name="OrganisationCode" type="string">
@@ -92,7 +92,7 @@
         </field>
     </class>
 
-    <class name="dvk.api.container.v2_1.DecMetadata">
+    <class name="ee.adit.dhx.api.container.v2_1.DecMetadata">
         <map-to xml="DecMetadata" ns-uri="http://www.riik.ee/schemas/deccontainer/vers_2_1/"/>
 
         <field name="DecId" type="string">
@@ -108,7 +108,7 @@
         </field>
     </class>
 
-    <class name="dvk.api.container.v2_1.Initiator">
+    <class name="ee.adit.dhx.api.container.v2_1.Initiator">
         <map-to xml="Initiator" ns-uri="http://www.riik.ee/schemas/deccontainer/vers_2_1/"/>
 
         <field name="InitiatorRecordOriginalIdentifier" type="string">
@@ -119,20 +119,20 @@
             <bind-xml name="InitiatorRecordDate" node="element" />
         </field>
 
-        <field name="Organisation" type="dvk.api.container.v2_1.OrganisationType">
+        <field name="Organisation" type="ee.adit.dhx.api.container.v2_1.OrganisationType">
             <bind-xml name="Organisation" />
         </field>
 
-        <field name="Person" type="dvk.api.container.v2_1.PersonType">
+        <field name="Person" type="ee.adit.dhx.api.container.v2_1.PersonType">
             <bind-xml name="Person" />
         </field>
 
-        <field name="ContactData" type="dvk.api.container.v2_1.ContactDataType">
+        <field name="ContactData" type="ee.adit.dhx.api.container.v2_1.ContactDataType">
             <bind-xml name="ContactData" />
         </field>
     </class>
 
-    <class name="dvk.api.container.v2_1.OrganisationType">
+    <class name="ee.adit.dhx.api.container.v2_1.OrganisationType">
         <map-to xml="Organisation" ns-uri="http://www.riik.ee/schemas/deccontainer/vers_2_1/"/>
 
         <field name="Name" type="string">
@@ -156,7 +156,7 @@
         </field>
     </class>
 
-    <class name="dvk.api.container.v2_1.PersonType">
+    <class name="ee.adit.dhx.api.container.v2_1.PersonType">
         <map-to xml="Person" ns-uri="http://www.riik.ee/schemas/deccontainer/vers_2_1/"/>
 
         <field name="Name" type="string">
@@ -180,7 +180,7 @@
         </field>
     </class>
 
-    <class name="dvk.api.container.v2_1.ContactDataType">
+    <class name="ee.adit.dhx.api.container.v2_1.ContactDataType">
         <map-to xml="ContactData" ns-uri="http://www.riik.ee/schemas/deccontainer/vers_2_1/"/>
 
         <field name="Adit" type="boolean">
@@ -203,12 +203,12 @@
             <bind-xml name="MessagingAddress" node="element" />
         </field>
 
-        <field name="PostalAddress" type="dvk.api.container.v2_1.PostalAddressType">
+        <field name="PostalAddress" type="ee.adit.dhx.api.container.v2_1.PostalAddressType">
             <bind-xml name="PostalAddress" />
         </field>
     </class>
 
-    <class name="dvk.api.container.v2_1.PostalAddressType">
+    <class name="ee.adit.dhx.api.container.v2_1.PostalAddressType">
         <map-to xml="PostalAddress" ns-uri="http://www.riik.ee/schemas/deccontainer/vers_2_1/"/>
 
         <field name="Country" type="string">
@@ -248,44 +248,44 @@
             <bind-xml name="BuildingPartNumber" node="element" />
         </field>
 
-        <field name="PostalCode" type="string" handler="dvk.api.container.v2_1.PostalAddressTypePostalCodeHandler">
+        <field name="PostalCode" type="string" handler="ee.adit.dhx.api.container.v2_1.PostalAddressTypePostalCodeHandler">
             <bind-xml name="PostalCode" node="element" />
         </field>
     </class>
 
-    <class name="dvk.api.container.v2_1.RecordCreator">
+    <class name="ee.adit.dhx.api.container.v2_1.RecordCreator">
         <map-to xml="RecordCreator" ns-uri="http://www.riik.ee/schemas/deccontainer/vers_2_1/"/>
 
-        <field name="Organisation" type="dvk.api.container.v2_1.OrganisationType">
+        <field name="Organisation" type="ee.adit.dhx.api.container.v2_1.OrganisationType">
             <bind-xml name="Organisation" />
         </field>
 
-        <field name="Person" type="dvk.api.container.v2_1.PersonType">
+        <field name="Person" type="ee.adit.dhx.api.container.v2_1.PersonType">
             <bind-xml name="Person" />
         </field>
 
-        <field name="ContactData" type="dvk.api.container.v2_1.ContactDataType">
+        <field name="ContactData" type="ee.adit.dhx.api.container.v2_1.ContactDataType">
             <bind-xml name="ContactData" />
         </field>
     </class>
 
-    <class name="dvk.api.container.v2_1.RecordSenderToDec">
+    <class name="ee.adit.dhx.api.container.v2_1.RecordSenderToDec">
         <map-to xml="RecordSenderToDec" ns-uri="http://www.riik.ee/schemas/deccontainer/vers_2_1/"/>
 
-        <field name="Organisation" type="dvk.api.container.v2_1.OrganisationType">
+        <field name="Organisation" type="ee.adit.dhx.api.container.v2_1.OrganisationType">
             <bind-xml name="Organisation" />
         </field>
 
-        <field name="Person" type="dvk.api.container.v2_1.PersonType">
+        <field name="Person" type="ee.adit.dhx.api.container.v2_1.PersonType">
             <bind-xml name="Person" />
         </field>
 
-        <field name="ContactData" type="dvk.api.container.v2_1.ContactDataType">
+        <field name="ContactData" type="ee.adit.dhx.api.container.v2_1.ContactDataType">
             <bind-xml name="ContactData" />
         </field>
     </class>
 
-    <class name="dvk.api.container.v2_1.Recipient">
+    <class name="ee.adit.dhx.api.container.v2_1.Recipient">
         <map-to xml="Recipient" ns-uri="http://www.riik.ee/schemas/deccontainer/vers_2_1/"/>
 
         <field name="RecipientRecordGuid" type="string">
@@ -300,20 +300,20 @@
             <bind-xml name="MessageForRecipient" node="element" />
         </field>
 
-        <field name="Organisation" type="dvk.api.container.v2_1.OrganisationType">
+        <field name="Organisation" type="ee.adit.dhx.api.container.v2_1.OrganisationType">
             <bind-xml name="Organisation" />
         </field>
 
-        <field name="Person" type="dvk.api.container.v2_1.PersonType">
+        <field name="Person" type="ee.adit.dhx.api.container.v2_1.PersonType">
             <bind-xml name="Person" />
         </field>
 
-        <field name="ContactData" type="dvk.api.container.v2_1.ContactDataType">
+        <field name="ContactData" type="ee.adit.dhx.api.container.v2_1.ContactDataType">
             <bind-xml name="ContactData" />
         </field>
     </class>
 
-    <class name="dvk.api.container.v2_1.RecordMetadata">
+    <class name="ee.adit.dhx.api.container.v2_1.RecordMetadata">
         <map-to xml="RecordMetadata" ns-uri="http://www.riik.ee/schemas/deccontainer/vers_2_1/"/>
 
         <field name="RecordGuid" type="string">
@@ -344,35 +344,35 @@
             <bind-xml name="RecordAbstract" node="element" />
         </field>
 
-        <field name="ReplyDueDate" type="string" handler="dvk.api.container.v2_1.RecordMetadataReplyDueDateHandler">
+        <field name="ReplyDueDate" type="string" handler="ee.adit.dhx.api.container.v2_1.RecordMetadataReplyDueDateHandler">
             <bind-xml name="ReplyDueDate" node="element" />
         </field>
     </class>
 
-    <class name="dvk.api.container.v2_1.Access">
+    <class name="ee.adit.dhx.api.container.v2_1.Access">
         <map-to xml="Access" ns-uri="http://www.riik.ee/schemas/deccontainer/vers_2_1/"/>
 
-        <field name="AccessConditionsCode" type="string" handler="dvk.api.container.v2_1.AccessConditionsCodeHandler">
+        <field name="AccessConditionsCode" type="string" handler="ee.adit.dhx.api.container.v2_1.AccessConditionsCodeHandler">
             <bind-xml name="AccessConditionsCode" node="element" />
         </field>
 
-        <field name="AccessRestriction" type="dvk.api.container.v2_1.AccessRestriction" collection="arraylist">
+        <field name="AccessRestriction" type="ee.adit.dhx.api.container.v2_1.AccessRestriction" collection="arraylist">
             <bind-xml name="AccessRestriction" node="element" />
         </field>
     </class>
 
-    <class name="dvk.api.container.v2_1.AccessRestriction">
+    <class name="ee.adit.dhx.api.container.v2_1.AccessRestriction">
         <map-to xml="AccessRestriction" ns-uri="http://www.riik.ee/schemas/deccontainer/vers_2_1/"/>
 
         <field name="RestrictionIdentifier" type="string" >
             <bind-xml name="RestrictionIdentifier" node="element" />
         </field>
 
-        <field name="RestrictionBeginDate" type="string" handler="dvk.api.container.v2_1.AccessRestrictionBeginDateHandler">
+        <field name="RestrictionBeginDate" type="string" handler="ee.adit.dhx.api.container.v2_1.AccessRestrictionBeginDateHandler">
             <bind-xml name="RestrictionBeginDate" node="element" />
         </field>
 
-        <field name="RestrictionEndDate" type="string" handler="dvk.api.container.v2_1.AccessRestrictionEndDateHandler">
+        <field name="RestrictionEndDate" type="string" handler="ee.adit.dhx.api.container.v2_1.AccessRestrictionEndDateHandler">
             <bind-xml name="RestrictionEndDate" node="element" />
         </field>
 
@@ -380,7 +380,7 @@
             <bind-xml name="RestrictionEndEvent" node="element" />
         </field>
 
-        <field name="RestrictionInvalidSince" type="string" handler="dvk.api.container.v2_1.AccessRestrictionInvalidSinceHandler">
+        <field name="RestrictionInvalidSince" type="string" handler="ee.adit.dhx.api.container.v2_1.AccessRestrictionInvalidSinceHandler">
             <bind-xml name="RestrictionInvalidSince" node="element" />
         </field>
 
@@ -393,7 +393,7 @@
         </field>
     </class>
 
-    <class name="dvk.api.container.v2_1.SignatureMetadata">
+    <class name="ee.adit.dhx.api.container.v2_1.SignatureMetadata">
         <map-to xml="SignatureMetadata" ns-uri="http://www.riik.ee/schemas/deccontainer/vers_2_1/"/>
 
         <field name="SignatureType" type="string" >
@@ -413,7 +413,7 @@
         </field>
     </class>
 
-    <class name="dvk.api.container.v2_1.File">
+    <class name="ee.adit.dhx.api.container.v2_1.File">
         <map-to xml="File" ns-uri="http://www.riik.ee/schemas/deccontainer/vers_2_1/"/>
 
         <field name="FileGuid" type="string" >

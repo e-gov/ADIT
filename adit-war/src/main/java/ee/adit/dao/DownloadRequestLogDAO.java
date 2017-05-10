@@ -2,7 +2,7 @@ package ee.adit.dao;
 
 import java.sql.SQLException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.springframework.orm.hibernate3.HibernateCallback;
@@ -19,7 +19,7 @@ import ee.adit.dao.pojo.DownloadRequestLog;
  */
 public class DownloadRequestLogDAO extends HibernateDaoSupport {
     
-    private static Logger logger = Logger.getLogger(DownloadRequestLogDAO.class);
+    private static Logger logger = LogManager.getLogger(DownloadRequestLogDAO.class);
 
     /**
      * Save download request log.

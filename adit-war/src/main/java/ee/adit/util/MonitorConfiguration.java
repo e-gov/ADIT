@@ -34,10 +34,6 @@ public class MonitorConfiguration {
      */
     private Long testDocumentId;
 
-    /**
-     * DVK test document ID.
-     */
-    private Long dvkTestDocumentID;
 
     /**
      * DVK test documendi kaust.
@@ -62,12 +58,7 @@ public class MonitorConfiguration {
     /**
      * Document send to DVK check interval.
      */
-    private Long documentSendToDvkInterval;
-
-    /**
-     * Document send to ADIT check interval.
-     */
-    private Long documentSendToAditInterval;
+    private Long documentSendToDhxInterval;
 
     /**
      * Notification send interval.
@@ -200,33 +191,18 @@ public class MonitorConfiguration {
      * Get document send to DVK interval.
      * @return document send to DVK interval
      */
-    public Long getDocumentSendToDvkInterval() {
-        return documentSendToDvkInterval;
+    public Long getDocumentSendToDhxInterval() {
+        return documentSendToDhxInterval;
     }
 
     /**
      * Set document send to DVK interval.
      * @param documentSendToDvkInterval document send to DVK interval
      */
-    public void setDocumentSendToDvkInterval(Long documentSendToDvkInterval) {
-        this.documentSendToDvkInterval = documentSendToDvkInterval;
+    public void setDocumentSendToDhxInterval(Long documentSendToDhxInterval) {
+        this.documentSendToDhxInterval = documentSendToDhxInterval;
     }
-
-    /**
-     * Get document send to ADIT interval.
-     * @return document send to ADIT interval
-     */
-    public Long getDocumentSendToAditInterval() {
-        return documentSendToAditInterval;
-    }
-
-    /**
-     * Set document send to ADIT interval.
-     * @param documentSendToAditInterval document send to ADIT interval
-     */
-    public void setDocumentSendToAditInterval(Long documentSendToAditInterval) {
-        this.documentSendToAditInterval = documentSendToAditInterval;
-    }
+    
 
     /**
      * Get notification send interval.
@@ -261,22 +237,6 @@ public class MonitorConfiguration {
         this.errorInterval = errorInterval;
     }
 
-    /**
-     * Get DVK test document ID.
-     * @return DVK test document ID
-     */
-    public Long getDvkTestDocumentID() {
-        return dvkTestDocumentID;
-    }
-
-    /**
-     * Set DVK test document ID.
-     * @param dvkTestDocumentID DVK test document ID
-     */
-    public void setDvkTestDocumentID(Long dvkTestDocumentID) {
-        this.dvkTestDocumentID = dvkTestDocumentID;
-    }
-    
     /**
      * Get DVK test document kausta nimi.
      * @return DVK document folder

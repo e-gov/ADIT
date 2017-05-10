@@ -1,6 +1,6 @@
 package ee.adit.util;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 
 /**
  * Monitor result holder class.
@@ -14,7 +14,7 @@ public class NagiosLogger {
     /**
      * Log4J logger.
      */
-    private static Logger logger = Logger.getLogger(NagiosLogger.class);
+    private static Logger logger = LogManager.getLogger(NagiosLogger.class);
 
     /**
      * Log message.

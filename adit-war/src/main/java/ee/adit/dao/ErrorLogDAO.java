@@ -3,7 +3,7 @@ package ee.adit.dao;
 import java.sql.SQLException;
 import java.util.Date;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -23,7 +23,7 @@ import ee.adit.service.LogService;
  */
 public class ErrorLogDAO extends HibernateDaoSupport {
 
-    private static Logger logger = Logger.getLogger(ErrorLogDAO.class);
+    private static Logger logger = LogManager.getLogger(ErrorLogDAO.class);
 
     /**
      * Save error log.

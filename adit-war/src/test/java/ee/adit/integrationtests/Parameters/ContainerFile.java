@@ -1,10 +1,12 @@
 package ee.adit.integrationtests.Parameters;
 
 import java.io.File;
+
 import java.net.URLDecoder;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Created with IntelliJ IDEA.
@@ -24,7 +26,7 @@ public class ContainerFile {
     public Long ddocDataFileStartOffset;
     public Long ddocDataFileEndOffset;
 
-    private static Logger logger = org.apache.log4j.Logger.getLogger(ContainerFile.class);
+    private static Logger logger = LogManager.getLogger(ContainerFile.class);
 
     /**
      * Construstor for files in document container

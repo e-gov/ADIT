@@ -48,6 +48,9 @@ public class SendDocumentRequest {
     @XmlElement(required = true)
     private String dvkFolder;
     
+    @XmlElement(name = "dec_folder")
+    private String decFolder;
+    
     /**
      * Gets the value of the documentId property.
      * 
@@ -128,5 +131,19 @@ public class SendDocumentRequest {
     public void setDvkFolder(String value) {
         this.dvkFolder = value;
     }
+
+	/**
+	 * @return the decFolder
+	 */
+	public String getDecFolder() {
+		return decFolder;
+	}
+
+	/**
+	 * @param decFolder the decFolder to set
+	 */
+	public void setDecFolder(String decFolder) {
+		this.decFolder = decFolder;
+	}
 
 }

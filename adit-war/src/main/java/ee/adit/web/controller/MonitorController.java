@@ -10,7 +10,7 @@ import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 
@@ -29,7 +29,7 @@ public class MonitorController extends AbstractController {
     /**
      * Log4J logger.
      */
-    private static Logger logger = Logger.getLogger(MonitorController.class);
+    private static Logger logger = LogManager.getLogger(MonitorController.class);
 
     /**
      * Monitor service.
@@ -124,33 +124,19 @@ public class MonitorController extends AbstractController {
             }
             results.add(getDocumentCheckResult);
 
-            // 3. DVK_SEND
-            MonitorResult dvkSendCheckResult = this.getMonitorService().checkDvkSend();
-            dvkSendCheckResult.setDurationString(df.format(dvkSendCheckResult.getDuration()));
-            if (dvkSendCheckResult.isSuccess()) {
-                dvkSendCheckResult.setStatusString(MonitorService.OK);
+            // 3. DHX_SEND
+            MonitorResult dhxSendCheckResult = this.getMonitorService().checkDhxSend();
+            dhxSendCheckResult.setDurationString(df.format(dhxSendCheckResult.getDuration()));
+            if (dhxSendCheckResult.isSuccess()) {
+            	dhxSendCheckResult.setStatusString(MonitorService.OK);
             } else {
-                dvkSendCheckResult.setStatusString(MonitorService.FAIL);
+            	dhxSendCheckResult.setStatusString(MonitorService.FAIL);
                 summaryStatusOk = false;
             }
-            if (dvkSendCheckResult.getExceptions() != null && dvkSendCheckResult.getExceptions().size() > 0) {
-                dvkSendCheckResult.setExceptionString(dvkSendCheckResult.getExceptions().get(0));
+            if (dhxSendCheckResult.getExceptions() != null && dhxSendCheckResult.getExceptions().size() > 0) {
+            	dhxSendCheckResult.setExceptionString(dhxSendCheckResult.getExceptions().get(0));
             }
-            results.add(dvkSendCheckResult);
-
-            // 3. DVK_RECEIVE
-            MonitorResult checkDvkReceiveResult = this.getMonitorService().checkDvkReceive();
-            checkDvkReceiveResult.setDurationString(df.format(checkDvkReceiveResult.getDuration()));
-            if (checkDvkReceiveResult.isSuccess()) {
-                checkDvkReceiveResult.setStatusString(MonitorService.OK);
-            } else {
-                checkDvkReceiveResult.setStatusString(MonitorService.FAIL);
-                summaryStatusOk = false;
-            }
-            if (checkDvkReceiveResult.getExceptions() != null && checkDvkReceiveResult.getExceptions().size() > 0) {
-                checkDvkReceiveResult.setExceptionString(checkDvkReceiveResult.getExceptions().get(0));
-            }
-            results.add(checkDvkReceiveResult);
+            results.add(dhxSendCheckResult);
 
             // 4. GET_USER_INFO
             MonitorResult getUserInfoCheckResult = this.getMonitorService().getUserInfoCheck(serviceURI);
