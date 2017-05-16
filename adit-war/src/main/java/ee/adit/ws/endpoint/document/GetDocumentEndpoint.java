@@ -198,12 +198,25 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
                     jdigidocCfgTmpFile, true, false);
 
                 if (resultDoc != null) {
-                    // Remember file IDs for logging later on.
-                    List<OutputDocumentFile> docFiles = resultDoc.getFiles().getFiles();
-                    if ((docFiles != null) && (docFiles.size() > 0)) {
-                        for (OutputDocumentFile file : docFiles) {
-                            fileIdList.add(file.getId());
-                        }
+//                	// Remember file IDs for logging later on.
+//                	List<OutputDocumentFile> docFiles = resultDoc.getFiles().getFiles();
+//                	if ((docFiles != null) && (docFiles.size() > 0)) {
+//                		for (OutputDocumentFile file : docFiles) {
+//                			fileIdList.add(file.getId());
+//                		}
+//                	}
+                    if (resultDoc.getFiles() != null) {
+	                    // Remember file IDs for logging later on.
+	                    List<OutputDocumentFile> docFiles = resultDoc.getFiles().getFiles();
+	                    if ((docFiles != null) && (docFiles.size() > 0)) {
+	                        for (OutputDocumentFile file : docFiles) {
+	                            fileIdList.add(file.getId());
+	                        }
+	                    }
+                    } else {
+                        logger.info("resultDoc.getFiles() is null");
+                        logger.info("resultDoc.id " + resultDoc.getId());
+                        logger.info("doc.id " + doc.getId());
                     }
 
                     // 1. Convert java list to XML string and output
