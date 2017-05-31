@@ -451,6 +451,12 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
 			}
 		}
 
+		OutputDocumentFilesList filesListWrapper = new OutputDocumentFilesList();
+		filesListWrapper.setFiles(outputFilesList);
+		filesListWrapper.setTotalFiles(outputFilesList.size());
+		filesListWrapper.setTotalBytes(totalBytes);
+		result.setFiles(filesListWrapper);
+
         // Signatures
         if (includeSignatures) {
             DocumentSignatureList docSignatures = new DocumentSignatureList();
