@@ -397,7 +397,9 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
 					if (docFile.getDocumentFileTypeId() == DocumentService.FILETYPE_SIGNATURE_CONTAINER) {
 						resultContainsSignatureContainer = true;
 					}
-
+				}
+			}
+		}
         if (includeFileContents && (doc.getSigned() != null) && doc.getSigned() && (signatureContainerFile != null)) {
         	try {
         		logger.debug("digidocConfigFile: " + digidocConfigFile);
@@ -678,9 +680,8 @@ public class DocumentDAO extends HibernateDaoSupport implements IDocumentDao {
                 }
             }
         }
-				}
-			}
-		}
+
+
 		return result;
 	}
 
