@@ -56,6 +56,17 @@
 		<!-- <resourceDir>conf/girf-arendus</resourceDir> -->
 	</properties>
 
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.apache.httpcomponents</groupId>
+				<artifactId>httpcore</artifactId>
+				<!-- like in dhx -->
+				<version>4.4.4</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 	<dependencies>
 		<dependency>
 			<groupId>ee.webmedia</groupId>
