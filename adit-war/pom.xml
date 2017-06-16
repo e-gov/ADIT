@@ -253,8 +253,8 @@
 
 		<dependency>
 			<groupId>org.bouncycastle</groupId>
-			<artifactId>BouncyCastle</artifactId>
-			<version>1.5</version>
+			<artifactId>bcprov-jdk15on</artifactId>
+			<version>1.48</version>
 			<scope>system</scope>
 			<systemPath>${basedir}/lib/bcprov-jdk15on-148.jar</systemPath>
 		</dependency>
