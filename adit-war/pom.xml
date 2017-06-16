@@ -251,6 +251,14 @@
 			<systemPath>${basedir}/lib/commons-codec-1.6.jar</systemPath>
 		</dependency>
 
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>BouncyCastle</artifactId>
+			<version>1.5</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/bcprov-jdk15on-148.jar</systemPath>
+		</dependency>
+		
 		<!-- DigiDoc -->
 		<dependency>
 			<groupId>ee.sk.digidoc</groupId>
