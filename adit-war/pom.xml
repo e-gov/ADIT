@@ -64,6 +64,12 @@
 				<!-- like in dhx -->
 				<version>4.4.4</version>
 			</dependency>
+			<dependency>
+<!-- 				override bouncycastle in dd4j dss with system dependency -->
+				<groupId>org.bouncycastle</groupId>
+				<artifactId>bcprov-jdk15on</artifactId>
+				<version>1.54</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -254,9 +260,9 @@
 		<dependency>
 			<groupId>org.bouncycastle</groupId>
 			<artifactId>bcprov-jdk15on</artifactId>
-			<version>1.48</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/bcprov-jdk15on-148.jar</systemPath>
+<!-- 			<version>1.48</version> -->
+<!-- 			<scope>system</scope> -->
+<!-- 			<systemPath>${basedir}/lib/bcprov-jdk15on-148.jar</systemPath> -->
 		</dependency>
 		
 		<!-- DigiDoc -->
@@ -482,6 +488,12 @@
 			<version>dss-xades-4.7.RC2.d4j.1</version>
 			<scope>system</scope>
 			<systemPath>${basedir}/lib/dss-xades-4.7.RC2.d4j.1.jar</systemPath>
+		</dependency>
+		<!-- needed for DSSRevocationUtils  -->
+		<dependency>
+			<groupId>org.digidoc4j.dss</groupId>
+			<artifactId>dss-spi</artifactId>
+			<version>4.7.RC2.d4j.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
