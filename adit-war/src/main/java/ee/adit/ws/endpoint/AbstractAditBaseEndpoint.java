@@ -39,6 +39,7 @@ import ee.adit.service.LogService;
 import ee.adit.service.MessageService;
 import ee.adit.service.MonitorService;
 import ee.adit.util.Configuration;
+import ee.adit.util.SecurityConfiguration;
 import ee.adit.util.Util;
 import ee.adit.util.xroad.CustomXRoadHeader;
 import ee.adit.util.xroad.XRoadQueryName;
@@ -63,6 +64,9 @@ public abstract class AbstractAditBaseEndpoint extends XRoadCustomEndpoint {
     	nameSpaceMappings = new HashMap<String, String>();
     	nameSpaceMappings.put("xrd", "http://x-road.eu/xsd/xroad.xsd");
     	nameSpaceMappings.put("id", "http://x-road.eu/xsd/identifiers");
+    	
+    	// add BC provider to Security
+    	SecurityConfiguration.init();
     }
 
     /**

@@ -1,7 +1,21 @@
 package ee.adit.test.util;
 
-import org.bouncycastle.cert.ocsp.CertificateID;
+import java.security.Security;
+import java.security.cert.CertificateParsingException;
+import java.security.cert.X509Certificate;
 
+import org.bouncycastle.asn1.ASN1Sequence;
+import org.bouncycastle.asn1.BERSequence;
+import org.bouncycastle.asn1.x509.Certificate;
+import org.bouncycastle.cert.ocsp.CertificateID;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.jce.provider.X509CertificateObject;
+import org.bouncycastle.operator.DigestCalculator;
+import org.bouncycastle.operator.DigestCalculatorProvider;
+import org.bouncycastle.operator.OperatorCreationException;
+import org.bouncycastle.operator.jcajce.JcaDigestCalculatorProviderBuilder;
+
+import ee.adit.util.SecurityConfiguration;
 import eu.europa.esig.dss.DSSRevocationUtils;
 import eu.europa.esig.dss.x509.CertificateToken;
 import junit.framework.TestCase;
@@ -17,6 +31,10 @@ import junit.framework.TestCase;
  * @author Jaak Lember, Interinx, jaak@interinx.com
  */
 public class DependencyLoadedTest extends TestCase {
+
+	static {
+		SecurityConfiguration.init();
+	}
 
 	/**
 	 * Construct new test instance.
@@ -38,6 +56,53 @@ public class DependencyLoadedTest extends TestCase {
 			// npe.printStackTrace();
 			assertEquals("X509 certificate is missing", npe.getMessage());
 		}
+	}
+	
+
+	public void testDSSRevocationUtilsWorksWithSecurityProvider() {
+		DSSRevocationUtils.getSHA1DigestCalculator();
+	}
+
+	public void testWithProvider() {
+		
+		JcaDigestCalculatorProviderBuilder jcaDigestCalculatorProviderBuilder = 
+				new JcaDigestCalculatorProviderBuilder();
+
+		jcaDigestCalculatorProviderBuilder
+				.setProvider(BouncyCastleProvider.PROVIDER_NAME);
+		try {
+			DigestCalculatorProvider p = jcaDigestCalculatorProviderBuilder.build();
+			
+			assertNotNull(p);
+			
+			DigestCalculator dc = p.get(CertificateID.HASH_SHA1);
+			
+			assertNotNull(dc);
+		} catch (OperatorCreationException e) {
+//			e.printStackTrace();
+			fail("Fail because exception " + e);
+		}
+
+	}
+	
+	public void testWithoutProvider() {
+		// remove provider to make it throw exception
+		Security.removeProvider(BouncyCastleProvider.PROVIDER_NAME);
+		Exception ex = null;
+
+		try {
+			DSSRevocationUtils.getSHA1DigestCalculator();
+		} catch (Exception e) {
+			ex = e;
+		} finally {
+			// add removed provider back
+			Security.addProvider(new BouncyCastleProvider());
+		}
+
+		assertNotNull(ex);
+		assertTrue(ex.getMessage().contains(
+				"java.security.NoSuchProviderException: no such provider: BC"));
+
 	}
 
 }
