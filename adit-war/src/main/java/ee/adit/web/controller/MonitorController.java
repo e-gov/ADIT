@@ -17,6 +17,8 @@ import org.springframework.web.servlet.mvc.AbstractController;
 import ee.adit.service.MonitorService;
 import ee.adit.util.Configuration;
 import ee.adit.util.MonitorResult;
+import ee.adit.util.SecurityConfiguration;
+import eu.europa.esig.dss.DSSRevocationUtils;
 
 /**
  * Controller class for monitoring view.
@@ -46,6 +48,11 @@ public class MonitorController extends AbstractController {
      */
     public MonitorController() {
         logger.info("MONITORCONTROLLER created.");
+        // testing whether BouncyCastle added or not
+        logger.info("getting digest calculatore ");
+        System.out.println("INITIATING SECURITY BC \n\n");
+        SecurityConfiguration.init();
+        DSSRevocationUtils.getSHA1DigestCalculator();
     }
 
     /**
