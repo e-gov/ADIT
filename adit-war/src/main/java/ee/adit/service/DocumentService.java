@@ -1552,6 +1552,7 @@ public class DocumentService {
 					if (document.getDocumentSharings() != null) {
 						Set<DocumentSharing> sharings =  document.getDocumentSharings();
 						for (DocumentSharing documentSharing : sharings) {
+							logger.debug("documentSharing.getUserCode() = " + documentSharing.getUserCode());
 							Transaction dhxTransaction = null;
 							try {
 								// send only those that are ment to be sent to
@@ -1571,6 +1572,7 @@ public class DocumentService {
 									}*/
 									dhxTransaction = session.beginTransaction();
 									AditUser recipientUser = aditUserDAO.getUserByID(documentSharing.getUserCode());
+									logger.debug("recipientUser.getDvkOrgCode() = " + recipientUser.getDvkOrgCode());
 									DhxUser org = dhxDAO.getOrganisationByIdentificator(recipientUser.getDvkOrgCode());
 									documentSharing.setDhxSentDate(new Date());
 									documentSharing.setDocumentDvkStatus(DHX_STATUS_SENDING);
@@ -1578,6 +1580,8 @@ public class DocumentService {
 									session.saveOrUpdate(documentSharing);
 									dhxTransaction.commit();
 									dhxTransaction = null;
+									logger.debug("org.getOrgCode() = " + org.getOrgCode());
+									logger.debug("org.getSubSystem() = " + org.getSubSystem());
 									OutgoingDhxPackage pckg = getDhxPackageProviderService().getOutgoingPackage(
 											new File(temporaryFile), documentSharing.getId().toString(),
 											org.getOrgCode(), org.getSubSystem());
