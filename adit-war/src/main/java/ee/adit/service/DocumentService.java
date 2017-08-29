@@ -1537,28 +1537,28 @@ public class DocumentService {
 				logger.info("Sending document with ID " + document.getId() + " to DVK");
 				try {
 					DocumentToContainerVer2_1ConverterImpl converter = new DocumentToContainerVer2_1ConverterImpl();
-					logger.debug("###### 01");
+					logger.info("###### 01");
 					converter.setAditUserDAO(getAditUserDAO());
 					converter.setConfiguration(getConfiguration());
 					converter.setDocumentTypeDAO(getDocumentTypeDAO());
-					logger.debug("###### 001");
+					logger.info("###### 001");
 					ContainerVer2_1 container = converter.convert(document);
-					logger.debug("###### 002");
+					logger.info("###### 002");
 					dhxService.formatCapsuleRecipientAndSenderAditContainerV21(container);
-					logger.debug("###### 003");
+					logger.info("###### 003");
 					DecMetadata metaData = new DecMetadata();
-					logger.debug("###### 004");
+					logger.info("###### 004");
 					metaData.setDecFolder(getFolderName(document));
 					metaData.setDecReceiptDate(new Date());
 					metaData.setDecId(String.valueOf(document.getId()));
-					logger.debug("###### 005");
+					logger.info("###### 005");
 					container.setDecMetadata(metaData);
 					String temporaryFile = saveContainerToTempFile(container);
 					if (document.getDocumentSharings() != null) {
-						logger.debug("###### 02");
+						logger.info("###### 02");
 						Set<DocumentSharing> sharings =  document.getDocumentSharings();
 						for (DocumentSharing documentSharing : sharings) {
-							logger.debug("documentSharing.getUserCode() = " + documentSharing.getUserCode());
+							logger.info("documentSharing.getUserCode() = " + documentSharing.getUserCode());
 							Transaction dhxTransaction = null;
 							try {
 								// send only those that are ment to be sent to
@@ -1578,9 +1578,9 @@ public class DocumentService {
 									}*/
 									dhxTransaction = session.beginTransaction();
 									AditUser recipientUser = aditUserDAO.getUserByID(documentSharing.getUserCode());
-									logger.debug("recipientUser.getDvkOrgCode() = " + recipientUser.getDvkOrgCode());
+									logger.info("recipientUser.getDvkOrgCode() = " + recipientUser.getDvkOrgCode());
 									DhxUser org = dhxDAO.getOrganisationByIdentificator(recipientUser.getDvkOrgCode());
-									logger.debug("DHX parameetrid: getCode=" + org.getCode() +
+									logger.info("DHX parameetrid: getCode=" + org.getCode() +
 											"; getMemberClass=" + org.getMemberClass() +
 											"; getOrgCode=" + org.getOrgCode() +
 											"; getOrganisationIdentificator=" + org.getOrganisationIdentificator() +
