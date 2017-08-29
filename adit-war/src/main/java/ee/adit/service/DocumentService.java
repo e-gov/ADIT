@@ -1574,14 +1574,22 @@ public class DocumentService {
 									AditUser recipientUser = aditUserDAO.getUserByID(documentSharing.getUserCode());
 									logger.debug("recipientUser.getDvkOrgCode() = " + recipientUser.getDvkOrgCode());
 									DhxUser org = dhxDAO.getOrganisationByIdentificator(recipientUser.getDvkOrgCode());
+									logger.debug("DHX parameetrid: getCode=" + org.getCode() +
+											"; getMemberClass=" + org.getMemberClass() +
+											"; getOrgCode=" + org.getOrgCode() +
+											"; getOrganisationIdentificator=" + org.getOrganisationIdentificator() +
+											"; getSubSystem=" + org.getSubSystem() +
+											"; getXroadInstance=" + org.getXroadInstance() +
+											"; getDhxOrganisation=" + org.getDhxOrganisation().toString() +
+											"; getRepresentees" + org.getRepresentees().toString() +
+											"; getRepresentor.getDhxUserId" + org.getRepresentor().getDhxUserId().toString()
+									);
 									documentSharing.setDhxSentDate(new Date());
 									documentSharing.setDocumentDvkStatus(DHX_STATUS_SENDING);
 									documentSharing.setDhxConsignmentId(documentSharing.getId().toString());
 									session.saveOrUpdate(documentSharing);
 									dhxTransaction.commit();
 									dhxTransaction = null;
-									logger.debug("org.getOrgCode() = " + org.getOrgCode());
-									logger.debug("org.getSubSystem() = " + org.getSubSystem());
 									OutgoingDhxPackage pckg = getDhxPackageProviderService().getOutgoingPackage(
 											new File(temporaryFile), documentSharing.getId().toString(),
 											org.getOrgCode(), org.getSubSystem());
