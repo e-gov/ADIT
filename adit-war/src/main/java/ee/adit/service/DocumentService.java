@@ -1537,19 +1537,25 @@ public class DocumentService {
 				logger.info("Sending document with ID " + document.getId() + " to DVK");
 				try {
 					DocumentToContainerVer2_1ConverterImpl converter = new DocumentToContainerVer2_1ConverterImpl();
+					logger.debug("###### 01");
 					converter.setAditUserDAO(getAditUserDAO());
 					converter.setConfiguration(getConfiguration());
 					converter.setDocumentTypeDAO(getDocumentTypeDAO());
+					logger.debug("###### 001");
 					ContainerVer2_1 container = converter.convert(document);
-
+					logger.debug("###### 002");
 					dhxService.formatCapsuleRecipientAndSenderAditContainerV21(container);
+					logger.debug("###### 003");
 					DecMetadata metaData = new DecMetadata();
+					logger.debug("###### 004");
 					metaData.setDecFolder(getFolderName(document));
 					metaData.setDecReceiptDate(new Date());
 					metaData.setDecId(String.valueOf(document.getId()));
+					logger.debug("###### 005");
 					container.setDecMetadata(metaData);
 					String temporaryFile = saveContainerToTempFile(container);
 					if (document.getDocumentSharings() != null) {
+						logger.debug("###### 02");
 						Set<DocumentSharing> sharings =  document.getDocumentSharings();
 						for (DocumentSharing documentSharing : sharings) {
 							logger.debug("documentSharing.getUserCode() = " + documentSharing.getUserCode());
