@@ -59,10 +59,10 @@
 		<property name="testDocumentId" value="999999999999" />
 		<property name="testDocumentFileId" value="999999999999" />
 		<property name="testUserCode" value="EE00000000000" />
-		<property name="documentSaveInterval" value="60000" />
-		<property name="documentSendToDhxInterval" value="60000" />
+		<property name="documentSaveInterval" value="600000" />
+		<property name="documentSendToDhxInterval" value="600000" />
 		<property name="notificationSendInterval" value="900000" />
-		<property name="errorInterval" value="60000" />
+		<property name="errorInterval" value="600000" />
 		<property name="errorLevel" value="FATAL" />
 	</bean>
 	<bean id="checkSignatures" class="java.lang.Boolean">
