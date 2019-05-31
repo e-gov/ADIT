@@ -112,6 +112,13 @@ public class CustomXRoadHeader extends XTeeHeader {
      * @return Value of {@code INFOSYSTEEM} SOAP header
      */
     public String getInfosysteem(final String producerName) {
+
+    	// check if RIA is calling using xroad V6
+		if (XRoadProtocolVersion.V4_0.equals(this.protocolVersion)
+				&& "70006317".equals(getAsutus())) {
+			return "Riigiportaal";
+		}
+
         String producerNsUri = String.format("http://producers.%s.xtee.riik.ee/producer/%s", producerName, producerName);
         QName infosysteem = new QName(producerNsUri, "infosysteem");
 
