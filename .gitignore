@@ -1,6 +1,8 @@
 /.classpath
 /.project
 /.settings
+/.idea
+*.iml
 adit-ear/target
 adit-war/.classpath
 adit-war/.project
