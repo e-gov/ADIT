@@ -5,6 +5,9 @@ import ee.adit.dhx.api.container.v2_1.ContainerVer2_1;
 public class RuuterDhxProcessingErrorRequest {
 
     private String senderOrganisationCode;
+    private String recipientCode;
+    private DhxRecipientUserType recipientUserType;
+    private String recipientUserName;
     private DhxProcessingErrorType errorCode;
     private ContainerVer2_1 containerVer2_1;
 
@@ -31,5 +34,29 @@ public class RuuterDhxProcessingErrorRequest {
 
     public void setContainerVer2_1(ContainerVer2_1 containerVer2_1) {
         this.containerVer2_1 = containerVer2_1;
+    }
+
+    public String getRecipientCode() {
+        return recipientCode;
+    }
+
+    public void setRecipientCode(String recipientCode) {
+        this.recipientCode = recipientCode;
+    }
+
+    public DhxRecipientUserType getRecipientUserType() {
+        return recipientUserType;
+    }
+
+    public void setRecipientUserType(DhxRecipientUserType recipientUserType) {
+        this.recipientUserType = recipientUserType;
+    }
+
+    public String getRecipientUserName() {
+        return recipientUserName;
+    }
+
+    public void setRecipientUserName(String recipientUserName) {
+        this.recipientUserName = recipientUserName;
     }
 }
