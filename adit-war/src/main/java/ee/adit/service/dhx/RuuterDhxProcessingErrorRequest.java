@@ -11,7 +11,6 @@ public class RuuterDhxProcessingErrorRequest {
     private DhxProcessingErrorType errorCode;
     private ContainerVer2_1 containerVer2_1;
 
-
     public String getSenderOrganisationCode() {
         return senderOrganisationCode;
     }
@@ -32,8 +31,13 @@ public class RuuterDhxProcessingErrorRequest {
         return containerVer2_1;
     }
 
+    /**
+     * Sets container and parses out senderOrganisationCode
+     */
     public void setContainerVer2_1(ContainerVer2_1 containerVer2_1) {
         this.containerVer2_1 = containerVer2_1;
+        if (containerVer2_1 != null && containerVer2_1.getTransport() != null && containerVer2_1.getTransport().getDecSender() != null)
+            setSenderOrganisationCode(containerVer2_1.getTransport().getDecSender().getOrganisationCode());
     }
 
     public String getRecipientCode() {

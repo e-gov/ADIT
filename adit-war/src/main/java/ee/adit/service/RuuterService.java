@@ -50,7 +50,7 @@ public class RuuterService {
 
         List<RuuterDhxProcessingErrorRequest> dhxProcessingErrorRequests =
                 buildRuuterDhxProcessingErrorRequests(containerVer2_1, ex);
-
+        logger.info("Forwarding DHX processing error ({}) to Ruuter as {} requests.", ex.getMessage(), dhxProcessingErrorRequests.size());
         sendDhxProcessingErrorRequests(dhxProcessingErrorRequests);
     }
 
