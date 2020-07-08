@@ -2,6 +2,8 @@ package ee.adit.service.dhx;
 
 import ee.adit.dhx.api.container.v2_1.ContainerVer2_1;
 
+import java.util.Objects;
+
 public class RuuterDhxProcessingErrorRequest {
 
     private String senderOrganisationCode;
@@ -62,5 +64,23 @@ public class RuuterDhxProcessingErrorRequest {
 
     public void setRecipientUserName(String recipientUserName) {
         this.recipientUserName = recipientUserName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RuuterDhxProcessingErrorRequest that = (RuuterDhxProcessingErrorRequest) o;
+        return Objects.equals(senderOrganisationCode, that.senderOrganisationCode) &&
+                Objects.equals(recipientCode, that.recipientCode) &&
+                recipientUserType == that.recipientUserType &&
+                Objects.equals(recipientUserName, that.recipientUserName) &&
+                errorCode == that.errorCode &&
+                containerVer2_1.equals(that.containerVer2_1);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(senderOrganisationCode, recipientCode, recipientUserType, recipientUserName, errorCode, containerVer2_1);
     }
 }
