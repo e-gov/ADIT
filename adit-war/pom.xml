@@ -425,7 +425,7 @@
 			<groupId>org.apache.commons</groupId>
 
 			<artifactId>commons-compress</artifactId>
-			<version>1.3</version>
+			<version>1.19</version>
 			<scope>system</scope>
 			<systemPath>${basedir}/lib/commons-compress-1.3.jar</systemPath>
 		</dependency>
