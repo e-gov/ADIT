@@ -193,7 +193,7 @@ CREATE TABLE adit.document_sharing (
 WITH (oids = false);
 
 
-CREATE TABLE &&ADIT_SCHEMA..dhx_user
+CREATE TABLE adit.dhx_user
 (
     org_code character varying(30)NOT NULL,
     org_name character varying(100) NOT NULL,
@@ -210,7 +210,7 @@ CREATE TABLE &&ADIT_SCHEMA..dhx_user
     organisation_identificator character varying(100),
     CONSTRAINT dhx_user_pkey PRIMARY KEY (dhx_user_id),
     CONSTRAINT dhx_user_dhx_userfk FOREIGN KEY (representor_id)
-        REFERENCES &&ADIT_SCHEMA..dhx_user (dhx_user_id) MATCH FULL
+        REFERENCES adit.dhx_user (dhx_user_id) MATCH FULL
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 )
@@ -607,7 +607,7 @@ CREATE SEQUENCE adit.user_contact_id_seq
     NO MINVALUE
     CACHE 1;
 
-CREATE SEQUENCE &&ADIT_SCHEMA..sq_dhx_user_id
+CREATE SEQUENCE adit.sq_dhx_user_id
     START WITH 1
     INCREMENT BY 1
     NO MAXVALUE

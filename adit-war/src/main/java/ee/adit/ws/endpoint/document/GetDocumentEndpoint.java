@@ -1,32 +1,11 @@
 package ee.adit.ws.endpoint.document;
 
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-
-import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
-import org.hibernate.ejb.criteria.CriteriaQueryCompiler.RenderedCriteriaQuery;
-import org.springframework.stereotype.Component;
-
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditInternalException;
-import ee.adit.pojo.ArrayOfMessage;
-import ee.adit.pojo.GetDocumentRequest;
-import ee.adit.pojo.GetDocumentResponse;
-import ee.adit.pojo.GetDocumentResponseAttachment;
-import ee.adit.pojo.GetDocumentResponseAttachmentV2;
-import ee.adit.pojo.GetDocumentResponseAttachmentV3;
-import ee.adit.pojo.GetDocumentResponseDocument;
-import ee.adit.pojo.Message;
-import ee.adit.pojo.OutputDocument;
-import ee.adit.pojo.OutputDocumentFile;
+import ee.adit.pojo.*;
 import ee.adit.schedule.ScheduleClient;
 import ee.adit.service.DocumentService;
 import ee.adit.service.LogService;
@@ -37,6 +16,12 @@ import ee.adit.util.xroad.CustomXRoadHeader;
 import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
 import ee.ria.dhx.util.StringUtil;
 import ee.webmedia.xtee.annotation.XTeeService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Component;
+
+import java.io.InputStream;
+import java.util.*;
 
 /**
  * Implementation of "getDocument" web method (web service request). Contains
@@ -900,14 +885,6 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
     private Document checkRightsAndGetDocument(
     	final GetDocumentRequest request, final String applicationName,
     	final AditUser user) {
-
-        // Kontrollime, et kasutajakonto ligipääs poleks peatatud (kasutaja
-        // lahkunud)
-        if ((user.getActive() == null) || !user.getActive()) {
-            AditCodedException aditCodedException = new AditCodedException("user.inactive");
-            aditCodedException.setParameters(new Object[] {user.getUserCode()});
-            throw aditCodedException;
-        }
 
         // Check whether or not the application has rights to
         // read current user's data.

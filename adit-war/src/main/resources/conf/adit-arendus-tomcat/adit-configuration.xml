@@ -48,7 +48,8 @@
         -->
         <property name="unfinishedSignatureLifetimeSeconds" value="300"/>
         <property name="doCheckTestCert" value="true"/>   
-        <property name="jDigiDocConfigFile" value="jdigidoc.cfg"/> 
+        <property name="jDigiDocConfigFile" value="jdigidoc.cfg"/>
+		<property name="ruuterServiceUrl" value="http://localhost:8080/ruuter" />
 	</bean>
 
 	<bean id="monitorConfiguration" class="ee.adit.util.MonitorConfiguration">

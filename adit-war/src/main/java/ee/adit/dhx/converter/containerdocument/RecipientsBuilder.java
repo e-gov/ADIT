@@ -1,19 +1,19 @@
 package ee.adit.dhx.converter.containerdocument;
 
-import java.util.ArrayList;
-
-import java.util.List;
-
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
-
 import ee.adit.dao.AditUserDAO;
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dhx.api.container.v2_1.ContainerVer2_1;
 import ee.adit.dhx.api.container.v2_1.DecRecipient;
 import ee.adit.dhx.api.container.v2_1.Recipient;
+import ee.adit.exception.AditUserInactiveException;
 import ee.adit.util.Configuration;
 import ee.adit.util.Util;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Hendrik Pärna
@@ -94,7 +94,7 @@ public class RecipientsBuilder {
                             }
                         }
                     } else {
-                        throw new IllegalStateException("User not found. Personal code: " + recipient.getPersonalIdCode());
+                        throw new AditUserInactiveException(recipient.getPersonalIdCode());
                     }
                 }
             }

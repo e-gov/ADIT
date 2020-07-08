@@ -1,34 +1,12 @@
 package ee.adit.ws.endpoint.document;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-
-import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
-import org.springframework.oxm.XmlMappingException;
-import org.springframework.stereotype.Component;
-
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditException;
 import ee.adit.exception.AditInternalException;
-import ee.adit.pojo.ArrayOfMessage;
-import ee.adit.pojo.GetDocumentFileRequest;
-import ee.adit.pojo.GetDocumentFileResponse;
-import ee.adit.pojo.GetDocumentFileResponseAttachment;
-import ee.adit.pojo.GetDocumentFileResponseFiles;
-import ee.adit.pojo.Message;
-import ee.adit.pojo.OutputDocument;
-import ee.adit.pojo.OutputDocumentFile;
+import ee.adit.pojo.*;
 import ee.adit.schedule.ScheduleClient;
 import ee.adit.service.DocumentService;
 import ee.adit.service.LogService;
@@ -38,6 +16,15 @@ import ee.adit.util.Util;
 import ee.adit.util.xroad.CustomXRoadHeader;
 import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
 import ee.webmedia.xtee.annotation.XTeeService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.oxm.XmlMappingException;
+import org.springframework.stereotype.Component;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * Implementation of "getDocumentFile" web method (web service request).
@@ -347,14 +334,6 @@ public class GetDocumentFileEndpoint extends AbstractAditBaseEndpoint {
         if (accessLevel < 1) {
             AditCodedException exception = new AditCodedException("application.insufficientPrivileges.read");
             exception.setParameters(new Object[] {applicationName });
-            throw exception;
-        }
-
-        // Kontrollime, et kasutajakonto ligipääs poleks peatatud (kasutaja
-        // lahkunud)
-        if ((user.getActive() == null) || !user.getActive()) {
-            AditCodedException exception = new AditCodedException("user.inactive");
-            exception.setParameters(new Object[] {user.getUserCode()});
             throw exception;
         }
 
