@@ -17,6 +17,7 @@
   * [GetNotifications.v1](#getnotificationsv1)   
 - [**Dokumentide loomine/muutmine**](#document-modify)
   * [SaveDocument.v1](#savedocumentv1)  
+  * [SaveDocument.v2](#savedocumentv2)  
   * [SaveDocumentFile.v1](#savedocumentfilev1)   
   * [DeflateDocument.v1](#deflatedocumentv1)   
   * [DeleteDocument.v1](deletedocumentv1)   
@@ -1846,6 +1847,242 @@ Parameetrid
     </SOAP-ENV:Body>
 </SOAP-ENV:Envelope>
 ```
+
+## SaveDocument.v2  
+
+Päring võimaldab salvestada dokumendi ADIT-is. Dokument lisatakse kasutaja kontole. Päringu parameetri „document“ atribuut „href“ viitab SOAP manusele, milles on salvestatava dokumendi andmed. Päringu vastuses tagastatakse salvestatud dokumendi ID parameetriga „document_id“.
+Kui saveDocument päringuga lisatakse uut dokumenti ning dokumendi ainsaks failiks on DigiDoc konteiner, siis teostab ADIT DigiDoc konteineri lahtipakkimise (st lisab eraldi failidena ka DigiDoc konteineris sisaldunud failid ning loeb välja allkirjade andmed).
+Päring erineb versioonist 1 selle poolest, et teenuse päringusse on lisatud parameeter check_user_is_active.
+Teenus on ainult sisemiseks kasutuseks mõeldud, seega pole väliselt ligipääsetav.
+
+
+Parameetrid
+
+| Nimi | Väärtuse tüüp | Väärtuse näide |
+| --- | --- | --- |
+| xrd:userId | String | EE30312829989 |
+| check_user_is_active | Boolean | false |
+| Document href | String | cid:123123123 |
+
+### Päringu näide
+---
+
+**X-tee sõnumiprotokoll v2.0**
+
+```xml
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xtee="http://x-tee.riik.ee/xsd/xtee.xsd" xmlns:adit="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid">
+   <soapenv:Header>
+     <xtee:nimi>ametlikud-dokumendid.saveDocument.v2</xtee:nimi>
+      <xtee:id>00000000000000</xtee:id>
+      <xtee:isikukood>EE38407054916</xtee:isikukood>
+      <xtee:andmekogu>ametlikud-dokumendid</xtee:andmekogu>
+      <xtee:asutus>12345678</xtee:asutus>
+      <adit:infosysteem>KOV</adit:infosysteem>
+   </soapenv:Header>
+   <soapenv:Body>
+      <adit:saveDocument>
+        <keha>
+          <check_user_is_active>false</check_user_is_active>
+          <document href="cid:123123123"/>
+          </keha>
+      </adit:saveDocument>
+   </soapenv:Body>
+</soapenv:Envelope>
+```
+
+**X-tee sõnumiprotokoll v4.0**
+
+```xml
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+	xmlns:adit="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+	xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
+	xmlns:id="http://x-road.eu/xsd/identifiers">
+    <soapenv:Header>
+        <xrd:client id:objectType="SUBSYSTEM">
+            <id:xRoadInstance>EE</id:xRoadInstance>
+            <id:memberClass>BUSINESS</id:memberClass>
+            <id:memberCode>12345678</id:memberCode>
+	    <id:subsystemCode>generic-consumer</id:subsystemCode>
+        </xrd:client>
+        <xrd:service id:objectType="SERVICE">
+            <id:xRoadInstance>EE</id:xRoadInstance>
+            <id:memberClass>GOV</id:memberClass>
+            <id:memberCode>70006317</id:memberCode>			
+            <id:subsystemCode>adit</id:subsystemCode>
+            <id:serviceCode>saveDocument</id:serviceCode>
+            <id:serviceVersion>v2</id:serviceVersion>
+        </xrd:service>
+        <xrd:userId>EE37901130250</xrd:userId>
+        <xrd:id>3cf04253-db0c-4d1d-8105-791472d88437</xrd:id>
+        <xrd:protocolVersion>4.0</xrd:protocolVersion>
+
+        <adit:infosysteem>KOV</adit:infosysteem>
+    </soapenv:Header>
+    <soapenv:Body>
+        <adit:saveDocument>
+            <keha>
+                <check_user_is_active>false</check_user_is_active>
+                <document href="cid:123123123"/>
+            </keha>
+        </adit:saveDocument>
+    </soapenv:Body>
+</soapenv:Envelope>
+```
+
+**Päringu SOAP manuse parameetrid**
+
+| Nimi | Kirjeldus | Väärtuse tüüp | Väärtuse näide |
+| --- | --- | --- | --- |
+| Document | Dokumendi andmete konteiner |  |  |
+| id | Dokumendi ID (tühi, kui salvestatakse uut dokumenti, täidetud kui muudetakse olemasolevat dokumenti) | Integer | 45 |
+| guid | Dokumendi GUID | String | 19d71714-0d93-292a-b254-3a06a4f24002 |
+| title | Dokumendi pealkiri | String |  |
+| document_type | Dokumendi tüüp (application / letter) | String | Application |
+| previous_document_id |  | Integer | 33 |
+| eform_use_id | Evormi kasutuselevõtu id. Tidetakse ainult siis, kui tegemist on evormi andmetega | Integer | 299 |
+| content | Dokumendi sisu. Riigiportaali „minu postkast“ kasutab seda välja nagu emaili keha. | String | Lorem ipsum dolor sit amet |
+| files | Dokumendi failide konteiner |  |  |
+| file | Dokumendi faili andmed |  |  |
+| file.id | Faili id (määratud juhul kui soovitakse muuta olemasolevat dokumendi faili) | Integer | 56 |
+| file.name | Faili nimi koos laiendiga | String | Avaldus.txt |
+| file.content_type | Faili MIME tüüp | String | Application/pdf |
+| file.description | Faili pealkiri või kirjeldus | String | Avaldus Tallinna Linnavalitsusele |
+| file.size_bytes | Faili suurus baitides | Long | 300 |
+| file.data | Faili sisu Base64 kodeeringus | String | SvVnZXZhI… |
+
+**Päringu SOAP manuse dekodeeriutd sisu näide**
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<saveDocumentRequestAttachmentV1>
+  <document>
+    <id/>
+    <guid>19d71714-0d93-292a-b254-3a06a4f24002</guid>
+    <title>Avaldus Jõgeva Linnavalitsusele</title>
+    <document_type>application</document_type>
+    <previous_document_id/>
+    <eform_use_id>299</eform_use_id>
+    <content>Lorem ipsum dolor sit amet</content>
+    <files>
+      <file>
+        <id/>
+        <name>avaldus1.txt</name>
+        <content_type>text/plain</content_type>
+        <description>Avaldus tekstifailina</description>
+        <size_bytes>300</size_bytes>
+        <data>
+        SvVnZXZhIExpbm5hdmFsaXRzdXMJMjAuMDQuMjAxMA0KDQpBdmFsZHVzDQoNClBh
+        bHVuIHZpaXZpdGFtYXR1bHQgdGFnYXN0YWRhIG1pbnUgcG9vbHQgbfb2ZHVudWQg
+        dGVpc2lw5GV2YWwgbGlubmF2YWxpdHN1c2Uga2FudHNlbGVpc3NlIHVudXN0YXR1
+        ZCBrb2h2ZXIsIHN1dXNhZCBqYSByYW5uYXBhbGwuDQoNCg0KRWlubyBNdWlkdWdp
+        DQpBUyBBc3V0dXMNCkp1aGF0dXNlIGVzaW1lZXMNCg==
+        </data>
+      </file>
+      <file>
+        <id/>
+        <name>avaldus2.txt</name>
+        <content_type>text/plain</content_type>
+        <description>Avaldus tekstifailina</description>
+        <size_bytes>300</size_bytes>
+        <data>
+        SvVnZXZhIExpbm5hdmFsaXRzdXMJMjAuMDQuMjAxMA0KDQpBdmFsZHVzDQoNClBh
+        bHVuIHZpaXZpdGFtYXR1bHQgdGFnYXN0YWRhIG1pbnUgcG9vbHQgbfb2ZHVudWQg
+        dGVpc2lw5GV2YWwgbGlubmF2YWxpdHN1c2Uga2FudHNlbGVpc3NlIHVudXN0YXR1
+        ZCBrb2h2ZXIsIHN1dXNhZCBqYSByYW5uYXBhbGwuDQoNCg0KRWlubyBNdWlkdWdp
+        DQpBUyBBc3V0dXMNCkp1aGF0dXNlIGVzaW1lZXMNCg==
+        </data>
+      </file>
+      <file>
+        <id/>
+        <name>avaldus3.txt</name>
+        <content_type>text/plain</content_type>
+        <description>Avaldus tekstifailina</description>
+        <size_bytes>300</size_bytes>
+        <data>
+        SvVnZXZhIExpbm5hdmFsaXRzdXMJMjAuMDQuMjAxMA0KDQpBdmFsZHVzDQoNClBh
+        bHVuIHZpaXZpdGFtYXR1bHQgdGFnYXN0YWRhIG1pbnUgcG9vbHQgbfb2ZHVudWQg
+        dGVpc2lw5GV2YWwgbGlubmF2YWxpdHN1c2Uga2FudHNlbGVpc3NlIHVudXN0YXR1
+        ZCBrb2h2ZXIsIHN1dXNhZCBqYSByYW5uYXBhbGwuDQoNCg0KRWlubyBNdWlkdWdp
+        DQpBUyBBc3V0dXMNCkp1aGF0dXNlIGVzaW1lZXMNCg==
+        </data>
+      </file>
+    </files>
+  </document>
+</saveDocumentRequestAttachmentV1>
+```
+
+### Päringu vastuse näide
+---
+
+**X-tee sõnumiprotokoll v2.0**
+
+```xml
+<SOAP-ENV:Envelope SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:adit="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xtee="http://x-tee.riik.ee/xsd/xtee.xsd">
+   <SOAP-ENV:Header>
+      <xtee:asutus xsi:type="xsd:string">EE12345678</xtee:asutus>
+      <xtee:isikukood xsi:type="xsd:string">EE38407089745</xtee:isikukood>
+      <xtee:id xsi:type="xsd:string">00000000000000</xtee:id>
+      <xtee:nimi xsi:type="xsd:string">ametlikud-dokumendid.saveDocument.v2</xtee:nimi>
+      <xtee:andmekogu xsi:type="xsd:string">ametlikud-dokumendid</xtee:andmekogu>
+   </SOAP-ENV:Header>
+   <SOAP-ENV:Body>
+      <adit:saveDocumentResponse>
+         <paring>
+            <check_user_is_active>false</check_user_is_active>
+            <document href="cid:123123123"/>
+         </paring>
+         <keha>
+            <success>true</success>
+            <messages>
+               <message lang="en">Document was successfully saved.</message>
+            </messages>
+            <document_id>45</document_id>
+         </keha>
+      </adit:saveDocumentResponse>
+   </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
+```
+
+**X-tee sõnumiprotokoll v4.0**
+
+```xml
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+	xmlns:adit="http://producers.ametlikud-dokumendid.xtee.riik.ee/producer/ametlikud-dokumendid"
+	xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
+	xmlns:id="http://x-road.eu/xsd/identifiers">
+    <SOAP-ENV:Header>
+        <xrd:client id:objectType="SUBSYSTEM">
+            <id:xRoadInstance>EE</id:xRoadInstance>
+            <id:memberClass>BUSINESS</id:memberClass>
+            <id:memberCode>12345678</id:memberCode>
+	    <id:subsystemCode>generic-consumer</id:subsystemCode>
+        </xrd:client>
+        <xrd:service id:objectType="SERVICE">
+            <id:xRoadInstance>EE</id:xRoadInstance>
+            <id:memberClass>GOV</id:memberClass>
+            <id:memberCode>70006317</id:memberCode>	
+            <id:subsystemCode>adit</id:subsystemCode>
+            <id:serviceCode>saveDocument</id:serviceCode>
+            <id:serviceVersion>v2</id:serviceVersion>
+        </xrd:service>
+        <xrd:userId>EE37901130250</xrd:userId>
+        <xrd:id>3cf04253-db0c-4d1d-8105-791472d88437</xrd:id>
+        <xrd:protocolVersion>4.0</xrd:protocolVersion>
+    </SOAP-ENV:Header>
+    <SOAP-ENV:Body>
+        <adit:saveDocumentResponse>
+            <keha>
+                <success>true</success>
+                <messages>
+                    <message lang="en">Document was successfully saved.</message>
+                </messages>
+                <document_id>45</document_id>
+            </keha>
+        </adit:saveDocumentResponse>
+    </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
+```
+
 
 ## SaveDocumentFile.v1  
 

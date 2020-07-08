@@ -804,6 +804,7 @@
 	      	<documentation xml:lang="en">"saveDocument" request</documentation>
     	</annotation>
 		<sequence>
+			<element name="check_user_is_active" type="boolean" />
 			<element name="document">
 				<annotation>
 					<documentation xml:lang="ee">Dokument</documentation>

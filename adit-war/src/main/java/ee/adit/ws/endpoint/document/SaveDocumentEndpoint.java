@@ -1,20 +1,5 @@
 package ee.adit.ws.endpoint.document;
 
-import java.io.File;
-import java.io.InputStream;
-import java.util.Calendar;
-import java.util.Iterator;
-import java.util.Locale;
-
-import org.digidoc4j.exceptions.CertificateNotFoundException;
-import org.digidoc4j.exceptions.CertificateRevokedException;
-import org.digidoc4j.exceptions.DigiDoc4JException;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.stereotype.Component;
-import org.springframework.ws.mime.Attachment;
-
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
 import ee.adit.exception.AditCodedException;
@@ -38,6 +23,19 @@ import ee.adit.util.Util;
 import ee.adit.util.xroad.CustomXRoadHeader;
 import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
 import ee.webmedia.xtee.annotation.XTeeService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.digidoc4j.exceptions.CertificateNotFoundException;
+import org.digidoc4j.exceptions.CertificateRevokedException;
+import org.digidoc4j.exceptions.DigiDoc4JException;
+import org.springframework.stereotype.Component;
+import org.springframework.ws.mime.Attachment;
+
+import java.io.File;
+import java.io.InputStream;
+import java.util.Calendar;
+import java.util.Iterator;
+import java.util.Locale;
 
 /**
  * Implementation of "saveDocument" web method (web service request). Contains
@@ -64,6 +62,8 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
 
         if (version == 1) {
             return v1(requestObject);
+        } else if (version == 2) {
+            return v2(requestObject);
         } else {
             throw new AditInternalException("This method does not support version specified: " + version);
         }
@@ -77,6 +77,23 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
      */
     @SuppressWarnings("unchecked")
     protected Object v1(Object requestObject) {
+        return parseSaveDocument((SaveDocumentRequest) requestObject, true);
+    }
+
+    /**
+     * Executes "V2" version of "saveDocument" request.
+     *
+     * @param requestObject Request body object
+     * @return Response body object
+     */
+    @SuppressWarnings("unchecked")
+    protected Object v2(Object requestObject) {
+        SaveDocumentRequest saveDocumentRequest = (SaveDocumentRequest) requestObject;
+        return parseSaveDocument((SaveDocumentRequest) requestObject,
+                saveDocumentRequest.isCheckUserIsActive() != null ? saveDocumentRequest.isCheckUserIsActive() : true);
+    }
+
+    private Object parseSaveDocument(SaveDocumentRequest request, boolean checkUserIsActive) {
         SaveDocumentResponse response = new SaveDocumentResponse();
         ArrayOfMessage messages = new ArrayOfMessage();
         Calendar requestDate = Calendar.getInstance();
@@ -88,15 +105,15 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
             logger.debug("SaveDocumentEndpoint.v1 invoked.");
             CustomXRoadHeader header = this.getHeader();
             String applicationName = header.getInfosysteem(this.getConfiguration().getXteeProducerName());
-            SaveDocumentRequest request = (SaveDocumentRequest) requestObject;
+
             InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream(getDigidocConfigurationFile());
             String jdigidocCfgTmpFile = Util.createTemporaryFile(input, getConfiguration().getTempDir());
             logger.debug("JDigidoc.cfg file created as a temporary file: '" + jdigidocCfgTmpFile + "'");
-            
+
             // jDigiDoc does not add provider when preparing signature, but uses it causing error. So add provider manually
-        	// ConfigManager.init(jdigidocCfgTmpFile);
-        	// ConfigManager.addProvider();
-            
+            // ConfigManager.init(jdigidocCfgTmpFile);
+            // ConfigManager.addProvider();
+
             // Log request
             Util.printHeader(header, this.getConfiguration());
 
@@ -108,6 +125,9 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
             AditUser xroadRequestUser = Util.getXroadUserFromXroadHeader(user, this.getHeader(), this.getUserService());
 
             checkRights(request, applicationName, user);
+            if (checkUserIsActive) {
+                checkUserStatus(user);
+            }
 
             String attachmentID = null;
             // Check if the attachment ID is specified
@@ -415,14 +435,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
         int accessLevel = this.getUserService().getAccessLevel(applicationName);
         if (accessLevel != 2) {
             AditCodedException aditCodedException = new AditCodedException("application.insufficientPrivileges.write");
-            aditCodedException.setParameters(new Object[] {applicationName });
-            throw aditCodedException;
-        }
-
-        // Check whether or not the user is active (account not deleted)
-        if ((user.getActive() == null) || !user.getActive()) {
-            AditCodedException aditCodedException = new AditCodedException("user.inactive");
-            aditCodedException.setParameters(new Object[] {user.getUserCode()});
+            aditCodedException.setParameters(new Object[]{applicationName});
             throw aditCodedException;
         }
 
@@ -430,7 +443,16 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
         int applicationAccessLevelForUser = userService.getAccessLevelForUser(applicationName, user);
         if (applicationAccessLevelForUser != 2) {
             AditCodedException aditCodedException = new AditCodedException("application.insufficientPrivileges.forUser.write");
-            aditCodedException.setParameters(new Object[] {applicationName, user.getUserCode() });
+            aditCodedException.setParameters(new Object[]{applicationName, user.getUserCode()});
+            throw aditCodedException;
+        }
+    }
+
+    private void checkUserStatus(final AditUser user) {
+        // Check whether or not the user is active (account not deleted)
+        if ((user.getActive() == null) || !user.getActive()) {
+            AditCodedException aditCodedException = new AditCodedException("user.inactive");
+            aditCodedException.setParameters(new Object[]{user.getUserCode()});
             throw aditCodedException;
         }
     }
@@ -492,5 +514,5 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
     public void setDigidocConfigurationFile(String digidocConfigurationFile) {
         this.digidocConfigurationFile = digidocConfigurationFile;
     }
-    
+
 }
