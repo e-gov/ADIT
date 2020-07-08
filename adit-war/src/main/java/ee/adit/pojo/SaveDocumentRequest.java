@@ -48,6 +48,9 @@ public class SaveDocumentRequest {
 
     @XmlElement(required = true)
     private SaveDocumentRequestDocument document;
+
+    @XmlElement(name = "check_user_is_active")
+    private Boolean checkUserIsActive;
     
     /**
      * Gets the value of the document property.
@@ -70,5 +73,21 @@ public class SaveDocumentRequest {
         this.document = value;
     }
 
+
+    /**
+     * Gets the value of the checkUserIsActive property.
+     *
+     */
+    public Boolean isCheckUserIsActive() {
+        return checkUserIsActive;
+    }
+
+    /**
+     * Sets the value of the checkUserIsActive property.
+     *
+     */
+    public void setCheckUserIsActive(Boolean value) {
+        this.checkUserIsActive = value;
+    }
 
 }
