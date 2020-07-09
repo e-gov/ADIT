@@ -6,14 +6,7 @@ import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditException;
 import ee.adit.exception.AditInternalException;
 import ee.adit.exception.AditMultipleException;
-import ee.adit.pojo.ArrayOfMessage;
-import ee.adit.pojo.Message;
-import ee.adit.pojo.SaveDocumentRequest;
-import ee.adit.pojo.SaveDocumentRequestAttachment;
-import ee.adit.pojo.SaveDocumentRequestDocument;
-import ee.adit.pojo.SaveDocumentResponse;
-import ee.adit.pojo.SaveItemInternalResult;
-import ee.adit.pojo.Success;
+import ee.adit.pojo.*;
 import ee.adit.service.DocumentService;
 import ee.adit.service.LogService;
 import ee.adit.service.MessageService;
@@ -77,6 +70,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
      */
     @SuppressWarnings("unchecked")
     protected Object v1(Object requestObject) {
+        logger.debug("SaveDocumentEndpoint.v1 invoked.");
         return parseSaveDocument((SaveDocumentRequest) requestObject, true);
     }
 
@@ -88,6 +82,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
      */
     @SuppressWarnings("unchecked")
     protected Object v2(Object requestObject) {
+        logger.debug("SaveDocumentEndpoint.v2 invoked.");
         SaveDocumentRequest saveDocumentRequest = (SaveDocumentRequest) requestObject;
         return parseSaveDocument((SaveDocumentRequest) requestObject,
                 saveDocumentRequest.isCheckUserIsActive() != null ? saveDocumentRequest.isCheckUserIsActive() : true);
@@ -102,7 +97,6 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
         boolean updatedExistingDocument = false;
 
         try {
-            logger.debug("SaveDocumentEndpoint.v1 invoked.");
             CustomXRoadHeader header = this.getHeader();
             String applicationName = header.getInfosysteem(this.getConfiguration().getXteeProducerName());
 

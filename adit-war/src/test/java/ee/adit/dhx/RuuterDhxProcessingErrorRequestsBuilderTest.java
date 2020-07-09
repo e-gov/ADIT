@@ -1,9 +1,7 @@
 package ee.adit.dhx;
 
-import ee.adit.dhx.api.container.v2_1.ContainerVer2_1;
-import ee.adit.dhx.api.container.v2_1.OrganisationType;
-import ee.adit.dhx.api.container.v2_1.PersonType;
-import ee.adit.dhx.api.container.v2_1.Recipient;
+import ee.adit.dao.pojo.DocumentType;
+import ee.adit.dhx.api.container.v2_1.*;
 import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditUserInactiveException;
 import ee.adit.service.dhx.DhxProcessingErrorType;
@@ -25,18 +23,26 @@ public class RuuterDhxProcessingErrorRequestsBuilderTest {
     public static final String TEST_ORGANISATION_NAME = "TestName";
     public static final String TEST_PERSON_NAME = "TestGiven";
     public static final String TEST_PERSON_SURNAME = "TestSur";
+    public List<DocumentType> ADIT_DOCUMENT_TYPES = new ArrayList<DocumentType>() {
+        {
+            add(new DocumentType("letter", "Kiri", null));
+            add(new DocumentType("invoice", "E-arve", null));
+            add(new DocumentType("application", "Avaldus / Taotlus", null));
+        }
+    };
 
     @Test
     public void testBuildWithAditUserInactiveException() {
         ContainerVer2_1 containerVer2_1 = buildValidContainer();
         Exception error = new AditUserInactiveException("12345");
-        RuuterDhxProcessingErrorRequestsBuilder builder = new RuuterDhxProcessingErrorRequestsBuilder(containerVer2_1, error);
+        RuuterDhxProcessingErrorRequestsBuilder builder = new RuuterDhxProcessingErrorRequestsBuilder(containerVer2_1, error, ADIT_DOCUMENT_TYPES);
         List<RuuterDhxProcessingErrorRequest> requests = builder.build();
 
         Assert.assertNotNull(requests);
         Assert.assertEquals(1, requests.size());
         Assert.assertEquals(DhxProcessingErrorType.ACTIVE_USER_NOT_FOUND, requests.get(0).getErrorCode());
-        Assert.assertEquals(containerVer2_1, requests.get(0).getContainerVer2_1());
+        Assert.assertEquals(containerVer2_1, requests.get(0).getDocument());
+        Assert.assertEquals("letter", requests.get(0).getAditDocumentType());
     }
 
     /**
@@ -49,26 +55,26 @@ public class RuuterDhxProcessingErrorRequestsBuilderTest {
         //Recipient uses personalIdCode 12345
         Exception error = new AditUserInactiveException("54321");
 
-        RuuterDhxProcessingErrorRequestsBuilder builder = new RuuterDhxProcessingErrorRequestsBuilder(containerVer2_1, error);
+        RuuterDhxProcessingErrorRequestsBuilder builder = new RuuterDhxProcessingErrorRequestsBuilder(containerVer2_1, error, ADIT_DOCUMENT_TYPES);
         List<RuuterDhxProcessingErrorRequest> requests = builder.build();
 
         Assert.assertNotNull(requests);
         Assert.assertEquals(1, requests.size());
         Assert.assertEquals(DhxProcessingErrorType.UNSPECIFIED, requests.get(0).getErrorCode());
-        Assert.assertEquals(containerVer2_1, requests.get(0).getContainerVer2_1());
+        Assert.assertEquals(containerVer2_1, requests.get(0).getDocument());
     }
 
     @Test
     public void testBuildWithAditCodedException() {
         ContainerVer2_1 containerVer2_1 = buildValidContainer();
         Exception error = new AditCodedException("message");
-        RuuterDhxProcessingErrorRequestsBuilder builder = new RuuterDhxProcessingErrorRequestsBuilder(containerVer2_1, error);
+        RuuterDhxProcessingErrorRequestsBuilder builder = new RuuterDhxProcessingErrorRequestsBuilder(containerVer2_1, error, ADIT_DOCUMENT_TYPES);
         List<RuuterDhxProcessingErrorRequest> requests = builder.build();
 
         Assert.assertNotNull(requests);
         Assert.assertEquals(1, requests.size());
         Assert.assertEquals(DhxProcessingErrorType.UNSPECIFIED, requests.get(0).getErrorCode());
-        Assert.assertEquals(containerVer2_1, requests.get(0).getContainerVer2_1());
+        Assert.assertEquals(containerVer2_1, requests.get(0).getDocument());
     }
 
     @Test
@@ -77,7 +83,7 @@ public class RuuterDhxProcessingErrorRequestsBuilderTest {
         containerVer2_1.getRecipient().add(buildOrganisationRecipient("111"));
 
         Exception error = new AditCodedException("message");
-        RuuterDhxProcessingErrorRequestsBuilder builder = new RuuterDhxProcessingErrorRequestsBuilder(containerVer2_1, error);
+        RuuterDhxProcessingErrorRequestsBuilder builder = new RuuterDhxProcessingErrorRequestsBuilder(containerVer2_1, error, ADIT_DOCUMENT_TYPES);
         List<RuuterDhxProcessingErrorRequest> requests = builder.build();
 
         Assert.assertNotNull(requests);
@@ -106,7 +112,7 @@ public class RuuterDhxProcessingErrorRequestsBuilderTest {
         containerVer2_1.getRecipient().add(buildPersonRecipient(inactiveUserPersonalIdCode));
 
         Exception error = new AditUserInactiveException(inactiveUserPersonalIdCode);
-        RuuterDhxProcessingErrorRequestsBuilder builder = new RuuterDhxProcessingErrorRequestsBuilder(containerVer2_1, error);
+        RuuterDhxProcessingErrorRequestsBuilder builder = new RuuterDhxProcessingErrorRequestsBuilder(containerVer2_1, error, ADIT_DOCUMENT_TYPES);
         List<RuuterDhxProcessingErrorRequest> requests = builder.build();
 
         Assert.assertNotNull(requests);
@@ -122,12 +128,58 @@ public class RuuterDhxProcessingErrorRequestsBuilderTest {
                 Matchers.<RuuterDhxProcessingErrorRequest>hasProperty("errorCode", is(DhxProcessingErrorType.UNSPECIFIED)))
         ));
 
-        Assert.assertEquals(containerVer2_1, requests.get(0).getContainerVer2_1());
-        Assert.assertEquals(containerVer2_1, requests.get(1).getContainerVer2_1());
+        Assert.assertEquals(containerVer2_1, requests.get(0).getDocument());
+        Assert.assertEquals(containerVer2_1, requests.get(1).getDocument());
+    }
+
+    /**
+     * No exceptions should be thrown, when getRecordMetadata is null or recordType is null
+     */
+    @Test
+    public void testBuildWithMissingDocumentType() {
+        // if all recordType is missing
+        ContainerVer2_1 containerVer2_1 = buildValidContainer();
+        containerVer2_1.getRecordMetadata().setRecordType(null);
+
+        Exception error = new AditUserInactiveException("12345");
+        RuuterDhxProcessingErrorRequestsBuilder builder = new RuuterDhxProcessingErrorRequestsBuilder(containerVer2_1, error, ADIT_DOCUMENT_TYPES);
+        List<RuuterDhxProcessingErrorRequest> requests = builder.build();
+        Assert.assertNotNull(requests);
+        Assert.assertEquals(1, requests.size());
+        Assert.assertNull(requests.get(0).getAditDocumentType());
+
+        // if all recordMetadata is missing
+        containerVer2_1 = buildValidContainer();
+        containerVer2_1.setRecordMetadata(null);
+        builder = new RuuterDhxProcessingErrorRequestsBuilder(containerVer2_1, error, ADIT_DOCUMENT_TYPES);
+        requests = builder.build();
+        Assert.assertNotNull(requests);
+        Assert.assertEquals(1, requests.size());
+
+        Assert.assertEquals(DhxProcessingErrorType.ACTIVE_USER_NOT_FOUND, requests.get(0).getErrorCode());
+        Assert.assertEquals(containerVer2_1, requests.get(0).getDocument());
+        Assert.assertNull(requests.get(0).getAditDocumentType());
+    }
+
+    @Test
+    public void testBuildWithInvalidDocumentType() {
+        ContainerVer2_1 containerVer2_1 = buildValidContainer();
+        containerVer2_1.getRecordMetadata().setRecordType("Sõnum");
+        Exception error = new AditUserInactiveException("12345");
+        RuuterDhxProcessingErrorRequestsBuilder builder = new RuuterDhxProcessingErrorRequestsBuilder(containerVer2_1, error, ADIT_DOCUMENT_TYPES);
+        List<RuuterDhxProcessingErrorRequest> requests = builder.build();
+
+        Assert.assertNotNull(requests);
+        Assert.assertEquals(1, requests.size());
+        Assert.assertEquals(DhxProcessingErrorType.ACTIVE_USER_NOT_FOUND, requests.get(0).getErrorCode());
+        Assert.assertEquals(containerVer2_1, requests.get(0).getDocument());
     }
 
     private ContainerVer2_1 buildValidContainer() {
         ContainerVer2_1 containerVer2_1 = new ContainerVer2_1();
+        RecordMetadata recordMetadata = new RecordMetadata();
+        recordMetadata.setRecordType("Kiri");
+        containerVer2_1.setRecordMetadata(recordMetadata);
 
         Recipient recipient = buildPersonRecipient("12345");
 

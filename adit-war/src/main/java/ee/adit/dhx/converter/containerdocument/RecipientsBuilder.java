@@ -21,27 +21,32 @@ import java.util.List;
  */
 public class RecipientsBuilder {
     private static Logger logger = LogManager.getLogger(RecipientsBuilder.class);
+
+    private boolean validateUserIsActive = true;
     private ContainerVer2_1 container;
     private Configuration configuration;
     private AditUserDAO aditUserDAO;
 
     /**
      * Constructor.
+     *
      * @param container 2.1 container version
      */
-    public RecipientsBuilder(final ContainerVer2_1 container) {
-       this.container = container;
+    public RecipientsBuilder(final ContainerVer2_1 container, boolean validateUserIsActive) {
+        this.container = container;
+        this.validateUserIsActive = validateUserIsActive;
     }
 
     /**
      * Build a list of recipients.
+     *
      * @return recipients
      */
     public List<Pair<AditUser, Recipient>> build() {
         List<Pair<AditUser, Recipient>> allRecipients = new ArrayList<Pair<AditUser, Recipient>>();
 
         // For every recipient - check if registered in ADIT
-        for (final DecRecipient recipient: container.getTransport().getDecRecipient()) {
+        for (final DecRecipient recipient : container.getTransport().getDecRecipient()) {
             // First of all make sure that this recipient is supposed to be found in ADIT
             if (!Util.isNullOrEmpty(recipient.getOrganisationCode())
                     && getConfiguration().getDvkOrgCode().equalsIgnoreCase(recipient.getOrganisationCode())) {
@@ -64,7 +69,7 @@ public class RecipientsBuilder {
                     logger.debug("Getting AditUser by personal code: " + personalIdCodeWithCountryPrefix);
                     final AditUser user = this.getAditUserDAO().getUserByID(personalIdCodeWithCountryPrefix);
 
-                    if (user != null && user.getActive()) {
+                    if (user != null && (!validateUserIsActive || user.getActive())) {
                         // Check if user uses DHX
                         if (!Util.isNullOrEmpty(user.getDvkOrgCode())) {
                             // The user uses DHX - this is not allowed.
