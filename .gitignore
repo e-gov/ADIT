@@ -10,6 +10,8 @@ adit-war/.settings
 adit-war/bin
 adit-war/lib/587705.p12d
 adit-war/src/main/resources/conf/adit-arendus-bpw
+/adit-war/src/main/resources/conf/adit-arendus-local/
 adit-war/target
 /target
 /bin/
+

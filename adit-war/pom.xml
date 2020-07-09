@@ -804,6 +804,18 @@
 			</properties>
 		</profile>
 		<profile>
+			<id>adit-arendus-local</id>
+			<activation>
+				<property>
+					<name>env</name>
+					<value>adit-arendus-local</value>
+				</property>
+			</activation>
+			<properties>
+				<conf>adit-arendus-local</conf>
+			</properties>
+		</profile>
+		<profile>
 			<id>adit-arendus-bpw</id>
 			<activation>
 				<property>
