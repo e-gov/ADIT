@@ -6,8 +6,8 @@ import ee.adit.dao.pojo.DocumentType;
 import ee.adit.dhx.api.container.v2_1.ContainerVer2_1;
 import ee.adit.dhx.api.container.v2_1.Recipient;
 import ee.adit.exception.AditInternalException;
-import ee.adit.service.dhx.RuuterDhxProcessingErrorRequest;
-import ee.adit.service.dhx.RuuterDhxProcessingErrorRequestsBuilder;
+import ee.adit.service.dhx.RuuterDhxErrorProcessingRequest;
+import ee.adit.service.dhx.RuuterDhxErrorProcessingRequestsBuilder;
 import ee.adit.util.Configuration;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -19,6 +19,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -31,13 +32,16 @@ import java.util.List;
 public class RuuterService implements InitializingBean {
 
     private static Logger logger = LogManager.getLogger(RuuterService.class);
-    private static final String RUUTER_DHX_ERROR_ENDPOINT = "ADIT_DHXDOCUMENTERROR";
+    private static final String RUUTER_DHX_INACTIVE_USER_RETRY_ENDPOINT = "ADIT_DHXRETRYINACTIVEUSER";
 
     private Configuration configuration;
 
     private DocumentTypeDAO documentTypeDAO;
 
-    public void forwardDhxProcessingErrorToRouter(String temporaryFile, Exception ex) {
+    /**
+     * Accesses Ruuter to check if retry should be attempted
+     */
+    public boolean shouldRetryWithoutActiveUserValidation(String temporaryFile, Exception ex) {
         // This method is already called within exception handling block.
         // try-catch ensures all exceptions generated here get logged as well.
         try {
@@ -55,27 +59,26 @@ public class RuuterService implements InitializingBean {
             }
 
             List<DocumentType> aditDocumentTypes = documentTypeDAO.listDocumentTypes();
-            List<RuuterDhxProcessingErrorRequest> dhxProcessingErrorRequests =
-                    new RuuterDhxProcessingErrorRequestsBuilder(containerVer2_1, ex, aditDocumentTypes).build();
+            List<RuuterDhxErrorProcessingRequest> dhxErrorProcessingRequests =
+                    new RuuterDhxErrorProcessingRequestsBuilder(containerVer2_1, ex, aditDocumentTypes).build();
             logger.info("Forwarding DHX processing error ({}) to Ruuter as {} requests.",
-                    ex.getMessage(), dhxProcessingErrorRequests.size());
+                    ex.getMessage(), dhxErrorProcessingRequests.size());
 
-            sendDhxProcessingErrorRequests(dhxProcessingErrorRequests);
+            for (RuuterDhxErrorProcessingRequest request : dhxErrorProcessingRequests) {
+                if (shouldRetryWithoutActiveUserValidation(request)) {
+                    logger.info("DHX processing should be retried as Ruuter returned OK for {}.", request);
+                    return true;
+                }
+            }
         } catch (Exception e) {
-            logger.error("Forwarding DHX processing error to Ruuter failed.", e);
+            logger.error("DHX processing retry verification from Ruuter failed.", e);
             e.printStackTrace();
         }
+        return false;
     }
 
-
-    private void sendDhxProcessingErrorRequests(List<RuuterDhxProcessingErrorRequest> dhxProcessingErrorRequests) {
-        for (RuuterDhxProcessingErrorRequest request : dhxProcessingErrorRequests) {
-            sendDhxProcessingErrorRequest(request);
-        }
-    }
-
-    private void sendDhxProcessingErrorRequest(RuuterDhxProcessingErrorRequest request) {
-        String ruuterEndpointUrl = configuration.getRuuterServiceUrl() + "/" + RUUTER_DHX_ERROR_ENDPOINT;
+    private boolean shouldRetryWithoutActiveUserValidation(RuuterDhxErrorProcessingRequest request) {
+        String ruuterEndpointUrl = configuration.getRuuterServiceUrl() + "/" + RUUTER_DHX_INACTIVE_USER_RETRY_ENDPOINT;
         String entityJson = new Gson().toJson(request);
 
         HttpPost httpPost = new HttpPost(ruuterEndpointUrl);
@@ -85,14 +88,16 @@ public class RuuterService implements InitializingBean {
         httpPost.setHeader("Accept", ContentType.APPLICATION_JSON.getMimeType());
         httpPost.setHeader("Content-type", ContentType.APPLICATION_JSON.getMimeType());
 
-        logger.info("Forwarding DHX error to Ruuter.");
         try (CloseableHttpClient client = HttpClients.createDefault();
              CloseableHttpResponse response = client.execute(httpPost)) {
-            logger.info("DHX error forwarded to Ruuter. Response: {}", response);
+            logger.info("Verification if retry without active user check is permitted returned: {}", response);
+            if (response.getStatusLine().getStatusCode() == HttpStatus.OK.value()) {
+                return true;
+            }
         } catch (IOException e) {
-            throw new AditInternalException("Failed to forward DHX processing error to Ruuter", e);
+            throw new AditInternalException("Failed to verify if DHX processing should be retried without active user check.", e);
         }
-
+        return false;
     }
 
     public void setConfiguration(Configuration configuration) {

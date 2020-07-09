@@ -42,7 +42,7 @@ public class Container2_1Receiver implements DhxReceiver {
 
 
 	@Override
-    public Long receive(final String containerFile, String consignmentId) {
+    public Long receive(final String containerFile, String consignmentId, boolean allowSendingToInactiveUser) {
     	ContainerVer2_1 containerVer2_1 = ContainerVer2_1.parseFile(containerFile);
         //ContainerVer2_1 containerVer2_1 = documentService.getDVKContainer2_1(message);
         ContainerVer2_1ToDocumentConverterImpl converter = createConverter(containerVer2_1, consignmentId);
@@ -51,7 +51,7 @@ public class Container2_1Receiver implements DhxReceiver {
         //this must be after conversion, because we need the data which is created during the conversion itself
         validateMessage(containerVer2_1, converter, consignmentId);
 
-        RecipientsBuilder recipientsBuilder = new RecipientsBuilder(containerVer2_1, false);
+        RecipientsBuilder recipientsBuilder = new RecipientsBuilder(containerVer2_1, allowSendingToInactiveUser);
         recipientsBuilder.setAditUserDAO(documentService.getAditUserDAO());
         recipientsBuilder.setConfiguration(documentService.getConfiguration());
 

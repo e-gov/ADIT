@@ -4,7 +4,7 @@ import ee.adit.dhx.api.container.v2_1.ContainerVer2_1;
 
 import java.util.Objects;
 
-public class RuuterDhxProcessingErrorRequest {
+public class RuuterDhxErrorProcessingRequest {
 
     private String senderOrganisationCode;
     private String recipientCode;
@@ -80,7 +80,7 @@ public class RuuterDhxProcessingErrorRequest {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RuuterDhxProcessingErrorRequest that = (RuuterDhxProcessingErrorRequest) o;
+        RuuterDhxErrorProcessingRequest that = (RuuterDhxErrorProcessingRequest) o;
         return Objects.equals(senderOrganisationCode, that.senderOrganisationCode) &&
                 Objects.equals(recipientCode, that.recipientCode) &&
                 recipientUserType == that.recipientUserType &&

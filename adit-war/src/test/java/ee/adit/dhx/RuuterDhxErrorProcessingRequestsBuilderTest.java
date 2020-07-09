@@ -6,8 +6,8 @@ import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditUserInactiveException;
 import ee.adit.service.dhx.DhxProcessingErrorType;
 import ee.adit.service.dhx.DhxRecipientUserType;
-import ee.adit.service.dhx.RuuterDhxProcessingErrorRequest;
-import ee.adit.service.dhx.RuuterDhxProcessingErrorRequestsBuilder;
+import ee.adit.service.dhx.RuuterDhxErrorProcessingRequest;
+import ee.adit.service.dhx.RuuterDhxErrorProcessingRequestsBuilder;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
@@ -18,7 +18,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.*;
 
-public class RuuterDhxProcessingErrorRequestsBuilderTest {
+public class RuuterDhxErrorProcessingRequestsBuilderTest {
 
     public static final String TEST_ORGANISATION_NAME = "TestName";
     public static final String TEST_PERSON_NAME = "TestGiven";
@@ -35,8 +35,8 @@ public class RuuterDhxProcessingErrorRequestsBuilderTest {
     public void testBuildWithAditUserInactiveException() {
         ContainerVer2_1 containerVer2_1 = buildValidContainer();
         Exception error = new AditUserInactiveException("12345");
-        RuuterDhxProcessingErrorRequestsBuilder builder = new RuuterDhxProcessingErrorRequestsBuilder(containerVer2_1, error, ADIT_DOCUMENT_TYPES);
-        List<RuuterDhxProcessingErrorRequest> requests = builder.build();
+        RuuterDhxErrorProcessingRequestsBuilder builder = new RuuterDhxErrorProcessingRequestsBuilder(containerVer2_1, error, ADIT_DOCUMENT_TYPES);
+        List<RuuterDhxErrorProcessingRequest> requests = builder.build();
 
         Assert.assertNotNull(requests);
         Assert.assertEquals(1, requests.size());
@@ -55,8 +55,8 @@ public class RuuterDhxProcessingErrorRequestsBuilderTest {
         //Recipient uses personalIdCode 12345
         Exception error = new AditUserInactiveException("54321");
 
-        RuuterDhxProcessingErrorRequestsBuilder builder = new RuuterDhxProcessingErrorRequestsBuilder(containerVer2_1, error, ADIT_DOCUMENT_TYPES);
-        List<RuuterDhxProcessingErrorRequest> requests = builder.build();
+        RuuterDhxErrorProcessingRequestsBuilder builder = new RuuterDhxErrorProcessingRequestsBuilder(containerVer2_1, error, ADIT_DOCUMENT_TYPES);
+        List<RuuterDhxErrorProcessingRequest> requests = builder.build();
 
         Assert.assertNotNull(requests);
         Assert.assertEquals(1, requests.size());
@@ -68,8 +68,8 @@ public class RuuterDhxProcessingErrorRequestsBuilderTest {
     public void testBuildWithAditCodedException() {
         ContainerVer2_1 containerVer2_1 = buildValidContainer();
         Exception error = new AditCodedException("message");
-        RuuterDhxProcessingErrorRequestsBuilder builder = new RuuterDhxProcessingErrorRequestsBuilder(containerVer2_1, error, ADIT_DOCUMENT_TYPES);
-        List<RuuterDhxProcessingErrorRequest> requests = builder.build();
+        RuuterDhxErrorProcessingRequestsBuilder builder = new RuuterDhxErrorProcessingRequestsBuilder(containerVer2_1, error, ADIT_DOCUMENT_TYPES);
+        List<RuuterDhxErrorProcessingRequest> requests = builder.build();
 
         Assert.assertNotNull(requests);
         Assert.assertEquals(1, requests.size());
@@ -83,24 +83,24 @@ public class RuuterDhxProcessingErrorRequestsBuilderTest {
         containerVer2_1.getRecipient().add(buildOrganisationRecipient("111"));
 
         Exception error = new AditCodedException("message");
-        RuuterDhxProcessingErrorRequestsBuilder builder = new RuuterDhxProcessingErrorRequestsBuilder(containerVer2_1, error, ADIT_DOCUMENT_TYPES);
-        List<RuuterDhxProcessingErrorRequest> requests = builder.build();
+        RuuterDhxErrorProcessingRequestsBuilder builder = new RuuterDhxErrorProcessingRequestsBuilder(containerVer2_1, error, ADIT_DOCUMENT_TYPES);
+        List<RuuterDhxErrorProcessingRequest> requests = builder.build();
 
         Assert.assertNotNull(requests);
         Assert.assertEquals(2, requests.size());
 
         MatcherAssert.assertThat(requests, hasItem(allOf(
-                Matchers.<RuuterDhxProcessingErrorRequest>hasProperty("recipientCode", is("111")),
-                Matchers.<RuuterDhxProcessingErrorRequest>hasProperty("recipientUserType", is(DhxRecipientUserType.ORGANISATION)),
-                Matchers.<RuuterDhxProcessingErrorRequest>hasProperty("recipientUserName", is(TEST_ORGANISATION_NAME)),
-                Matchers.<RuuterDhxProcessingErrorRequest>hasProperty("errorCode", is(DhxProcessingErrorType.UNSPECIFIED)))
+                Matchers.<RuuterDhxErrorProcessingRequest>hasProperty("recipientCode", is("111")),
+                Matchers.<RuuterDhxErrorProcessingRequest>hasProperty("recipientUserType", is(DhxRecipientUserType.ORGANISATION)),
+                Matchers.<RuuterDhxErrorProcessingRequest>hasProperty("recipientUserName", is(TEST_ORGANISATION_NAME)),
+                Matchers.<RuuterDhxErrorProcessingRequest>hasProperty("errorCode", is(DhxProcessingErrorType.UNSPECIFIED)))
         ));
 
         MatcherAssert.assertThat(requests, hasItem(allOf(
-                Matchers.<RuuterDhxProcessingErrorRequest>hasProperty("recipientCode", is("12345")),
-                Matchers.<RuuterDhxProcessingErrorRequest>hasProperty("recipientUserType", is(DhxRecipientUserType.PERSON)),
-                Matchers.<RuuterDhxProcessingErrorRequest>hasProperty("recipientUserName", is(TEST_PERSON_NAME + " " + TEST_PERSON_SURNAME)),
-                Matchers.<RuuterDhxProcessingErrorRequest>hasProperty("errorCode", is(DhxProcessingErrorType.UNSPECIFIED)))
+                Matchers.<RuuterDhxErrorProcessingRequest>hasProperty("recipientCode", is("12345")),
+                Matchers.<RuuterDhxErrorProcessingRequest>hasProperty("recipientUserType", is(DhxRecipientUserType.PERSON)),
+                Matchers.<RuuterDhxErrorProcessingRequest>hasProperty("recipientUserName", is(TEST_PERSON_NAME + " " + TEST_PERSON_SURNAME)),
+                Matchers.<RuuterDhxErrorProcessingRequest>hasProperty("errorCode", is(DhxProcessingErrorType.UNSPECIFIED)))
         ));
     }
 
@@ -112,20 +112,20 @@ public class RuuterDhxProcessingErrorRequestsBuilderTest {
         containerVer2_1.getRecipient().add(buildPersonRecipient(inactiveUserPersonalIdCode));
 
         Exception error = new AditUserInactiveException(inactiveUserPersonalIdCode);
-        RuuterDhxProcessingErrorRequestsBuilder builder = new RuuterDhxProcessingErrorRequestsBuilder(containerVer2_1, error, ADIT_DOCUMENT_TYPES);
-        List<RuuterDhxProcessingErrorRequest> requests = builder.build();
+        RuuterDhxErrorProcessingRequestsBuilder builder = new RuuterDhxErrorProcessingRequestsBuilder(containerVer2_1, error, ADIT_DOCUMENT_TYPES);
+        List<RuuterDhxErrorProcessingRequest> requests = builder.build();
 
         Assert.assertNotNull(requests);
         Assert.assertEquals(2, requests.size());
 
         MatcherAssert.assertThat(requests, hasItem(allOf(
-                Matchers.<RuuterDhxProcessingErrorRequest>hasProperty("recipientCode", is("23456")),
-                Matchers.<RuuterDhxProcessingErrorRequest>hasProperty("errorCode", is(DhxProcessingErrorType.ACTIVE_USER_NOT_FOUND)))
+                Matchers.<RuuterDhxErrorProcessingRequest>hasProperty("recipientCode", is("23456")),
+                Matchers.<RuuterDhxErrorProcessingRequest>hasProperty("errorCode", is(DhxProcessingErrorType.ACTIVE_USER_NOT_FOUND)))
         ));
 
         MatcherAssert.assertThat(requests, hasItem(allOf(
-                Matchers.<RuuterDhxProcessingErrorRequest>hasProperty("recipientCode", is("12345")),
-                Matchers.<RuuterDhxProcessingErrorRequest>hasProperty("errorCode", is(DhxProcessingErrorType.UNSPECIFIED)))
+                Matchers.<RuuterDhxErrorProcessingRequest>hasProperty("recipientCode", is("12345")),
+                Matchers.<RuuterDhxErrorProcessingRequest>hasProperty("errorCode", is(DhxProcessingErrorType.UNSPECIFIED)))
         ));
 
         Assert.assertEquals(containerVer2_1, requests.get(0).getDocument());
@@ -142,8 +142,8 @@ public class RuuterDhxProcessingErrorRequestsBuilderTest {
         containerVer2_1.getRecordMetadata().setRecordType(null);
 
         Exception error = new AditUserInactiveException("12345");
-        RuuterDhxProcessingErrorRequestsBuilder builder = new RuuterDhxProcessingErrorRequestsBuilder(containerVer2_1, error, ADIT_DOCUMENT_TYPES);
-        List<RuuterDhxProcessingErrorRequest> requests = builder.build();
+        RuuterDhxErrorProcessingRequestsBuilder builder = new RuuterDhxErrorProcessingRequestsBuilder(containerVer2_1, error, ADIT_DOCUMENT_TYPES);
+        List<RuuterDhxErrorProcessingRequest> requests = builder.build();
         Assert.assertNotNull(requests);
         Assert.assertEquals(1, requests.size());
         Assert.assertNull(requests.get(0).getAditDocumentType());
@@ -151,7 +151,7 @@ public class RuuterDhxProcessingErrorRequestsBuilderTest {
         // if all recordMetadata is missing
         containerVer2_1 = buildValidContainer();
         containerVer2_1.setRecordMetadata(null);
-        builder = new RuuterDhxProcessingErrorRequestsBuilder(containerVer2_1, error, ADIT_DOCUMENT_TYPES);
+        builder = new RuuterDhxErrorProcessingRequestsBuilder(containerVer2_1, error, ADIT_DOCUMENT_TYPES);
         requests = builder.build();
         Assert.assertNotNull(requests);
         Assert.assertEquals(1, requests.size());
@@ -166,8 +166,8 @@ public class RuuterDhxProcessingErrorRequestsBuilderTest {
         ContainerVer2_1 containerVer2_1 = buildValidContainer();
         containerVer2_1.getRecordMetadata().setRecordType("Sõnum");
         Exception error = new AditUserInactiveException("12345");
-        RuuterDhxProcessingErrorRequestsBuilder builder = new RuuterDhxProcessingErrorRequestsBuilder(containerVer2_1, error, ADIT_DOCUMENT_TYPES);
-        List<RuuterDhxProcessingErrorRequest> requests = builder.build();
+        RuuterDhxErrorProcessingRequestsBuilder builder = new RuuterDhxErrorProcessingRequestsBuilder(containerVer2_1, error, ADIT_DOCUMENT_TYPES);
+        List<RuuterDhxErrorProcessingRequest> requests = builder.build();
 
         Assert.assertNotNull(requests);
         Assert.assertEquals(1, requests.size());

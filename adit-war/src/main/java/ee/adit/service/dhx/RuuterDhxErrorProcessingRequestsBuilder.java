@@ -11,25 +11,25 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RuuterDhxProcessingErrorRequestsBuilder {
+public class RuuterDhxErrorProcessingRequestsBuilder {
 
-    private static Logger logger = LogManager.getLogger(RuuterDhxProcessingErrorRequestsBuilder.class);
+    private static Logger logger = LogManager.getLogger(RuuterDhxErrorProcessingRequestsBuilder.class);
 
     private final List<DocumentType> aditDocumentTypes;
     private ContainerVer2_1 containerVer2_1;
     private Exception error;
 
 
-    public RuuterDhxProcessingErrorRequestsBuilder(ContainerVer2_1 containerVer2_1, Exception error, List<DocumentType> aditDocumentTypes) {
+    public RuuterDhxErrorProcessingRequestsBuilder(ContainerVer2_1 containerVer2_1, Exception error, List<DocumentType> aditDocumentTypes) {
         this.containerVer2_1 = containerVer2_1;
         this.error = error;
         this.aditDocumentTypes = aditDocumentTypes;
     }
 
-    public List<RuuterDhxProcessingErrorRequest> build() {
-        List<RuuterDhxProcessingErrorRequest> dhxProcessingErrorRequests = new ArrayList<>();
+    public List<RuuterDhxErrorProcessingRequest> build() {
+        List<RuuterDhxErrorProcessingRequest> dhxProcessingErrorRequests = new ArrayList<>();
         for (Recipient recipient : containerVer2_1.getRecipient()) {
-            RuuterDhxProcessingErrorRequest request = new RuuterDhxProcessingErrorRequest();
+            RuuterDhxErrorProcessingRequest request = new RuuterDhxErrorProcessingRequest();
 
             // Set recipient specific fields
             parseRecipientSpecificErrorDetails(recipient, request);
@@ -44,7 +44,7 @@ public class RuuterDhxProcessingErrorRequestsBuilder {
         return dhxProcessingErrorRequests;
     }
 
-    private void parseAditDocumentType(ContainerVer2_1 containerVer2_1, List<DocumentType> aditDocumentTypes, RuuterDhxProcessingErrorRequest request) {
+    private void parseAditDocumentType(ContainerVer2_1 containerVer2_1, List<DocumentType> aditDocumentTypes, RuuterDhxErrorProcessingRequest request) {
         String dhxRecordType = containerVer2_1.getRecordMetadata() != null ? containerVer2_1.getRecordMetadata().getRecordType() : null;
         for (DocumentType aditDocumentType : aditDocumentTypes) {
             if (aditDocumentType.getDescription().equals(dhxRecordType)) {
@@ -55,7 +55,7 @@ public class RuuterDhxProcessingErrorRequestsBuilder {
         logger.error("Container recordType {} did not match any allowed ADIT documentType values {}", dhxRecordType, aditDocumentTypes);
     }
 
-    private void parseErrorType(Exception ex, Recipient recipient, RuuterDhxProcessingErrorRequest request) {
+    private void parseErrorType(Exception ex, Recipient recipient, RuuterDhxErrorProcessingRequest request) {
         DhxProcessingErrorType errorType = DhxProcessingErrorType.UNSPECIFIED;
 
         if (AditUserInactiveException.class.isInstance(ex)) {
@@ -67,7 +67,7 @@ public class RuuterDhxProcessingErrorRequestsBuilder {
         request.setErrorCode(errorType);
     }
 
-    private void parseRecipientSpecificErrorDetails(Recipient recipient, RuuterDhxProcessingErrorRequest request) {
+    private void parseRecipientSpecificErrorDetails(Recipient recipient, RuuterDhxErrorProcessingRequest request) {
         if (recipient.getPerson() != null) {
             request.setRecipientUserType(DhxRecipientUserType.PERSON);
             PersonType person = recipient.getPerson();

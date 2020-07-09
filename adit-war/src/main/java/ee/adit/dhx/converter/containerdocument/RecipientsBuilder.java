@@ -22,7 +22,7 @@ import java.util.List;
 public class RecipientsBuilder {
     private static Logger logger = LogManager.getLogger(RecipientsBuilder.class);
 
-    private boolean validateUserIsActive = true;
+    private boolean allowSendingToInactiveUser = false;
     private ContainerVer2_1 container;
     private Configuration configuration;
     private AditUserDAO aditUserDAO;
@@ -32,9 +32,9 @@ public class RecipientsBuilder {
      *
      * @param container 2.1 container version
      */
-    public RecipientsBuilder(final ContainerVer2_1 container, boolean validateUserIsActive) {
+    public RecipientsBuilder(final ContainerVer2_1 container, boolean allowSendingToInactiveUser) {
         this.container = container;
-        this.validateUserIsActive = validateUserIsActive;
+        this.allowSendingToInactiveUser = allowSendingToInactiveUser;
     }
 
     /**
@@ -69,7 +69,7 @@ public class RecipientsBuilder {
                     logger.debug("Getting AditUser by personal code: " + personalIdCodeWithCountryPrefix);
                     final AditUser user = this.getAditUserDAO().getUserByID(personalIdCodeWithCountryPrefix);
 
-                    if (user != null && (!validateUserIsActive || user.getActive())) {
+                    if (user != null && (allowSendingToInactiveUser || user.getActive())) {
                         // Check if user uses DHX
                         if (!Util.isNullOrEmpty(user.getDvkOrgCode())) {
                             // The user uses DHX - this is not allowed.
