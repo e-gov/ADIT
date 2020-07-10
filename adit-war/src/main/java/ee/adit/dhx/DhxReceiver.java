@@ -7,8 +7,7 @@ package ee.adit.dhx;
 public interface DhxReceiver {
     /**
      * Receive a message from DHX.
-     * @param message {@link PojoMessage}
      * @return id of the received document.
      */
-    Long receive(final String containerFile, String consignmentId);
+    Long receive(final String containerFile, String consignmentId, boolean allowSendingToInactiveUser);
 }

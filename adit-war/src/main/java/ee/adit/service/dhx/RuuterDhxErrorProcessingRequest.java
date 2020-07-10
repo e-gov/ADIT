@@ -4,14 +4,16 @@ import ee.adit.dhx.api.container.v2_1.ContainerVer2_1;
 
 import java.util.Objects;
 
-public class RuuterDhxProcessingErrorRequest {
+public class RuuterDhxErrorProcessingRequest {
 
     private String senderOrganisationCode;
     private String recipientCode;
     private DhxRecipientUserType recipientUserType;
     private String recipientUserName;
     private DhxProcessingErrorType errorCode;
-    private ContainerVer2_1 containerVer2_1;
+    // RecordMetadata.RecordType ADIT value (DocumentType.shortName)
+    private String aditDocumentType;
+    private ContainerVer2_1 document;
 
     public String getSenderOrganisationCode() {
         return senderOrganisationCode;
@@ -29,17 +31,17 @@ public class RuuterDhxProcessingErrorRequest {
         this.errorCode = errorCode;
     }
 
-    public ContainerVer2_1 getContainerVer2_1() {
-        return containerVer2_1;
+    public ContainerVer2_1 getDocument() {
+        return document;
     }
 
     /**
      * Sets container and parses out senderOrganisationCode
      */
-    public void setContainerVer2_1(ContainerVer2_1 containerVer2_1) {
-        this.containerVer2_1 = containerVer2_1;
-        if (containerVer2_1 != null && containerVer2_1.getTransport() != null && containerVer2_1.getTransport().getDecSender() != null)
-            setSenderOrganisationCode(containerVer2_1.getTransport().getDecSender().getOrganisationCode());
+    public void setDocument(ContainerVer2_1 document) {
+        this.document = document;
+        if (document != null && document.getTransport() != null && document.getTransport().getDecSender() != null)
+            setSenderOrganisationCode(document.getTransport().getDecSender().getOrganisationCode());
     }
 
     public String getRecipientCode() {
@@ -58,6 +60,14 @@ public class RuuterDhxProcessingErrorRequest {
         this.recipientUserType = recipientUserType;
     }
 
+    public String getAditDocumentType() {
+        return aditDocumentType;
+    }
+
+    public void setAditDocumentType(String aditDocumentType) {
+        this.aditDocumentType = aditDocumentType;
+    }
+
     public String getRecipientUserName() {
         return recipientUserName;
     }
@@ -70,17 +80,17 @@ public class RuuterDhxProcessingErrorRequest {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RuuterDhxProcessingErrorRequest that = (RuuterDhxProcessingErrorRequest) o;
+        RuuterDhxErrorProcessingRequest that = (RuuterDhxErrorProcessingRequest) o;
         return Objects.equals(senderOrganisationCode, that.senderOrganisationCode) &&
                 Objects.equals(recipientCode, that.recipientCode) &&
                 recipientUserType == that.recipientUserType &&
                 Objects.equals(recipientUserName, that.recipientUserName) &&
                 errorCode == that.errorCode &&
-                containerVer2_1.equals(that.containerVer2_1);
+                document.equals(that.document);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(senderOrganisationCode, recipientCode, recipientUserType, recipientUserName, errorCode, containerVer2_1);
+        return Objects.hash(senderOrganisationCode, recipientCode, recipientUserType, recipientUserName, errorCode, document);
     }
 }

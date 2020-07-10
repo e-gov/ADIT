@@ -14,7 +14,7 @@ public class DocumentType implements java.io.Serializable {
      * Serial version UID
      */
     private static final long serialVersionUID = 1L;
-    
+
     private String shortName;
     private String description;
     private Set<Document> documents = new HashSet<Document>(0);
@@ -56,4 +56,12 @@ public class DocumentType implements java.io.Serializable {
         this.documents = documents;
     }
 
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("DocumentType{");
+        sb.append("shortName='").append(shortName).append('\'');
+        sb.append(", description='").append(description).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
 }

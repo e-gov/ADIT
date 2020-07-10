@@ -90,6 +90,7 @@
 
     <bean id="ruuterService" class="ee.adit.service.RuuterService">
         <property name="configuration" ref="configuration"/>
+        <property name="documentTypeDAO" ref="documentTypeDAO"/>
     </bean>
 
 </beans>
