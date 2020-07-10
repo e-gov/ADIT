@@ -88,6 +88,7 @@ public class RuuterService implements InitializingBean {
         httpPost.setHeader("Accept", ContentType.APPLICATION_JSON.getMimeType());
         httpPost.setHeader("Content-type", ContentType.APPLICATION_JSON.getMimeType());
 
+        logger.info("Posting DHX processing error ({}) to Ruuter: {}.", request.getErrorCode(), httpPost);
         try (CloseableHttpClient client = HttpClients.createDefault();
              CloseableHttpResponse response = client.execute(httpPost)) {
             logger.info("Verification if retry without active user check is permitted returned: {}", response);
