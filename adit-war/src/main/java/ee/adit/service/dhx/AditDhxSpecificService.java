@@ -136,7 +136,7 @@ public class AditDhxSpecificService implements DhxImplementationSpecificService 
             return docId;
         } catch (Exception ex) {
             log.error(ex.getMessage(), ex);
-            throw new DataRetrievalFailureException("Error occured while saving DHX message: ", ex);
+            throw ex;
         }
     }
 
