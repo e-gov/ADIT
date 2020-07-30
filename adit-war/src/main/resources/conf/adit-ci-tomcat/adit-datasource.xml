@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+
+    <!-- ADIT main data source configuration  -->
+    <bean id="aditDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+        <property name="jndiName" value="java:comp/env/jdbc/adit-ci-postgres"/>
+    </bean>
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+        <property name="mappingLocations">
+            <list>
+                <value>classpath:hbm/AccessRestriction.hbm.xml</value>
+                <value>classpath:hbm/AditUser.hbm.xml</value>
+                <value>classpath:hbm/Document.hbm.xml</value>
+                <value>classpath:hbm/DocumentDvkStatus.hbm.xml</value>
+                <value>classpath:hbm/DocumentFile.hbm.xml</value>
+                <value>classpath:hbm/DocumentFileDeflateResult.hbm.xml</value>
+                <value>classpath:hbm/DocumentHistory.hbm.xml</value>
+                <value>classpath:hbm/DocumentHistoryType.hbm.xml</value>
+                <value>classpath:hbm/DocumentSharing.hbm.xml</value>
+                <value>classpath:hbm/DocumentSharingType.hbm.xml</value>
+                <value>classpath:hbm/DocumentType.hbm.xml</value>
+                <value>classpath:hbm/DocumentWfStatus.hbm.xml</value>
+                <value>classpath:hbm/Notification.hbm.xml</value>
+                <value>classpath:hbm/NotificationType.hbm.xml</value>
+                <value>classpath:hbm/RemoteApplication.hbm.xml</value>
+                <value>classpath:hbm/RequestLog.hbm.xml</value>
+                <value>classpath:hbm/Signature.hbm.xml</value>
+                <value>classpath:hbm/UserNotification.hbm.xml</value>
+                <value>classpath:hbm/Usertype.hbm.xml</value>
+                <value>classpath:hbm/ErrorLog.hbm.xml</value>
+                <value>classpath:hbm/DownloadRequestLog.hbm.xml</value>
+                <value>classpath:hbm/MetadataRequestLog.hbm.xml</value>
+                <value>classpath:hbm/MaintenanceJob.hbm.xml</value>
+                <value>classpath:hbm/SetJobRunningStatusResult.hbm.xml</value>
+                <value>classpath:hbm/UserContact.hbm.xml</value>
+                <value>classpath:hbm/DhxUser.hbm.xml</value>
+            </list>
+        </property>
+
+        <property name="dataSource" ref="aditDataSource"/>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</prop>
+                <prop key="hibernate.cache.provider_class">org.hibernate.cache.NoCacheProvider</prop>
+                <prop key="hibernate.connection.autocommit">false</prop>
+                <prop key="hibernate.connection.useUnicode">true</prop>
+                <prop key="hibernate.connection.characterEncoding">UTF-8</prop>
+                <prop key="hibernate.connection.charSet">UTF-8</prop>
+                <prop key="hibernate.show.sql">true</prop>
+
+                <prop key="hibernate.current_session_context_class">jta</prop>
+                <prop key="javax.persistence.transactionType">jta</prop>
+                <prop key="hibernate.transaction.manager_lookup_class">
+                    com.atomikos.icatch.jta.hibernate3.TransactionManagerLookup
+                </prop>
+                <prop key="hibernate.transaction.factory_class">
+                    com.atomikos.icatch.jta.hibernate3.AtomikosJTATransactionFactory
+                </prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- Atomikos -->
+    <bean id="atomikosTransactionManager" class="com.atomikos.icatch.jta.UserTransactionManager" init-method="init"
+          destroy-method="close">
+        <property name="forceShutdown" value="false"/>
+    </bean>
+
+    <bean id="atomikosUserTransaction" class="com.atomikos.icatch.jta.UserTransactionImp"/>
+
+    <bean id="transactionManager" class="org.springframework.transaction.jta.JtaTransactionManager"
+          depends-on="atomikosTransactionManager,atomikosUserTransaction">
+        <property name="transactionManager" ref="atomikosTransactionManager"/>
+        <property name="userTransaction" ref="atomikosUserTransaction"/>
+        <property name="allowCustomIsolationLevels" value="true"/>
+    </bean>
+
+</beans>

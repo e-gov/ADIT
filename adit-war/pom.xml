@@ -604,6 +604,7 @@
 				<targetPath>../adit/WEB-INF</targetPath>
 				<includes>
 					<include>adit-configuration.xml</include>
+					<include>adit-dhx.xml</include>
 					<include>adit-datasource.xml</include>
 					<include>dhx-application.properties</include>
 				</includes>
@@ -644,7 +645,6 @@
 					<include>adit-jobs.xml</include>
 					<include>adit-services.xml</include>
 					<include>adit-endpoints.xml</include>
-					<include>adit-dhx.xml</include>
 					<include>adit-dhx-servlet.xml</include>
 				</includes>
 			</resource>
@@ -672,6 +672,7 @@
 				<directory>${basedir}/lib</directory>
 				<includes>
 					<include>atomikos-integration-extension-3.7.2.jar</include>
+					<include>postgresql-42.2.14.jar</include>
 				</includes>
 				<targetPath>${ria.jar.dependencies.directory}</targetPath>
 			</resource>

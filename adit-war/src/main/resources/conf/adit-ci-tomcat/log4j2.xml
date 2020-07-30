@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" packages="ee.ria.dhx">
+	<Appenders>
+		<Console name="stdout" target="SYSTEM_OUT">
+			<PatternLayout pattern="%d{ISO8601}%5p %C:%L - %m%n" />
+		</Console>
+		<RollingFile name="file" fileName="/var/log/adit/adit.log"
+			filePattern="/var/log/adit/adit.log.%d{yyyy-MM-dd}">
+			<PatternLayout>
+				<Pattern>%d{ISO8601}%5p %C:%L - %m%n</Pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="24"
+					modulate="false" />
+			</Policies>
+		</RollingFile>
+		<RollingFile name="dhx" fileName="/var/log/adit/adit_dvk.log"
+			filePattern="/var/log/adit/adit_dvk.log.%d{yyyy-MM}">
+			<PatternLayout>
+				<Pattern>%d{ISO8601}%5p %C:%L - %m%n</Pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="24"
+					modulate="false" />
+			</Policies>
+		</RollingFile>
+
+		<RollingFile name="monitoring" fileName="/var/log/adit/adit_monitoring.log"
+			filePattern="/var/log/adit/adit_monitoring.log.%d{yyyy-MM}">
+			<PatternLayout>
+				<Pattern>%d{ISO8601}%5p %C:%L - %m%n</Pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="24"
+					modulate="false" />
+			</Policies>
+		</RollingFile>
+
+		<RollingFile name="nagios" fileName="/var/log/adit/adit_nagios.log"
+			filePattern="/var/log/adit/adit_nagios.log.%d{yyyy-MM}">
+			<PatternLayout>
+				<Pattern>%d{ISO8601}%5p %C:%L - %m%n</Pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="24"
+					modulate="false" />
+			</Policies>
+		</RollingFile>
+
+		<RollingFile name="performance" fileName="/var/log/adit/adit_performance.log"
+			filePattern="/var/log/adit/adit_performance.log.%d{yyyy-MM}">
+			<PatternLayout>
+				<Pattern>%d{ISO8601}%5p %C:%L - %m%n</Pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="24"
+					modulate="false" />
+			</Policies>
+		</RollingFile>
+
+		<RollingFile name="aditSoapMessages" fileName="/var/log/adit/adit_soap_messages.log"
+			filePattern="/var/log/adit/adit_performance.log.%d{yyyy-MM}">
+			<PatternLayout>
+				<Pattern>%d{ISO8601}%5p %C:%L - %m%n</Pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="24"
+					modulate="false" />
+				<SizeBasedTriggeringPolicy size="100 MB" />
+				<DefaultRolloverStrategy min="1" max="100" />
+			</Policies>
+		</RollingFile>
+	</Appenders>
+	<Loggers>
+		<Logger name="ee.adit.ws" level="info" additivity="false">
+			<AppenderRef ref="file" />
+		</Logger>
+		<Logger name="ee.adit.util" level="info" additivity="false">
+			<AppenderRef ref="file" />
+		</Logger>
+		<Logger name="ee.adit.dao" level="info" additivity="false">
+			<AppenderRef ref="file" />
+		</Logger>
+		<Logger name="ee.adit.dvk" level="info" additivity="false">
+			<AppenderRef ref="file" />
+		</Logger>
+		<Logger name="ee.adit.service" level="info" additivity="false">
+			<AppenderRef ref="file" />
+		</Logger>
+
+		<Logger name="org.hibernate" level="WARN" additivity="false">
+			<AppenderRef ref="stdout" />
+		</Logger>
+		<Logger name="ee.adit.schedule.ScheduleClient" level="INFO"
+			additivity="false">
+		</Logger>
+		<Logger name="com.atomikos" level="ERROR" additivity="false">
+			<AppenderRef ref="stdout" />
+		</Logger>
+		<Logger name="ee.sk.utils.ConfigManager" level="warn"
+			additivity="false">
+		</Logger>
+		<Logger name="ee.sk.digidoc" level="info" additivity="false">
+		</Logger>
+		<Logger name="ee.sk.digidoc.factory.PKCS11SignatureFactory"
+			level="ERROR" additivity="false">
+			<AppenderRef ref="file" />
+		</Logger>
+		<Logger name="ee.sk.digidoc.factory.IAIKNotaryFactory" level="ERROR"
+			additivity="false">
+			<AppenderRef ref="file" />
+		</Logger>
+		<Logger name="ee.sk.xmlenc.factory.EncryptedDataSAXParser"
+			level="ERROR" additivity="false">
+			<AppenderRef ref="file" />
+		</Logger>
+		<Logger name="ee.sk.xmlenc.EncryptedKey" level="ERROR"
+			additivity="false">
+			<AppenderRef ref="file" />
+		</Logger>
+		<Logger name="ee.sk.digidoc.Base64Util" level="ERROR"
+			additivity="false">
+			<AppenderRef ref="file" />
+		</Logger>
+		<Logger name="ee.sk.digidoc.factory.SAXDigiDocFactory" level="ERROR"
+			additivity="false">
+			<AppenderRef ref="file" />
+		</Logger>
+		<Logger name="ee.sk.digidoc.factory.SAXDigiDocException" level="ERROR"
+			additivity="false">
+			<AppenderRef ref="file" />
+		</Logger>
+		<Logger name="ee.sk.digidoc.factory.BouncyCastleNotaryFactory"
+			level="ERROR" additivity="false">
+			<AppenderRef ref="file" />
+		</Logger>
+		<Logger name="ee.sk.xmlenc.factory.EncryptedStreamSAXParser"
+			level="ERROR" additivity="false">
+			<AppenderRef ref="file" />
+		</Logger>
+		<Logger name="ee.sk.digidoc.DataFile" level="ERROR" additivity="false">
+			<AppenderRef ref="file" />
+		</Logger>
+		<Logger name="ee.sk.xmlenc.EncryptedData" level="ERROR"
+			additivity="false">
+			<AppenderRef ref="file" />
+		</Logger>
+		<Logger name="ee.adit.performance" level="INFO" additivity="false">
+			<AppenderRef ref="performance" />
+		</Logger>
+		<Logger name="ee.adit.service.MonitorService" level="DEBUG"
+			additivity="false">
+			<AppenderRef ref="monitoring" />
+		</Logger>
+		<Logger name="ee.adit.dhx" level="DEBUG" additivity="false">
+			<AppenderRef ref="dhx" />
+		</Logger>
+		<Logger name="ee.adit.util.NagiosLogger" level="INFO"
+			additivity="false">
+			<AppenderRef ref="nagios" />
+		</Logger>
+		<Logger name="org.springframework.ws.client.MessageTracing"
+			level="trace" additivity="false">
+			<AppenderRef ref="aditSoapMessages" />
+		</Logger>
+		<Logger name="org.springframework.ws.server.MessageTracing"
+			level="trace" additivity="false">
+			<AppenderRef ref="aditSoapMessages" />
+		</Logger>
+		<Root level="ERROR" additivity="false">
+			<AppenderRef ref="file" />
+		</Root>
+	</Loggers>
+</Configuration>

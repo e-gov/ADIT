@@ -1,9 +1,9 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
-	http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
 	http://www.springframework.org/schema/context
-	http://www.springframework.org/schema/context/spring-context-2.5.xsd">
+	http://www.springframework.org/schema/context/spring-context-4.0.xsd">
 
 	<context:component-scan
 		base-package="ee.ria.dhx.ws.service*,ee.ria.dhx.ws.config*,ee.ria.dhx.ws.context*,ee.adit.dhx*,ee.adit.service.dhx*">
@@ -11,6 +11,5 @@
 			expression="ee.ria.dhx.ws.config.endpoint.DhxEndpointConfig" />
 	</context:component-scan>
 	<context:property-placeholder
-		location="WEB-INF/dhx-application.properties,classpath*:xtee.properties" />
-
+			location="classpath:dhx-application.properties,classpath:xtee.properties" order="1" ignore-unresolvable="true"/>
 </beans>
