@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+    <context:property-placeholder location="classpath:adit.properties" order="2" ignore-unresolvable="true"/>
+
+    <!-- Configuration -->
+    <bean id="configuration" class="ee.adit.util.Configuration">
+        <property name="xteeProducerName" value="@PRODUCER_NAME@"/>
+        <property name="getJoinedMaxResults" value="10"/>
+        <property name="tempDir" value="/tmp/adit"/>
+        <property name="deleteTemporaryFiles" value="true"/>
+        <property name="schedulerEventTypeName" value="Minu dokumentide teavitus"/>
+
+        <!-- X-Road message protocol version 4.0 specific values -->
+        <property name="xroadInstance" value="${xroadInstance}"/>
+        <property name="xroadMemberClass" value="${xroadMemberClass}"/>
+        <property name="xroadMemberCode" value="${xroadMemberCode}"/>
+
+        <!-- Default disk quota in bytes per user -->
+        <property name="globalDiskQuota" value="10240000"/>
+
+        <!--
+        Document retention deadline in days (specifies how many days
+        document is stored before it's files are deleted).
+        -->
+        <property name="documentRetentionDeadlineDays" value="365"/>
+
+        <property name="locales">
+            <list>
+                <value>et_ee</value>
+                <value>en_us</value>
+                <value>ru_ru</value>
+            </list>
+        </property>
+        <property name="dvkOrgCode" value="${dvkOrgCode}"/>
+        <property name="xteeInstitution" value="${xteeInstitution}"/>
+        <property name="xteeSecurityServer" value="${xteeSecurityServer}"/>
+        <property name="xteeIdCode" value="${xteeIdCode}"/>
+
+        <!--
+        Specifies how many seconds the system waits for unfinished digital
+        signatures to be finished. During this period initiating additional
+        signatures to the same document is blocked.
+        -->
+        <property name="unfinishedSignatureLifetimeSeconds" value="300"/>
+        <property name="doCheckTestCert" value="true"/>
+        <property name="jDigiDocConfigFile" value="jdigidoc.cfg"/>
+        <property name="ruuterServiceUrl" value="${ruuterServiceUrl}"/>
+    </bean>
+
+    <bean id="monitorConfiguration" class="ee.adit.util.MonitorConfiguration">
+        <property name="aditServiceUrl" value="${aditServiceUrl}"/>
+        <property name="remoteApplicationShortName" value="${remoteApplicationShortName}"/>
+        <property name="userCode" value="${userCode}"/>
+        <property name="institutionCode" value="${institutionCode}"/>
+        <property name="testDocumentId" value="${testDocumentId}"/>
+        <property name="testDocumentFileId" value="${testDocumentFileId}"/>
+        <property name="testUserCode" value="${testUserCode}"/>
+        <property name="documentSaveInterval" value="600000"/>
+        <property name="documentSendToDhxInterval" value="600000"/>
+        <property name="notificationSendInterval" value="900000"/>
+        <property name="errorInterval" value="600000"/>
+        <property name="errorLevel" value="FATAL"/>
+    </bean>
+    <bean id="checkSignatures" class="java.lang.Boolean">
+        <constructor-arg value="true"/>
+    </bean>
+</beans>
