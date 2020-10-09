@@ -1,0 +1,13 @@
+version: '3.4'
+services:
+  postgres:
+    image: postgres94et
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres123
+    volumes:
+      - ${PWD}/postgres/init-scripts/:/docker-entrypoint-initdb.d/
+
+
