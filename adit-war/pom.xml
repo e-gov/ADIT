@@ -75,6 +75,13 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.14</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
 			<groupId>ee.webmedia</groupId>
 			<artifactId>xtee-server</artifactId>
 			<version>1.0</version>
