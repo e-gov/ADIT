@@ -119,14 +119,19 @@ public abstract class XRoadCustomEndpoint implements MessageEndpoint {
             CustomXRoadHeader pais = parseXRoadHeader(paringMessage);
             
             String xRoadNameSpace = pais.getProtocolVersion().equals(XRoadProtocolVersion.V2_0) ? Util.XTEE_NAMESPACE : XRoadProtocolVersion.V4_0.getNamespaceURI();
-            QName listMethodsQN = new QName(xRoadNameSpace, "listMethods");
-            
+
             // Check if it is a metaservice
             try {
-                Iterator i = paringMessage.getSOAPBody().getChildElements(listMethodsQN);
-                if (i.hasNext()) {
-                    metaService = true;
+                Iterator i = paringMessage.getSOAPBody().getChildElements();
+
+                while(i.hasNext()) {
+                    SOAPElement se = (SOAPElement) i.next();
+                    if ("listMethods".equals(se.getElementName().getLocalName())) {
+                        metaService = true;
+                    }
                 }
+
+
             } catch (Exception e) {
                 logger.error("Error while trying to determine if metaservice query: ", e);
             }
@@ -374,7 +379,7 @@ public abstract class XRoadCustomEndpoint implements MessageEndpoint {
     /**
      * Creates X-Road specific structure for SOAP message: adds MIME headers, base namespaces.
      * 
-     * @param header X-Road specific header
+     * @param xRoadHeader X-Road specific header
      * @param reqMessage request SOAP message
      * @param respMessage response SOAP message
      * @return the service element of the SOAP response message
