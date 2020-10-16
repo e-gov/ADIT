@@ -1,0 +1,10 @@
+<settings>
+    <mirrors>
+        <mirror>
+            <!--This sends everything else to /public -->
+            <id>nexus</id>
+            <mirrorOf>external:*</mirrorOf>
+            <url>https://nexus.ria.ee/repository/maven-public/</url>
+        </mirror>
+    </mirrors>
+</settings>
