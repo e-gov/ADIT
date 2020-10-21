@@ -529,6 +529,21 @@
 			<artifactId>hibernate-validator</artifactId>
 			<version>5.3.4.Final</version>
 		</dependency>
+
+		<dependency>
+			<groupId>javax.el</groupId>
+			<artifactId>javax.el-api</artifactId>
+			<version>2.2.5</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.glassfish.web</groupId>
+			<artifactId>el-impl</artifactId>
+			<version>2.2</version>
+			<scope>test</scope>
+		</dependency>
+
 		<!-- <dependency> <groupId>ee.sk.digidoc</groupId> <artifactId>JDCerts</artifactId> 
 			<version>1.0</version> <scope>system</scope> <systemPath>${basedir}/lib/jdcerts.jar</systemPath> 
 			</dependency> -->

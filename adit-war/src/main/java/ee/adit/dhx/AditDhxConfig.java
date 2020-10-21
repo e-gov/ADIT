@@ -14,6 +14,7 @@ public class AditDhxConfig {
 
 	@Autowired
 	@Getter
+	@Setter
 	SoapConfig config;
 
 	@Value("${dhx.server.special-orgnisations}")

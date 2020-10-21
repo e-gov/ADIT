@@ -875,9 +875,6 @@
  	<!-- SaveDocument -->
  	<class name="ee.adit.pojo.SaveDocumentRequest">
 		<map-to xml="saveDocument" ns-uri="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" />
-		<field name="checkUserIsActive" type="java.lang.Boolean">
-			<bind-xml name="check_user_is_active" location="keha" />
-		</field>
 		<field name="document" type="ee.adit.pojo.SaveDocumentRequestDocument">
 			<bind-xml name="document" location="keha" />
 		</field>

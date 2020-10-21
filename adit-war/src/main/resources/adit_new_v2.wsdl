@@ -34,8 +34,6 @@
 			<element name="getUserInfoV2Response" type="tns:getUserInfoV2Response" />
 			<element name="sendDocumentV2Request" type="tns:sendDocumentV2Request" />
 			<element name="sendDocumentV2Response" type="tns:sendDocumentV2Response" />
-			<element name="saveDocumentV2Request" type="tns:saveDocumentV2Request" />
-			<element name="saveDocumentV2Response" type="tns:saveDocumentV2Response" />
 			<element name="getDocumentListV2Request" type="tns:getDocumentListV2Request" />
 			<element name="getDocumentListV2Response" type="tns:getDocumentListV2Response" />
 			<element name="getSendStatusV2Request" type="tns:getSendStatusV2Request" />
@@ -391,57 +389,6 @@
 					</element>
 				</sequence>
 			</complexType>
-			<!-- saveDocument päringu tüübid -->
-			<complexType name="saveDocumentV2Request">
-				<xs:annotation>
-					<xs:documentation xml:lang="ee">Päring "saveDocument"</xs:documentation>
-					<xs:documentation xml:lang="en">"saveDocument" request</xs:documentation>
-				</xs:annotation>
-				<sequence>
-					<element name="keha">
-						<complexType>
-							<sequence>
-								<element name="check_user_is_active" type="boolean" />
-								<element name="document">
-									<xs:annotation>
-										<xs:documentation xml:lang="ee">Dokument</xs:documentation>
-										<xs:documentation xml:lang="en">Document</xs:documentation>
-									</xs:annotation>
-									<complexType>
-										<attribute name="href" type="tns:href" />
-									</complexType>
-								</element>
-							</sequence>
-						</complexType>
-					</element>
-				</sequence>
-			</complexType>
-			<complexType name="saveDocumentV2Response">
-				<xs:annotation>
-					<xs:documentation xml:lang="ee">Päringu "saveDocument" vastus</xs:documentation>
-					<xs:documentation xml:lang="en">"saveDocument" requestresponse</xs:documentation>
-				</xs:annotation>
-				<sequence>
-					<element name="keha">
-						<complexType>
-							<sequence>
-								<element name="success" type="tns:success" />
-								<element name="messages" type="tns:arrayOfMessage" />
-								<element name="document_id" type="integer" />
-								<element name="document">
-									<xs:annotation>
-										<xs:documentation xml:lang="ee">Dokument</xs:documentation>
-										<xs:documentation xml:lang="en">Document</xs:documentation>
-									</xs:annotation>
-									<complexType>
-										<attribute name="href" type="tns:href" />
-									</complexType>
-								</element>
-							</sequence>
-						</complexType>
-					</element>
-				</sequence>
-			</complexType>
 						<complexType name="getDocumentListV2Request">
 				<xs:annotation>
 					<xs:documentation xml:lang="ee">Päring "getDocumentList"</xs:documentation>
@@ -643,63 +590,6 @@
 				</xs:annotation>
 				<xs:sequence>
 					<xs:element name="document" type="documentV1Type" />
-				</xs:sequence>
-			</xs:complexType>
-
-			<!-- saveDocument attachments -->
-			<xs:element name="saveDocumentV2RequestAttachmentV2" type="saveDocumentV2RequestAttachmentV2Type" />
-			<xs:complexType name="saveDocumentV2RequestAttachmentV2Type">
-				<xs:annotation>
-					<xs:documentation xml:lang="ee">Päringu "saveDocument" manus</xs:documentation>
-					<xs:documentation xml:lang="en">Attachment for request "saveDocument" request message</xs:documentation>
-				</xs:annotation>
-				<xs:sequence>
-					<xs:element name="document" type="saveDocumentV2RequestAttachmentV2DocumentType" />
-				</xs:sequence>
-			</xs:complexType>
-			<xs:complexType name="saveDocumentV2RequestAttachmentV2DocumentType">
-				<xs:annotation>
-					<xs:documentation xml:lang="ee">Dokumendi andmed</xs:documentation>
-					<xs:documentation xml:lang="en">Document data</xs:documentation>
-				</xs:annotation>
-				<xs:sequence>
-					<xs:element name="id" type="xs:integer">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Dokumendi identifikaator</xs:documentation>
-							<xs:documentation xml:lang="en">Document identificator</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="guid" type="xs:string">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Dokumendi globaalselt unikaalne identifikaator (GUID)</xs:documentation>
-							<xs:documentation xml:lang="en">Document globally unique identificator (GUID)</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="title" type="xs:string">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Dokumendi pealkiri</xs:documentation>
-							<xs:documentation xml:lang="en">Document title</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="document_type" type="xs:string">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Dokumendi tüüp</xs:documentation>
-							<xs:documentation xml:lang="en">Document type</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="previous_document_id" type="xs:integer">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Eelmise dokumendi identifikaator (kui dokument on vastuseks teisele dokumendile)</xs:documentation>
-							<xs:documentation xml:lang="en">Previous document identificator (if the document is a response to another document)</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="eform_use_id" type="xs:integer">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Evormi kasutuselevõtu id. Tidetakse ainult siis, kui tegemist on evormi andmetega</xs:documentation>
-							<xs:documentation xml:lang="en">Eform use id. Filled only in case of eform formData</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="files" type="subDocumentFilesType" />
 				</xs:sequence>
 			</xs:complexType>
 
@@ -1603,12 +1493,6 @@
 	<wsdl:message name="sendDocumentV2Response">
 		<wsdl:part name="parameters" element="tns:sendDocumentV2Response" />
 	</wsdl:message>
-	<wsdl:message name="saveDocumentV2Request">
-		<wsdl:part name="parameters" element="tns:saveDocumentV2Request" />
-	</wsdl:message>
-	<wsdl:message name="saveDocumentV2Response">
-		<wsdl:part name="parameters" element="tns:saveDocumentV2Response" />
-	</wsdl:message>
 	<wsdl:message name="getSendStatusV2Request">
 		<wsdl:part name="parameters" element="tns:getSendStatusV2Request" />
 	</wsdl:message>
@@ -1648,14 +1532,6 @@
 			</xs:documentation>
 			<wsdl:input message="tns:sendDocumentV2Request" name="sendDocumentV2Request" />
 			<wsdl:output message="tns:sendDocumentV2Response" name="sendDocumentV2Response" />
-		</wsdl:operation>
-		<wsdl:operation name="saveDocument">
-			<xs:documentation>
-				<xrd:title>Dokumendi salvestamine</xrd:title>
-				<xrd:notes>Dokument (ja failid) salvestatakse</xrd:notes>
-			</xs:documentation>
-			<wsdl:input message="tns:saveDocumentV2Request" name="saveDocumentV2Request" />
-			<wsdl:output message="tns:saveDocumentV2Response" name="saveDocumentV2Response" />
 		</wsdl:operation>
 		<wsdl:operation name="getSendStatus">
 			<xs:documentation>
@@ -1763,32 +1639,6 @@
 				<soap:body parts="parameters" use="literal" />
 			</wsdl:input>
 			<wsdl:output name="sendDocumentV2Response">
-				<soap:header message="tns:requestHeader" part="client" use="literal" />
-				<soap:header message="tns:requestHeader" part="service" use="literal" />
-				<soap:header message="tns:requestHeader" part="id" use="literal" />
-				<soap:header message="tns:requestHeader" part="userId" use="literal" />
-				<soap:header message="tns:requestHeader" part="issue" use="literal" />
-				<soap:header message="tns:requestHeader" part="protocolVersion" use="literal" />
-				<soap:header message="tns:requestHeader" part="infosysteem" use="literal" />
-				
-				<soap:body parts="parameters" use="literal" />
-			</wsdl:output>
-		</wsdl:operation>
-		<wsdl:operation name="saveDocument">
-			<xrd:version>v1</xrd:version>
-			<soap:operation style="document" />
-			<wsdl:input name="saveDocumentV2Request">
-				<soap:header message="tns:requestHeader" part="client" use="literal" />
-				<soap:header message="tns:requestHeader" part="service" use="literal" />
-				<soap:header message="tns:requestHeader" part="id" use="literal" />
-				<soap:header message="tns:requestHeader" part="userId" use="literal" />
-				<soap:header message="tns:requestHeader" part="issue" use="literal" />
-				<soap:header message="tns:requestHeader" part="protocolVersion" use="literal" />
-				<soap:header message="tns:requestHeader" part="infosysteem" use="literal" />
-
-				<soap:body parts="parameters" use="literal" />
-			</wsdl:input>
-			<wsdl:output name="saveDocumentV2Response">
 				<soap:header message="tns:requestHeader" part="client" use="literal" />
 				<soap:header message="tns:requestHeader" part="service" use="literal" />
 				<soap:header message="tns:requestHeader" part="id" use="literal" />

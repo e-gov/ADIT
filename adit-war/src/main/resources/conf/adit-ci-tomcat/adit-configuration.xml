@@ -51,7 +51,6 @@
         <property name="unfinishedSignatureLifetimeSeconds" value="300"/>
         <property name="doCheckTestCert" value="true"/>
         <property name="jDigiDocConfigFile" value="jdigidoc.cfg"/>
-        <property name="ruuterServiceUrl" value="${ruuterServiceUrl}"/>
     </bean>
 
     <bean id="monitorConfiguration" class="ee.adit.util.MonitorConfiguration">

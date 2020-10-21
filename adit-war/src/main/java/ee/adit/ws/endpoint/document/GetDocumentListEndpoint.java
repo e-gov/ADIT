@@ -1,10 +1,26 @@
 package ee.adit.ws.endpoint.document;
 
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
+
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Component;
+
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditException;
 import ee.adit.exception.AditInternalException;
-import ee.adit.pojo.*;
+import ee.adit.pojo.ArrayOfMessage;
+import ee.adit.pojo.GetDocumentListRequest;
+import ee.adit.pojo.GetDocumentListResponse;
+import ee.adit.pojo.GetDocumentListResponseAttachment;
+import ee.adit.pojo.GetDocumentListResponseAttachmentV2;
+import ee.adit.pojo.GetDocumentListResponseList;
+import ee.adit.pojo.Message;
+import ee.adit.pojo.OutputDocument;
 import ee.adit.service.DocumentService;
 import ee.adit.service.LogService;
 import ee.adit.service.MessageService;
@@ -13,15 +29,6 @@ import ee.adit.util.Util;
 import ee.adit.util.xroad.CustomXRoadHeader;
 import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
 import ee.webmedia.xtee.annotation.XTeeService;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.stereotype.Component;
-
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Locale;
 
 /**
  * Implementation of "getDocumentList" web method (web service request).
@@ -108,6 +115,14 @@ public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
 
             // Kontrollime, kas päringus märgitud isik on teenuse kasutaja
             AditUser user = Util.getAditUserFromXroadHeader(this.getHeader(), this.getUserService());
+
+            // Kontrollime, et kasutajakonto ligipääs poleks peatatud (kasutaja
+            // lahkunud)
+            if ((user.getActive() == null) || !user.getActive()) {
+                AditCodedException aditCodedException = new AditCodedException("user.inactive");
+                aditCodedException.setParameters(new Object[] {user.getUserCode() });
+                throw aditCodedException;
+            }
 
             // Check whether or not the application has rights to
             // read current user's data.
@@ -262,6 +277,14 @@ public class GetDocumentListEndpoint extends AbstractAditBaseEndpoint {
 
             // Kontrollime, kas päringus märgitud isik on teenuse kasutaja
             AditUser user = Util.getAditUserFromXroadHeader(this.getHeader(), this.getUserService());
+
+            // Kontrollime, et kasutajakonto ligipääs poleks peatatud (kasutaja
+            // lahkunud)
+            if ((user.getActive() == null) || !user.getActive()) {
+                AditCodedException aditCodedException = new AditCodedException("user.inactive");
+                aditCodedException.setParameters(new Object[] {user.getUserCode() });
+                throw aditCodedException;
+            }
 
             // Check whether or not the application has rights to
             // read current user's data.

@@ -16,14 +16,14 @@ import junit.framework.Assert;
  * @author Hendrik Pärna
  * @since 15.07.14
  */
-@RunWith(SpringJUnit4ClassRunner.class)
+//@RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:integration-tests.xml"})
 public class MaintenanceJobDAO_Integration {
 
     @Autowired
     private MaintenanceJobDAO maintenanceJobDAO;
 
-    @Test
+    //@Test
     public void testInitializingJobStatuses() throws Exception {
         maintenanceJobDAO.initializeJobRunningStatuses();
         List<MaintenanceJob> jobs = maintenanceJobDAO.findAllJobs();

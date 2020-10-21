@@ -110,11 +110,6 @@ public class Configuration {
      */
     private String jDigiDocConfigFile;
 
-    /**
-     * Ruuter component base url for constructing queries
-     */
-    private String ruuterServiceUrl;
-    
     public List<String> getLocales() {
         return locales;
     }
@@ -281,18 +276,4 @@ public class Configuration {
 		this.jDigiDocConfigFile = jDigiDocConfigFile;
 	}
 
-    /**
-     * @return the base-url of Ruuter service
-     */
-    public String getRuuterServiceUrl() {
-        return ruuterServiceUrl;
-    }
-
-    /**
-     *
-     * @param ruuterServiceUrl the base-url of Ruuter service
-     */
-    public void setRuuterServiceUrl(String ruuterServiceUrl) {
-        this.ruuterServiceUrl = ruuterServiceUrl;
-    }
 }
