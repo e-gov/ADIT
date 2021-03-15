@@ -30,6 +30,7 @@ import ee.adit.util.Util;
 import ee.adit.util.xroad.CustomXRoadHeader;
 import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
 import ee.webmedia.xtee.annotation.XTeeService;
+import org.springframework.ws.soap.saaj.SaajSoapMessage;
 
 /**
  * Implementation of "getSendStatus" web method (web service request). Contains
@@ -50,13 +51,13 @@ public class GetSendStatusEndpoint extends AbstractAditBaseEndpoint {
 
 
     @Override
-    protected Object invokeInternal(Object requestObject, int version) throws Exception {
+    protected Object invokeInternal(Object requestObject, int version, SaajSoapMessage requestMessage, SaajSoapMessage responseMessage, CustomXRoadHeader xRoadHeader) throws Exception {
         logger.debug("getSendStatus invoked. Version: " + version);
 
         if (version == 1) {
-            return v1(requestObject);
+            return v1(requestObject, requestMessage, responseMessage, xRoadHeader);
         } else if (version == 2) {
-        	 return v2(requestObject);
+        	 return v2(requestObject, requestMessage, responseMessage, xRoadHeader);
         }else {
             throw new AditInternalException("This method does not support version specified: " + version);
         }
@@ -67,9 +68,11 @@ public class GetSendStatusEndpoint extends AbstractAditBaseEndpoint {
      *
      * @param requestObject
      *            Request body object
+     * @param requestMessage Incoming request
+     * @param responseMessage Sent as result
      * @return Response body object
      */
-    protected Object v1(Object requestObject) {
+    protected Object v1(Object requestObject, SaajSoapMessage requestMessage, SaajSoapMessage responseMessage, CustomXRoadHeader xRoadHeader) {
         GetSendStatusResponse response = new GetSendStatusResponse();
         ArrayOfMessage messages = new ArrayOfMessage();
         Calendar requestDate = Calendar.getInstance();
@@ -90,7 +93,7 @@ public class GetSendStatusEndpoint extends AbstractAditBaseEndpoint {
             // All primary checks passed.
             logger.info("Processing attachment with id: '" + attachmentID + "'");
             // Extract the SOAP message to a temporary file
-            String base64EncodedFile = extractAttachmentXML(this.getRequestMessage(), attachmentID);
+            String base64EncodedFile = extractAttachmentXML(requestMessage, attachmentID);
 
             // Base64 decode and unzip the temporary file
             String xmlFileInput = Util.base64DecodeAndUnzip(base64EncodedFile, this.getConfiguration().getTempDir(), this
@@ -129,14 +132,13 @@ public class GetSendStatusEndpoint extends AbstractAditBaseEndpoint {
                 	GetSendStatusRequestAttachment requestAttachment = (GetSendStatusRequestAttachment) unmarshalledObject;
                 	 InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream(getDigidocConfigurationFile());
                      String jdigidocCfgTmpFile = Util.createTemporaryFile(input, getConfiguration().getTempDir());
-                	 CustomXRoadHeader header = this.getHeader();
-                     String applicationName = header.getInfosysteem(this.getConfiguration().getXteeProducerName());
+                    String applicationName = xRoadHeader.getInfosysteem(this.getConfiguration().getXteeProducerName());
 
                      // Log request
-                     Util.printHeader(header, this.getConfiguration());
+                     Util.printHeader(xRoadHeader, this.getConfiguration());
 
                      // Check header for required fields
-                     checkHeader(header);
+                     checkHeader(xRoadHeader);
 
                      // Kontrollime, kas päringu käivitanud infosüsteem on ADITis
                      // registreeritud
@@ -145,7 +147,7 @@ public class GetSendStatusEndpoint extends AbstractAditBaseEndpoint {
                      // Kontrollime, kas päringu käivitanud infosüsteem tohib
                      // andmeid näha
                      this.getUserService().checkApplicationReadPrivilege(applicationName);
-                     
+
                 	 List<DocumentSendStatus> documentSendStatuses = this.documentService.getDocumentDAO().getDocumentsForSendStatus(requestAttachment.getDhlIds());
                      if (documentSendStatuses != null) {
                              // 1. Convert java list to XML string and output
@@ -163,7 +165,7 @@ public class GetSendStatusEndpoint extends AbstractAditBaseEndpoint {
                              String gzipFileName = Util.gzipFile(xmlFile, this.getConfiguration().getTempDir());
 
                              // 3. Add as an attachment
-                             String contentID = addAttachment(gzipFileName);
+                             String contentID = addAttachment(gzipFileName, responseMessage);
                              GetSendStatusResponseDocument responseDoc = new GetSendStatusResponseDocument();
                              responseDoc.setHref("cid:" + contentID);
                              response.setDocument(responseDoc);
@@ -202,13 +204,13 @@ public class GetSendStatusEndpoint extends AbstractAditBaseEndpoint {
             }
 
             additionalInformationForLog = errorMessage;
-            super.logError(null, requestDate.getTime(), LogService.ERROR_LOG_LEVEL_ERROR, errorMessage);
+            super.logError(null, requestDate.getTime(), LogService.ERROR_LOG_LEVEL_ERROR, errorMessage, xRoadHeader);
 
             logger.debug("Adding exception messages to response object.");
             response.setMessages(arrayOfMessage);
         }
 
-        super.logCurrentRequest(null, requestDate.getTime(), additionalInformationForLog);
+        super.logCurrentRequest(null, requestDate.getTime(), additionalInformationForLog, xRoadHeader);
         return response;
     }
     
@@ -217,9 +219,11 @@ public class GetSendStatusEndpoint extends AbstractAditBaseEndpoint {
      *
      * @param requestObject
      *            Request body object
+     * @param requestMessage Incoming request
+     * @param responseMessage Sent as result
      * @return Response body object
      */
-    protected Object v2(Object requestObject) {
+    protected Object v2(Object requestObject, SaajSoapMessage requestMessage, SaajSoapMessage responseMessage, CustomXRoadHeader xRoadHeader) {
         GetSendStatusResponse response = new GetSendStatusResponse();
         ArrayOfMessage messages = new ArrayOfMessage();
         Calendar requestDate = Calendar.getInstance();
@@ -240,8 +244,7 @@ public class GetSendStatusEndpoint extends AbstractAditBaseEndpoint {
             // All primary checks passed.
             logger.info("Processing attachment with id: '" + attachmentID + "'");
             // Extract the SOAP message to a temporary file
-            String base64EncodedFile = extractAttachmentXML(this.getRequestMessage(), attachmentID);
-
+            String base64EncodedFile = extractAttachmentXML(requestMessage, attachmentID);
             // Base64 decode and unzip the temporary file
             String xmlFileInput = Util.base64DecodeAndUnzip(base64EncodedFile, this.getConfiguration().getTempDir(), this
                     .getConfiguration().getDeleteTemporaryFilesAsBoolean());
@@ -278,8 +281,10 @@ public class GetSendStatusEndpoint extends AbstractAditBaseEndpoint {
                 if (unmarshalledObject instanceof GetSendStatusRequestAttachmentV2) {
                 	GetSendStatusRequestAttachmentV2 requestAttachment = (GetSendStatusRequestAttachmentV2) unmarshalledObject;
                 	 InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream(getDigidocConfigurationFile());
-                     String jdigidocCfgTmpFile = Util.createTemporaryFile(input, getConfiguration().getTempDir());
-                	 CustomXRoadHeader header = this.getHeader();
+
+                	 // TODO no need
+                	 String jdigidocCfgTmpFile = Util.createTemporaryFile(input, getConfiguration().getTempDir());
+                	 CustomXRoadHeader header = xRoadHeader;
                      String applicationName = header.getInfosysteem(this.getConfiguration().getXteeProducerName());
 
                      // Log request
@@ -313,7 +318,7 @@ public class GetSendStatusEndpoint extends AbstractAditBaseEndpoint {
                              String gzipFileName = Util.gzipFile(xmlFile, this.getConfiguration().getTempDir());
 
                              // 3. Add as an attachment
-                             String contentID = addAttachment(gzipFileName);
+                             String contentID = addAttachment(gzipFileName, responseMessage);
                              GetSendStatusResponseDocument responseDoc = new GetSendStatusResponseDocument();
                              responseDoc.setHref("cid:" + contentID);
                              response.setDocument(responseDoc);
@@ -352,20 +357,20 @@ public class GetSendStatusEndpoint extends AbstractAditBaseEndpoint {
             }
 
             additionalInformationForLog = errorMessage;
-            super.logError(null, requestDate.getTime(), LogService.ERROR_LOG_LEVEL_ERROR, errorMessage);
+            super.logError(null, requestDate.getTime(), LogService.ERROR_LOG_LEVEL_ERROR, errorMessage, xRoadHeader);
 
             logger.debug("Adding exception messages to response object.");
             response.setMessages(arrayOfMessage);
         }
 
-        super.logCurrentRequest(null, requestDate.getTime(), additionalInformationForLog);
+        super.logCurrentRequest(null, requestDate.getTime(), additionalInformationForLog, xRoadHeader);
         return response;
     }
 
     @Override
-    protected Object getResultForGenericException(Exception ex) {
+    protected Object getResultForGenericException(Exception ex, SaajSoapMessage requestMessage, SaajSoapMessage responseMessage, CustomXRoadHeader xRoadHeader) {
         super.logError(null, Calendar.getInstance().getTime(), LogService.ERROR_LOG_LEVEL_FATAL, "ERROR: "
-                + ex.getMessage());
+                + ex.getMessage(), xRoadHeader);
         GetSendStatusResponse response = new GetSendStatusResponse();
         response.setSuccess(false);
         ArrayOfMessage arrayOfMessage = new ArrayOfMessage();

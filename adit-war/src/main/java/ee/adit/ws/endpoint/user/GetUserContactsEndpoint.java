@@ -35,6 +35,7 @@ import ee.adit.util.Util;
 import ee.adit.util.xroad.CustomXRoadHeader;
 import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
 import ee.webmedia.xtee.annotation.XTeeService;
+import org.springframework.ws.soap.saaj.SaajSoapMessage;
 
 /**
  * Implementation of "getUserContacts" web method (web service request). Contains
@@ -53,11 +54,11 @@ public class GetUserContactsEndpoint extends AbstractAditBaseEndpoint {
     private UserService userService;
 
     @Override
-    protected Object invokeInternal(Object requestObject, int version) throws Exception {
+    protected Object invokeInternal(Object requestObject, int version, SaajSoapMessage requestMessage, SaajSoapMessage responseMessage, CustomXRoadHeader xRoadHeader) throws Exception {
         logger.debug("getUserContacts invoked. Version: " + version);
 
         if (version == 1) {
-            return v1(requestObject);
+            return v1(requestObject, requestMessage, responseMessage, xRoadHeader);
         } else {
             throw new AditInternalException("This method does not support version specified: " + version);
         }
@@ -71,7 +72,7 @@ public class GetUserContactsEndpoint extends AbstractAditBaseEndpoint {
      *            Request body object
      * @return Response body object
      */
-    protected Object v1(Object requestObject) {
+    protected Object v1(Object requestObject, SaajSoapMessage requestMessage, SaajSoapMessage responseMessage, CustomXRoadHeader xRoadHeader) {
         GetUserContactsResponse response = new GetUserContactsResponse();
         ArrayOfMessage messages = new ArrayOfMessage();
         Calendar requestDate = Calendar.getInstance();
@@ -82,7 +83,7 @@ public class GetUserContactsEndpoint extends AbstractAditBaseEndpoint {
             checkConfiguration();
 
             GetUserContactsRequest request = (GetUserContactsRequest) requestObject;
-            CustomXRoadHeader header = this.getHeader();
+            CustomXRoadHeader header = xRoadHeader;
             String applicationName = header.getInfosysteem(this.getConfiguration().getXteeProducerName());
 
             // Check header for required fields
@@ -127,7 +128,7 @@ public class GetUserContactsEndpoint extends AbstractAditBaseEndpoint {
                         String gzipFileName = Util.gzipFile(xmlFile, this.getConfiguration().getTempDir());
 
                         // 3. Add as an attachment
-                        String contentID = addAttachment(gzipFileName);
+                        String contentID = addAttachment(gzipFileName, responseMessage);
                         UserContactList getUserContactsResponseUserContactList = new UserContactList();
                         getUserContactsResponseUserContactList.setHref("cid:" + contentID);
                         response.setUserContactList(getUserContactsResponseUserContactList);
@@ -180,20 +181,20 @@ public class GetUserContactsEndpoint extends AbstractAditBaseEndpoint {
             }
 
             additionalInformationForLog = errorMessage;
-            super.logError(null, requestDate.getTime(), LogService.ERROR_LOG_LEVEL_ERROR, errorMessage);
+            super.logError(null, requestDate.getTime(), LogService.ERROR_LOG_LEVEL_ERROR, errorMessage, xRoadHeader);
 
             logger.debug("Adding exception messages to response object.");
             response.setMessages(arrayOfMessage);
         }
 
-        super.logCurrentRequest(null, requestDate.getTime(), additionalInformationForLog);
+        super.logCurrentRequest(null, requestDate.getTime(), additionalInformationForLog, xRoadHeader);
         return response;
     }
 
     @Override
-    protected Object getResultForGenericException(Exception ex) {
+    protected Object getResultForGenericException(Exception ex, SaajSoapMessage requestMessage, SaajSoapMessage responseMessage, CustomXRoadHeader xRoadHeader) {
         super.logError(null, Calendar.getInstance().getTime(), LogService.ERROR_LOG_LEVEL_FATAL, "ERROR: "
-                + ex.getMessage());
+                + ex.getMessage(), xRoadHeader);
         logger.debug("Constructing result for generic exception...");
         GetJoinedResponse response = new GetJoinedResponse();
         response.setSuccess(new Success(false));

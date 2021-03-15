@@ -29,6 +29,7 @@ import ee.adit.util.Util;
 import ee.adit.util.xroad.CustomXRoadHeader;
 import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
 import ee.webmedia.xtee.annotation.XTeeService;
+import org.springframework.ws.soap.saaj.SaajSoapMessage;
 
 /**
  * Implementation of "shareDocument" web method (web service request). Contains
@@ -50,11 +51,11 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
     private ScheduleClient scheduleClient;
 
     @Override
-    protected Object invokeInternal(Object requestObject, int version) throws Exception {
+    protected Object invokeInternal(Object requestObject, int version, SaajSoapMessage requestMessage, SaajSoapMessage responseMessage, CustomXRoadHeader xRoadHeader) throws Exception {
         logger.debug("shareDocument invoked. Version: " + version);
 
         if (version == 1) {
-            return v1(requestObject);
+            return v1(requestObject, requestMessage, responseMessage, xRoadHeader);
         } else {
             throw new AditInternalException("This method does not support version specified: " + version);
         }
@@ -67,7 +68,7 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
      *            Request body object
      * @return Response body object
      */
-    protected Object v1(Object requestObject) {
+    protected Object v1(Object requestObject, SaajSoapMessage requestMessage, SaajSoapMessage responseMessage, CustomXRoadHeader xRoadHeader) {
         ShareDocumentResponse response = new ShareDocumentResponse();
         ArrayOfMessage messages = new ArrayOfMessage();
         ArrayOfRecipientStatus statusArray = new ArrayOfRecipientStatus();
@@ -85,7 +86,7 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
             if (request != null) {
                 documentId = request.getDocumentId();
             }
-            CustomXRoadHeader header = this.getHeader();
+            CustomXRoadHeader header = xRoadHeader;
             String applicationName = header.getInfosysteem(this.getConfiguration().getXteeProducerName());
 
             // Log request
@@ -99,8 +100,8 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
             checkRequest(request);
 
             // Kontrollime, kas päringus märgitud isik on teenuse kasutaja
-            AditUser user = Util.getAditUserFromXroadHeader(this.getHeader(), this.getUserService());
-            AditUser xroadRequestUser = Util.getXroadUserFromXroadHeader(user, this.getHeader(), this.getUserService());
+            AditUser user = Util.getAditUserFromXroadHeader(xRoadHeader, this.getUserService());
+            AditUser xroadRequestUser = Util.getXroadUserFromXroadHeader(user, xRoadHeader, this.getUserService());
 
             Document doc = checkRightsAndGetDocument(request, applicationName, user);
 
@@ -299,20 +300,20 @@ public class ShareDocumentEndpoint extends AbstractAditBaseEndpoint {
             }
 
             additionalInformationForLog = errorMessage;
-            super.logError(documentId, requestDate.getTime(), LogService.ERROR_LOG_LEVEL_ERROR, errorMessage);
+            super.logError(documentId, requestDate.getTime(), LogService.ERROR_LOG_LEVEL_ERROR, errorMessage, xRoadHeader);
 
             logger.debug("Adding exception messages to response object.");
             response.setMessages(arrayOfMessage);
         }
 
-        super.logCurrentRequest(documentId, requestDate.getTime(), additionalInformationForLog);
+        super.logCurrentRequest(documentId, requestDate.getTime(), additionalInformationForLog, xRoadHeader);
         return response;
     }
 
     @Override
-    protected Object getResultForGenericException(Exception ex) {
+    protected Object getResultForGenericException(Exception ex, SaajSoapMessage requestMessage, SaajSoapMessage responseMessage, CustomXRoadHeader xRoadHeader) {
         super.logError(null, Calendar.getInstance().getTime(), LogService.ERROR_LOG_LEVEL_FATAL, "ERROR: "
-                + ex.getMessage());
+                + ex.getMessage(), xRoadHeader);
         ShareDocumentResponse response = new ShareDocumentResponse();
         response.setSuccess(false);
         ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
