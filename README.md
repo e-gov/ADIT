@@ -44,6 +44,15 @@ DIGIDOC_DF_CACHE_DIR=/Users/me/spaces/postkast/adit/tmp
 
  * IntelliJ ideas vali Run -> Configurations -> (+ new) -> Tomcat server -> Local
    * lisa configuration alla adit-war:war exploaded
-   * After launch - open http://localhost:8080/adit_war_war_exploded/
+      * seal määra application context: "/adit"
+   * After launch - open http://localhost:8080/adit/
    * soap-ui-ga saada päringud aditEndpoint=http://localhost:8080/adit_war_war_exploded/service/adit.wsdl
     
+## Adit monitoring
+
+Teeb enda vastu teste.
+
+* NOTIFICATIONS - teeb andmebaasi sisuliselt sellise päringu:
+select count(*) from Notification where notificationId is null and eventDate <= (NOW()-15min)
+  Kui see tagastab nullist suurema arvu, siis on fail.
+* SUMMARY_STATUS - kui vähemalt üks ülemistest on FAIL, siis summary tuleb ka FAIL
