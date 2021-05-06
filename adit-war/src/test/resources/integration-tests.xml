@@ -163,4 +163,41 @@
     <bean id="testUtils" class="ee.adit.integrationtests.Utils">
         <property name="documentService" ref="documentService"/>
     </bean>
+
+    <bean id="soapConfig" class="ee.ria.dhx.ws.config.SoapConfig">
+        <property name="dhxSubsystemPrefix" value="DHX"/>
+        <property name="securityServer" value="https://10.0.13.198"/>
+        <property name="xroadInstance" value="ee-dev"/>
+        <property name="memberClass" value="GOV"/>
+        <property name="memberCode" value="70006317"/>
+
+    </bean>
+
+<!--
+    dhx.check-recipient=false
+    soap.protocol-version=4.0
+    soap.member-code=
+    soap.client-truststore-file=${JAVA_HOME}/jre/lib/security/cacerts
+    soap.client-truststore-password=changeit
+    soap.client-truststore-type=JKS
+    soap.client-keystore-file=dhx.jks
+    soap.client-keystore-password=changeit
+    soap.client-keystore-type=JKS
+    soap.default-subsystem=DHX.adit
+    soap.accepted-subsystems=DHX.adit
+    dhx.document-resend-template=5,10,15
+    address-renew-timeout=0 */2 * * * ?
+    dhx.server.special-orgnisations=adit,kovtp,rt,eelnoud
+    dhx.resend.timeout=120
+
+-->
+    <bean id="aditDhxConfig" class="ee.adit.dhx.AditDhxConfig">
+        <property name="config" ref="soapConfig"/>
+        <property name="specialOrganisations" value="adit,kovtp,rt,eelnoud"/>
+        <property name="resendTimeout" value="120"/>
+    </bean>
+
+
+
+
 </beans>

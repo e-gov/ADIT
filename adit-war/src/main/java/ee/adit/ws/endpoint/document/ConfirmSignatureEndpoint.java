@@ -32,6 +32,7 @@ import ee.adit.util.Util;
 import ee.adit.util.xroad.CustomXRoadHeader;
 import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
 import ee.webmedia.xtee.annotation.XTeeService;
+import org.springframework.ws.soap.saaj.SaajSoapMessage;
 
 /**
  * Implementation of "confirmSignature" web method (web service request).
@@ -56,11 +57,11 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
     private ScheduleClient scheduleClient;
 
     @Override
-    protected Object invokeInternal(Object requestObject, int version) throws Exception {
+    protected Object invokeInternal(Object requestObject, int version, SaajSoapMessage requestMessage, SaajSoapMessage responseMessage, CustomXRoadHeader xRoadHeader) throws Exception {
         logger.debug("confirmSignature invoked. Version: " + version);
 
         if (version == 1) {
-            return v1(requestObject);
+            return v1(requestObject, requestMessage, xRoadHeader);
         } else {
             throw new AditInternalException("This method does not support version specified: " + version);
         }
@@ -71,9 +72,10 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
      *
      * @param requestObject
      *            Request body object
+     * @param requestMessage Incoming request
      * @return Response body object
      */
-    protected Object v1(Object requestObject) {
+    protected Object v1(Object requestObject, SaajSoapMessage requestMessage, CustomXRoadHeader xRoadHeader) {
         ConfirmSignatureResponse response = new ConfirmSignatureResponse();
         ArrayOfMessage messages = new ArrayOfMessage();
         Calendar requestDate = Calendar.getInstance();
@@ -86,15 +88,14 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
             if (request != null) {
                 documentId = request.getDocumentId();
             }
-            CustomXRoadHeader header = this.getHeader();
-            String applicationName = header.getInfosysteem(this.getConfiguration().getXteeProducerName());
+            String applicationName = xRoadHeader.getInfosysteem(this.getConfiguration().getXteeProducerName());
 
             // Log request
-            Util.printHeader(header, this.getConfiguration());
+            Util.printHeader(xRoadHeader, this.getConfiguration());
             printRequest(request);
 
             // Check header for required fields
-            checkHeader(header);
+            checkHeader(xRoadHeader);
 
             // Check request body
             checkRequest(request);
@@ -117,8 +118,8 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
             }
 
             // Kontrollime, kas päringus märgitud isik on teenuse kasutaja
-            AditUser user = Util.getAditUserFromXroadHeader(this.getHeader(), this.getUserService());
-            AditUser xroadRequestUser = Util.getXroadUserFromXroadHeader(user, this.getHeader(), this.getUserService());
+            AditUser user = Util.getAditUserFromXroadHeader(xRoadHeader, this.getUserService());
+            AditUser xroadRequestUser = Util.getXroadUserFromXroadHeader(user, xRoadHeader, this.getUserService());
 
             // Kontrollime, et kasutajakonto ligipääs poleks peatatud (kasutaja lahkunud)
             if ((user.getActive() == null) || !user.getActive()) {
@@ -220,7 +221,7 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
                 // All primary checks passed.
                 logger.debug("Processing attachment with id: '" + attachmentID + "'");
                 // Extract the SOAP message to a temporary file
-                String base64EncodedFile = extractAttachmentXML(this.getRequestMessage(), attachmentID);
+                String base64EncodedFile = extractAttachmentXML(requestMessage, attachmentID);
 
                 // Base64 decode and unzip the temporary file
                 signatureFile = Util.base64DecodeAndUnzip(base64EncodedFile, this.getConfiguration().getTempDir(), this
@@ -234,7 +235,7 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
                     throw aditCodedException;
                 }
 
-                this.documentService.confirmSignature(doc.getId(), signatureFile, header.getIsikukood(), user, this.getConfiguration().getTempDir());
+                this.documentService.confirmSignature(doc.getId(), signatureFile, xRoadHeader.getIsikukood(), user, this.getConfiguration().getTempDir());
 
                 // Send scheduler notification to document owner.
                 // Notification does not need to be sent if user signed his/her own document.
@@ -243,7 +244,7 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
                     if ((docCreator != null)
                         && (userService.findNotification(docCreator.getUserNotifications(), ScheduleClient.NOTIFICATION_TYPE_SIGN) != null)) {
 
-                    	String signerData = (user.getFullName() != null ?  user.getFullName() : "" ) + " (" + header.getIsikukood() + ")";
+                    	String signerData = (user.getFullName() != null ?  user.getFullName() : "" ) + " (" + xRoadHeader.getIsikukood() + ")";
                     	List<Message> messageInAllKnownLanguages = this.getMessageService().getMessages(
                     			"scheduler.message.sign", new Object[] {doc.getTitle(), signerData});
                     	String eventText = Util.joinMessages(messageInAllKnownLanguages, "<br/>");
@@ -307,21 +308,21 @@ public class ConfirmSignatureEndpoint extends AbstractAditBaseEndpoint {
             }
 
             additionalInformationForLog = errorMessage;
-            super.logError(documentId, requestDate.getTime(), LogService.ERROR_LOG_LEVEL_ERROR, errorMessage);
+            super.logError(documentId, requestDate.getTime(), LogService.ERROR_LOG_LEVEL_ERROR, errorMessage, xRoadHeader);
 
             logger.debug("Adding exception messages to response object.");
             response.setMessages(arrayOfMessage);
         }
 
-        super.logCurrentRequest(documentId, requestDate.getTime(), additionalInformationForLog);
+        super.logCurrentRequest(documentId, requestDate.getTime(), additionalInformationForLog, xRoadHeader);
         
         return response;
     }
 
     @Override
-    protected Object getResultForGenericException(Exception ex) {
+    protected Object getResultForGenericException(Exception ex, SaajSoapMessage requestMessage, SaajSoapMessage responseMessage, CustomXRoadHeader xRoadHeader) {
         super.logError(null, Calendar.getInstance().getTime(), LogService.ERROR_LOG_LEVEL_FATAL, "ERROR: "
-                + ex.getMessage());
+                + ex.getMessage(), xRoadHeader);
         ConfirmSignatureResponse response = new ConfirmSignatureResponse();
         response.setSuccess(false);
         ArrayOfMessage arrayOfMessage = new ArrayOfMessage();

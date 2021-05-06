@@ -31,6 +31,7 @@ import ee.adit.util.Util;
 import ee.adit.util.xroad.CustomXRoadHeader;
 import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
 import ee.webmedia.xtee.annotation.XTeeService;
+import org.springframework.ws.soap.saaj.SaajSoapMessage;
 
 /**
  * Implementation of "sendDocument" web method (web service request). Contains
@@ -48,13 +49,13 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
     private ScheduleClient scheduleClient;
 
     @Override
-    protected Object invokeInternal(Object requestObject, int version) throws Exception {
+    protected Object invokeInternal(Object requestObject, int version, SaajSoapMessage requestMessage, SaajSoapMessage responseMessage, CustomXRoadHeader xRoadHeader) throws Exception {
         logger.debug("sendDocument invoked. Version: " + version);
 
         if (version == 1) {
-            return v1(requestObject);
+            return v1(requestObject, xRoadHeader);
         } else if (version == 2) {
-        	return v2(requestObject);
+        	return v2(requestObject, xRoadHeader);
         }else {
             throw new AditInternalException("This method does not support version specified: " + version);
         }
@@ -67,7 +68,7 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
      *            Request body object
      * @return Response body object
      */
-    protected Object v1(Object requestObject) {
+    protected Object v1(Object requestObject, CustomXRoadHeader xRoadHeader) {
         SendDocumentResponse response = new SendDocumentResponse();
         Calendar requestDate = Calendar.getInstance();
         String additionalInformationForLog = "";
@@ -82,21 +83,20 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 
             logger.debug("SendDocumentEndpoint.v1 invoked.");
             request = (SendDocumentRequest) requestObject;
-            CustomXRoadHeader header = this.getHeader();
-            String applicationName = header.getInfosysteem(this.getConfiguration().getXteeProducerName());
+            String applicationName = xRoadHeader.getInfosysteem(this.getConfiguration().getXteeProducerName());
 
             // Log request
-            Util.printHeader(header, this.getConfiguration());
+            Util.printHeader(xRoadHeader, this.getConfiguration());
 
             // Check header for required fields
-            checkHeader(header);
+            checkHeader(xRoadHeader);
 
             // Check request body
             checkRequest(request);
 
             // Check if the user is registered
-            AditUser user = Util.getAditUserFromXroadHeader(this.getHeader(), this.getUserService());
-            AditUser xroadRequestUser = Util.getXroadUserFromXroadHeader(user, this.getHeader(), this.getUserService());
+            AditUser user = Util.getAditUserFromXroadHeader(xRoadHeader, this.getUserService());
+            AditUser xroadRequestUser = Util.getXroadUserFromXroadHeader(user, xRoadHeader, this.getUserService());
 
             Document doc = checkRightsAndGetDocument(request, applicationName, user);
 
@@ -146,7 +146,7 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
                             localErrorMessage = "User does not exist: ";
                         }
                         super.logError(request.getDocumentId(), requestDate.getTime(), LogService.ERROR_LOG_LEVEL_ERROR,
-                                LogService.REQUEST_LOG_FAIL + localErrorMessage + recipientCode);
+                                LogService.REQUEST_LOG_FAIL + localErrorMessage + recipientCode, xRoadHeader);
                         if (additionalInformationForLog != null && !additionalInformationForLog.trim().equals("")) {
                             additionalInformationForLog = additionalInformationForLog + ", ";
                         }
@@ -161,7 +161,7 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 
                         String localErrorMessage = "Document has already been sent to user: ";
                         super.logError(request.getDocumentId(), requestDate.getTime(), LogService.ERROR_LOG_LEVEL_ERROR,
-                                LogService.REQUEST_LOG_FAIL + localErrorMessage + recipientCode);
+                                LogService.REQUEST_LOG_FAIL + localErrorMessage + recipientCode, xRoadHeader);
                         if (additionalInformationForLog != null && !additionalInformationForLog.trim().equals("")) {
                             additionalInformationForLog += ", ";
                         }
@@ -323,13 +323,13 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
             }
 
             additionalInformationForLog = errorMessage;
-            super.logError(request.getDocumentId(), requestDate.getTime(), LogService.ERROR_LOG_LEVEL_ERROR, errorMessage);
+            super.logError(request.getDocumentId(), requestDate.getTime(), LogService.ERROR_LOG_LEVEL_ERROR, errorMessage, xRoadHeader);
 
             logger.debug("Adding exception messages to response object.");
             response.setMessages(arrayOfMessage);
         }
 
-        super.logCurrentRequest(request.getDocumentId(), requestDate.getTime(), additionalInformationForLog);
+        super.logCurrentRequest(request.getDocumentId(), requestDate.getTime(), additionalInformationForLog, xRoadHeader);
 
         return response;
     }
@@ -342,7 +342,7 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
      *            Request body object
      * @return Response body object
      */
-    protected Object v2(Object requestObject) {
+    protected Object v2(Object requestObject, CustomXRoadHeader xRoadHeader) {
         SendDocumentResponse response = new SendDocumentResponse();
         Calendar requestDate = Calendar.getInstance();
         String additionalInformationForLog = "";
@@ -358,21 +358,20 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
             logger.debug("SendDocumentEndpoint.v1 invoked.");
             request = (SendDocumentRequest) requestObject;
             request.setDvkFolder(request.getDecFolder());
-            CustomXRoadHeader header = this.getHeader();
-            String applicationName = header.getInfosysteem(this.getConfiguration().getXteeProducerName());
+            String applicationName = xRoadHeader.getInfosysteem(this.getConfiguration().getXteeProducerName());
 
             // Log request
-            Util.printHeader(header, this.getConfiguration());
+            Util.printHeader(xRoadHeader, this.getConfiguration());
 
             // Check header for required fields
-            checkHeader(header);
+            checkHeader(xRoadHeader);
 
             // Check request body
             checkRequest(request);
 
             // Check if the user is registered
-            AditUser user = Util.getAditUserFromXroadHeader(this.getHeader(), this.getUserService());
-            AditUser xroadRequestUser = Util.getXroadUserFromXroadHeader(user, this.getHeader(), this.getUserService());
+            AditUser user = Util.getAditUserFromXroadHeader(xRoadHeader, this.getUserService());
+            AditUser xroadRequestUser = Util.getXroadUserFromXroadHeader(user, xRoadHeader, this.getUserService());
 
             Document doc = checkRightsAndGetDocument(request, applicationName, user);
 
@@ -422,7 +421,7 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
                             localErrorMessage = "User does not exist: ";
                         }
                         super.logError(request.getDocumentId(), requestDate.getTime(), LogService.ERROR_LOG_LEVEL_ERROR,
-                                LogService.REQUEST_LOG_FAIL + localErrorMessage + recipientCode);
+                                LogService.REQUEST_LOG_FAIL + localErrorMessage + recipientCode, xRoadHeader);
                         if (additionalInformationForLog != null && !additionalInformationForLog.trim().equals("")) {
                             additionalInformationForLog = additionalInformationForLog + ", ";
                         }
@@ -437,7 +436,7 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
 
                         String localErrorMessage = "Document has already been sent to user: ";
                         super.logError(request.getDocumentId(), requestDate.getTime(), LogService.ERROR_LOG_LEVEL_ERROR,
-                                LogService.REQUEST_LOG_FAIL + localErrorMessage + recipientCode);
+                                LogService.REQUEST_LOG_FAIL + localErrorMessage + recipientCode, xRoadHeader);
                         if (additionalInformationForLog != null && !additionalInformationForLog.trim().equals("")) {
                             additionalInformationForLog += ", ";
                         }
@@ -599,13 +598,13 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
             }
 
             additionalInformationForLog = errorMessage;
-            super.logError(request.getDocumentId(), requestDate.getTime(), LogService.ERROR_LOG_LEVEL_ERROR, errorMessage);
+            super.logError(request.getDocumentId(), requestDate.getTime(), LogService.ERROR_LOG_LEVEL_ERROR, errorMessage, xRoadHeader);
 
             logger.debug("Adding exception messages to response object.");
             response.setMessages(arrayOfMessage);
         }
 
-        super.logCurrentRequest(request.getDocumentId(), requestDate.getTime(), additionalInformationForLog);
+        super.logCurrentRequest(request.getDocumentId(), requestDate.getTime(), additionalInformationForLog, xRoadHeader);
 
         return response;
     }
@@ -728,9 +727,9 @@ public class SendDocumentEndpoint extends AbstractAditBaseEndpoint {
     }
 
     @Override
-    protected Object getResultForGenericException(Exception ex) {
+    protected Object getResultForGenericException(Exception ex, SaajSoapMessage requestMessage, SaajSoapMessage responseMessage, CustomXRoadHeader xRoadHeader) {
         super.logError(null, Calendar.getInstance().getTime(), LogService.ERROR_LOG_LEVEL_FATAL, "ERROR: "
-                + ex.getMessage());
+                + ex.getMessage(), xRoadHeader);
         SendDocumentResponse response = new SendDocumentResponse();
         response.setSuccess(false);
         ArrayOfMessage arrayOfMessage = new ArrayOfMessage();

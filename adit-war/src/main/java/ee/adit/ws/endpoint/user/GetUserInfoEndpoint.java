@@ -27,6 +27,7 @@ import ee.adit.util.Util;
 import ee.adit.util.xroad.CustomXRoadHeader;
 import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
 import ee.webmedia.xtee.annotation.XTeeService;
+import org.springframework.ws.soap.saaj.SaajSoapMessage;
 
 /**
  * Implementation of "getUserInfo" web method (web service request). Contains
@@ -44,13 +45,13 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 	private UserService userService;
 
 	@Override
-	protected Object invokeInternal(Object requestObject, int version) throws Exception {
+	protected Object invokeInternal(Object requestObject, int version, SaajSoapMessage requestMessage, SaajSoapMessage responseMessage, CustomXRoadHeader xRoadHeader) throws Exception {
 		logger.debug("getUserInfo invoked. Version: " + version);
 
 		if (version == 1) {
-			return v1(requestObject);
+			return v1(requestObject, requestMessage, responseMessage, xRoadHeader);
 		} else if (version == 2) {
-			return v2(requestObject);
+			return v2(requestObject, requestMessage, responseMessage, xRoadHeader);
 		} else {
 			throw new AditInternalException("This method does not support version specified: " + version);
 		}
@@ -63,7 +64,7 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 	 *            Request body object
 	 * @return Response body object
 	 */
-	protected Object v1(Object requestObject) {
+	protected Object v1(Object requestObject, SaajSoapMessage requestMessage, SaajSoapMessage responseMessage, CustomXRoadHeader xRoadHeader) {
 		GetUserInfoResponse response = new GetUserInfoResponse();
 		ArrayOfMessage messages = new ArrayOfMessage();
 		Calendar requestDate = Calendar.getInstance();
@@ -72,7 +73,7 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 		try {
 
 			GetUserInfoRequest request = (GetUserInfoRequest) requestObject;
-			CustomXRoadHeader header = this.getHeader();
+			CustomXRoadHeader header = xRoadHeader;
 			String applicationName = header.getInfosysteem(this.getConfiguration().getXteeProducerName());
 
 			// Check header for required fields
@@ -102,7 +103,7 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 					// All primary checks passed.
 					logger.debug("Processing attachment with id: '" + attachmentID + "'");
 					// Extract the SOAP message to a temporary file
-					String base64EncodedFile = extractAttachmentXML(this.getRequestMessage(), attachmentID);
+					String base64EncodedFile = extractAttachmentXML(requestMessage, attachmentID);
 
 					// Base64 decode and unzip the temporary file
 					String xmlFile = Util.base64DecodeAndUnzip(base64EncodedFile, this.getConfiguration().getTempDir(),
@@ -159,7 +160,7 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 									this.getConfiguration().getTempDir());
 
 							// Add as an attachment
-							String contentID = addAttachment(attachmentFile);
+							String contentID = addAttachment(attachmentFile, responseMessage);
 							UserList getUserInfoResponseUserList = new UserList();
 							getUserInfoResponseUserList.setHref("cid:" + contentID);
 							response.setUserList(getUserInfoResponseUserList);
@@ -216,13 +217,13 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 			}
 
 			additionalInformationForLog = errorMessage;
-			super.logError(null, requestDate.getTime(), LogService.ERROR_LOG_LEVEL_ERROR, errorMessage);
+			super.logError(null, requestDate.getTime(), LogService.ERROR_LOG_LEVEL_ERROR, errorMessage, xRoadHeader);
 
 			logger.debug("Adding exception messages to response object.");
 			response.setMessages(arrayOfMessage);
 		}
 
-		super.logCurrentRequest(null, requestDate.getTime(), additionalInformationForLog);
+		super.logCurrentRequest(null, requestDate.getTime(), additionalInformationForLog, xRoadHeader);
 		return response;
 	}
 
@@ -233,7 +234,7 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 	 *            Request body object
 	 * @return Response body object
 	 */
-	protected Object v2(Object requestObject) {
+	protected Object v2(Object requestObject, SaajSoapMessage requestMessage, SaajSoapMessage responseMessage, CustomXRoadHeader xRoadHeader) {
 		GetUserInfoResponse response = new GetUserInfoResponse();
 		ArrayOfMessage messages = new ArrayOfMessage();
 		Calendar requestDate = Calendar.getInstance();
@@ -242,7 +243,7 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 		try {
 
 			GetUserInfoRequest request = (GetUserInfoRequest) requestObject;
-			CustomXRoadHeader header = this.getHeader();
+			CustomXRoadHeader header = xRoadHeader;
 			String applicationName = header.getInfosysteem(this.getConfiguration().getXteeProducerName());
 
 			// Check header for required fields
@@ -272,7 +273,7 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 					// All primary checks passed.
 					logger.debug("Processing attachment with id: '" + attachmentID + "'");
 					// Extract the SOAP message to a temporary file
-					String base64EncodedFile = extractAttachmentXML(this.getRequestMessage(), attachmentID);
+					String base64EncodedFile = extractAttachmentXML(requestMessage, attachmentID);
 
 					// Base64 decode and unzip the temporary file
 					String xmlFile = Util.base64DecodeAndUnzip(base64EncodedFile, this.getConfiguration().getTempDir(),
@@ -329,7 +330,7 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 									this.getConfiguration().getTempDir());
 
 							// Add as an attachment
-							String contentID = addAttachment(attachmentFile);
+							String contentID = addAttachment(attachmentFile, responseMessage);
 							UserList getUserInfoResponseUserList = new UserList();
 							getUserInfoResponseUserList.setHref("cid:" + contentID);
 							response.setUserList(getUserInfoResponseUserList);
@@ -386,20 +387,20 @@ public class GetUserInfoEndpoint extends AbstractAditBaseEndpoint {
 			}
 
 			additionalInformationForLog = errorMessage;
-			super.logError(null, requestDate.getTime(), LogService.ERROR_LOG_LEVEL_ERROR, errorMessage);
+			super.logError(null, requestDate.getTime(), LogService.ERROR_LOG_LEVEL_ERROR, errorMessage, xRoadHeader);
 
 			logger.debug("Adding exception messages to response object.");
 			response.setMessages(arrayOfMessage);
 		}
 
-		super.logCurrentRequest(null, requestDate.getTime(), additionalInformationForLog);
+		super.logCurrentRequest(null, requestDate.getTime(), additionalInformationForLog, xRoadHeader);
 		return response;
 	}
 
 	@Override
-	protected Object getResultForGenericException(Exception ex) {
+	protected Object getResultForGenericException(Exception ex, SaajSoapMessage requestMessage, SaajSoapMessage responseMessage, CustomXRoadHeader xRoadHeader) {
 		super.logError(null, Calendar.getInstance().getTime(), LogService.ERROR_LOG_LEVEL_FATAL,
-				"ERROR: " + ex.getMessage());
+				"ERROR: " + ex.getMessage(), xRoadHeader);
 		GetUserInfoResponse response = new GetUserInfoResponse();
 		response.setSuccess(new Success(false));
 		ArrayOfMessage arrayOfMessage = new ArrayOfMessage();

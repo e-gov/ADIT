@@ -7,6 +7,8 @@ import ee.adit.pojo.PersonName;
 import ee.adit.util.Util;
 import junit.framework.TestCase;
 
+import static java.util.Calendar.MILLISECOND;
+
 /**
  * The class <code>UtilTest</code> contains tests for the class {@link
  * <code>Util</code>}.
@@ -74,7 +76,9 @@ public class UtilTest extends TestCase {
 		Calendar earlierCal = Calendar.getInstance();
 		Calendar laterCal = Calendar.getInstance();
 		earlierCal.set(2011, 7, 26, 16, 0, 0);
+		earlierCal.set(MILLISECOND, 0);
 		laterCal.set(2011, 7, 26, 16, 0, 1);
+		laterCal.set(MILLISECOND, 0);
 		Date earlierDate = earlierCal.getTime();
 		Date laterDate = laterCal.getTime();
 		assertEquals(1000L, Util.getDateDiffInMilliseconds(earlierDate, laterDate));

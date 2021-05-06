@@ -30,7 +30,6 @@ import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logg
 import org.exolab.castor.xml.NodeType;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.MessageEndpoint;
-import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -79,16 +78,6 @@ public abstract class XRoadCustomEndpoint implements MessageEndpoint {
     private boolean metaService = false;
 
     /**
-     * Response message.
-     */
-    private SaajSoapMessage responseMessage;
-
-    /**
-     * Request message.
-     */
-    private SaajSoapMessage requestMessage;
-
-    /**
      * If true then SOAP attachment headers will not be corrected before sending
      * query response. This is useful when returning original attachments within
      * an error message.
@@ -98,7 +87,7 @@ public abstract class XRoadCustomEndpoint implements MessageEndpoint {
     /**
      * The entry point for web-service call. Extracts the X-Tee operation node
      * and passes it to the
-     * {@link #getResponse(CustomXRoadHeader, Document, SOAPMessage, SOAPMessage, Document)}
+     * {@link #getResponse(CustomXRoadHeader, Document, SOAPMessage, SOAPMessage, Document, SaajSoapMessage, SaajSoapMessage)}
      * method for futher processing.
      *
      * @param messageContext
@@ -113,8 +102,9 @@ public abstract class XRoadCustomEndpoint implements MessageEndpoint {
             // Extract request / response
             SOAPMessage paringMessage = CustomSOAPUtil.extractSoapMessage(messageContext.getRequest());
             SOAPMessage respMessage = CustomSOAPUtil.extractSoapMessage(messageContext.getResponse());
-            this.setResponseMessage(new SaajSoapMessage(respMessage));
-            this.setRequestMessage(new SaajSoapMessage(paringMessage));
+
+            SaajSoapMessage requestMessage = new SaajSoapMessage(paringMessage);
+            SaajSoapMessage responseMessage = new SaajSoapMessage(respMessage);
 
             CustomXRoadHeader pais = parseXRoadHeader(paringMessage);
             
@@ -171,7 +161,7 @@ public abstract class XRoadCustomEndpoint implements MessageEndpoint {
                 }
             }
 
-            getResponse(pais, paring, respMessage, paringMessage, operationDocument);
+            getResponse(pais, paring, respMessage, paringMessage, operationDocument, requestMessage, responseMessage);
         } catch (Exception e) {
             logger.error("Exception while processing request: ", e);
             throw new Exception("Service error");
@@ -326,27 +316,19 @@ public abstract class XRoadCustomEndpoint implements MessageEndpoint {
      *            request message
      * @param operationNode
      *            X-Tee specific operation node
+     * @param requestMessage Incoming request
+     * @param responseMessage Sent as result
      * @throws Exception
      */
     private void getResponse(CustomXRoadHeader header, Document query, SOAPMessage respMessage,
-            SOAPMessage reqMessage, Document operationNode) throws Exception {
+                             SOAPMessage reqMessage, Document operationNode, SaajSoapMessage requestMessage, SaajSoapMessage responseMessage) throws Exception {
         SOAPElement teenusElement = createXteeMessageStructure(header, reqMessage, respMessage);
-        //For testing only
-//        DOMSource domSource = new DOMSource(query);
-//        StringWriter writer = new StringWriter();
-//        StreamResult result = new StreamResult(writer);
-//        TransformerFactory tf = TransformerFactory.newInstance();
-//        Transformer transformer = tf.newTransformer();
-//        transformer.transform(domSource, result);
-//        String requestObjectSourceXml = writer.toString();
-//        logger.info(requestObjectSourceXml);
-        //testing end
-        
+
         if (!metaService && header.getProtocolVersion().equals(XRoadProtocolVersion.V2_0)) {
             copyParing(query, teenusElement);
         }
         
-        invokeInternal(operationNode, teenusElement, header);
+        invokeInternal(operationNode, teenusElement, header, requestMessage, responseMessage);
         
         if (!(metaService && header.getProtocolVersion().equals(XRoadProtocolVersion.V2_0))) {
             addHeader(header, respMessage, reqMessage);
@@ -374,7 +356,7 @@ public abstract class XRoadCustomEndpoint implements MessageEndpoint {
     /**
      * Creates X-Road specific structure for SOAP message: adds MIME headers, base namespaces.
      * 
-     * @param xRoadHeader X-Road specific header
+     * @param xRoadHeader Parsed header X-Road specific header
      * @param reqMessage request SOAP message
      * @param respMessage response SOAP message
      * @return the service element of the SOAP response message
@@ -436,7 +418,7 @@ public abstract class XRoadCustomEndpoint implements MessageEndpoint {
      *
      * @param pais
      *            headers
-     * @param responseMessage
+     * @param responseMessage Sent as result
      *            SOAP message
      * @throws SOAPException
      */
@@ -500,44 +482,6 @@ public abstract class XRoadCustomEndpoint implements MessageEndpoint {
     }
 
     /**
-     * Retrieves the response message.
-     *
-     * @return Response message as {@link SoapMessage} object.
-     */
-    public SoapMessage getResponseMessage() {
-        return responseMessage;
-    }
-
-    /**
-     * Retrieves the request message.
-     *
-     * @return Request message as {@link SoapMessage} object.
-     */
-    public SoapMessage getRequestMessage() {
-        return requestMessage;
-    }
-
-    /**
-     * Sets the response message.
-     *
-     * @param responseMessage
-     *            Response message as {@link SaajSoapMessage} object.
-     */
-    public void setResponseMessage(SaajSoapMessage responseMessage) {
-        this.responseMessage = responseMessage;
-    }
-
-    /**
-     * Sets the request message.
-     *
-     * @param requestMessage
-     *            Request message as {@link SaajSoapMessage} object.
-     */
-    public void setRequestMessage(SaajSoapMessage requestMessage) {
-        this.requestMessage = requestMessage;
-    }
-
-    /**
      * Indicates whether SOAP attachments headers are to be corrected.
      *
      * @return <code>true</code> if this request should not attempt to correct
@@ -551,15 +495,15 @@ public abstract class XRoadCustomEndpoint implements MessageEndpoint {
      * Method which must implement the service logic, receives
      * <code>requestKeha</code>, <code>responseElement</code>
      * and <code>CustomXRoadHeader</code>.
-     *
-     * @param requestKeha
+     *  @param requestKeha
      *            query body
      * @param responseElement
      *            response body
      * @param xTeeHeader
-     *            query header
+     * @param requestMessage Incoming request
+     * @param responseMessage Sent as result
      */
-    protected abstract void invokeInternal(Document requestKeha, Element responseElement, CustomXRoadHeader xTeeHeader)
+    protected abstract void invokeInternal(Document requestKeha, Element responseElement, CustomXRoadHeader xTeeHeader, SaajSoapMessage requestMessage, SaajSoapMessage responseMessage)
             throws Exception;
 
 }

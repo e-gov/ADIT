@@ -1,5 +1,11 @@
 package ee.adit.dhx;
 
+import java.util.Calendar;
+import java.util.List;
+
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
+
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
 import ee.adit.dhx.api.container.v2_1.ContainerVer2_1;
@@ -11,12 +17,6 @@ import ee.adit.dhx.converter.containerdocument.RecipientsBuilder;
 import ee.adit.pojo.OutputDocumentFile;
 import ee.adit.pojo.SaveItemInternalResult;
 import ee.adit.service.DocumentService;
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.util.Calendar;
-import java.util.List;
 
 /**
  * @author Hendrik Pärna
@@ -42,7 +42,7 @@ public class Container2_1Receiver implements DhxReceiver {
 
 
 	@Override
-    public Long receive(final String containerFile, String consignmentId, boolean allowSendingToInactiveUser) {
+    public Long receive(final String containerFile, String consignmentId) {
     	ContainerVer2_1 containerVer2_1 = ContainerVer2_1.parseFile(containerFile);
         //ContainerVer2_1 containerVer2_1 = documentService.getDVKContainer2_1(message);
         ContainerVer2_1ToDocumentConverterImpl converter = createConverter(containerVer2_1, consignmentId);
@@ -51,13 +51,9 @@ public class Container2_1Receiver implements DhxReceiver {
         //this must be after conversion, because we need the data which is created during the conversion itself
         validateMessage(containerVer2_1, converter, consignmentId);
 
-        RecipientsBuilder recipientsBuilder = new RecipientsBuilder(containerVer2_1, allowSendingToInactiveUser);
-        recipientsBuilder.setAditUserDAO(documentService.getAditUserDAO());
-        recipientsBuilder.setConfiguration(documentService.getConfiguration());
-
-        initDocumentParentId(containerVer2_1, document, recipientsBuilder);
+        initDocumentParentId(containerVer2_1, document);
         saveDocumentToAdit(converter, document);
-        sendToRecipients(converter.getSenderUser(), document, containerVer2_1, recipientsBuilder);
+        sendToRecipients(converter.getSenderUser(), document, containerVer2_1);
 
         try {
             documentService.getDocumentDAO().updateDocumentReceiptId(document.getId(), document.getId());
@@ -144,7 +140,10 @@ public class Container2_1Receiver implements DhxReceiver {
     }
 
     private void sendToRecipients(final AditUser sender, final Document document,
-                                  final ContainerVer2_1 containerVer2_1, RecipientsBuilder recipientsBuilder) {
+                                  final ContainerVer2_1 containerVer2_1) {
+        RecipientsBuilder recipientsBuilder = new RecipientsBuilder(containerVer2_1);
+        recipientsBuilder.setAditUserDAO(documentService.getAditUserDAO());
+        recipientsBuilder.setConfiguration(documentService.getConfiguration());
 
         for (Pair<AditUser, Recipient> aditUserRecipient : recipientsBuilder.build()) {
             documentService.sendDocumentAndNotifyRecipient(document, sender, aditUserRecipient.getLeft(), null,
@@ -152,7 +151,11 @@ public class Container2_1Receiver implements DhxReceiver {
         }
     }
 
-    private void initDocumentParentId(final ContainerVer2_1 container, final Document document, RecipientsBuilder recipientsBuilder) {
+    private void initDocumentParentId(final ContainerVer2_1 container, final Document document) {
+        RecipientsBuilder recipientsBuilder = new RecipientsBuilder(container);
+        recipientsBuilder.setAditUserDAO(documentService.getAditUserDAO());
+        recipientsBuilder.setConfiguration(documentService.getConfiguration());
+
         // Get the first not null RecipientRecordOriginalIdentifier found in adit recipients
         for (Pair<AditUser, Recipient> aditUserRecipient : recipientsBuilder.build()) {
             String recipientRecordOriginalIdentifier = aditUserRecipient.getRight().getRecipientRecordOriginalIdentifier();

@@ -58,8 +58,6 @@
 			<element name="getDocumentFileResponse" type="tns:getDocumentFileResponse" />
 			<element name="saveDocumentRequest" type="tns:saveDocumentRequest" />
 			<element name="saveDocumentResponse" type="tns:saveDocumentResponse" />
-			<element name="saveDocumentV2Request" type="tns:saveDocumentV2Request" />
-			<element name="saveDocumentV2Response" type="tns:saveDocumentV2Response" />
 			<element name="saveDocumentFileRequest" type="tns:saveDocumentFileRequest" />
 			<element name="saveDocumentFileResponse" type="tns:saveDocumentFileResponse" />
 			<element name="deleteDocumentFileRequest" type="tns:deleteDocumentFileRequest" />
@@ -1231,46 +1229,6 @@
 				</sequence>
 			</complexType>
 			<complexType name="saveDocumentResponse">
-				<xs:annotation>
-					<xs:documentation xml:lang="ee">Päringu "saveDocument" vastus</xs:documentation>
-					<xs:documentation xml:lang="en">"saveDocument" requestresponse</xs:documentation>
-				</xs:annotation>
-				<sequence>
-					<element name="success" type="tns:success" />
-					<element name="messages" type="tns:arrayOfMessage" />
-					<element name="document_id" type="integer" />
-					<element name="document">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Dokument</xs:documentation>
-							<xs:documentation xml:lang="en">Document</xs:documentation>
-						</xs:annotation>
-						<complexType>
-							<attribute name="href" type="tns:href" />
-						</complexType>
-					</element>
-				</sequence>
-			</complexType>
-
-			<!-- saveDocumentV2 päringu tüübid -->
-			<complexType name="saveDocumentV2Request">
-				<xs:annotation>
-					<xs:documentation xml:lang="ee">Päring "saveDocument"</xs:documentation>
-					<xs:documentation xml:lang="en">"saveDocument" request</xs:documentation>
-				</xs:annotation>
-				<sequence>
-					<element name="check_user_is_active" type="boolean" />
-					<element name="document">
-						<xs:annotation>
-							<xs:documentation xml:lang="ee">Dokument</xs:documentation>
-							<xs:documentation xml:lang="en">Document</xs:documentation>
-						</xs:annotation>
-						<complexType>
-							<attribute name="href" type="tns:href" />
-						</complexType>
-					</element>
-				</sequence>
-			</complexType>
-			<complexType name="saveDocumentV2Response">
 				<xs:annotation>
 					<xs:documentation xml:lang="ee">Päringu "saveDocument" vastus</xs:documentation>
 					<xs:documentation xml:lang="en">"saveDocument" requestresponse</xs:documentation>
@@ -3470,9 +3428,6 @@
 	<wsdl:message name="saveDocumentResponse">
 		<wsdl:part name="keha" type="tns:saveDocumentResponse" />
 	</wsdl:message>
-	<wsdl:message name="saveDocumentV2Response">
-		<wsdl:part name="keha" type="tns:saveDocumentV2Response" />
-	</wsdl:message>
 	<wsdl:message name="getDocumentListResponse">
 		<wsdl:part name="keha" type="tns:getDocumentListResponse">
 		</wsdl:part>
@@ -3533,9 +3488,6 @@
 	</wsdl:message>
 	<wsdl:message name="saveDocumentRequest">
 		<wsdl:part name="keha" type="tns:saveDocumentRequest" />
-	</wsdl:message>
-	<wsdl:message name="saveDocumentV2Request">
-		<wsdl:part name="keha" type="tns:saveDocumentV2Request" />
 	</wsdl:message>
 	<wsdl:message name="sendDocumentResponse">
 		<wsdl:part name="keha" type="tns:sendDocumentResponse">
@@ -3844,14 +3796,6 @@
 			</xs:documentation>
 			<wsdl:input message="tns:saveDocumentRequest" name="saveDocumentRequest" />
 			<wsdl:output message="tns:saveDocumentResponse" name="saveDocumentResponse" />
-		</wsdl:operation>
-		<wsdl:operation name="saveDocument">
-			<xs:documentation>
-				<xtee:title>Dokumendi salvestamine</xtee:title>
-				<xtee:notes>Dokument (ja failid) salvestatakse</xtee:notes>
-			</xs:documentation>
-			<wsdl:input message="tns:saveDocumentV2Request" name="saveDocumentV2Request" />
-			<wsdl:output message="tns:saveDocumentV2Response" name="saveDocumentV2Response" />
 		</wsdl:operation>
 		<wsdl:operation name="prepareSignature">
 			<xs:documentation>
@@ -4625,30 +4569,6 @@
 				<soap:body namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" use="literal" />
 			</wsdl:input>
 			<wsdl:output name="saveDocumentResponse">
-				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="asutus" use="literal" />
-				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="andmekogu" use="literal" />
-				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="isikukood" use="literal" />
-				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="id" use="literal" />
-				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="nimi" use="literal" />
-				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" part="infosysteem" use="literal" />
-				
-				<soap:body namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" use="literal" />
-			</wsdl:output>
-		</wsdl:operation>
-		<wsdl:operation name="saveDocument">
-			<xtee:version>v2</xtee:version>
-			<soap:operation soapAction="" />
-			<wsdl:input name="saveDocumentV2Request">
-				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="asutus" use="literal" />
-				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="andmekogu" use="literal" />
-				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="isikukood" use="literal" />
-				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="id" use="literal" />
-				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="nimi" use="literal" />
-				<soap:header message="tns:xteeStandardPais" namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" part="infosysteem" use="literal" />
-
-				<soap:body namespace="http://producers.@PRODUCER_NAME@.xtee.riik.ee/producer/@PRODUCER_NAME@" use="literal" />
-			</wsdl:input>
-			<wsdl:output name="saveDocumentV2Response">
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="asutus" use="literal" />
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="andmekogu" use="literal" />
 				<soap:header message="tns:xteeStandardPais" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="isikukood" use="literal" />

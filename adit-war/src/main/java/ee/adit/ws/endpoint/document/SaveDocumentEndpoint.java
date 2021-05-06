@@ -1,12 +1,34 @@
 package ee.adit.ws.endpoint.document;
 
+import java.io.File;
+import java.io.InputStream;
+import java.util.Calendar;
+import java.util.Iterator;
+import java.util.Locale;
+
+import org.digidoc4j.exceptions.CertificateNotFoundException;
+import org.digidoc4j.exceptions.CertificateRevokedException;
+import org.digidoc4j.exceptions.DigiDoc4JException;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Component;
+import org.springframework.ws.mime.Attachment;
+
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
 import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditException;
 import ee.adit.exception.AditInternalException;
 import ee.adit.exception.AditMultipleException;
-import ee.adit.pojo.*;
+import ee.adit.pojo.ArrayOfMessage;
+import ee.adit.pojo.Message;
+import ee.adit.pojo.SaveDocumentRequest;
+import ee.adit.pojo.SaveDocumentRequestAttachment;
+import ee.adit.pojo.SaveDocumentRequestDocument;
+import ee.adit.pojo.SaveDocumentResponse;
+import ee.adit.pojo.SaveItemInternalResult;
+import ee.adit.pojo.Success;
 import ee.adit.service.DocumentService;
 import ee.adit.service.LogService;
 import ee.adit.service.MessageService;
@@ -16,19 +38,7 @@ import ee.adit.util.Util;
 import ee.adit.util.xroad.CustomXRoadHeader;
 import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
 import ee.webmedia.xtee.annotation.XTeeService;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.digidoc4j.exceptions.CertificateNotFoundException;
-import org.digidoc4j.exceptions.CertificateRevokedException;
-import org.digidoc4j.exceptions.DigiDoc4JException;
-import org.springframework.stereotype.Component;
-import org.springframework.ws.mime.Attachment;
-
-import java.io.File;
-import java.io.InputStream;
-import java.util.Calendar;
-import java.util.Iterator;
-import java.util.Locale;
+import org.springframework.ws.soap.saaj.SaajSoapMessage;
 
 /**
  * Implementation of "saveDocument" web method (web service request). Contains
@@ -50,13 +60,11 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
     private String digidocConfigurationFile;
 
     @Override
-    protected Object invokeInternal(Object requestObject, int version) throws Exception {
+    protected Object invokeInternal(Object requestObject, int version, SaajSoapMessage requestMessage, SaajSoapMessage responseMessage, CustomXRoadHeader xRoadHeader) throws Exception {
         logger.debug("saveDocument invoked. Version: " + version);
 
         if (version == 1) {
-            return v1(requestObject);
-        } else if (version == 2) {
-            return v2(requestObject);
+            return v1(requestObject, requestMessage, responseMessage, xRoadHeader);
         } else {
             throw new AditInternalException("This method does not support version specified: " + version);
         }
@@ -69,26 +77,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
      * @return Response body object
      */
     @SuppressWarnings("unchecked")
-    protected Object v1(Object requestObject) {
-        logger.debug("SaveDocumentEndpoint.v1 invoked.");
-        return parseSaveDocument((SaveDocumentRequest) requestObject, true);
-    }
-
-    /**
-     * Executes "V2" version of "saveDocument" request.
-     *
-     * @param requestObject Request body object
-     * @return Response body object
-     */
-    @SuppressWarnings("unchecked")
-    protected Object v2(Object requestObject) {
-        logger.debug("SaveDocumentEndpoint.v2 invoked.");
-        SaveDocumentRequest saveDocumentRequest = (SaveDocumentRequest) requestObject;
-        return parseSaveDocument((SaveDocumentRequest) requestObject,
-                saveDocumentRequest.isCheckUserIsActive() != null ? saveDocumentRequest.isCheckUserIsActive() : true);
-    }
-
-    private Object parseSaveDocument(SaveDocumentRequest request, boolean checkUserIsActive) {
+    protected Object v1(Object requestObject, SaajSoapMessage requestMessage, SaajSoapMessage responseMessage, CustomXRoadHeader xRoadHeader) {
         SaveDocumentResponse response = new SaveDocumentResponse();
         ArrayOfMessage messages = new ArrayOfMessage();
         Calendar requestDate = Calendar.getInstance();
@@ -97,9 +86,10 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
         boolean updatedExistingDocument = false;
 
         try {
-            CustomXRoadHeader header = this.getHeader();
+            logger.debug("SaveDocumentEndpoint.v1 invoked.");
+            CustomXRoadHeader header = xRoadHeader;
             String applicationName = header.getInfosysteem(this.getConfiguration().getXteeProducerName());
-
+            SaveDocumentRequest request = (SaveDocumentRequest) requestObject;
             InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream(getDigidocConfigurationFile());
             String jdigidocCfgTmpFile = Util.createTemporaryFile(input, getConfiguration().getTempDir());
             logger.debug("JDigidoc.cfg file created as a temporary file: '" + jdigidocCfgTmpFile + "'");
@@ -115,13 +105,10 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
             checkHeader(header);
 
             // Check whether or not the user who executed current query is registered.
-            AditUser user = Util.getAditUserFromXroadHeader(this.getHeader(), this.getUserService());
-            AditUser xroadRequestUser = Util.getXroadUserFromXroadHeader(user, this.getHeader(), this.getUserService());
+            AditUser user = Util.getAditUserFromXroadHeader(xRoadHeader, this.getUserService());
+            AditUser xroadRequestUser = Util.getXroadUserFromXroadHeader(user, xRoadHeader, this.getUserService());
 
             checkRights(request, applicationName, user);
-            if (checkUserIsActive) {
-                checkUserStatus(user);
-            }
 
             String attachmentID = null;
             // Check if the attachment ID is specified
@@ -135,7 +122,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
             // All primary checks passed.
             logger.debug("Processing attachment with id: '" + attachmentID + "'");
             // Extract the SOAP message to a temporary file
-            String base64EncodedFile = extractAttachmentXML(this.getRequestMessage(), attachmentID);
+            String base64EncodedFile = extractAttachmentXML(requestMessage, attachmentID);
 
             // Base64 decode and unzip the temporary file
             String xmlFile = Util.base64DecodeAndUnzip(base64EncodedFile, this.getConfiguration().getTempDir(), this
@@ -338,7 +325,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
             response.setMessages(arrayOfMessage);
 
             additionalInformationForLog = errorMessage;
-            super.logError(documentId, requestDate.getTime(), LogService.ERROR_LOG_LEVEL_ERROR, errorMessage);
+            super.logError(documentId, requestDate.getTime(), LogService.ERROR_LOG_LEVEL_ERROR, errorMessage, xRoadHeader);
         }
 
         logger.debug("Adding request attachments to response object.");
@@ -346,7 +333,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
             super.setIgnoreAttachmentHeaders(true);
             boolean cidAdded = false;
             
-            Iterator<Attachment> it = this.getRequestMessage().getAttachments();
+            Iterator<Attachment> it = requestMessage.getAttachments();
             while (it.hasNext()) {
                 Attachment attachment = it.next();
                 
@@ -357,7 +344,7 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
                     contentId = Util.stripContentID(contentId);
                 }
                 
-                this.getResponseMessage().addAttachment(contentId, attachment.getDataHandler());
+                responseMessage.addAttachment(contentId, attachment.getDataHandler());
                 if (!cidAdded) {
                     response.setDocument(new SaveDocumentRequestDocument("cid:" + contentId));
                     cidAdded = true;
@@ -367,16 +354,16 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
             logger.error("Failed sending request attachments back within response object!", ex);
         }
 
-        super.logCurrentRequest(documentId, requestDate.getTime(), additionalInformationForLog);
+        super.logCurrentRequest(documentId, requestDate.getTime(), additionalInformationForLog, xRoadHeader);
         
         return response;
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    protected Object getResultForGenericException(Exception ex) {
+    protected Object getResultForGenericException(Exception ex, SaajSoapMessage requestMessage, SaajSoapMessage responseMessage, CustomXRoadHeader xRoadHeader) {
         super.logError(null, Calendar.getInstance().getTime(), LogService.ERROR_LOG_LEVEL_FATAL, "ERROR: "
-                + ex.getMessage());
+                + ex.getMessage(), xRoadHeader);
         SaveDocumentResponse response = new SaveDocumentResponse();
         response.setSuccess(new Success(false));
         ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
@@ -386,14 +373,14 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
         try {
             super.setIgnoreAttachmentHeaders(true);
             boolean cidAdded = false;
-            Iterator<Attachment> i = this.getRequestMessage().getAttachments();
+            Iterator<Attachment> i = requestMessage.getAttachments();
             while (i.hasNext()) {
                 Attachment attachment = i.next();
                 String contentId = attachment.getContentId();
                 if ((contentId == null) || (contentId.length() < 1)) {
                     contentId = Util.generateRandomID();
                 }
-                this.getResponseMessage().addAttachment(contentId, attachment.getDataHandler());
+                responseMessage.addAttachment(contentId, attachment.getDataHandler());
                 if (!cidAdded) {
                     response.setDocument(new SaveDocumentRequestDocument("cid:" + contentId));
                     cidAdded = true;
@@ -433,20 +420,18 @@ public class SaveDocumentEndpoint extends AbstractAditBaseEndpoint {
             throw aditCodedException;
         }
 
+        // Check whether or not the user is active (account not deleted)
+        if ((user.getActive() == null) || !user.getActive()) {
+            AditCodedException aditCodedException = new AditCodedException("user.inactive");
+            aditCodedException.setParameters(new Object[] {user.getUserCode()});
+            throw aditCodedException;
+        }
+
         // Check whether or not the application has rights to modify current user's data.
         int applicationAccessLevelForUser = userService.getAccessLevelForUser(applicationName, user);
         if (applicationAccessLevelForUser != 2) {
             AditCodedException aditCodedException = new AditCodedException("application.insufficientPrivileges.forUser.write");
             aditCodedException.setParameters(new Object[]{applicationName, user.getUserCode()});
-            throw aditCodedException;
-        }
-    }
-
-    private void checkUserStatus(final AditUser user) {
-        // Check whether or not the user is active (account not deleted)
-        if ((user.getActive() == null) || !user.getActive()) {
-            AditCodedException aditCodedException = new AditCodedException("user.inactive");
-            aditCodedException.setParameters(new Object[]{user.getUserCode()});
             throw aditCodedException;
         }
     }

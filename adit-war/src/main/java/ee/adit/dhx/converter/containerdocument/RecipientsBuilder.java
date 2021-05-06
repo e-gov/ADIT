@@ -1,19 +1,19 @@
 package ee.adit.dhx.converter.containerdocument;
 
+import java.util.ArrayList;
+
+import java.util.List;
+
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
+
 import ee.adit.dao.AditUserDAO;
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dhx.api.container.v2_1.ContainerVer2_1;
 import ee.adit.dhx.api.container.v2_1.DecRecipient;
 import ee.adit.dhx.api.container.v2_1.Recipient;
-import ee.adit.exception.AditUserInactiveException;
 import ee.adit.util.Configuration;
 import ee.adit.util.Util;
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Hendrik Pärna
@@ -21,25 +21,20 @@ import java.util.List;
  */
 public class RecipientsBuilder {
     private static Logger logger = LogManager.getLogger(RecipientsBuilder.class);
-
-    private boolean allowSendingToInactiveUser = false;
     private ContainerVer2_1 container;
     private Configuration configuration;
     private AditUserDAO aditUserDAO;
 
     /**
      * Constructor.
-     *
      * @param container 2.1 container version
      */
-    public RecipientsBuilder(final ContainerVer2_1 container, boolean allowSendingToInactiveUser) {
+    public RecipientsBuilder(final ContainerVer2_1 container) {
         this.container = container;
-        this.allowSendingToInactiveUser = allowSendingToInactiveUser;
     }
 
     /**
      * Build a list of recipients.
-     *
      * @return recipients
      */
     public List<Pair<AditUser, Recipient>> build() {
@@ -69,7 +64,7 @@ public class RecipientsBuilder {
                     logger.debug("Getting AditUser by personal code: " + personalIdCodeWithCountryPrefix);
                     final AditUser user = this.getAditUserDAO().getUserByID(personalIdCodeWithCountryPrefix);
 
-                    if (user != null && (allowSendingToInactiveUser || user.getActive())) {
+                    if (user != null && user.getActive()) {
                         // Check if user uses DHX
                         if (!Util.isNullOrEmpty(user.getDvkOrgCode())) {
                             // The user uses DHX - this is not allowed.
@@ -99,7 +94,7 @@ public class RecipientsBuilder {
                             }
                         }
                     } else {
-                        throw new AditUserInactiveException(recipient.getPersonalIdCode());
+                        throw new IllegalStateException("User not found. Personal code: " + recipient.getPersonalIdCode());
                     }
                 }
             }

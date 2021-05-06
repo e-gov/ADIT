@@ -1,11 +1,31 @@
 package ee.adit.ws.endpoint.document;
 
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+
+import org.apache.logging.log4j.LogManager; import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Component;
+
 import ee.adit.dao.pojo.AditUser;
 import ee.adit.dao.pojo.Document;
 import ee.adit.dao.pojo.DocumentSharing;
 import ee.adit.exception.AditCodedException;
 import ee.adit.exception.AditInternalException;
-import ee.adit.pojo.*;
+import ee.adit.pojo.ArrayOfMessage;
+import ee.adit.pojo.GetDocumentRequest;
+import ee.adit.pojo.GetDocumentResponse;
+import ee.adit.pojo.GetDocumentResponseAttachment;
+import ee.adit.pojo.GetDocumentResponseAttachmentV2;
+import ee.adit.pojo.GetDocumentResponseAttachmentV3;
+import ee.adit.pojo.GetDocumentResponseDocument;
+import ee.adit.pojo.Message;
+import ee.adit.pojo.OutputDocument;
+import ee.adit.pojo.OutputDocumentFile;
 import ee.adit.schedule.ScheduleClient;
 import ee.adit.service.DocumentService;
 import ee.adit.service.LogService;
@@ -16,12 +36,7 @@ import ee.adit.util.xroad.CustomXRoadHeader;
 import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
 import ee.ria.dhx.util.StringUtil;
 import ee.webmedia.xtee.annotation.XTeeService;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.stereotype.Component;
-
-import java.io.InputStream;
-import java.util.*;
+import org.springframework.ws.soap.saaj.SaajSoapMessage;
 
 /**
  * Implementation of "getDocument" web method (web service request). Contains
@@ -43,16 +58,16 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
 
 
     @Override
-    protected Object invokeInternal(Object requestObject, int version) throws Exception {
+    protected Object invokeInternal(Object requestObject, int version, SaajSoapMessage requestMessage, SaajSoapMessage responseMessage, CustomXRoadHeader xRoadHeader) throws Exception {
         logger.debug("getDocument invoked. Version: " + version);
 
         if (version == 1) {
-            return v1(requestObject);
+            return v1(requestObject, requestMessage, responseMessage, xRoadHeader);
         }
         else if (version == 2) {
-            return v2(requestObject);
+            return v2(requestObject, requestMessage, responseMessage, xRoadHeader);
         } else if (version == 3) {
-            return v3(requestObject);
+            return v3(requestObject, requestMessage, responseMessage, xRoadHeader);
         }
         else {
             throw new AditInternalException("This method does not support version specified: " + version);
@@ -66,7 +81,7 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
      *            Request body object
      * @return Response body object
      */
-    protected Object v1(Object requestObject) {
+    protected Object v1(Object requestObject, SaajSoapMessage requestMessage, SaajSoapMessage responseMessage, CustomXRoadHeader xRoadHeader) {
         GetDocumentResponse response = new GetDocumentResponse();
         ArrayOfMessage messages = new ArrayOfMessage();
         Calendar requestDate = Calendar.getInstance();
@@ -90,16 +105,15 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
                 	documentGuid = request.getDocumentGuid();
                 }
             }
-            
-            CustomXRoadHeader header = this.getHeader();
-            String applicationName = header.getInfosysteem(this.getConfiguration().getXteeProducerName());
+
+            String applicationName = xRoadHeader.getInfosysteem(this.getConfiguration().getXteeProducerName());
 
             // Log request
-            Util.printHeader(header, this.getConfiguration());
+            Util.printHeader(xRoadHeader, this.getConfiguration());
             printRequest(request);
 
             // Check header for required fields
-            checkHeader(header);
+            checkHeader(xRoadHeader);
 
             // Check request body
             checkRequest(request);
@@ -113,8 +127,8 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
             this.getUserService().checkApplicationReadPrivilege(applicationName);
 
             // Kontrollime, kas päringus märgitud isik on teenuse kasutaja
-            AditUser user = Util.getAditUserFromXroadHeader(this.getHeader(), this.getUserService());
-            AditUser xroadRequestUser = Util.getXroadUserFromXroadHeader(user, this.getHeader(), this.getUserService());
+            AditUser user = Util.getAditUserFromXroadHeader(xRoadHeader, this.getUserService());
+            AditUser xroadRequestUser = Util.getXroadUserFromXroadHeader(user, xRoadHeader, this.getUserService());
 
             Document doc = checkRightsAndGetDocument(request, applicationName, user);
             
@@ -216,7 +230,7 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
                     String gzipFileName = Util.gzipFile(xmlFile, this.getConfiguration().getTempDir());
 
                     // 3. Add as an attachment
-                    String contentID = addAttachment(gzipFileName);
+                    String contentID = addAttachment(gzipFileName, responseMessage);
                     GetDocumentResponseDocument responseDoc = new GetDocumentResponseDocument();
                     responseDoc.setHref("cid:" + contentID);
                     response.setDocument(responseDoc);
@@ -310,25 +324,25 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
             }
 
             additionalInformationForLog = errorMessage;
-            super.logError(documentId, requestDate.getTime(), LogService.ERROR_LOG_LEVEL_ERROR, errorMessage);
+            super.logError(documentId, requestDate.getTime(), LogService.ERROR_LOG_LEVEL_ERROR, errorMessage, xRoadHeader);
 
             logger.debug("Adding exception messages to response object.");
             response.setMessages(arrayOfMessage);
         }
 
-        super.logCurrentRequest(documentId, requestDate.getTime(), additionalInformationForLog);
+        super.logCurrentRequest(documentId, requestDate.getTime(), additionalInformationForLog, xRoadHeader);
 
         // Log document/file download
         if (includeFileContents) {
             if ((fileIdList == null) || (fileIdList.size() < 1)) {
-                super.logDownloadRequest(documentId, null, requestDate.getTime());
+                super.logDownloadRequest(documentId, null, requestDate.getTime(), xRoadHeader);
             } else {
                 for (Long fileId : fileIdList) {
-                    super.logDownloadRequest(documentId, fileId, requestDate.getTime());
+                    super.logDownloadRequest(documentId, fileId, requestDate.getTime(), xRoadHeader);
                 }
             }
         } else {
-            super.logMetadataRequest(documentId, requestDate.getTime());
+            super.logMetadataRequest(documentId, requestDate.getTime(), xRoadHeader);
         }
 
         return response;
@@ -341,7 +355,7 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
      *            Request body object
      * @return Response body object
      */
-    protected Object v2(Object requestObject) {
+    protected Object v2(Object requestObject, SaajSoapMessage requestMessage, SaajSoapMessage responseMessage, CustomXRoadHeader xRoadHeader) {
         GetDocumentResponse response = new GetDocumentResponse();
         ArrayOfMessage messages = new ArrayOfMessage();
         Calendar requestDate = Calendar.getInstance();
@@ -361,15 +375,14 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
                 }
             }
             request.setDhxReceiptId(null);
-            CustomXRoadHeader header = this.getHeader();
-            String applicationName = header.getInfosysteem(this.getConfiguration().getXteeProducerName());
+            String applicationName = xRoadHeader.getInfosysteem(this.getConfiguration().getXteeProducerName());
 
             // Log request
-            Util.printHeader(header, this.getConfiguration());
+            Util.printHeader(xRoadHeader, this.getConfiguration());
             printRequest(request);
 
             // Check header for required fields
-            checkHeader(header);
+            checkHeader(xRoadHeader);
 
             // Check request body
             checkRequest(request);
@@ -382,8 +395,8 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
             this.getUserService().checkApplicationReadPrivilege(applicationName);
 
             // Kontrollime, kas päringus märgitud isik on teenuse kasutaja
-            AditUser user = Util.getAditUserFromXroadHeader(this.getHeader(), this.getUserService());
-            AditUser xroadRequestUser = Util.getXroadUserFromXroadHeader(user, this.getHeader(), this.getUserService());
+            AditUser user = Util.getAditUserFromXroadHeader(xRoadHeader, this.getUserService());
+            AditUser xroadRequestUser = Util.getXroadUserFromXroadHeader(user, xRoadHeader, this.getUserService());
 
             Document doc = checkRightsAndGetDocument(request, applicationName, user);
 
@@ -473,7 +486,7 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
                     String gzipFileName = Util.gzipFile(xmlFile, this.getConfiguration().getTempDir());
 
                     // 3. Add as an attachment
-                    String contentID = addAttachment(gzipFileName);
+                    String contentID = addAttachment(gzipFileName, responseMessage);
                     GetDocumentResponseDocument responseDoc = new GetDocumentResponseDocument();
                     responseDoc.setHref("cid:" + contentID);
                     response.setDocument(responseDoc);
@@ -571,25 +584,25 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
             }
 
             additionalInformationForLog = errorMessage;
-            super.logError(documentId, requestDate.getTime(), LogService.ERROR_LOG_LEVEL_ERROR, errorMessage);
+            super.logError(documentId, requestDate.getTime(), LogService.ERROR_LOG_LEVEL_ERROR, errorMessage, xRoadHeader);
 
             logger.debug("Adding exception messages to response object.");
             response.setMessages(arrayOfMessage);
         }
 
-        super.logCurrentRequest(documentId, requestDate.getTime(), additionalInformationForLog);
+        super.logCurrentRequest(documentId, requestDate.getTime(), additionalInformationForLog, xRoadHeader);
 
         // Log document/file download
         if (includeFileContents) {
             if ((fileIdList == null) || (fileIdList.size() < 1)) {
-                super.logDownloadRequest(documentId, null, requestDate.getTime());
+                super.logDownloadRequest(documentId, null, requestDate.getTime(), xRoadHeader);
             } else {
                 for (Long fileId : fileIdList) {
-                    super.logDownloadRequest(documentId, fileId, requestDate.getTime());
+                    super.logDownloadRequest(documentId, fileId, requestDate.getTime(), xRoadHeader);
                 }
             }
         } else {
-            super.logMetadataRequest(documentId, requestDate.getTime());
+            super.logMetadataRequest(documentId, requestDate.getTime(), xRoadHeader);
         }
 
         return response;
@@ -604,7 +617,7 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
      *            Request body object
      * @return Response body object
      */
-    protected Object v3(Object requestObject) {
+    protected Object v3(Object requestObject, SaajSoapMessage requestMessage, SaajSoapMessage responseMessage, CustomXRoadHeader xRoadHeader) {
         GetDocumentResponse response = new GetDocumentResponse();
         ArrayOfMessage messages = new ArrayOfMessage();
         Calendar requestDate = Calendar.getInstance();
@@ -623,16 +636,15 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
                 	documentGuid = request.getDocumentGuid();
                 }
             }
-            
-            CustomXRoadHeader header = this.getHeader();
-            String applicationName = header.getInfosysteem(this.getConfiguration().getXteeProducerName());
+
+            String applicationName = xRoadHeader.getInfosysteem(this.getConfiguration().getXteeProducerName());
 
             // Log request
-            Util.printHeader(header, this.getConfiguration());
+            Util.printHeader(xRoadHeader, this.getConfiguration());
             printRequest(request);
 
             // Check header for required fields
-            checkHeader(header);
+            checkHeader(xRoadHeader);
 
             // Check request body
             checkRequest(request);
@@ -645,8 +657,8 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
             this.getUserService().checkApplicationReadPrivilege(applicationName);
 
             // Kontrollime, kas päringus märgitud isik on teenuse kasutaja
-            AditUser user = Util.getAditUserFromXroadHeader(this.getHeader(), this.getUserService());
-            AditUser xroadRequestUser = Util.getXroadUserFromXroadHeader(user, this.getHeader(), this.getUserService());
+            AditUser user = Util.getAditUserFromXroadHeader(xRoadHeader, this.getUserService());
+            AditUser xroadRequestUser = Util.getXroadUserFromXroadHeader(user, xRoadHeader, this.getUserService());
 
             Document doc = checkRightsAndGetDocument(request, applicationName, user);
 
@@ -734,7 +746,7 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
                     String gzipFileName = Util.gzipFile(xmlFile, this.getConfiguration().getTempDir());
 
                     // 3. Add as an attachment
-                    String contentID = addAttachment(gzipFileName);
+                    String contentID = addAttachment(gzipFileName, responseMessage);
                     GetDocumentResponseDocument responseDoc = new GetDocumentResponseDocument();
                     responseDoc.setHref("cid:" + contentID);
                     response.setDocument(responseDoc);
@@ -832,25 +844,25 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
             }
 
             additionalInformationForLog = errorMessage;
-            super.logError(documentId, requestDate.getTime(), LogService.ERROR_LOG_LEVEL_ERROR, errorMessage);
+            super.logError(documentId, requestDate.getTime(), LogService.ERROR_LOG_LEVEL_ERROR, errorMessage, xRoadHeader);
 
             logger.debug("Adding exception messages to response object.");
             response.setMessages(arrayOfMessage);
         }
 
-        super.logCurrentRequest(documentId, requestDate.getTime(), additionalInformationForLog);
+        super.logCurrentRequest(documentId, requestDate.getTime(), additionalInformationForLog, xRoadHeader);
 
         // Log document/file download
         if (includeFileContents) {
             if ((fileIdList == null) || (fileIdList.size() < 1)) {
-                super.logDownloadRequest(documentId, null, requestDate.getTime());
+                super.logDownloadRequest(documentId, null, requestDate.getTime(), xRoadHeader);
             } else {
                 for (Long fileId : fileIdList) {
-                    super.logDownloadRequest(documentId, fileId, requestDate.getTime());
+                    super.logDownloadRequest(documentId, fileId, requestDate.getTime(), xRoadHeader);
                 }
             }
         } else {
-            super.logMetadataRequest(documentId, requestDate.getTime());
+            super.logMetadataRequest(documentId, requestDate.getTime(), xRoadHeader);
         }
 
         return response;
@@ -858,9 +870,9 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
     
 
     @Override
-    protected Object getResultForGenericException(Exception ex) {
+    protected Object getResultForGenericException(Exception ex, SaajSoapMessage requestMessage, SaajSoapMessage responseMessage, CustomXRoadHeader xRoadHeader) {
         super.logError(null, Calendar.getInstance().getTime(), LogService.ERROR_LOG_LEVEL_FATAL, "ERROR: "
-                + ex.getMessage());
+                + ex.getMessage(), xRoadHeader);
         GetDocumentResponse response = new GetDocumentResponse();
         response.setSuccess(false);
         ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
@@ -885,6 +897,14 @@ public class GetDocumentEndpoint extends AbstractAditBaseEndpoint {
     private Document checkRightsAndGetDocument(
     	final GetDocumentRequest request, final String applicationName,
     	final AditUser user) {
+
+        // Kontrollime, et kasutajakonto ligipääs poleks peatatud (kasutaja
+        // lahkunud)
+        if ((user.getActive() == null) || !user.getActive()) {
+            AditCodedException aditCodedException = new AditCodedException("user.inactive");
+            aditCodedException.setParameters(new Object[] {user.getUserCode()});
+            throw aditCodedException;
+        }
 
         // Check whether or not the application has rights to
         // read current user's data.

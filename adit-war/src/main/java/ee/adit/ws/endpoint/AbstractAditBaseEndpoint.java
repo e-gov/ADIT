@@ -26,7 +26,7 @@ import org.springframework.oxm.Unmarshaller;
 import org.springframework.oxm.XmlMappingException;
 import org.springframework.oxm.castor.CastorMarshaller;
 import org.springframework.ws.mime.Attachment;
-import org.springframework.ws.soap.SoapMessage;
+import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -68,11 +68,6 @@ public abstract class AbstractAditBaseEndpoint extends XRoadCustomEndpoint {
     	// add BC provider to Security
     	SecurityConfiguration.init();
     }
-
-    /**
-     * X-Tee header.
-     */
-    private CustomXRoadHeader header;
 
     /**
      * Marshaller - required to convert Java objects to XML.
@@ -120,10 +115,12 @@ public abstract class AbstractAditBaseEndpoint extends XRoadCustomEndpoint {
      *            response body element
      * @param xteeHeader
      *            X-Tee header
+     * @param requestMessage Incoming request
+     * @param responseMessage Sent as result
      * @throws Exception
      */
     @Override
-    protected void invokeInternal(Document requestKeha, Element responseElement, CustomXRoadHeader xteeHeader) throws Exception {
+    protected void invokeInternal(Document requestKeha, Element responseElement, CustomXRoadHeader xteeHeader, SaajSoapMessage requestMessage, SaajSoapMessage responseMessage) throws Exception {
 
     	Timer performanceTimer = new Timer();
     	try {
@@ -137,9 +134,6 @@ public abstract class AbstractAditBaseEndpoint extends XRoadCustomEndpoint {
 	        }
 
 	        try {
-	            // Set the header as a property
-	            this.setHeader(xteeHeader);
-
 	            if (!this.isMetaService()) {
 	                // Check request version
 	                if (xteeHeader.getNimi() == null) {
@@ -179,10 +173,10 @@ public abstract class AbstractAditBaseEndpoint extends XRoadCustomEndpoint {
 	            }
 
 	            // Execute business logic
-	            responseObject = invokeInternal(requestObject, version);
+	            responseObject = invokeInternal(requestObject, version, requestMessage, responseMessage, xteeHeader);
 	        } catch (Exception e) {
 	            logger.error("Exception while marshalling request/response object: ", e);
-	            responseObject = getResultForGenericException(e);
+	            responseObject = getResultForGenericException(e, requestMessage, responseMessage, xteeHeader);
 
 	            String additionalInformation = "ERROR: Exception while marshalling request/response object: " + e.getMessage();
 
@@ -247,14 +241,14 @@ public abstract class AbstractAditBaseEndpoint extends XRoadCustomEndpoint {
      *
      * @param fileName
      *            the temporary file to add as an attachment.
+     * @param responseMessage Sent as result
      * @return attachment ID
      * @throws Exception
      */
-    public String addAttachment(String fileName) throws Exception {
+    public String addAttachment(String fileName, SaajSoapMessage responseMessage) throws Exception {
         String result = null;
         try {
             logger.debug("Adding SOAP attachment from file: " + fileName);
-            SoapMessage responseMessage = this.getResponseMessage();
             InputStreamSource isr = new FileSystemResource(new File(fileName));
             Attachment attachment = responseMessage.addAttachment(Util.generateRandomID(), isr, " text/xml");
             logger.debug("Attachment added with ID: " + attachment.getContentId());
@@ -316,18 +310,18 @@ public abstract class AbstractAditBaseEndpoint extends XRoadCustomEndpoint {
     /**
      * Extract attachment XML to temporary file.
      *
-     * @param message SOAP message
+     * @param requestMessage Incoming request
      * @param attachmentID attachment ID to be extracted
      * @return temporary file location
      * @throws IOException
      * @throws AditInternalException
      * @throws AditCodedException
      */
-    public String extractAttachmentXML(SoapMessage message, String attachmentID) throws IOException,
+    public String extractAttachmentXML(SaajSoapMessage requestMessage, String attachmentID) throws IOException,
             AditInternalException, AditCodedException {
         logger.info("Extracting attachment with ID: " + attachmentID);
 
-        if (message == null) {
+        if (requestMessage == null) {
             logger.error("SoapMessage is null.");
             throw new AditInternalException("SoapMessage is null. Could not extract attachment from it.");
         }
@@ -337,10 +331,10 @@ public abstract class AbstractAditBaseEndpoint extends XRoadCustomEndpoint {
             throw new AditCodedException("request.attachments.invalidID");
         }
 
-        Attachment attachment = this.getRequestMessage().getAttachment(attachmentID);
+        Attachment attachment = requestMessage.getAttachment(attachmentID);
         if ((attachment == null) && !(attachmentID.startsWith("<") && attachmentID.endsWith(">"))) {
         	logger.info("Did not find attachment with Content-ID: " + attachmentID + ", attempting to find one with Content-ID: <" + attachmentID + ">");
-        	attachment = this.getRequestMessage().getAttachment("<" + attachmentID + ">");
+        	attachment = requestMessage.getAttachment("<" + attachmentID + ">");
         }
 
         if (attachment == null) {
@@ -367,16 +361,15 @@ public abstract class AbstractAditBaseEndpoint extends XRoadCustomEndpoint {
 
     /**
      * Logs the current request.
-     *
-     * @param documentId
+     *  @param documentId
      *            ID of the document (if it is a document request)
      * @param requestDate
      *            time of the request
      * @param additionalInformation
-     *            additional information about the request
+     * @param xRoadHeader Parsed header
      */
     public void logCurrentRequest(final Long documentId, final Date requestDate,
-    	final String additionalInformation) {
+                                  final String additionalInformation, CustomXRoadHeader xRoadHeader) {
 
     	String logMessage = additionalInformation;
     	if (!Util.isNullOrEmpty(logMessage)) {
@@ -384,11 +377,11 @@ public abstract class AbstractAditBaseEndpoint extends XRoadCustomEndpoint {
     	}
 
     	try {
-            if (this.header != null) {
-                this.logService.addRequestLogEntry(this.header.getNimi(),
-                	documentId, requestDate, this.header.getInfosysteem(configuration.getXteeProducerName()),
-                	!Util.isNullOrEmpty(this.header.getIsikukood()) ? this.header.getIsikukood() : this.header.getAllasutus(),
-                	this.header.getAsutus(), logMessage);
+            if (xRoadHeader != null) {
+                this.logService.addRequestLogEntry(xRoadHeader.getNimi(),
+                	documentId, requestDate, xRoadHeader.getInfosysteem(configuration.getXteeProducerName()),
+                	!Util.isNullOrEmpty(xRoadHeader.getIsikukood()) ? xRoadHeader.getIsikukood() : xRoadHeader.getAllasutus(),
+                	xRoadHeader.getAsutus(), logMessage);
             } else {
                 throw new NullPointerException("Request header not initialized.");
             }
@@ -399,21 +392,20 @@ public abstract class AbstractAditBaseEndpoint extends XRoadCustomEndpoint {
 
     /**
      * Log a downloading request - a request that downloads file data.
-     *
-     * @param documentId
+     *  @param documentId
      *            the ID of the document associated with the file.
      * @param fileId
      *            the ID of the file being downloaded.
      * @param requestDate
-     *            time of the request
+     * @param xRoadHeader Parsed header
      */
-    public void logDownloadRequest(Long documentId, Long fileId, Date requestDate) {
+    public void logDownloadRequest(Long documentId, Long fileId, Date requestDate, CustomXRoadHeader xRoadHeader) {
         try {
-            if (this.header != null) {
+            if (xRoadHeader != null) {
                 this.logService.addDownloadRequestLogEntry(documentId, fileId,
-                	requestDate, this.header.getInfosysteem(configuration.getXteeProducerName()),
-                	!Util.isNullOrEmpty(this.header.getIsikukood()) ? this.header.getIsikukood() : this.header.getAllasutus(),
-                	this.header.getAsutus());
+                	requestDate, xRoadHeader.getInfosysteem(configuration.getXteeProducerName()),
+                	!Util.isNullOrEmpty(xRoadHeader.getIsikukood()) ? xRoadHeader.getIsikukood() : xRoadHeader.getAllasutus(),
+                	xRoadHeader.getAsutus());
             } else {
                 throw new NullPointerException("Request header not initialized.");
             }
@@ -424,19 +416,18 @@ public abstract class AbstractAditBaseEndpoint extends XRoadCustomEndpoint {
 
     /**
      * Log metadata request.
-     *
-     * @param documentId
+     *  @param documentId
      *            the ID of the document queried
      * @param requestDate
-     *            time of the request
+     * @param xRoadHeader Parsed header
      */
-    public void logMetadataRequest(Long documentId, Date requestDate) {
+    public void logMetadataRequest(Long documentId, Date requestDate, CustomXRoadHeader xRoadHeader) {
         try {
-            if (this.header != null) {
+            if (xRoadHeader != null) {
                 this.logService.addMetadataRequestLogEntry(documentId,
-                    requestDate, this.header.getInfosysteem(configuration.getXteeProducerName()),
-                    !Util.isNullOrEmpty(this.header.getIsikukood()) ? this.header.getIsikukood() : this.header.getAllasutus(),
-                    this.header.getAsutus());
+                    requestDate, xRoadHeader.getInfosysteem(configuration.getXteeProducerName()),
+                    !Util.isNullOrEmpty(xRoadHeader.getIsikukood()) ? xRoadHeader.getIsikukood() : xRoadHeader.getAllasutus(),
+                    xRoadHeader.getAsutus());
             } else {
                 throw new NullPointerException("Request header not initialized.");
             }
@@ -447,18 +438,17 @@ public abstract class AbstractAditBaseEndpoint extends XRoadCustomEndpoint {
 
     /**
      * Log an error.
-     *
-     * @param documentId
+     *  @param documentId
      *            the document associated with the error.
      * @param errorDate
      *            the time of the error
      * @param level
-     *            error severity (WARN, ERROR, FATAL)
+ *            error severity (WARN, ERROR, FATAL)
      * @param errorMessage
-     *            error message
+     * @param xRoadHeader Parsed header
      */
     public void logError(final Long documentId, final Date errorDate,
-    	final String level, final String errorMessage) {
+                         final String level, final String errorMessage, CustomXRoadHeader xRoadHeader) {
 
     	String logMessage = errorMessage;
     	if (!Util.isNullOrEmpty(logMessage)) {
@@ -466,10 +456,10 @@ public abstract class AbstractAditBaseEndpoint extends XRoadCustomEndpoint {
     	}
 
     	try {
-            if (this.header != null) {
-                this.logService.addErrorLogEntry(this.header.getNimi(),
-                	documentId, errorDate, this.header.getInfosysteem(configuration.getXteeProducerName()),
-                	!Util.isNullOrEmpty(this.header.getIsikukood()) ? this.header.getIsikukood() : this.header.getAllasutus(),
+            if (xRoadHeader != null) {
+                this.logService.addErrorLogEntry(xRoadHeader.getNimi(),
+                	documentId, errorDate, xRoadHeader.getInfosysteem(configuration.getXteeProducerName()),
+                	!Util.isNullOrEmpty(xRoadHeader.getIsikukood()) ? xRoadHeader.getIsikukood() : xRoadHeader.getAllasutus(),
                 	level, logMessage);
             } else {
                 throw new NullPointerException("Request header not initialized.");
@@ -484,19 +474,19 @@ public abstract class AbstractAditBaseEndpoint extends XRoadCustomEndpoint {
      * Throws a {@link AditCodedException} if any of required fields are missing
      * or empty.
      *
-     * @param headerParam
+     * @param xRoadHeader Parsed header
      *            SOAP message header part as {@link CustomXRoadHeader}
      * @throws AditCodedException
      *             Exception describing which required field is missing or empty
      */
-    public void checkHeader(CustomXRoadHeader headerParam) throws AditCodedException {
-        if (header != null) {
-        	String infosysteem = header.getInfosysteem(configuration.getXteeProducerName());
-            if (Util.isNullOrEmpty(header.getIsikukood())) {
+    public void checkHeader(CustomXRoadHeader xRoadHeader) throws AditCodedException {
+        if (xRoadHeader != null) {
+        	String infosysteem = xRoadHeader.getInfosysteem(configuration.getXteeProducerName());
+            if (Util.isNullOrEmpty(xRoadHeader.getIsikukood())) {
                 throw new AditCodedException("request.header.undefined.personalCode");
             } else if (Util.isNullOrEmpty(infosysteem)) {
                 throw new AditCodedException("request.header.undefined.systemName");
-            } else if (Util.isNullOrEmpty(header.getAsutus())) {
+            } else if (Util.isNullOrEmpty(xRoadHeader.getAsutus())) {
                 throw new AditCodedException("request.header.undefined.institution");
             }
         }
@@ -517,10 +507,13 @@ public abstract class AbstractAditBaseEndpoint extends XRoadCustomEndpoint {
      *            request object
      * @param version
      *            version of the service method
+     * @param requestMessage Incoming request
+     * @param responseMessage Sent as result
+     * @param xRoadHeader Parsed header
      * @return response object
      * @throws Exception
      */
-    protected abstract Object invokeInternal(Object requestObject, int version) throws Exception;
+    protected abstract Object invokeInternal(Object requestObject, int version, SaajSoapMessage requestMessage, SaajSoapMessage responseMessage, CustomXRoadHeader xRoadHeader) throws Exception;
 
     /**
      * Generates error messages, creates a response object and adds error
@@ -528,9 +521,10 @@ public abstract class AbstractAditBaseEndpoint extends XRoadCustomEndpoint {
      *
      * @param ex
      *            the exception for which error messages have to be created
+     * @param xRoadHeader Parsed header
      * @return response object
      */
-    protected abstract Object getResultForGenericException(Exception ex);
+    protected abstract Object getResultForGenericException(Exception ex, SaajSoapMessage requestMessage, SaajSoapMessage responseMessage, CustomXRoadHeader xRoadHeader);
 
     /**
      * Retreives the marshaller.
@@ -568,25 +562,6 @@ public abstract class AbstractAditBaseEndpoint extends XRoadCustomEndpoint {
      */
     public void setUnmarshaller(Unmarshaller unmarshaller) {
         this.unmarshaller = unmarshaller;
-    }
-
-    /**
-     * Retreives the X-Tee header.
-     *
-     * @return X-Tee header of current request
-     */
-    public CustomXRoadHeader getHeader() {
-        return header;
-    }
-
-    /**
-     * Sets the X-Tee header.
-     *
-     * @param header
-     *            X-Tee header of current request
-     */
-    public void setHeader(CustomXRoadHeader header) {
-        this.header = header;
     }
 
     /**

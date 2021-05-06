@@ -20,6 +20,7 @@ import ee.adit.util.Util;
 import ee.adit.util.xroad.CustomXRoadHeader;
 import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
 import ee.webmedia.xtee.annotation.XTeeService;
+import org.springframework.ws.soap.saaj.SaajSoapMessage;
 
 /**
  * Implementation of "unJoin" web method (web service request). Contains request
@@ -37,11 +38,11 @@ public class UnJoinEndpoint extends AbstractAditBaseEndpoint {
     private UserService userService;
 
     @Override
-    protected Object invokeInternal(Object requestObject, int version) throws Exception {
+    protected Object invokeInternal(Object requestObject, int version, SaajSoapMessage requestMessage, SaajSoapMessage responseMessage, CustomXRoadHeader xRoadHeader) throws Exception {
         logger.debug("unJoin invoked. Version: " + version);
 
         if (version == 1) {
-            return v1(requestObject);
+            return v1(xRoadHeader);
         } else {
             throw new AditInternalException("This method does not support version specified: " + version);
         }
@@ -50,11 +51,9 @@ public class UnJoinEndpoint extends AbstractAditBaseEndpoint {
     /**
      * Executes "V1" version of "unJoin" request.
      *
-     * @param requestObject
-     *            Request body object
      * @return Response body object
      */
-    protected Object v1(Object requestObject) {
+    protected Object v1(CustomXRoadHeader xRoadHeader) {
         UnJoinResponse response = new UnJoinResponse();
         ArrayOfMessage messages = new ArrayOfMessage();
         Calendar requestDate = Calendar.getInstance();
@@ -62,14 +61,13 @@ public class UnJoinEndpoint extends AbstractAditBaseEndpoint {
 
         try {
             logger.debug("UnJoinEndpoint.v1 invoked.");
-            CustomXRoadHeader header = this.getHeader();
-            String applicationName = header.getInfosysteem(this.getConfiguration().getXteeProducerName());
+            String applicationName = xRoadHeader.getInfosysteem(this.getConfiguration().getXteeProducerName());
 
             // Log request
-            Util.printHeader(header, this.getConfiguration());
+            Util.printHeader(xRoadHeader, this.getConfiguration());
 
             // Check header for required fields
-            checkHeader(header);
+            checkHeader(xRoadHeader);
 
             // Kontrollime, kas päringu käivitanud infosüsteem on ADITis
             // registreeritud
@@ -85,7 +83,7 @@ public class UnJoinEndpoint extends AbstractAditBaseEndpoint {
                 if (accessLevel == 2) {
 
                     // Kontrollime, kas päringu käivitanud kasutaja eksisteerib
-                    AditUser aditUser = Util.getAditUserFromXroadHeader(this.getHeader(), this.getUserService());
+                    AditUser aditUser = Util.getAditUserFromXroadHeader(xRoadHeader, this.getUserService());
 
                     // Kontrollime, kas infosüsteem tohib antud kasutaja
                     // andmeid muuta
@@ -154,20 +152,20 @@ public class UnJoinEndpoint extends AbstractAditBaseEndpoint {
             }
 
             additionalInformationForLog = errorMessage;
-            super.logError(null, requestDate.getTime(), LogService.ERROR_LOG_LEVEL_ERROR, errorMessage);
+            super.logError(null, requestDate.getTime(), LogService.ERROR_LOG_LEVEL_ERROR, errorMessage, xRoadHeader);
 
             logger.debug("Adding exception messages to response object.");
             response.setMessages(arrayOfMessage);
         }
 
-        super.logCurrentRequest(null, requestDate.getTime(), additionalInformationForLog);
+        super.logCurrentRequest(null, requestDate.getTime(), additionalInformationForLog, xRoadHeader);
         return response;
     }
 
     @Override
-    protected Object getResultForGenericException(Exception ex) {
+    protected Object getResultForGenericException(Exception ex, SaajSoapMessage requestMessage, SaajSoapMessage responseMessage, CustomXRoadHeader xRoadHeader) {
         super.logError(null, Calendar.getInstance().getTime(), LogService.ERROR_LOG_LEVEL_FATAL, "ERROR: "
-                + ex.getMessage());
+                + ex.getMessage(), xRoadHeader);
         UnJoinResponse response = new UnJoinResponse();
         response.setSuccess(new Success(false));
         ArrayOfMessage arrayOfMessage = new ArrayOfMessage();

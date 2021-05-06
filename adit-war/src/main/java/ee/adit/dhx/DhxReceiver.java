@@ -9,5 +9,5 @@ public interface DhxReceiver {
      * Receive a message from DHX.
      * @return id of the received document.
      */
-    Long receive(final String containerFile, String consignmentId, boolean allowSendingToInactiveUser);
+    Long receive(final String containerFile, String consignmentId);
 }

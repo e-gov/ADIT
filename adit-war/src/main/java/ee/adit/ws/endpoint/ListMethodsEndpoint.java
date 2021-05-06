@@ -11,6 +11,7 @@ import ee.adit.pojo.ListMethodsResponseVer2;
 import ee.adit.util.Util;
 import ee.adit.util.xroad.CustomXRoadHeader;
 import ee.adit.util.xroad.messageprotocol.XRoadProtocolVersion;
+import org.springframework.ws.soap.saaj.SaajSoapMessage;
 
 /**
  * Web-service endpoint for "listMethods" service. Returns the list of services provided by ADIT.
@@ -98,33 +99,35 @@ public class ListMethodsEndpoint extends AbstractAditBaseEndpoint implements Ini
      *
      * @param requestObject request object (not used)
      * @param version query version (not used)
-     * @return response object
+     * @param requestMessage Incoming request
+     * @param responseMessage Sent as result
+     * @param xRoadHeader Parsed header
+	 * @return response object
      */
     @Override
-    protected Object invokeInternal(Object requestObject, int version) throws Exception {
-        return getResponse();
+    protected Object invokeInternal(Object requestObject, int version, SaajSoapMessage requestMessage, SaajSoapMessage responseMessage, CustomXRoadHeader xRoadHeader) throws Exception {
+        return getResponse(xRoadHeader);
     }
 
     /**
      * Gets the response object if an exception occurs.
      * @param ex Exception that occurred
-     * @return response object
+     * @param xRoadHeader Parsed header
+	 * @return response object
      */
     @Override
-    protected Object getResultForGenericException(Exception ex) {
-        return getResponse();
+    protected Object getResultForGenericException(Exception ex, SaajSoapMessage requestMessage, SaajSoapMessage responseMessage, CustomXRoadHeader xRoadHeader) {
+        return getResponse(xRoadHeader);
     }
 
     /**
      * Constructs a response object containing all the query names that ADIT publishes.
      *
      * @return "listMethods" web method result as {@link ListMethodsResponse} object
+	 * @param xRoadHeader Parsed header
      */
-    private Object getResponse() {
+    private Object getResponse(CustomXRoadHeader xRoadHeader) {
     	Object response = null;
-    	
-    	CustomXRoadHeader xRoadHeader = getHeader();
-    	
     	if (xRoadHeader.getProtocolVersion().equals(XRoadProtocolVersion.V2_0)) {
     		ListMethodsResponse listMethodsResponse = new ListMethodsResponse();
     		for (String serviceMethod : xteeServiceMethodsNames) {

@@ -40,6 +40,7 @@ import ee.adit.util.Util;
 import ee.adit.util.xroad.CustomXRoadHeader;
 import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
 import ee.webmedia.xtee.annotation.XTeeService;
+import org.springframework.ws.soap.saaj.SaajSoapMessage;
 
 /**
  * Implementation of "saveDocumentFile" web method (web service request).
@@ -62,11 +63,11 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
     private String digidocConfigurationFile;
 
     @Override
-    protected Object invokeInternal(Object requestObject, int version) throws Exception {
+    protected Object invokeInternal(Object requestObject, int version, SaajSoapMessage requestMessage, SaajSoapMessage responseMessage, CustomXRoadHeader xRoadHeader) throws Exception {
         logger.debug("saveDocumentFile invoked. Version: " + version);
 
         if (version == 1) {
-            return v1(requestObject);
+            return v1(requestObject, requestMessage, responseMessage, xRoadHeader);
         } else {
             throw new AditInternalException("This method does not support version specified: " + version);
         }
@@ -79,7 +80,7 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
      * @return Response body object
      */
     @SuppressWarnings("unchecked")
-    protected Object v1(Object requestObject) {
+    protected Object v1(Object requestObject, SaajSoapMessage requestMessage, SaajSoapMessage responseMessage, CustomXRoadHeader xRoadHeader) {
         SaveDocumentFileResponse response = new SaveDocumentFileResponse();
         ArrayOfMessage messages = new ArrayOfMessage();
         Calendar requestDate = Calendar.getInstance();
@@ -94,7 +95,7 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
             if (request != null) {
                 documentId = request.getDocumentId();
             }
-            CustomXRoadHeader header = this.getHeader();
+            CustomXRoadHeader header = xRoadHeader;
             String applicationName = header.getInfosysteem(this.getConfiguration().getXteeProducerName());
 
             // Log request
@@ -108,8 +109,8 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
             checkRequest(request);
 
             // Kontrollime, kas päringus märgitud isik on teenuse kasutaja
-            AditUser user = Util.getAditUserFromXroadHeader(this.getHeader(), this.getUserService());
-            AditUser xroadRequestUser = Util.getXroadUserFromXroadHeader(user, this.getHeader(), this.getUserService());
+            AditUser user = Util.getAditUserFromXroadHeader(xRoadHeader, this.getUserService());
+            AditUser xroadRequestUser = Util.getXroadUserFromXroadHeader(user, xRoadHeader, this.getUserService());
 
             // Check user's disk quota
             long remainingDiskQuota = this.getUserService().getRemainingDiskQuota(user,
@@ -128,12 +129,12 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
             // All primary checks passed.
             logger.debug("Processing attachment with id: '" + attachmentID + "'");
             // Extract the SOAP message to a temporary file
-            String base64EncodedFile = extractAttachmentXML(this.getRequestMessage(), attachmentID);
+            String base64EncodedFile = extractAttachmentXML(requestMessage, attachmentID);
 
             // Base64 decode and unzip the temporary file
             String xmlFile = Util.base64DecodeAndUnzip(base64EncodedFile, this.getConfiguration().getTempDir(), this
                     .getConfiguration().getDeleteTemporaryFilesAsBoolean());
-            logger.debug("Attachment unzipped to temporary file: " + xmlFile);
+            logger.debug("Attachment unzipped tocur temporary file: " + xmlFile);
 
             // Extract large files from main document
             FileSplitResult splitResult = Util.splitOutTags(xmlFile, "data", false, false, true, true);
@@ -259,7 +260,7 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
             }
 
             additionalInformationForLog = errorMessage;
-            super.logError(documentId, requestDate.getTime(), LogService.ERROR_LOG_LEVEL_ERROR, errorMessage);
+            super.logError(documentId, requestDate.getTime(), LogService.ERROR_LOG_LEVEL_ERROR, errorMessage, xRoadHeader);
 
             logger.debug("Adding exception messages to response object.");
             response.setMessages(arrayOfMessage);
@@ -269,7 +270,7 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
                 super.setIgnoreAttachmentHeaders(true);
                 boolean cidAdded = false;
                 
-                Iterator<Attachment> it = this.getRequestMessage().getAttachments();
+                Iterator<Attachment> it = requestMessage.getAttachments();
                 while (it.hasNext()) {
                     Attachment attachment = it.next();
                     
@@ -280,7 +281,7 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
                         contentId = Util.stripContentID(contentId);
                     }
                     
-                    this.getResponseMessage().addAttachment(contentId, attachment.getDataHandler());
+                    responseMessage.addAttachment(contentId, attachment.getDataHandler());
                     if (!cidAdded) {
                         response.setFile(new SaveDocumentFileRequestFile("cid:" + contentId));
                         cidAdded = true;
@@ -291,15 +292,15 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
             }
         }
 
-        super.logCurrentRequest(documentId, requestDate.getTime(), additionalInformationForLog);
+        super.logCurrentRequest(documentId, requestDate.getTime(), additionalInformationForLog, xRoadHeader);
         
         return response;
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    protected Object getResultForGenericException(Exception ex) {
-        super.logError(null, Calendar.getInstance().getTime(), LogService.ERROR_LOG_LEVEL_FATAL, "ERROR: " + ex.getMessage());
+    protected Object getResultForGenericException(Exception ex, SaajSoapMessage requestMessage, SaajSoapMessage responseMessage, CustomXRoadHeader xRoadHeader) {
+        super.logError(null, Calendar.getInstance().getTime(), LogService.ERROR_LOG_LEVEL_FATAL, "ERROR: " + ex.getMessage(), xRoadHeader);
         SaveDocumentFileResponse response = new SaveDocumentFileResponse();
         response.setSuccess(false);
         ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
@@ -309,14 +310,14 @@ public class SaveDocumentFileEndpoint extends AbstractAditBaseEndpoint {
         try {
             super.setIgnoreAttachmentHeaders(true);
             boolean cidAdded = false;
-            Iterator<Attachment> i = this.getRequestMessage().getAttachments();
+            Iterator<Attachment> i = requestMessage.getAttachments();
             while (i.hasNext()) {
                 Attachment attachment = i.next();
                 String contentId = attachment.getContentId();
                 if ((contentId == null) || (contentId.length() < 1)) {
                     contentId = Util.generateRandomID();
                 }
-                this.getResponseMessage().addAttachment(contentId, attachment.getDataHandler());
+                responseMessage.addAttachment(contentId, attachment.getDataHandler());
                 if (!cidAdded) {
                     response.setFile(new SaveDocumentFileRequestFile("cid:" + contentId));
                     cidAdded = true;

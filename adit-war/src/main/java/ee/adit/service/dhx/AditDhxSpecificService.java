@@ -10,7 +10,6 @@ import ee.adit.dhx.DhxReceiver;
 import ee.adit.dhx.DhxReceiverFactory;
 import ee.adit.dhx.DhxUtil;
 import ee.adit.service.DocumentService;
-import ee.adit.service.RuuterService;
 import ee.adit.util.Configuration;
 import ee.ria.dhx.exception.DhxException;
 import ee.ria.dhx.exception.DhxExceptionEnum;
@@ -59,10 +58,6 @@ public class AditDhxSpecificService implements DhxImplementationSpecificService 
     DocumentService documentService;
 
     @Autowired
-    RuuterService ruuterService;
-
-
-    @Autowired
     Configuration configuration;
 
     /**
@@ -98,34 +93,15 @@ public class AditDhxSpecificService implements DhxImplementationSpecificService 
                 document.getExternalConsignmentId(), document.getRecipient(), document.getService());
         Long docId = null;
         String temporaryFile = null;
-        DhxReceiverFactory receiverFactory = new DhxReceiverFactory(documentService, configuration.getjDigiDocConfigFile());
         try {
             dhxService.formatCapsuleRecipientAndSender(document.getParsedContainer(), document.getClient(),
                     document.getService(), false);
             log.debug("Saving document to DHX database");
+
+			DhxReceiverFactory receiverFactory = new DhxReceiverFactory(documentService, configuration.getjDigiDocConfigFile());
             temporaryFile = dhxService.saveContainerToFile(document.getParsedContainer());
-            docId = receiveDocument(receiverFactory, document, temporaryFile, false);
-
-        } catch (Exception ex) {
-            if (ruuterService.shouldRetryWithoutActiveUserValidation(temporaryFile, ex)) {
-                // If we manage to process the document without active user check, return docId to original DHX sender
-                docId = receiveDocument(receiverFactory, document, temporaryFile, true);
-            } else {
-                throw new DataRetrievalFailureException("Error occured while saving DHX message: ", ex);
-            }
-        } finally {
-            if (temporaryFile != null) {
-                new File(temporaryFile).delete();
-            }
-        }
-        dhxService.cleanupContainer(document.getParsedContainer());
-        return docId.toString();
-    }
-
-    private Long receiveDocument(DhxReceiverFactory receiverFactory, IncomingDhxPackage document, String temporaryFile, boolean allowSendingToInactiveUser) {
-        try {
             DhxReceiver receiver = receiverFactory.getReceiver(document.getParsedContainer());
-            Long docId = receiver.receive(temporaryFile, document.getExternalConsignmentId(), allowSendingToInactiveUser);
+			docId = receiver.receive(temporaryFile, document.getExternalConsignmentId());
             if (docId == null || docId.longValue() == 0) {
                 log.error("Error while saving outgoing DHX message - no ID returned by save method.");
                 throw new DataRetrievalFailureException(
@@ -133,13 +109,17 @@ public class AditDhxSpecificService implements DhxImplementationSpecificService 
             } else {
                 log.info("Incoming message saved to DHX database. ID: " + docId);
             }
-            return docId;
         } catch (Exception ex) {
             log.error(ex.getMessage(), ex);
-            throw ex;
+			throw new DataRetrievalFailureException("Error occured while saving DHX message: ", ex);
+		} finally {
+			if(temporaryFile != null) {
+				new File(temporaryFile).delete();
         }
     }
-
+		dhxService.cleanupContainer(document.getParsedContainer());
+		return docId.toString();
+	}
 
     @Override
     @Loggable

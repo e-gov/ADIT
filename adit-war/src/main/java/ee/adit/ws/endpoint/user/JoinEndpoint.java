@@ -21,6 +21,7 @@ import ee.adit.service.UserService;
 import ee.adit.util.Util;
 import ee.adit.util.xroad.CustomXRoadHeader;
 import ee.adit.ws.endpoint.AbstractAditBaseEndpoint;
+import org.springframework.ws.soap.saaj.SaajSoapMessage;
 
 /**
  * Implementation of "join" web method (web service request). Contains request
@@ -39,11 +40,11 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
     private DocumentService documentService;
 
     @Override
-    protected Object invokeInternal(Object requestObject, int version) throws Exception {
+    protected Object invokeInternal(Object requestObject, int version, SaajSoapMessage requestMessage, SaajSoapMessage responseMessage, CustomXRoadHeader xRoadHeader) throws Exception {
         logger.debug("JoinEndpoint invoked. Version: " + version);
 
         if (version == 1) {
-            return v1(requestObject);
+            return v1(requestObject, xRoadHeader);
         } else {
             throw new AditInternalException("This method does not support version specified: " + version);
         }
@@ -56,7 +57,7 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
      *            Request body object
      * @return Response body object
      */
-    protected Object v1(Object requestObject) throws Exception {
+    protected Object v1(Object requestObject, CustomXRoadHeader xRoadHeader) throws Exception {
         JoinResponse response = new JoinResponse();
         ArrayOfMessage messages = new ArrayOfMessage();
         Calendar requestDate = Calendar.getInstance();
@@ -66,15 +67,14 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
         try {
 
             JoinRequest request = (JoinRequest) requestObject;
-            CustomXRoadHeader header = this.getHeader();
-            String applicationName = header.getInfosysteem(this.getConfiguration().getXteeProducerName());
+            String applicationName = xRoadHeader.getInfosysteem(this.getConfiguration().getXteeProducerName());
 
             // Log request
-            Util.printHeader(header, this.getConfiguration());
+            Util.printHeader(xRoadHeader, this.getConfiguration());
             printRequest(request);
 
             // Check header for required fields
-            checkHeader(header);
+            checkHeader(xRoadHeader);
 
             // Check request body
             checkRequest(request);
@@ -100,7 +100,7 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
                         // Kontrollime, kas kasutaja juba eksisteerib
                         // s.t. kas lisame uue kasutaja või muudame olemasolevat
                         logger.debug("Checking if user already exists...");
-                        String userCode = !Util.isNullOrEmpty(header.getIsikukood()) ? header.getIsikukood() : header.getAllasutus();
+                        String userCode = !Util.isNullOrEmpty(xRoadHeader.getIsikukood()) ? xRoadHeader.getIsikukood() : xRoadHeader.getAllasutus();
                         AditUser aditUser = userService.getUserByID(userCode);
 
                         // Lisame kasutaja või muudame olemasolevat
@@ -146,9 +146,9 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
                             }
                         } else {
                             logger.info("Adding new user.");
-                            userService.addUser(request.getUserName(), usertype, header.getAllasutus(), header.getIsikukood());
+                            userService.addUser(request.getUserName(), usertype, xRoadHeader.getAllasutus(), xRoadHeader.getIsikukood());
                             //add user full name to all document sharings that were made before user joined ADIT.
-                            documentService.addUserNameToDocumentSharings(userService.getUserByID(header.getIsikukood()));
+                            documentService.addUserNameToDocumentSharings(userService.getUserByID(xRoadHeader.getIsikukood()));
                             
                             response.setSuccess(new Success(true));
                             String message = this.getMessageService().getMessage("request.join.success.userAdded",
@@ -199,20 +199,20 @@ public class JoinEndpoint extends AbstractAditBaseEndpoint {
             }
 
             additionalInformationForLog = errorMessage;
-            super.logError(documentId, requestDate.getTime(), LogService.ERROR_LOG_LEVEL_ERROR, errorMessage);
+            super.logError(documentId, requestDate.getTime(), LogService.ERROR_LOG_LEVEL_ERROR, errorMessage, xRoadHeader);
 
             logger.debug("Adding exception messages to response object.");
             response.setMessages(arrayOfMessage);
         }
 
-        super.logCurrentRequest(documentId, requestDate.getTime(), additionalInformationForLog);
+        super.logCurrentRequest(documentId, requestDate.getTime(), additionalInformationForLog, xRoadHeader);
         return response;
     }
 
     @Override
-    protected Object getResultForGenericException(Exception ex) {
+    protected Object getResultForGenericException(Exception ex, SaajSoapMessage requestMessage, SaajSoapMessage responseMessage, CustomXRoadHeader xRoadHeader) {
         super.logError(null, Calendar.getInstance().getTime(), LogService.ERROR_LOG_LEVEL_FATAL, "ERROR: "
-                + ex.getMessage());
+                + ex.getMessage(), xRoadHeader);
         JoinResponse response = new JoinResponse();
         response.setSuccess(new Success(false));
         ArrayOfMessage arrayOfMessage = new ArrayOfMessage();
