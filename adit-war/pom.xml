@@ -15,7 +15,7 @@
 		<repository>
 			<id>ria</id>
 			<name>DVK releases</name>
-			<url>http://artifactory.tt.kit:8081/artifactory/DVK-libs-release-local</url>
+        <url>https://nexus.ria.ee/repository/DVK-libs-release-local</url>
 		</repository>
 	</repositories>
 
